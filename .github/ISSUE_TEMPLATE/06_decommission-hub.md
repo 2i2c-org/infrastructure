@@ -22,7 +22,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 ### Task List
 
-#### Phase I
+#### Phase I - Data Migration Strategy
 
 - [ ] Confirm with Community Representative that the hub is no longer in use and it's safe to decommission
 - [ ] Confirm if there is any data to migrate from the hub before decommissioning
@@ -54,9 +54,15 @@ _This phase is only necessary for single hub clusters._
 - [ ] Run `terraform plan -destroy` and `terraform apply` from the [appropriate workspace](https://infrastructure.2i2c.org/en/latest/topic/terraform.html#workspaces), to destroy the cluster
 - [ ] Delete the terraform workspace: `terraform workspace delete <NAME>`
 - [ ] Delete the terraform values file under the `projects` folder associated with the relevant cloud provider (e.g. `terraform/gcp/projects/` for GCP)
+- [ ] If the cluster is on AWS:
+  - Run `eksctl delete cluster --config-file=$CLUSTER_NAME.eksctl.yaml --disable-nodegroup-eviction`
+  - Delete the `eksctl`-related files:
+    - The `jsonnet` file under the `eksctl` folder
+    - The public SSH key under the `eksctl/ssh-keys` folder
 - [ ] Remove the associated `config/clusters/<cluster_name>` directory and all its contents
 - Remove the cluster from CI:
   - [ ] [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
   - [ ] [`deploy-grafana-dashboards.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-grafana-dashboards.yaml)
 - [ ] Remove A record from Namecheap account
 - [ ] Ensure home directory backups are deleted ([EFS](https://repost.aws/knowledge-center/efs-disable-automatic-backups))
+- [ ] Delete the cloud account (where permissions allow it)

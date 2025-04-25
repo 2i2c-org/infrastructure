@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: fs-0bede1dba0cd22029.efs.us-west-2.amazonaws.com
+      serverIP: 10.100.196.94
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-staging
@@ -35,3 +35,6 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: staging
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-0728f7b1555016f13

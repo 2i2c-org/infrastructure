@@ -138,6 +138,7 @@ basehub:
             - google-oauth2|117710759588624106233 #Sarah Wilson
             - google-oauth2|112630227497477971771 #Robert Weekly
             - google-oauth2|118403506154942842583 #Alex Hamilton
+            - google-oauth2|108516754518362587599 # Yuvi
     singleuser:
       cloudMetadata:
         blockWithIptables: false
@@ -232,3 +233,7 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true

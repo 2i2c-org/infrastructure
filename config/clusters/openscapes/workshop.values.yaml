@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: fs-09a9026ea8f4b4d3b.efs.us-west-2.amazonaws.com
+      serverIP: 10.100.249.210
   jupyterhub:
     custom:
       2i2c:
@@ -161,3 +161,35 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: workshop
+  jupyterhub-home-nfs:
+    quotaEnforcer:
+      hardQuota: "16" # in GB
+      path: "/export/workshop"
+      resources:
+        requests:
+          cpu: 0.02
+          memory: 20M
+        limits:
+          cpu: 0.04
+          memory: 30M
+    nfsServer:
+      resources:
+        requests:
+          cpu: 0.2
+          memory: 2G
+        limits:
+          cpu: 0.4
+          memory: 6G
+    prometheusExporter:
+      resources:
+        requests:
+          cpu: 0.02
+          memory: 15M
+        limits:
+          cpu: 0.04
+          memory: 20M
+    eks:
+      volumeId: vol-03afdfb4245b63dfb
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-03afdfb4245b63dfb
