@@ -16,7 +16,6 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" },
     },
-    // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-prod",
