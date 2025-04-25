@@ -230,7 +230,6 @@ jobs:
       failure_openscapes: ${{ steps.declare-failure.outputs.failure_openscapes }}
       failure_opensci: ${{ steps.declare-failure.outputs.failure_opensci }}
       failure_projectpythia: ${{ steps.declare-failure.outputs.failure_projectpythia }}
-      failure_queensu: ${{ steps.declare-failure.outputs.failure_queensu }}
       failure_reflective: ${{ steps.declare-failure.outputs.failure_reflective }}
       failure_smithsonian: ${{ steps.declare-failure.outputs.failure_smithsonian }}
       failure_strudel: ${{ steps.declare-failure.outputs.failure_strudel }}
@@ -471,7 +470,6 @@ jobs:
       failure_openscapes_staging: ${{ steps.declare-failure.outputs.failure_openscapes_staging }}
       failure_opensci_staging: ${{ steps.declare-failure.outputs.failure_opensci_staging }}
       failure_projectpythia_staging: ${{ steps.declare-failure.outputs.failure_projectpythia_staging }}
-      failure_queensu_staging: ${{ steps.declare-failure.outputs.failure_queensu_staging }}
       failure_reflective_staging: ${{ steps.declare-failure.outputs.failure_reflective_staging }}
       failure_smithsonian_staging: ${{ steps.declare-failure.outputs.failure_smithsonian_staging }}
       failure_strudel_staging: ${{ steps.declare-failure.outputs.failure_strudel_staging }}

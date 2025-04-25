@@ -43,7 +43,6 @@ jobs:
           - cluster_name: opensci
           - cluster_name: projectpythia
           - cluster_name: projectpythia-binder
-          - cluster_name: queensu
           - cluster_name: reflective
           - cluster_name: smithsonian
           - cluster_name: strudel
