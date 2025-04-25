@@ -72,7 +72,7 @@ local notebookNodes = [
       instanceType: "g4dn.xlarge",
       namePrefix: "gpu-staging",
       labels+: {
-        "2i2c/hub-name": "staging"
+        "2i2c/hub-name": "staging",
         "2i2c/has-gpu": "true",
       },
       tags+: {
