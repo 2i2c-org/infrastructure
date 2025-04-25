@@ -10,75 +10,89 @@ local nodeAz = "us-west-2b";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+    // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-staging",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" },
     },
+    // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-prod",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" },
     },
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-workshop",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "workshop" },
         tags+: { "2i2c:hub-name": "workshop" },
     },
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-noaa-only",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "noaa-only" },
         tags+: { "2i2c:hub-name": "noaa-only" },
     },
     {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-staging",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" },
     },
     {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-prod",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" },
     },
     {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-workshop",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "workshop" },
         tags+: { "2i2c:hub-name": "workshop" },
     },
     {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-noaa-only",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "noaa-only" },
         tags+: { "2i2c:hub-name": "noaa-only" },
     },
     {
         instanceType: "r5.16xlarge",
         namePrefix: "nb-staging",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" },
     },
     {
         instanceType: "r5.16xlarge",
         namePrefix: "nb-prod",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" },
     },
     {
         instanceType: "r5.16xlarge",
         namePrefix: "nb-workshop",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "workshop" },
         tags+: { "2i2c:hub-name": "workshop" },
     },
     {
         instanceType: "r5.16xlarge",
         namePrefix: "nb-noaa-only",
+        nameSuffix: '-a',
         labels+: { "2i2c/hub-name": "noaa-only" },
         tags+: { "2i2c:hub-name": "noaa-only" },
     },
@@ -226,7 +240,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: '-a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             instanceType: "r5.xlarge",
