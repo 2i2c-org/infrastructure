@@ -196,12 +196,9 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
-            ssh: {
-                publicKeyPath: 'ssh-keys/nasa-veda.key.pub'
-            },
             instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
