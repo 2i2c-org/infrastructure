@@ -1,0 +1,57 @@
+jupyterhub:
+  ingress:
+    hosts: [authoring.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [authoring.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  prePuller:
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image
+    hook:
+      enabled: true
+  singleuser:
+    memory:
+      guarantee: 512M
+      limit: 1G
+    image:
+      name: public.ecr.aws/s7x4g6w9/cal-icor/base-user-image
+      tag: a4e1b2e1c4f9
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: 2i2c / CloudBank Hubs Demo
+          logo_url: https://www.cloudbank.org/sites/default/files/file_fields/logo.png
+          url: https://docs.2i2c.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://authoring.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - ucb-ds
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - sean-morris
+          - ericvd-ucb
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
