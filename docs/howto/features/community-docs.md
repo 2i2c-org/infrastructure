@@ -1,6 +1,6 @@
 # Integrate community-documentation with Jupyter Book
 
-With [`#5045`][mvp], we now support the ability to connect community-documentation with a deployed Hub. From an infrastructure perspective, this is a thin integration in which we deliver the following features:
+With [PR `2i2c-org/infrastructure#5045`][mvp], we now support the ability to connect community-documentation with a deployed Hub. From an infrastructure perspective, this is a thin integration in which we deliver the following features:
 
 - A GitHub repository template for community documentation.
 - A hub-adjacent public subdomain `docs.<COMMUNITY>.2i2c.cloud`.
