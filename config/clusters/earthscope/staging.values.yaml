@@ -61,3 +61,4 @@ basehub:
     config:
       groupsExporter:
         update_exporter_interval: 3600
+        log_level: INFO
