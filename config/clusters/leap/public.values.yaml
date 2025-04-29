@@ -143,6 +143,8 @@ jupyterhub:
                   image: "pangeo/pytorch-notebook:2024.06.02"
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
   config:
     BinderHub:
       image_prefix: us-central1-docker.pkg.dev/leap-pangeo/imagebuilding-registry/

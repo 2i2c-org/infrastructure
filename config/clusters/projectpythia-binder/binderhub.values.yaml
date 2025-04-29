@@ -104,6 +104,8 @@ jupyterhub:
 
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
   nodeSelector:
     capi.stackhpc.com/node-group: core
     hub.jupyter.org/node-purpose: null

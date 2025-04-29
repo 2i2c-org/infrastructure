@@ -194,6 +194,8 @@ jupyterhub:
 
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/opensci-sciencecore-

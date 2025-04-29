@@ -130,6 +130,8 @@ jupyterhub:
 
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
   config:
     BinderHub:
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binderhub-service-
