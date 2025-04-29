@@ -105,13 +105,15 @@ jupyterhub:
       enabled: true
 ```
 
-#### 4. Check that the binderhub-service chart is enabled
+#### 4. Check that the binderhub-service chart and network policy is enabled
 
 We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) Helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub so we need to enable it.
 
 ```yaml
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
 ```
 
 #### 5. Check that BinderHub is configured correctly

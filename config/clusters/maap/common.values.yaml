@@ -282,6 +282,8 @@ jupyterhub:
 
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
   # Explicitly specify what nodes we want for our builds
   # Otherwise we may scale up a larger node than needed
   dockerApi:
