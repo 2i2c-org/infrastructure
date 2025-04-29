@@ -7,8 +7,6 @@ userServiceAccount:
 
 binderhub-service:
   enabled: false
-  networkPolicy:
-    enabled: true
   ingress:
     enabled: false
     ingressClassName: nginx
