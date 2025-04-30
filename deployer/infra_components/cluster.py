@@ -5,6 +5,9 @@ import tempfile
 from contextlib import ExitStack, contextmanager
 from pathlib import Path
 
+import requests
+import yaml
+
 from deployer.infra_components.hub import Hub
 from deployer.utils.env_vars_management import unset_env_vars
 from deployer.utils.file_acquisition import (
@@ -82,46 +85,43 @@ class Cluster:
             # calico `Installation` object can be set up.
             # I deeply loathe the operator *singleton* pattern.
             tigera_operator_version = "v3.29.3"
-            subprocess.check_call(
-                [
-                    "kubectl",
-                    "apply",
-                    "--force-conflicts",  # Remove after https://github.com/2i2c-org/infrastructure/issues/5961
-                    "--server-side",  # https://github.com/projectcalico/calico/issues/7826
-                    "-f",
-                    f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml",
-                ]
-            )
-            print_colour("Done!")
+            url = f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml"
+            resp = requests.get(url)
+            resp.raise_for_status()
+            manifest = list(yaml.safe_load_all(resp.text))
 
-            # Patch the tigera operator to remove the NoSchedule toleration
-            # otherwise it will schedule on tainted nodes
-            print_colour("Patching tigera operator...")
-            patch_tolerations = {
-                "spec": {
-                    "template": {
-                        "spec": {
-                            "tolerations": [
-                                {"effect": "NoExecute", "operator": "Exists"},
-                            ],
-                        }
-                    }
-                }
-            }
-            patch_tolerations_json = json.dumps(patch_tolerations)
-            subprocess.check_call(
-                [
-                    "kubectl",
-                    "--namespace",
-                    "tigera-operator",
-                    "patch",
-                    "deployment",
-                    "tigera-operator",
-                    "--patch",
-                    patch_tolerations_json,
-                ],
-            )
-            print_colour("Done!")
+            # Update the tigera-operator manifest to remove the NoSchedule
+            # toleration otherwise it will schedule on tainted nodes
+            for resource in manifest:
+                if (
+                    resource.get("kind") == "Deployment"
+                    and resource.get("metadata", {}).get("name") == "tigera-operator"
+                ):
+                    spec = resource.get("spec", {}).get("template", {}).get("spec", {})
+                    if spec.get("tolerations", []):
+                        spec["tolerations"] = [
+                            {"effect": "NoExecute", "operator": "Exists"}
+                        ]
+            try:
+                with tempfile.NamedTemporaryFile(
+                    mode="w+", suffix=".yaml", delete=False
+                ) as tmp:
+                    yaml.dump_all(manifest, tmp)
+                    tmp.flush()
+                    tmp_path = tmp.name
+                    subprocess.check_call(
+                        [
+                            "kubectl",
+                            "apply",
+                            "--server-side",  # https://github.com/projectcalico/calico/issues/7826
+                            "-f",
+                            tmp_path,
+                        ]
+                    )
+            finally:
+                if os.path.exists(tmp_path):
+                    os.remove(tmp_path)
+                print_colour("Done!")
 
         print_colour("Provisioning support charts...")
 
