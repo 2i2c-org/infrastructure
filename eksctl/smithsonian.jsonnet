@@ -64,7 +64,10 @@ local notebookNodes = [
     {
         instanceType: "g4dn.xlarge",
         namePrefix: "gpu-staging",
-        labels+: { "2i2c/hub-name": "staging" },
+        labels+: {
+            "2i2c/hub-name": "staging",
+            "2i2c/has-gpu": "true"
+        },
         tags+: {
             "2i2c:hub-name": "staging",
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
@@ -79,7 +82,10 @@ local notebookNodes = [
     {
         instanceType: "g4dn.xlarge",
         namePrefix: "gpu-prod",
-        labels+: { "2i2c/hub-name": "prod" },
+        labels+: {
+            "2i2c/hub-name": "prod",
+            "2i2c/has-gpu": "true"
+        },
         tags+: {
             "2i2c:hub-name": "prod",
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
@@ -124,7 +130,7 @@ local daskNodes = [
     metadata+: {
         name: "smithsonian",
         region: clusterRegion,
-        version: "1.30",
+        version: "1.32",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
@@ -187,12 +193,9 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
-            ssh: {
-                publicKeyPath: 'ssh-keys/smithsonian.key.pub'
-            },
             instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
@@ -209,9 +212,6 @@ local daskNodes = [
             minSize: 0,
             maxSize: 500,
             instanceType: n.instanceType,
-            ssh: {
-                publicKeyPath: 'ssh-keys/smithsonian.key.pub'
-            },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
@@ -229,9 +229,6 @@ local daskNodes = [
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
-            ssh: {
-                publicKeyPath: 'ssh-keys/smithsonian.key.pub'
-            },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
             },

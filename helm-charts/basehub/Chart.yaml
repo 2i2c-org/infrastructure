@@ -15,7 +15,7 @@ dependencies:
     version: 4.0.0
     repository: https://jupyterhub.github.io/helm-chart/
   - name: binderhub-service
-    version: 0.1.0-0.dev.git.303.h6b5e651
+    version: 0.1.0-0.dev.git.316.h27f15f4
     repository: https://2i2c.org/binderhub-service/
     condition: binderhub-service.enabled
     # If bumping the version of dask-gateway, please also bump the default version set
@@ -29,3 +29,7 @@ dependencies:
     version: 0.1.0
     repository: oci://ghcr.io/2i2c-org/jupyterhub-home-nfs
     condition: jupyterhub-home-nfs.enabled
+  - name: jupyterhub-groups-exporter
+    version: 0.0.1-0.dev.git.100.hb754827
+    repository: https://2i2c.org/jupyterhub-groups-exporter
+    condition: jupyterhub-groups-exporter.enabled

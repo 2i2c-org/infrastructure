@@ -26,23 +26,14 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
+        authenticator_class: github
+      GitHubOAuthenticator:
         oauth_callback_url: https://sierra.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            default: true
-            username_derivation:
-              username_claim: "email"
-            allowed_domains:
-              - sierracollege.edu
-              - student.sierracollege.edu
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
+        allowed_organizations:
+          - SierraCollege-DataScience
+        scope:
+          - read:org
       Authenticator:
         admin_users:
-          - skolathuparambil@sierracollege.edu
-          - ericvd@berkeley.edu
-          - k_usovich@berkeley.edu
-          - sean.smorris@berkeley.edu
+          - sean-morris
+          - skolathu2025

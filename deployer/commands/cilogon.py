@@ -504,7 +504,7 @@ def delete(
             )
             return
 
-    delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id)
+    delete_client(admin_id, admin_secret, client_id)
 
     # Delete client credentials from config file also if file exists
     if Path(config_filename).is_file():

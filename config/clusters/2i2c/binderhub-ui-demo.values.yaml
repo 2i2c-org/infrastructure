@@ -79,6 +79,8 @@ jupyterhub:
               username_claim: "email"
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
   dockerApi:
     nodeSelector:
       # Schedule dockerApi pods to run on the smallest user nodes only

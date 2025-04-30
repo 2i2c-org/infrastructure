@@ -11,11 +11,11 @@ jupyterhub:
         capi.stackhpc.com/node-group: core
   ingress:
     hosts:
-      - hub.binder-pythia.jetstream2.2i2c.cloud
+      - hub.projectpythia.org
     tls:
       - secretName: https-auto-tls
         hosts:
-          - hub.binder-pythia.jetstream2.2i2c.cloud
+          - hub.projectpythia.org
   custom:
     binderhubUI:
       enabled: true
@@ -104,17 +104,19 @@ jupyterhub:
 
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
   nodeSelector:
     capi.stackhpc.com/node-group: core
     hub.jupyter.org/node-purpose: null
   ingress:
     enabled: true
     hosts:
-      - binder-pythia.jetstream2.2i2c.cloud
+      - binder.projectpythia.org
     tls:
       - secretName: binder-https-auto-tls
         hosts:
-          - binder-pythia.jetstream2.2i2c.cloud
+          - binder.projectpythia.org
   dockerApi:
     nodeSelector:
       hub.jupyter.org/node-purpose: null
@@ -127,8 +129,8 @@ binderhub-service:
         - "^binder-examples/.*"
     BinderHub:
       base_url: /
-      hub_url: https://hub.binder-pythia.jetstream2.2i2c.cloud
-      badge_base_url: https://binder-pythia.jetstream2.2i2c.cloud
+      hub_url: https://hub.projectpythia.org
+      badge_base_url: https://binder.projectpythia.org
       auth_enabled: false
       enable_api_only_mode: false
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/jetstream2-projectpythia-pythia-binder-
@@ -151,11 +153,11 @@ binderhub-service:
     - name: JUPYTERHUB_CLIENT_ID
       value: "service-binder"
     - name: JUPYTERHUB_API_URL
-      value: "https://hub.binder-pythia.jetstream2.2i2c.cloud/hub/api"
+      value: "https://hub.projectpythia.org/hub/api"
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
-      value: "https://hub.binder-pythia.jetstream2.2i2c.cloud/"
+      value: "https://hub.projectpythia.org/"
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: *url

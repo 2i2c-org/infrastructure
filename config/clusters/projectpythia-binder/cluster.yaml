@@ -9,7 +9,7 @@ support:
 hubs:
   - name: binderhub
     display_name: "Project Pythia BinderHub on Jetstream2"
-    domain: hub.binder-pythia.jetstream2.2i2c.cloud
+    domain: hub.projectpythia.org
     helm_chart: basehub
     helm_chart_values_files:
       - binderhub.values.yaml

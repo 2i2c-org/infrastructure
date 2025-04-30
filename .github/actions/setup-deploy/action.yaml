@@ -49,6 +49,7 @@ runs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.11"
+    - uses: actions/setup-go@v5
 
     # There will always be a cache hit on the cache key when this composite
     # action is run, as its only done after the "generate-jobs" job has been run
@@ -62,10 +63,10 @@ runs:
         # between workflow runs.
         key: "${{ github.run_id }}"
 
-    - name: Install the deployer
+    - name: Install the deployer + go dependency
       run: |
         pip install --editable .
-        pip list
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
       shell: bash
 
     # This action use the github official cache mechanism internally

@@ -64,6 +64,7 @@ basehub:
             - US-GHG-Center:ghg-external-collaborators
             - US-GHG-Center:ghg-workshop-access
             - US-GHG-Center:ghg-trial-access
+            - US-GHG-Center:ssim-ghg-2025
             - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org

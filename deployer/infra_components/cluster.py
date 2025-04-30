@@ -2,7 +2,8 @@ import json
 import os
 import subprocess
 import tempfile
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
+from pathlib import Path
 
 from deployer.infra_components.hub import Hub
 from deployer.utils.env_vars_management import unset_env_vars
@@ -12,6 +13,7 @@ from deployer.utils.file_acquisition import (
     get_decrypted_files,
 )
 from deployer.utils.helm import wait_for_deployments_daemonsets
+from deployer.utils.jsonnet import render_jsonnet
 from deployer.utils.rendering import print_colour
 
 
@@ -84,6 +86,7 @@ class Cluster:
                 [
                     "kubectl",
                     "apply",
+                    "--force-conflicts",  # Remove after https://github.com/2i2c-org/infrastructure/issues/5961
                     "--server-side",  # https://github.com/projectcalico/calico/issues/7826
                     "-f",
                     f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml",
@@ -100,12 +103,15 @@ class Cluster:
         values_file_paths = [
             support_dir.joinpath("enc-support.secret.values.yaml"),
             support_dir.joinpath("enc-cryptnono.secret.values.yaml"),
+            support_dir.joinpath("support.values.jsonnet"),
         ] + [
             self.config_path.joinpath(p)
             for p in self.support["helm_chart_values_files"]
         ]
 
-        with get_decrypted_files(values_file_paths) as values_files:
+        with get_decrypted_files(
+            values_file_paths
+        ) as values_files, ExitStack() as jsonnet_stack:
             cmd = [
                 "helm",
                 "upgrade",
@@ -117,7 +123,14 @@ class Cluster:
             ]
 
             for values_file in values_files:
-                cmd.append(f"--values={values_file}")
+                _, ext = os.path.splitext(values_file)
+                if ext == ".jsonnet":
+                    rendered_path = jsonnet_stack.enter_context(
+                        render_jsonnet(Path(values_file), [self.config_path])
+                    )
+                    cmd.append(f"--values={rendered_path}")
+                else:
+                    cmd.append(f"--values={values_file}")
 
             if debug:
                 cmd.append("--debug")

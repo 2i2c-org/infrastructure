@@ -276,6 +276,8 @@ jupyterhub:
 
 binderhub-service:
   enabled: true
+  networkPolicy:
+    enabled: true
   buildPodsRegistryCredentials:
     server: https://quay.io
     username: "imagebuilding-non-gcp-hubs+image_builder"

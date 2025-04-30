@@ -64,11 +64,5 @@ _This phase is only necessary for single hub clusters._
   - [ ] [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
   - [ ] [`deploy-grafana-dashboards.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-grafana-dashboards.yaml)
 - [ ] Remove A record from Namecheap account
+- [ ] Ensure home directory backups are deleted ([EFS](https://repost.aws/knowledge-center/efs-disable-automatic-backups))
 - [ ] Delete the cloud account (where permissions allow it)
-
-### Definition of Done
-
-_A non-specific, pre-defined list of tasks that should be considered before marking the task complete._
-
-- [ ] All the tasks above have been completed
-- [ ] Existing functionality was not broken
