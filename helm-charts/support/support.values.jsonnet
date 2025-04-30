@@ -26,7 +26,7 @@ local cluster_name = cluster.name;
       'alerting_rules.yml': {
         groups: [
           {
-            name: 'home directory full on %s' % [cluster_name],
+            name: 'Home directory disk full on %s' % [cluster_name],
             rules: [
               {
                 alert: 'HomeDirectoryApproachingFull',
