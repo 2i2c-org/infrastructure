@@ -3,12 +3,12 @@ Functions related to validating configuration files such as helm chart values an
 cluster.yaml files
 """
 
-from contextlib import ExitStack
 import functools
 import json
 import os
 import subprocess
 import sys
+from contextlib import ExitStack
 from pathlib import Path
 
 import jsonschema
@@ -137,7 +137,11 @@ def hub_config(
             for values_file in hub.spec["helm_chart_values_files"]:
                 # FIXME: The logic here for figuring out non secret files is not correct
                 if values_file.endswith(".jsonnet"):
-                    rendered_file = jsonnet_stack.enter_context(render_jsonnet(config_file_path.parent / values_file, [config_file_path]))
+                    rendered_file = jsonnet_stack.enter_context(
+                        render_jsonnet(
+                            config_file_path.parent / values_file, [config_file_path]
+                        )
+                    )
                     cmd.append(f"--values={rendered_file}")
                 elif "secret" not in os.path.basename(values_file):
                     values_file = config_file_path.parent.joinpath(values_file)
@@ -191,11 +195,17 @@ def support_config(
         with ExitStack() as jsonnet_stack:
             for values_file in cluster.support["helm_chart_values_files"]:
                 if values_file.endswith(".jsonnet"):
-                    rendered_file = jsonnet_stack.enter_context(render_jsonnet(config_file_path.parent / values_file, [cluster.config_path]))
+                    rendered_file = jsonnet_stack.enter_context(
+                        render_jsonnet(
+                            config_file_path.parent / values_file, [cluster.config_path]
+                        )
+                    )
                     cmd.append(f"--values={rendered_file}")
                 # FIXME: The logic here for figuring out non secret files is not correct
                 elif "secret" not in os.path.basename(values_file):
-                    cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
+                    cmd.append(
+                        f"--values={config_file_path.parent.joinpath(values_file)}"
+                    )
 
                 try:
                     subprocess.check_output(cmd, text=True)

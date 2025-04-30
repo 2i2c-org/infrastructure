@@ -1,9 +1,9 @@
 import json
 import os
-from pathlib import Path
 import subprocess
 import tempfile
 from contextlib import ExitStack, contextmanager
+from pathlib import Path
 
 from deployer.infra_components.hub import Hub
 from deployer.utils.env_vars_management import unset_env_vars
@@ -108,7 +108,9 @@ class Cluster:
             for p in self.support["helm_chart_values_files"]
         ]
 
-        with get_decrypted_files(values_file_paths) as values_files, ExitStack() as jsonnet_stack:
+        with get_decrypted_files(
+            values_file_paths
+        ) as values_files, ExitStack() as jsonnet_stack:
             cmd = [
                 "helm",
                 "upgrade",
@@ -122,9 +124,9 @@ class Cluster:
             for values_file in values_files:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
-                    rendered_path = jsonnet_stack.enter_context(render_jsonnet(
-                        Path(values_file), [self.config_path]
-                    ))
+                    rendered_path = jsonnet_stack.enter_context(
+                        render_jsonnet(Path(values_file), [self.config_path])
+                    )
                     cmd.append(f"--values={rendered_path}")
                 else:
                     cmd.append(f"--values={values_file}")
