@@ -92,6 +92,7 @@ jobs:
         run: |
           pip install --editable .
           pip list
+          go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
       - name: Get merged/open PR labels
         uses: actions/github-script@v7

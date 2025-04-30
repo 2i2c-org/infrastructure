@@ -216,6 +216,7 @@ jobs:
       - name: Install deployer module dependencies
         run: |
           pip install --editable .
+          go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
       - name: "Validate cluster: ${{ matrix.jobs.cluster_name }}"
         env:
