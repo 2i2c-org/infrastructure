@@ -7,7 +7,7 @@ default_budget_alert = {
 }
 
 enable_aws_ce_grafana_backend_iam = true
-disable_cluster_wide_filestore    = false
+disable_cluster_wide_filestore    = true
 
 # The initial EFS is now used by the prod hub only
 # So we tag it appropriately for costs purposes
@@ -35,20 +35,7 @@ ebs_volumes = {
 }
 enable_nfs_backup = true
 
-filestores = {
-  "staging" = {
-    name_suffix = "staging"
-    tags = {
-      "2i2c:hub-name" : "staging"
-    }
-  }
-  "workshop" = {
-    name_suffix = "workshop"
-    tags = {
-      "2i2c:hub-name" : "workshop"
-    }
-  }
-}
+filestores = {}
 
 user_buckets = {
   "scratch-staging" : {
