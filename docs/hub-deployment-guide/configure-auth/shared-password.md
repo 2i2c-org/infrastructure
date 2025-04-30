@@ -12,9 +12,10 @@ export HUB_NAME=hub_name
 
 ## Use a specific branch of the homepage repository
 
-The Dummy Authenticator requires presenting the user with a username and password input field, rather than the typical "log in" button.
-This means we cannot use the default homepage template since this will not provide these input fields.
-Instead we use a specialised branch of the homepage repo which allows us to have the username and password input fields, along with providing specific info about and for each community: [`username-and-password-homepage`](https://github.com/2i2c-org/default-hub-homepage/tree/username-and-password-homepage).
+Until [this PR](https://github.com/2i2c-org/default-hub-homepage/pull/51)
+is merged, we need to explicitly specify that as the
+branch to use so login pages show the username / password
+correctly.
 
 In the `${HUB_NAME}.values.yaml` file, include the following config.
 
@@ -22,7 +23,9 @@ In the `${HUB_NAME}.values.yaml` file, include the following config.
 jupyterhub:
   custom:
     homepage:
-      gitRepoBranch: "username-and-password-homepage"
+      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
+      # is merged
+      gitRepoBranch: unify-logins-2
       templateVars: [...]  # These values are as normal
 ```
 
