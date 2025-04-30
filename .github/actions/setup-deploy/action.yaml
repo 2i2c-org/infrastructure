@@ -62,10 +62,10 @@ runs:
         # between workflow runs.
         key: "${{ github.run_id }}"
 
-    - name: Install the deployer
+    - name: Install the deployer + go dependency
       run: |
         pip install --editable .
-        pip list
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
       shell: bash
 
     # This action use the github official cache mechanism internally
