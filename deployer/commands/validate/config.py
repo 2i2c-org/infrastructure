@@ -54,21 +54,24 @@ def _prepare_helm_charts_dependencies_and_schemas():
     Ensures that the helm charts we deploy, basehub and daskhub, have got their
     dependencies updated and .json schema files generated so that they can be
     """
+    # Run helm repo update once so we can skip refreshing local cache each time
+    # we run `helm dep up`
+    subprocess.check_call(["helm", "repo", "update"])
     basehub_dir = HELM_CHARTS_DIR.joinpath("basehub")
     _generate_values_schema_json(basehub_dir)
-    subprocess.check_call(["helm", "dep", "up", basehub_dir])
+    subprocess.check_call(["helm", "dep", "up", "--skip-refresh", basehub_dir])
 
     daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
     # Not generating schema for daskhub, as it is dead
-    subprocess.check_call(["helm", "dep", "up", daskhub_dir])
+    subprocess.check_call(["helm", "dep", "up", "--skip-refresh", daskhub_dir])
 
     support_dir = HELM_CHARTS_DIR.joinpath("support")
     _generate_values_schema_json(support_dir)
-    subprocess.check_call(["helm", "dep", "up", support_dir])
+    subprocess.check_call(["helm", "dep", "up", "--skip-refresh", support_dir])
 
     aws_ce_grafana_backend = HELM_CHARTS_DIR.joinpath("aws-ce-grafana-backend")
     _generate_values_schema_json(aws_ce_grafana_backend)
-    subprocess.check_call(["helm", "dep", "up", aws_ce_grafana_backend])
+    subprocess.check_call(["helm", "dep", "up", "--skip-refresh", aws_ce_grafana_backend])
 
 
 def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
