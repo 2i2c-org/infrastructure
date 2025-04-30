@@ -21,6 +21,9 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
     homepage:
+      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
+      # is merged
+      gitRepoBranch: unify-logins-2
       templateVars:
         org:
           name: Reflective Cloud
@@ -35,6 +38,17 @@ jupyterhub:
         funded_by:
           name: Reflective
           url: https://reflective.org/
+        learn_more: |
+
+          Are you a researcher looking to gain access to the Reflective Cloud?
+          Please fill in this
+          <a href="https://forms.reflective.org/cloud-hub-access">form</a>
+          and we will get back to you.
+
+          For more information about using this resource, see our
+          <a href="For more information about using this resource, see our Jupyter-book">
+            Jupyter-book
+          </a>
   hub:
     config:
       JupyterHub:
