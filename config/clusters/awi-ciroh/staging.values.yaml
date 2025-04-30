@@ -57,7 +57,8 @@ basehub:
                   default: true
                   slug: "new"
                   kubespawner_override:
-                    image: "quay.io/2i2c/awi-ciroh-image:43afa7f902b4"
+                    # :latest requested in https://2i2c.freshdesk.com/a/tickets/3238
+                    image: "quay.io/2i2c/awi-ciroh-image:latest"
               unlisted_choice:
                 enabled: True
                 display_name: "Custom image"
