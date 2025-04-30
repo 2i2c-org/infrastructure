@@ -8,7 +8,12 @@ jupyterhub:
   custom:
     2i2c: {}
     homepage:
-      gitRepoBranch: "username-and-password-homepage"
+      templateVars:
+        learn_more: |
+          For more information about using this resource, see our
+          <a href="For more information about using this resource, see our Jupyter-book">
+            Jupyter-book
+          </a>
     jupyterhubConfigurator:
       enabled: false
     singleuserAdmin:
