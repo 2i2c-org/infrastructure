@@ -94,6 +94,35 @@ class Cluster:
             )
             print_colour("Done!")
 
+            # Patch the tigera operator to remove the NoSchedule toleration
+            # otherwise it will schedule on tainted nodes
+            print_colour("Patching tigera operator...")
+            patch_tolerations = {
+                "spec": {
+                    "template": {
+                        "spec": {
+                            "tolerations": [
+                                {"effect": "NoExecute", "operator": "Exists"},
+                            ],
+                        }
+                    }
+                }
+            }
+            patch_tolerations_json = json.dumps(patch_tolerations)
+            subprocess.check_call(
+                [
+                    "kubectl",
+                    "--namespace",
+                    "tigera-operator",
+                    "patch",
+                    "deployment",
+                    "tigera-operator",
+                    "--patch",
+                    patch_tolerations_json,
+                ],
+            )
+            print_colour("Done!")
+
         print_colour("Provisioning support charts...")
 
         support_dir = HELM_CHARTS_DIR.joinpath("support")
