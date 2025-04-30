@@ -27,3 +27,20 @@ powerful tool for us. Be aware of the factors laid out here when introducing it 
 The [Jsonnet Tutorial](https://jsonnet.org/learning/tutorial.html) is a good
 place to learn the language. Just the basics should take you a long way. If
 you already know JSON and Python (particularly list comprehensions, dict comprehensions and string formatting with `%s`) you should find it familiar.
+
+The short [design](https://jsonnet.org/articles/design.html) page on the Jsonnet
+site is also helpful.
+
+## Import path when `deployer` renders `.jsonnet` files
+
+When the `deployer` renders `.jsonnet` files, it puts two directories in
+the import path of the command:
+
+1. The directory where the `.jsonnet` file being rendered lives
+2. The directory, under `config/clusters` where the cluster containing the support chart or the hub being rendered lives.
+
+This allows us to read other config files (in [YAML](https://jsonnet.org/ref/stdlib.html#std-parseYaml) or [JSON](https://jsonnet.org/ref/stdlib.html#std-parseJson) form) from either
+of those directories and avoid repetition.
+
+Each time the deployer renders `.jsonnet`, it will also print the exact command
+it is using for this rendering. That should also help you with debugging!

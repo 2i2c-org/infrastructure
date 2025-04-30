@@ -1,5 +1,7 @@
 import os
 import subprocess
+from contextlib import ExitStack
+from pathlib import Path
 
 from ruamel.yaml import YAML
 
@@ -11,6 +13,8 @@ from deployer.utils.file_acquisition import (
 )
 from deployer.utils.helm import wait_for_deployments_daemonsets
 from deployer.utils.rendering import print_colour
+
+from ..utils.jsonnet import render_jsonnet
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -53,7 +57,9 @@ class Hub:
 
         config_file_path = find_absolute_path_to_cluster_file(self.cluster.config_path)
         for values_file in self.spec["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(values_file):
+            if "secret" not in os.path.basename(
+                values_file
+            ) and not values_file.endswith(".jsonnet"):
                 values_file = config_file_path.parent.joinpath(values_file)
                 config = yaml.load(values_file)
                 # Check if there's config that enables dask-gateway
@@ -76,7 +82,8 @@ class Hub:
         with get_decrypted_files(
             self.cluster.config_path.joinpath(p)
             for p in self.spec["helm_chart_values_files"]
-        ) as values_files:
+        ) as values_files, ExitStack() as jsonnet_stack:
+
             cmd = [
                 "helm",
                 "upgrade",
@@ -95,7 +102,14 @@ class Hub:
 
             # Add on the values files
             for values_file in values_files:
-                cmd.append(f"--values={values_file}")
+                _, ext = os.path.splitext(values_file)
+                if ext == ".jsonnet":
+                    rendered_path = jsonnet_stack.enter_context(
+                        render_jsonnet(Path(values_file), [self.cluster.config_path])
+                    )
+                    cmd.append(f"--values={rendered_path}")
+                else:
+                    cmd.append(f"--values={values_file}")
 
             # join method will fail on the PosixPath element if not transformed
             # into a string first
