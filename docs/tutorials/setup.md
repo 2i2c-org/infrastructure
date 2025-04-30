@@ -94,7 +94,11 @@ added you will to run the installation again.
 Remember you need to *activate the environment* you installed these libraries into each
 time you use any of our scripts.
 
-## Step 3: Setup the git pre-commit hooks
+## Step 3: Install `go-jsonnet`
+
+We use [go-jsonnet](https://github.com/google/go-jsonnet) in a [number of places](topic/jsonnet). Install it on a Mac with `brew install go-jsonnet`.
+
+## Step 4: Setup the git pre-commit hooks
 
 Install pre-commit [pre-commit installation instruction](https://pre-commit.com/#introduction)
 
@@ -103,9 +107,9 @@ the local pre-commit hooks.
 
 ```
 pre-commit install --install-hooks
-``` 
+```
 
-## Step 4: Authenticate with Google Cloud to decrypt our secret files
+## Step 5: Authenticate with Google Cloud to decrypt our secret files
 
 Permission to decrypt the secret files in this repo is managed via
 Google Cloud's [Key Management Service](https://cloud.google.com/security-key-management),
@@ -121,7 +125,7 @@ your `2i2c.org` Google Account. If you don't have this, please ask a team member
 
 Tada, now you're logged in!
 
-## Step 5: Access kubernetes clusters with the `deployer` module
+## Step 6: Access kubernetes clusters with the `deployer` module
 
 ```{note}
 You should have already been given access to the `two-eye-two-see` Google Cloud

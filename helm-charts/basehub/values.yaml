@@ -1714,6 +1714,8 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   enabled: false
+  prometheusExporter:
+    enabled: true
 
 jupyterhub-groups-exporter:
   enabled: false

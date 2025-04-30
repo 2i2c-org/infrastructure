@@ -26,7 +26,9 @@ import deployer.commands.verify_backups  # noqa: F401
 import deployer.keys.decrypt_age  # noqa: F401
 
 from .cli_app import app
+from .utils.jsonnet import validate_jsonnet_version
 
 
 def main():
+    validate_jsonnet_version()
     app()
