@@ -212,13 +212,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - uses: actions/setup-go@v5
 
       - name: Install deployer module dependencies
         run: |
           pip install --editable .
           go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
-          go env
-          echo $PATH
 
       - name: "Validate cluster: ${{ matrix.jobs.cluster_name }}"
         env:
