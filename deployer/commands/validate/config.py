@@ -71,7 +71,9 @@ def _prepare_helm_charts_dependencies_and_schemas():
 
     aws_ce_grafana_backend = HELM_CHARTS_DIR.joinpath("aws-ce-grafana-backend")
     _generate_values_schema_json(aws_ce_grafana_backend)
-    subprocess.check_call(["helm", "dep", "up", "--skip-refresh", aws_ce_grafana_backend])
+    subprocess.check_call(
+        ["helm", "dep", "up", "--skip-refresh", aws_ce_grafana_backend]
+    )
 
 
 def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
