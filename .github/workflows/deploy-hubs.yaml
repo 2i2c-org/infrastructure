@@ -77,6 +77,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - uses: actions/setup-go@v5
 
       # There will almost never be a cache hit on the cache key when this job is
       # run, as it is the first of all jobs in this workflow. An exception is if
@@ -91,7 +92,6 @@ jobs:
       - name: Install deployer script's Python dependencies
         run: |
           pip install --editable .
-          pip list
           go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
       - name: Get merged/open PR labels
