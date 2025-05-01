@@ -21,10 +21,13 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
     homepage:
+      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
+      # is merged
+      gitRepoBranch: unify-logins-2
       templateVars:
         org:
           name: Reflective Cloud
-          logo_url: "https://private-user-images.githubusercontent.com/47328986/436169139-41658b93-1ba3-4afe-851c-a833a4d622a9.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDU0MDYxNDUsIm5iZiI6MTc0NTQwNTg0NSwicGF0aCI6Ii80NzMyODk4Ni80MzYxNjkxMzktNDE2NThiOTMtMWJhMy00YWZlLTg1MWMtYTgzM2E0ZDYyMmE5LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA0MjMlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNDIzVDEwNTcyNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTk2ZWM2NDc0ZDI0MjJiODY2YWU4NmRjNTNmYjQ4ODdjMDgyNzBjODM1MzQ4YTgxYWZiMjc2NzRiZWUxMTgzYWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.fRDz0eaYBYzfU1YuehLpmSGFfJLDpU5tOWbUYGcRB1k"
+          logo_url: https://raw.githubusercontent.com/ReflectiveCloud/Book/refs/heads/main/logo.png
           url: https://reflective.org/
         designed_by:
           name: 2i2c
@@ -35,6 +38,17 @@ jupyterhub:
         funded_by:
           name: Reflective
           url: https://reflective.org/
+        learn_more: |
+
+          Are you a researcher looking to gain access to the Reflective Cloud?
+          Please fill in this
+          <a href="https://forms.reflective.org/cloud-hub-access">form</a>
+          and we will get back to you.
+
+          For more information about using this resource, see our
+          <a href="For more information about using this resource, see our Jupyter-book">
+            Jupyter-book
+          </a>
   hub:
     config:
       JupyterHub:
