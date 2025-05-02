@@ -1,0 +1,21 @@
+nfs:
+  pv:
+    serverIP: 34.118.237.8
+
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/climatematch/zones/us-central1-b/disks/hub-nfs-homedirs-staging
+
+jupyterhub:
+  ingress:
+    hosts:
+      - staging.climatematch.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - staging.climatematch.2i2c.cloud
+  hub:
+    config:
+      JupyterHub:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.climatematch.2i2c.cloud/hub/oauth_callback
