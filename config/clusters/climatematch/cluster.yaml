@@ -4,20 +4,11 @@ gcp:
   key: enc-deployer-credentials.secret.json
   project: climatematch
   cluster: climatematch-cluster
-  # We default to a regional cluster
-  zone: us-central1
   billing:
-    # Set to true if billing for this cluster is paid for by the 2i2c card
     paid_by_us: true
     bigquery:
-      # contains information about bigquery billing export (https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
-      # for calculating how much this cluster costs us. Required if `paid_by_us` is
-      # set to true.
-      # the id of gcp project where bigquery dataset lives, which is usually the cluster's name
       project: climatematch
-      # the default name of the dataset from the docs
       dataset: cloud_costs
-      # the 2i2c billing account id
       billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
