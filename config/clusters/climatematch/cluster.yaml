@@ -1,0 +1,35 @@
+name: climatematch
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/climatematch-cluster/observability?project=climatematch
+gcp:
+  key: enc-deployer-credentials.secret.json
+  project: climatematch
+  cluster: climatematch-cluster
+  zone: us-central1
+  billing:
+    paid_by_us: true
+    bigquery:
+      project: climatematch
+      dataset: cloud_costs
+      billing_id: 0157F7-E3EA8C-25AC3C
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: staging
+    display_name: "ClimateMatch staging"
+    domain: staging.climatematch.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
+
+  - name: prod
+    display_name: "ClimateMatch"
+    domain: climatematch.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml

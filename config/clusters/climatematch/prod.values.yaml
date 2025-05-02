@@ -1,0 +1,46 @@
+nfs:
+  pv:
+    serverIP: 34.118.234.48
+
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/climatematch/zones/us-central1-b/disks/hub-nfs-homedirs-prod
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/prod"
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 20M
+      limits:
+        cpu: 0.04
+        memory: 30M
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 2G
+      limits:
+        cpu: 0.4
+        memory: 6G
+  prometheusExporter:
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 15M
+      limits:
+        cpu: 0.04
+        memory: 20M
+
+jupyterhub:
+  ingress:
+    hosts:
+      - climatematch.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - climatematch.2i2c.cloud
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://climatematch.2i2c.cloud/hub/oauth_callback

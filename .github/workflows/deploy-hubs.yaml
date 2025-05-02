@@ -215,6 +215,7 @@ jobs:
       failure_awi-ciroh: ${{ steps.declare-failure.outputs.failure_awi-ciroh }}
       failure_catalystproject-africa: ${{ steps.declare-failure.outputs.failure_catalystproject-africa }}
       failure_catalystproject-latam: ${{ steps.declare-failure.outputs.failure_catalystproject-latam }}
+      failure_climatematch: ${{ steps.declare-failure.outputs.failure_climatematch }}
       failure_cloudbank: ${{ steps.declare-failure.outputs.failure_cloudbank }}
       failure_disasters: ${{ steps.declare-failure.outputs.failure_disasters }}
       failure_dubois: ${{ steps.declare-failure.outputs.failure_dubois }}
@@ -455,6 +456,7 @@ jobs:
       failure_awi-ciroh_staging: ${{ steps.declare-failure.outputs.failure_awi-ciroh_staging }}
       failure_catalystproject-africa_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-africa_staging }}
       failure_catalystproject-latam_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-latam_staging }}
+      failure_climatematch_staging: ${{ steps.declare-failure.outputs.failure_climatematch_staging }}
       failure_cloudbank_staging: ${{ steps.declare-failure.outputs.failure_cloudbank_staging }}
       failure_dubois_staging: ${{ steps.declare-failure.outputs.failure_dubois_staging }}
       failure_disasters_staging: ${{ steps.declare-failure.outputs.failure_disasters_staging }}
