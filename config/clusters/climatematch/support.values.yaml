@@ -1,8 +1,14 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+prometheusStorageClass:
+  gke:
+    enabled: true
+
 prometheus:
   server:
+    persistentVolume:
+      storageClass: balanced-rwo-retain
     ingress:
       enabled: true
       hosts:
