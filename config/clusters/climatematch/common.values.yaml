@@ -1,0 +1,106 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    mountOptions:
+      - soft
+      - noatime
+    baseShareName: /
+
+jupyterhub-home-nfs:
+  enabled: true
+  gke:
+    enabled: true
+  prometheusExporter:
+    enabled: true
+
+jupyterhub:
+  singleuser:
+    memory:
+      limit: 16G
+      guarantee: 10G
+    defaultUrl: /lab
+    # shared-public for collaboration
+    # See https://github.com/2i2c-org/infrastructure/issues/2785
+    storage:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        - name: home
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+        - name: dev-shm
+          mountPath: /dev/shm
+    initContainers:
+      - name: volume-mount-ownership-fix
+        image: busybox:1.36.1
+        command:
+          - sh
+          - -c
+          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{username}"
+          # Mounted without readonly attribute here,
+          # so we can chown it appropriately
+          - name: home
+            mountPath: /home/jovyan/shared
+            subPath: _shared
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
+  custom:
+    # Extra mount point for admins to access to all users' home dirs
+    # Ref https://2i2c.freshdesk.com/a/tickets/849
+    singleuserAdmin:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: true
+        # mounts below are copied from basehub's values that we override by
+        # specifying extraVolumeMounts (lists get overridden when helm values
+        # are combined)
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
+        - name: home
+          mountPath: /home/rstudio/shared-readwrite
+          subPath: _shared
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: ClimateMatch Academy
+          # Logo copied from https://academy.climatematch.io/
+          logo_url: https://github.com/2i2c-org/infrastructure/assets/3837114/ac3ec52f-1e62-440a-b2bd-8052e5f38897
+          url: https://academy.climatematch.io/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: ClimateMatch Academy
+          url: https://academy.climatematch.io/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+          - ClimateMatchAcademy:2024students
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - iamzoltan
+          - abodner
