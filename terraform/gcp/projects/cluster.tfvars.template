@@ -94,11 +94,11 @@ filestores = {}
 
 persistent_disks = {
   "staging" = {
-    size        = 5 # in GB
+    size        = 1 # in GB
     name_suffix = "staging"
   },
   "prod" = {
-    size        = 100 # in GB
+    size        = 50 # in GB
     name_suffix = "staging"
   },
 }
