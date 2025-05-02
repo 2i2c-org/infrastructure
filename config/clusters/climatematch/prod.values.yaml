@@ -1,3 +1,7 @@
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/climatematch/zones/us-central1-b/disks/hub-nfs-homedirs-prod
+
 jupyterhub:
   ingress:
     hosts:
