@@ -89,3 +89,16 @@ dask_nodes = {
   },
 }
 {% endif %}
+
+filestores = {}
+
+persistent_disks = {
+  "staging" = {
+    size        = 5 # in GB
+    name_suffix = "staging"
+  },
+  "prod" = {
+    size        = 100 # in GB
+    name_suffix = "staging"
+  },
+}
