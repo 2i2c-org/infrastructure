@@ -5,7 +5,6 @@ nfs:
     mountOptions:
       - soft
       - noatime
-    serverIP: 34.118.237.8
     baseShareName: /
 
 jupyterhub-home-nfs:
