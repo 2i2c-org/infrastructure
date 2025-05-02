@@ -4,6 +4,7 @@ gcp:
   key: enc-deployer-credentials.secret.json
   project: climatematch
   cluster: climatematch-cluster
+  zone: us-central1
   billing:
     paid_by_us: true
     bigquery:
