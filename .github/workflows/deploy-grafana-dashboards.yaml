@@ -26,6 +26,7 @@ jobs:
           - cluster_name: awi-ciroh
           - cluster_name: catalystproject-africa
           - cluster_name: catalystproject-latam
+          - cluster_name: climatematch
           - cluster_name: cloudbank
           - cluster_name: dubois
           - cluster_name: disasters
