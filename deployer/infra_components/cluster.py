@@ -126,7 +126,7 @@ class Cluster:
         print_colour("Provisioning support charts...")
 
         support_dir = HELM_CHARTS_DIR.joinpath("support")
-        subprocess.check_call(["helm", "dep", "up", support_dir])
+        subprocess.check_call(["helm", "dep", "up", "--skip-refresh", support_dir])
 
         # contains both encrypted and unencrypted values files
         values_file_paths = [
