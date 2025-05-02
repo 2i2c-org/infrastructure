@@ -42,6 +42,5 @@ jupyterhub:
           - climatematch.2i2c.cloud
   hub:
     config:
-      JupyterHub:
       GitHubOAuthenticator:
         oauth_callback_url: https://climatematch.2i2c.cloud/hub/oauth_callback

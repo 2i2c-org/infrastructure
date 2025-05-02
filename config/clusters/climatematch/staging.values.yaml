@@ -19,6 +19,5 @@ jupyterhub:
           - staging.climatematch.2i2c.cloud
   hub:
     config:
-      JupyterHub:
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.climatematch.2i2c.cloud/hub/oauth_callback
