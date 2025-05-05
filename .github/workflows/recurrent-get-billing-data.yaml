@@ -82,5 +82,5 @@ jobs:
           fields: Status,Estimate,Start date,End date
           github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           project_url: https://github.com/orgs/2i2c-org/projects/57
-          values: Up Next,2,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
+          values: Up Next,1,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
           resource_url: ${{ env.shared_issue }}
