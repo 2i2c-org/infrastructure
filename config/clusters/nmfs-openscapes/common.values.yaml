@@ -48,14 +48,14 @@ jupyterhub:
         funded_by:
           name: NOAA Fisheries
           url: https://www.fisheries.noaa.gov
-      singleuserAdmin:
-        extraVolumeMounts:
-          - name: home
-            mountPath: /home/jovyan/allusers
-            readOnly: false
-          - name: home
-            mountPath: /home/rstudio/allusers
-            readOnly: false
+    singleuserAdmin:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
+        - name: home
+          mountPath: /home/rstudio/allusers
+          readOnly: false
   singleuser:
     cloudMetadata:
       blockWithIptables: false
