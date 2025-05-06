@@ -97,7 +97,7 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
-          - ClimateMatchAcademy:2024students
+          - ClimateMatchAcademy:2025students
         scope:
           - read:org
       Authenticator:
