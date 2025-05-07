@@ -49,6 +49,10 @@ user_buckets = {
     "delete_after" : null,
     "uniform_bucket_level_access_only" : true
   }
+  "scratch-workshop" : {
+    "delete_after" : 7,
+    "uniform_bucket_level_access_only" : true
+  },
 }
 
 # Setup notebook node pools
