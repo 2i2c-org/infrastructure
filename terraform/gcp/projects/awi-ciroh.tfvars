@@ -19,6 +19,10 @@ persistent_disks = {
     size        = 2500 # in GB
     name_suffix = "prod"
   }
+  "workshop" = {
+    size        = 1000 # in GB
+    name_suffix = "workshop"
+  }
 }
 
 # Cloud costs for this project are not passed through by 2i2c
