@@ -63,7 +63,7 @@ jupyterhub:
       jupyterHub:
         authenticator_class: dummy
   singleuser:
-    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FScienceCore%2Fclimaterisk&urlpath=lab%2Ftree%2Fclimaterisk%2F00_Introduction_Setup%2F00_Getting_NASA_EarthData_Credentials.ipynb&branch=notebooks
+    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FScienceCore%2Fclimaterisk&urlpath=lab%2Ftree%2Fclimaterisk%2Fbook%2F00_Introduction_Setup%2F00_Getting_NASA_EarthData_Credentials.ipynb&branch=notebooks
     image:
       name: quay.io/2i2c/sciencecore-climaterisk-image
       tag: "09c3a11f1698"
