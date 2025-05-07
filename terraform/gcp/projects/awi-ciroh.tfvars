@@ -108,6 +108,10 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch", "persistent"],
     hub_namespace : "prod"
   }
+  "workshop" : {
+    bucket_admin_access : ["scratch-workshop"],
+    hub_namespace : "workshop"
+  }
 }
 
 container_repos = []
