@@ -20,7 +20,13 @@ jupyterhub:
         command:
           - sh
           - -c
-          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
+          - >
+            id &&
+            chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public /home/jovyan/shared-group &&
+            if [ -d "/home/jovyan/shared-group" ] && [ "$(ls -A /home/jovyan/shared-group)" ]; then
+              chown 1000:1000 /home/jovyan/shared-group/* || true;
+            fi &&
+            ls -lhd /home/jovyan
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -35,6 +41,9 @@ jupyterhub:
           - name: home
             mountPath: /home/jovyan/shared-public
             subPath: _shared-public
+          - name: home
+            mountPath: /home/jovyan/shared-group
+            subPath: _shared-group
 
     profileList:
       - display_name: Choose your environment and resources
