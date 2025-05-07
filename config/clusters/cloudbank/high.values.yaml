@@ -4,6 +4,10 @@ jupyterhub:
     tls:
       - hosts: [high.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
+  singleuser:
+    memory:
+      guarantee: 384M
+      limit: 2G
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
