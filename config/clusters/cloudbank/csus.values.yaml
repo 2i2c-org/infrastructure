@@ -11,7 +11,7 @@ jupyterhub:
       guarantee: 384M
       limit: 1.5G
     image:
-      name: public.ecr.aws/s7x4g6w9/cal-icor/base-user-image
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
       tag: 88d0254c55f0
   custom:
     2i2c:
