@@ -56,6 +56,7 @@ basehub:
           allowed_organizations:
             - CryoInTheCloud:cryoclouduser
             - CryoInTheCloud:cryocloudadvanced
+            - CryoInTheCloud:csdms-2025-workshop
           scope:
             - read:org
         Authenticator:
@@ -133,6 +134,7 @@ basehub:
                   allowed_groups: &regular_allowed_groups
                     - CryoInTheCloud:CryoCloudAdvanced
                     - CryoInTheCloud:CryoCloudUser
+                    - CryoInTheCloud:csdms-2025-workshop
                     - 2i2c-org:hub-access-for-2i2c-staff
                   kubespawner_override:
                     mem_guarantee: 1991244775
