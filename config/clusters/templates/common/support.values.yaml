@@ -1,6 +1,12 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+{% if provider == "gcp" %}
+prometheusStorageClass:
+  gke:
+    enabled: true
+{% endif %}
+
 prometheus:
   server:
     ingress:

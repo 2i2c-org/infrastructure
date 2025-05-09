@@ -89,7 +89,7 @@ basehub:
                   display_name: Python
                   description: Python datascience environment
                   kubespawner_override:
-                    image: openscapes/python:07980b9
+                    image: openscapes/python:f7d3d14
                 02-R:
                   display_name: R
                   description: R (with RStudio) + Python environment
