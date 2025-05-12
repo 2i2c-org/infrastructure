@@ -4,6 +4,12 @@ jupyterhub:
     tls:
       - hosts: [hub.binder.ghg.2i2c.cloud]
         secretName: https-auto-tls
+  cull:
+    every: 300
+    # No pods over 12h long
+    maxAge: 43200
+    # Also cull all users more than 12h old
+    users: true
   custom:
     binderhubUI:
       enabled: true
