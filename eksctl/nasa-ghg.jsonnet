@@ -37,6 +37,12 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" },
     },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-binder",
+        labels+: { "2i2c/hub-name": "binder" },
+        tags+: { "2i2c:hub-name": "binder" }
+    },
     { 
         instanceType: "r5.4xlarge",
         namePrefix: "nb-staging",
