@@ -22,6 +22,9 @@ jupyterhub:
       enabled: false
     singleuserAdmin:
       extraVolumeMounts: []
+    homepage:
+      templateVars:
+        enabled: false
   singleuser:
     nodeSelector:
       2i2c/hub-name: binder
