@@ -31,3 +31,10 @@ hubs:
       - enc-common.secret.values.yaml
       - prod.values.yaml
       - enc-prod.secret.values.yaml
+  - name: binder
+    display_name: "NASA GHG Center BinderHub"
+    domain: binder.ghg.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - binder.values.yaml
+      - enc-binder.secret.values.yaml
