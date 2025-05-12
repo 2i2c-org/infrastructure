@@ -1071,6 +1071,7 @@ jupyterhub:
         display: false
         url: http://binderhub:8090
         oauth_no_confirm: true
+      jupyterhub-groups-exporter: {}
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.12172.hf6a94ef2"
