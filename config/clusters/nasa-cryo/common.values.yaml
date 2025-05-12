@@ -124,7 +124,7 @@ basehub:
           kubespawner_override:
             # Image repo: https://github.com/CryoInTheCloud/hub-image
             # Requested in https://2i2c.freshdesk.com/a/tickets/3139
-            image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
+            image: quay.io/cryointhecloud/cryo-hub-image:958a0ffa8cca
           profile_options: &profile_options
             resource_allocation: &profile_options_resource_allocation
               display_name: Resource Allocation
