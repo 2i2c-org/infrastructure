@@ -21,10 +21,12 @@ jupyterhub:
       extraVolumeMounts: []
   singleuser:
     nodeSelector:
-      # Schedule users on the smallest instance
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
       2i2c/hub-name: binder
+    memory:
+      guarantee: 1G
+      limit: 2G
+    cpu:
+      limit: 1
     storage:
       type: none
       extraVolumeMounts: []
@@ -83,9 +85,6 @@ binderhub-service:
     enabled: true
   dockerApi:
     nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
       2i2c/hub-name: binder
   ingress:
     enabled: true
@@ -108,8 +107,10 @@ binderhub-service:
       badge_base_url: https://binder.ghg.2i2c.cloud
       auth_enabled: false
       enable_api_only_mode: false
-      banner_message:
-      about_message:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/ghg-binder-
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
@@ -124,3 +125,6 @@ binderhub-service:
     # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
       value: "https://hub.binder.ghg.2i2c.cloud/"
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
