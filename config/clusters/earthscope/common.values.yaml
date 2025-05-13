@@ -210,6 +210,7 @@ basehub:
           description: "A dedicated machine for you."
           profile_options: *profile_options
           allowed_groups:
+            - geolab
             - geolab:dev
             - geolab:power
           kubespawner_override:
