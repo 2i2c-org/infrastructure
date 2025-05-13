@@ -143,7 +143,7 @@ basehub:
       cloudMetadata:
         blockWithIptables: false
       profileList:
-        - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
+        - display_name: "Shared Small: 1-4 CPU, 8-16 GB"
           description: "A shared machine, the recommended option until you experience a limitation."
           allowed_groups:
             - geolab
@@ -188,7 +188,7 @@ basehub:
                     # https://github.com/2i2c-org/infrastructure/issues/2559
                     working_dir: /home/rstudio
           kubespawner_override:
-            mem_guarantee: 7.234G
+            mem_guarantee: 14.468G
             cpu_guarantee: 0.1
             mem_limit: null
             node_selector:
