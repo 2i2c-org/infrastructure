@@ -49,6 +49,10 @@ basehub:
             # Admin users will by default have access:services, so this is only
             # observed to be required for non-admin users.
             - access:services!service=binder
+  jupyterhub-home-nfs:
+    enabled: false
+    eks:
+      enabled: false
 binderhub-service:
   enabled: true
   networkPolicy:
