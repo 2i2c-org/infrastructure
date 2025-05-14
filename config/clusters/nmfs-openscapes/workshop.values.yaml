@@ -46,7 +46,7 @@ jupyterhub:
         command:
           - sh
           - -c
-          - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared-public && ls -lhd /home/jovyan
         securityContext:
           runAsUser: 0
         volumeMounts:
