@@ -1,4 +1,8 @@
 basehub:
+  nfs:
+    enabled: false
+    pv:
+      enabled: false
   jupyterhub:
     ingress:
       hosts: [hub.binder.earthscope.2i2c.cloud]
@@ -14,8 +18,7 @@ basehub:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: custom
       homepage:
-        templateVars:
-          redirect_to: https://www.earthscope.org/data/geolab/
+        gitRepoBranch: "no-homepage-subsections"
       jupyterhubConfigurator:
         enabled: false
       singleuserAdmin:
