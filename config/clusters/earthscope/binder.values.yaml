@@ -6,13 +6,16 @@ basehub:
         - hosts: [hub.binder.earthscope.2i2c.cloud]
           secretName: https-auto-tls
     custom:
+      daskhubSetup:
+        enabled: false
       binderhubUI:
         enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: custom
-      # homepage:
-      # gitRepoBranch: "no-homepage-subsections"
+      homepage:
+        templateVars:
+          redirect_to: https://www.earthscope.org/data/geolab/
       jupyterhubConfigurator:
         enabled: false
       singleuserAdmin:
