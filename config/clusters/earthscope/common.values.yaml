@@ -139,6 +139,7 @@ basehub:
             - google-oauth2|112630227497477971771 #Robert Weekly
             - google-oauth2|118403506154942842583 #Alex Hamilton
             - google-oauth2|108516754518362587599 # Yuvi
+            - google-oauth2|117859169473992122769 # Georgiana
     singleuser:
       cloudMetadata:
         blockWithIptables: false
