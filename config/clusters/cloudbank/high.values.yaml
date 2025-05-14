@@ -32,5 +32,5 @@ jupyterhub:
       JupyterHub:
         authenticator_class: dummy
       Authenticator:
-        admin_users: []     
-        enable_auth_state: false          
+        admin_users: []
+        enable_auth_state: false
