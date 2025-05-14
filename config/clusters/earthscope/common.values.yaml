@@ -193,7 +193,7 @@ basehub:
             mem_limit: 7.234G
             node_selector:
               node.kubernetes.io/instance-type: r5.xlarge
-        - display_name: "Shared Small: 1-4 CPU, 7-14 GB"
+        - display_name: "Shared Small: 1-4 CPU, 14 GB"
           description: "A shared machine, the recommended option until you experience a limitation."
           allowed_groups:
             - geolab
@@ -238,7 +238,7 @@ basehub:
                     # https://github.com/2i2c-org/infrastructure/issues/2559
                     working_dir: /home/rstudio
           kubespawner_override:
-            mem_guarantee: 7.234G
+            mem_guarantee: 14.468G
             cpu_guarantee: 0.1
             mem_limit: 14.468G
             node_selector:
