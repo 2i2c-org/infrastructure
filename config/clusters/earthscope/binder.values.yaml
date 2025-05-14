@@ -1,0 +1,97 @@
+basehub:
+  jupyterhub:
+    ingress:
+      hosts: [hub.binder.earthscope.2i2c.cloud]
+      tls:
+        - hosts: [hub.binder.earthscope.2i2c.cloud]
+          secretName: https-auto-tls
+    custom:
+      binderhubUI:
+        enabled: true
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: custom
+      # homepage:
+      # gitRepoBranch: "no-homepage-subsections"
+      jupyterhubConfigurator:
+        enabled: false
+      singleuserAdmin:
+        extraVolumeMounts: []
+    singleuser:
+      nodeSelector:
+        2i2c/hub-name: binder
+      storage:
+        type: none
+        extraVolumeMounts: []
+      initContainers: []
+      profileList: []
+    hub:
+      config:
+        BinderSpawnerMixin:
+          auth_enabled: true
+      redirectToServer: false
+      services:
+        binder:
+          oauth_redirect_uri: https://binder.earthscope.2i2c.cloud/oauth_callback
+      loadRoles:
+        binder:
+          services:
+            - binder
+          scopes:
+            - servers
+            - read:users # admin:users is required if authentication isn't enabled
+        user:
+          scopes:
+            - self
+            # Admin users will by default have access:services, so this is only
+            # observed to be required for non-admin users.
+            - access:services!service=binder
+binderhub-service:
+  enabled: true
+  networkPolicy:
+    enabled: true
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: binder
+  ingress:
+    enabled: true
+    hosts: [binder.earthscope.2i2c.cloud]
+    tls:
+      - hosts: [binder.earthscope.2i2c.cloud]
+        secretName: binder-https-auto-tls
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: true
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: binder
+        node.kubernetes.io/instance-type: r5.xlarge
+    BinderHub:
+      base_url: /
+      hub_url: https://hub.binder.earthscope.2i2c.cloud
+      badge_base_url: https://binder.earthscope.2i2c.cloud
+      auth_enabled: true
+      enable_api_only_mode: false
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+  extraEnv:
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: hub
+          key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
+    - name: JUPYTERHUB_API_URL
+      value: "https://hub.binder.earthscope.2i2c.cloud/hub/api"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://hub.binder.earthscope.2i2c.cloud/"
+    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+      value: "https://binder.earthscope.2i2c.cloud/oauth_callback"
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
