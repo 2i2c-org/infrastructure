@@ -92,17 +92,19 @@ class Hub:
                 "--create-namespace",
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
-                chart_dir
+                chart_dir,
             ]
 
             # Add on rendered jsonnet values.yaml file for the chart
             rendered_values_path = jsonnet_stack.enter_context(
-                render_jsonnet(chart_dir / "values.jsonnet", self.cluster.spec["name"], self.spec["name"])
+                render_jsonnet(
+                    chart_dir / "values.jsonnet",
+                    self.cluster.spec["name"],
+                    self.spec["name"],
+                )
             )
 
-            cmd += [
-                "--values", rendered_values_path
-            ]
+            cmd += ["--values", rendered_values_path]
 
             if dry_run:
                 cmd.append("--dry-run")
