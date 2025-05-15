@@ -33,7 +33,6 @@ jobs:
           - cluster_name: earthscope
           - cluster_name: hhmi
           - cluster_name: jupyter-health
-          - cluster_name: jupyter-meets-the-earth
           - cluster_name: leap
           - cluster_name: maap
           - cluster_name: nasa-cryo
