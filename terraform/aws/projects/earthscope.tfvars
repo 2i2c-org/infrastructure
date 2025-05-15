@@ -42,6 +42,10 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "prod" },
   },
+  "scratch-binder" : {
+    "delete_after" : 1,
+    "tags" : { "2i2c:hub-name" : "binder" },
+  },
 }
 
 hub_cloud_permissions = {
@@ -50,5 +54,8 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch"],
+  },
+  "binder" : {
+    bucket_admin_access : ["scratch-binder"],
   },
 }
