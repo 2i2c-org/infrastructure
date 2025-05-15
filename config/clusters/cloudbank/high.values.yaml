@@ -5,6 +5,7 @@ jupyterhub:
       - hosts: [high.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
   singleuser:
+    defaultUrl: /lab
     memory:
       guarantee: 384M
       limit: 2G
