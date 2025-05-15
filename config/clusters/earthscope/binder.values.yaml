@@ -76,6 +76,8 @@ basehub:
       config:
         BinderSpawnerMixin:
           auth_enabled: false
+        JupyterHub:
+          authenticator_class: "null"
       redirectToServer: false
       loadRoles:
         binder:
