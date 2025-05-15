@@ -166,12 +166,7 @@ basehub:
                   display_name: GeoLab
                   slug: geolab-general
                   kubespawner_override:
-                    image: public.ecr.aws/earthscope-dev/geolab:td-dev-dd5851e6
-                mt-shortcourse:
-                  display_name: MT-ShortCourse
-                  slug: mt-shortcourse
-                  kubespawner_override:
-                    image: public.ecr.aws/earthscope-dev/geolab_default:mt_shortcourse-1a6a2fbd
+                    image: public.ecr.aws/earthscope-dev/geolab_default:extensions-c1c714c1
                 jupyter-scipy:
                   display_name: Jupyter
                   slug: jupyter-scipy
