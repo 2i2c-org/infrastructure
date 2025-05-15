@@ -53,7 +53,7 @@ persistent_disks = {
     name_suffix = "ucmerced-staging"
   },
   "ucmerced" = {
-    size        = 120 # in GB
+    size        = 150 # in GB
     name_suffix = "ucmerced"
   }
 }
