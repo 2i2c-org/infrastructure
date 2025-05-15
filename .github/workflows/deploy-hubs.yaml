@@ -222,7 +222,6 @@ jobs:
       failure_earthscope: ${{ steps.declare-failure.outputs.failure_earthscope }}
       failure_hhmi: ${{ steps.declare-failure.outputs.failure_hhmi }}
       failure_jupyter-health: ${{ steps.declare-failure.outputs.failure_jupyter-health }}
-      failure_jupyter-meets-the-earth: ${{ steps.declare-failure.outputs.failure_jupyter-meets-the-earth }}
       failure_leap: ${{ steps.declare-failure.outputs.failure_leap }}
       failure_maap: ${{ steps.declare-failure.outputs.failure_maap }}
       failure_nasa-cryo: ${{ steps.declare-failure.outputs.failure_nasa-cryo }}
@@ -463,7 +462,6 @@ jobs:
       failure_earthscope_staging: ${{ steps.declare-failure.outputs.failure_earthscope_staging }}
       failure_hhmi_staging: ${{ steps.declare-failure.outputs.failure_hhmi_staging }}
       failure_jupyter-health_staging: ${{ steps.declare-failure.outputs.failure_jupyter-health_staging }}
-      failure_jupyter-meets-the-earth_staging: ${{ steps.declare-failure.outputs.failure_jupyter-meets-the-earth_staging }}
       failure_leap_staging: ${{ steps.declare-failure.outputs.failure_leap_staging }}
       failure_maap_staging: ${{ steps.declare-failure.outputs.failure_maap_staging }}
       failure_nasa-cryo_staging: ${{ steps.declare-failure.outputs.failure_nasa-cryo_staging }}
