@@ -96,7 +96,7 @@ time you use any of our scripts.
 
 ## Step 3: Install `go-jsonnet`
 
-We use [go-jsonnet](https://github.com/google/go-jsonnet) in a [number of places](topic/jsonnet). Install it on a Mac with `brew install go-jsonnet`.
+We use [go-jsonnet](https://github.com/google/go-jsonnet) in a [number of places](../topic/jsonnet.md). Install it on a Mac with `brew install go-jsonnet`.
 
 ## Step 4: Setup the git pre-commit hooks
 
