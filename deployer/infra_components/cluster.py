@@ -155,7 +155,7 @@ class Cluster:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(Path(values_file), [self.config_path])
+                        render_jsonnet(Path(values_file), self.spec["name"], None)
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:

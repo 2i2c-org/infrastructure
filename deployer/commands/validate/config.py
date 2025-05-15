@@ -139,7 +139,9 @@ def hub_config(
                 if values_file.endswith(".jsonnet"):
                     rendered_file = jsonnet_stack.enter_context(
                         render_jsonnet(
-                            config_file_path.parent / values_file, [config_file_path]
+                            config_file_path.parent / values_file,
+                            cluster_name,
+                            hub_name,
                         )
                     )
                     cmd.append(f"--values={rendered_file}")
@@ -197,7 +199,7 @@ def support_config(
                 if values_file.endswith(".jsonnet"):
                     rendered_file = jsonnet_stack.enter_context(
                         render_jsonnet(
-                            config_file_path.parent / values_file, [cluster.config_path]
+                            config_file_path.parent / values_file, cluster_name, None
                         )
                     )
                     cmd.append(f"--values={rendered_file}")

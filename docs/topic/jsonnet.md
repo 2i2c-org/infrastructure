@@ -33,14 +33,26 @@ site is also helpful.
 
 ## Import path when `deployer` renders `.jsonnet` files
 
-When the `deployer` renders `.jsonnet` files, it puts two directories in
-the import path of the command:
-
-1. The directory where the `.jsonnet` file being rendered lives
-2. The directory, under `config/clusters` where the cluster containing the support chart or the hub being rendered lives.
+When the `deployer` renders `.jsonnet` files, it puts the directory where the imported file
+is in the import path of the command.
 
 This allows us to read other config files (in [YAML](https://jsonnet.org/ref/stdlib.html#std-parseYaml) or [JSON](https://jsonnet.org/ref/stdlib.html#std-parseJson) form) from either
 of those directories and avoid repetition.
 
-Each time the deployer renders `.jsonnet`, it will also print the exact command
-it is using for this rendering. That should also help you with debugging!
+## Injected external variables
+
+Two external variables (accessible via `std.extVar` in jsonnet files) are injected:
+
+1. `2I2C_VARS.CLUSTER_NAME` - Name of the cluster we are deploying.
+2. `2I2C_VARS.HUB_NAME` - Name of the hub we are deploying. Unset for support deploys.
+
+We want to keep this set of variables *super minimal*, to prevent right to replicate related
+issues. A community that wants to replicate our code should be able to convert the jsonnet
+files into YAML as a one time operation by supplying these, and be able to move away without
+issue. This is superior to the prior implementation, which allowed jsonnet files to read our
+`cluster.yaml` files for this information.
+
+## Debugging
+
+Each time the deployer renders `.jsonnet`, it will print the exact command
+it is using for this rendering. That should help you with debugging!
