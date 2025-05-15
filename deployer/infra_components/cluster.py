@@ -132,7 +132,7 @@ class Cluster:
         values_file_paths = [
             support_dir.joinpath("enc-support.secret.values.yaml"),
             support_dir.joinpath("enc-cryptnono.secret.values.yaml"),
-            support_dir.joinpath("support.values.jsonnet"),
+            support_dir.joinpath("values.jsonnet"),
         ] + [
             self.config_path.joinpath(p)
             for p in self.support["helm_chart_values_files"]
