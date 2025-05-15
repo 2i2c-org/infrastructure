@@ -27,8 +27,6 @@ local makePVCApproachingFullAlert = function(
           ||| % [persistentvolumeclaim, persistentvolumeclaim],
           'for': '5m',
           labels: {
-            severity: 'critical',
-            channel: 'pagerduty',
             cluster: cluster_name,
           },
           annotations: {
@@ -51,9 +49,13 @@ local makePVCApproachingFullAlert = function(
           routes: [
             {
               receiver: 'pagerduty',
-              match: {
-                channel: 'pagerduty',
-              },
+              matchers: [
+                # We want to match all alerts, but not add additional labels as they
+                # clutter the view. So we look for the presence of the 'cluster' label, as that
+                # is present on all alerts we have. This makes the 'cluster' label *required* for
+                # all alerts if they need to come to pagerduty.
+                "cluster =~ .*"
+              ]
             },
           ],
         },
