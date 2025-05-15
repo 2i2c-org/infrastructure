@@ -47,9 +47,10 @@ def render_jsonnet(jsonnet_file: Path, cluster_name: str, hub_name: str | None):
     ]
     if hub_name is not None:
         command += ["--ext-str", f'2I2C_VARS.HUB_NAME="{hub_name}"']
-    # Resolve the path to the jsonnet file itself, so std.thisFile
-    # is a full path
-    command += [jsonnet_file.resolve()]
+    # Make the jsonnet file passed be an absolute path, but do not *resolve*
+    # it - so symlinks are resolved by jsonnet rather than us. This is important
+    # for daskhub compatibility.
+    command += [jsonnet_file.absolute()]
 
     print(f"Rendering jsonnet file {jsonnet_file} with the command: ", end="")
     # We print it without the temporary filename so deployers can reuse the command

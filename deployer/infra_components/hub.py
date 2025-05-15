@@ -84,6 +84,7 @@ class Hub:
             for p in self.spec["helm_chart_values_files"]
         ) as values_files, ExitStack() as jsonnet_stack:
 
+            chart_dir = HELM_CHARTS_DIR / self.spec["helm_chart"]
             cmd = [
                 "helm",
                 "upgrade",
@@ -91,8 +92,19 @@ class Hub:
                 "--create-namespace",
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
-                HELM_CHARTS_DIR.joinpath(self.spec["helm_chart"]),
+                chart_dir,
             ]
+
+            # Add on rendered jsonnet values.yaml file for the chart
+            rendered_values_path = jsonnet_stack.enter_context(
+                render_jsonnet(
+                    chart_dir / "values.jsonnet",
+                    self.cluster.spec["name"],
+                    self.spec["name"],
+                )
+            )
+
+            cmd += ["--values", rendered_values_path]
 
             if dry_run:
                 cmd.append("--dry-run")
