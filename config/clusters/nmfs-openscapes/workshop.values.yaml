@@ -46,15 +46,23 @@ jupyterhub:
         command:
           - sh
           - -c
-          - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared-public && ls -lhd /home/jovyan
         securityContext:
           runAsUser: 0
         volumeMounts:
           - name: home
             mountPath: /home/jovyan
             subPath: "{escaped_username}"
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
     storage:
-      extraVolumeMounts: []
+      extraVolumeMounts:
+        # A shared folder readable & writeable by everyone
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
     defaultUrl: /lab
     nodeSelector:
       2i2c/hub-name: workshop

@@ -105,7 +105,11 @@ class Hub:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(Path(values_file), [self.cluster.config_path])
+                        render_jsonnet(
+                            Path(values_file),
+                            self.cluster.spec["name"],
+                            self.spec["name"],
+                        )
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:
