@@ -1,5 +1,4 @@
-local cluster = std.parseYaml(importstr 'cluster.yaml');
-local cluster_name = cluster.name;
+local cluster_name = std.extVar("2I2C_VARS.CLUSTER_NAME");
 
 {
   prometheus: {
