@@ -185,6 +185,9 @@ def run_hub_health_check(
         ):
             values_file = config_file_path.parent.joinpath(values_file_name)
             config = yaml.load(values_file)
+            basehub = config.get("basehub", {})
+            if basehub:
+                config = config.get("basehub", {})
             binderhub_ui = (
                 config.get("jupyterhub", {})
                 .get("custom", {})
