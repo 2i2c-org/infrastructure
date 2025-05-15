@@ -9,69 +9,81 @@ basehub:
       tls:
         - hosts: [hub.binder.earthscope.2i2c.cloud]
           secretName: https-auto-tls
+      cull:
+        every: 300
+        # No pods over 12h long
+        maxAge: 43200
+        # Also cull all users more than 12h old
+        users: true
     custom:
       daskhubSetup:
         enabled: false
       binderhubUI:
         enabled: true
       2i2c:
-        add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: custom
-      homepage:
-        gitRepoBranch: "no-homepage-subsections"
-        templateVars:
-          org:
-            name: EarthScope
-            url: https://www.earthscope.org
-            logo_url: https://github.com/2i2c-org/infrastructure/assets/7579677/589da909-86c2-4440-a42b-e3f1b59f49d5
-          designed_by:
-            name: 2i2c
-            url: https://2i2c.org
-          operated_by:
-            name: 2i2c
-            url: https://2i2c.org
-          funded_by:
-            name: "EarthScope Consortium"
-            url: https://www.earthscope.org
+        add_staff_user_ids_to_admin_users: false
       jupyterhubConfigurator:
         enabled: false
       singleuserAdmin:
         extraVolumeMounts: []
+      homepage:
+        templateVars:
+          enabled: false
     singleuser:
       nodeSelector:
         2i2c/hub-name: binder
+      memory:
+        guarantee: 1G
+        limit: 2G
+      cpu:
+        limit: 1
       storage:
         type: none
         extraVolumeMounts: []
       initContainers: []
       profileList: []
+      cmd:
+        - python3
+        - "-c"
+        - |
+          import os
+          import sys
+
+          try:
+              import jupyterlab
+              import jupyterlab.labapp
+              major = int(jupyterlab.__version__.split(".", 1)[0])
+          except Exception as e:
+              print("Failed to import jupyterlab: {e}", file=sys.stderr)
+              have_lab = False
+          else:
+              have_lab = major >= 3
+
+          if have_lab:
+              # technically, we could accept another jupyter-server-based frontend
+              print("Launching jupyter-lab", file=sys.stderr)
+              exe = "jupyter-lab"
+          else:
+              print("jupyter-lab not found, launching jupyter-notebook", file=sys.stderr)
+              exe = "jupyter-notebook"
+
+          # launch the notebook server
+          os.execvp(exe, sys.argv)
     hub:
       config:
-        GenericOAuthenticator:
-          token_url: https://login-dev.earthscope.org/oauth/token
-          authorize_url: https://login-dev.earthscope.org/authorize
-          userdata_url: https://login-dev.earthscope.org/userinfo
-          logout_redirect_url: https://login-dev.earthscope.org/v2/logout?client_id=Kn6kSKtw9TqgrSrEmDS0rlBM7Sc69BkL
-          extra_authorize_params:
-            audience: https://api.dev.earthscope.org
         BinderSpawnerMixin:
-          auth_enabled: true
+          auth_enabled: false
       redirectToServer: false
-      services:
-        binder:
-          oauth_redirect_uri: https://binder.earthscope.2i2c.cloud/oauth_callback
       loadRoles:
         binder:
           services:
             - binder
           scopes:
             - servers
-            - read:users # admin:users is required if authentication isn't enabled
+            - admin:users
         user:
           scopes:
             - self
-            # Admin users will by default have access:services, so this is only
-            # observed to be required for non-admin users.
             - access:services!service=binder
   jupyterhub-home-nfs:
     enabled: false
@@ -101,7 +113,7 @@ basehub:
         base_url: /
         hub_url: https://hub.binder.earthscope.2i2c.cloud
         badge_base_url: https://binder.earthscope.2i2c.cloud
-        auth_enabled: true
+        auth_enabled: false
         enable_api_only_mode: false
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
       DockerRegistry:
@@ -121,8 +133,6 @@ basehub:
       # appended to binderhub's URL instead of the hub's
       - name: JUPYTERHUB_BASE_URL
         value: "https://hub.binder.earthscope.2i2c.cloud/"
-      - name: JUPYTERHUB_OAUTH_CALLBACK_URL
-        value: "https://binder.earthscope.2i2c.cloud/oauth_callback"
     buildPodsRegistryCredentials:
       server: *url
       username: *username
