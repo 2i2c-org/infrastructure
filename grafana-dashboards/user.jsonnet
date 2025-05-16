@@ -139,7 +139,7 @@ local cpuRequests =
     + prometheus.withLegendFormat('{{ annotation_hub_jupyter_org_username }} - ({{ namespace }})'),
   ]);
 
-dashboard.new('User Diagnostics Dashboard (test)')
+dashboard.new('User Diagnostics Dashboard')
 + dashboard.withTags(['jupyterhub'])
 + dashboard.withUid('user-diagnostics-dashboard')
 + dashboard.withEditable(true)
