@@ -76,14 +76,7 @@ local ts = grafonnet.panel.timeSeries;
       + var.query.withDatasourceFromVariable(self.prometheus)
       + var.query.selectionOptions.withMulti()
       + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')
-      + var.query.queryTypes.withLabelValues('annotation_hub_jupyter_org_username', 'kube_pod_annotations{ namespace=~"$hub"}')
-    ,
-    user_pod:
-      var.query.new('user_pod')
-      + var.query.withDatasourceFromVariable(self.prometheus)
-      + var.query.selectionOptions.withMulti()
-      + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')
-      + var.query.queryTypes.withLabelValues('pod', 'kube_pod_labels{label_app="jupyterhub", label_component="singleuser-server", namespace=~"$hub"}')
+      + var.query.queryTypes.withLabelValues('annotation_hub_jupyter_org_username', 'kube_pod_annotations{ namespace=~"$hub_name"}')
     ,
   },
 
