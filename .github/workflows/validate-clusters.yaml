@@ -172,8 +172,10 @@ jobs:
 
           # Construct a matrix of clusters that have changes
           matrix = []
+          excluded_template_assets = ["templates", "common", "aws", "gcp"]
           for cluster in clusters:
-              matrix.append({"cluster_name": cluster})
+              if cluster not in excluded_template_assets:
+                  matrix.append({"cluster_name": cluster})
 
           # Write the matrix to the GITHUB_ENV file in GitHub Actions
           env_file = os.getenv("GITHUB_ENV")
