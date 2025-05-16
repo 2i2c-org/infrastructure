@@ -332,14 +332,6 @@ variable "filestores" {
   EOT
 }
 
-variable "filestore_alert_available_percent" {
-  type        = number
-  default     = 10
-  description = <<-EOT
-  % of free space in filestore available under which to fire an alert to pagerduty.
-  EOT
-}
-
 variable "enable_filestore_backups" {
   type        = bool
   default     = false
