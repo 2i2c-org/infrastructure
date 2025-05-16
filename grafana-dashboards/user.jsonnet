@@ -20,10 +20,10 @@ local memoryUsage =
       '$PROMETHEUS_DS',
       |||
         sum(
-          container_memory_working_set_bytes{name!="", pod=~"jupyter-.*", namespace=~"$hub"}
+          container_memory_working_set_bytes{name!="", pod=~"jupyter-.*", namespace=~"$hub_name"}
             * on (namespace, pod) group_left(annotation_hub_jupyter_org_username)
             group(
-                kube_pod_annotations{namespace=~"$hub", annotation_hub_jupyter_org_username=~"$user_name", pod=~"jupyter-.*"}
+                kube_pod_annotations{namespace=~"$hub_name", annotation_hub_jupyter_org_username=~"$user_name", pod=~"jupyter-.*"}
             ) by (pod, namespace, annotation_hub_jupyter_org_username)
         ) by (annotation_hub_jupyter_org_username, namespace)
       |||
@@ -52,7 +52,7 @@ local cpuUsage =
           irate(container_cpu_usage_seconds_total{name!="", pod=~"jupyter-.*"}[5m])
           * on (namespace, pod) group_left(annotation_hub_jupyter_org_username)
           group(
-              kube_pod_annotations{namespace=~"$hub", annotation_hub_jupyter_org_username=~"$user_name"}
+              kube_pod_annotations{namespace=~"$hub_name", annotation_hub_jupyter_org_username=~"$user_name"}
           ) by (pod, namespace, annotation_hub_jupyter_org_username)
         ) by (annotation_hub_jupyter_org_username, namespace)
       |||
@@ -84,7 +84,7 @@ local homedirSharedUsage =
       '$PROMETHEUS_DS',
       |||
         max(
-          dirsize_total_size_bytes{namespace=~"$hub"}
+          dirsize_total_size_bytes{namespace=~"$hub_name"}
         ) by (directory, namespace)
       |||
     )
@@ -105,9 +105,9 @@ local memoryRequests =
       '$PROMETHEUS_DS',
       |||
         sum(
-          kube_pod_container_resource_requests{resource="memory", namespace=~"$hub", pod=~"jupyter-.*"}  * on (namespace, pod)
+          kube_pod_container_resource_requests{resource="memory", namespace=~"$hub_name", pod=~"jupyter-.*"}  * on (namespace, pod)
           group_left(annotation_hub_jupyter_org_username) group(
-            kube_pod_annotations{namespace=~"$hub", annotation_hub_jupyter_org_username=~"$user_name"}
+            kube_pod_annotations{namespace=~"$hub_name", annotation_hub_jupyter_org_username=~"$user_name"}
             ) by (pod, namespace, annotation_hub_jupyter_org_username)
         ) by (annotation_hub_jupyter_org_username, namespace)
       |||
@@ -129,9 +129,9 @@ local cpuRequests =
       '$PROMETHEUS_DS',
       |||
         sum(
-          kube_pod_container_resource_requests{resource="cpu", namespace=~"$hub", pod=~"jupyter-.*"} * on (namespace, pod)
+          kube_pod_container_resource_requests{resource="cpu", namespace=~"$hub_name", pod=~"jupyter-.*"} * on (namespace, pod)
           group_left(annotation_hub_jupyter_org_username) group(
-            kube_pod_annotations{namespace=~"$hub", annotation_hub_jupyter_org_username=~"$user_name"}
+            kube_pod_annotations{namespace=~"$hub_name", annotation_hub_jupyter_org_username=~"$user_name"}
             ) by (pod, namespace, annotation_hub_jupyter_org_username)
         ) by (annotation_hub_jupyter_org_username, namespace)
       |||
@@ -145,7 +145,7 @@ dashboard.new('User Diagnostics Dashboard')
 + dashboard.withEditable(true)
 + dashboard.withVariables([
   common.variables.prometheus,
-  common.variables.hub,
+  common.variables.hub_name,
   common.variables.user_name,
 ])
 + dashboard.withPanels(

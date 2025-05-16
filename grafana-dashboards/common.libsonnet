@@ -15,7 +15,32 @@ local ts = grafonnet.panel.timeSeries;
     ,
     // Limit namespaces to those that run a hub service    
     hub:
-      var.query.new('hub')
+      var.query.new(
+        "hub",
+        {
+          query: "",
+          queryType: "infinity",
+          infinityQuery: {
+            format: "table",
+            parser: "backend",
+            refId: "variable",
+            source: "url",
+            type: "json",
+            url: "http://aws-ce-grafana-backend.support.svc.cluster.local/hub-names?from=${__from:date}&to=${__to:date}",
+            url_options: {
+              data: "",
+              method: "GET"
+            },
+          },
+        },
+      )
+      + var.query.withDatasourceFromVariable(self.infinity_datasource)
+      + var.query.selectionOptions.withIncludeAll(value=true)
+      + var.query.generalOptions.showOnDashboard.withNothing()
+      + var.query.refresh.onTime()
+    ,
+    hub_name:
+      var.query.new('hub_name')
       + var.query.withDatasourceFromVariable(self.prometheus)
       + var.query.selectionOptions.withMulti()
       + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')      

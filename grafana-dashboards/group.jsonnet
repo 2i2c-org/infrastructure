@@ -23,14 +23,14 @@ local memoryUsage =
       '$PROMETHEUS_DS',
       |||
         sum(
-          container_memory_working_set_bytes{name!="", pod=~"jupyter-.*", namespace=~"$hub"}
+          container_memory_working_set_bytes{name!="", pod=~"jupyter-.*", namespace=~"$hub_name"}
             * on (namespace, pod) group_left(annotation_hub_jupyter_org_username, usergroup)
             group(
-                kube_pod_annotations{namespace=~"$hub", annotation_hub_jupyter_org_username=~".*", pod=~"jupyter-.*"}
+                kube_pod_annotations{namespace=~"$hub_name", annotation_hub_jupyter_org_username=~".*", pod=~"jupyter-.*"}
             ) by (pod, namespace, annotation_hub_jupyter_org_username)
             * on (namespace, annotation_hub_jupyter_org_username) group_left(usergroup)
             group(
-              label_replace(jupyterhub_user_group_info{namespace=~"$hub", username=~".*", usergroup=~"$user_group"},
+              label_replace(jupyterhub_user_group_info{namespace=~"$hub_name", username=~".*", usergroup=~"$user_group"},
                 "annotation_hub_jupyter_org_username", "$1", "username", "(.+)")
             ) by (annotation_hub_jupyter_org_username, usergroup, namespace)
         ) by (usergroup, namespace)
@@ -63,11 +63,11 @@ local cpuUsage =
           irate(container_cpu_usage_seconds_total{name!="", pod=~"jupyter-.*"}[5m])
           * on (namespace, pod) group_left(annotation_hub_jupyter_org_username)
           group(
-              kube_pod_annotations{namespace=~"$hub", annotation_hub_jupyter_org_username=~".*"}
+              kube_pod_annotations{namespace=~"$hub_name", annotation_hub_jupyter_org_username=~".*"}
           ) by (pod, namespace, annotation_hub_jupyter_org_username)
           * on (namespace, annotation_hub_jupyter_org_username) group_left(usergroup)
           group(
-            label_replace(jupyterhub_user_group_info{namespace=~"$hub", username=~".*", usergroup=~"$user_group"},
+            label_replace(jupyterhub_user_group_info{namespace=~"$hub_name", username=~".*", usergroup=~"$user_group"},
               "annotation_hub_jupyter_org_username", "$1", "username", "(.+)")
           ) by (annotation_hub_jupyter_org_username, usergroup, namespace)
         ) by (usergroup, namespace)
@@ -93,13 +93,13 @@ local memoryRequests =
       '$PROMETHEUS_DS',
       |||
         sum(
-          kube_pod_container_resource_requests{resource="memory", namespace=~"$hub", pod=~"jupyter-.*"}  * on (namespace, pod)
+          kube_pod_container_resource_requests{resource="memory", namespace=~"$hub_name", pod=~"jupyter-.*"}  * on (namespace, pod)
           group_left(annotation_hub_jupyter_org_username) group(
-            kube_pod_annotations{namespace=~"$hub", annotation_hub_jupyter_org_username=~".*"}
+            kube_pod_annotations{namespace=~"$hub_name", annotation_hub_jupyter_org_username=~".*"}
             ) by (pod, namespace, annotation_hub_jupyter_org_username)
           * on (namespace, annotation_hub_jupyter_org_username) group_left(usergroup)
           group(
-            label_replace(jupyterhub_user_group_info{namespace=~"$hub", username=~".*", usergroup=~"$user_group"},
+            label_replace(jupyterhub_user_group_info{namespace=~"$hub_name", username=~".*", usergroup=~"$user_group"},
               "annotation_hub_jupyter_org_username", "$1", "username", "(.+)")
           ) by (annotation_hub_jupyter_org_username, usergroup, namespace)
         ) by (usergroup, namespace)
@@ -125,13 +125,13 @@ local cpuRequests =
       '$PROMETHEUS_DS',
       |||
         sum(
-          kube_pod_container_resource_requests{resource="cpu", namespace=~"$hub", pod=~"jupyter-.*"} * on (namespace, pod)
+          kube_pod_container_resource_requests{resource="cpu", namespace=~"$hub_name", pod=~"jupyter-.*"} * on (namespace, pod)
           group_left(annotation_hub_jupyter_org_username) group(
-            kube_pod_annotations{namespace=~"$hub", annotation_hub_jupyter_org_username=~".*"}
+            kube_pod_annotations{namespace=~"$hub_name", annotation_hub_jupyter_org_username=~".*"}
             ) by (pod, namespace, annotation_hub_jupyter_org_username)
           * on (namespace, annotation_hub_jupyter_org_username) group_left(usergroup)
           group(
-            label_replace(jupyterhub_user_group_info{namespace=~"$hub", username=~".*", usergroup=~"$user_group"},
+            label_replace(jupyterhub_user_group_info{namespace=~"$hub_name", username=~".*", usergroup=~"$user_group"},
               "annotation_hub_jupyter_org_username", "$1", "username", "(.+)")
           ) by (annotation_hub_jupyter_org_username, usergroup, namespace)
         ) by (usergroup, namespace)
@@ -146,7 +146,7 @@ dashboard.new('User Group Diagnostics Dashboard')
 + dashboard.withEditable(true)
 + dashboard.withVariables([
   common.variables.prometheus,
-  common.variables.hub,
+  common.variables.hub_name,
   common.variables.user_group,
 ])
 + dashboard.withPanels(
