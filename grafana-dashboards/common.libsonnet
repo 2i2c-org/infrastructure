@@ -9,30 +9,56 @@ local ts = grafonnet.panel.timeSeries;
       var.datasource.new("infinity_datasource", "yesoreyeram-infinity-datasource")
       + var.datasource.generalOptions.showOnDashboard.withNothing()
     ,
+    prometheus:
+      var.datasource.new('PROMETHEUS_DS', 'prometheus')
+      + var.datasource.generalOptions.showOnDashboard.withValueOnly()
+    ,
+    // Limit namespaces to those that run a hub service    
     hub:
-      var.query.new(
-        "hub",
-        {
-          query: "",
-          queryType: "infinity",
-          infinityQuery: {
-            format: "table",
-            parser: "backend",
-            refId: "variable",
-            source: "url",
-            type: "json",
-            url: "http://aws-ce-grafana-backend.support.svc.cluster.local/hub-names?from=${__from:date}&to=${__to:date}",
-            url_options: {
-              data: "",
-              method: "GET"
-            },
-          },
-        },
-      )
-      + var.query.withDatasourceFromVariable(self.infinity_datasource)
-      + var.query.selectionOptions.withIncludeAll(value=true)
-      + var.query.generalOptions.showOnDashboard.withNothing()
-      + var.query.refresh.onTime()
+      var.query.new('hub')
+      + var.query.withDatasourceFromVariable(self.prometheus)
+      + var.query.selectionOptions.withMulti()
+      + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')      
+      + var.query.queryTypes.withLabelValues('namespace', 'kube_service_labels{service="hub"}')
+    ,
+    // Queries should use the 'instance' label when querying metrics that
+    // come from collectors present on each node - such as node_exporter or
+    // container_ metrics, and use the 'node' label when querying metrics
+    // that come from collectors that are present once per cluster, like
+    // kube_state_metrics.
+    instance:
+      var.query.new('instance')
+      + var.query.withDatasourceFromVariable(self.prometheus)
+      + var.query.selectionOptions.withMulti()
+      + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')
+      + var.query.queryTypes.withLabelValues('node', 'kube_node_info'),
+    namespace:
+      var.query.new('namespace')
+      + var.query.withDatasourceFromVariable(self.prometheus)
+      + var.query.selectionOptions.withMulti()
+      + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')
+      + var.query.queryTypes.withLabelValues('namespace', 'kube_pod_labels')
+    ,
+    user_group:
+      var.query.new('user_group')
+      + var.query.withDatasourceFromVariable(self.prometheus)
+      + var.query.selectionOptions.withMulti()
+      + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')
+      + var.query.queryTypes.withLabelValues('usergroup', 'jupyterhub_user_group_info')
+    ,    
+    user_name:
+      var.query.new('user_name')
+      + var.query.withDatasourceFromVariable(self.prometheus)
+      + var.query.selectionOptions.withMulti()
+      + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')
+      + var.query.queryTypes.withLabelValues('annotation_hub_jupyter_org_username', 'kube_pod_annotations{ namespace=~"$hub"}')
+    ,
+    user_pod:
+      var.query.new('user_pod')
+      + var.query.withDatasourceFromVariable(self.prometheus)
+      + var.query.selectionOptions.withMulti()
+      + var.query.selectionOptions.withIncludeAll(value=true, customAllValue='.*')
+      + var.query.queryTypes.withLabelValues('pod', 'kube_pod_labels{label_app="jupyterhub", label_component="singleuser-server", namespace=~"$hub"}')
     ,
   },
 
