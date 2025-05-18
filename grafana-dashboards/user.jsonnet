@@ -85,10 +85,16 @@ local homedirSharedUsage =
       |||
         max(
           dirsize_total_size_bytes{namespace=~"$hub_name"}
-        ) by (directory, namespace)
+          * on (namespace, directory) group_left(username)
+          group(
+            label_replace(
+              jupyterhub_user_group_info{namespace=~"$hub_name", username_escaped=~".*"},
+                "directory", "$1", "username_escaped", "(.+)")
+          ) by (directory, namespace, username)
+        ) by (namespace, username)
       |||
     )
-    + prometheus.withLegendFormat('{{ directory }} - ({{ namespace }})'),
+    + prometheus.withLegendFormat('{{ username }} - ({{ namespace }})'),
   ]);
 
 local memoryRequests =
