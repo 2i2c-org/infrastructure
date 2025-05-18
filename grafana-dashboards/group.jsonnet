@@ -76,6 +76,38 @@ local cpuUsage =
     + prometheus.withLegendFormat('{{ usergroup }} - ({{ namespace }})'),
   ]);
 
+local homedirSharedUsage =
+  common.tsOptions
+  + ts.new('Home Directory Usage (on shared home directories)')
+  + ts.panelOptions.withDescription(
+    |||
+      Per group home directory size, when using a shared home directory.
+
+      Requires https://github.com/yuvipanda/prometheus-dirsize-exporter and https://github.com/2i2c-org/jupyterhub-groups-exporter to
+      be set up.
+    |||
+  )
+  + ts.standardOptions.withUnit('bytes')
+  + ts.queryOptions.withTargets([
+    prometheus.new(
+      '$PROMETHEUS_DS',
+      |||
+        sum(
+          max(
+            dirsize_total_size_bytes{namespace=~"$hub_name"}
+          ) by (namespace, directory)
+          * on (namespace, directory) group_left(usergroup)
+          group(
+            label_replace(
+              jupyterhub_user_group_info{namespace=~"$hub_name", username_escaped=~".*", usergroup=~"$user_group"},
+              "directory", "$1", "username_escaped", "(.+)")
+          ) by (directory, namespace, usergroup)
+        ) by (namespace, usergroup)
+      |||
+    )
+    + prometheus.withLegendFormat('{{ usergroup }} - ({{ namespace }})'),
+  ]);
+
 local memoryRequests =
   common.tsOptions
   + ts.new('Memory Requests')
@@ -154,6 +186,7 @@ dashboard.new('User Group Diagnostics Dashboard')
     [
       memoryUsage,
       cpuUsage,
+      homedirSharedUsage,
       memoryRequests,
       cpuRequests,
     ],
