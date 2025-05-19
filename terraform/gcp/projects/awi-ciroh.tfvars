@@ -12,7 +12,7 @@ filestores               = {}
 enable_nfs_backup = true
 persistent_disks = {
   "staging" = {
-    size        = 100 # in GB
+    size        = 120 # in GB
     name_suffix = "staging"
   }
   "prod" = {
