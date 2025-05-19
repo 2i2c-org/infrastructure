@@ -59,6 +59,7 @@ basehub:
             - read:org
         Authenticator:
           enable_auth_state: true
+          manage_groups: true
       services:
         jupyterhub-groups-exporter: {}
       loadRoles:
@@ -81,7 +82,7 @@ basehub:
                     continue
                   else:
                     groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
-                resp["auth_state"]["groups"] = groups
+                resp["groups"] = groups
                 return resp
           c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
     singleuser:
