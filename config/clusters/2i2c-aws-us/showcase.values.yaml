@@ -50,6 +50,7 @@ basehub:
           oauth_callback_url: "https://showcase.2i2c.cloud/hub/oauth_callback"
           populate_teams_in_auth_state: true
           allowed_organizations:
+            - 2i2c-org:hub-access-for-2i2c-staff
             - 2i2c-community-showcase:access-2i2c-showcase
             - 2i2c-community-showcase:magiclinks-demo
             - 2i2c-demo-hub-access:showcase-topst
