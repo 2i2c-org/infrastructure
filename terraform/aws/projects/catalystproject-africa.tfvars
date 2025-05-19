@@ -34,64 +34,64 @@ hub_cloud_permissions = {
 
 ebs_volumes = {
   "uvri" = {
-      size        = 1
-      type        = "gp3"
-      name_suffix = "uvri"
-      tags        = { "2i2c:hub-name": "uvri" }
+    size        = 1
+    type        = "gp3"
+    name_suffix = "uvri"
+    tags        = { "2i2c:hub-name" : "uvri" }
   },
   "bhki" = {
-      size        = 512
-      type        = "gp3"
-      name_suffix = "bhki"
-      tags        = { "2i2c:hub-name": "bhki" }
+    size        = 512
+    type        = "gp3"
+    name_suffix = "bhki"
+    tags        = { "2i2c:hub-name" : "bhki" }
   },
   "must" = {
-      size        = 64
-      type        = "gp3"
-      name_suffix = "must"
-      tags        = { "2i2c:hub-name": "must" }
+    size        = 64
+    type        = "gp3"
+    name_suffix = "must"
+    tags        = { "2i2c:hub-name" : "must" }
   },
   "nm-aist" = {
-      size        = 1
-      type        = "gp3"
-      name_suffix = "nm-aist"
-      tags        = { "2i2c:hub-name": "nm-aist" }
+    size        = 1
+    type        = "gp3"
+    name_suffix = "nm-aist"
+    tags        = { "2i2c:hub-name" : "nm-aist" }
   },
   "molerhealth" = {
-      size        = 256
-      type        = "gp3"
-      name_suffix = "molerhealth"
-      tags        = { "2i2c:hub-name": "molerhealth" }
+    size        = 256
+    type        = "gp3"
+    name_suffix = "molerhealth"
+    tags        = { "2i2c:hub-name" : "molerhealth" }
   },
   "staging" = {
-      size        = 1
-      type        = "gp3"
-      name_suffix = "staging"
-      tags        = { "2i2c:hub-name": "staging" }
+    size        = 1
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
   },
   "aibst" = {
-      size        = 64
-      type        = "gp3"
-      name_suffix = "aibst"
-      tags        = { "2i2c:hub-name": "aibst" }
+    size        = 64
+    type        = "gp3"
+    name_suffix = "aibst"
+    tags        = { "2i2c:hub-name" : "aibst" }
   },
   "kush" = {
-      size        = 1
-      type        = "gp3"
-      name_suffix = "kush"
-      tags        = { "2i2c:hub-name": "kush" }
+    size        = 1
+    type        = "gp3"
+    name_suffix = "kush"
+    tags        = { "2i2c:hub-name" : "kush" }
   },
   "wits" = {
-      size        = 1
-      type        = "gp3"
-      name_suffix = "wits"
-      tags        = { "2i2c:hub-name": "wits" }
+    size        = 1
+    type        = "gp3"
+    name_suffix = "wits"
+    tags        = { "2i2c:hub-name" : "wits" }
   },
   "bon" = {
-      size        = 1
-      type        = "gp3"
-      name_suffix = "bon"
-      tags        = { "2i2c:hub-name": "bon" }
+    size        = 1
+    type        = "gp3"
+    name_suffix = "bon"
+    tags        = { "2i2c:hub-name" : "bon" }
   }
 }
 
