@@ -50,6 +50,7 @@ basehub:
           oauth_callback_url: "https://showcase.2i2c.cloud/hub/oauth_callback"
           populate_teams_in_auth_state: true
           allowed_organizations:
+            - 2i2c-org:hub-access-for-2i2c-staff
             - 2i2c-community-showcase:access-2i2c-showcase
             - 2i2c-community-showcase:magiclinks-demo
             - 2i2c-demo-hub-access:showcase-topst
@@ -58,6 +59,32 @@ basehub:
             - read:org
         Authenticator:
           enable_auth_state: true
+          manage_groups: true
+      services:
+        jupyterhub-groups-exporter: {}
+      loadRoles:
+        jupyterhub-groups-exporter:
+          services:
+            - jupyterhub-groups-exporter
+          scopes:
+            - users
+            - groups
+      extraConfig:
+        custom-github-oauthenticator: |
+          class CustomGitHubOAuthenticator(GitHubOAuthenticator):
+            async def authenticate(self, *args, **kwargs):
+                resp = await super().authenticate(*args, **kwargs)
+                if resp["auth_state"]["teams"] is None:
+                  return resp
+                groups = []
+                for team in resp["auth_state"]["teams"]:
+                  if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
+                    continue
+                  else:
+                    groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
+                resp["groups"] = groups
+                return resp
+          c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
     singleuser:
       nodeSelector:
         2i2c/hub-name: showcase
@@ -270,3 +297,9 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: showcase
+
+  jupyterhub-groups-exporter:
+    enabled: true
+    config:
+      groupsExporter:
+        update_exporter_interval: 3600
