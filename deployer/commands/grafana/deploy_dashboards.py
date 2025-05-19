@@ -27,6 +27,8 @@ def deploy_dashboards(
     The official JupyterHub dashboards are maintained in
     https://github.com/jupyterhub/grafana-dashboards along with a python script
     to deploy them to Grafana via a REST API.
+
+    NOTE: 2i2c-hosted dashboards live at https://github.com/2i2c-org/grafana-dashboards while features are waiting to be upstreamed to the official repository.
     """
     grafana_url = get_grafana_url(cluster_name)
     grafana_token = get_grafana_token(cluster_name)
@@ -37,7 +39,7 @@ def deploy_dashboards(
         [
             "git",
             "clone",
-            "https://github.com/jupyterhub/grafana-dashboards",
+            "https://github.com/2i2c-org/grafana-dashboards",
             "jupyterhub-grafana-dashboards",
         ]
     )
