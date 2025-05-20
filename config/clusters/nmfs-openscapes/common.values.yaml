@@ -273,6 +273,7 @@ jupyterhub:
       GitHubOAuthenticator:
         populate_teams_in_auth_state: true
         allowed_organizations:
+          - 2i2c-org:hub-access-for-2i2c-staff
           - nmfs-openscapes:longterm-access-2i2c
           - nmfs-openscapes:2024-mentors
           - nmfs-openscapes:2024-science-teams
@@ -282,6 +283,7 @@ jupyterhub:
           - read:org
       Authenticator:
         enable_auth_state: true
+        manage_groups: true
         admin_users:
           - ateucher # Andy Teucher
           - jules32 # Julia Stewart Lowndes
