@@ -48,7 +48,6 @@ basehub:
       volumeId: vol-050b22932c5cf210e
     quotaEnforcer:
       hardQuota: "50" # in GB
-      path: "/export/prod"
   nfs:
     pv:
       serverIP: 10.100.13.73
