@@ -25,3 +25,6 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: molerhealth
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0565144a04545ca05

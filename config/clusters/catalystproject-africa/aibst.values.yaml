@@ -25,3 +25,6 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: aibst
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-06a16472044aa6ebc

@@ -30,3 +30,6 @@ jupyterhub:
       2i2c/hub-name: bhki
     extraEnv:
       PERSISTENT_BUCKET: s3://catalystproject-africa-persistent-bhki/$(JUPYTERHUB_USER)
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0d045995f74632549

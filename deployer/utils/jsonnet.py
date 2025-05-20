@@ -43,10 +43,10 @@ def render_jsonnet(jsonnet_file: Path, cluster_name: str, hub_name: str | None):
         "--jpath",
         str(jsonnet_file.parent),
         "--ext-str",
-        f'2I2C_VARS.CLUSTER_NAME="{cluster_name}"',
+        f"2I2C_VARS.CLUSTER_NAME={cluster_name}",
     ]
     if hub_name is not None:
-        command += ["--ext-str", f'2I2C_VARS.HUB_NAME="{hub_name}"']
+        command += ["--ext-str", f"2I2C_VARS.HUB_NAME={hub_name}"]
     # Make the jsonnet file passed be an absolute path, but do not *resolve*
     # it - so symlinks are resolved by jsonnet rather than us. This is important
     # for daskhub compatibility.

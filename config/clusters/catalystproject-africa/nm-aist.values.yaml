@@ -33,3 +33,6 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: nm-aist
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0919166247adeb423

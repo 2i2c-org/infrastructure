@@ -27,6 +27,7 @@ basehub:
       jupyterhubConfigurator:
         enabled: false
       homepage:
+        gitRepoBranch: "2i2c-showcase"
         templateVars:
           org:
             name: 2i2c Showcase
@@ -43,20 +44,13 @@ basehub:
             url: https://2i2c.org
     hub:
       config:
-        JupyterHub:
-          authenticator_class: github
         GitHubOAuthenticator:
           oauth_callback_url: "https://showcase.2i2c.cloud/hub/oauth_callback"
-          populate_teams_in_auth_state: true
           allowed_organizations:
             - 2i2c-community-showcase:access-2i2c-showcase
             - 2i2c-community-showcase:magiclinks-demo
             - 2i2c-demo-hub-access:showcase-topst
             - ScienceCore
-          scope:
-            - read:org
-        Authenticator:
-          enable_auth_state: true
     singleuser:
       nodeSelector:
         2i2c/hub-name: showcase

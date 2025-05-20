@@ -27,3 +27,6 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: uvri
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0a5a743a0a8b387c8

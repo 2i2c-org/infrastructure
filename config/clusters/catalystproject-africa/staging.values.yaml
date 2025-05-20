@@ -28,3 +28,6 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-072df08df0e6623c8
