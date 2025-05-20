@@ -36,3 +36,5 @@ jupyterhub:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0919166247adeb423
+jupyterhub-groups-exporter:
+  enabled: false
