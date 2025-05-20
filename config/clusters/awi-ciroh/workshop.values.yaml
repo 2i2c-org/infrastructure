@@ -166,9 +166,6 @@ basehub:
               node.kubernetes.io/instance-type: n2-highmem-16
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - AlabamaWaterInstitute:2i2c_portal_users_gpu
           profile_options:
             image:
               display_name: Image
