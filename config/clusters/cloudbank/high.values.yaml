@@ -7,8 +7,11 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     memory:
-      guarantee: 384M
+      guarantee: 1.5G
       limit: 2G
+    cpu:
+      guarantee: 1
+      limit: 2
     initContainers:
       - name: volume-mount-ownership-fix
         image: busybox:1.36.1
