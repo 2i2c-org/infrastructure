@@ -31,5 +31,7 @@ jupyterhub:
     extraEnv:
       PERSISTENT_BUCKET: s3://catalystproject-africa-persistent-bhki/$(JUPYTERHUB_USER)
 jupyterhub-home-nfs:
+  quotaEnforcer:
+    hardQuota: "350" # in GB
   eks:
     volumeId: vol-0d045995f74632549

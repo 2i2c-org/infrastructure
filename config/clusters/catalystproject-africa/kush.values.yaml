@@ -26,5 +26,7 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: kush
 jupyterhub-home-nfs:
+  quotaEnforcer:
+    hardQuota: "1" # in GB
   eks:
     volumeId: vol-0dd3949e267cd806b
