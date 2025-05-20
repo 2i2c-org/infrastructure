@@ -38,4 +38,3 @@ basehub:
       volumeId: vol-02e09b4fdbf07100a
     quotaEnforcer:
       hardQuota: "0.1" # in GB
-      path: "/export/staging"

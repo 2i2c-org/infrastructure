@@ -36,6 +36,5 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0ac31776780207b43
   quotaEnforcer:
-    path: "/export/prod"
     # Default per-user quota is 10GB. Uncomment below line to change this.
     # hardQuota: "10" # in GB

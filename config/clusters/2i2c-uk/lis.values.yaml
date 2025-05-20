@@ -14,7 +14,6 @@ jupyterhub-home-nfs:
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
   quotaEnforcer:
     hardQuota: "35" # in GB
-    path: "/export/lis"
 jupyterhub:
   ingress:
     hosts: [ds.lis.2i2c.cloud]

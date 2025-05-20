@@ -7,7 +7,6 @@ jupyterhub-home-nfs:
     volumeId: projects/climatematch/zones/us-central1-b/disks/hub-nfs-homedirs-prod
   quotaEnforcer:
     hardQuota: "10" # in GB
-    path: "/export/prod"
 
 jupyterhub:
   ingress:

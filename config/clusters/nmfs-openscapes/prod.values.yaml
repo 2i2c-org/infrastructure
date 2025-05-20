@@ -40,7 +40,6 @@ jupyterhub-home-nfs:
     volumeId: vol-004cc1b60a1dfb9e4
   quotaEnforcer:
     hardQuota: "64" # in GB
-    path: "/export/prod"
 
 binderhub-service:
   config:

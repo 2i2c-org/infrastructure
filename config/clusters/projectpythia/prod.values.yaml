@@ -7,7 +7,6 @@ jupyterhub-home-nfs:
     volumeId: vol-0cdc25a68ca0303ce
   quotaEnforcer:
     hardQuota: "10" # in GB
-    path: "/export/prod"
 jupyterhub:
   ingress:
     hosts: [projectpythia.2i2c.cloud]

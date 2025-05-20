@@ -49,7 +49,6 @@ basehub:
       volumeId: vol-01889854859d8768d
     quotaEnforcer:
       hardQuota: "1" # in GB
-      path: "/export/staging"
 
   nfs:
     pv:
