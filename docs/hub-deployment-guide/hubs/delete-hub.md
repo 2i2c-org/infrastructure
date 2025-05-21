@@ -103,5 +103,5 @@ Open the ['Active Hubs' tab](https://airtable.com/appbjBTRIbgRiElkr/pagUsesTyZXH
 
 There is already automatic detection to determine if a hub is 'ACTIVE' or 'INACTIVE'. Adding the date that a hub was actually deleted is useful data to help diagnose situations where a hub is `INACTIVE` (say, an DNS related issue) but not intentionally decommisioned.
 
-The `ACTIVE' / `INACTIVE` flag is automatically set when the `Hub last seen` field is more than a 1 day in the past.  While decommision a hub, it is also good time to review the ['Missing Decommision Date` tab](https://airtable.com/appbjBTRIbgRiElkr/pagUsesTyZXHJRwb1?6fnj6=sfs1u0B54n6xtmqW6). These are hubs that are no longer active but do not have a decommision date recorded. Normally, 'Missing Documention Date' tab should have no rows visible.
+The `ACTIVE' / `INACTIVE` flag is automatically set when the `Hub last seen` field is more than a 1 day in the past.  While decommision a hub, it is also good time to review the ['Missing Decommision Date` tab](https://airtable.com/appbjBTRIbgRiElkr/pagUsesTyZXHJRwb1?6fnj6=sfs1u0B54n6xtmqW6). These are hubs that are no longer active but do not have a decommision date recorded. Normally, 'Missing Documentation Date' tab should have no rows visible.
 
