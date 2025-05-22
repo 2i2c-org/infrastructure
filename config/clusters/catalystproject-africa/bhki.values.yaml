@@ -34,4 +34,4 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "350" # in GB
   eks:
-    volumeId: vol-0d045995f74632549
+    volumeId: vol-010d4c82c22dd5e69
