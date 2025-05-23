@@ -31,6 +31,7 @@ jupyterhub:
       Authenticator:
         admin_users: []
         enable_auth_state: false
+        manage_groups: false
   singleuser:
     nodeSelector:
       2i2c/hub-name: workshop
