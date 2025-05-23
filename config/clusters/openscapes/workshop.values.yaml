@@ -174,7 +174,6 @@ basehub:
   jupyterhub-home-nfs:
     quotaEnforcer:
       hardQuota: "16" # in GB
-      path: "/export/workshop"
     eks:
       volumeId: vol-03afdfb4245b63dfb
 jupyterhub-home-nfs:

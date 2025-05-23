@@ -44,6 +44,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
 - [ ] If the hub has one or more dedicated nodegroups, e.g. because it is on AWS with cost allocation enabled, delete them via `eksctl `
+- [ ] Record decommision date in the [2i2c Airtable](https://airtable.com/appbjBTRIbgRiElkr/pagUsesTyZXHJRwb1?6fnj6=sfsUqDXtjqVAhjzvc)
 
 #### Phase III - Cluster Removal
 

@@ -34,7 +34,12 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: nm-aist
 jupyterhub-home-nfs:
+  quotaEnforcer:
+    hardQuota: "1" # in GB
   eks:
-    volumeId: vol-0919166247adeb423
+    volumeId: vol-0335f8d2d1795a035
+nfs:
+  pv:
+    serverIP: 10.100.24.156
 jupyterhub-groups-exporter:
   enabled: false

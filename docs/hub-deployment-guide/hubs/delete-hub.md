@@ -71,7 +71,7 @@ deployer cilogon-client delete --client-id cilogon:/client_id/<id> $CLUSTER_NAME
 
 This will clean up some of the hub values related to auth and must be done prior to removing the hub files.
 
-## 4. Remove the hub values file
+## 3. Remove the hub values file
 
 If the hub remains listed in its cluster's `cluster.yaml` file, the hub could be
 redeployed by any merged PR triggering our CI/CD pipeline.
@@ -95,4 +95,13 @@ helm --namespace=$HUB_NAME delete $HUB_NAME
 kubectl delete namespace $HUB_NAME
 ```
 
+## 5. Update Airtable with Decommission Date
+
+Record the date of decommissioning in the [2i2c AirTable](https://airtable.com/appbjBTRIbgRiElkr/pagUsesTyZXHJRwb1?6fnj6=sfsUqDXtjqVAhjzvc). This date is used in other workflows as a check and balance that resources are being properly shutdown. We have an automation that adds the record in Airtable when a hub is first created and also records the date a hub is last seen. We do not have an automation that records when a hub has been decommissioned so this step needs to be done manually.
+
+Open the [*Active Hubs* tab](https://airtable.com/appbjBTRIbgRiElkr/pagUsesTyZXHJRwb1?6fnj6=sfsUqDXtjqVAhjzvc) and fill in the Decommission Date with today's date to indicated that this hub has been decommissioned.
+
+There is already automatic detection to determine if a hub is **ACTIVE** or **INACTIVE**. Adding the date that a hub was actually deleted is useful data to help diagnose situations where a hub is **INACTIVE** (say, due to a DNS related issue) but not intentionally decommisioned.
+
+The **ACTIVE** / **INACTIVE** flag is automatically set when the `Hub last seen` field is more than a 1 day in the past.  While decommision a hub, it is also good time to review the [*Missing Decommision Date* tab](https://airtable.com/appbjBTRIbgRiElkr/pagUsesTyZXHJRwb1?6fnj6=sfs1u0B54n6xtmqW6). These are hubs that are no longer active but do not have a decommision date recorded. Normally, *Missing Documentation Date* tab should have no rows visible.
 

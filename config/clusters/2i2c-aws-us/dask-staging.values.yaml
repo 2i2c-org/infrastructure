@@ -10,7 +10,6 @@ basehub:
       volumeId: vol-002bff088152dd5e9
     quotaEnforcer:
       hardQuota: "10" # in GB
-      path: "/export/dask-staging"
   jupyterhub:
     ingress:
       hosts: [dask-staging.aws.2i2c.cloud]

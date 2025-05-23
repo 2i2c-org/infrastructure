@@ -7,7 +7,6 @@ jupyterhub-home-nfs:
     volumeId: vol-02a23da5b534a990a
   quotaEnforcer:
     hardQuota: "0.5" # in GB
-    path: "/export/staging"
 
 jupyterhub:
   ingress:
