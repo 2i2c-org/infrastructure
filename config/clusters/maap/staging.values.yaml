@@ -44,6 +44,8 @@ jupyterhub:
           - name: home
             mountPath: /home/jovyan/shared-group
             subPath: _shared-group
+    storage:
+      type: null
 
     profileList:
       - display_name: Choose your environment and resources
@@ -229,6 +231,47 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: generic-oauth
+      KubeSpawner:
+        volumes:
+          00-home-nfs:
+            name: home
+            persistentVolumeClaim:
+              claimName: home-nfs
+          01-dev-shm:
+            name: dev-shm
+            emptyDir:
+              medium: Memory
+        volume_mounts:
+          00-home-nfs:
+            name: home
+            mountPath: /home/jovyan
+            subPath: "{escaped_username}"
+          01-home-shared:
+            name: home
+            mountPath: /home/jovyan/shared
+            subPath: _shared
+            readOnly: true
+          02-home-shared-public:
+            name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
+          03-dev-shm:
+            name: dev-shm
+            mountPath: /dev/shm
+        group_overrides:
+          00-group-CPU-L-extra-volume-mounts:
+            groups: ["CPU:L"]
+            spawner_override:
+              volume_mounts:
+                00-group-CPU-L-shared-dir:
+                  name: home
+                  mountPath: /home/jovyan/shared-group/CPU_L
+                  subPath: _shared-group/CPU_L
+                01-group-GPU-T4-extra-volume-mounts:
+                  name: home
+                  mountPath: /home/jovyan/shared-group/GPU_T4
+                  subPath: _shared-group/GPU_T4
+
       Authenticator:
         admin_users: []
       GitHubOAuthenticator:
@@ -261,53 +304,6 @@ jupyterhub:
           - CPU:XXL
           - CPU:XXXL
           - GPU:T4
-    extraConfig:
-      00-volumes-and-volume-mounts-as-dict: |
-        # The base jupyterhub config in zero-to-jupyterhub defines
-        # volumes and volume_mounts as lists.
-        # But we can't add new volumes or volume_mounts to the list
-        # as that replaces the entire list.
-        # So we convert them to dictionaries, which allows us to
-        # add new volumes and volume_mounts as needed.
-        if isinstance(c.KubeSpawner.volumes, list):
-          existing_volumes = c.KubeSpawner.volumes
-          c.KubeSpawner.volumes = {}
-          for volume in existing_volumes:
-            c.KubeSpawner.volumes[volume["name"]] = volume
-        if isinstance(c.KubeSpawner.volume_mounts, list):
-          existing_volume_mounts = c.KubeSpawner.volume_mounts
-          c.KubeSpawner.volume_mounts = {}
-          for idx, volume_mount in enumerate(existing_volume_mounts):
-            c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
-      01-group-shared-directories: |
-        c.KubeSpawner.group_overrides = {
-          "00-group-CPU-L-extra-volume-mounts": {
-            "groups": ["CPU:L"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-CPU-L-shared-dir": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/shared-group/CPU_L",
-                  "subPath": "_shared-group/CPU_L",
-                  "readOnly": False
-                },
-              }
-            },
-          },
-          "01-group-GPU-T4-extra-volume-mounts": {
-            "groups": ["GPU:T4"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-GPU-T4-shared-dir": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/shared-group/GPU_T4",
-                  "subPath": "_shared-group/GPU_T4",
-                  "readOnly": False
-                },
-              }
-            },
-          }
-        }
   ingress:
     hosts: [staging.hub.maap.2i2c.cloud]
     tls:
