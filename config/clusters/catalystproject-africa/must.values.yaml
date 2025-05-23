@@ -38,3 +38,5 @@ jupyterhub-home-nfs:
     hardQuota: "1" # in GB
   eks:
     volumeId: vol-0b664c61a6ac96c73
+jupyterhub-groups-exporter:
+  enabled: false

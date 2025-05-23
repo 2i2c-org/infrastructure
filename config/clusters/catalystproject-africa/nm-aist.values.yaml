@@ -41,3 +41,5 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.100.24.156
+jupyterhub-groups-exporter:
+  enabled: false
