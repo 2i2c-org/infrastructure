@@ -73,8 +73,8 @@ jupyterhub:
         # Requested in https://2i2c.freshdesk.com/a/tickets/1348
         # FIXME: The </p><p> is a hack for kubespawner to render a new line, maybe there are better ways to do this?
         description: |
-          Provides 1G - 4G of RAM</p>
-          <p> ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
+          Provides 1G - 4G of RAM.
+          ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
         kubespawner_override:
           mem_limit: 4G
           mem_guarantee: 1G
@@ -105,21 +105,21 @@ jupyterhub:
           - users
           - groups
     extraConfig:
-      custom-github-oauthenticator: |
-        class CustomGitHubOAuthenticator(GitHubOAuthenticator):
-          async def authenticate(self, *args, **kwargs):
-              resp = await super().authenticate(*args, **kwargs)
-              if resp["auth_state"]["teams"] is None:
-                return resp
-              groups = []
-              for team in resp["auth_state"]["teams"]:
-                if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
-                  continue
-                else:
-                  groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
-              resp["groups"] = groups
-              return resp
-        c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
+      custom-auth-state-groups-key: |
+        async def custom_auth_state_groups_key(auth_state):
+          groups_list = []
+          if auth_state is None:
+            print("Auth state is None")
+            return groups_list
+          else:
+            for team in auth_state["teams"]:
+              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
+                continue
+              else:
+                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+            return groups_list
+        if c.GitHubOAuthenticator:
+          c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
 
 jupyterhub-groups-exporter:
   enabled: true
