@@ -195,6 +195,7 @@ basehub:
             - read:org
         Authenticator:
           enable_auth_state: true
+          manage_groups: true
           admin_users:
             - amfriesz
             - jules32

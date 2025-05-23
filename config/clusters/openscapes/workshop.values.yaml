@@ -26,6 +26,7 @@ basehub:
           authenticator_class: dummy
         Authenticator:
           enable_auth_state: false
+          manage_groups: false
           admin_users: []
     singleuser:
       initContainers:
