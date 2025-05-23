@@ -343,4 +343,3 @@ jupyterhub-home-nfs:
     volumeId: vol-043cd887a98827319
   quotaEnforcer:
     hardQuota: "1" # in GB
-    path: "/export/staging"

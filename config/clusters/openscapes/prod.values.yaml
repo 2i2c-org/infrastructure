@@ -35,7 +35,6 @@ basehub:
   jupyterhub-home-nfs:
     quotaEnforcer:
       hardQuota: "100" # in GB
-      path: "/export/prod"
     eks:
       volumeId: vol-0cddd71981a7ff6ba
   nfs:

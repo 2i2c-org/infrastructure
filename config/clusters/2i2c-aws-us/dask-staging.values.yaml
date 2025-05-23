@@ -10,7 +10,6 @@ basehub:
       volumeId: vol-002bff088152dd5e9
     quotaEnforcer:
       hardQuota: "10" # in GB
-      path: "/export/dask-staging"
   jupyterhub:
     ingress:
       hosts: [dask-staging.aws.2i2c.cloud]
@@ -46,8 +45,6 @@ basehub:
         SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-dask-staging/$(JUPYTERHUB_USER)
     hub:
       config:
-        JupyterHub:
-          authenticator_class: "github"
         GitHubOAuthenticator:
           oauth_callback_url: "https://dask-staging.aws.2i2c.cloud/hub/oauth_callback"
 
