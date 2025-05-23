@@ -82,7 +82,6 @@ basehub:
           scopes:
             - access:servers!group=CryoInTheCloud:csdms-2025-workshop
             - admin:servers!group=CryoInTheCloud:csdms-2025-workshop
-            - admin-ui
             - list:groups!group=CryoInTheCloud:csdms-2025-workshop
           groups:
             - CryoInTheCloud:csdms-2025-workshop
