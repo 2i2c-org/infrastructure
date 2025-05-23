@@ -200,4 +200,5 @@ basehub:
         JupyterHub:
           authenticator_class: dummy
         Authenticator:
+          manage_groups: false
           admin_users: []
