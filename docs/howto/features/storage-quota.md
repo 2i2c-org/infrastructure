@@ -153,7 +153,6 @@ This can be done by updating `basehub.jupyterhub-home-nfs.quotaEnforcer` in the 
 jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "10" # in GB
-    path: "/export/staging"
 ```
 
 The `path` field is the path to the parent directory of the user's home directory in the NFS server. The `hardQuota` field is the maximum allowed size of the user's home directory in GB.

@@ -10,7 +10,6 @@ basehub:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-workshop
     quotaEnforcer:
       hardQuota: "250" # in GB
-      path: "/export/workshop"
   jupyterhub:
     custom:
       jupyterhubConfigurator:
@@ -201,4 +200,5 @@ basehub:
         JupyterHub:
           authenticator_class: dummy
         Authenticator:
+          manage_groups: false
           admin_users: []

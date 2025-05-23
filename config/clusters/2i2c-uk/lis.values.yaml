@@ -14,7 +14,6 @@ jupyterhub-home-nfs:
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
   quotaEnforcer:
     hardQuota: "35" # in GB
-    path: "/export/lis"
 jupyterhub:
   ingress:
     hosts: [ds.lis.2i2c.cloud]
@@ -73,8 +72,8 @@ jupyterhub:
         # Requested in https://2i2c.freshdesk.com/a/tickets/1348
         # FIXME: The </p><p> is a hack for kubespawner to render a new line, maybe there are better ways to do this?
         description: |
-          Provides 1G - 4G of RAM</p>
-          <p> ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
+          Provides 1G - 4G of RAM.
+          ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
         kubespawner_override:
           mem_limit: 4G
           mem_guarantee: 1G
@@ -84,10 +83,45 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: "https://ds.lis.2i2c.cloud/hub/oauth_callback"
+        populate_teams_in_auth_state: true
         allowed_organizations:
+          - 2i2c-org:hub-access-for-2i2c-staff
           - lisacuk
         scope:
           - read:org
       Authenticator:
+        enable_auth_state: true
+        manage_groups: true
         admin_users:
           - maundjs-lis
+    services:
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+          - jupyterhub-groups-exporter
+        scopes:
+          - users
+          - groups
+    extraConfig:
+      custom-auth-state-groups-key: |
+        async def custom_auth_state_groups_key(auth_state):
+          groups_list = []
+          if auth_state is None:
+            print("Auth state is None")
+            return groups_list
+          else:
+            for team in auth_state["teams"]:
+              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
+                continue
+              else:
+                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+            return groups_list
+        if c.GitHubOAuthenticator:
+          c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
+
+jupyterhub-groups-exporter:
+  enabled: true
+  config:
+    groupsExporter:
+      update_exporter_interval: 3600

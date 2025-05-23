@@ -12,7 +12,6 @@ jupyterhub-home-nfs:
     volumeId: vol-0ead627e253d8383a
   quotaEnforcer:
     hardQuota: "10" # in GB
-    path: "/export/sciencecore"
 
 jupyterhub-groups-exporter:
   enabled: true

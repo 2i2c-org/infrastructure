@@ -32,15 +32,26 @@ jupyterhub:
       PERSISTENT_BUCKET: s3://nmfs-openscapes-persistent/$(JUPYTERHUB_USER)
   hub:
     config:
+      JupyterHub:
+        authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://nmfs-openscapes.2i2c.cloud/hub/oauth_callback
+        populate_teams_in_auth_state: true
+        allowed_organizations:
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - nmfs-openscapes:longterm-access-2i2c
+          - nmfs-openscapes:2024-mentors
+          - nmfs-openscapes:2024-science-teams
+          - nmfs-openscapes:2024-CoastWatch
+          - nmfs-openscapes:2024-nmfs-champions-cohort
+        scope:
+          - read:org
 
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-004cc1b60a1dfb9e4
   quotaEnforcer:
     hardQuota: "64" # in GB
-    path: "/export/prod"
 
 binderhub-service:
   config:

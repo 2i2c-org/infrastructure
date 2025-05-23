@@ -26,6 +26,7 @@ basehub:
           authenticator_class: dummy
         Authenticator:
           enable_auth_state: false
+          manage_groups: false
           admin_users: []
     singleuser:
       initContainers:
@@ -174,7 +175,6 @@ basehub:
   jupyterhub-home-nfs:
     quotaEnforcer:
       hardQuota: "16" # in GB
-      path: "/export/workshop"
     eks:
       volumeId: vol-03afdfb4245b63dfb
 jupyterhub-home-nfs:
