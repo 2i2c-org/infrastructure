@@ -19,7 +19,7 @@
   //
   local instanceType = if 'instanceType' in $ then $.instanceType else $.instancesDistribution.instanceTypes[0],
   // NodeGroup names can't have a '.' in them as instanceTypes has
-  local escapedInstanceType = std.strReplace(instanceType, ".", "-"),
+  local escapedInstanceType = std.strReplace(instanceType, '.', '-'),
 
   // The cluster autoscaler reads specific tags on a Auto Scaling Group's default
   // launch template version about the k8s labels and taints that the node group
@@ -34,8 +34,8 @@
     for key in std.objectFields(taints)
   },
   local commonTags = {
-    "ManagedBy": "2i2c",
-    "2i2c.org/cluster-name": $.clusterName,
+    ManagedBy: '2i2c',
+    '2i2c.org/cluster-name': $.clusterName,
   },
   local tags = caLabelTags(self.labels) + caTaintTags(self.taints) + commonTags,
 
@@ -43,15 +43,15 @@
 
   // Hidden fields (due to ::) are used as inputs from merged objects to compute
   // output fields
-  clusterName:: "",
-  namePrefix:: "",
+  clusterName:: '',
+  namePrefix:: '',
   nameIncludeInstanceType:: true,
-  nameBase:: if self.nameIncludeInstanceType then escapedInstanceType else "",
-  nameSuffix:: "",
+  nameBase:: if self.nameIncludeInstanceType then escapedInstanceType else '',
+  nameSuffix:: '',
   preventScaleUp:: false,
 
   // Output fields
-  name: std.join("-", std.filter(function(x) x != "", nameParts)),
+  name: std.join('-', std.filter(function(x) x != '', nameParts)),
   availabilityZones: [],
   minSize: 0,
   desiredCapacity: self.minSize,
