@@ -69,6 +69,13 @@ jupyterhub:
     cloudMetadata:
       blockWithIptables: false
     defaultUrl: /lab
+    storage:
+      extraVolumeMounts:
+        # A shared folder readable & writeable by everyone
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: "Iv23lio8dJq5euL8Y2kF"
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/nmfs-openscapes-github-push-access
