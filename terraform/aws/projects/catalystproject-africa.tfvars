@@ -46,7 +46,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "bhki" }
   },
   "must" = {
-    size        = 64
+    size        = 512
     type        = "gp3"
     name_suffix = "must"
     tags        = { "2i2c:hub-name" : "must" }
