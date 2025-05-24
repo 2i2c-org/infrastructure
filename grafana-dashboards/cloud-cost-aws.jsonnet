@@ -1,15 +1,15 @@
 #!/usr/bin/env -S jsonnet -J ../vendor
-local grafonnet = import "grafonnet/main.libsonnet";
+local grafonnet = import 'grafonnet/main.libsonnet';
 local dashboard = grafonnet.dashboard;
 local ts = grafonnet.panel.timeSeries;
 local var = grafonnet.dashboard.variable;
 
-local common = import "./common.libsonnet";
+local common = import './common.libsonnet';
 
 
 local dailyCosts =
   common.tsOptions
-  + ts.new("Daily costs")
+  + ts.new('Daily costs')
   + ts.panelOptions.withDescription(
     |||
       "Costs account" refers to the associated AWS account's total costs, and
@@ -35,16 +35,16 @@ local dailyCosts =
     |||
   )
   + ts.queryOptions.withTargets([
-      common.queryTarget
-      + {
-          url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs?from=${__from:date}&to=${__to:date}",
-        }
+    common.queryTarget
+    {
+      url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs?from=${__from:date}&to=${__to:date}',
+    },
   ]);
 
 
 local dailyCostsPerHub =
   common.tsOptions
-  + ts.new("Daily costs per hub")
+  + ts.new('Daily costs per hub')
   + ts.panelOptions.withDescription(
     |||
       Costs can sometimes be attributed to a specific hub, and that can then be
@@ -52,7 +52,7 @@ local dailyCostsPerHub =
 
       "Cost shared" reflect all 2i2c cloud infrastructure attributable costs
       that isn't attributable to a specific hub.
-      
+
       For hub specific cost attribution, the underlying cloud infrastructure
       needs to setup to be hub specific. Currently compute, home storage, and
       object storage can be setup for specific hubs, but isn't unless explicitly
@@ -69,16 +69,16 @@ local dailyCostsPerHub =
     |||
   )
   + ts.queryOptions.withTargets([
-      common.queryTarget
-      + {
-          url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}",
-        }
+    common.queryTarget
+    {
+      url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}',
+    },
   ]);
 
 
 local dailyCostsPerComponent =
   common.tsOptions
-  + ts.new("Total daily costs per component")
+  + ts.new('Total daily costs per component')
   + ts.panelOptions.withDescription(
     |||
       Components are human friendly groupings of AWS services, as [defined
@@ -93,16 +93,16 @@ local dailyCostsPerComponent =
     |||
   )
   + ts.queryOptions.withTargets([
-      common.queryTarget
-      + {
-          url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}",
-        }
+    common.queryTarget
+    {
+      url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}',
+    },
   ]);
 
 
 local dailyCostsPerComponentAndHub =
   common.tsOptions
-  + ts.new("Daily costs per component, for ${hub}")
+  + ts.new('Daily costs per component, for ${hub}')
   + ts.panelOptions.withDescription(
     |||
       Components are human friendly groupings of AWS services, as [defined
@@ -116,13 +116,13 @@ local dailyCostsPerComponentAndHub =
       - All costs are pure usage costs, and doesn't consider credits etc.
     |||
   )
-  + ts.panelOptions.withRepeat("hub")
+  + ts.panelOptions.withRepeat('hub')
   + ts.panelOptions.withMaxPerRow(2)
   + ts.queryOptions.withTargets([
-      common.queryTarget
-      + {
-          url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=${hub}",
-        }
+    common.queryTarget
+    {
+      url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=${hub}',
+    },
   ]);
 
 
@@ -132,22 +132,22 @@ local dailyCostsPerComponentAndHub =
 // that we aren't providing one atm.
 // See https://community.grafana.com/t/dashboard-description-is-it-used-anywhere/53273.
 //
-dashboard.new("Cloud cost attribution")
-+ dashboard.withUid("cloud-cost-aws")
-+ dashboard.withTimezone("utc")
+dashboard.new('Cloud cost attribution')
++ dashboard.withUid('cloud-cost-aws')
++ dashboard.withTimezone('utc')
 + dashboard.withEditable(true)
-+ dashboard.time.withFrom("now-30d")
++ dashboard.time.withFrom('now-30d')
 + dashboard.withVariables([
-    common.variables.hub,
-    common.variables.infinity_datasource,
-  ])
+  common.variables.hub,
+  common.variables.infinity_datasource,
+])
 + dashboard.withPanels(
   grafonnet.util.grid.makeGrid(
     [
       dailyCosts,
       dailyCostsPerHub,
       dailyCostsPerComponent,
-      dailyCostsPerComponentAndHub
+      dailyCostsPerComponentAndHub,
     ],
     panelWidth=24,
     panelHeight=12,

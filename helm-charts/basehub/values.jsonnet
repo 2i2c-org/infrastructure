@@ -1,20 +1,20 @@
-local hub_name = std.extVar("2I2C_VARS.HUB_NAME");
+local hub_name = std.extVar('2I2C_VARS.HUB_NAME');
 
 // Assume we are a staging hub if the word 'staging' is in the
 // name of the hub.
-local is_staging = std.member(hub_name, "staging");
+local is_staging = std.member(hub_name, 'staging');
 
 local emitDaskHubCompatibleConfig(basehubConfig) =
-    // Handle legacy 'daskhub' type hubs
-    // Note: This relies on `jsonnet` being called with absolute path to
-    // the file, and the symlink from helm-charts/daskhub/values.jsonnet
-    local isDaskHub = std.splitLimitR(std.thisFile, "/", 3)[2] == "daskhub";
+  // Handle legacy 'daskhub' type hubs
+  // Note: This relies on `jsonnet` being called with absolute path to
+  // the file, and the symlink from helm-charts/daskhub/values.jsonnet
+  local isDaskHub = std.splitLimitR(std.thisFile, '/', 3)[2] == 'daskhub';
 
-    if isDaskHub then {"basehub": basehubConfig} else basehubConfig;
+  if isDaskHub then { basehub: basehubConfig } else basehubConfig;
 
 local jupyterhubHomeNFSResources = {
   quotaEnforcer: {
-    path: "/export/%s" % hub_name,
+    path: '/export/%s' % hub_name,
     resources: {
       requests: {
         cpu: 0.02,
