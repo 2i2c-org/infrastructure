@@ -7,12 +7,12 @@ basehub:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
       serverIP: fs-b25253b5.efs.us-west-2.amazonaws.com
       baseShareName: /
   dask-gateway:
@@ -23,11 +23,11 @@ basehub:
         enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
+        add_staff_user_ids_of_type: github
       jupyterhubConfigurator:
         enabled: false
       homepage:
-        gitRepoBranch: "openscapes"
+        gitRepoBranch: openscapes
         templateVars:
           org:
             name: NASA Openscapes
@@ -44,132 +44,132 @@ basehub:
             url: https://nasa-openscapes.github.io/
       singleuserAdmin:
         extraVolumeMounts:
-          - name: home
-            mountPath: /home/jovyan/allusers
+        - name: home
+          mountPath: /home/jovyan/allusers
             # Uncomment the line below to make the directory readonly for admins
             # readOnly: true
-          - name: home
-            mountPath: /home/rstudio/allusers
+        - name: home
+          mountPath: /home/rstudio/allusers
             # Uncomment the line below to make the directory readonly for admins
             # readOnly: true
           # mounts below are copied from basehub's values that we override by
           # specifying extraVolumeMounts (lists get overridden when helm values
           # are combined)
-          - name: home
-            mountPath: /home/jovyan/shared-readwrite
-            subPath: _shared
-          - name: home
-            mountPath: /home/rstudio/shared-readwrite
-            subPath: _shared
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
+        - name: home
+          mountPath: /home/rstudio/shared-readwrite
+          subPath: _shared
     singleuser:
       cloudMetadata:
         blockWithIptables: false
       defaultUrl: /lab
       extraEnv:
-        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.6981e043b45f042f"
+        GH_SCOPED_CREDS_CLIENT_ID: Iv1.6981e043b45f042f
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/openscapes-github-push-access
       profileList:
-        - display_name: Choose your environment and resources
-          default: true
-          profile_options:
-            image:
-              display_name: Environment
-              dynamic_image_building:
-                enabled: True
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                description: Specify your own docker image (must have python and jupyterhub installed in it)
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+      - display_name: Choose your environment and resources
+        default: true
+        profile_options:
+          image:
+            display_name: Environment
+            dynamic_image_building:
+              enabled: true
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              description: Specify your own docker image (must have python and jupyterhub installed in it)
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              01-python:
+                display_name: Python
+                description: Python datascience environment
                 kubespawner_override:
-                  image: "{value}"
-              choices:
-                01-python:
-                  display_name: Python
-                  description: Python datascience environment
-                  kubespawner_override:
-                    image: openscapes/python:f7d3d14
-                02-R:
-                  display_name: R
-                  description: R (with RStudio) + Python environment
-                  kubespawner_override:
-                    image: openscapes/rocker:a7596b5
+                  image: openscapes/python:f7d3d14
+              02-R:
+                display_name: R
+                description: R (with RStudio) + Python environment
+                kubespawner_override:
+                  image: openscapes/rocker:a7596b5
                     # Ensures container working dir is homedir
                     # https://github.com/2i2c-org/infrastructure/issues/2559
-                    working_dir: /home/rstudio
-                03-Matlab:
-                  display_name: Matlab
-                  description: Matlab environment
-                  kubespawner_override:
-                    image: openscapes/matlab:2023-11-28
-            resource_allocation:
-              display_name: Resource Allocation
-              choices:
-                mem_1_9:
-                  display_name: 1.9 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 1991244775
-                    mem_limit: 1991244775
-                    cpu_guarantee: 0.2328125
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                  default: true
-                mem_3_7:
-                  display_name: 3.7 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 3982489550
-                    mem_limit: 3982489550
-                    cpu_guarantee: 0.465625
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_7_4:
-                  display_name: 7.4 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 7964979101
-                    mem_limit: 7964979101
-                    cpu_guarantee: 0.93125
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_14_8:
-                  display_name: 14.8 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 15929958203
-                    mem_limit: 15929958203
-                    cpu_guarantee: 1.8625
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_29_7:
-                  display_name: 29.7 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 31859916406
-                    mem_limit: 31859916406
-                    cpu_guarantee: 3.725
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_60_6:
-                  display_name: 60.6 GB RAM, upto 15.6 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 65094448840
-                    mem_limit: 65094448840
-                    cpu_guarantee: 7.8475
-                    cpu_limit: 15.695
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
-                mem_121_2:
-                  display_name: 121.2 GB RAM, upto 15.6 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 130188897681
-                    mem_limit: 130188897681
-                    cpu_guarantee: 15.695
-                    cpu_limit: 15.695
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
+                  working_dir: /home/rstudio
+              03-Matlab:
+                display_name: Matlab
+                description: Matlab environment
+                kubespawner_override:
+                  image: openscapes/matlab:2023-11-28
+          resource_allocation:
+            display_name: Resource Allocation
+            choices:
+              mem_1_9:
+                display_name: 1.9 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
+                  cpu_guarantee: 0.2328125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 15929958203
+                  mem_limit: 15929958203
+                  cpu_guarantee: 1.8625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_7:
+                display_name: 29.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 31859916406
+                  mem_limit: 31859916406
+                  cpu_guarantee: 3.725
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 65094448840
+                  mem_limit: 65094448840
+                  cpu_guarantee: 7.8475
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_121_2:
+                display_name: 121.2 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 130188897681
+                  mem_limit: 130188897681
+                  cpu_guarantee: 15.695
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
     scheduling:
       userScheduler:
         enabled: true
@@ -181,27 +181,27 @@ basehub:
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - NASA-Openscapes:workshopaccess-2i2c
-            - NASA-Openscapes:longtermaccess-2i2c
-            - NASA-Openscapes:championsaccess-2i2c
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - NASA-Openscapes:workshopaccess-2i2c
+          - NASA-Openscapes:longtermaccess-2i2c
+          - NASA-Openscapes:championsaccess-2i2c
             # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
-            - nasa-openscapes-workshops:AdminTeam
-            - nasa-openscapes-workshops:nasa-champions-2024
-            - nasa-openscapes-workshops:ChampionsAccess-2i2c
-            - nasa-openscapes-workshops:WorkshopAccess-2i2c
-            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
+          - nasa-openscapes-workshops:AdminTeam
+          - nasa-openscapes-workshops:nasa-champions-2024
+          - nasa-openscapes-workshops:ChampionsAccess-2i2c
+          - nasa-openscapes-workshops:WorkshopAccess-2i2c
+          - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           scope:
-            - read:org
+          - read:org
         Authenticator:
           enable_auth_state: true
           manage_groups: true
           admin_users:
-            - amfriesz
-            - jules32
-            - erinmr
-            - betolink
-            - ateucher
+          - amfriesz
+          - jules32
+          - erinmr
+          - betolink
+          - ateucher
   binderhub-service:
     enabled: true
     config:

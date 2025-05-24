@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [sbcc-dev.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [sbcc-dev.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [sbcc-dev.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -28,11 +28,11 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: "https://sbcc-dev.cloudbank.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://sbcc-dev.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       OAuthenticator:
         # WARNING: Don't use allow_existing_users with config to allow an
         #          externally managed group of users, such as
@@ -45,7 +45,7 @@ jupyterhub:
         #          access if it had logged in once before, as it then exists
         #          in JupyterHub's database of users.
         #
-        allow_existing_users: True
+        allow_existing_users: true
       Authenticator:
         # WARNING: Removing a user from admin_users or allowed_users doesn't
         #          revoke admin status or access.
@@ -63,6 +63,6 @@ jupyterhub:
         #          /hub/admin panel.
         #
         admin_users:
-          - ericvd@gmail.com
-          - sean.smorris@berkeley.edu
-          - nfguebels@pipeline.sbcc.edu
+        - ericvd@gmail.com
+        - sean.smorris@berkeley.edu
+        - nfguebels@pipeline.sbcc.edu

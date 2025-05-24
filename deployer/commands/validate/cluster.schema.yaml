@@ -1,4 +1,4 @@
-$schema: "http://json-schema.org/draft-07/schema#"
+$schema: http://json-schema.org/draft-07/schema#
 type: object
 additionalProperties: false
 properties:
@@ -28,17 +28,17 @@ properties:
       authentication against the cluster. Currently supports gcp, aws, azure,
       and raw kubeconfig files.
     enum:
-      - gcp
-      - kubeconfig
-      - aws
-      - azure
+    - gcp
+    - kubeconfig
+    - aws
+    - azure
   tenancy:
     type: string
     description: |
       Type of tenancy this cluster runs. Currently supports dedicated and shared.
     enum:
-      - dedicated
-      - shared
+    - dedicated
+    - shared
     default: dedicated
   account:
     type: string
@@ -67,17 +67,17 @@ properties:
       Configuration to connect to the cluster on GCP. Is used when
       provider is set to `gcp`
     required:
-      - key
-      - project
-      - cluster
-      - zone
-      - billing
+    - key
+    - project
+    - cluster
+    - zone
+    - billing
     properties:
       billing:
         type: object
         additionalProperties: false
         required:
-          - paid_by_us
+        - paid_by_us
         # if paid_by_us is true, we *must* provide bigquery information
         # on where to find the costs export for this project
         if:
@@ -86,7 +86,7 @@ properties:
               const: true
         then:
           required:
-            - bigquery
+          - bigquery
         description: |
           Billing information for this cluster
         properties:
@@ -99,9 +99,9 @@ properties:
             type: object
             additionalProperties: false
             required:
-              - project
-              - dataset
-              - billing_id
+            - project
+            - dataset
+            - billing_id
             properties:
               project:
                 type: string
@@ -143,11 +143,11 @@ properties:
     type: object
     additionalProperties: false
     required:
-      - key
-      - clusterType
-      - clusterName
-      - region
-      - billing
+    - key
+    - clusterType
+    - clusterName
+    - region
+    - billing
     description: |
       Configuration to connect to the cluster on AWS.
       Is used when provider is set to `aws`.
@@ -165,7 +165,7 @@ properties:
         description: |
           We currently support EKS-based cluster on AWS.
         enum:
-          - eks
+        - eks
       clusterName:
         type: string
         description: |
@@ -178,7 +178,7 @@ properties:
         type: object
         additionalProperties: false
         required:
-          - paid_by_us
+        - paid_by_us
         properties:
           paid_by_us:
             type: boolean
@@ -189,9 +189,9 @@ properties:
     type: object
     additionalProperties: false
     required:
-      - key
-      - resource_group
-      - cluster
+    - key
+    - resource_group
+    - cluster
     description: |
       Configuration to connect to a cluster on Azure. Is used when
       provider is set to `azure`
@@ -218,73 +218,73 @@ properties:
     description: |
       Each item here is a hub deployed to this cluster.
     items:
-      - type: object
-        additionalProperties: false
-        required:
-          - name
-          - domain
-          - helm_chart
-          - helm_chart_values_files
-        properties:
-          name:
-            type: string
-            description: |
-              Name of the hub. This will be used to determine
-              the kubernetes namespace the hub is deployed into.
-          display_name:
-            type: string
-            description: |
-              A long form name for the hub to display on our website. This is usually
-              the name of the community we run the hub for.
-          uptime_check:
-            type: object
-            description: |
-              Optional configuration for how uptime checks should be performed
-              on this hub.
-            additionalProperties: false
-            properties:
-              expected_status:
-                type: string
-                description: |
-                  Status code expected from hitting the health checkpoint for
-                  this hub. Defaults to 200, can be overridden in case we have
-                  basic auth setup for the entire hub
-          domain:
-            type: string
-            description: |
-              Domain the hub should be running on. This domain should resolve
-              to the IP of the ingress controller on the cluster - most likely
-              via a wildcard DNS entry.
+    - type: object
+      additionalProperties: false
+      required:
+      - name
+      - domain
+      - helm_chart
+      - helm_chart_values_files
+      properties:
+        name:
+          type: string
+          description: |
+            Name of the hub. This will be used to determine
+            the kubernetes namespace the hub is deployed into.
+        display_name:
+          type: string
+          description: |
+            A long form name for the hub to display on our website. This is usually
+            the name of the community we run the hub for.
+        uptime_check:
+          type: object
+          description: |
+            Optional configuration for how uptime checks should be performed
+            on this hub.
+          additionalProperties: false
+          properties:
+            expected_status:
+              type: string
+              description: |
+                Status code expected from hitting the health checkpoint for
+                this hub. Defaults to 200, can be overridden in case we have
+                basic auth setup for the entire hub
+        domain:
+          type: string
+          description: |
+            Domain the hub should be running on. This domain should resolve
+            to the IP of the ingress controller on the cluster - most likely
+            via a wildcard DNS entry.
 
-              For example, there's a entry for '*.pilot.2i2c.cloud' pointing to
-              the ingress controller of the cluster running hubs in `2i2c.cluster.yaml`.
-              Similar for '*.cloudbank.2i2c.cloud', etc.
-          domain_override_file:
-            type: string
-            description: |
-              In some cases, we may want to temporarily change the domain a hub is
-              operational at. For instance, to prevent cheating on an educational hub
-              or hide the hub from miners.
+            For example, there's a entry for '*.pilot.2i2c.cloud' pointing to
+            the ingress controller of the cluster running hubs in `2i2c.cluster.yaml`.
+            Similar for '*.cloudbank.2i2c.cloud', etc.
+        domain_override_file:
+          type: string
+          description: |
+            In some cases, we may want to temporarily change the domain a hub is
+            operational at. For instance, to prevent cheating on an educational hub
+            or hide the hub from miners.
 
-              Provide the filepath to a domain override YAML file here. The YAML should
-              contain the 'domain' key and the new domain to point the hub at. If we do
-              not want the hub to be discoverable, then this file should be sops
-              encrypted, but that is not strictly enforced. This path is defined
-              RELATIVE to the location of the cluster.yaml file and has the naming
-              convention '{{enc-}}HUB_NAME.domain-override{{.secret}}.yaml'
-          helm_chart:
-            type: string
-            description: |
-              Hub helm chart to deploy. This refers to a directory under `helm-charts`
-              containing a helm chart with base values and dependencies that
-              determines the kind of hub deployed.
-            enum:
-              - basehub
-              - daskhub
-          helm_chart_values_files:
-            type: array
-            description: |
-              A list of *.values.yaml files which, together, describe the complete
-              helm chart values for a single hub deployment. These filepaths are defined
-              RELATIVE to the location of the cluster.yaml file and have the naming
-              convention '{{ hub name }}.values.yaml'.
+            Provide the filepath to a domain override YAML file here. The YAML should
+            contain the 'domain' key and the new domain to point the hub at. If we do
+            not want the hub to be discoverable, then this file should be sops
+            encrypted, but that is not strictly enforced. This path is defined
+            RELATIVE to the location of the cluster.yaml file and has the naming
+            convention '{{enc-}}HUB_NAME.domain-override{{.secret}}.yaml'
+        helm_chart:
+          type: string
+          description: |
+            Hub helm chart to deploy. This refers to a directory under `helm-charts`
+            containing a helm chart with base values and dependencies that
+            determines the kind of hub deployed.
+          enum:
+          - basehub
+          - daskhub
+        helm_chart_values_files:
+          type: array
+          description: |
+            A list of *.values.yaml files which, together, describe the complete
+            helm chart values for a single hub deployment. These filepaths are defined
+            RELATIVE to the location of the cluster.yaml file and have the naming
+            convention '{{ hub name }}.values.yaml'.

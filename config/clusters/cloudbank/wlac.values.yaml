@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [wlac.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [wlac.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [wlac.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     homepage:
       templateVars:
         org:
@@ -30,10 +30,10 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://wlac.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - WLAC-CS
+        - WLAC-CS
         scope:
-          - read:org
+        - read:org
       Authenticator:
         admin_users:
-          - kgorfu # WLAC instructor
-          - sean-morris
+        - kgorfu   # WLAC instructor
+        - sean-morris

@@ -16,22 +16,22 @@ grafana:
       allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.victor.2i2c.cloud
+    - grafana.victor.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.victor.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.victor.2i2c.cloud
 
 prometheus:
   server:
     ingress:
       enabled: true
       hosts:
-        - prometheus.victor.2i2c.cloud
+      - prometheus.victor.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.victor.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.victor.2i2c.cloud
 
 aws-ce-grafana-backend:
   enabled: true
@@ -43,10 +43,10 @@ aws-ce-grafana-backend:
 
 redirects:
   rules:
-    - from: victor.2i2c.cloud
-      to: hub.victorproject.org
-    - from: staging.victor.2i2c.cloud
-      to: staging.hub.victorproject.org
+  - from: victor.2i2c.cloud
+    to: hub.victorproject.org
+  - from: staging.victor.2i2c.cloud
+    to: staging.hub.victorproject.org
 
 calico:
   enabled: true

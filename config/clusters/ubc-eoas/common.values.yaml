@@ -6,12 +6,12 @@ nfs:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
     serverIP: fs-08652322ea83653b1.efs.ca-central-1.amazonaws.com
     baseShareName: /
 
@@ -19,7 +19,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     jupyterhubConfigurator:
       enabled: false
     homepage:
@@ -56,9 +56,9 @@ jupyterhub:
               username_claim: email
       Authenticator:
         admin_users:
-          - ckrzysik # Technical representative, Charles Krzysik
-          - lheagy # Technical representative, Lindsey Heagy
-          - hmodzelewski # Technical representative, Henryk Modzelewski
+        - ckrzysik   # Technical representative, Charles Krzysik
+        - lheagy   # Technical representative, Lindsey Heagy
+        - hmodzelewski   # Technical representative, Henryk Modzelewski
 
   singleuser:
     defaultUrl: /lab
@@ -75,38 +75,38 @@ jupyterhub:
     nodeSelector:
       node.kubernetes.io/instance-type: r5.2xlarge
     profileList:
-      - display_name: EOSC211
-        description: "For class EOSC211, provides up to 1 CPU and ~4G RAM"
-        default: true
-        kubespawner_override:
+    - display_name: EOSC211
+      description: For class EOSC211, provides up to 1 CPU and ~4G RAM
+      default: true
+      kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
-          image: quay.io/henrykmodzelewski/2i2c-eosc211:latest
-      - display_name: EOSC212
-        description: "For class EOSC212, provides up to 1 CPU and ~4G RAM"
-        kubespawner_override:
+        image: quay.io/henrykmodzelewski/2i2c-eosc211:latest
+    - display_name: EOSC212
+      description: For class EOSC212, provides up to 1 CPU and ~4G RAM
+      kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
-          image: quay.io/henrykmodzelewski/2i2c-eosc212:latest
-      - display_name: EOSC350
-        description: "For class EOSC350, provides up to 1 CPU and ~4G RAM"
-        kubespawner_override:
+        image: quay.io/henrykmodzelewski/2i2c-eosc212:latest
+    - display_name: EOSC350
+      description: For class EOSC350, provides up to 1 CPU and ~4G RAM
+      kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
-          image: quay.io/henrykmodzelewski/2i2c-eosc350:latest
-      - display_name: EOSC454
-        description: "For class EOSC454, provides up to 1 CPU and ~4G RAM"
-        kubespawner_override:
+        image: quay.io/henrykmodzelewski/2i2c-eosc350:latest
+    - display_name: EOSC454
+      description: For class EOSC454, provides up to 1 CPU and ~4G RAM
+      kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
-          image: quay.io/henrykmodzelewski/2i2c-eosc454:latest
+        image: quay.io/henrykmodzelewski/2i2c-eosc454:latest
       # https://2i2c.freshdesk.com/a/tickets/2578
-      - display_name: ENVR420
-        description: "For class ENVR420, provides up to 1 CPU and ~4G RAM"
-        kubespawner_override:
+    - display_name: ENVR420
+      description: For class ENVR420, provides up to 1 CPU and ~4G RAM
+      kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
-          image: quay.io/henrykmodzelewski/2i2c-envr420:latest
+        image: quay.io/henrykmodzelewski/2i2c-envr420:latest
 
   scheduling:
     userScheduler:

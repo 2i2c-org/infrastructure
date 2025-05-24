@@ -13,103 +13,103 @@ gcp:
       billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
+- name: staging
     # Tip: consider changing this to something more human friendly
-    display_name: "Catalyst Project, LatAm - Staging"
-    domain: staging.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: unitefa-conicet
-    display_name: "Catalyst Project, LatAm - UNITEFA-CONICET"
-    domain: unitefa-conicet.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - unitefa-conicet.values.yaml
-      - enc-unitefa-conicet.secret.values.yaml
-  - name: cicada
-    display_name: "Catalyst Project, LatAm - CICADA"
-    domain: cicada.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - cicada.values.yaml
-      - enc-cicada.secret.values.yaml
-  - name: gita
-    display_name: "Catalyst Project, LatAm - GITA"
-    domain: gita.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - gita.values.yaml
-      - enc-gita.secret.values.yaml
-  - name: iner
-    display_name: "Catalyst Project, LatAm - INER"
-    domain: iner.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - iner.values.yaml
-      - enc-iner.secret.values.yaml
-  - name: plnc
-    display_name: "Catalyst Project, LatAm - PLNC"
-    domain: hub.pln.villena.cl
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - plnc.values.yaml
-      - enc-plnc.secret.values.yaml
-  - name: unam
-    display_name: "Catalyst Project, LatAm - UNAM"
-    domain: unam.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - unam.values.yaml
-      - enc-unam.secret.values.yaml
-  - name: cabana
-    display_name: "Catalyst Project, LatAm - CABANA"
-    domain: cabana.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - cabana.values.yaml
-      - enc-cabana.secret.values.yaml
-  - name: nnb-ccg
-    display_name: "Catalyst Project, LatAm - NNB-CCG"
-    domain: nnb-ccg.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - nnb-ccg.values.yaml
-      - enc-nnb-ccg.secret.values.yaml
-  - name: labi
-    display_name: "Catalyst Project, LatAm - LABI"
-    domain: labi.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - labi.values.yaml
-      - enc-labi.secret.values.yaml
-  - name: areciboc3
-    display_name: "Catalyst Project, LatAm - Arecibo C3"
-    domain: areciboc3.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - areciboc3.values.yaml
-      - enc-areciboc3.secret.values.yaml
-  - name: valledellili
-    display_name: "Catalyst Project, LatAm - Fundación Valle del Lili-UMBC & AC3"
-    domain: valledellili.latam.catalystproject.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - valledellili.values.yaml
-      - enc-valledellili.secret.values.yaml
+  display_name: Catalyst Project, LatAm - Staging
+  domain: staging.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: unitefa-conicet
+  display_name: Catalyst Project, LatAm - UNITEFA-CONICET
+  domain: unitefa-conicet.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - unitefa-conicet.values.yaml
+  - enc-unitefa-conicet.secret.values.yaml
+- name: cicada
+  display_name: Catalyst Project, LatAm - CICADA
+  domain: cicada.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - cicada.values.yaml
+  - enc-cicada.secret.values.yaml
+- name: gita
+  display_name: Catalyst Project, LatAm - GITA
+  domain: gita.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - gita.values.yaml
+  - enc-gita.secret.values.yaml
+- name: iner
+  display_name: Catalyst Project, LatAm - INER
+  domain: iner.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - iner.values.yaml
+  - enc-iner.secret.values.yaml
+- name: plnc
+  display_name: Catalyst Project, LatAm - PLNC
+  domain: hub.pln.villena.cl
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - plnc.values.yaml
+  - enc-plnc.secret.values.yaml
+- name: unam
+  display_name: Catalyst Project, LatAm - UNAM
+  domain: unam.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - unam.values.yaml
+  - enc-unam.secret.values.yaml
+- name: cabana
+  display_name: Catalyst Project, LatAm - CABANA
+  domain: cabana.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - cabana.values.yaml
+  - enc-cabana.secret.values.yaml
+- name: nnb-ccg
+  display_name: Catalyst Project, LatAm - NNB-CCG
+  domain: nnb-ccg.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - nnb-ccg.values.yaml
+  - enc-nnb-ccg.secret.values.yaml
+- name: labi
+  display_name: Catalyst Project, LatAm - LABI
+  domain: labi.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - labi.values.yaml
+  - enc-labi.secret.values.yaml
+- name: areciboc3
+  display_name: Catalyst Project, LatAm - Arecibo C3
+  domain: areciboc3.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - areciboc3.values.yaml
+  - enc-areciboc3.secret.values.yaml
+- name: valledellili
+  display_name: Catalyst Project, LatAm - Fundación Valle del Lili-UMBC & AC3
+  domain: valledellili.latam.catalystproject.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - valledellili.values.yaml
+  - enc-valledellili.secret.values.yaml

@@ -19,8 +19,8 @@ basehub:
     ingress:
       hosts: [leap.2i2c.cloud]
       tls:
-        - hosts: [leap.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [leap.2i2c.cloud]
+        secretName: https-auto-tls
     proxy:
       chp:
         resources:

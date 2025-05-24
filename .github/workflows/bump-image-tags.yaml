@@ -11,7 +11,7 @@ on:
         default: false
         required: false
   schedule:
-    - cron: "0 0 * * 1" # Run at 00:00 UTC every Monday
+  - cron: 0 0 * * 1     # Run at 00:00 UTC every Monday
 
 env:
   team_reviewers: engineering
@@ -45,19 +45,19 @@ jobs:
       # secondary workflows.
       #
       # Action: https://github.com/marketplace/actions/github-app-token
-      - name: Fetch a token from GitHub App
-        id: generate_token
-        uses: tibdex/github-app-token@v2
-        with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+    - name: Fetch a token from GitHub App
+      id: generate_token
+      uses: tibdex/github-app-token@v2
+      with:
+        app_id: ${{ secrets.APP_ID }}
+        private_key: ${{ secrets.PRIVATE_KEY }}
 
       # Action repo: https://github.com/sgibson91/bump-jhub-image-action
-      - name: "Bump image tags: ${{ matrix.name }}"
-        uses: sgibson91/bump-jhub-image-action@main
-        with:
-          config_path: ${{ matrix.config_path }}
-          images_info: ${{ matrix.images_info }}
-          github_token: ${{ steps.generate_token.outputs.token }}
+    - name: 'Bump image tags: ${{ matrix.name }}'
+      uses: sgibson91/bump-jhub-image-action@main
+      with:
+        config_path: ${{ matrix.config_path }}
+        images_info: ${{ matrix.images_info }}
+        github_token: ${{ steps.generate_token.outputs.token }}
           # team_reviewers: ${{ env.team_reviewers }}
-          dry_run: ${{ github.event.inputs.dry_run || false }}
+        dry_run: ${{ github.event.inputs.dry_run || false }}

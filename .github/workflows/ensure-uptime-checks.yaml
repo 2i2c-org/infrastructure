@@ -3,16 +3,16 @@ name: Ensure Uptime Checks
 on:
   push:
     branches:
-      - main
+    - main
     paths:
       # Config of prometheus or hubs might have changed
-      - helm-charts/**
+    - helm-charts/**
       # Hubs & clusters might be added or removed
-      - config/clusters/**
+    - config/clusters/**
       # The terraform code for the checks might have changed
-      - terraform/uptime-checks/**
+    - terraform/uptime-checks/**
       # The way terraform is deployed might have changed!
-      - .github/workflows/ensure-uptime-checks.yaml
+    - .github/workflows/ensure-uptime-checks.yaml
 
 # Queue executions of this workflow to avoid conflicts
 # ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
@@ -28,29 +28,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
       # Uptime checks are set up and managed via terraform
-      - uses: hashicorp/setup-terraform@v3
+    - uses: hashicorp/setup-terraform@v3
 
       # We use sops to store encrypted GCP ServiceAccount Key that terraform uses
       # to run, as well as PagerDuty config terraform uses
-      - name: Install sops
-        uses: mdgreenwald/mozilla-sops-action@v1.6.0
+    - name: Install sops
+      uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
       # Authenticate with the correct KMS key that sops will use.
-      - name: Setup sops credentials to decrypt repo secrets
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: "${{ secrets.GCP_KMS_DECRYPTOR_KEY }}"
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
-      - name: ensure uptime checks are set up
-        run: |
-          cd terraform/uptime-checks
-          # Decrypt the GCP ServiceAccount key with permissions to run terraform
-          sops -d secret/enc-service-account-key.secret.json > service-account-key.json
-          export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
-          # Setup Terraform
-          terraform init
-          # Run terraform automatically
-          terraform apply -auto-approve
+    - name: ensure uptime checks are set up
+      run: |
+        cd terraform/uptime-checks
+        # Decrypt the GCP ServiceAccount key with permissions to run terraform
+        sops -d secret/enc-service-account-key.secret.json > service-account-key.json
+        export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
+        # Setup Terraform
+        terraform init
+        # Run terraform automatically
+        terraform apply -auto-approve

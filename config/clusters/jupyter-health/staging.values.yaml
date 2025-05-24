@@ -10,14 +10,14 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-097e117991afc3759
   quotaEnforcer:
-    hardQuota: "0.5" # in GB
+    hardQuota: '0.5' # in GB
 
 jupyterhub:
   ingress:
     hosts: [staging.jupyter-health.2i2c.cloud]
     tls:
-      - hosts: [staging.jupyter-health.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.jupyter-health.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       GenericOAuthenticator:
@@ -28,8 +28,8 @@ jupyterhub:
         userdata_url: https://berkeley-jhe-staging.jupyterhealth.org/api/v1/users/profile
         login_service: JupyterHealth Exchange (staging)
         allowed_groups:
-          - "20024" # JupyterHub users (~all users are here)
-          - "20017" # 2i2c
+        - '20024'   # JupyterHub users (~all users are here)
+        - '20017'   # 2i2c
   singleuser:
     extraEnv:
       JHE_URL: https://berkeley-jhe-staging.jupyterhealth.org
@@ -39,11 +39,11 @@ jupyterhub:
         data:
           SMARTExtensionApp:
             scopes:
-              - openid
-              - profile
-              - fhirUser
-              - launch/patient
-            redirect_uri: "https://staging.jupyter-health.2i2c.cloud/hub/user-redirect/smart-on-fhir/callback"
+            - openid
+            - profile
+            - fhirUser
+            - launch/patient
+            redirect_uri: https://staging.jupyter-health.2i2c.cloud/hub/user-redirect/smart-on-fhir/callback
       extra_server_config_py:
         mountPath: /opt/conda/etc/jupyter/jupyter_server_config.py
         stringData: |

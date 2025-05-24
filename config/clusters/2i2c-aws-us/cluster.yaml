@@ -9,30 +9,30 @@ aws:
     paid_by_us: true
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "2i2c AWS staging"
-    domain: staging.aws.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: dask-staging
-    display_name: "2i2c AWS dask-staging"
-    domain: dask-staging.aws.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - dask-staging.values.yaml
-      - enc-dask-staging.secret.values.yaml
-  - name: showcase
-    display_name: "2i2c Showcase"
-    domain: showcase.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - showcase.values.yaml
-      - enc-showcase.secret.values.yaml
+- name: staging
+  display_name: 2i2c AWS staging
+  domain: staging.aws.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: dask-staging
+  display_name: 2i2c AWS dask-staging
+  domain: dask-staging.aws.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - daskhub-common.values.yaml
+  - dask-staging.values.yaml
+  - enc-dask-staging.secret.values.yaml
+- name: showcase
+  display_name: 2i2c Showcase
+  domain: showcase.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - daskhub-common.values.yaml
+  - showcase.values.yaml
+  - enc-showcase.secret.values.yaml

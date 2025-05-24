@@ -6,11 +6,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.projectpythia.2i2c.cloud
+      - prometheus.projectpythia.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.projectpythia.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.projectpythia.2i2c.cloud
 
 grafana:
   grafana.ini:
@@ -21,11 +21,11 @@ grafana:
     allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.projectpythia.2i2c.cloud
+    - grafana.projectpythia.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.projectpythia.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.projectpythia.2i2c.cloud
 
 aws-ce-grafana-backend:
   enabled: true

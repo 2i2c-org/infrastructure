@@ -13,36 +13,36 @@ gcp:
       billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "HHMI Staging"
-    domain: staging.hhmi.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: prod
-    display_name: "HHMI"
-    domain: hhmi.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - prod.values.yaml
-      - enc-prod.secret.values.yaml
-  - name: spyglass
-    display_name: "HHMI Spyglass (ephemeral)"
-    domain: spyglass.hhmi.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - spyglass.values.yaml
-      - enc-spyglass.secret.values.yaml
-  - name: binder
-    display_name: "HHMI Binder (ephemeral)"
-    domain: binder.hhmi.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - binder.values.yaml
-      - enc-binder.secret.values.yaml
+- name: staging
+  display_name: HHMI Staging
+  domain: staging.hhmi.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - daskhub-common.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: prod
+  display_name: HHMI
+  domain: hhmi.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - daskhub-common.values.yaml
+  - prod.values.yaml
+  - enc-prod.secret.values.yaml
+- name: spyglass
+  display_name: HHMI Spyglass (ephemeral)
+  domain: spyglass.hhmi.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - spyglass.values.yaml
+  - enc-spyglass.secret.values.yaml
+- name: binder
+  display_name: HHMI Binder (ephemeral)
+  domain: binder.hhmi.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - binder.values.yaml
+  - enc-binder.secret.values.yaml

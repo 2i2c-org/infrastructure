@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [merced.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [merced.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [merced.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -36,13 +36,13 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://merced.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - Merced-College
+        - Merced-College
         scope:
-          - read:org
+        - read:org
       Authenticator:
         admin_users:
-          - sean-morris
-          - katkanemoto
-          - ghogan42
-          - svetla-gargova
-          - basaadMerced
+        - sean-morris
+        - katkanemoto
+        - ghogan42
+        - svetla-gargova
+        - basaadMerced

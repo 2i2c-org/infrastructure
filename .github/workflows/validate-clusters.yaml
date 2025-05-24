@@ -11,30 +11,30 @@ name: Validate clusters
 on:
   pull_request:
     branches:
-      - main
+    - main
     paths:
-      - "config/clusters/**"
+    - config/clusters/**
       # Exclude changes to the templates directory from
       # triggering this workflow
-      - "!config/clusters/templates/**"
-      - "helm-charts/**"
-      - "deployer/**"
-      - "requirements.txt"
-      - ".github/workflows/validate-clusters.yaml"
+    - '!config/clusters/templates/**'
+    - helm-charts/**
+    - deployer/**
+    - requirements.txt
+    - .github/workflows/validate-clusters.yaml
   push:
     branches:
-      - main
+    - main
     paths:
-      - "config/clusters/**"
+    - config/clusters/**
       # Exclude changes the templates directory from
       # triggering this workflow
-      - "!config/clusters/templates/**"
-      - "helm-charts/**"
-      - "deployer/**"
-      - "requirements.txt"
-      - ".github/workflows/validate-clusters.yaml"
+    - '!config/clusters/templates/**'
+    - helm-charts/**
+    - deployer/**
+    - requirements.txt
+    - .github/workflows/validate-clusters.yaml
     tags:
-      - "**"
+    - '**'
   workflow_dispatch:
 
 permissions:
@@ -79,111 +79,111 @@ jobs:
       (github.event_name == 'pull_request' && contains(github.head_ref, fromJson('["dependabot", "pre-commit"]')) == false)
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-      - name: Check for file changes
+    - name: Check for file changes
         # Don't run this step when we manually trigger the workflow
-        if: github.event_name != 'workflow_dispatch'
+      if: github.event_name != 'workflow_dispatch'
         # Action repo: https://github.com/dorny/paths-filter
-        uses: dorny/paths-filter@v3
-        id: file_changes
-        with:
-          token: ""
-          list-files: csv
-          filters: |
-            common:
-              - added|modified: deployer/**
-              - added|modified: helm-charts/basehub/**
-              - added|modified: helm-charts/daskhub/**
-              - added|modified: helm-charts/support/**
-              - added|modified: requirements.txt
-              - added|modified: .github/workflows/validate-clusters.yaml
-            cluster_specific:
-              - added|modified: config/clusters/**
-              # We want to ignore config/clusters/templates/**, but it seems its
-              # not be possible for us to do so with a single call to this
-              # action. Let's try to ignore jobs failing triggered by stuff in
-              # templates/.
-              # - added|modified: !config/clusters/templates/**
+      uses: dorny/paths-filter@v3
+      id: file_changes
+      with:
+        token: ''
+        list-files: csv
+        filters: |
+          common:
+            - added|modified: deployer/**
+            - added|modified: helm-charts/basehub/**
+            - added|modified: helm-charts/daskhub/**
+            - added|modified: helm-charts/support/**
+            - added|modified: requirements.txt
+            - added|modified: .github/workflows/validate-clusters.yaml
+          cluster_specific:
+            - added|modified: config/clusters/**
+            # We want to ignore config/clusters/templates/**, but it seems its
+            # not be possible for us to do so with a single call to this
+            # action. Let's try to ignore jobs failing triggered by stuff in
+            # templates/.
+            # - added|modified: !config/clusters/templates/**
 
       # Only run this step if there *ARE* changes under the common filter, *OR*
       # we have manually triggered the workflow
-      - name: Generate a matrix containing all clusters
-        if: |
-          github.event_name == 'workflow_dispatch' ||
-          steps.file_changes.outputs.common == 'true'
-        shell: python
-        run: |
-          import os
-          import json
+    - name: Generate a matrix containing all clusters
+      if: |
+        github.event_name == 'workflow_dispatch' ||
+        steps.file_changes.outputs.common == 'true'
+      shell: python
+      run: |
+        import os
+        import json
 
-          # List all cluster folders
-          cluster_folders = os.listdir("config/clusters")
+        # List all cluster folders
+        cluster_folders = os.listdir("config/clusters")
 
-          # Construct a matrix of all clusters
-          matrix = []
-          for cluster in cluster_folders:
-              # The `templates` directory contains template yaml configs
-              # and doesn't represent a "real" cluster.
-              # This is why we need to exclude it from the list of clusters
-              # and hence all workflows, otherwise it will cause them to fail.
-              if cluster != "templates":
-                matrix.append({"cluster_name": cluster})
+        # Construct a matrix of all clusters
+        matrix = []
+        for cluster in cluster_folders:
+            # The `templates` directory contains template yaml configs
+            # and doesn't represent a "real" cluster.
+            # This is why we need to exclude it from the list of clusters
+            # and hence all workflows, otherwise it will cause them to fail.
+            if cluster != "templates":
+              matrix.append({"cluster_name": cluster})
 
-          # Write matrix to the GITHUB_ENV file in GitHub Actions
-          env_file = os.getenv("GITHUB_ENV")
-          with open(env_file, "a") as f:
-              # Explicitly dump these as JSON, as that is what they are read as
-              # General python object syntax sometimes works but sometimes does
-              # not - for example, single quotes are not valid in JSON.
-              f.write(f"MATRIX={json.dumps(matrix)}")
+        # Write matrix to the GITHUB_ENV file in GitHub Actions
+        env_file = os.getenv("GITHUB_ENV")
+        with open(env_file, "a") as f:
+            # Explicitly dump these as JSON, as that is what they are read as
+            # General python object syntax sometimes works but sometimes does
+            # not - for example, single quotes are not valid in JSON.
+            f.write(f"MATRIX={json.dumps(matrix)}")
 
       # Only run this step if there are *NO* changes under the common filter,
       # but *ARE* changes under the cluster_specific filter, *AND* we have not
       # manually triggered the workflow
-      - name: Generate a matrix containing only clusters that have changes
-        if: |
-          github.event_name != 'workflow_dispatch' &&
-          steps.file_changes.outputs.common != 'true' &&
-          steps.file_changes.outputs.cluster_specific == 'true'
-        shell: python
-        run: |
-          import os
-          import json
-          from pathlib import Path
+    - name: Generate a matrix containing only clusters that have changes
+      if: |
+        github.event_name != 'workflow_dispatch' &&
+        steps.file_changes.outputs.common != 'true' &&
+        steps.file_changes.outputs.cluster_specific == 'true'
+      shell: python
+      run: |
+        import os
+        import json
+        from pathlib import Path
 
-          # Consume list of changed cluster files and convert to list by splitting
-          # on the comma character
-          cluster_files = r"""${{ steps.file_changes.outputs.cluster_specific_files }}"""
-          cluster_files = cluster_files.split(",")
-          assert isinstance(cluster_files, list)
+        # Consume list of changed cluster files and convert to list by splitting
+        # on the comma character
+        cluster_files = r"""${{ steps.file_changes.outputs.cluster_specific_files }}"""
+        cluster_files = cluster_files.split(",")
+        assert isinstance(cluster_files, list)
 
-          # Extract the cluster names from the paths of the changed files
-          clusters = []
-          for cluster_file in cluster_files:
-              clusters.append(Path(cluster_file).parent.stem)
+        # Extract the cluster names from the paths of the changed files
+        clusters = []
+        for cluster_file in cluster_files:
+            clusters.append(Path(cluster_file).parent.stem)
 
-          # Ensure each cluster name only appears once by transforming the list
-          # into a set
-          clusters = set(clusters)
+        # Ensure each cluster name only appears once by transforming the list
+        # into a set
+        clusters = set(clusters)
 
-          # Construct a matrix of clusters that have changes
-          matrix = []
-          excluded_template_assets = ["templates", "common", "aws", "gcp"]
-          for cluster in clusters:
-              if cluster not in excluded_template_assets:
-                  matrix.append({"cluster_name": cluster})
+        # Construct a matrix of clusters that have changes
+        matrix = []
+        excluded_template_assets = ["templates", "common", "aws", "gcp"]
+        for cluster in clusters:
+            if cluster not in excluded_template_assets:
+                matrix.append({"cluster_name": cluster})
 
-          # Write the matrix to the GITHUB_ENV file in GitHub Actions
-          env_file = os.getenv("GITHUB_ENV")
-          with open(env_file, "a") as f:
-              # Explicitly dump these as JSON, as that is what they are read as
-              # General python object syntax sometimes works but sometimes does
-              # not - for example, single quotes are not valid in JSON.
-              f.write(f"MATRIX={json.dumps(matrix)}")
+        # Write the matrix to the GITHUB_ENV file in GitHub Actions
+        env_file = os.getenv("GITHUB_ENV")
+        with open(env_file, "a") as f:
+            # Explicitly dump these as JSON, as that is what they are read as
+            # General python object syntax sometimes works but sometimes does
+            # not - for example, single quotes are not valid in JSON.
+            f.write(f"MATRIX={json.dumps(matrix)}")
 
   # This job runs the 'deployer validate' subcommand across a matrix of
   # cluster names.
@@ -200,7 +200,7 @@ jobs:
   validate-helm-charts-values-files:
     runs-on: ubuntu-latest
     needs: [generate-clusters-to-validate]
-    name: "validate-${{ matrix.jobs.cluster_name }}"
+    name: validate-${{ matrix.jobs.cluster_name }}
     if: |
       needs.generate-clusters-to-validate.outputs.continue_workflow &&
       (needs.generate-clusters-to-validate.outputs.cluster_matrix != '[]')
@@ -210,19 +210,19 @@ jobs:
         jobs: ${{ fromJson(needs.generate-clusters-to-validate.outputs.cluster_matrix) }}
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - uses: actions/setup-go@v5
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - uses: actions/setup-go@v5
 
-      - name: Install deployer module dependencies
-        run: |
-          pip install --editable .
-          go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+    - name: Install deployer module dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
-      - name: "Validate cluster: ${{ matrix.jobs.cluster_name }}"
-        env:
-          TERM: xterm
-        run: |
-          deployer validate all ${{ matrix.jobs.cluster_name }}
+    - name: 'Validate cluster: ${{ matrix.jobs.cluster_name }}'
+      env:
+        TERM: xterm
+      run: |
+        deployer validate all ${{ matrix.jobs.cluster_name }}

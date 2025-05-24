@@ -9,8 +9,8 @@ basehub:
     ingress:
       hosts: [staging.leap.2i2c.cloud]
       tls:
-        - hosts: [staging.leap.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [staging.leap.2i2c.cloud]
+        secretName: https-auto-tls
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://leap-scratch-staging/$(JUPYTERHUB_USER)

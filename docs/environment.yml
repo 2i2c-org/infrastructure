@@ -1,7 +1,7 @@
 name: infrastructure-docs
 channels:
-  - conda-forge
+- conda-forge
 dependencies:
-  - python=3.11
-  - pip:
-      - -r requirements.txt
+- python=3.11
+- pip:
+  - -r requirements.txt

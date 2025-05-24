@@ -2,14 +2,14 @@ jupyterhub:
   ingress:
     hosts: [dubois.2i2c.cloud]
     tls:
-      - hosts: [dubois.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [dubois.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       JupyterHub:
         authenticator_class: tmp
       Authenticator:
-        allow_all: True
+        allow_all: true
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins

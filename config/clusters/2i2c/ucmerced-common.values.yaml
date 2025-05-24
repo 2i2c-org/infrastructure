@@ -2,23 +2,23 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     singleuserAdmin:
       extraVolumeMounts:
         # /allusers is an extra mount point for admins to access to all users'
         # home dirs
-        - name: home
-          mountPath: /home/jovyan/allusers
-          readOnly: false
+      - name: home
+        mountPath: /home/jovyan/allusers
+        readOnly: false
         # mounts below are copied from basehub's values that we override by
         # specifying extraVolumeMounts (lists get overridden when helm values
         # are combined)
-        - name: home
-          mountPath: /home/jovyan/shared-readwrite
-          subPath: _shared
-        - name: home
-          mountPath: /home/rstudio/shared-readwrite
-          subPath: _shared
+      - name: home
+        mountPath: /home/jovyan/shared-readwrite
+        subPath: _shared
+      - name: home
+        mountPath: /home/rstudio/shared-readwrite
+        subPath: _shared
     homepage:
       templateVars:
         org:
@@ -39,20 +39,20 @@ jupyterhub:
           resources and documentation</a> on how to utilize JupyterHub.
         announcements:
           # from https://2i2c.freshdesk.com/a/tickets/1512
-          - |
-            <div>
-              <p>
-                Support for JupyterHub is provided during standard operating hours: 8:00 a.m. –
-                5:00 p.m., Monday through Friday. Please submit a general ticket through the <a
-                href="https://ucmerced.service-now.com/servicehub?id=public_kb_article&sys_id=3c3ee9ff1b67a0543a003112cd4bcb13&form_id=06da3f8edbfc08103c4d56f3ce9619f4">
-                UC Merced ServiceHub</a>.
-              </p>
+        - |
+          <div>
+            <p>
+              Support for JupyterHub is provided during standard operating hours: 8:00 a.m. –
+              5:00 p.m., Monday through Friday. Please submit a general ticket through the <a
+              href="https://ucmerced.service-now.com/servicehub?id=public_kb_article&sys_id=3c3ee9ff1b67a0543a003112cd4bcb13&form_id=06da3f8edbfc08103c4d56f3ce9619f4">
+              UC Merced ServiceHub</a>.
+            </p>
 
-              <p>
-                If you're having issues accessing JupterHub, please Report a Problem at
-                <a href="https://ucmerced.service-now.com/servicehub">servicehub.ucmerced.edu</a> or call 228-HELP (4357).
-              </p>
-            </div>
+            <p>
+              If you're having issues accessing JupterHub, please Report a Problem at
+              <a href="https://ucmerced.service-now.com/servicehub">servicehub.ucmerced.edu</a> or call 228-HELP (4357).
+            </p>
+          </div>
   hub:
     config:
       JupyterHub:
@@ -62,11 +62,11 @@ jupyterhub:
           urn:mace:incommon:ucmerced.edu:
             default: true
             username_derivation:
-              username_claim: "eppn"
+              username_claim: eppn
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - schadalapaka@ucmerced.edu
+        - schadalapaka@ucmerced.edu

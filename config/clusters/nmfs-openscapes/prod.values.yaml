@@ -22,8 +22,8 @@ jupyterhub:
   ingress:
     hosts: [nmfs-openscapes.2i2c.cloud]
     tls:
-      - hosts: [nmfs-openscapes.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [nmfs-openscapes.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod
@@ -38,20 +38,20 @@ jupyterhub:
         oauth_callback_url: https://nmfs-openscapes.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - nmfs-openscapes:longterm-access-2i2c
-          - nmfs-openscapes:2024-mentors
-          - nmfs-openscapes:2024-science-teams
-          - nmfs-openscapes:2024-CoastWatch
-          - nmfs-openscapes:2024-nmfs-champions-cohort
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - nmfs-openscapes:longterm-access-2i2c
+        - nmfs-openscapes:2024-mentors
+        - nmfs-openscapes:2024-science-teams
+        - nmfs-openscapes:2024-CoastWatch
+        - nmfs-openscapes:2024-nmfs-champions-cohort
         scope:
-          - read:org
+        - read:org
 
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-004cc1b60a1dfb9e4
   quotaEnforcer:
-    hardQuota: "64" # in GB
+    hardQuota: '64' # in GB
 
 binderhub-service:
   config:
