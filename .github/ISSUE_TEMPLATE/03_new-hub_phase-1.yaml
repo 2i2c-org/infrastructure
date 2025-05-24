@@ -1,41 +1,41 @@
 name: New Hub Turnup Phase 1 - Cloud Account Setup
 description: Track setting up a cloud account for new community on a dedicated cluster
-title: "[New Hub] [Phase 1] Cloud Account Setup - {{community_name}}"
+title: '[New Hub] [Phase 1] Cloud Account Setup - {{community_name}}'
 body:
-  - type: dropdown
-    id: status
-    attributes:
-      label: "What is the 'ready to work' status of this phase?"
-      description: >-
-        This phase can only be marked READY when the table below is complete
-      options:
-        - "NOT READY"
-        - "READY"
-      default: 0
-    validations:
-      required: true
-  - type: textarea
-    id: info-table
-    attributes:
-      label: >-
-        Required information for setting up a cloud account for a new community
-        on a dedicated cluster.
+- type: dropdown
+  id: status
+  attributes:
+    label: What is the 'ready to work' status of this phase?
+    description: >-
+      This phase can only be marked READY when the table below is complete
+    options:
+    - NOT READY
+    - READY
+    default: 0
+  validations:
+    required: true
+- type: textarea
+  id: info-table
+  attributes:
+    label: >-
+      Required information for setting up a cloud account for a new community
+      on a dedicated cluster.
 
-      value: |-
-        This phase is applicable for cases where a community is being setup on a
-        dedicated cluster. The following table lists the information that must
-        be provided before this phase can be marked as READY and begin.
-        Use the Notes column to provide any other contextual information.
+    value: |-
+      This phase is applicable for cases where a community is being setup on a
+      dedicated cluster. The following table lists the information that must
+      be provided before this phase can be marked as READY and begin.
+      Use the Notes column to provide any other contextual information.
 
-        | Question | Answer | Notes |
-        | :--- | :--- | :--- |
-        | Cloud Provider | `AWS/GCP` | |
-        | Will 2i2c pay for cloud costs? | `Yes/No` | |
-        | Name of cloud account | | |
-        | Community Representative(s) (GitHub handles or email) | | |
-        | Have the Technical Contacts been added to the [AirTable](https://airtable.com/appbjBTRIbgRiElkr/pagD3XyZjqBunYMnC)? | `Yes/No` | |
+      | Question | Answer | Notes |
+      | :--- | :--- | :--- |
+      | Cloud Provider | `AWS/GCP` | |
+      | Will 2i2c pay for cloud costs? | `Yes/No` | |
+      | Name of cloud account | | |
+      | Community Representative(s) (GitHub handles or email) | | |
+      | Have the Technical Contacts been added to the [AirTable](https://airtable.com/appbjBTRIbgRiElkr/pagD3XyZjqBunYMnC)? | `Yes/No` | |
 
-        Available runbooks:
-        - https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase1/#available-runbooks
-    validations:
-      required: true
+      Available runbooks:
+      - https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase1/#available-runbooks
+  validations:
+    required: true

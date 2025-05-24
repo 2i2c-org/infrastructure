@@ -3,18 +3,18 @@ name: Lint terraform
 on:
   pull_request:
     paths:
-      - "terraform/**"
+    - terraform/**
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-      - uses: terraform-linters/setup-tflint@v4
-      - name: Run terraform linter
-        run: |
-          cd terraform
-          tflint --recursive
-      - name: Check terraform formatting
-        run: terraform fmt -check -diff terraform/
+    - uses: actions/checkout@v4
+    - uses: hashicorp/setup-terraform@v3
+    - uses: terraform-linters/setup-tflint@v4
+    - name: Run terraform linter
+      run: |
+        cd terraform
+        tflint --recursive
+    - name: Check terraform formatting
+      run: terraform fmt -check -diff terraform/

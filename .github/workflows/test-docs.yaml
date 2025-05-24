@@ -6,32 +6,32 @@ name: Test docs
 on:
   pull_request:
     paths:
-      - "docs/**"
-      - "**/test-docs.yaml"
+    - docs/**
+    - '**/test-docs.yaml'
   push:
     paths:
-      - "docs/**"
-      - "**/test-docs.yaml"
+    - docs/**
+    - '**/test-docs.yaml'
     branches-ignore:
-      - "dependabot/**"
-      - "pre-commit-ci-update-config"
+    - dependabot/**
+    - pre-commit-ci-update-config
   workflow_dispatch:
 
 jobs:
   test-docs:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-      - name: Install deps
-        run: pip install -r docs/requirements.txt
+    - name: Install deps
+      run: pip install -r docs/requirements.txt
 
       # linkcheck is done separately from this in doc-links.yml, scheduled to
       # run every day and open/update an issue
-      - name: make dirhtml
-        run: |
-          cd docs
-          make dirhtml SPHINXOPTS='--color -W --keep-going'
+    - name: make dirhtml
+      run: |
+        cd docs
+        make dirhtml SPHINXOPTS='--color -W --keep-going'

@@ -1,11 +1,11 @@
-name: "Recurrent: regenerate SMCE credentials"
+name: 'Recurrent: regenerate SMCE credentials'
 on:
   workflow_dispatch:
   schedule:
     # Run on January 6 → February 25 → April 6 → May 25, and so on
     # This means a new issue will be opened every 40 to 50 days
-    - cron: "0 0 6 1,4,7,10 *"
-    - cron: "0 0 25 2,5,8,11 *"
+  - cron: 0 0 6 1,4,7,10 *
+  - cron: 0 0 25 2,5,8,11 *
 
 jobs:
   create_issue:
@@ -14,52 +14,52 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Get Deadline
-        id: get_deadline
+    - name: Get Deadline
+      id: get_deadline
         # The deadline is 4 days after the issue is opened
-        run: |
-          echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
-          echo "deadline_as_iso_date=$(date -d '+4 days' +"%Y-%m-%d")" >> $GITHUB_ENV
+      run: |
+        echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
+        echo "deadline_as_iso_date=$(date -d '+4 days' +"%Y-%m-%d")" >> $GITHUB_ENV
 
-      - name: Create issue
-        run: |
-          issue=$(gh issue create \
-            --label "recurrent" \
-            --title "[${{ env.deadline }}] Regenerate SMCE credentials" \
-            --body "$BODY")
-          echo "issue=$issue" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          BODY: |
-            The credentials of the deployer on SMCE clusters must be renewed every ~55 days.
+    - name: Create issue
+      run: |
+        issue=$(gh issue create \
+          --label "recurrent" \
+          --title "[${{ env.deadline }}] Regenerate SMCE credentials" \
+          --body "$BODY")
+        echo "issue=$issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          The credentials of the deployer on SMCE clusters must be renewed every ~55 days.
 
-            ### Context
-            AWS credentials for our hub deployer must be renewed for the following clusters:
-            - [ ] nasa-veda
-            - [ ] nasa-ghg
-            - [ ] maap
-            - [ ] disasters
+          ### Context
+          AWS credentials for our hub deployer must be renewed for the following clusters:
+          - [ ] nasa-veda
+          - [ ] nasa-ghg
+          - [ ] maap
+          - [ ] disasters
 
-            ### Resources
-            Follow [the instructions](https://infrastructure.2i2c.org/howto/regenerate-smce-creds/#regenerate-credentials-for-the-deployer) on how to do this.
+          ### Resources
+          Follow [the instructions](https://infrastructure.2i2c.org/howto/regenerate-smce-creds/#regenerate-credentials-for-the-deployer) on how to do this.
 
-            ### Definition of Done
-            - [ ] There is a deadline for this task
-            - [ ] The credentials of the deployer on all 3 clusters have been renewed
+          ### Definition of Done
+          - [ ] There is a deadline for this task
+          - [ ] The credentials of the deployer on all 3 clusters have been renewed
 
-      - name: Sleep a bit to allow issue to be added to the board by automation
-        run: sleep 3
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
 
-      - name: Set the "Status" and "Estimate" project board fields
-        uses: EndBug/project-fields@v2
-        id: set-fields
-        with:
-          operation: set
+    - name: Set the "Status" and "Estimate" project board fields
+      uses: EndBug/project-fields@v2
+      id: set-fields
+      with:
+        operation: set
           # If the fields name or type will change
           # expect this step to fail
-          fields: Status,Estimate,End date
-          github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-          project_url: https://github.com/orgs/2i2c-org/projects/57
-          values: Up Next,1,${{ env.deadline_as_iso_date }}
-          resource_url: ${{ env.issue }}
+        fields: Status,Estimate,End date
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Up Next,1,${{ env.deadline_as_iso_date }}
+        resource_url: ${{ env.issue }}

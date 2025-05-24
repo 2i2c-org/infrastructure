@@ -15,7 +15,7 @@
 # General action configuration reference:
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#about-yaml-syntax-for-github-actions
 #
-name: "Setup the deployer script for use to deploy"
+name: Setup the deployer script for use to deploy
 description: >-
   Setups the deployer script by loading credentials and installing library
   dependencies and relevant tools needed to interact with encrypted files,
@@ -28,9 +28,9 @@ description: >-
 #
 inputs:
   provider:
-    description: "Cloud provider a cluster runs on"
+    description: Cloud provider a cluster runs on
     required: true
-    default: "gcp"
+    default: gcp
   GCP_KMS_DECRYPTOR_KEY:
     description: >-
       A Google Cloud Service Account Key with KMS Decryption privileges. This allows
@@ -44,34 +44,34 @@ inputs:
 # workflow, it is different!
 #
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-    - uses: actions/setup-go@v5
+  - uses: actions/setup-python@v5
+    with:
+      python-version: '3.11'
+  - uses: actions/setup-go@v5
 
     # There will always be a cache hit on the cache key when this composite
     # action is run, as its only done after the "generate-jobs" job has been run
     # which will save a cache.
-    - name: Restore pip's install cache
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
+  - name: Restore pip's install cache
+    uses: actions/cache@v4
+    with:
+      path: ~/.cache/pip
         # key determines if we define or reuse an existing cache or not. Our
         # key ensure we cache within a workflow run and its attempts, but not
         # between workflow runs.
-        key: "${{ github.run_id }}"
+      key: ${{ github.run_id }}
 
-    - name: Install the deployer + go dependency
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
-      shell: bash
+  - name: Install the deployer + go dependency
+    run: |
+      pip install --editable .
+      go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+    shell: bash
 
     # This action use the github official cache mechanism internally
-    - uses: azure/setup-helm@v4
-      with:
+  - uses: azure/setup-helm@v4
+    with:
         # Manually update a pinning of helm to a minor version based on:
         #
         # - it seems to work
@@ -81,7 +81,7 @@ runs:
         #
         # - helm versions: https://github.com/helm/helm/releases
         #
-        version: v3.14.4
+      version: v3.14.4
 
     # Manually update a pinning of kubectl to a minor version based on:
     #
@@ -104,13 +104,13 @@ runs:
     # - 2i2c, k8s upgrades tracked: https://github.com/2i2c-org/infrastructure/issues/2293
     # - 2i2c, historical issue: https://github.com/2i2c-org/infrastructure/issues/1271
     #
-    - uses: azure/setup-kubectl@v4
-      with:
-        version: "v1.28.8"
+  - uses: azure/setup-kubectl@v4
+    with:
+      version: v1.28.8
 
     # This action use the github official cache mechanism internally
-    - name: Install sops
-      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+  - name: Install sops
+    uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
     # Install pre-requisite for "gcloud container clusters get-credentials"
     # command with a modern k8s client.
@@ -119,17 +119,17 @@ runs:
     # the github-runner image. See
     # https://github.com/actions/runner-images/issues/5925#issuecomment-1216417721.
     #
-    - name: Install gke-gcloud-auth-plugin
-      if: inputs.provider == 'gcp'
-      run: |
-        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+  - name: Install gke-gcloud-auth-plugin
+    if: inputs.provider == 'gcp'
+    run: |
+      echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 
-        sudo apt-get update -y
-        sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
-      shell: bash
+      sudo apt-get update -y
+      sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+    shell: bash
 
-    - name: Setup sops credentials to decrypt repo secrets
-      uses: google-github-actions/auth@v2
-      with:
-        credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
+  - name: Setup sops credentials to decrypt repo secrets
+    uses: google-github-actions/auth@v2
+    with:
+      credentials_json: ${{ inputs.GCP_KMS_DECRYPTOR_KEY }}

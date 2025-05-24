@@ -3,7 +3,7 @@ name: Add readthedocs preview link to pull requests
 on:
   pull_request_target:
     paths:
-      - "docs/**"
+    - docs/**
 
 jobs:
   autolink-rtd-previews:
@@ -11,7 +11,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: readthedocs/actions/preview@v1
-        with:
+    - uses: readthedocs/actions/preview@v1
+      with:
           # The project slug in RTD still has the old repo name
-          project-slug: "2i2c-pilot-hubs"
+        project-slug: 2i2c-pilot-hubs
