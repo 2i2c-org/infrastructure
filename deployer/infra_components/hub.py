@@ -5,9 +5,9 @@ from pathlib import Path
 
 from ruamel.yaml import YAML
 
+from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
-    find_absolute_path_to_cluster_file,
     get_decrypted_file,
     get_decrypted_files,
 )
@@ -25,7 +25,7 @@ class Hub:
     A single, deployable JupyterHub
     """
 
-    def __init__(self, cluster, spec):
+    def __init__(self, cluster: Cluster, spec):
         self.cluster = cluster
         self.spec = spec
 
@@ -55,12 +55,11 @@ class Hub:
 
             self.spec["domain"] = domain_override_config["domain"]
 
-        config_file_path = find_absolute_path_to_cluster_file(self.cluster.config_path)
         for values_file in self.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(
                 values_file
             ) and not values_file.endswith(".jsonnet"):
-                values_file = config_file_path.parent.joinpath(values_file)
+                values_file = self.cluster.dir_path / values_file
                 config = yaml.load(values_file)
                 # Check if there's config that enables dask-gateway
                 dask_gateway_enabled = config.get("dask-gateway", {}).get(

@@ -19,7 +19,6 @@ from deployer.cli_app import validate_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
-    find_absolute_path_to_cluster_file,
 )
 from deployer.utils.jsonnet import render_jsonnet
 from deployer.utils.rendering import print_colour
@@ -72,9 +71,7 @@ def _prepare_helm_charts_dependencies_and_schemas():
 
 
 def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
 
     if hub_name:
         return [h for h in cluster.hubs if h.spec["name"] == hub_name]
@@ -91,13 +88,13 @@ def cluster_config(
     """
     cur_dir = Path(__file__).parent
     cluster_schema_file = cur_dir.joinpath("cluster.schema.yaml")
-    cluster_file = find_absolute_path_to_cluster_file(cluster_name)
 
-    with open(cluster_file) as cf, open(cluster_schema_file) as sf:
-        cluster_config = yaml.load(cf)
+    cluster = Cluster.from_name(cluster_name)
+
+    with open(cluster_schema_file) as sf:
         schema = yaml.load(sf)
         # Raises useful exception if validation fails
-        jsonschema.validate(cluster_config, schema)
+        jsonschema.validate(cluster.spec, schema)
 
 
 @validate_app.command()
@@ -116,7 +113,7 @@ def hub_config(
     if not skip_refresh:
         _prepare_helm_charts_dependencies_and_schemas()
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    cluster = Cluster.from_name(cluster_name)
 
     hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
 
@@ -139,14 +136,14 @@ def hub_config(
                 if values_file.endswith(".jsonnet"):
                     rendered_file = jsonnet_stack.enter_context(
                         render_jsonnet(
-                            config_file_path.parent / values_file,
+                            cluster.dir_path / values_file,
                             cluster_name,
                             hub_name,
                         )
                     )
                     cmd.append(f"--values={rendered_file}")
                 elif "secret" not in os.path.basename(values_file):
-                    values_file = config_file_path.parent.joinpath(values_file)
+                    values_file = cluster.dir_path / values_file
                     cmd.append(f"--values={values_file}")
                     config = yaml.load(values_file)
                     # Check if there's config that enables dask-gateway
@@ -177,9 +174,7 @@ def support_config(
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
 
     if cluster.support:
         print_colour(
@@ -199,15 +194,13 @@ def support_config(
                 if values_file.endswith(".jsonnet"):
                     rendered_file = jsonnet_stack.enter_context(
                         render_jsonnet(
-                            config_file_path.parent / values_file, cluster_name, None
+                            cluster.dir_path / values_file, cluster_name, None
                         )
                     )
                     cmd.append(f"--values={rendered_file}")
                 # FIXME: The logic here for figuring out non secret files is not correct
                 elif "secret" not in os.path.basename(values_file):
-                    cmd.append(
-                        f"--values={config_file_path.parent.joinpath(values_file)}"
-                    )
+                    cmd.append(f"--values={cluster.dir_path / values_file}")
 
                 try:
                     subprocess.check_output(cmd, text=True)
@@ -231,7 +224,7 @@ def authenticator_config(
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    cluster = Cluster.from_name(cluster_name)
 
     hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
 
@@ -244,7 +237,7 @@ def authenticator_config(
         allowed_users = []
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
-                values_file = config_file_path.parent.joinpath(values_file_name)
+                values_file = cluster.dir_path / values_file_name
                 # Load the hub extra config from its specific values files
                 config = yaml.load(values_file)
                 # Check if there's config that specifies an authenticator class
@@ -292,7 +285,7 @@ def configurator_config(
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    cluster = Cluster.from_name(cluster_name)
 
     hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
 
@@ -305,7 +298,7 @@ def configurator_config(
         singleuser_overrides = False
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
-                values_file = config_file_path.parent.joinpath(values_file_name)
+                values_file = cluster.dir_path / values_file_name
                 # Load the hub extra config from its specific values files
                 config = yaml.load(values_file)
                 try:

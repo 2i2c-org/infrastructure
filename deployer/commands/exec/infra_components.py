@@ -8,7 +8,6 @@ from ruamel.yaml import YAML
 
 from deployer.cli_app import exec_app
 from deployer.infra_components.cluster import Cluster
-from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
 from deployer.utils.rendering import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -50,9 +49,7 @@ def root_homes(
     Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
     Optionally mount an additional NFS or EBS volume if required (useful when migrating data to a new NFS server).
     """
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
 
     hubs = cluster.hubs
     hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
@@ -63,7 +60,7 @@ def root_homes(
     server_ip = base_share_name = ""
     for values_file in hub.spec["helm_chart_values_files"]:
         if "secret" not in os.path.basename(values_file):
-            values_file = config_file_path.parent.joinpath(values_file)
+            values_file = cluster.dir_path / values_file
             config = yaml.load(values_file)
 
             if config.get("basehub", {}):
@@ -330,10 +327,8 @@ def homes(
         "/bin/bash",
         "-l",
     ]
+    cluster = Cluster.from_name(cluster_name)
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
     with cluster.auth():
         subprocess.check_call(cmd)
 
@@ -346,9 +341,7 @@ def hub(
     """
     Pop an interactive shell in the hub pod
     """
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
     with cluster.auth():
         pod_name = (
             subprocess.check_output(
@@ -597,9 +590,7 @@ def copy_homedir_into_another(
     # Name the pod so we know what to delete when the transfer is done
     pod_name = f"{cluster_name}-{hub_name}-transfer-shell"
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
     with cluster.auth():
         try:
             # Create the pod that mounts the /home directory and wait for it to be ready
