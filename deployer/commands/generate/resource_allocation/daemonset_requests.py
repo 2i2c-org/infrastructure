@@ -8,7 +8,6 @@ from kubernetes.utils.quantity import parse_quantity
 from ruamel.yaml import YAML
 
 from deployer.infra_components.cluster import Cluster
-from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
 
 from .resource_allocation_app import resource_allocation_app
 
@@ -161,10 +160,7 @@ def daemonset_requests(
     file_path = HERE / "daemonset_requests.yaml"
     file_path.touch(exist_ok=True)
 
-    # acquire a Cluster object
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
 
     # auth and inspect cluster
     with cluster.auth():

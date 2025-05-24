@@ -10,7 +10,7 @@ from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
 
-from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
+from deployer.infra_components.cluster import Cluster
 from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
@@ -325,14 +325,12 @@ def assign_staging_jobs_for_missing_clusters(
                 if hub["cluster_name"] == missing_cluster
             ]
 
-            cluster_file = find_absolute_path_to_cluster_file(missing_cluster)
-            with open(cluster_file) as f:
-                cluster_config = yaml.load(f)
+            cluster = Cluster.from_name(missing_cluster)
 
             staging_hubs = [
-                hub["name"]
-                for hub in cluster_config.get("hubs")
-                if "staging" in hub["name"]
+                hub.spec["name"]
+                for hub in cluster.hubs
+                if "staging" in hub.spec["name"]
             ]
 
             for staging_hub in staging_hubs:

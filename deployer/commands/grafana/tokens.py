@@ -9,19 +9,71 @@ deployer command going forward.
 """
 
 import json
+import os
+import subprocess
 from base64 import b64encode
 
 import requests
 import typer
+from ruamel.yaml import YAML
 
 from deployer.cli_app import grafana_app
+from deployer.infra_components.cluster import Cluster
+from deployer.utils.file_acquisition import (
+    REPO_ROOT_PATH,
+    get_decrypted_file,
+)
 from deployer.utils.rendering import print_colour
 
-from .utils import (
-    get_grafana_admin_password,
-    get_grafana_url,
-    update_central_grafana_token,
-)
+yaml = YAML(typ="safe")
+
+
+def get_grafana_admin_password():
+    """
+    Retrieve the password of the grafana `admin` user
+    stored in "helm-charts/support/enc-support.secret.values.yaml"
+
+    Returns:
+        string object: password of the admin user
+    """
+    grafana_credentials_filename = REPO_ROOT_PATH.joinpath(
+        "helm-charts/support/enc-support.secret.values.yaml"
+    )
+
+    with get_decrypted_file(grafana_credentials_filename) as decrypted_path:
+        with open(decrypted_path) as f:
+            grafana_creds = yaml.load(f)
+
+    return grafana_creds.get("grafana", {}).get("adminPassword", None)
+
+
+def update_central_grafana_token(cluster_name, token):
+    """
+    Update the API token stored in the `enc-grafana-token.secret.yaml` file
+    for the <cluster_name>'s Grafana.
+    This access token should have enough permissions to create datasources.
+
+    - If the file `enc-grafana-token.secret.yaml` doesn't exist, it creates one and
+      writes the `token` under `grafana_token` key.
+    - If the file `enc-grafana-token.secret.yaml` already exists, it updates the token in it by
+      first deleting the file and then creating a new (encrypted) one
+      where it writes the `token` under `grafana_token` key.
+    """
+    # Get the location of the file that stores the central grafana token
+    cluster = Cluster.from_name(cluster_name)
+
+    grafana_token_file = cluster.config_path.parent / "enc-grafana-token.secret.yaml"
+
+    # If grafana token file exists delete it and then create it again with new token
+    # Fastest way to update the token
+    if os.path.exists(grafana_token_file):
+        os.remove(grafana_token_file)
+
+    with open(grafana_token_file, "w") as f:
+        f.write(f"grafana_token: {token}")
+
+    # Encrypt the private key
+    subprocess.check_call(["sops", "--in-place", "--encrypt", grafana_token_file])
 
 
 def build_service_account_request_headers():
@@ -156,7 +208,7 @@ def create_deployer_token(sa_endpoint, sa_id, headers):
 
 @grafana_app.command()
 def new_token(
-    cluster=typer.Argument(
+    cluster_name=typer.Argument(
         ...,
         help="Name of cluster for who's Grafana deployment to generate a new deployer token",
     )
@@ -165,7 +217,8 @@ def new_token(
     Generate an API token for the cluster's Grafana `deployer` service account
     and store it encrypted inside a `enc-grafana-token.secret.yaml` file.
     """
-    grafana_url = get_grafana_url(cluster)
+    cluster = Cluster.from_name(cluster_name)
+    grafana_url = cluster.get_grafana_url()
     sa_endpoint = f"{grafana_url}/api/serviceaccounts"
     headers = build_service_account_request_headers()
 

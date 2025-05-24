@@ -7,7 +7,6 @@ import json
 import os
 import subprocess
 import tempfile
-import warnings
 from contextlib import ExitStack, contextmanager
 from pathlib import Path
 
@@ -36,61 +35,6 @@ def _assert_file_exists(filepath):
             {filepath}
         """
         )
-
-
-def find_absolute_path_to_cluster_file(cluster_name: str):
-    """Find the absolute path to a cluster.yaml file for a named cluster
-
-    Args:
-        cluster_name (str): The name of the cluster we wish to perform actions on.
-            This corresponds to a folder name, and that folder should contain a
-            cluster.yaml file.
-
-    Returns:
-        Path object: The absolute path to the cluster.yaml file for the named cluster
-    """
-    cluster_yaml_path = CONFIG_CLUSTERS_PATH.joinpath(f"{cluster_name}/cluster.yaml")
-    if not cluster_yaml_path.exists():
-        raise FileNotFoundError(
-            f"No cluster.yaml file exists for cluster {cluster_name}. "
-            + "Please create one and then continue."
-        )
-
-    with open(cluster_yaml_path) as cf:
-        cluster_config = yaml.load(cf)
-
-    if cluster_yaml_path.parent.name != cluster_config["name"]:
-        warnings.warn(
-            "Cluster Name Mismatch: It is convention that the cluster name defined "
-            + "in cluster.yaml matches the name of the parent directory. "
-            + "Deployment won't be halted but please update this for consistency!"
-        )
-
-    return cluster_yaml_path
-
-
-def build_absolute_path_to_hub_encrypted_config_file(cluster_name, hub_name):
-    """Builds the absolute path to a `enc-{hub_name}.secret.values.yaml` file
-    for a named cluster and hub
-
-    Args:
-        cluster_name (str): The name of the cluster we wish to perform actions on.
-            This corresponds to a folder name, and that folder should contain a
-            cluster.yaml file.
-        hub_name (str): The name of the hub we wish to perform actions on.
-            This hub name must be listed in the cluster's cluster.yaml file.
-
-    Returns:
-        Path object: The absolute path to the `enc-{hub_name}.secret.values.yaml`
-        in the `cluster_name` named cluster.
-        Note that file doesn't need to exist.
-    """
-    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
-    encrypted_file_path = cluster_config_dir_path.joinpath(
-        f"enc-{hub_name}.secret.values.yaml"
-    )
-
-    return encrypted_file_path
 
 
 def persist_config_in_encrypted_file(encrypted_file, new_config):

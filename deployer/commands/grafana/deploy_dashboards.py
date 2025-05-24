@@ -5,9 +5,8 @@ import subprocess
 import typer
 
 from deployer.cli_app import grafana_app
+from deployer.infra_components.cluster import Cluster
 from deployer.utils.rendering import print_colour
-
-from .utils import get_cluster_cloud_provider, get_grafana_token, get_grafana_url
 
 
 @grafana_app.command()
@@ -30,9 +29,10 @@ def deploy_dashboards(
 
     NOTE: 2i2c-hosted dashboards live at https://github.com/2i2c-org/grafana-dashboards while features are waiting to be upstreamed to the official repository.
     """
-    grafana_url = get_grafana_url(cluster_name)
-    grafana_token = get_grafana_token(cluster_name)
-    cluster_provider = get_cluster_cloud_provider(cluster_name)
+    cluster = Cluster.from_name(cluster_name)
+    grafana_url = cluster.get_grafana_url()
+    grafana_token = cluster.get_grafana_token()
+    cluster_provider = cluster.spec["provider"]
 
     print_colour("Cloning jupyterhub/grafana-dashboards...")
     subprocess.check_call(
