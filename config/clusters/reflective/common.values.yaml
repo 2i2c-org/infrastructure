@@ -122,7 +122,7 @@ jupyterhub:
                 display_name: Pangeo Notebook Image
                 description: "Python image with scientific, dask and geospatial tools"
                 kubespawner_override:
-                  image: pangeo/pangeo-notebook:2025.01.24
+                  image: pangeo/pangeo-notebook:2025.05.22
               03-rocker:
                 display_name: Rocker Geospatial with RStudio
                 description: R environment with many geospatial libraries pre-installed
