@@ -1,143 +1,143 @@
 name: 📅 Event for a community
 description: Coordination and planning around an event for a community
-title: "[EVENT][{{ dates }}] {{ HUB NAME }}"
-labels: ["event"]
+title: '[EVENT][{{ dates }}] {{ HUB NAME }}'
+labels: [event]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        # Event Info
+- type: markdown
+  attributes:
+    value: |
+      # Event Info
 
-        The following information is needed to determine if additional changes need to be done to the infrastructure.
-        Get this information from the community representative via support if not already provided.
+      The following information is needed to determine if additional changes need to be done to the infrastructure.
+      Get this information from the community representative via support if not already provided.
 
-  - type: input
-    id: ticket_id
-    attributes:
-      label: The link towards the Freshdesk ticket this event was reported
-      description: |
-        Copy-paste the Freshdesk link here
-    validations:
-      required: true
+- type: input
+  id: ticket_id
+  attributes:
+    label: The link towards the Freshdesk ticket this event was reported
+    description: |
+      Copy-paste the Freshdesk link here
+  validations:
+    required: true
 
-  - type: input
-    id: community_rep
-    attributes:
-      label: The GitHub handle or name of the community representative
-      description: |
-        Type the GitHub handle of the community representative or their name if the handle is not known.
-    validations:
-      required: false
+- type: input
+  id: community_rep
+  attributes:
+    label: The GitHub handle or name of the community representative
+    description: |
+      Type the GitHub handle of the community representative or their name if the handle is not known.
+  validations:
+    required: false
 
-  - type: textarea
-    id: event_begin
-    attributes:
-      label: The date when the event will start
-      description: |
-        Make sure to specify the timezone or to add an https://arewemeetingyet.com/ link or similar so team members can translate to their timezone.
-    validations:
-      required: true
+- type: textarea
+  id: event_begin
+  attributes:
+    label: The date when the event will start
+    description: |
+      Make sure to specify the timezone or to add an https://arewemeetingyet.com/ link or similar so team members can translate to their timezone.
+  validations:
+    required: true
 
-  - type: textarea
-    id: event_end
-    attributes:
-      label: The date when the event will end
-      description: |
-        Make sure to specify the timezone or to add an https://arewemeetingyet.com/ link or similar so team members can translate to their timezone.
-    validations:
-      required: true
+- type: textarea
+  id: event_end
+  attributes:
+    label: The date when the event will end
+    description: |
+      Make sure to specify the timezone or to add an https://arewemeetingyet.com/ link or similar so team members can translate to their timezone.
+  validations:
+    required: true
 
-  - type: textarea
-    id: active_times
-    attributes:
-      label: What hours of the day will participants be active? (e.g., 5am - 5pm US/Pacific)
-    validations:
-      required: true
+- type: textarea
+  id: active_times
+  attributes:
+    label: What hours of the day will participants be active? (e.g., 5am - 5pm US/Pacific)
+  validations:
+    required: true
 
-  - type: checkboxes
-    id: enough_notice
-    attributes:
-      label: Are we three weeks before the start date of the event?
-      options:
-        - label: "Yes"
-        - label: "No"
+- type: checkboxes
+  id: enough_notice
+  attributes:
+    label: Are we three weeks before the start date of the event?
+    options:
+    - label: Yes
+    - label: No
 
-  - type: input
-    id: user_number
-    attributes:
-      label: Number of attendees
-      description: |
-        How many attendees should we expect simultaneously each day.
-    validations:
-      required: true
+- type: input
+  id: user_number
+  attributes:
+    label: Number of attendees
+    description: |
+      How many attendees should we expect simultaneously each day.
+  validations:
+    required: true
 
-  - type: checkboxes
-    id: calendar
-    attributes:
-      label: Make sure to add the event into the calendar
-      description: |
-        The [Hub Events Calendar link](https://calendar.google.com/calendar/u/2?cid=Y19rdDg0c2g3YW5tMHNsb2NqczJzdTNqdnNvY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
-      options:
-        - label: Done
+- type: checkboxes
+  id: calendar
+  attributes:
+    label: Make sure to add the event into the calendar
+    description: |
+      The [Hub Events Calendar link](https://calendar.google.com/calendar/u/2?cid=Y19rdDg0c2g3YW5tMHNsb2NqczJzdTNqdnNvY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+    options:
+    - label: Done
 
-  - type: markdown
-    attributes:
-      value: |
-        # Hub info
+- type: markdown
+  attributes:
+    value: |
+      # Hub info
 
-        General info about the hub that will be used for the event.
+      General info about the hub that will be used for the event.
 
-  - type: checkboxes
-    id: hub_exists
-    attributes:
-      label: Does the hub already exist?
-      options:
-        - label: "Yes"
-        - label: "No"
+- type: checkboxes
+  id: hub_exists
+  attributes:
+    label: Does the hub already exist?
+    options:
+    - label: Yes
+    - label: No
 
-  - type: input
-    id: hub_url
-    attributes:
-      label: The URL of the hub that will be used for the event
-    validations:
-      required: true
+- type: input
+  id: hub_url
+  attributes:
+    label: The URL of the hub that will be used for the event
+  validations:
+    required: true
 
-  - type: checkboxes
-    id: hub_decommision
-    attributes:
-      label: Will this hub be decommissioned after the event is over?
-      options:
-        - label: "Yes"
-        - label: "No"
+- type: checkboxes
+  id: hub_decommision
+  attributes:
+    label: Will this hub be decommissioned after the event is over?
+    options:
+    - label: Yes
+    - label: No
 
-  - type: markdown
-    attributes:
-      value: |
-        # Engineer task list
+- type: markdown
+  attributes:
+    value: |
+      # Engineer task list
 
-        General checks to perform before the event.
+      General checks to perform before the event.
 
-  - type: textarea
-    id: tasks
-    attributes:
-      label: Task list
-      description: |
-        (optional) A clear and concise list of steps to take to close this issue.
-      value: |
-        - [ ] Was all the info filled in above?
-        - [ ] Quotas from the cloud provider are high-enough to handle expected usage?
-        - [ ]
-    validations:
-      required: true
+- type: textarea
+  id: tasks
+  attributes:
+    label: Task list
+    description: |
+      (optional) A clear and concise list of steps to take to close this issue.
+    value: |
+      - [ ] Was all the info filled in above?
+      - [ ] Quotas from the cloud provider are high-enough to handle expected usage?
+      - [ ]
+  validations:
+    required: true
 
-  - type: textarea
-    id: dod
-    attributes:
-      label: Definition of Done
-      description: |
-        The Definition of Done. What must be true to consider this task complete?
-      value: |
-        - [ ] All the tasks have been completed
-        - [ ]
-    validations:
-      required: true
+- type: textarea
+  id: dod
+  attributes:
+    label: Definition of Done
+    description: |
+      The Definition of Done. What must be true to consider this task complete?
+    value: |
+      - [ ] All the tasks have been completed
+      - [ ]
+  validations:
+    required: true

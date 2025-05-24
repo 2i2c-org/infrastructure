@@ -1,9 +1,9 @@
-name: "Recurrent: get billing data"
+name: 'Recurrent: get billing data'
 on:
   workflow_dispatch:
   schedule:
     # Run on every 28th of the month at midnight
-    - cron: "0 0 28 * *"
+  - cron: 0 0 28 * *
 
 jobs:
   create_issue:
@@ -12,75 +12,75 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Compute billing period and deadline
-        run: |
-          echo "billing_month=$(date +'%B')" >> $GITHUB_ENV
-          echo "start_date_as_iso=$(date -d '+1 month' +'%Y-%m-02')" >> $GITHUB_ENV
-          echo "end_date_as_iso=$(date -d '+1 month' +'%Y-%m-07')" >> $GITHUB_ENV
+    - name: Compute billing period and deadline
+      run: |
+        echo "billing_month=$(date +'%B')" >> $GITHUB_ENV
+        echo "start_date_as_iso=$(date -d '+1 month' +'%Y-%m-02')" >> $GITHUB_ENV
+        echo "end_date_as_iso=$(date -d '+1 month' +'%Y-%m-07')" >> $GITHUB_ENV
 
-      - name: Create issue for dedicated clusters billing
-        run: |
-          dedicated_issue=$(gh issue create \
-            --label "recurrent" \
-            --title "[Billing] Dedicated clusters: collect billing data for $BILLING_MONTH" \
-            --body "$BODY")
-          echo "dedicated_issue=$dedicated_issue" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          BILLING_MONTH: ${{ env.billing_month }}
-          BODY: |
-            ### Context
-            - Dedicated clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-with-dedicated-cloud-accounts)  
+    - name: Create issue for dedicated clusters billing
+      run: |
+        dedicated_issue=$(gh issue create \
+          --label "recurrent" \
+          --title "[Billing] Dedicated clusters: collect billing data for $BILLING_MONTH" \
+          --body "$BODY")
+        echo "dedicated_issue=$dedicated_issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BILLING_MONTH: ${{ env.billing_month }}
+        BODY: |
+          ### Context
+          - Dedicated clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-with-dedicated-cloud-accounts)  
 
-            ### Definition of Done
-            - [ ] Billing data is collected according to instructions.
-            - [ ] The billing slack was notified about the new billing data collected
+          ### Definition of Done
+          - [ ] Billing data is collected according to instructions.
+          - [ ] The billing slack was notified about the new billing data collected
 
-      - name: Create issue for shared clusters billing
-        run: |
-          shared_issue=$(gh issue create \
-            --label "recurrent" \
-            --title "[Billing] Shared clusters: collect billing data for $BILLING_MONTH" \
-            --body "$BODY")
-          echo "shared_issue=$shared_issue" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          BILLING_MONTH: ${{ env.billing_month }}
-          BODY: |
-            ### Context
-            - Shared clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-in-shared-cloud-accounts) for performing this task
+    - name: Create issue for shared clusters billing
+      run: |
+        shared_issue=$(gh issue create \
+          --label "recurrent" \
+          --title "[Billing] Shared clusters: collect billing data for $BILLING_MONTH" \
+          --body "$BODY")
+        echo "shared_issue=$shared_issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BILLING_MONTH: ${{ env.billing_month }}
+        BODY: |
+          ### Context
+          - Shared clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-in-shared-cloud-accounts) for performing this task
 
-            ### Definition of Done
-            - [ ] Billing data is collected according to instructions.
-            - [ ] The billing slack was notified about the new billing data collected
+          ### Definition of Done
+          - [ ] Billing data is collected according to instructions.
+          - [ ] The billing slack was notified about the new billing data collected
 
-      - name: Sleep a bit to allow issues to be added to the board by automation
-        run: sleep 3
+    - name: Sleep a bit to allow issues to be added to the board by automation
+      run: sleep 3
 
-      - name: "Dedicated clusters: set the relevant project board fields"
-        uses: EndBug/project-fields@v2
-        id: set-dedicated-fields
-        with:
-          operation: set
+    - name: 'Dedicated clusters: set the relevant project board fields'
+      uses: EndBug/project-fields@v2
+      id: set-dedicated-fields
+      with:
+        operation: set
           # If the fields name or type will change
           # expect this step to fail
-          fields: Status,Estimate,Start date,End date
-          github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-          project_url: https://github.com/orgs/2i2c-org/projects/57
-          values: Up Next,1,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
-          resource_url: ${{ env.dedicated_issue }}
+        fields: Status,Estimate,Start date,End date
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Up Next,1,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
+        resource_url: ${{ env.dedicated_issue }}
 
-      - name: "Shared clusters: set the relevant project board fields"
-        uses: EndBug/project-fields@v2
-        id: set-shared-fields
-        with:
-          operation: set
+    - name: 'Shared clusters: set the relevant project board fields'
+      uses: EndBug/project-fields@v2
+      id: set-shared-fields
+      with:
+        operation: set
           # If the fields name or type will change
           # expect this step to fail
-          fields: Status,Estimate,Start date,End date
-          github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-          project_url: https://github.com/orgs/2i2c-org/projects/57
-          values: Up Next,1,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
-          resource_url: ${{ env.shared_issue }}
+        fields: Status,Estimate,Start date,End date
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Up Next,1,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
+        resource_url: ${{ env.shared_issue }}

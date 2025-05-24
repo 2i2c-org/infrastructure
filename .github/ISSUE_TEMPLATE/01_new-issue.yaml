@@ -1,42 +1,42 @@
 name: 💡 General Issue
 description: A general template for many kinds of issues.
 body:
-  - type: textarea
-    id: context
-    attributes:
-      label: Context
-      description: |
-        Any background information that helps others understand this issue and why it is important.
+- type: textarea
+  id: context
+  attributes:
+    label: Context
+    description: |
+      Any background information that helps others understand this issue and why it is important.
 
-    validations:
-      required: true
+  validations:
+    required: true
 
-  - type: textarea
-    id: action
-    attributes:
-      label: What we need to do
-      description: |
-        State the required outcome and action plan, if known.
+- type: textarea
+  id: action
+  attributes:
+    label: What we need to do
+    description: |
+      State the required outcome and action plan, if known.
 
-    validations:
-      required: true
+  validations:
+    required: true
 
-  - type: textarea
-    id: dod
-    attributes:
-      label: Definition of Done
-      description: |
-        The Definition of Done. Please only remove what is not applicable.
-      value: |
-        - [ ] The feature/service is technically complete
-        - [ ] The feature/service been tested with one or more users (if applicable)
-        - [ ] The feature/service been deployed to a production cluster
-        - [ ] The feature/service has been shown to be replicably deployable
-        - [ ] The feature/service is well documented, and the documentation is accessible for the target user base
-        - [ ] The feature/service has been added to our product menu (if applicable).
-        - [ ] Lessons learned have been documented
-        - [ ] The feature's availability has been communicated to Sales
-        - [ ] The feature has been communicated to our communities
+- type: textarea
+  id: dod
+  attributes:
+    label: Definition of Done
+    description: |
+      The Definition of Done. Please only remove what is not applicable.
+    value: |
+      - [ ] The feature/service is technically complete
+      - [ ] The feature/service been tested with one or more users (if applicable)
+      - [ ] The feature/service been deployed to a production cluster
+      - [ ] The feature/service has been shown to be replicably deployable
+      - [ ] The feature/service is well documented, and the documentation is accessible for the target user base
+      - [ ] The feature/service has been added to our product menu (if applicable).
+      - [ ] Lessons learned have been documented
+      - [ ] The feature's availability has been communicated to Sales
+      - [ ] The feature has been communicated to our communities
 
-    validations:
-      required: false
+  validations:
+    required: false
