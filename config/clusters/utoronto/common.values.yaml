@@ -4,9 +4,9 @@ nfs:
     enabled: true
     # Recommended options from the Azure Portal UI for mounting the share
     mountOptions:
-      - vers=4
-      - minorversion=1
-      - sec=sys
+    - vers=4
+    - minorversion=1
+    - sec=sys
     serverIP: 2i2cutorontohubstorage.file.core.windows.net
     # Trailing slash is important!
     baseShareName: /2i2cutorontohubstorage/homes/
@@ -27,7 +27,7 @@ jupyterhub:
       # Everyone hitting the home page directly is redirected to
       # https://datatools.utoronto.ca as the unified home page. The various parameters
       # here under templateVars are no-op - UToronto manages the unified homepage themselves.
-      gitRepoBranch: "utoronto"
+      gitRepoBranch: utoronto
       templateVars:
         org:
           name: University of Toronto
@@ -59,7 +59,7 @@ jupyterhub:
         # stringData field will be set via encrypted values files but added here
         # to meet the chart schema validation requirements without the need to
         # use secret values during the validation.
-        stringData: "dummy"
+        stringData: dummy
       gitconfig:
         mountPath: /etc/gitconfig
         # app-id comes from https://github.com/organizations/utoronto-2i2c/settings/apps/utoronto-jupyterhub-private-cloner
@@ -83,7 +83,7 @@ jupyterhub:
           https://idpz.utorauth.utoronto.ca/shibboleth:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:

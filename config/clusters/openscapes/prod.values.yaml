@@ -6,8 +6,8 @@ basehub:
     ingress:
       hosts: [openscapes.2i2c.cloud]
       tls:
-        - hosts: [openscapes.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [openscapes.2i2c.cloud]
+        secretName: https-auto-tls
     singleuser:
       nodeSelector:
         2i2c/hub-name: prod
@@ -17,18 +17,18 @@ basehub:
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: "https://openscapes.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: https://openscapes.2i2c.cloud/hub/oauth_callback
         CILogonOAuthenticator:
-          oauth_callback_url: "https://openscapes.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: https://openscapes.2i2c.cloud/hub/oauth_callback
       services:
         jupyterhub-groups-exporter: {}
       loadRoles:
         jupyterhub-groups-exporter:
           services:
-            - jupyterhub-groups-exporter
+          - jupyterhub-groups-exporter
           scopes:
-            - users
-            - groups
+          - users
+          - groups
       extraConfig:
         custom-auth-state-groups-key: |
           async def custom_auth_state_groups_key(auth_state):
@@ -59,7 +59,7 @@ basehub:
               2i2c/hub-name: prod
   jupyterhub-home-nfs:
     quotaEnforcer:
-      hardQuota: "100" # in GB
+      hardQuota: '100' # in GB
     eks:
       volumeId: vol-0cddd71981a7ff6ba
   nfs:

@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [csum.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [csum.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [csum.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -13,7 +13,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -34,27 +34,27 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: "https://csum.cloudbank.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://csum.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://cma-shibboleth.csum.edu/idp/shibboleth:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allow_all: true
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - "solano.edu"
+            - solano.edu
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - jteoh@csum.edu
-          - jsimons@csum.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - jteoh@csum.edu
+        - jsimons@csum.edu
     extraFiles:
       configurator-schema-default:
         data:
@@ -63,20 +63,18 @@ jupyterhub:
               type: string
               title: Default User Interface
               enum:
-                - "/tree"
-                - "/lab"
-                - "/retro"
-              default: "/retro"
+              - /tree
+              - /lab
+              - /retro
+              default: /retro
               enumMetadata:
                 interfaces:
-                  - value: "/tree"
-                    title: Classic Notebook
-                    description:
-                      The original single-document interface for creating
-                      Jupyter Notebooks.
-                  - value: "/lab"
-                    title: JupyterLab
-                    description: A Powerful next generation notebook interface
-                  - value: "/retro"
-                    title: RetroLab
-                    description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.
+                - value: /tree
+                  title: Classic Notebook
+                  description: The original single-document interface for creating Jupyter Notebooks.
+                - value: /lab
+                  title: JupyterLab
+                  description: A Powerful next generation notebook interface
+                - value: /retro
+                  title: RetroLab
+                  description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.

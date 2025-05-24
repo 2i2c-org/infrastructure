@@ -1,15 +1,15 @@
 jupyterhub:
   ingress:
     hosts:
-      - demo.2i2c.cloud
+    - demo.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - demo.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - demo.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -36,13 +36,13 @@ jupyterhub:
           https://enterprise.login.utexas.edu/idp/shibboleth:
             default: true
             username_derivation:
-              username_claim: "eppn"
+              username_claim: eppn
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - rmbl.org
+            - rmbl.org
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-demo

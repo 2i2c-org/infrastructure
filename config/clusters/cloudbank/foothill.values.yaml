@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [foothill.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [foothill.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [foothill.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -28,23 +28,23 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: "https://foothill.cloudbank.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://foothill.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - fhda.edu
-              - student.foothill.edu
-              - student.fhda.edu
-              - student.deanza.edu
+            - fhda.edu
+            - student.foothill.edu
+            - student.fhda.edu
+            - student.deanza.edu
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - ibrahimhanan@fhda.edu
-          - reederic@fhda.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - ibrahimhanan@fhda.edu
+        - reederic@fhda.edu

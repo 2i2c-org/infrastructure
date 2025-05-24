@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [sjcc.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [sjcc.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [sjcc.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -33,19 +33,19 @@ jupyterhub:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - sjcc.edu
-              - stu.sjcc.edu
-              - stu.evc.edu
-              - evc.edu
+            - sjcc.edu
+            - stu.sjcc.edu
+            - stu.evc.edu
+            - evc.edu
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - christiaan.desmond@sjcc.edu
-          - sanjay.dorairaj@sjcc.edu
-          - ericvd@berkeley.edu
-          - k_usovich@berkeley.edu
-          - sean.smorris@berkeley.edu
+        - christiaan.desmond@sjcc.edu
+        - sanjay.dorairaj@sjcc.edu
+        - ericvd@berkeley.edu
+        - k_usovich@berkeley.edu
+        - sean.smorris@berkeley.edu

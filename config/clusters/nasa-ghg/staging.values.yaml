@@ -18,11 +18,11 @@ basehub:
     ingress:
       hosts: [staging.ghg.2i2c.cloud]
       tls:
-        - hosts: [staging.ghg.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [staging.ghg.2i2c.cloud]
+        secretName: https-auto-tls
     custom:
       homepage:
-        gitRepoBranch: "bootstrap5-nasa-ghg-staging"
+        gitRepoBranch: bootstrap5-nasa-ghg-staging
         # FIXME: use this repository again once the changes in the bootstrap5-nasa-ghg-staging branch of 2i2c-org/default-hub-homepage have been ported to it
         # gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
     hub:
@@ -48,7 +48,7 @@ basehub:
     eks:
       volumeId: vol-01889854859d8768d
     quotaEnforcer:
-      hardQuota: "1" # in GB
+      hardQuota: '1' # in GB
 
   nfs:
     pv:

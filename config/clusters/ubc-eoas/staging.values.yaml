@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [staging.ubc-eoas.2i2c.cloud]
     tls:
-      - hosts: [staging.ubc-eoas.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.ubc-eoas.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       CILogonOAuthenticator:

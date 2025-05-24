@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [dvc.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [dvc.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [dvc.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -37,26 +37,26 @@ jupyterhub:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - dvc.edu
-              - 4cd.edu
-              - email.4cd.edu
-              - insite.4cd.edu
-              - losmedanos.edu
-              - contracosta.edu
+            - dvc.edu
+            - 4cd.edu
+            - email.4cd.edu
+            - insite.4cd.edu
+            - losmedanos.edu
+            - contracosta.edu
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - dvc.edu
+            - dvc.edu
       JupyterHub:
         authenticator_class: cilogon
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - namato@dvc.edu
-          - llo@dvc.edu
-          - jazlin.dvc@gmail.com
-          - sean.smorris@gmail.com
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - namato@dvc.edu
+        - llo@dvc.edu
+        - jazlin.dvc@gmail.com
+        - sean.smorris@gmail.com

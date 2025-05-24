@@ -4,19 +4,19 @@ prometheusIngressAuthSecret:
 redirects:
   rules:
     # From https://2i2c.freshdesk.com/a/tickets/1591
-    - from: plnc.latam.catalystproject.2i2c.cloud
-      to: hub.pln.villena.cl
+  - from: plnc.latam.catalystproject.2i2c.cloud
+    to: hub.pln.villena.cl
 
 prometheus:
   server:
     ingress:
       enabled: true
       hosts:
-        - prometheus.latam.catalystproject.2i2c.cloud
+      - prometheus.latam.catalystproject.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.latam.catalystproject.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.latam.catalystproject.2i2c.cloud
 
 grafana:
   grafana.ini:
@@ -27,11 +27,11 @@ grafana:
       allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.latam.catalystproject.2i2c.cloud
+    - grafana.latam.catalystproject.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.latam.catalystproject.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.latam.catalystproject.2i2c.cloud
 
 gcpFilestoreBackups:
   enabled: true

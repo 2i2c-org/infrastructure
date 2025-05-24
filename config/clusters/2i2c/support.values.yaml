@@ -14,11 +14,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.pilot.2i2c.cloud
+      - prometheus.pilot.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.pilot.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.pilot.2i2c.cloud
 
 grafana:
   grafana.ini:
@@ -39,20 +39,20 @@ grafana:
         # are also linked as datasources.
         # Having "2i2c" as the name, instead of the more generic "prometheus"
         # will help to more easily know what cluster the datasource is mapping.
-        - name: 2i2c
-          orgId: 1
-          type: prometheus
+      - name: 2i2c
+        orgId: 1
+        type: prometheus
           # This is the name of the kubernetes service exposed by the prometheus server
-          url: http://support-prometheus-server
-          access: proxy
-          isDefault: false
-          editable: false
+        url: http://support-prometheus-server
+        access: proxy
+        isDefault: false
+        editable: false
   ingress:
     hosts:
-      - grafana.pilot.2i2c.cloud
+    - grafana.pilot.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.pilot.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.pilot.2i2c.cloud
   plugins:
-    - grafana-bigquery-datasource
+  - grafana-bigquery-datasource

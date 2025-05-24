@@ -2,14 +2,14 @@ name: cluster3
 provider: gcp
 support:
   helm_chart_values_files:
-    - support.values.yaml
+  - support.values.yaml
 hubs:
-  - name: staging1
-    helm_chart_values_files:
-      - staging1.values.yaml
-  - name: staging2
-    helm_chart_values_files:
-      - staging2.values.yaml
-  - name: prod
-    helm_chart_values_files:
-      - prod.values.yaml
+- name: staging1
+  helm_chart_values_files:
+  - staging1.values.yaml
+- name: staging2
+  helm_chart_values_files:
+  - staging2.values.yaml
+- name: prod
+  helm_chart_values_files:
+  - prod.values.yaml

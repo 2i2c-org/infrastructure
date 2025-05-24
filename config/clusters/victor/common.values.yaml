@@ -7,23 +7,23 @@ basehub:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
       serverIP: fs-00c0183a99b47c9ed.efs.us-west-2.amazonaws.com
       baseShareName: /
   jupyterhub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
+        add_staff_user_ids_of_type: github
       jupyterhubConfigurator:
         enabled: false
       homepage:
-        gitRepoBranch: "victor"
+        gitRepoBranch: victor
         templateVars:
           org:
             name: VICTOR
@@ -36,7 +36,7 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: "National Science Foundation"
+            name: National Science Foundation
             url: https://people.climate.columbia.edu/projects/sponsor/National%20Science%20Foundation
     hub:
       config:
@@ -49,15 +49,15 @@ basehub:
             http://github.com/login/oauth/authorize:
               default: true
               username_derivation:
-                username_claim: "preferred_username"
+                username_claim: preferred_username
             http://google.com/accounts/o8/id:
               username_derivation:
-                username_claim: "email"
+                username_claim: email
                 action: prefix
                 prefix: g
             http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
               username_derivation:
-                username_claim: "email"
+                username_claim: email
                 action: prefix
                 prefix: ms
         OAuthenticator:
@@ -72,7 +72,7 @@ basehub:
           #          access if it had logged in once before, as it then exists
           #          in JupyterHub's database of users.
           #
-          allow_existing_users: True
+          allow_existing_users: true
         Authenticator:
           # WARNING: Removing a user from admin_users or allowed_users doesn't
           #          revoke admin status or access.
@@ -90,8 +90,8 @@ basehub:
           #          /hub/admin panel.
           #
           admin_users:
-            - einatlev-ldeo
-            - SamKrasnoff
+          - einatlev-ldeo
+          - SamKrasnoff
     singleuser:
       defaultUrl: /lab
     scheduling:

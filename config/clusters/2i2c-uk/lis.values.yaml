@@ -3,8 +3,8 @@ nfs:
   pv:
     enabled: true
     mountOptions:
-      - soft
-      - noatime
+    - soft
+    - noatime
     serverIP: 10.103.253.53
     baseShareName: /
 jupyterhub-home-nfs:
@@ -13,17 +13,17 @@ jupyterhub-home-nfs:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
   quotaEnforcer:
-    hardQuota: "35" # in GB
+    hardQuota: '35' # in GB
 jupyterhub:
   ingress:
     hosts: [ds.lis.2i2c.cloud]
     tls:
-      - hosts: [ds.lis.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [ds.lis.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     homepage:
       templateVars:
         org:
@@ -43,66 +43,66 @@ jupyterhub:
       extraVolumeMounts:
         # /allusers is an extra mount point for admins to access to all users'
         # home dirs, ref: https://2i2c.freshdesk.com/a/tickets/228.
-        - name: home
-          mountPath: /home/jovyan/allusers
-          readOnly: false
+      - name: home
+        mountPath: /home/jovyan/allusers
+        readOnly: false
         # mounts below are copied from basehub's values that we override by
         # specifying extraVolumeMounts (lists get overridden when helm values
         # are combined)
-        - name: home
-          mountPath: /home/jovyan/shared-readwrite
-          subPath: _shared
-        - name: home
-          mountPath: /home/rstudio/shared-readwrite
-          subPath: _shared
+      - name: home
+        mountPath: /home/jovyan/shared-readwrite
+        subPath: _shared
+      - name: home
+        mountPath: /home/rstudio/shared-readwrite
+        subPath: _shared
   singleuser:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base
-      name: "lisacuk/lishub-base"
-      tag: "364c386"
+      name: lisacuk/lishub-base
+      tag: 364c386
     profileList:
       # Setup as requested in https://2i2c.freshdesk.com/a/tickets/1348
-      - display_name: Regular Instance
-        description: "Provides 512M - 2G of RAM"
-        default: true
-        kubespawner_override:
-          mem_limit: 2G
-          mem_guarantee: 512M
-      - display_name: Large Instance
+    - display_name: Regular Instance
+      description: Provides 512M - 2G of RAM
+      default: true
+      kubespawner_override:
+        mem_limit: 2G
+        mem_guarantee: 512M
+    - display_name: Large Instance
         # Requested in https://2i2c.freshdesk.com/a/tickets/1348
         # FIXME: The </p><p> is a hack for kubespawner to render a new line, maybe there are better ways to do this?
-        description: |
-          Provides 1G - 4G of RAM.
-          ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
-        kubespawner_override:
-          mem_limit: 4G
-          mem_guarantee: 1G
+      description: |
+        Provides 1G - 4G of RAM.
+        ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
+      kubespawner_override:
+        mem_limit: 4G
+        mem_guarantee: 1G
   hub:
     config:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: "https://ds.lis.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://ds.lis.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - lisacuk
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - lisacuk
         scope:
-          - read:org
+        - read:org
       Authenticator:
         enable_auth_state: true
         manage_groups: true
         admin_users:
-          - maundjs-lis
+        - maundjs-lis
     services:
       jupyterhub-groups-exporter: {}
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-          - jupyterhub-groups-exporter
+        - jupyterhub-groups-exporter
         scopes:
-          - users
-          - groups
+        - users
+        - groups
     extraConfig:
       custom-auth-state-groups-key: |
         async def custom_auth_state_groups_key(auth_state):

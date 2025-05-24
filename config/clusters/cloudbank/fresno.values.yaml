@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [fresno.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [fresno.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [fresno.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -33,14 +33,14 @@ jupyterhub:
           https://idp.scccd.edu/idp/shibboleth:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - joellen.green@fresnocitycollege.edu
-          - ericvd@berkeley.edu
-          - k_usovich@berkeley.edu
-          - sean.smorris@berkeley.edu
+        - joellen.green@fresnocitycollege.edu
+        - ericvd@berkeley.edu
+        - k_usovich@berkeley.edu
+        - sean.smorris@berkeley.edu

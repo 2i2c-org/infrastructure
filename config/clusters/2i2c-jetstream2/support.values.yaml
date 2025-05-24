@@ -6,11 +6,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.staging.js.2i2c.cloud
+      - prometheus.staging.js.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.staging.js.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.staging.js.2i2c.cloud
 
 grafana:
   grafana.ini:
@@ -21,8 +21,8 @@ grafana:
     allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.staging.js.2i2c.cloud
+    - grafana.staging.js.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.staging.js.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.staging.js.2i2c.cloud

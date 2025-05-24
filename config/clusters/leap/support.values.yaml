@@ -6,11 +6,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.leap.2i2c.cloud
+      - prometheus.leap.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.leap.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.leap.2i2c.cloud
     persistentVolume:
       size: 500Gi
     resources:
@@ -28,8 +28,8 @@ grafana:
       allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.leap.2i2c.cloud
+    - grafana.leap.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.leap.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.leap.2i2c.cloud

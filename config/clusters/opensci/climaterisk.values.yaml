@@ -6,13 +6,13 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-03d03c8c473d83e5d
   quotaEnforcer:
-    hardQuota: "10" # in GB
+    hardQuota: '10' # in GB
 jupyterhub:
   ingress:
     hosts: [climaterisk.opensci.2i2c.cloud]
     tls:
-      - hosts: [climaterisk.opensci.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [climaterisk.opensci.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     homepage:
       # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
@@ -30,8 +30,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: "NASA TOPS-T ScienceCore"
-          url: ""
+          name: NASA TOPS-T ScienceCore
+          url: ''
     singleuserAdmin:
       extraVolumeMounts: []
   hub:
@@ -42,7 +42,7 @@ jupyterhub:
     defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FScienceCore%2Fclimaterisk&urlpath=lab%2Ftree%2Fclimaterisk%2Fbook%2F00_Introduction_Setup%2F00_Getting_NASA_EarthData_Credentials.ipynb&branch=notebooks
     image:
       name: quay.io/2i2c/sciencecore-climaterisk-image
-      tag: "09c3a11f1698"
+      tag: 09c3a11f1698
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23lijUItbe0FgDL5Dr
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/climaterisk-gh-scoped-creds
@@ -56,18 +56,18 @@ jupyterhub:
       guarantee: 1.8625
       limit: 3.725
     initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{escaped_username}"
+    - name: volume-mount-ownership-fix
+      image: busybox:1.36.1
+      command:
+      - sh
+      - -c
+      - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
     storage:
       extraVolumeMounts: []
 dask-gateway:

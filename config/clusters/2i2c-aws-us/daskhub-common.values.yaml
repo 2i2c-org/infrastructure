@@ -9,12 +9,12 @@ basehub:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
       baseShareName: /
 
   dask-gateway:
@@ -46,13 +46,13 @@ basehub:
     hub:
       config:
         JupyterHub:
-          authenticator_class: "github"
+          authenticator_class: github
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:hub-access-for-2i2c-staff
+          - 2i2c-org:hub-access-for-2i2c-staff
           scope:
-            - read:org
+          - read:org
         Authenticator:
           enable_auth_state: true
           manage_groups: true
@@ -61,10 +61,10 @@ basehub:
       loadRoles:
         jupyterhub-groups-exporter:
           services:
-            - jupyterhub-groups-exporter
+          - jupyterhub-groups-exporter
           scopes:
-            - users
-            - groups
+          - users
+          - groups
       extraConfig:
         custom-github-oauthenticator: |
           class CustomGitHubOAuthenticator(GitHubOAuthenticator):

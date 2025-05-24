@@ -3,21 +3,21 @@ prometheusIngressAuthSecret:
 
 redirects:
   rules:
-    - from: staging.earthscope.2i2c.cloud
-      to: staging.geolab.earthscope.cloud
-    - from: earthscope.2i2c.cloud
-      to: geolab.earthscope.cloud
+  - from: staging.earthscope.2i2c.cloud
+    to: staging.geolab.earthscope.cloud
+  - from: earthscope.2i2c.cloud
+    to: geolab.earthscope.cloud
 
 prometheus:
   server:
     ingress:
       enabled: true
       hosts:
-        - prometheus.earthscope.2i2c.cloud
+      - prometheus.earthscope.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.earthscope.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.earthscope.2i2c.cloud
 
 grafana:
   grafana.ini:
@@ -28,11 +28,11 @@ grafana:
     allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.earthscope.2i2c.cloud
+    - grafana.earthscope.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.earthscope.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.earthscope.2i2c.cloud
 
 cluster-autoscaler:
   enabled: true

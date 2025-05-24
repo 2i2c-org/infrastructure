@@ -8,8 +8,8 @@ jupyterhub:
   ingress:
     hosts: [staging.reflective.2i2c.cloud]
     tls:
-      - hosts: [staging.reflective.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.reflective.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       GitHubOAuthenticator:

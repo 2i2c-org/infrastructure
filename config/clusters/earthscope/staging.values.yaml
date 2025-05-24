@@ -6,10 +6,10 @@ basehub:
   jupyterhub:
     ingress:
       hosts:
-        - staging.geolab.earthscope.cloud
+      - staging.geolab.earthscope.cloud
       tls:
-        - hosts: [staging.geolab.earthscope.cloud]
-          secretName: https-auto-tls
+      - hosts: [staging.geolab.earthscope.cloud]
+        secretName: https-auto-tls
     custom:
       homepage:
         templateVars:

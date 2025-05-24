@@ -14,83 +14,83 @@ gcp:
       billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "2i2c staging"
-    domain: staging.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: dask-staging
-    display_name: "2i2c dask staging"
-    domain: dask-staging.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - dask-staging.values.yaml
-      - enc-dask-staging.secret.values.yaml
-  - name: imagebuilding-demo
-    display_name: "2i2c image building demo"
-    domain: imagebuilding-demo.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - imagebuilding-demo.values.yaml
-      - enc-imagebuilding-demo.secret.values.yaml
-  - name: binderhub-ui-demo
-    display_name: "2i2c Binderhub UI demo"
-    domain: hub.binderhub-ui-demo.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - binderhub-ui-demo.values.yaml
-      - enc-binderhub-ui-demo.secret.values.yaml
-  - name: demo
-    display_name: "2i2c demo"
-    domain: demo.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - demo.values.yaml
-      - enc-demo.secret.values.yaml
-  - name: temple
-    display_name: "Temple University"
-    domain: temple.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - temple.values.yaml
-      - enc-temple.secret.values.yaml
+- name: staging
+  display_name: 2i2c staging
+  domain: staging.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: dask-staging
+  display_name: 2i2c dask staging
+  domain: dask-staging.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - daskhub-common.values.yaml
+  - dask-staging.values.yaml
+  - enc-dask-staging.secret.values.yaml
+- name: imagebuilding-demo
+  display_name: 2i2c image building demo
+  domain: imagebuilding-demo.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - imagebuilding-demo.values.yaml
+  - enc-imagebuilding-demo.secret.values.yaml
+- name: binderhub-ui-demo
+  display_name: 2i2c Binderhub UI demo
+  domain: hub.binderhub-ui-demo.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - binderhub-ui-demo.values.yaml
+  - enc-binderhub-ui-demo.secret.values.yaml
+- name: demo
+  display_name: 2i2c demo
+  domain: demo.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - demo.values.yaml
+  - enc-demo.secret.values.yaml
+- name: temple
+  display_name: Temple University
+  domain: temple.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - temple.values.yaml
+  - enc-temple.secret.values.yaml
   # Temporary deploy a staging hub for UCMerced
   # to help them transition to new user images
   # ref: https://github.com/2i2c-org/infrastructure/issues/3188
-  - name: ucmerced-staging
-    display_name: "UC Merced staging"
-    domain: staging.ucmerced.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - ucmerced-common.values.yaml
-      - ucmerced-staging.values.yaml
-      - enc-ucmerced-staging.secret.values.yaml
-  - name: ucmerced
-    display_name: "UC Merced"
-    domain: ucmerced.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - ucmerced-common.values.yaml
-      - ucmerced.values.yaml
-      - enc-ucmerced.secret.values.yaml
-  - name: mtu
-    display_name: "Michigan Technological University"
-    domain: mtu.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - mtu.values.yaml
-      - enc-mtu.secret.values.yaml
+- name: ucmerced-staging
+  display_name: UC Merced staging
+  domain: staging.ucmerced.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - ucmerced-common.values.yaml
+  - ucmerced-staging.values.yaml
+  - enc-ucmerced-staging.secret.values.yaml
+- name: ucmerced
+  display_name: UC Merced
+  domain: ucmerced.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - ucmerced-common.values.yaml
+  - ucmerced.values.yaml
+  - enc-ucmerced.secret.values.yaml
+- name: mtu
+  display_name: Michigan Technological University
+  domain: mtu.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - basehub-common.values.yaml
+  - mtu.values.yaml
+  - enc-mtu.secret.values.yaml

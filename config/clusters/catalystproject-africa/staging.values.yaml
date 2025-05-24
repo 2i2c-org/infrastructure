@@ -2,14 +2,14 @@ jupyterhub:
   ingress:
     hosts: [staging.af.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [staging.af.catalystproject.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.af.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
         org:
           name: Catalyst Project
-          url: "https://chanzuckerberg.com/science/programs-resources/open-science/educationcapacitybuilding/international-interactive-computing-collaboration-2i2c/"
+          url: https://chanzuckerberg.com/science/programs-resources/open-science/educationcapacitybuilding/international-interactive-computing-collaboration-2i2c/
           logo_url: https://github.com/2i2c-org/infrastructure/assets/6181563/0667c576-7dce-4443-afd2-922288530814
   hub:
     config:
@@ -19,11 +19,11 @@ jupyterhub:
         oauth_callback_url: https://staging.af.catalystproject.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - czi-catalystproject
-          - CatalystProject-Hubs:staging
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - czi-catalystproject
+        - CatalystProject-Hubs:staging
         scope:
-          - read:org
+        - read:org
       Authenticator:
         enable_auth_state: true
         manage_groups: true
@@ -32,10 +32,10 @@ jupyterhub:
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-          - jupyterhub-groups-exporter
+        - jupyterhub-groups-exporter
         scopes:
-          - users
-          - groups
+        - users
+        - groups
     extraConfig:
       custom-github-oauthenticator: |
         class CustomGitHubOAuthenticator(GitHubOAuthenticator):
@@ -57,7 +57,7 @@ jupyterhub:
       2i2c/hub-name: staging
 jupyterhub-home-nfs:
   quotaEnforcer:
-    hardQuota: "1" # in GB
+    hardQuota: '1' # in GB
   eks:
     volumeId: vol-0b6a28a6eec8fdb3f
 nfs:

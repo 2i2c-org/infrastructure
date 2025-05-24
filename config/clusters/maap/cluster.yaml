@@ -9,24 +9,24 @@ aws:
     paid_by_us: false
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "MAAP - staging"
-    domain: staging.hub.maap.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - staging.values.yaml
-      - enc-common.secret.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: prod
-    display_name: "MAAP - prod"
-    domain: hub.maap.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - prod.values.yaml
-      - enc-common.secret.values.yaml
-      - enc-prod.secret.values.yaml
+- name: staging
+  display_name: MAAP - staging
+  domain: staging.hub.maap.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - staging.values.yaml
+  - enc-common.secret.values.yaml
+  - enc-staging.secret.values.yaml
+- name: prod
+  display_name: MAAP - prod
+  domain: hub.maap.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - prod.values.yaml
+  - enc-common.secret.values.yaml
+  - enc-prod.secret.values.yaml

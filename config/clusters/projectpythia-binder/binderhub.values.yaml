@@ -11,11 +11,11 @@ jupyterhub:
         capi.stackhpc.com/node-group: core
   ingress:
     hosts:
-      - hub.projectpythia.org
+    - hub.projectpythia.org
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - hub.projectpythia.org
+    - secretName: https-auto-tls
+      hosts:
+      - hub.projectpythia.org
   custom:
     binderhubUI:
       enabled: true
@@ -42,32 +42,32 @@ jupyterhub:
     initContainers: []
     profileList: []
     cmd:
-      - python3
-      - "-c"
-      - |
-        import os
-        import sys
+    - python3
+    - -c
+    - |
+      import os
+      import sys
 
-        try:
-            import jupyterlab
-            import jupyterlab.labapp
-            major = int(jupyterlab.__version__.split(".", 1)[0])
-        except Exception as e:
-            print("Failed to import jupyterlab: {e}", file=sys.stderr)
-            have_lab = False
-        else:
-            have_lab = major >= 3
+      try:
+          import jupyterlab
+          import jupyterlab.labapp
+          major = int(jupyterlab.__version__.split(".", 1)[0])
+      except Exception as e:
+          print("Failed to import jupyterlab: {e}", file=sys.stderr)
+          have_lab = False
+      else:
+          have_lab = major >= 3
 
-        if have_lab:
-            # technically, we could accept another jupyter-server-based frontend
-            print("Launching jupyter-lab", file=sys.stderr)
-            exe = "jupyter-lab"
-        else:
-            print("jupyter-lab not found, launching jupyter-notebook", file=sys.stderr)
-            exe = "jupyter-notebook"
+      if have_lab:
+          # technically, we could accept another jupyter-server-based frontend
+          print("Launching jupyter-lab", file=sys.stderr)
+          exe = "jupyter-lab"
+      else:
+          print("jupyter-lab not found, launching jupyter-notebook", file=sys.stderr)
+          exe = "jupyter-notebook"
 
-        # launch the notebook server
-        os.execvp(exe, sys.argv)
+      # launch the notebook server
+      os.execvp(exe, sys.argv)
   # Custom selectors are needed because the magnum driver doesn't yet support
   # custom labeling due to a bug
   proxy:
@@ -87,20 +87,20 @@ jupyterhub:
     loadRoles:
       binder:
         services:
-          - binder
+        - binder
         scopes:
-          - servers
-          - admin:users
+        - servers
+        - admin:users
       user:
         scopes:
-          - self
-          - access:services!service=binder
+        - self
+        - access:services!service=binder
     redirectToServer: false
     config:
       BinderSpawnerMixin:
         auth_enabled: false
       JupyterHub:
-        authenticator_class: "null"
+        authenticator_class: 'null'
 
 binderhub-service:
   enabled: true
@@ -108,25 +108,25 @@ binderhub-service:
     enabled: true
   nodeSelector:
     capi.stackhpc.com/node-group: core
-    hub.jupyter.org/node-purpose: null
+    hub.jupyter.org/node-purpose:
   ingress:
     enabled: true
     hosts:
-      - binder.projectpythia.org
+    - binder.projectpythia.org
     tls:
-      - secretName: binder-https-auto-tls
-        hosts:
-          - binder.projectpythia.org
+    - secretName: binder-https-auto-tls
+      hosts:
+      - binder.projectpythia.org
   dockerApi:
     nodeSelector:
-      hub.jupyter.org/node-purpose: null
+      hub.jupyter.org/node-purpose:
       capi.stackhpc.com/node-group: user-m3-quad
   config:
     GitHubRepoProvider:
       allowed_specs:
-        - ^ProjectPythia/.*$
-        - ^ktyle/.*$
-        - "^binder-examples/.*"
+      - ^ProjectPythia/.*$
+      - ^ktyle/.*$
+      - ^binder-examples/.*
     BinderHub:
       base_url: /
       hub_url: https://hub.projectpythia.org
@@ -134,30 +134,30 @@ binderhub-service:
       auth_enabled: false
       enable_api_only_mode: false
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/jetstream2-projectpythia-pythia-binder-
-      banner_message: "Binder on Jetstream2 for use with Project Pythia"
-      about_message: ""
+      banner_message: Binder on Jetstream2 for use with Project Pythia
+      about_message: ''
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
     KubernetesBuildExecutor:
       node_selector:
         # Schedule builder pods to run on user nodes only
-        hub.jupyter.org/node-purpose: null
+        hub.jupyter.org/node-purpose:
         capi.stackhpc.com/node-group: user-m3-quad
   extraEnv:
-    - name: JUPYTERHUB_API_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: '{{ include "jupyterhub.hub.fullname" . }}'
-          key: hub.services.binder.apiToken
-    - name: JUPYTERHUB_CLIENT_ID
-      value: "service-binder"
-    - name: JUPYTERHUB_API_URL
-      value: "https://hub.projectpythia.org/hub/api"
+  - name: JUPYTERHUB_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: '{{ include "jupyterhub.hub.fullname" . }}'
+        key: hub.services.binder.apiToken
+  - name: JUPYTERHUB_CLIENT_ID
+    value: service-binder
+  - name: JUPYTERHUB_API_URL
+    value: https://hub.projectpythia.org/hub/api
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
-    - name: JUPYTERHUB_BASE_URL
-      value: "https://hub.projectpythia.org/"
+  - name: JUPYTERHUB_BASE_URL
+    value: https://hub.projectpythia.org/
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: *url

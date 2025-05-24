@@ -6,16 +6,16 @@ jupyterhub-home-nfs:
   gke:
     volumeId: projects/climatematch/zones/us-central1-b/disks/hub-nfs-homedirs-staging
   quotaEnforcer:
-    hardQuota: "0.5" # in GB
+    hardQuota: '0.5' # in GB
 
 jupyterhub:
   ingress:
     hosts:
-      - staging.climatematch.2i2c.cloud
+    - staging.climatematch.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - staging.climatematch.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - staging.climatematch.2i2c.cloud
   hub:
     config:
       GitHubOAuthenticator:

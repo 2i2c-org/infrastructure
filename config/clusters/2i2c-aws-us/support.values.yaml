@@ -10,22 +10,22 @@ grafana:
       allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.aws.2i2c.cloud
+    - grafana.aws.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.aws.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.aws.2i2c.cloud
 
 prometheus:
   server:
     ingress:
       enabled: true
       hosts:
-        - prometheus.aws.2i2c.cloud
+      - prometheus.aws.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.aws.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.aws.2i2c.cloud
     persistentVolume:
       size: 500Gi
 
@@ -45,8 +45,8 @@ cluster-autoscaler:
 
 redirects:
   rules:
-    - from: researchdelight.2i2c.cloud
-      to: showcase.2i2c.cloud
+  - from: researchdelight.2i2c.cloud
+    to: showcase.2i2c.cloud
 
 calico:
   enabled: true

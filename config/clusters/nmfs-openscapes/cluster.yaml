@@ -9,40 +9,40 @@ aws:
     paid_by_us: false
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: NOAA Fisheries Openscapes - Staging
-    domain: staging.nmfs-openscapes.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - enc-common.secret.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: prod
-    display_name: NOAA Fisheries Openscapes
-    domain: nmfs-openscapes.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - enc-common.secret.values.yaml
-      - prod.values.yaml
-      - enc-prod.secret.values.yaml
-  - name: workshop
-    display_name: "NOAA Fisheries Openscapes Workshop"
-    domain: workshop.nmfs-openscapes.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - workshop.values.yaml
-      - enc-workshop.secret.values.yaml
-  - name: noaa-only
-    display_name: "NOAA Fisheries Openscapes NOAA-only access"
-    domain: noaa.nmfs-openscapes.2i2c.cloud
-    helm_chart: "basehub"
-    helm_chart_values_files:
-      - common.values.yaml
-      - noaa-only.values.yaml
-      - enc-noaa-only.secret.values.yaml
+- name: staging
+  display_name: NOAA Fisheries Openscapes - Staging
+  domain: staging.nmfs-openscapes.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: prod
+  display_name: NOAA Fisheries Openscapes
+  domain: nmfs-openscapes.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - prod.values.yaml
+  - enc-prod.secret.values.yaml
+- name: workshop
+  display_name: NOAA Fisheries Openscapes Workshop
+  domain: workshop.nmfs-openscapes.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - workshop.values.yaml
+  - enc-workshop.secret.values.yaml
+- name: noaa-only
+  display_name: NOAA Fisheries Openscapes NOAA-only access
+  domain: noaa.nmfs-openscapes.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - noaa-only.values.yaml
+  - enc-noaa-only.secret.values.yaml

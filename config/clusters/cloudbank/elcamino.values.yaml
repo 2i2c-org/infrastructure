@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [elcamino.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [elcamino.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [elcamino.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -33,24 +33,24 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: "https://elcamino.cloudbank.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://elcamino.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - elcamino.edu
+            - elcamino.edu
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - srussell@elcamino.edu
-          - ammartinez@elcamino.edu
-          - jonathanferrari@berkeley.edu
-          - arianaghimire27@berkeley.edu
-          - bdsomer@berkeley.edu
-          - brandon_concepcion@berkeley.edu
-          - jegeronimo@berkeley.edu
-          - mark.barranda@berkeley.edu
-          - skompalli@berkeley.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - srussell@elcamino.edu
+        - ammartinez@elcamino.edu
+        - jonathanferrari@berkeley.edu
+        - arianaghimire27@berkeley.edu
+        - bdsomer@berkeley.edu
+        - brandon_concepcion@berkeley.edu
+        - jegeronimo@berkeley.edu
+        - mark.barranda@berkeley.edu
+        - skompalli@berkeley.edu

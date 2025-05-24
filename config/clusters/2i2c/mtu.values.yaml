@@ -1,15 +1,15 @@
 jupyterhub:
   ingress:
     hosts:
-      - mtu.2i2c.cloud
+    - mtu.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - mtu.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - mtu.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -23,39 +23,39 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: "Michigan Technological University - College of Computing"
-          url: "https://www.mtu.edu/computing/"
+          name: Michigan Technological University - College of Computing
+          url: https://www.mtu.edu/computing/
   singleuser:
     image:
       name: quay.io/2i2c/cloudbank-data8-image
-      tag: "6286b77ae45c"
+      tag: 6286b77ae45c
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: "https://mtu.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://mtu.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           # Allow MTU to login via Shibboleth
           https://sso.mtu.edu/idp/shibboleth:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - "mtu.edu"
+            - mtu.edu
           # Allow 2i2c staff to login with Google accounts
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - "dbkc@mtu.edu"
-          - "lebrown@mtu.edu"
+        - dbkc@mtu.edu
+        - lebrown@mtu.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-mtu
   quotaEnforcer:
-    hardQuota: "20" # in GB
+    hardQuota: '20' # in GB
 nfs:
   pv:
     serverIP: 10.3.244.132
