@@ -17,9 +17,6 @@ hubs:
     domain: staging.opensci.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
       - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
@@ -28,9 +25,6 @@ hubs:
     domain: sciencecore.opensci.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
       - common.values.yaml
       - sciencecore.values.yaml
       - enc-imagebuilding-common.secret.values.yaml
@@ -40,9 +34,6 @@ hubs:
     domain: climaterisk.opensci.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
       - common.values.yaml
       - climaterisk.values.yaml
       - enc-climaterisk.secret.values.yaml

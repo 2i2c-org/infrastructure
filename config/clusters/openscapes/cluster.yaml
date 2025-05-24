@@ -18,9 +18,6 @@ hubs:
     domain: staging.openscapes.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
       - common.values.yaml
       - enc-common.secret.values.yaml
       - staging.values.yaml
@@ -30,9 +27,6 @@ hubs:
     domain: openscapes.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
       - common.values.yaml
       - enc-common.secret.values.yaml
       - prod.values.yaml
