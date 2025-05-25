@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import os
 import subprocess
 from contextlib import ExitStack
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from ruamel.yaml import YAML
 
-from deployer.infra_components.cluster import Cluster
+if TYPE_CHECKING:
+    from deployer.infra_components.cluster import Cluster
+
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
     get_decrypted_file,
