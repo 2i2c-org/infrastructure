@@ -10,7 +10,6 @@ from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
 
-from deployer.utils.file_acquisition import CONFIG_CLUSTERS_PATH
 from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
@@ -324,6 +323,13 @@ def assign_staging_jobs_for_missing_clusters(
                 for hub in prod_hub_matrix_jobs
                 if hub["cluster_name"] == missing_cluster
             ]
+
+            # HACK: This is here because the unit test for testing helm upgrade
+            # decisions tries to mock this global variable. Having to mock things
+            # that we control is always problematic. This whole file needs to be
+            # refactored to be far less indirect. Moving this import here
+            # lets us do that as part of a separate PR
+            from deployer.utils.file_acquisition import CONFIG_CLUSTERS_PATH
 
             cluster_config_path = (
                 CONFIG_CLUSTERS_PATH / missing_cluster / "cluster.yaml"
