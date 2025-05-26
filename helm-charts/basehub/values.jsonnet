@@ -13,8 +13,8 @@ local emitDaskHubCompatibleConfig(basehubConfig) =
   if isDaskHub then { basehub: basehubConfig } else basehubConfig;
 
 local jupyterhubHomeNFSResources = {
-  # The + is required so this will merge correctly with other config
-  # when needed
+  // The + is required so this will merge correctly with other config
+  // when needed
   quotaEnforcer+: {
     resources: {
       requests: {
