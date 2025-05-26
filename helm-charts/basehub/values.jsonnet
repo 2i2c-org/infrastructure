@@ -13,8 +13,9 @@ local emitDaskHubCompatibleConfig(basehubConfig) =
   if isDaskHub then { basehub: basehubConfig } else basehubConfig;
 
 local jupyterhubHomeNFSResources = {
-  quotaEnforcer: {
-    path: '/export/%s' % hub_name,
+  # The + is required so this will merge correctly with other config
+  # when needed
+  quotaEnforcer+: {
     resources: {
       requests: {
         cpu: 0.02,
@@ -26,7 +27,7 @@ local jupyterhubHomeNFSResources = {
       },
     },
   },
-  nfsServer: {
+  nfsServer+: {
     resources: {
       requests: {
         cpu: 0.2,
@@ -38,7 +39,7 @@ local jupyterhubHomeNFSResources = {
       },
     },
   },
-  prometheusExporter: {
+  prometheusExporter+: {
     resources: {
       requests: {
         cpu: 0.02,
@@ -51,7 +52,12 @@ local jupyterhubHomeNFSResources = {
     },
   },
 };
+local jupyterhubHomeNFS = {
+  quotaEnforcer: {
+    path: '/export/%s' % hub_name,
+  },
+} + if is_staging then {} else jupyterhubHomeNFSResources;
 
 emitDaskHubCompatibleConfig({
-  'jupyterhub-home-nfs': if is_staging then {} else jupyterhubHomeNFSResources,
+  'jupyterhub-home-nfs': jupyterhubHomeNFS,
 })
