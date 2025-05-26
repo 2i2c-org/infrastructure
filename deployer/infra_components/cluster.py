@@ -260,7 +260,7 @@ class Cluster:
         activate the appropriate subscription, then authenticate against the
         cluster using `az aks get-credentials`.
         """
-        config = self.spect["azure"]
+        config = self.spec["azure"]
         key_path = self.config_path.joinpath(config["key"])
         cluster = config["cluster"]
         resource_group = config["resource_group"]
