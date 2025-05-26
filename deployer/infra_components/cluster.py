@@ -364,7 +364,7 @@ class Cluster:
 
         Raises an exception if URL is not correctly set.
         """
-        config_file = self.config_path.parent / "support.values.yaml"
+        config_file = self.dir_path / "support.values.yaml"
         with open(config_file) as f:
             support_config = yaml.load(f)
 
@@ -383,7 +383,7 @@ class Cluster:
         """
         Return access token for talking to the Grafana API on this cluster
         """
-        grafana_token_file = self.config_path.parent / "enc-grafana-token.secret.yaml"
+        grafana_token_file = self.dir_path / "enc-grafana-token.secret.yaml"
 
         # Read the secret grafana token file
         with get_decrypted_file(grafana_token_file) as decrypted_file_path:
@@ -404,7 +404,7 @@ class Cluster:
         Raises an exception if URL is not correctly configured
         """
 
-        config_file = self.config_path.parent / "support.values.yaml"
+        config_file = self.dir_path / "support.values.yaml"
         with open(config_file) as f:
             support_config = yaml.load(f)
 
@@ -437,7 +437,7 @@ class Cluster:
 
         Raises an exception if it was not correctly configured
         """
-        config_filename = self.config_path.parent / "enc-support.secret.values.yaml"
+        config_filename = self.dir_path / "enc-support.secret.values.yaml"
 
         with get_decrypted_file(config_filename) as decrypted_path:
             with open(decrypted_path) as f:
