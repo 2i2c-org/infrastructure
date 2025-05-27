@@ -248,15 +248,15 @@ jupyterhub:
             secret:
               secretName: singleuser
               items:
-              - key: ghsa-w3vc-fx9p-wp4v-check-patch-run
-                mode: 493
-                path: ghsa-w3vc-fx9p-wp4v-check-patch-run
-              - key: ipython_kernel_config.json
-                path: ipython_kernel_config.json
-              - key: jupyter_notebook_config.json
-                path: jupyter_notebook_config.json
-              - key: jupyter_server_config.json
-                path: jupyter_server_config.json
+                - key: ghsa-w3vc-fx9p-wp4v-check-patch-run
+                  mode: 493
+                  path: ghsa-w3vc-fx9p-wp4v-check-patch-run
+                - key: ipython_kernel_config.json
+                  path: ipython_kernel_config.json
+                - key: jupyter_notebook_config.json
+                  path: jupyter_notebook_config.json
+                - key: jupyter_server_config.json
+                  path: jupyter_server_config.json
           03-shared-group:
             name: shared-group-placeholder
             emptyDir:
