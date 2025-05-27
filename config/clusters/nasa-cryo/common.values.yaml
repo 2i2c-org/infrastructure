@@ -78,6 +78,10 @@ basehub:
       services:
         jupyterhub-groups-exporter: {}
       loadRoles:
+        user:
+          scopes:
+            - self
+            - shares!user
         jupyterhub-groups-exporter:
           services:
             - jupyterhub-groups-exporter
