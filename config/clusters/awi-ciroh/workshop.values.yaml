@@ -127,7 +127,7 @@ basehub:
                     image: "quay.io/awiciroh/devcon25:jmframe_d25"
                     image_pull_policy: "Always"
                 devcon7:
-                  display_name: Ngen in 2i2c
+                  display_name: NextGen National Water Model(NWM)
                   slug: "devcon7"
                   kubespawner_override:
                     image: "quay.io/fbaig25/ngiab-2i2c:v1.0.0"
