@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [lbcc.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [lbcc.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [lbcc.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -39,15 +39,15 @@ jupyterhub:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - lbcc.edu
+            - lbcc.edu
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - dgonzalez@lbcc.edu
-          - lbarbee@lbcc.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - dgonzalez@lbcc.edu
+        - lbarbee@lbcc.edu

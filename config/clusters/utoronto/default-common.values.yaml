@@ -2,13 +2,13 @@ jupyterhub:
   singleuser:
     image:
       name: quay.io/2i2c/utoronto-image
-      tag: "5e0cbe50c587"
+      tag: 5e0cbe50c587
   hub:
     config:
       Authenticator:
         admin_users:
           # 2i2c staff below, a list maintained in default-common r-common
-          - "yuvi.panda@utoronto.ca"
-          - "georgiana.elena@utoronto.ca"
-          - "chris.holdgraf@utoronto.ca"
-          - "davidy.liu@utoronto.ca"
+        - yuvi.panda@utoronto.ca
+        - georgiana.elena@utoronto.ca
+        - chris.holdgraf@utoronto.ca
+        - davidy.liu@utoronto.ca

@@ -29,8 +29,8 @@ jupyterhub:
   ingress:
     hosts: [workshop.nmfs-openscapes.2i2c.cloud]
     tls:
-      - hosts: [workshop.nmfs-openscapes.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [workshop.nmfs-openscapes.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     allowNamedServers: true
     config:
@@ -42,28 +42,28 @@ jupyterhub:
         admin_users: []
   singleuser:
     initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared-public && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{escaped_username}"
-          - name: home
-            mountPath: /home/jovyan/shared-public
-            subPath: _shared-public
+    - name: volume-mount-ownership-fix
+      image: busybox:1.36.1
+      command:
+      - sh
+      - -c
+      - id && chown 1000:1000 /home/jovyan /home/jovyan/shared-public && ls -lhd /home/jovyan
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
+      - name: home
+        mountPath: /home/jovyan/shared-public
+        subPath: _shared-public
     storage:
       extraVolumeMounts:
         # A shared folder readable & writeable by everyone
-        - name: home
-          mountPath: /home/jovyan/shared-public
-          subPath: _shared-public
-          readOnly: false
+      - name: home
+        mountPath: /home/jovyan/shared-public
+        subPath: _shared-public
+        readOnly: false
     defaultUrl: /lab
     nodeSelector:
       2i2c/hub-name: workshop
@@ -73,156 +73,156 @@ jupyterhub:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liopQ2cWF2zW212t
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/nmfs-openscapes-workshop-github
     profileList:
-      - display_name: Default
-        description: Choose image and resource allocation
-        default: true
-        profile_options: &profile_options
-          image: &profile_options_image
-            display_name: Image
-            choices:
-              python:
-                display_name: Py - NASA Openscapes Python, Dask Gateway 07980b9
-                slug: python
-                kubespawner_override:
-                  image: openscapes/python:07980b9
-              pyrbase:
-                display_name: Py-R - py-rocket-base image 4.4-3.10
-                slug: pyrbase
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/py-rocket-base:latest
-              cefi:
-                display_name: Py-R - CEFI image latest
-                slug: cefi
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/cefi-image:latest
-              asar:
-                display_name: R - ASAR Stock Assessment
-                slug: asar
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/asar:latest
-              pyrgeo2:
-                display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
-                slug: pyrgeo2
-                default: true
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
-              coastwatch:
-                display_name: Py-R - CoastWatch - coastwatch latest
-                slug: coastwatch
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/coastwatch:latest
-              aomlomics:
-                display_name: Py - Tourmaline Snakemake workflow for QIIME 2 v.2023.5
-                slug: aomlomics
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/aomlomics-jh:latest
-              iorocker:
-                display_name: R - Geospatial w sdmTMB - r-geospatial-sdm latest
-                slug: rgeospatialsdm
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/r-geospatial-sdm:latest
-              echopype:
-                display_name: Py - Echopype with pangeo - image-acoustics latest
-                slug: echopype
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/image-acoustics:latest
-              arcgis:
-                display_name: Py - ArcGIS Python 3.9
-                slug: arcgis
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/arcgis:latest
-              vast:
-                display_name: R - VAST with TMB - vast latest
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/vast:latest
-              pace:
-                display_name: Py - PACE image with OCSSW tools
-                slug: pace
-                kubespawner_override:
-                  image: quay.io/pacehackweek/pace-2024:latest
-            unlisted_choice:
-              enabled: True
-              display_name: "Custom image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+    - display_name: Default
+      description: Choose image and resource allocation
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          choices:
+            python:
+              display_name: Py - NASA Openscapes Python, Dask Gateway 07980b9
+              slug: python
               kubespawner_override:
-                image: "{value}"
-          requests: &profile_options_resource_allocation
-            display_name: Resource Allocation
-            choices:
+                image: openscapes/python:07980b9
+            pyrbase:
+              display_name: Py-R - py-rocket-base image 4.4-3.10
+              slug: pyrbase
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/py-rocket-base:latest
+            cefi:
+              display_name: Py-R - CEFI image latest
+              slug: cefi
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/cefi-image:latest
+            asar:
+              display_name: R - ASAR Stock Assessment
+              slug: asar
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/asar:latest
+            pyrgeo2:
+              display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
+              slug: pyrgeo2
+              default: true
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
+            coastwatch:
+              display_name: Py-R - CoastWatch - coastwatch latest
+              slug: coastwatch
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/coastwatch:latest
+            aomlomics:
+              display_name: Py - Tourmaline Snakemake workflow for QIIME 2 v.2023.5
+              slug: aomlomics
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/aomlomics-jh:latest
+            iorocker:
+              display_name: R - Geospatial w sdmTMB - r-geospatial-sdm latest
+              slug: rgeospatialsdm
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/r-geospatial-sdm:latest
+            echopype:
+              display_name: Py - Echopype with pangeo - image-acoustics latest
+              slug: echopype
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/image-acoustics:latest
+            arcgis:
+              display_name: Py - ArcGIS Python 3.9
+              slug: arcgis
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/arcgis:latest
+            vast:
+              display_name: R - VAST with TMB - vast latest
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/vast:latest
+            pace:
+              display_name: Py - PACE image with OCSSW tools
+              slug: pace
+              kubespawner_override:
+                image: quay.io/pacehackweek/pace-2024:latest
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+        requests:
+          display_name: Resource Allocation
+          choices:
               # choices generated by combining:
               # - deployer generate resource-allocation choices r7i.xlarge
               # - deployer generate resource-allocation choices r7i.4xlarge --num-allocations=2
-              mem_1_9:
-                display_name: 1.9 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 1991244775
-                  mem_limit: 1991244775
-                  cpu_guarantee: 0.2328125
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-                default: true
-              mem_3_7:
-                display_name: 3.7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 3982489550
-                  mem_limit: 3982489550
-                  cpu_guarantee: 0.465625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_7_4:
-                display_name: 7.4 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 7964979101
-                  mem_limit: 7964979101
-                  cpu_guarantee: 0.93125
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_14_8:
-                display_name: 14.8 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 15929958203
-                  mem_limit: 15929958203
-                  cpu_guarantee: 1.8625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_7:
-                display_name: 29.7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 31859916406
-                  mem_limit: 31859916406
-                  cpu_guarantee: 3.725
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_60_6:
-                display_name: 60.6 GB RAM, upto 15.6 CPUs
-                kubespawner_override:
-                  mem_guarantee: 65094448840
-                  mem_limit: 65094448840
-                  cpu_guarantee: 7.8475
-                  cpu_limit: 15.695
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.4xlarge
-              mem_121_2:
-                display_name: 121.2 GB RAM, upto 15.6 CPUs
-                kubespawner_override:
-                  mem_guarantee: 130188897681
-                  mem_limit: 130188897681
-                  cpu_guarantee: 15.695
-                  cpu_limit: 15.695
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.4xlarge
+            mem_1_9:
+              display_name: 1.9 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 1991244775
+                mem_limit: 1991244775
+                cpu_guarantee: 0.2328125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+              default: true
+            mem_3_7:
+              display_name: 3.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 3982489550
+                mem_limit: 3982489550
+                cpu_guarantee: 0.465625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_7_4:
+              display_name: 7.4 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 7964979101
+                mem_limit: 7964979101
+                cpu_guarantee: 0.93125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_14_8:
+              display_name: 14.8 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 15929958203
+                mem_limit: 15929958203
+                cpu_guarantee: 1.8625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_7:
+              display_name: 29.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 31859916406
+                mem_limit: 31859916406
+                cpu_guarantee: 3.725
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_60_6:
+              display_name: 60.6 GB RAM, upto 15.6 CPUs
+              kubespawner_override:
+                mem_guarantee: 65094448840
+                mem_limit: 65094448840
+                cpu_guarantee: 7.8475
+                cpu_limit: 15.695
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_121_2:
+              display_name: 121.2 GB RAM, upto 15.6 CPUs
+              kubespawner_override:
+                mem_guarantee: 130188897681
+                mem_limit: 130188897681
+                cpu_guarantee: 15.695
+                cpu_limit: 15.695
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
 
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-07154b7def3b80b96
   quotaEnforcer:
-    hardQuota: "4" # in GB
+    hardQuota: '4' # in GB
 
 binderhub-service:
   enabled: false

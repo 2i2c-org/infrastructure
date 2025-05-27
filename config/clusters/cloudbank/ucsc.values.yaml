@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [ucsc.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [ucsc.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [ucsc.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -39,14 +39,14 @@ jupyterhub:
           urn:mace:incommon:ucsc.edu:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - pmorale5@ucsc.edu
-          - jusimons@ucsc.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - pmorale5@ucsc.edu
+        - jusimons@ucsc.edu

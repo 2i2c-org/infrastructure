@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [riohondo.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [riohondo.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [riohondo.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -36,11 +36,11 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://riohondo.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - RHC-DSCI-100
+        - RHC-DSCI-100
         scope:
-          - read:org
+        - read:org
       Authenticator:
         admin_users:
-          - sean-morris
-          - DrHolbrook
-          - bharlowRHC
+        - sean-morris
+        - DrHolbrook
+        - bharlowRHC

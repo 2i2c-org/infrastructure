@@ -2,16 +2,16 @@ jupyterhub:
   ingress:
     hosts: [nm-aist.af.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [nm-aist.af.catalystproject.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [nm-aist.af.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
-          name: "NM-AIST"
+          name: NM-AIST
           url: https://nm-aist.ac.tz/
           logo_url: https://nm-aist.ac.tz/images/logo.png
   hub:
@@ -26,16 +26,16 @@ jupyterhub:
             username_derivation:
               username_claim: email
             allowed_domains:
-              - nm-aist.ac.tz
+            - nm-aist.ac.tz
       Authenticator:
         admin_users:
-          - "beatus.lyimo@nm-aist.ac.tz"
+        - beatus.lyimo@nm-aist.ac.tz
   singleuser:
     nodeSelector:
       2i2c/hub-name: nm-aist
 jupyterhub-home-nfs:
   quotaEnforcer:
-    hardQuota: "1" # in GB
+    hardQuota: '1' # in GB
   eks:
     volumeId: vol-0335f8d2d1795a035
 nfs:

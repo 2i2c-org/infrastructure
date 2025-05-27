@@ -3,27 +3,27 @@ prometheusIngressAuthSecret:
 
 redirects:
   rules:
-    - from: r-staging.utoronto.2i2c.cloud
-      to: r-staging.datatools.utoronto.ca
-    - from: r.utoronto.2i2c.cloud
-      to: r.datatools.utoronto.ca
-    - from: jupyter-staging.datatools.utoronto.ca
-      to: staging.utoronto.2i2c.cloud
-    - from: jupyter.datatools.utoronto.ca
-      to: jupyter.utoronto.ca
-    - from: highmem.utoronto.2i2c.cloud
-      to: highmem.datatools.utoronto.ca
+  - from: r-staging.utoronto.2i2c.cloud
+    to: r-staging.datatools.utoronto.ca
+  - from: r.utoronto.2i2c.cloud
+    to: r.datatools.utoronto.ca
+  - from: jupyter-staging.datatools.utoronto.ca
+    to: staging.utoronto.2i2c.cloud
+  - from: jupyter.datatools.utoronto.ca
+    to: jupyter.utoronto.ca
+  - from: highmem.utoronto.2i2c.cloud
+    to: highmem.datatools.utoronto.ca
 
 prometheus:
   server:
     ingress:
       enabled: true
       hosts:
-        - prometheus.utoronto.2i2c.cloud
+      - prometheus.utoronto.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.utoronto.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.utoronto.2i2c.cloud
     resources:
       # utoronto's prometheus seems to lie stable below 10Gi at around 6Gi
       requests:
@@ -40,11 +40,11 @@ grafana:
       allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.utoronto.2i2c.cloud
+    - grafana.utoronto.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.utoronto.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.utoronto.2i2c.cloud
 
 ingress-nginx:
   controller:

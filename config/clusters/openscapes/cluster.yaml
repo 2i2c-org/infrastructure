@@ -1,6 +1,6 @@
 name: openscapes
 provider: aws # https://783616723547.signin.aws.amazon.com/console
-account: "783616723547"
+account: '783616723547'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
@@ -10,32 +10,32 @@ aws:
     paid_by_us: false
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "Openscapes (staging)"
-    domain: staging.openscapes.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - common.values.yaml
-      - enc-common.secret.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: prod
-    display_name: "Openscapes (prod)"
-    domain: openscapes.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - common.values.yaml
-      - enc-common.secret.values.yaml
-      - prod.values.yaml
-      - enc-prod.secret.values.yaml
-  - name: workshop
-    display_name: "Openscapes Workshop"
-    domain: workshop.openscapes.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - common.values.yaml
-      - workshop.values.yaml
-      - enc-workshop.secret.values.yaml
+- name: staging
+  display_name: Openscapes (staging)
+  domain: staging.openscapes.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: prod
+  display_name: Openscapes (prod)
+  domain: openscapes.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - prod.values.yaml
+  - enc-prod.secret.values.yaml
+- name: workshop
+  display_name: Openscapes Workshop
+  domain: workshop.openscapes.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - common.values.yaml
+  - workshop.values.yaml
+  - enc-workshop.secret.values.yaml

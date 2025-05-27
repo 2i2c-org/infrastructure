@@ -69,8 +69,8 @@ repos:
 - repo: https://github.com/google/go-jsonnet
   rev: v0.21.0
   hooks:
-    - id: jsonnet-format
-      exclude: eksctl/template.jsonnet
+  - id: jsonnet-format
+    exclude: eksctl/template.jsonnet
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:

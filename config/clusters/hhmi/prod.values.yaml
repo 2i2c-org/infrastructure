@@ -5,16 +5,16 @@ basehub:
   jupyterhub:
     ingress:
       hosts:
-        - hhmi.2i2c.cloud
+      - hhmi.2i2c.cloud
       tls:
-        - secretName: https-auto-tls
-          hosts:
-            - hhmi.2i2c.cloud
+      - secretName: https-auto-tls
+        hosts:
+        - hhmi.2i2c.cloud
     custom:
       homepage:
         templateVars:
           org:
-            name: "HHMI"
+            name: HHMI
     hub:
       config:
         CILogonOAuthenticator:

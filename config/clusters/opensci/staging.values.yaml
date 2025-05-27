@@ -6,7 +6,7 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-02a23da5b534a990a
   quotaEnforcer:
-    hardQuota: "0.5" # in GB
+    hardQuota: '0.5' # in GB
 
 jupyterhub-groups-exporter:
   enabled: true
@@ -17,15 +17,15 @@ jupyterhub-groups-exporter:
 jupyterhub:
   ingress:
     hosts:
-      - staging.opensci.2i2c.cloud
+    - staging.opensci.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - staging.opensci.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - staging.opensci.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     jupyterhubConfigurator:
       enabled: false
     homepage:
@@ -41,91 +41,91 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: ""
-          url: ""
+          name: ''
+          url: ''
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
     profileList:
-      - display_name: Choose your environment and resources
-        slug: only-choice
-        profile_options:
-          image:
-            display_name: Image
-            unlisted_choice: &profile_list_unlisted_choice
-              enabled: True
-              display_name: "Custom image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-              display_name_in_choices: "Specify an existing docker image"
-              description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
-                image: "{value}"
-            choices:
-              pangeo:
-                display_name: Pangeo Notebook Image
-                description: "Python image with scientific, dask and geospatial tools"
-                kubespawner_override:
-                  image: pangeo/pangeo-notebook:2023.09.11
-              geospatial:
-                display_name: Rocker Geospatial
-                description: "R image with RStudio, the tidyverse & Geospatial tools"
-                default: true
-                slug: geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
+                image: pangeo/pangeo-notebook:2023.09.11
+            geospatial:
+              display_name: Rocker Geospatial
+              description: R image with RStudio, the tidyverse & Geospatial tools
+              default: true
+              slug: geospatial
+              kubespawner_override:
+                image: rocker/binder:4.3
+                image_pull_policy: Always
                   # Launch into RStudio after the user logs in
-                  default_url: /rstudio
+                default_url: /rstudio
                   # Ensures container working dir is homedir
                   # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
-              scipy:
-                display_name: Jupyter SciPy Notebook
-                slug: scipy
-                kubespawner_override:
+                working_dir: /home/rstudio
+            scipy:
+              display_name: Jupyter SciPy Notebook
+              slug: scipy
+              kubespawner_override:
                   # FIXME: use quay.io/ for tags after 2023-10-20
-                  image: jupyter/scipy-notebook:2023-06-26
-          resources:
-            display_name: Resource Allocation
-            choices:
-              mem_3_7:
-                display_name: 3.7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 3982489550
-                  mem_limit: 3982489550
-                  cpu_guarantee: 0.465625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-                default: true
-              mem_7_4:
-                display_name: 7.4 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 7964979101
-                  mem_limit: 7964979101
-                  cpu_guarantee: 0.93125
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_14_8:
-                display_name: 14.8 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 15929958203
-                  mem_limit: 15929958203
-                  cpu_guarantee: 1.8625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_7:
-                display_name: 29.7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 31859916406
-                  mem_limit: 31859916406
-                  cpu_guarantee: 3.725
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
+                image: jupyter/scipy-notebook:2023-06-26
+        resources:
+          display_name: Resource Allocation
+          choices:
+            mem_3_7:
+              display_name: 3.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 3982489550
+                mem_limit: 3982489550
+                cpu_guarantee: 0.465625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+              default: true
+            mem_7_4:
+              display_name: 7.4 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 7964979101
+                mem_limit: 7964979101
+                cpu_guarantee: 0.93125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_14_8:
+              display_name: 14.8 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 15929958203
+                mem_limit: 15929958203
+                cpu_guarantee: 1.8625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_7:
+              display_name: 29.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 31859916406
+                mem_limit: 31859916406
+                cpu_guarantee: 3.725
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
 
   hub:
     allowNamedServers: true
@@ -136,10 +136,10 @@ jupyterhub:
         oauth_callback_url: https://staging.opensci.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - 2i2c-demo-hub-access
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - 2i2c-demo-hub-access
         scope:
-          - read:org
+        - read:org
       Authenticator:
         enable_auth_state: true
         manage_groups: true
@@ -148,10 +148,10 @@ jupyterhub:
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-          - jupyterhub-groups-exporter
+        - jupyterhub-groups-exporter
         scopes:
-          - users
-          - groups
+        - users
+        - groups
     extraConfig:
       custom-github-oauthenticator: |
         class CustomGitHubOAuthenticator(GitHubOAuthenticator):

@@ -1,10 +1,10 @@
 creation_rules:
-  - path_regex: .*secret.*
-    gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
-  - path_regex: .*/eksctl/ssh-keys/.*
-    gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
-  - path_regex: deployer/keys/.*key.*
-    gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
+- path_regex: .*secret.*
+  gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
+- path_regex: .*/eksctl/ssh-keys/.*
+  gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
+- path_regex: deployer/keys/.*key.*
+  gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
 
 # stores configuration is supported by sops 3.9.0+ only
 stores:

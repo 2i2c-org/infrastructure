@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [high.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [high.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [high.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
     memory:
@@ -13,24 +13,24 @@ jupyterhub:
       guarantee: 1
       limit: 2
     initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{escaped_username}"
+    - name: volume-mount-ownership-fix
+      image: busybox:1.36.1
+      command:
+      - sh
+      - -c
+      - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
     storage:
       extraVolumeMounts: []
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
       # is merged

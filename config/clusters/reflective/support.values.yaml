@@ -6,11 +6,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.reflective.2i2c.cloud
+      - prometheus.reflective.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.reflective.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.reflective.2i2c.cloud
 grafana:
   grafana.ini:
     server:
@@ -20,11 +20,11 @@ grafana:
     allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.reflective.2i2c.cloud
+    - grafana.reflective.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.reflective.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.reflective.2i2c.cloud
 
 cluster-autoscaler:
   enabled: true

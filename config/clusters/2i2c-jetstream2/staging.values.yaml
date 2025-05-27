@@ -5,12 +5,12 @@ nfs:
   pv:
     enabled: true
     mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
     serverIP: 172.24.110.218
     baseShareName: /
 
@@ -40,12 +40,12 @@ jupyterhub:
   ingress:
     hosts: [staging.js.2i2c.cloud]
     tls:
-      - hosts: [staging.js.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.js.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     homepage:
       templateVars:
         org:
@@ -68,12 +68,12 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: "https://staging.js.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://staging.js.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
+        - 2i2c-org:hub-access-for-2i2c-staff
         scope:
-          - read:org
+        - read:org
       Authenticator:
         enable_auth_state: true
         manage_groups: true
@@ -82,10 +82,10 @@ jupyterhub:
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-          - jupyterhub-groups-exporter
+        - jupyterhub-groups-exporter
         scopes:
-          - users
-          - groups
+        - users
+        - groups
     extraConfig:
       custom-auth-state-groups-key: |
         async def custom_auth_state_groups_key(auth_state):
@@ -107,70 +107,70 @@ jupyterhub:
     nodeSelector:
       capi.stackhpc.com/node-group: user-m3-quad
     profileList:
-      - display_name: Choose your environment and resources
-        slug: only-choice
-        profile_options:
-          image:
-            display_name: Image
-            unlisted_choice: &profile_list_unlisted_choice
-              enabled: True
-              display_name: "Custom image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-              display_name_in_choices: "Specify an existing docker image"
-              description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              default: true
+              slug: pangeo
               kubespawner_override:
-                image: "{value}"
-            choices:
-              pangeo:
-                display_name: Pangeo Notebook Image
-                description: "Python image with scientific, dask and geospatial tools"
-                default: true
-                slug: pangeo
-                kubespawner_override:
-                  image: pangeo/pangeo-notebook:2023.09.11
-              geospatial:
-                display_name: Rocker Geospatial
-                description: "R image with RStudio, the tidyverse & Geospatial tools"
-                slug: geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
+                image: pangeo/pangeo-notebook:2023.09.11
+            geospatial:
+              display_name: Rocker Geospatial
+              description: R image with RStudio, the tidyverse & Geospatial tools
+              slug: geospatial
+              kubespawner_override:
+                image: rocker/binder:4.3
+                image_pull_policy: Always
                   # Launch into RStudio after the user logs in
-                  default_url: /rstudio
+                default_url: /rstudio
                   # Ensures container working dir is homedir
                   # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
-              scipy:
-                display_name: Jupyter SciPy Notebook
-                slug: scipy
-                kubespawner_override:
-                  image: quay.io/jupyter/scipy-notebook:2024-03-18
-          resources:
-            display_name: Resource Allocation
-            choices:
-              mem_3_7:
-                display_name: 3 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 3G
-                  mem_limit: 3G
-                  cpu_guarantee: 0.465625
-                  cpu_limit: 3.725
-                default: true
-              mem_7_4:
-                display_name: 7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 7G
-                  mem_limit: 7G
-                  cpu_guarantee: 0.93125
-                  cpu_limit: 3.725
-              mem_14_8:
-                display_name: 14 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 14G
-                  mem_limit: 14G
-                  cpu_guarantee: 1.8625
-                  cpu_limit: 3.725
+                working_dir: /home/rstudio
+            scipy:
+              display_name: Jupyter SciPy Notebook
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2024-03-18
+        resources:
+          display_name: Resource Allocation
+          choices:
+            mem_3_7:
+              display_name: 3 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 3G
+                mem_limit: 3G
+                cpu_guarantee: 0.465625
+                cpu_limit: 3.725
+              default: true
+            mem_7_4:
+              display_name: 7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 7G
+                mem_limit: 7G
+                cpu_guarantee: 0.93125
+                cpu_limit: 3.725
+            mem_14_8:
+              display_name: 14 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 14G
+                mem_limit: 14G
+                cpu_guarantee: 1.8625
+                cpu_limit: 3.725
 jupyterhub-home-nfs:
   enabled: true
   prometheusExporter:
@@ -180,7 +180,7 @@ jupyterhub-home-nfs:
     volumeId: 694b2c04-6b08-4ebe-8cb9-74f7d42c1b1c
   quotaEnforcer:
     hardQuota: 1 # in GB
-    path: "/export/staging"
+    path: /export/staging
 jupyterhub-groups-exporter:
   enabled: true
   config:

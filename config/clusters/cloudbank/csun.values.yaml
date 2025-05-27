@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [csun.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [csun.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [csun.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -16,7 +16,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -42,16 +42,16 @@ jupyterhub:
           urn:mace:incommon:csun.edu:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - wayne.smith@csun.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - wayne.smith@csun.edu
     extraFiles:
       configurator-schema-default:
         data:
@@ -60,23 +60,21 @@ jupyterhub:
               type: string
               title: Default User Interface
               enum:
-                - "/tree"
-                - "/lab"
-                - "/retro"
-              default: "/lab"
+              - /tree
+              - /lab
+              - /retro
+              default: /lab
               enumMetadata:
                 interfaces:
-                  - value: "/tree"
-                    title: Classic Notebook
-                    description:
-                      The original single-document interface for creating
-                      Jupyter Notebooks.
-                  - value: "/lab"
-                    title: JupyterLab
-                    description: A Powerful next generation notebook interface
-                  - value: "/retro"
-                    title: RetroLab
-                    description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.
+                - value: /tree
+                  title: Classic Notebook
+                  description: The original single-document interface for creating Jupyter Notebooks.
+                - value: /lab
+                  title: JupyterLab
+                  description: A Powerful next generation notebook interface
+                - value: /retro
+                  title: RetroLab
+                  description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.
   cull:
     # Cull after 30min of inactivity
     every: 300

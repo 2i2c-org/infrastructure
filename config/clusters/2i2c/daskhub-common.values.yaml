@@ -4,8 +4,8 @@ basehub:
     pv:
       enabled: true
       mountOptions:
-        - soft
-        - noatime
+      - soft
+      - noatime
       baseShareName: /
   dask-gateway:
     enabled: true

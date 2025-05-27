@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [labi.latam.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [labi.latam.catalystproject.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [labi.latam.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
@@ -17,25 +17,25 @@ jupyterhub:
         oauth_callback_url: https://labi.latam.catalystproject.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - CatalystProject-Hubs:labi
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - CatalystProject-Hubs:labi
         scope:
-          - read:org
+        - read:org
       Authenticator:
         enable_auth_state: true
         manage_groups: true
         admin_users:
-          - paul-hernandez-herrera # Paúl Hernandez
-          - aolivera-labi # Andrés Olivera
+        - paul-hernandez-herrera   # Paúl Hernandez
+        - aolivera-labi   # Andrés Olivera
     services:
       jupyterhub-groups-exporter: {}
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-          - jupyterhub-groups-exporter
+        - jupyterhub-groups-exporter
         scopes:
-          - users
-          - groups
+        - users
+        - groups
     extraConfig:
       custom-github-oauthenticator: |
         class CustomGitHubOAuthenticator(GitHubOAuthenticator):
@@ -54,85 +54,85 @@ jupyterhub:
         c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
   singleuser:
     profileList:
-      - display_name: Jupyter SciPy Notebook
-        description: Python environment
-        slug: jupyter
-        default: true
-        kubespawner_override:
-          image: quay.io/jupyter/scipy-notebook:2024-03-04
-          default_url: /lab
-        profile_options: &profile_options
-          resource_allocation: &resource_allocation
-            display_name: Resource Allocation
-            choices:
-              mem_0_7:
-                display_name: Up to 2G of RAM and 1 CPU
-                kubespawner_override:
-                  mem_guarantee: 732421K
-                  mem_limit: 2G
-                  cpu_guarantee: 0.093
-                  cpu_limit: 1
-              mem_3_0:
-                display_name: Up to 6G of RAM and 2 CPUs
-                kubespawner_override:
-                  mem_guarantee: 2929687.5K
-                  mem_limit: 6G
-                  cpu_guarantee: 0.375
-                  cpu_limit: 2
-              mem_12_0:
-                display_name: Up to 24G of RAM and 3 CPUs
-                kubespawner_override:
-                  mem_guarantee: 11718750K
-                  mem_limit: 24G
-                  cpu_guarantee: 1.5
-                  cpu_limit: 3
-              # GPU
-              mem_26_0:
-                display_name: 1 GPU, 21G of RAM and 3 CPUs
-                kubespawner_override:
-                  mem_guarantee: 21G
-                  mem_limit: null
-                  cpu_guarantee: 3
-                  environment:
-                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
-                  node_selector:
-                    node.kubernetes.io/instance-type: n1-highmem-4
-                  extra_resource_limits:
-                    nvidia.com/gpu: "1"
-              mem_104_0:
-                display_name: 4 GPU, 92G of RAM and 15 CPUs
-                kubespawner_override:
-                  mem_guarantee: 92G
-                  mem_limit: null
-                  cpu_guarantee: 15
-                  environment:
-                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
-                  node_selector:
-                    node.kubernetes.io/instance-type: n1-highmem-16
-                  extra_resource_limits:
-                    nvidia.com/gpu: "4"
-      - display_name: Rocker Geospatial with RStudio
-        description: R environment
-        slug: rocker
-        kubespawner_override:
-          image: rocker/binder:4.3
-          image_pull_policy: Always
-          default_url: /rstudio
-          working_dir: /home/rstudio # Ensures container working dir is homedir
-        profile_options: *profile_options
-
-      - display_name: Bring your own image
-        description: Specify your own docker image (must have python and jupyterhub installed in it)
-        slug: custom
-        profile_options:
-          image:
-            display_name: Image
-            unlisted_choice:
-              enabled: True
-              display_name: "Custom image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+    - display_name: Jupyter SciPy Notebook
+      description: Python environment
+      slug: jupyter
+      default: true
+      kubespawner_override:
+        image: quay.io/jupyter/scipy-notebook:2024-03-04
+        default_url: /lab
+      profile_options: &profile_options
+        resource_allocation: &resource_allocation
+          display_name: Resource Allocation
+          choices:
+            mem_0_7:
+              display_name: Up to 2G of RAM and 1 CPU
               kubespawner_override:
-                image: "{value}"
-            choices: {}
-          resource_allocation: *resource_allocation
+                mem_guarantee: 732421K
+                mem_limit: 2G
+                cpu_guarantee: 0.093
+                cpu_limit: 1
+            mem_3_0:
+              display_name: Up to 6G of RAM and 2 CPUs
+              kubespawner_override:
+                mem_guarantee: 2929687.5K
+                mem_limit: 6G
+                cpu_guarantee: 0.375
+                cpu_limit: 2
+            mem_12_0:
+              display_name: Up to 24G of RAM and 3 CPUs
+              kubespawner_override:
+                mem_guarantee: 11718750K
+                mem_limit: 24G
+                cpu_guarantee: 1.5
+                cpu_limit: 3
+              # GPU
+            mem_26_0:
+              display_name: 1 GPU, 21G of RAM and 3 CPUs
+              kubespawner_override:
+                mem_guarantee: 21G
+                mem_limit:
+                cpu_guarantee: 3
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                node_selector:
+                  node.kubernetes.io/instance-type: n1-highmem-4
+                extra_resource_limits:
+                  nvidia.com/gpu: '1'
+            mem_104_0:
+              display_name: 4 GPU, 92G of RAM and 15 CPUs
+              kubespawner_override:
+                mem_guarantee: 92G
+                mem_limit:
+                cpu_guarantee: 15
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                node_selector:
+                  node.kubernetes.io/instance-type: n1-highmem-16
+                extra_resource_limits:
+                  nvidia.com/gpu: '4'
+    - display_name: Rocker Geospatial with RStudio
+      description: R environment
+      slug: rocker
+      kubespawner_override:
+        image: rocker/binder:4.3
+        image_pull_policy: Always
+        default_url: /rstudio
+        working_dir: /home/rstudio   # Ensures container working dir is homedir
+      profile_options: *profile_options
+
+    - display_name: Bring your own image
+      description: Specify your own docker image (must have python and jupyterhub installed in it)
+      slug: custom
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices: {}
+        resource_allocation: *resource_allocation

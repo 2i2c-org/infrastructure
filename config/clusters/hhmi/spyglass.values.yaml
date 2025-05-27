@@ -7,8 +7,8 @@ nfs:
   pv:
     enabled: true
     mountOptions:
-      - soft
-      - noatime
+    - soft
+    - noatime
     serverIP: 10.87.246.71
     baseShareName: /
     # The spyglass hub will be using the same *shared* directory from the 'prod' hub, so
@@ -18,11 +18,11 @@ nfs:
 jupyterhub:
   ingress:
     hosts:
-      - spyglass.hhmi.2i2c.cloud
+    - spyglass.hhmi.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - spyglass.hhmi.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - spyglass.hhmi.2i2c.cloud
   custom:
     jupyterhubConfigurator:
       enabled: false
@@ -31,11 +31,11 @@ jupyterhub:
       extraVolumeMounts: []
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     homepage:
       templateVars:
         org:
-          name: "HHMI"
+          name: HHMI
           url: https://www.hhmi.org/
           logo_url: https://github.com/2i2c-org/infrastructure/assets/1879041/76419ba9-6d1a-41fe-b9b7-56fd89e0da40
         designed_by:
@@ -45,8 +45,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: ""
-          url: ""
+          name: ''
+          url: ''
           custom_html: <a href="https://www.hhmi.org/">HHMI</a> and <a href="https://strategiesos.org/about/">Stratos</a>
   prePuller:
     hook:
@@ -59,51 +59,51 @@ jupyterhub:
     storage:
       type: none
       extraVolumes:
-        - name: shared-dir-pv
-          persistentVolumeClaim:
-            claimName: home-nfs
-        - name: dev-shm
-          emptyDir:
-            medium: Memory
+      - name: shared-dir-pv
+        persistentVolumeClaim:
+          claimName: home-nfs
+      - name: dev-shm
+        emptyDir:
+          medium: Memory
       extraVolumeMounts:
-        - name: shared-dir-pv
-          mountPath: /home/jovyan/shared-readonly
-          subPath: _shared
-          readOnly: true
-        - name: dev-shm
-          mountPath: /dev/shm
+      - name: shared-dir-pv
+        mountPath: /home/jovyan/shared-readonly
+        subPath: _shared
+        readOnly: true
+      - name: dev-shm
+        mountPath: /dev/shm
     defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FLorenFrankLab%2Fspyglass-demo&urlpath=lab%2Ftree%2Fspyglass-demo%2Fnotebooks%2F00_HubQuickStart.ipynb&branch=main
     image:
       name: quay.io/lorenlab/hhmi-spyglass-image
-      tag: "82450331e8f1"
+      tag: 82450331e8f1
     memory:
       limit: 3.4G
       guarantee: 3.4G
     nodeSelector:
       node.kubernetes.io/instance-type: n2-highmem-4
     extraContainers:
+    - name: mysql
+      image: datajoint/mysql:8.0   # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
+      ports:
       - name: mysql
-        image: datajoint/mysql:8.0 # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
-        ports:
-          - name: mysql
-            containerPort: 3306
-        resources:
-          limits:
+        containerPort: 3306
+      resources:
+        limits:
             # Best effort only. No more than 1 CPU, and if mysql uses more than 4G, restart it
-            memory: 4Gi
-            cpu: 1.0
-          requests:
+          memory: 4Gi
+          cpu: 1.0
+        requests:
             # If we don't set requests, k8s sets requests == limits!
             # So we set something tiny
-            memory: 64Mi
-            cpu: 0.01
-        env:
+          memory: 64Mi
+          cpu: 0.01
+      env:
           # Configured using the env vars documented in https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
-          - name: MYSQL_ROOT_PASSWORD
-            value: "tutorial"
+      - name: MYSQL_ROOT_PASSWORD
+        value: tutorial
   hub:
     config:
       JupyterHub:
         authenticator_class: tmp
       Authenticator:
-        allow_all: True
+        allow_all: true

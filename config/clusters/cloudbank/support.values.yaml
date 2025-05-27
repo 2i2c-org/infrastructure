@@ -6,11 +6,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.cloudbank.2i2c.cloud
+      - prometheus.cloudbank.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.cloudbank.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.cloudbank.2i2c.cloud
 
 grafana:
   grafana.ini:
@@ -21,11 +21,11 @@ grafana:
       allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.cloudbank.2i2c.cloud
+    - grafana.cloudbank.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.cloudbank.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.cloudbank.2i2c.cloud
 
 gcpFilestoreBackups:
   enabled: true

@@ -7,12 +7,12 @@ basehub:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
       serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
       baseShareName: /
   dask-gateway:
@@ -23,7 +23,7 @@ basehub:
         enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "google"
+        add_staff_user_ids_of_type: google
       jupyterhubConfigurator:
         enabled: false
     hub:
@@ -103,19 +103,19 @@ basehub:
         CustomGenericOAuthenticator:
           required_scopes:
             # This allows EarthScope to control who can login to the hub
-            - geolab
+          - geolab
         GenericOAuthenticator:
           scope:
-            - openid
+          - openid
             # This gives us refresh token
-            - offline_access
+          - offline_access
             # This allows EarthScope to control who can login to the hub
             # Everyone who logs in with Google and has a `@2i2c.org` email will be
             # automatically granted this scope, so we can test. See
             # https://2i2c.freshdesk.com/a/tickets/1280 for how this was granted.
-            - geolab
-            - geolab:dev
-            - geolab:power
+          - geolab
+          - geolab:dev
+          - geolab:power
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
@@ -127,164 +127,164 @@ basehub:
             http://github.com/login/oauth/authorize:
               default: true
               username_derivation:
-                username_claim: "preferred_username"
+                username_claim: preferred_username
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: email
         Authenticator:
           enable_auth_state: true
           admin_users:
-            - google-oauth2|117718799995701713253 #Chad Trabant, https://2i2c.freshdesk.com/a/tickets/1279
-            - google-oauth2|117710759588624106233 #Sarah Wilson
-            - google-oauth2|112630227497477971771 #Robert Weekly
-            - google-oauth2|118403506154942842583 #Alex Hamilton
-            - google-oauth2|108516754518362587599 # Yuvi
-            - google-oauth2|117859169473992122769 # Georgiana
-            - google-oauth2|117322480787655244438 # Jenny
+          - google-oauth2|117718799995701713253   #Chad Trabant, https://2i2c.freshdesk.com/a/tickets/1279
+          - google-oauth2|117710759588624106233   #Sarah Wilson
+          - google-oauth2|112630227497477971771   #Robert Weekly
+          - google-oauth2|118403506154942842583   #Alex Hamilton
+          - google-oauth2|108516754518362587599   # Yuvi
+          - google-oauth2|117859169473992122769   # Georgiana
+          - google-oauth2|117322480787655244438   # Jenny
       services:
         jupyterhub-groups-exporter: {}
       loadRoles:
         jupyterhub-groups-exporter:
           services:
-            - jupyterhub-groups-exporter
+          - jupyterhub-groups-exporter
           scopes:
-            - users
-            - groups
+          - users
+          - groups
     singleuser:
       cloudMetadata:
         blockWithIptables: false
       profileList:
-        - display_name: "Shared Small: 1-4 CPU, 7.2 GB"
-          description: "A shared machine, the recommended option until you experience a limitation."
-          allowed_groups:
-            - geolab
-            - geolab:dev
-            - geolab:power
-          profile_options:
-            image:
-              display_name: Image
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+      - display_name: 'Shared Small: 1-4 CPU, 7.2 GB'
+        description: A shared machine, the recommended option until you experience a limitation.
+        allowed_groups:
+        - geolab
+        - geolab:dev
+        - geolab:power
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              geolab-general:
+                display_name: GeoLab
+                slug: geolab-general
                 kubespawner_override:
-                  image: "{value}"
-              choices:
-                geolab-general:
-                  display_name: GeoLab
-                  slug: geolab-general
-                  kubespawner_override:
-                    image: public.ecr.aws/earthscope-dev/geolab_default:extensions-c1c714c1
-                jupyter-scipy:
-                  display_name: Jupyter
-                  slug: jupyter-scipy
-                  kubespawner_override:
+                  image: public.ecr.aws/earthscope-dev/geolab_default:extensions-c1c714c1
+              jupyter-scipy:
+                display_name: Jupyter
+                slug: jupyter-scipy
+                kubespawner_override:
                     # FIXME: use quay.io/ for tags after 2023-10-20
-                    image: jupyter/scipy-notebook:2023-06-27
-                rocker-geospatial:
-                  display_name: RStudio
-                  slug: rocker-geospatial
-                  kubespawner_override:
-                    image: rocker/binder:4.3
-                    image_pull_policy: Always
+                  image: jupyter/scipy-notebook:2023-06-27
+              rocker-geospatial:
+                display_name: RStudio
+                slug: rocker-geospatial
+                kubespawner_override:
+                  image: rocker/binder:4.3
+                  image_pull_policy: Always
                     # Launch into RStudio after the user logs in
-                    default_url: /rstudio
+                  default_url: /rstudio
                     # Ensures container working dir is homedir
                     # https://github.com/2i2c-org/infrastructure/issues/2559
-                    working_dir: /home/rstudio
-          kubespawner_override:
-            mem_guarantee: 7.234G
-            cpu_guarantee: 0.1
-            mem_limit: 7.234G
-            node_selector:
-              node.kubernetes.io/instance-type: r5.xlarge
-        - display_name: "Shared Small: 1-4 CPU, 14 GB"
-          description: "A shared machine, the recommended option until you experience a limitation."
-          allowed_groups:
-            - geolab
-            - geolab:dev
-            - geolab:power
-          profile_options: &profile_options
-            image:
-              display_name: Image
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                  working_dir: /home/rstudio
+        kubespawner_override:
+          mem_guarantee: 7.234G
+          cpu_guarantee: 0.1
+          mem_limit: 7.234G
+          node_selector:
+            node.kubernetes.io/instance-type: r5.xlarge
+      - display_name: 'Shared Small: 1-4 CPU, 14 GB'
+        description: A shared machine, the recommended option until you experience a limitation.
+        allowed_groups:
+        - geolab
+        - geolab:dev
+        - geolab:power
+        profile_options: &profile_options
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              geolab-general:
+                display_name: GeoLab
+                slug: geolab-general
                 kubespawner_override:
-                  image: "{value}"
-              choices:
-                geolab-general:
-                  display_name: GeoLab
-                  slug: geolab-general
-                  kubespawner_override:
-                    image: public.ecr.aws/earthscope-dev/geolab:td-dev-dd5851e6
-                mt-shortcourse:
-                  display_name: MT-ShortCourse
-                  slug: mt-shortcourse
-                  kubespawner_override:
-                    image: public.ecr.aws/earthscope-dev/geolab_default:mt_shortcourse-1a6a2fbd
-                jupyter-scipy:
-                  display_name: Jupyter
-                  slug: jupyter-scipy
-                  kubespawner_override:
+                  image: public.ecr.aws/earthscope-dev/geolab:td-dev-dd5851e6
+              mt-shortcourse:
+                display_name: MT-ShortCourse
+                slug: mt-shortcourse
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope-dev/geolab_default:mt_shortcourse-1a6a2fbd
+              jupyter-scipy:
+                display_name: Jupyter
+                slug: jupyter-scipy
+                kubespawner_override:
                     # FIXME: use quay.io/ for tags after 2023-10-20
-                    image: jupyter/scipy-notebook:2023-06-27
-                rocker-geospatial:
-                  display_name: RStudio
-                  slug: rocker-geospatial
-                  kubespawner_override:
-                    image: rocker/binder:4.3
-                    image_pull_policy: Always
+                  image: jupyter/scipy-notebook:2023-06-27
+              rocker-geospatial:
+                display_name: RStudio
+                slug: rocker-geospatial
+                kubespawner_override:
+                  image: rocker/binder:4.3
+                  image_pull_policy: Always
                     # Launch into RStudio after the user logs in
-                    default_url: /rstudio
+                  default_url: /rstudio
                     # Ensures container working dir is homedir
                     # https://github.com/2i2c-org/infrastructure/issues/2559
-                    working_dir: /home/rstudio
-          kubespawner_override:
-            mem_guarantee: 14.468G
-            cpu_guarantee: 0.1
-            mem_limit: 14.468G
-            node_selector:
-              node.kubernetes.io/instance-type: r5.xlarge
-        - display_name: "Small: 4 CPU, 32 GB"
-          description: "A dedicated machine for you."
-          allowed_groups:
-            - geolab
-            - geolab:dev
-            - geolab:power
-          profile_options: *profile_options
-          kubespawner_override:
-            mem_guarantee: 28.937G
-            cpu_guarantee: 0.4
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.xlarge
-        - display_name: "Medium: 16 CPU, 128 GB"
-          description: "A dedicated machine for you."
-          profile_options: *profile_options
-          allowed_groups:
-            - geolab:dev
-            - geolab:power
-          kubespawner_override:
-            mem_guarantee: 120.513G
-            cpu_guarantee: 1.6
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.4xlarge
-        - display_name: "Large: 64 CPU, 512 GB"
-          description: "A dedicated machine for you"
-          profile_options: *profile_options
-          allowed_groups:
-            - geolab:power
-          kubespawner_override:
-            mem_guarantee: 489.13G
-            cpu_guarantee: 6.4
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.16xlarge
+                  working_dir: /home/rstudio
+        kubespawner_override:
+          mem_guarantee: 14.468G
+          cpu_guarantee: 0.1
+          mem_limit: 14.468G
+          node_selector:
+            node.kubernetes.io/instance-type: r5.xlarge
+      - display_name: 'Small: 4 CPU, 32 GB'
+        description: A dedicated machine for you.
+        allowed_groups:
+        - geolab
+        - geolab:dev
+        - geolab:power
+        profile_options: *profile_options
+        kubespawner_override:
+          mem_guarantee: 28.937G
+          cpu_guarantee: 0.4
+          mem_limit:
+          node_selector:
+            node.kubernetes.io/instance-type: r5.xlarge
+      - display_name: 'Medium: 16 CPU, 128 GB'
+        description: A dedicated machine for you.
+        profile_options: *profile_options
+        allowed_groups:
+        - geolab:dev
+        - geolab:power
+        kubespawner_override:
+          mem_guarantee: 120.513G
+          cpu_guarantee: 1.6
+          mem_limit:
+          node_selector:
+            node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: 'Large: 64 CPU, 512 GB'
+        description: A dedicated machine for you
+        profile_options: *profile_options
+        allowed_groups:
+        - geolab:power
+        kubespawner_override:
+          mem_guarantee: 489.13G
+          cpu_guarantee: 6.4
+          mem_limit:
+          node_selector:
+            node.kubernetes.io/instance-type: r5.16xlarge
 
     scheduling:
       userScheduler:
@@ -299,6 +299,6 @@ basehub:
       groupsExporter:
         update_exporter_interval: 3600
         allowed_groups:
-          - geolab
-          - geolab:dev
-          - geolab:power
+        - geolab
+        - geolab:dev
+        - geolab:power

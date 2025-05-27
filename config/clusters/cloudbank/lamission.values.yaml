@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [lamission.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [lamission.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [lamission.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     homepage:
       templateVars:
         org:
@@ -30,10 +30,10 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://lamission.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - LAMC-Mathematics
+        - LAMC-Mathematics
         scope:
-          - read:org
+        - read:org
       Authenticator:
         admin_users:
-          - sean-morris
-          - emilsar
+        - sean-morris
+        - emilsar

@@ -4,8 +4,8 @@ basehub:
     pv:
       enabled: true
       mountOptions:
-        - soft
-        - noatime
+      - soft
+      - noatime
       baseShareName: /
   jupyterhub-home-nfs:
     enabled: true
@@ -33,7 +33,7 @@ basehub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
+        add_staff_user_ids_of_type: github
       jupyterhubConfigurator:
         enabled: false
       daskhubSetup:
@@ -64,28 +64,28 @@ basehub:
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - alabamawaterinstitute
-            - NOAA-OWP
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - alabamawaterinstitute
+          - NOAA-OWP
           scope:
-            - read:org
+          - read:org
         Authenticator:
           enable_auth_state: true
           manage_groups: true
           admin_users:
-            - jameshalgren
-            - arpita0911patel
-            - dan1831
-            - benlee0423
+          - jameshalgren
+          - arpita0911patel
+          - dan1831
+          - benlee0423
       services:
         jupyterhub-groups-exporter: {}
       loadRoles:
         jupyterhub-groups-exporter:
           services:
-            - jupyterhub-groups-exporter
+          - jupyterhub-groups-exporter
           scopes:
-            - users
-            - groups
+          - users
+          - groups
       extraConfig:
         custom-auth-state-groups-key: |
           async def custom_auth_state_groups_key(auth_state):

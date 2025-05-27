@@ -13,11 +13,11 @@ jupyterhub:
       Authenticator:
         admin_users:
           # 2i2c staff below, a list maintained in default-common r-common
-          - "yuvi.panda@utoronto.ca"
-          - "georgiana.elena@utoronto.ca"
-          - "chris.holdgraf@utoronto.ca"
+        - yuvi.panda@utoronto.ca
+        - georgiana.elena@utoronto.ca
+        - chris.holdgraf@utoronto.ca
   singleuser:
     defaultUrl: /rstudio
     image:
       name: quay.io/2i2c/utoronto-r-image
-      tag: "e8fb739a9b64"
+      tag: e8fb739a9b64

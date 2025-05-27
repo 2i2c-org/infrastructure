@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [highmem.datatools.utoronto.ca]
     tls:
-      - hosts: [highmem.datatools.utoronto.ca]
-        secretName: https-auto-tls
+    - hosts: [highmem.datatools.utoronto.ca]
+      secretName: https-auto-tls
   hub:
     db:
       pvc:

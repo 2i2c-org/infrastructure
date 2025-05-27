@@ -13,20 +13,20 @@ gcp:
       billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "2i2c-uk Staging"
-    domain: staging.uk.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: lis
-    display_name: "London Interdisciplinary School"
-    domain: ds.lis.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - lis.values.yaml
-      - enc-lis.secret.values.yaml
+- name: staging
+  display_name: 2i2c-uk Staging
+  domain: staging.uk.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: lis
+  display_name: London Interdisciplinary School
+  domain: ds.lis.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - lis.values.yaml
+  - enc-lis.secret.values.yaml

@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [glendale.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [glendale.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [glendale.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -33,12 +33,12 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - glendale.edu
-              - student.glendale.edu
+            - glendale.edu
+            - student.glendale.edu
       Authenticator:
         admin_users:
-          - simon@glendale.edu
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
+        - simon@glendale.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu

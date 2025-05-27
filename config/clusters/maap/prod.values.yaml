@@ -11,27 +11,26 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: prod
     initContainers:
-      - &volume_ownership_fix_initcontainer
-        name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{escaped_username}"
+    - name: volume-mount-ownership-fix
+      image: busybox:1.36.1
+      command:
+      - sh
+      - -c
+      - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
           # Mounted without readonly attribute here,
           # so we can chown it appropriately
-          - name: home
-            mountPath: /home/jovyan/shared
-            subPath: _shared
-          - name: home
-            mountPath: /home/jovyan/shared-public
-            subPath: _shared-public
+      - name: home
+        mountPath: /home/jovyan/shared
+        subPath: _shared
+      - name: home
+        mountPath: /home/jovyan/shared-public
+        subPath: _shared-public
   hub:
     config:
       GitHubOAuthenticator:
@@ -39,8 +38,8 @@ jupyterhub:
   ingress:
     hosts: [hub.maap.2i2c.cloud]
     tls:
-      - hosts: [hub.maap.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [hub.maap.2i2c.cloud]
+      secretName: https-auto-tls
 
 dask-gateway:
   gateway:
@@ -53,7 +52,7 @@ dask-gateway:
         extraPodConfig:
           node_selector:
             2i2c/hub-name: prod
-      imagePullSecrets: [{ name: image-pull-secret }]
+      imagePullSecrets: [name: image-pull-secret]
 
 binderhub-service:
   dockerApi:
@@ -70,4 +69,4 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0cb9118aa95971a6a
   quotaEnforcer:
-    hardQuota: "100" # in GB
+    hardQuota: '100' # in GB

@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [humboldt.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [humboldt.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [humboldt.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   prePuller:
     # hook prePuller shouldn't be enabled when configuring images in any other
     # way than singleuser.image
@@ -16,7 +16,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -42,21 +42,21 @@ jupyterhub:
           https://sso.humboldt.edu/idp/metadata:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - humboldt.edu
+            - humboldt.edu
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - bl222@humboldt.edu
-          - bj117@humboldt.edu
-          - btc26@humboldt.edu
-          - rkc20@humboldt.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - bl222@humboldt.edu
+        - bj117@humboldt.edu
+        - btc26@humboldt.edu
+        - rkc20@humboldt.edu
   cull:
     # Cull after 30min of inactivity
     every: 300

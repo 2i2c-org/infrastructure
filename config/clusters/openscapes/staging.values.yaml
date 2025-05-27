@@ -9,8 +9,8 @@ basehub:
     ingress:
       hosts: [staging.openscapes.2i2c.cloud]
       tls:
-        - hosts: [staging.openscapes.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [staging.openscapes.2i2c.cloud]
+        secretName: https-auto-tls
     singleuser:
       nodeSelector:
         2i2c/hub-name: staging
@@ -20,18 +20,18 @@ basehub:
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: "https://staging.openscapes.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: https://staging.openscapes.2i2c.cloud/hub/oauth_callback
         CILogonOAuthenticator:
-          oauth_callback_url: "https://staging.openscapes.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: https://staging.openscapes.2i2c.cloud/hub/oauth_callback
       services:
         jupyterhub-groups-exporter: {}
       loadRoles:
         jupyterhub-groups-exporter:
           services:
-            - jupyterhub-groups-exporter
+          - jupyterhub-groups-exporter
           scopes:
-            - users
-            - groups
+          - users
+          - groups
       extraConfig:
         custom-auth-state-groups-key: |
           async def custom_auth_state_groups_key(auth_state):
