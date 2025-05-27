@@ -78,13 +78,10 @@ basehub:
       services:
         jupyterhub-groups-exporter: {}
       loadRoles:
-        rtc-access:
+        user:
           scopes:
-            - access:servers!group=CryoInTheCloud:csdms-2025-workshop
-            - admin:servers!group=CryoInTheCloud:csdms-2025-workshop
-            - list:groups!group=CryoInTheCloud:csdms-2025-workshop
-          groups:
-            - CryoInTheCloud:csdms-2025-workshop
+            - self
+            - shares!user
         jupyterhub-groups-exporter:
           services:
             - jupyterhub-groups-exporter
