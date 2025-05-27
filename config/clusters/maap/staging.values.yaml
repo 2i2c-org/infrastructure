@@ -20,12 +20,14 @@ jupyterhub:
         command:
           - sh
           - -c
+          # create the shared group directories and fix ownership
+          # so that they are owned by the user
           - >
             id &&
+            mkdir -p /home/jovyan/shared-group/CPU_L &&
+            mkdir -p /home/jovyan/shared-group/GPU_T4 &&
             chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public &&
-            if [ -d "/home/jovyan/shared-group" ] && [ "$(ls -A /home/jovyan/shared-group)" ]; then
-              chown 1000:1000 /home/jovyan/shared-group/* || true;
-            fi &&
+            chown 1000:1000 /home/jovyan/shared-group/* &&
             ls -lhd /home/jovyan
         securityContext:
           runAsUser: 0
