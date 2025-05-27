@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [calstatela.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [calstatela.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [calstatela.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -16,7 +16,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -42,15 +42,15 @@ jupyterhub:
           https://idpp.calstatela.edu/idp:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
   cull:
     # Cull after 30min of inactivity
     every: 300

@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [pasadena.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [pasadena.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [pasadena.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -13,7 +13,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -39,14 +39,14 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - go.pasadena.edu
+            - go.pasadena.edu
       Authenticator:
         admin_users:
-          - yxchang@go.pasadena.edu
-          - eshaw4@go.pasadena.edu
-          - JJASHRAF@go.pasadena.edu
-          - ericvd@berkeley.edu
-          - k_usovich@berkeley.edu
-          - sean.smorris@berkeley.edu
+        - yxchang@go.pasadena.edu
+        - eshaw4@go.pasadena.edu
+        - JJASHRAF@go.pasadena.edu
+        - ericvd@berkeley.edu
+        - k_usovich@berkeley.edu
+        - sean.smorris@berkeley.edu

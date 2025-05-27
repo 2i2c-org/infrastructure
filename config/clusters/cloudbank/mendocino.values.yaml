@@ -2,12 +2,12 @@ jupyterhub:
   ingress:
     hosts: [mendocino.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [mendocino.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [mendocino.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -32,15 +32,15 @@ jupyterhub:
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - "mendocino.edu"
-              - "student.mendocino.edu"
+            - mendocino.edu
+            - student.mendocino.edu
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - jedington@mendocino.edu
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
+        - jedington@mendocino.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu

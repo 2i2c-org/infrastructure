@@ -1,15 +1,15 @@
 jupyterhub:
   ingress:
     hosts:
-      - imagebuilding-demo.2i2c.cloud
+    - imagebuilding-demo.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - imagebuilding-demo.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - imagebuilding-demo.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     jupyterhubConfigurator:
       enabled: false
     homepage:
@@ -25,93 +25,93 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: ""
-          url: ""
+          name: ''
+          url: ''
           custom_html: <a href="https://www.dfg.de/">DFG</a>, <a href="https://www.cessda.eu/">CESSDA</a>, <a href="https://www.gesis.org/">GESIS</a>, FKZ/Project number <a href="https://gepris.dfg.de/gepris/projekt/460234259?language=en">460234259</a>
   singleuser:
     profileList:
-      - display_name: Choose your environment and resources
-        slug: only-choice
-        profile_options:
-          image:
-            display_name: Image
-            dynamic_image_building:
-              enabled: True
-            unlisted_choice:
-              enabled: True
-              display_name: "Custom image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-              display_name_in_choices: "Specify an existing docker image"
-              description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
-                image: "{value}"
-            choices:
-              pangeo:
-                display_name: Pangeo Notebook Image
-                description: "Python image with scientific, dask and geospatial tools"
-                kubespawner_override:
-                  image: pangeo/pangeo-notebook:2023.09.11
-              geospatial:
-                display_name: Rocker Geospatial
-                description: "R image with RStudio, the tidyverse & Geospatial tools"
-                default: true
-                slug: geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
+                image: pangeo/pangeo-notebook:2023.09.11
+            geospatial:
+              display_name: Rocker Geospatial
+              description: R image with RStudio, the tidyverse & Geospatial tools
+              default: true
+              slug: geospatial
+              kubespawner_override:
+                image: rocker/binder:4.3
+                image_pull_policy: Always
                   # Launch into RStudio after the user logs in
-                  default_url: /rstudio
+                default_url: /rstudio
                   # Ensures container working dir is homedir
                   # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
-              scipy:
-                display_name: Jupyter SciPy Notebook
-                slug: scipy
-                kubespawner_override:
-                  image: quay.io/jupyter/scipy-notebook:2024-03-18
-          resources:
-            display_name: Resource Allocation
-            choices:
+                working_dir: /home/rstudio
+            scipy:
+              display_name: Jupyter SciPy Notebook
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2024-03-18
+        resources:
+          display_name: Resource Allocation
+          choices:
               # choices were generated using the command (GKE 1.29 compatible):
               # deployer generate resource-allocation choices --num-allocations 4 n2-highmem-4
-              mem_3_4:
-                display_name: 3.4 GB RAM, upto 3.4 CPUs
-                kubespawner_override:
-                  mem_guarantee: 3620925866
-                  mem_limit: 3620925866
-                  cpu_guarantee: 0.43125
-                  cpu_limit: 3.45
-                  node_selector:
-                    node.kubernetes.io/instance-type: n2-highmem-4
-                default: true
-              mem_6_7:
-                display_name: 6.7 GB RAM, upto 3.4 CPUs
-                kubespawner_override:
-                  mem_guarantee: 7241851732
-                  mem_limit: 7241851732
-                  cpu_guarantee: 0.8625
-                  cpu_limit: 3.45
-                  node_selector:
-                    node.kubernetes.io/instance-type: n2-highmem-4
-              mem_13_5:
-                display_name: 13.5 GB RAM, upto 3.4 CPUs
-                kubespawner_override:
-                  mem_guarantee: 14483703464
-                  mem_limit: 14483703464
-                  cpu_guarantee: 1.725
-                  cpu_limit: 3.45
-                  node_selector:
-                    node.kubernetes.io/instance-type: n2-highmem-4
-              mem_27_0:
-                display_name: 27.0 GB RAM, upto 3.4 CPUs
-                kubespawner_override:
-                  mem_guarantee: 28967406928
-                  mem_limit: 28967406928
-                  cpu_guarantee: 3.45
-                  cpu_limit: 3.45
-                  node_selector:
-                    node.kubernetes.io/instance-type: n2-highmem-4
+            mem_3_4:
+              display_name: 3.4 GB RAM, upto 3.4 CPUs
+              kubespawner_override:
+                mem_guarantee: 3620925866
+                mem_limit: 3620925866
+                cpu_guarantee: 0.43125
+                cpu_limit: 3.45
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-4
+              default: true
+            mem_6_7:
+              display_name: 6.7 GB RAM, upto 3.4 CPUs
+              kubespawner_override:
+                mem_guarantee: 7241851732
+                mem_limit: 7241851732
+                cpu_guarantee: 0.8625
+                cpu_limit: 3.45
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-4
+            mem_13_5:
+              display_name: 13.5 GB RAM, upto 3.4 CPUs
+              kubespawner_override:
+                mem_guarantee: 14483703464
+                mem_limit: 14483703464
+                cpu_guarantee: 1.725
+                cpu_limit: 3.45
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-4
+            mem_27_0:
+              display_name: 27.0 GB RAM, upto 3.4 CPUs
+              kubespawner_override:
+                mem_guarantee: 28967406928
+                mem_limit: 28967406928
+                cpu_guarantee: 3.45
+                cpu_limit: 3.45
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-4
   hub:
     # Allows for multiple concurrent demos
     allowNamedServers: true
@@ -121,12 +121,12 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://imagebuilding-demo.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - 2i2c-demo-hub-access
-          - veda-analytics-access:all-users
-          - veda-analytics-access:collaborator-access
-          - CYGNSS-VEDA:cygnss-iwg
+        - 2i2c-demo-hub-access
+        - veda-analytics-access:all-users
+        - veda-analytics-access:collaborator-access
+        - CYGNSS-VEDA:cygnss-iwg
         scope:
-          - read:org
+        - read:org
 
 binderhub-service:
   enabled: true
@@ -137,8 +137,8 @@ binderhub-service:
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binderhub-service-
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
-    server: "https://us-central1-docker.pkg.dev"
-    username: "_json_key"
+    server: https://us-central1-docker.pkg.dev
+    username: _json_key
 
 jupyterhub-home-nfs:
   gke:

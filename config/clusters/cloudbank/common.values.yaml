@@ -3,8 +3,8 @@ nfs:
   pv:
     enabled: true
     mountOptions:
-      - soft
-      - noatime
+    - soft
+    - noatime
     serverIP: 10.80.94.178
     # MUST HAVE TRAILING SLASH
     baseShareName: /homes/homes/

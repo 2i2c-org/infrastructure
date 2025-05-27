@@ -1,82 +1,76 @@
-# pre-commit is a tool to perform a predefined set of tasks manually and/or
-# automatically before git commits are made.
-#
-# Config reference: https://pre-commit.com/#pre-commit-configyaml---top-level
-#
-# Common tasks
-#
-# - Run on all files:   pre-commit run --all-files
-# - Register git hooks: pre-commit install --install-hooks
-#
+# See https://pre-commit.com/ for more information
 repos:
-  # Autoformat: markdown, yaml
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0 # Don't upgrade, v4 causes "No files matching [...]" issues
-    hooks:
-      - id: prettier
+
+# Autoformat YAML with ruamel.yaml, so we can also use its roundtripping
+# capabilities for writing mass refactoring scripts.
+- repo: https://github.com/yuvipanda/ruamelfmt
+  rev: v1.0.0
+  hooks:
+  - id: ruamelfmt
+    exclude: helm-charts/.*|config/clusters/templates/.*
 
   # Autoformat: Python code, syntax patterns are modernized
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
-    hooks:
-      - id: pyupgrade
-        args:
-          - --py36-plus
+- repo: https://github.com/asottile/pyupgrade
+  rev: v3.19.1
+  hooks:
+  - id: pyupgrade
+    args:
+    - --py36-plus
 
   # Autoformat: Python code
-  - repo: https://github.com/pycqa/isort
-    rev: "6.0.1"
-    hooks:
-      - id: isort
+- repo: https://github.com/pycqa/isort
+  rev: 6.0.1
+  hooks:
+  - id: isort
 
   # Autoformat: Python code
-  - repo: https://github.com/psf/black
-    rev: "25.1.0"
-    hooks:
-      - id: black
+- repo: https://github.com/psf/black
+  rev: 25.1.0
+  hooks:
+  - id: black
         # This is a `.py` file but is encrypted with sops
-        exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
+    exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Lint: Python code
-  - repo: https://github.com/pycqa/flake8
-    rev: "7.2.0"
-    hooks:
-      - id: flake8
+- repo: https://github.com/pycqa/flake8
+  rev: 7.2.0
+  hooks:
+  - id: flake8
         # This is a `.py` file but is encrypted with sops
-        exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
+    exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Run `terraform fmt` on all our terraform files automatically
-  - repo: https://github.com/yuvipanda/terraform-bin
-    rev: v3.0.0
-    hooks:
-      - id: terraform-fmt
-        exclude: terraform/aws/projects/template.tfvars
+- repo: https://github.com/yuvipanda/terraform-bin
+  rev: v3.0.0
+  hooks:
+  - id: terraform-fmt
+    exclude: terraform/aws/projects/template.tfvars
 
   # Prevent unencrypted files from being committed
-  - repo: https://github.com/yuvipanda/pre-commit-hook-ensure-sops
-    rev: v1.1
-    hooks:
-      - id: sops-encryption
-        # Add files here if they contain the word 'secret' but should not be encrypted
-        exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/common/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml|helm-charts/aws-ce-grafana-backend/templates/secret\.yaml
+- repo: https://github.com/yuvipanda/pre-commit-hook-ensure-sops
+  rev: v1.1
+  hooks:
+  - id: sops-encryption
+    # Add files here if they contain the word 'secret' but should not be encrypted
+    exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/common/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml|helm-charts/aws-ce-grafana-backend/templates/secret\.yaml
 
   # Prevent known typos from being committed
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
-    hooks:
-      - id: codespell
-        args:
-          # Autofix known typos
-          - --write-changes
-        additional_dependencies:
-          - tomli
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.4.1
+  hooks:
+  - id: codespell
+    args:
+    # Autofix known typos
+    - --write-changes
+    additional_dependencies:
+    - tomli
 
-  # Autoformat jsonnet
-  - repo: https://github.com/google/go-jsonnet
-    rev: v0.21.0
-    hooks:
-      - id: jsonnet-format
-        exclude: eksctl/template.jsonnet
+# Autoformat jsonnet
+- repo: https://github.com/google/go-jsonnet
+  rev: v0.21.0
+  hooks:
+  - id: jsonnet-format
+    exclude: eksctl/template.jsonnet
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:

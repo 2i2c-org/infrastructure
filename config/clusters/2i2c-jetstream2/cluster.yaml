@@ -4,13 +4,13 @@ kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "2i2c Jetstream2 staging"
-    domain: staging.js.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
+- name: staging
+  display_name: 2i2c Jetstream2 staging
+  domain: staging.js.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml

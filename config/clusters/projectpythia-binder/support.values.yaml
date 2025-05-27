@@ -6,11 +6,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.binder-pythia.jetstream2.2i2c.cloud
+      - prometheus.binder-pythia.jetstream2.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.binder-pythia.jetstream2.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.binder-pythia.jetstream2.2i2c.cloud
 
 grafana:
   grafana.ini:
@@ -21,15 +21,15 @@ grafana:
     allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.binder-pythia.jetstream2.2i2c.cloud
+    - grafana.binder-pythia.jetstream2.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.binder-pythia.jetstream2.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.binder-pythia.jetstream2.2i2c.cloud
 
 redirects:
   rules:
-    - from: binder-pythia.jetstream2.2i2c.cloud
-      to: binder.projectpythia.org
-    - from: hub.binder-pythia.jetstream2.2i2c.cloud
-      to: hub.projectpythia.org
+  - from: binder-pythia.jetstream2.2i2c.cloud
+    to: binder.projectpythia.org
+  - from: hub.binder-pythia.jetstream2.2i2c.cloud
+    to: hub.projectpythia.org

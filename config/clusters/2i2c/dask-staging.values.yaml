@@ -5,15 +5,15 @@ basehub:
   jupyterhub:
     ingress:
       hosts:
-        - dask-staging.2i2c.cloud
+      - dask-staging.2i2c.cloud
       tls:
-        - secretName: https-auto-tls
-          hosts:
-            - dask-staging.2i2c.cloud
+      - secretName: https-auto-tls
+        hosts:
+        - dask-staging.2i2c.cloud
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "google"
+        add_staff_user_ids_of_type: google
       homepage:
         templateVars:
           org:
@@ -32,7 +32,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: "latest"
+        tag: latest
       extraEnv:
         SCRATCH_BUCKET: gs://pilot-hubs-scratch-dask-staging/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://pilot-hubs-scratch-dask-staging/$(JUPYTERHUB_USER)
@@ -41,12 +41,12 @@ basehub:
         JupyterHub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
-          oauth_callback_url: "https://dask-staging.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: https://dask-staging.2i2c.cloud/hub/oauth_callback
           allowed_idps:
             http://google.com/accounts/o8/id:
               default: true
               username_derivation:
-                username_claim: "email"
+                username_claim: email
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-dask-staging

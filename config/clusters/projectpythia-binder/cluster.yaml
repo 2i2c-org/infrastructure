@@ -4,13 +4,13 @@ kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: binderhub
-    display_name: "Project Pythia BinderHub on Jetstream2"
-    domain: hub.projectpythia.org
-    helm_chart: basehub
-    helm_chart_values_files:
-      - binderhub.values.yaml
-      - enc-binderhub.secret.values.yaml
+- name: binderhub
+  display_name: Project Pythia BinderHub on Jetstream2
+  domain: hub.projectpythia.org
+  helm_chart: basehub
+  helm_chart_values_files:
+  - binderhub.values.yaml
+  - enc-binderhub.secret.values.yaml

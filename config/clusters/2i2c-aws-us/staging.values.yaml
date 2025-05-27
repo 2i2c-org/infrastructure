@@ -10,18 +10,18 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-063f53806dd18c4a6
   quotaEnforcer:
-    hardQuota: "10" # in GB
+    hardQuota: '10' # in GB
 
 jupyterhub:
   ingress:
     hosts: [staging.aws.2i2c.cloud]
     tls:
-      - hosts: [staging.aws.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.aws.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     homepage:
       templateVars:
         org:
@@ -40,7 +40,7 @@ jupyterhub:
   hub:
     config:
       GitHubOAuthenticator:
-        oauth_callback_url: "https://staging.aws.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://staging.aws.2i2c.cloud/hub/oauth_callback
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging

@@ -6,11 +6,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.openscapes.2i2c.cloud
+      - prometheus.openscapes.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.openscapes.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.openscapes.2i2c.cloud
     resources:
       requests:
         memory: 8Gi
@@ -26,11 +26,11 @@ cluster-autoscaler:
 grafana:
   ingress:
     hosts:
-      - grafana.openscapes.2i2c.cloud
+    - grafana.openscapes.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.openscapes.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.openscapes.2i2c.cloud
   grafana.ini:
     server:
       root_url: https://grafana.openscapes.2i2c.cloud/

@@ -3,47 +3,47 @@ name: Deploy and test hubs
 on:
   push:
     branches:
-      - main
+    - main
     paths:
       # Include changes to the deployer script's folder, but exclude some parts
-      - deployer/**
-      - "!deployer/README.md"
-      - "!deployer/health_check_tests/**"
-      - "!deployer/commands/generate/billing/**"
-      - "!deployer/commands/generate/dedicated_cluster/**"
-      - "!deployer/commands/generate/hub_asset/**"
-      - "!deployer/commands/generate/resource_allocation/**"
-      - requirements.txt
-      - .github/actions/setup-deploy/**
-      - helm-charts/**
-      - config/clusters/**
+    - deployer/**
+    - '!deployer/README.md'
+    - '!deployer/health_check_tests/**'
+    - '!deployer/commands/generate/billing/**'
+    - '!deployer/commands/generate/dedicated_cluster/**'
+    - '!deployer/commands/generate/hub_asset/**'
+    - '!deployer/commands/generate/resource_allocation/**'
+    - requirements.txt
+    - .github/actions/setup-deploy/**
+    - helm-charts/**
+    - config/clusters/**
       # Exclude the template configuration files
-      - "!config/clusters/templates/**"
-      - "!terraform/aws/projects/template.tfvars"
-      - "!terraform/gcp/projects/cluster.tfvars.template"
-      - "!eksctl/template.jsonnet"
+    - '!config/clusters/templates/**'
+    - '!terraform/aws/projects/template.tfvars'
+    - '!terraform/gcp/projects/cluster.tfvars.template'
+    - '!eksctl/template.jsonnet'
 
   pull_request:
     branches:
-      - main
+    - main
     paths:
       # Include changes to the deployer script's folder, but exclude some parts
-      - deployer/**
-      - "!deployer/README.md"
-      - "!deployer/health_check_tests/**"
-      - "!deployer/commands/generate/billing/**"
-      - "!deployer/commands/generate/dedicated_cluster/**"
-      - "!deployer/commands/generate/hub_asset/**"
-      - "!deployer/commands/generate/resource_allocation/**"
-      - requirements.txt
-      - .github/actions/setup-deploy/**
-      - helm-charts/**
-      - config/clusters/**
+    - deployer/**
+    - '!deployer/README.md'
+    - '!deployer/health_check_tests/**'
+    - '!deployer/commands/generate/billing/**'
+    - '!deployer/commands/generate/dedicated_cluster/**'
+    - '!deployer/commands/generate/hub_asset/**'
+    - '!deployer/commands/generate/resource_allocation/**'
+    - requirements.txt
+    - .github/actions/setup-deploy/**
+    - helm-charts/**
+    - config/clusters/**
       # Exclude the template configuration files
-      - "!config/clusters/templates/**"
-      - "!terraform/aws/projects/template.tfvars"
-      - "!terraform/gcp/projects/cluster.tfvars.template"
-      - "!eksctl/template.jsonnet"
+    - '!config/clusters/templates/**'
+    - '!terraform/aws/projects/template.tfvars'
+    - '!terraform/gcp/projects/cluster.tfvars.template'
+    - '!eksctl/template.jsonnet'
 
 # ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
 concurrency:
@@ -52,7 +52,7 @@ concurrency:
 
 env:
   TERM: xterm
-  USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
+  USE_GKE_GCLOUD_AUTH_PLUGIN: 'True'
 
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
@@ -72,126 +72,126 @@ jobs:
       prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - uses: actions/setup-go@v5
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - uses: actions/setup-go@v5
 
       # There will almost never be a cache hit on the cache key when this job is
       # run, as it is the first of all jobs in this workflow. An exception is if
       # this job is re-attempted as part of the same workflow run after
       # succeeding previously.
-      - name: Save pip's install cache on job completion
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: "${{ github.run_id }}"
+    - name: Save pip's install cache on job completion
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ github.run_id }}
 
-      - name: Install deployer script's Python dependencies
-        run: |
-          pip install --editable .
-          go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
-      - name: Get merged/open PR labels
-        uses: actions/github-script@v7
-        id: pr-labels
-        with:
+    - name: Get merged/open PR labels
+      uses: actions/github-script@v7
+      id: pr-labels
+      with:
           # Both pull_request and push can have triggered this job to run. A
           # context with PR info (including its labels) is available when this
           # job is triggered via pull_request, but not when triggered via push -
           # a push can be triggered by other things than merged PRs. Due to
           # this, we check if a pushed commit is matching some PRs merge commit,
           # and if so gets its labels.
-          script: |
-            let labels = null;
+        script: |
+          let labels = null;
 
-            if (context.eventName === 'pull_request') {
-              labels = context.payload.pull_request.labels;
-            }
-            else if (context.eventName === 'push') {
-              // api ref: https://octokit.github.io/rest.js/v20#pulls-list
-              const resp = await github.rest.pulls.list(
-                {
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  state: 'closed',
-                  sort: 'updated',
-                  direction: 'desc',
-                  per_page: 100,
-                }
-              );
-              const merged_pr = resp.data.find(pr => pr.merge_commit_sha === context.sha);
-              labels = merged_pr?.labels;
-            }
+          if (context.eventName === 'pull_request') {
+            labels = context.payload.pull_request.labels;
+          }
+          else if (context.eventName === 'push') {
+            // api ref: https://octokit.github.io/rest.js/v20#pulls-list
+            const resp = await github.rest.pulls.list(
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'closed',
+                sort: 'updated',
+                direction: 'desc',
+                per_page: 100,
+              }
+            );
+            const merged_pr = resp.data.find(pr => pr.merge_commit_sha === context.sha);
+            labels = merged_pr?.labels;
+          }
 
-            label_names = (labels || []).map(l => l.name);
-            return label_names
+          label_names = (labels || []).map(l => l.name);
+          return label_names
 
-      - name: Identify files that have been added or modified
+    - name: Identify files that have been added or modified
         # Action repo: https://github.com/dorny/paths-filter
-        uses: dorny/paths-filter@v3
-        id: changed-files
-        with:
-          token: ""
-          list-files: csv
-          filters: |
-            changed:
-              - added|modified: deployer/**
-              - added|modified: requirements.txt
-              - added|modified: .github/actions/setup-deploy/**
-              - added|modified: helm-charts/basehub/**
-              - added|modified: helm-charts/daskhub/**
-              - added|modified: helm-charts/support/**
-              - added|modified: config/clusters/**
+      uses: dorny/paths-filter@v3
+      id: changed-files
+      with:
+        token: ''
+        list-files: csv
+        filters: |
+          changed:
+            - added|modified: deployer/**
+            - added|modified: requirements.txt
+            - added|modified: .github/actions/setup-deploy/**
+            - added|modified: helm-charts/basehub/**
+            - added|modified: helm-charts/daskhub/**
+            - added|modified: helm-charts/support/**
+            - added|modified: config/clusters/**
 
       # This step will create a comment-body.txt file containing the jobs to be run in a
       # Markdown table format to be posted on a Pull Request
-      - name: Generate matrix jobs
-        id: generate-jobs
-        run: |
-          deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
+    - name: Generate matrix jobs
+      id: generate-jobs
+      run: |
+        deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
 
       # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow
-      - name: Save Pull Request number to a file
-        if: github.event_name == 'pull_request'
-        run: |
-          echo "${{ github.event.number }}" > pr-number.txt
+    - name: Save Pull Request number to a file
+      if: github.event_name == 'pull_request'
+      run: |
+        echo "${{ github.event.number }}" > pr-number.txt
 
       # Upload the pr-number.txt and comment-body.txt files as artifacts for the
       # comment-deployment-plan-pr.yaml workflow to access
-      - name: Upload artifacts
-        if: >
-          github.event_name == 'pull_request' &&
-          (steps.generate-jobs.outputs.support-jobs != '[]' ||
-          steps.generate-jobs.outputs.staging-jobs != '[]' ||
-          steps.generate-jobs.outputs.prod-jobs != '[]')
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr
-          path: |
-            pr-number.txt
-            comment-body.txt
+    - name: Upload artifacts
+      if: >
+        github.event_name == 'pull_request' &&
+        (steps.generate-jobs.outputs.support-jobs != '[]' ||
+        steps.generate-jobs.outputs.staging-jobs != '[]' ||
+        steps.generate-jobs.outputs.prod-jobs != '[]')
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr
+        path: |
+          pr-number.txt
+          comment-body.txt
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
       # When https://github.com/integrations/slack/issues/1563 gets implemented,
       # we can use that instead
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
-        with:
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
+      with:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
-          notify_when: "failure"
-          status: ${{ job.status }} # required
+        notify_when: failure
+        status: ${{ job.status }}   # required
           # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-          footer: "<{run_url}|Failing Run>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades the support chart for clusters in parallel, if those upgrades
   # are required. This job needs the `generate-jobs` job to have completed and set
@@ -199,7 +199,7 @@ jobs:
   upgrade-support:
     runs-on: ubuntu-latest
     needs: [generate-jobs]
-    name: "support-${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.provider }}"
+    name: support-${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.provider }}
 
     # We declare outputs indicating the job failed status of a specific job
     # variation. We are currently required to do this in a hardcoded fashion,
@@ -248,49 +248,49 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
-        uses: ./.github/actions/setup-deploy
-        with:
-          provider: ${{ matrix.jobs.provider }}
-          GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
+      uses: ./.github/actions/setup-deploy
+      with:
+        provider: ${{ matrix.jobs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
-      - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
-        run: |
-          deployer deploy-support ${{ matrix.jobs.cluster_name }}
+    - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
+      run: |
+        deployer deploy-support ${{ matrix.jobs.cluster_name }}
 
-      - name: Declare failure status
-        id: declare-failure
-        if: always()
-        shell: python
-        run: |
-          import os
+    - name: Declare failure status
+      id: declare-failure
+      if: always()
+      shell: python
+      run: |
+        import os
 
-          name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
-          failure = "${{ job.status == 'failure' }}"
+        name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
+        failure = "${{ job.status == 'failure' }}"
 
-          output_file = os.getenv("GITHUB_OUTPUT")
-          with open(output_file, "a") as f:
-              f.write(f"failure_{name}={failure}")
+        output_file = os.getenv("GITHUB_OUTPUT")
+        with open(output_file, "a") as f:
+            f.write(f"failure_{name}={failure}")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
       # FIXME: when https://github.com/integrations/slack/issues/1563 gets implemented,
       # we can use that instead
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
         # Warning: there are multiple "Report Status" steps in this file (one per job).
         # Make sure they are all updated
-        with:
-          notify_when: "failure"
-          status: ${{ job.status }} # required
+      with:
+        notify_when: failure
+        status: ${{ job.status }}   # required
           # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-          footer: "<{run_url}|Failing Run>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job reduces the initially planned staging-jobs and prod-jobs deployments
   # by filtering out any deployment to a cluster with a failed support job.
@@ -313,56 +313,56 @@ jobs:
       # This Python script filters out any staging and/or prod hub deployment job
       # from running later based on if its part of a cluster where support upgrade
       # just failed.
-      - name: Filter staging and prod deploy jobs to run based on failures in support
-        id: filter-jobs
-        shell: python
-        run: |
-          import os
-          import json
+    - name: Filter staging and prod deploy jobs to run based on failures in support
+      id: filter-jobs
+      shell: python
+      run: |
+        import os
+        import json
 
-          staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs}}""")
-          prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
-          outputs = json.loads(r"""${{ toJson(needs.upgrade-support.outputs) }}""")
+        staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs}}""")
+        prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
+        outputs = json.loads(r"""${{ toJson(needs.upgrade-support.outputs) }}""")
 
-          try:
-              filtered_staging_jobs = [
-                  staging_job
-                  for staging_job in staging_jobs
-                  if f"failure_{staging_job['cluster_name'].replace('.', '-')}" in outputs.keys()
-                  and outputs[f"failure_{staging_job['cluster_name'].replace('.', '-')}"] != "true"
-              ]
+        try:
+            filtered_staging_jobs = [
+                staging_job
+                for staging_job in staging_jobs
+                if f"failure_{staging_job['cluster_name'].replace('.', '-')}" in outputs.keys()
+                and outputs[f"failure_{staging_job['cluster_name'].replace('.', '-')}"] != "true"
+            ]
 
-              filtered_prod_jobs = [
-                  prod_job
-                  for prod_job in prod_jobs
-                  if f"failure_{prod_job['cluster_name'].replace('.', '-')}" in outputs.keys()
-                  and outputs[f"failure_{prod_job['cluster_name'].replace('.', '-')}"] != "true"
-              ]
-          except KeyError as ke:
-            print(f"A cluster wasn't found in the `upgrade-support.outputs` list. Please add it before continuing! {repr(ke)}")
+            filtered_prod_jobs = [
+                prod_job
+                for prod_job in prod_jobs
+                if f"failure_{prod_job['cluster_name'].replace('.', '-')}" in outputs.keys()
+                and outputs[f"failure_{prod_job['cluster_name'].replace('.', '-')}"] != "true"
+            ]
+        except KeyError as ke:
+          print(f"A cluster wasn't found in the `upgrade-support.outputs` list. Please add it before continuing! {repr(ke)}")
 
-          output_file = os.getenv("GITHUB_OUTPUT")
-          with open(output_file, "a") as f:
-              f.write(f"filtered-staging-jobs={json.dumps(filtered_staging_jobs)}\n")
-              f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
+        output_file = os.getenv("GITHUB_OUTPUT")
+        with open(output_file, "a") as f:
+            f.write(f"filtered-staging-jobs={json.dumps(filtered_staging_jobs)}\n")
+            f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
       # When https://github.com/integrations/slack/issues/1563 gets implemented,
       # we can use that instead
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
-        with:
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
+      with:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
-          notify_when: "failure"
-          status: ${{ job.status }} # required
+        notify_when: failure
+        status: ${{ job.status }}   # required
           # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-          footer: "<{run_url}|Failing Run>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # We need to run this job because if there are no support jobs executed, then
   # filter-failed-support won't produce an output. We cannot use logic in a
@@ -384,41 +384,41 @@ jobs:
       staging-jobs: ${{ steps.reset-jobs.outputs.staging-jobs }}
       prod-jobs: ${{ steps.reset-jobs.outputs.prod-jobs }}
     steps:
-      - id: reset-jobs
-        shell: python
-        run: |
-          import os
-          import json
+    - id: reset-jobs
+      shell: python
+      run: |
+        import os
+        import json
 
-          try:
-              staging_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.staging-jobs }}""")
-              prod_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.prod-jobs }}""")
-          except json.decoder.JSONDecodeError:
-              staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs }}""")
-              prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
+        try:
+            staging_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.staging-jobs }}""")
+            prod_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.prod-jobs }}""")
+        except json.decoder.JSONDecodeError:
+            staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs }}""")
+            prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
 
-          output_file = os.getenv("GITHUB_OUTPUT")
-          with open(output_file, "a") as f:
-              f.write(f"staging-jobs={json.dumps(staging_jobs)}\n")
-              f.write(f"prod-jobs={json.dumps(prod_jobs)}\n")
+        output_file = os.getenv("GITHUB_OUTPUT")
+        with open(output_file, "a") as f:
+            f.write(f"staging-jobs={json.dumps(staging_jobs)}\n")
+            f.write(f"prod-jobs={json.dumps(prod_jobs)}\n")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
       # When https://github.com/integrations/slack/issues/1563 gets implemented,
       # we can use that instead
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
-        with:
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
+      with:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
-          notify_when: "failure"
-          status: ${{ job.status }} # required
+        notify_when: failure
+        status: ${{ job.status }}   # required
           # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-          footer: "<{run_url}|Failing Run>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades staging hubs on clusters in parallel, if required. This
   # job needs the `reset-jobs` to have completed to provide its output `staging-jobs`.
@@ -428,7 +428,7 @@ jobs:
   upgrade-staging:
     runs-on: ubuntu-latest
     needs: [reset-jobs]
-    name: "${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}"
+    name: ${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -480,59 +480,59 @@ jobs:
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
-        uses: ./.github/actions/setup-deploy
-        with:
-          provider: ${{ matrix.jobs.provider }}
-          GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
+      uses: ./.github/actions/setup-deploy
+      with:
+        provider: ${{ matrix.jobs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
-      - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
-        run: |
-          deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+    - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
+      run: |
+        deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
       # Retry action: https://github.com/marketplace/actions/retry-step
-      - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          command: |
-            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+    - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
-      - name: Declare failure status
-        id: declare-failure
-        if: always()
-        shell: python
-        run: |
-          import os
+    - name: Declare failure status
+      id: declare-failure
+      if: always()
+      shell: python
+      run: |
+        import os
 
-          cluster_name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
-          hub_name = "${{ matrix.jobs.hub_name }}".replace(".", "-")
-          failure = "${{ job.status == 'failure' }}"
+        cluster_name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
+        hub_name = "${{ matrix.jobs.hub_name }}".replace(".", "-")
+        failure = "${{ job.status == 'failure' }}"
 
-          output_file = os.getenv("GITHUB_OUTPUT")
-          with open(output_file, "a") as f:
-              f.write(f"failure_{cluster_name}_{hub_name}={failure}\n")
+        output_file = os.getenv("GITHUB_OUTPUT")
+        with open(output_file, "a") as f:
+            f.write(f"failure_{cluster_name}_{hub_name}={failure}\n")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
       # When https://github.com/integrations/slack/issues/1563 gets implemented,
       # we can use that instead
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
-        with:
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
+      with:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
-          notify_when: "failure"
-          status: ${{ job.status }} # required
+        notify_when: failure
+        status: ${{ job.status }}   # required
           # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-          footer: "<{run_url}|Failing Run>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job further reduces prod-jobs by filtering out any prod hub deployment
   # to a cluster with a failed staging hub job.
@@ -551,52 +551,52 @@ jobs:
       # later based on if its part of a cluster where staging hub upgrade
       # just failed. Data is injected to the script before its executed via
       # string literals as rendered GitHub workflow expressions.
-      - name: Filter prod deploy jobs to run based on failures in staging
-        id: filter-jobs
-        shell: python
-        run: |
-          import os
-          import json
+    - name: Filter prod deploy jobs to run based on failures in staging
+      id: filter-jobs
+      shell: python
+      run: |
+        import os
+        import json
 
-          prod_jobs = json.loads(r"""${{ needs.reset-jobs.outputs.prod-jobs }}""")
-          outputs = json.loads(r"""${{ toJson(needs.upgrade-staging.outputs) }}""")
+        prod_jobs = json.loads(r"""${{ needs.reset-jobs.outputs.prod-jobs }}""")
+        outputs = json.loads(r"""${{ toJson(needs.upgrade-staging.outputs) }}""")
 
-          try:
-              filtered_prod_jobs = []
-              for prod_job in prod_jobs:
-                  failed_jobs = {
-                      k: v
-                      for k, v in outputs.items()
-                      if prod_job["cluster_name"] in k
-                      and v == "true"
-                  }
+        try:
+            filtered_prod_jobs = []
+            for prod_job in prod_jobs:
+                failed_jobs = {
+                    k: v
+                    for k, v in outputs.items()
+                    if prod_job["cluster_name"] in k
+                    and v == "true"
+                }
 
-                  if len(failed_jobs) == 0:
-                      filtered_prod_jobs.append(prod_job)
-          except KeyError as ke:
-              print(f"A cluster and staging hub wasn't found in the `upgrade-staging.outputs` list. Please add it before continuing! {repr(ke)}")
+                if len(failed_jobs) == 0:
+                    filtered_prod_jobs.append(prod_job)
+        except KeyError as ke:
+            print(f"A cluster and staging hub wasn't found in the `upgrade-staging.outputs` list. Please add it before continuing! {repr(ke)}")
 
-          output_file = os.getenv("GITHUB_OUTPUT")
-          with open(output_file, "a") as f:
-              f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
+        output_file = os.getenv("GITHUB_OUTPUT")
+        with open(output_file, "a") as f:
+            f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
       # When https://github.com/integrations/slack/issues/1563 gets implemented,
       # we can use that instead
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
-        with:
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
+      with:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
-          notify_when: "failure"
-          status: ${{ job.status }} # required
+        notify_when: failure
+        status: ${{ job.status }}   # required
           # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-          footer: "<{run_url}|Failing Run>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades production hubs on clusters in parallel, if required. This
   # job needs the `filter-failed-staging` to have completed to provide its
@@ -606,7 +606,7 @@ jobs:
   upgrade-prod:
     runs-on: ubuntu-latest
     needs: [filter-failed-staging]
-    name: "${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}"
+    name: ${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -618,41 +618,41 @@ jobs:
         jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
-        uses: ./.github/actions/setup-deploy
-        with:
-          provider: ${{ matrix.jobs.provider }}
-          GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
+      uses: ./.github/actions/setup-deploy
+      with:
+        provider: ${{ matrix.jobs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
-      - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
-        run: |
-          deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+    - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
+      run: |
+        deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
       # Retry action: https://github.com/marketplace/actions/retry-step
-      - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          command: |
-            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+    - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
       # When https://github.com/integrations/slack/issues/1563 gets implemented,
       # we can use that instead
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
-        with:
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
+      with:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
-          notify_when: "failure"
-          status: ${{ job.status }} # required
+        notify_when: failure
+        status: ${{ job.status }}   # required
           # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-          footer: "<{run_url}|Failing Run>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}

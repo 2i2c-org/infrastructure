@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [skyline.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [skyline.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [skyline.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -39,12 +39,12 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - my.smccd.edu
+            - my.smccd.edu
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - dhum1@my.smccd.edu
-          - momenik1@my.smccd.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - dhum1@my.smccd.edu
+        - momenik1@my.smccd.edu

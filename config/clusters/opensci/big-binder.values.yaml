@@ -2,7 +2,7 @@ dask-gateway:
   enabled: true
   gateway:
     backend:
-      imagePullSecrets: [{ name: image-pull-secret }]
+      imagePullSecrets: [name: image-pull-secret]
       scheduler:
         extraPodConfig:
           nodeSelector:
@@ -20,8 +20,8 @@ jupyterhub:
   ingress:
     hosts: [hub.big.binder.opensci.2i2c.cloud]
     tls:
-      - hosts: [hub.big.binder.opensci.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [hub.big.binder.opensci.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     binderhubUI:
       enabled: true
@@ -31,7 +31,7 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
     homepage:
-      gitRepoBranch: "no-homepage-subsections"
+      gitRepoBranch: no-homepage-subsections
       templateVars:
         org:
           name: Ephemeral Interactive Computing for NASA Communities
@@ -47,15 +47,15 @@ jupyterhub:
           name: NASA ROSES-2023 F.15 High Priority Open-Source Science
           url: https://nasa.gov
         announcements:
-          - |
-            <div>
-              <p>
-                Are you affiliated with NASA in some way and want to get access
-                to this instance? Please email
-                <a href="mailto:binder-requests@2i2c.org">binder-requests@2i2c.org</a>
-                with information and we will get back to you!
-              </p>
-            </div>
+        - |
+          <div>
+            <p>
+              Are you affiliated with NASA in some way and want to get access
+              to this instance? Please email
+              <a href="mailto:binder-requests@2i2c.org">binder-requests@2i2c.org</a>
+              with information and we will get back to you!
+            </p>
+          </div>
     jupyterhubConfigurator:
       enabled: false
     singleuserAdmin:
@@ -88,10 +88,10 @@ jupyterhub:
         oauth_callback_url: https://hub.big.binder.opensci.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-ephemeral-hubs:access
-          - 2i2c-org:hub-access-for-2i2c-staff
+        - 2i2c-ephemeral-hubs:access
+        - 2i2c-org:hub-access-for-2i2c-staff
         scope:
-          - read:org
+        - read:org
       Authenticator:
         enable_auth_state: true
         manage_groups: true
@@ -120,22 +120,22 @@ jupyterhub:
     loadRoles:
       binder:
         services:
-          - binder
+        - binder
         scopes:
-          - servers
-          - read:users # admin:users is required if authentication isn't enabled
+        - servers
+        - read:users   # admin:users is required if authentication isn't enabled
       jupyterhub-groups-exporter:
         services:
-          - jupyterhub-groups-exporter
+        - jupyterhub-groups-exporter
         scopes:
-          - users
-          - groups
+        - users
+        - groups
       user:
         scopes:
-          - self
+        - self
           # Admin users will by default have access:services, so this is only
           # observed to be required for non-admin users.
-          - access:services!service=binder
+        - access:services!service=binder
 binderhub-service:
   enabled: true
   networkPolicy:
@@ -150,8 +150,8 @@ binderhub-service:
     enabled: true
     hosts: [big.binder.opensci.2i2c.cloud]
     tls:
-      - hosts: [big.binder.opensci.2i2c.cloud]
-        secretName: binder-https-auto-tls
+    - hosts: [big.binder.opensci.2i2c.cloud]
+      secretName: binder-https-auto-tls
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
@@ -168,27 +168,27 @@ binderhub-service:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/opensci-big-binder-
       auth_enabled: true
       enable_api_only_mode: false
-      banner_message: ""
-      about_message: ""
+      banner_message: ''
+      about_message: ''
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
   extraEnv:
-    - name: JUPYTERHUB_API_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: hub
-          key: hub.services.binder.apiToken
-    - name: JUPYTERHUB_CLIENT_ID
-      value: "service-binder"
-    - name: JUPYTERHUB_API_URL
-      value: "https://hub.big.binder.opensci.2i2c.cloud/hub/api"
+  - name: JUPYTERHUB_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: hub
+        key: hub.services.binder.apiToken
+  - name: JUPYTERHUB_CLIENT_ID
+    value: service-binder
+  - name: JUPYTERHUB_API_URL
+    value: https://hub.big.binder.opensci.2i2c.cloud/hub/api
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
-    - name: JUPYTERHUB_BASE_URL
-      value: "https://hub.big.binder.opensci.2i2c.cloud/"
-    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
-      value: "https://big.binder.opensci.2i2c.cloud/oauth_callback"
+  - name: JUPYTERHUB_BASE_URL
+    value: https://hub.big.binder.opensci.2i2c.cloud/
+  - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+    value: https://big.binder.opensci.2i2c.cloud/oauth_callback
   buildPodsRegistryCredentials:
     server: *url
     username: *username

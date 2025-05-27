@@ -2,39 +2,39 @@ jupyterhub:
   ingress:
     hosts: [unitefa-conicet.latam.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [unitefa-conicet.latam.catalystproject.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [unitefa-conicet.latam.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
           name: Catalyst Project, LatAm - UNITEFA-CONICET
-          url: "https://unitefa.conicet.unc.edu.ar/"
+          url: https://unitefa.conicet.unc.edu.ar/
           logo_url: https://unitefa.conicet.unc.edu.ar/wp-content/blogs.dir/50/files/sites/50/2019/12/cropped-Captura-de-pantalla-de-2019-12-17-10-29-47.png
         funded_by:
           name: Chan Zuckerberg Initiative - Open Science
-          url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
+          url: https://chanzuckerberg.com/science/programs-resources/open-science/
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: "https://unitefa-conicet.latam.catalystproject.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://unitefa-conicet.latam.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - unc.edu.ar
-              - mi.unc.edu.ar
-              - famaf.unc.edu.ar
+            - unc.edu.ar
+            - mi.unc.edu.ar
+            - famaf.unc.edu.ar
       Authenticator:
         admin_users:
-          - aquevedo@unc.edu.ar
-          - nicolasw@famaf.unc.edu.ar
+        - aquevedo@unc.edu.ar
+        - nicolasw@famaf.unc.edu.ar
 jupyterhub-groups-exporter:
   enabled: false

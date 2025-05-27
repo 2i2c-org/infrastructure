@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [sacramento.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [sacramento.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [sacramento.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -39,13 +39,13 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - scc.losrios.edu
-              - apps.losrios.edu
+            - scc.losrios.edu
+            - apps.losrios.edu
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - mukarra@scc.losrios.edu
-          - w1475529@apps.losrios.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - mukarra@scc.losrios.edu
+        - w1475529@apps.losrios.edu

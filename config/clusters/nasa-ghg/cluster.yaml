@@ -1,6 +1,6 @@
 name: nasa-ghg
 provider: aws # https://smce-ghg-center.signin.aws.amazon.com/console
-account: "smce-ghg-center"
+account: smce-ghg-center
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
@@ -10,31 +10,31 @@ aws:
     paid_by_us: false
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "NASA GHG Center (staging)"
-    domain: staging.ghg.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - common.values.yaml
-      - enc-common.secret.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: prod
-    display_name: "NASA GHG Center (prod)"
-    domain: hub.ghg.center
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - common.values.yaml
-      - enc-common.secret.values.yaml
-      - prod.values.yaml
-      - enc-prod.secret.values.yaml
-  - name: binder
-    display_name: "NASA GHG Center BinderHub"
-    domain: binder.ghg.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - binder.values.yaml
-      - enc-binder.secret.values.yaml
+- name: staging
+  display_name: NASA GHG Center (staging)
+  domain: staging.ghg.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: prod
+  display_name: NASA GHG Center (prod)
+  domain: hub.ghg.center
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - prod.values.yaml
+  - enc-prod.secret.values.yaml
+- name: binder
+  display_name: NASA GHG Center BinderHub
+  domain: binder.ghg.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - binder.values.yaml
+  - enc-binder.secret.values.yaml

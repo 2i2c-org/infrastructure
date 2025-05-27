@@ -9,8 +9,8 @@ basehub:
     ingress:
       hosts: [staging.hub.cryointhecloud.com]
       tls:
-        - hosts: [staging.hub.cryointhecloud.com]
-          secretName: https-auto-tls
+      - hosts: [staging.hub.cryointhecloud.com]
+        secretName: https-auto-tls
     hub:
       config:
         GitHubOAuthenticator:
@@ -37,4 +37,4 @@ basehub:
     eks:
       volumeId: vol-02e09b4fdbf07100a
     quotaEnforcer:
-      hardQuota: "0.1" # in GB
+      hardQuota: '0.1' # in GB

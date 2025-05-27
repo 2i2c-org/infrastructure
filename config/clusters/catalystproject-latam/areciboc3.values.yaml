@@ -5,8 +5,8 @@ jupyterhub:
   ingress:
     hosts: [areciboc3.latam.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [areciboc3.latam.catalystproject.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [areciboc3.latam.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
@@ -23,25 +23,25 @@ jupyterhub:
         oauth_callback_url: https://areciboc3.latam.catalystproject.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - catalystproject-hubs:areciboc3
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - catalystproject-hubs:areciboc3
         scope:
-          - read:org
+        - read:org
       Authenticator:
         enable_auth_state: true
         manage_groups: true
         admin_users:
-          - pattiordonez
-          - danielhjacobs
+        - pattiordonez
+        - danielhjacobs
     services:
       jupyterhub-groups-exporter: {}
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-          - jupyterhub-groups-exporter
+        - jupyterhub-groups-exporter
         scopes:
-          - users
-          - groups
+        - users
+        - groups
     extraConfig:
       custom-github-oauthenticator: |
         class CustomGitHubOAuthenticator(GitHubOAuthenticator):
