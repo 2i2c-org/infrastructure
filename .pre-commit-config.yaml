@@ -51,7 +51,7 @@ repos:
   rev: v1.1
   hooks:
   - id: sops-encryption
-        # Add files here if they contain the word 'secret' but should not be encrypted
+    # Add files here if they contain the word 'secret' but should not be encrypted
     exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/common/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml|helm-charts/aws-ce-grafana-backend/templates/secret\.yaml
 
   # Prevent known typos from being committed
@@ -60,17 +60,17 @@ repos:
   hooks:
   - id: codespell
     args:
-          # Autofix known typos
+    # Autofix known typos
     - --write-changes
     additional_dependencies:
     - tomli
 
-  # Autoformat jsonnet
-  - repo: https://github.com/google/go-jsonnet
-    rev: v0.21.0
-    hooks:
-      - id: jsonnet-format
-        exclude: eksctl/template.jsonnet
+# Autoformat jsonnet
+- repo: https://github.com/google/go-jsonnet
+  rev: v0.21.0
+  hooks:
+    - id: jsonnet-format
+      exclude: eksctl/template.jsonnet
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:
