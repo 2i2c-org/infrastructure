@@ -1,10 +1,11 @@
 import re
 
 import pandas as pd
+import requests
 from google.cloud import bigquery
 from prometheus_pandas import query
 
-from deployer.commands.grafana.utils import get_cluster_prometheus
+from deployer.infra_components.cluster import Cluster
 
 
 def build_gcp_query(cluster: dict, service_id=None):
@@ -125,8 +126,12 @@ class PrometheusUtilizationImporter:
         return self.clean_query_dataframe(df)
 
     def _run_query(self, start_month, end_month):
-        url, s = get_cluster_prometheus(self.cluster.get("name"))
-        p = query.Prometheus(url, http=s)
+        cluster_obj = Cluster.from_name(self.cluster["name"])
+        url = cluster_obj.get_external_prometheus_url()
+        creds = cluster_obj.get_cluster_prometheus_creds()
+        session = requests.Session()
+        session.auth = creds
+        p = query.Prometheus(url, http=session)
         prom_query = """sum(
         kube_pod_container_resource_requests{resource="memory",unit="byte"}
         ) by (namespace)

@@ -15,15 +15,9 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import grafana_app
+from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import get_all_cluster_yaml_files
 from deployer.utils.rendering import print_colour
-
-from .utils import (
-    get_cluster_prometheus_address,
-    get_cluster_prometheus_creds,
-    get_grafana_token,
-    get_grafana_url,
-)
 
 yaml = YAML(typ="safe")
 
@@ -39,7 +33,8 @@ grafana_app.add_typer(
 
 
 def central_grafana_datasource_endpoint(central_grafana_cluster_name="2i2c"):
-    grafana_url = get_grafana_url(central_grafana_cluster_name)
+    cluster = Cluster.from_name(central_grafana_cluster_name)
+    grafana_url = cluster.get_grafana_url()
     return f"{grafana_url}/api/datasources"
 
 
@@ -53,21 +48,20 @@ def build_datasource_details(cluster_name, datasource_name=None):
     Returns:
         dict object: req payload to be consumed by Grafana
     """
-    # Get the prometheus address for cluster_name
-    datasource_url = get_cluster_prometheus_address(cluster_name)
+    cluster = Cluster.from_name(cluster_name)
+    datasource_url = cluster.get_external_prometheus_url()
 
-    # Get the credentials of this prometheus instance
-    prometheus_creds = get_cluster_prometheus_creds(cluster_name)
+    prometheus_creds = cluster.get_cluster_prometheus_creds()
 
     datasource_name = cluster_name if not datasource_name else datasource_name
     datasource_details = {
         "name": datasource_name,
         "type": "prometheus",
         "access": "proxy",
-        "url": f"https://{datasource_url}",
+        "url": datasource_url,
         "basicAuth": True,
-        "basicAuthUser": prometheus_creds["username"],
-        "secureJsonData": {"basicAuthPassword": prometheus_creds["password"]},
+        "basicAuthUser": prometheus_creds[0],
+        "secureJsonData": {"basicAuthPassword": prometheus_creds[1]},
     }
 
     return datasource_details
@@ -80,7 +74,8 @@ def build_datasource_request_headers(central_grafana_cluster_name="2i2c"):
     Returns:
         dict: "Accept", "Content-Type", "Authorization" headers
     """
-    token = get_grafana_token(central_grafana_cluster_name)
+    cluster = Cluster.from_name(central_grafana_cluster_name)
+    token = cluster.get_grafana_token()
 
     headers = {
         "Accept": "application/json",
