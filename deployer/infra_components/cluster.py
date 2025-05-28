@@ -152,10 +152,7 @@ class Cluster:
             support_dir.joinpath("enc-support.secret.values.yaml"),
             support_dir.joinpath("enc-cryptnono.secret.values.yaml"),
             support_dir.joinpath("values.jsonnet"),
-        ] + [
-            self.config_dir / p
-            for p in self.support["helm_chart_values_files"]
-        ]
+        ] + [self.config_dir / p for p in self.support["helm_chart_values_files"]]
 
         with (
             get_decrypted_files(values_file_paths) as values_files,
