@@ -60,7 +60,7 @@ def root_homes(
     server_ip = base_share_name = ""
     for values_file in hub.spec["helm_chart_values_files"]:
         if "secret" not in os.path.basename(values_file):
-            values_file = cluster.dir_path / values_file
+            values_file = cluster.config_dir / values_file
             config = yaml.load(values_file)
 
             if config.get("basehub", {}):

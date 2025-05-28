@@ -43,7 +43,7 @@ class Cluster:
     def __init__(self, spec, config_path: Path):
         self.spec = spec
         self.config_path = config_path
-        self.dir_path = config_path.parent
+        self.config_dir = config_path.parent
         self.hubs = [Hub(self, hub_spec) for hub_spec in self.spec.get("hubs", [])]
         self.support = self.spec.get("support", {})
 
@@ -153,7 +153,7 @@ class Cluster:
             support_dir.joinpath("enc-cryptnono.secret.values.yaml"),
             support_dir.joinpath("values.jsonnet"),
         ] + [
-            self.dir_path / p
+            self.config_dir / p
             for p in self.support["helm_chart_values_files"]
         ]
 
@@ -200,7 +200,7 @@ class Cluster:
            we call (primarily helm) will use that as config
         """
         config = self.spec["kubeconfig"]
-        config_path = self.dir_path / config["file"]
+        config_path = self.config_dir / config["file"]
 
         with (
             get_decrypted_file(config_path) as decrypted_key_path,
@@ -219,7 +219,7 @@ class Cluster:
         side-effects on existing local configuration.
         """
         config = self.spec["aws"]
-        key_path = self.dir_path / config["key"]
+        key_path = self.config_dir / config["key"]
         cluster_name = config["clusterName"]
         region = config["region"]
 
@@ -261,7 +261,7 @@ class Cluster:
         cluster using `az aks get-credentials`.
         """
         config = self.spec["azure"]
-        key_path = self.dir_path / config["key"]
+        key_path = self.config_dir / config["key"]
         cluster = config["cluster"]
         resource_group = config["resource_group"]
 
@@ -316,7 +316,7 @@ class Cluster:
 
     def auth_gcp(self):
         config = self.spec["gcp"]
-        key_path = self.dir_path / config["key"]
+        key_path = self.config_dir / config["key"]
         project = config["project"]
         # If cluster is regional, it'll have a `region` key set.
         # Else, it'll just have a `zone` key set. Let's respect either.
@@ -364,7 +364,7 @@ class Cluster:
 
         Raises an exception if URL is not correctly set.
         """
-        config_file = self.dir_path / "support.values.yaml"
+        config_file = self.config_dir / "support.values.yaml"
         with open(config_file) as f:
             support_config = yaml.load(f)
 
@@ -383,7 +383,7 @@ class Cluster:
         """
         Return access token for talking to the Grafana API on this cluster
         """
-        grafana_token_file = self.dir_path / "enc-grafana-token.secret.yaml"
+        grafana_token_file = self.config_dir / "enc-grafana-token.secret.yaml"
 
         # Read the secret grafana token file
         with get_decrypted_file(grafana_token_file) as decrypted_file_path:
@@ -404,7 +404,7 @@ class Cluster:
         Raises an exception if URL is not correctly configured
         """
 
-        config_file = self.dir_path / "support.values.yaml"
+        config_file = self.config_dir / "support.values.yaml"
         with open(config_file) as f:
             support_config = yaml.load(f)
 
@@ -437,7 +437,7 @@ class Cluster:
 
         Raises an exception if it was not correctly configured
         """
-        config_filename = self.dir_path / "enc-support.secret.values.yaml"
+        config_filename = self.config_dir / "enc-support.secret.values.yaml"
 
         with get_decrypted_file(config_filename) as decrypted_path:
             with open(decrypted_path) as f:

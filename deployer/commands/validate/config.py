@@ -136,14 +136,14 @@ def hub_config(
                 if values_file.endswith(".jsonnet"):
                     rendered_file = jsonnet_stack.enter_context(
                         render_jsonnet(
-                            cluster.dir_path / values_file,
+                            cluster.config_dir / values_file,
                             cluster_name,
                             hub_name,
                         )
                     )
                     cmd.append(f"--values={rendered_file}")
                 elif "secret" not in os.path.basename(values_file):
-                    values_file = cluster.dir_path / values_file
+                    values_file = cluster.config_dir / values_file
                     cmd.append(f"--values={values_file}")
                     config = yaml.load(values_file)
                     # Check if there's config that enables dask-gateway
@@ -194,13 +194,13 @@ def support_config(
                 if values_file.endswith(".jsonnet"):
                     rendered_file = jsonnet_stack.enter_context(
                         render_jsonnet(
-                            cluster.dir_path / values_file, cluster_name, None
+                            cluster.config_dir / values_file, cluster_name, None
                         )
                     )
                     cmd.append(f"--values={rendered_file}")
                 # FIXME: The logic here for figuring out non secret files is not correct
                 elif "secret" not in os.path.basename(values_file):
-                    cmd.append(f"--values={cluster.dir_path / values_file}")
+                    cmd.append(f"--values={cluster.config_dir / values_file}")
 
                 try:
                     subprocess.check_output(cmd, text=True)
@@ -237,7 +237,7 @@ def authenticator_config(
         allowed_users = []
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
-                values_file = cluster.dir_path / values_file_name
+                values_file = cluster.config_dir / values_file_name
                 # Load the hub extra config from its specific values files
                 config = yaml.load(values_file)
                 # Check if there's config that specifies an authenticator class
@@ -298,7 +298,7 @@ def configurator_config(
         singleuser_overrides = False
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
-                values_file = cluster.dir_path / values_file_name
+                values_file = cluster.config_dir / values_file_name
                 # Load the hub extra config from its specific values files
                 config = yaml.load(values_file)
                 try:

@@ -173,7 +173,7 @@ def run_hub_health_check(
             substr in os.path.basename(values_file_name)
             for substr in ["secret", "common"]
         ):
-            values_file = cluster.dir_path / values_file_name
+            values_file = cluster.config_dir / values_file_name
             config = yaml.load(values_file)
             basehub = config.get("basehub", {})
             if basehub:
@@ -206,7 +206,7 @@ def run_hub_health_check(
         domain_override_file = hub.spec["domain_override_file"]
 
         with get_decrypted_file(
-            hub.cluster.dir_path / domain_override_file
+            hub.cluster.config_dir / domain_override_file
         ) as decrypted_path:
             with open(decrypted_path) as f:
                 domain_override_config = yaml.load(f)
@@ -252,7 +252,7 @@ def run_hub_health_check(
 
     for values_file in hub.spec["helm_chart_values_files"]:
         if "secret" not in os.path.basename(values_file):
-            values_file = cluster.dir_path / values_file
+            values_file = cluster.config_dir / values_file
             config = yaml.load(values_file)
             # Check if there's config that enables dask-gateway
             if config.get("basehub", {}):

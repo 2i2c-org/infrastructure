@@ -62,7 +62,7 @@ def update_central_grafana_token(cluster_name, token):
     # Get the location of the file that stores the central grafana token
     cluster = Cluster.from_name(cluster_name)
 
-    grafana_token_file = cluster.dir_path / "enc-grafana-token.secret.yaml"
+    grafana_token_file = cluster.config_dir / "enc-grafana-token.secret.yaml"
 
     # If grafana token file exists delete it and then create it again with new token
     # Fastest way to update the token

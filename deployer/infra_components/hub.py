@@ -53,7 +53,7 @@ class Hub:
             domain_override_file = self.spec["domain_override_file"]
 
             with get_decrypted_file(
-                self.cluster.dir_path / domain_override_file
+                self.cluster.config_dir / domain_override_file
             ) as decrypted_path:
                 with open(decrypted_path) as f:
                     domain_override_config = yaml.load(f)
@@ -64,7 +64,7 @@ class Hub:
             if "secret" not in os.path.basename(
                 values_file
             ) and not values_file.endswith(".jsonnet"):
-                values_file = self.cluster.dir_path / values_file
+                values_file = self.cluster.config_dir / values_file
                 config = yaml.load(values_file)
                 # Check if there's config that enables dask-gateway
                 dask_gateway_enabled = config.get("dask-gateway", {}).get(
@@ -85,7 +85,7 @@ class Hub:
 
         with (
             get_decrypted_files(
-                self.cluster.dir_path / p
+                self.cluster.config_dir / p
                 for p in self.spec["helm_chart_values_files"]
             ) as values_files,
             ExitStack() as jsonnet_stack,
