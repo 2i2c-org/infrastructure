@@ -206,7 +206,7 @@ def run_hub_health_check(
         domain_override_file = hub.spec["domain_override_file"]
 
         with get_decrypted_file(
-            hub.cluster.config_path.joinpath(domain_override_file)
+            hub.cluster.dir_path / domain_override_file
         ) as decrypted_path:
             with open(decrypted_path) as f:
                 domain_override_config = yaml.load(f)

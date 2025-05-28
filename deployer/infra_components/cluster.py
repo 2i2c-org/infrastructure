@@ -153,7 +153,7 @@ class Cluster:
             support_dir.joinpath("enc-cryptnono.secret.values.yaml"),
             support_dir.joinpath("values.jsonnet"),
         ] + [
-            self.config_path.joinpath(p)
+            self.dir_path / p
             for p in self.support["helm_chart_values_files"]
         ]
 
@@ -200,7 +200,7 @@ class Cluster:
            we call (primarily helm) will use that as config
         """
         config = self.spec["kubeconfig"]
-        config_path = self.config_path.joinpath(config["file"])
+        config_path = self.dir_path / config["file"]
 
         with (
             get_decrypted_file(config_path) as decrypted_key_path,
@@ -219,7 +219,7 @@ class Cluster:
         side-effects on existing local configuration.
         """
         config = self.spec["aws"]
-        key_path = self.config_path.joinpath(config["key"])
+        key_path = self.dir_path / config["key"]
         cluster_name = config["clusterName"]
         region = config["region"]
 
@@ -261,7 +261,7 @@ class Cluster:
         cluster using `az aks get-credentials`.
         """
         config = self.spec["azure"]
-        key_path = self.config_path.joinpath(config["key"])
+        key_path = self.dir_path / config["key"]
         cluster = config["cluster"]
         resource_group = config["resource_group"]
 
@@ -316,7 +316,7 @@ class Cluster:
 
     def auth_gcp(self):
         config = self.spec["gcp"]
-        key_path = self.config_path.joinpath(config["key"])
+        key_path = self.dir_path / config["key"]
         project = config["project"]
         # If cluster is regional, it'll have a `region` key set.
         # Else, it'll just have a `zone` key set. Let's respect either.

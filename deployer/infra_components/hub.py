@@ -53,7 +53,7 @@ class Hub:
             domain_override_file = self.spec["domain_override_file"]
 
             with get_decrypted_file(
-                self.cluster.config_path.joinpath(domain_override_file)
+                self.cluster.dir_path / domain_override_file
             ) as decrypted_path:
                 with open(decrypted_path) as f:
                     domain_override_config = yaml.load(f)
@@ -85,7 +85,7 @@ class Hub:
 
         with (
             get_decrypted_files(
-                self.cluster.config_path.joinpath(p)
+                self.cluster.dir_path / p
                 for p in self.spec["helm_chart_values_files"]
             ) as values_files,
             ExitStack() as jsonnet_stack,
