@@ -21,6 +21,12 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
+jupyterhub-groups-exporter:
+  enabled: true
+  config:
+    groupsExporter:
+      update_exporter_interval: 3600
+
 dask-gateway:
   enabled: true
 
@@ -275,6 +281,15 @@ jupyterhub:
         - ateucher   # Andy Teucher
         - jules32   # Julia Stewart Lowndes
         - eeholmes   # Eli Holmes
+    services:
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+        - jupyterhub-groups-exporter
+        scopes:
+        - users
+        - groups
     extraConfig:
       custom-auth-state-groups-key: |
         async def custom_auth_state_groups_key(auth_state):

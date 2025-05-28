@@ -224,5 +224,8 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: '4' # in GB
 
+jupyterhub-groups-exporter:
+  enabled: false
+
 binderhub-service:
   enabled: false
