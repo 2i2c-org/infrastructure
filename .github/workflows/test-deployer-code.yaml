@@ -9,6 +9,7 @@ on:
     - tests/**
     - requirements.txt
     - dev-requirements.txt
+    - pyproject.toml
     tags:
     - '**'
   pull_request:
@@ -19,6 +20,7 @@ on:
     - tests/**
     - requirements.txt
     - dev-requirements.txt
+    - pyproject.toml
   workflow_dispatch:
 
 jobs:

@@ -86,7 +86,7 @@ libraries we will use. Again this depends on how you installed python, and wheth
 want to use `conda` or `pip`.
 
 Once you have a virtual environment setup and activated, install the libraries
-required with `pip install -r requirements.txt -r dev-requirements.txt -e .`
+required with `pip install -e .[dev]`
 
 Now you are all ready to use our deployer scripts! Note if dependencies get
 added you will to run the installation again.

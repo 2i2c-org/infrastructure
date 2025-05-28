@@ -79,10 +79,13 @@ class Hub:
             for manifest_url in manifest_urls:
                 subprocess.check_call(["kubectl", "apply", "-f", manifest_url])
 
-        with get_decrypted_files(
-            self.cluster.config_path.joinpath(p)
-            for p in self.spec["helm_chart_values_files"]
-        ) as values_files, ExitStack() as jsonnet_stack:
+        with (
+            get_decrypted_files(
+                self.cluster.config_path.joinpath(p)
+                for p in self.spec["helm_chart_values_files"]
+            ) as values_files,
+            ExitStack() as jsonnet_stack,
+        ):
 
             chart_dir = HELM_CHARTS_DIR / self.spec["helm_chart"]
             cmd = [

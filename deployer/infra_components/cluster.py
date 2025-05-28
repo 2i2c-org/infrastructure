@@ -138,9 +138,10 @@ class Cluster:
             for p in self.support["helm_chart_values_files"]
         ]
 
-        with get_decrypted_files(
-            values_file_paths
-        ) as values_files, ExitStack() as jsonnet_stack:
+        with (
+            get_decrypted_files(values_file_paths) as values_files,
+            ExitStack() as jsonnet_stack,
+        ):
             cmd = [
                 "helm",
                 "upgrade",
@@ -182,8 +183,9 @@ class Cluster:
         config = self.spec["kubeconfig"]
         config_path = self.config_path.joinpath(config["file"])
 
-        with get_decrypted_file(config_path) as decrypted_key_path, unset_env_vars(
-            ["KUBECONFIG"]
+        with (
+            get_decrypted_file(config_path) as decrypted_key_path,
+            unset_env_vars(["KUBECONFIG"]),
         ):
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
@@ -244,8 +246,9 @@ class Cluster:
         cluster = config["cluster"]
         resource_group = config["resource_group"]
 
-        with tempfile.NamedTemporaryFile() as kubeconfig, unset_env_vars(
-            ["KUBECONFIG"]
+        with (
+            tempfile.NamedTemporaryFile() as kubeconfig,
+            unset_env_vars(["KUBECONFIG"]),
         ):
             os.environ["KUBECONFIG"] = kubeconfig.name
 
