@@ -1,23 +1,11 @@
-# Configuration on how ReadTheDocs (RTD) builds our documentation
-# ref: https://readthedocs.org/projects/2i2c-pilot-hubs/
-# ref: https://docs.readthedocs.io/en/stable/config-file/v2.html
-#
+# https://docs.readthedocs.io/en/stable/config-file/v2.html
 version: 2
 
 build:
-  os: ubuntu-22.04
+  os: ubuntu-24.04
   tools:
-    # We need to specify that we require Python to be setup with conda/mamba to
-    # work against an `conda.environment` file, so we specify mambaforge here.
-    #
-    # ref: https://github.com/readthedocs/readthedocs.org/issues/8595
-    # ref: https://docs.readthedocs.io/en/stable/config-file/v2.html#build-tools-python
-    #
-    python: mambaforge-latest
+    python: "3.13"
 
 sphinx:
   configuration: docs/conf.py
   builder: dirhtml
-
-conda:
-  environment: docs/environment.yml
