@@ -22,8 +22,8 @@ jupyterhub:
   ingress:
     hosts: [nmfs-openscapes.2i2c.cloud]
     tls:
-      - hosts: [nmfs-openscapes.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [nmfs-openscapes.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod
@@ -32,38 +32,26 @@ jupyterhub:
       PERSISTENT_BUCKET: s3://nmfs-openscapes-persistent/$(JUPYTERHUB_USER)
   hub:
     config:
+      JupyterHub:
+        authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://nmfs-openscapes.2i2c.cloud/hub/oauth_callback
+        populate_teams_in_auth_state: true
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - nmfs-openscapes:longterm-access-2i2c
+        - nmfs-openscapes:2024-mentors
+        - nmfs-openscapes:2024-science-teams
+        - nmfs-openscapes:2024-CoastWatch
+        - nmfs-openscapes:2024-nmfs-champions-cohort
+        scope:
+        - read:org
 
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-004cc1b60a1dfb9e4
   quotaEnforcer:
-    hardQuota: "64" # in GB
-    path: "/export/prod"
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 20M
-      limits:
-        cpu: 0.04
-        memory: 30M
-  nfsServer:
-    resources:
-      requests:
-        cpu: 0.2
-        memory: 2G
-      limits:
-        cpu: 0.4
-        memory: 6G
-  prometheusExporter:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 15M
-      limits:
-        cpu: 0.04
-        memory: 20M
+    hardQuota: '64' # in GB
 
 binderhub-service:
   config:

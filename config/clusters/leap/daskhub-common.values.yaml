@@ -4,8 +4,8 @@ basehub:
     pv:
       enabled: true
       mountOptions:
-        - soft
-        - noatime
+      - soft
+      - noatime
       baseShareName: /
   dask-gateway:
     enabled: true
@@ -26,21 +26,21 @@ basehub:
       # Ref https://github.com/2i2c-org/infrastructure/issues/2105
       singleuserAdmin:
         extraVolumeMounts:
-          - name: home
-            mountPath: /home/jovyan/allusers
-            readOnly: true
+        - name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: true
           # mounts below are copied from basehub's values that we override by
           # specifying extraVolumeMounts (lists get overridden when helm values
           # are combined)
-          - name: home
-            mountPath: /home/jovyan/shared-readwrite
-            subPath: _shared
-          - name: home
-            mountPath: /home/rstudio/shared-readwrite
-            subPath: _shared
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
+        - name: home
+          mountPath: /home/rstudio/shared-readwrite
+          subPath: _shared
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
+        add_staff_user_ids_of_type: github
       jupyterhubConfigurator:
         enabled: false
       homepage:
@@ -62,7 +62,7 @@ basehub:
       annotations:
         # Prevents the core node on which this pod is present from being drained
         # See https://github.com/2i2c-org/infrastructure/issues/3461
-        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+        cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
       allowNamedServers: true
       config:
         JupyterHub:
@@ -86,22 +86,49 @@ basehub:
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - leap-stc:leap-pangeo-base-access
-            - leap-stc:leap-pangeo-full-access
-            - leap-stc:data-and-compute
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - leap-stc:leap-pangeo-base-access
+          - leap-stc:leap-pangeo-full-access
+          - leap-stc:data-and-compute
           scope:
-            - read:org
+          - read:org
         Authenticator:
           enable_auth_state: true
+          manage_groups: true
           admin_users:
             # ref: https://2i2c.freshdesk.com/a/tickets/2761
-            - RobertPincus
-            - SammyAgrawal
+          - RobertPincus
+          - SammyAgrawal
+      services:
+        jupyterhub-groups-exporter: {}
+      loadRoles:
+        jupyterhub-groups-exporter:
+          services:
+          - jupyterhub-groups-exporter
+          scopes:
+          - users
+          - groups
+      extraConfig:
+        custom-github-oauthenticator: |
+          class CustomGitHubOAuthenticator(GitHubOAuthenticator):
+            async def authenticate(self, *args, **kwargs):
+                resp = await super().authenticate(*args, **kwargs)
+                if resp["auth_state"]["teams"] is None:
+                  return resp
+                groups = []
+                for team in resp["auth_state"]["teams"]:
+                  if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
+                    continue
+                  else:
+                    groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
+                resp["groups"] = groups
+                return resp
+          c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
     singleuser:
       cloudMetadata:
         blockWithIptables: false
       extraEnv:
-        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
+        GH_SCOPED_CREDS_CLIENT_ID: Iv1.0c7df3d4b3191b2f
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
       profileList:
         # NOTE: About node sharing
@@ -142,84 +169,84 @@ basehub:
         #          causes more frequent need to wait on startups, increased cost,
         #          wasted energy.
         #
-        - display_name: "Devs Only"
-          description: "Start a container limited to a chosen share of capacity on a node of this type"
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - leap-stc:leap-pangeo-dev-access
-            - leap-stc:data-and-compute
-          profile_options:
-            requests:
+      - display_name: Devs Only
+        description: Start a container limited to a chosen share of capacity on a node of this type
+        allowed_groups:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - leap-stc:leap-pangeo-dev-access
+        - leap-stc:data-and-compute
+        profile_options:
+          requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
               #
               #       This specific setup is not a standard node sharing setup,
               #       don't copy it!
               #
-              display_name: Node share
-              choices:
-                mem_512:
-                  display_name: ~512 GB, ~64.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 462.196G
-                    cpu_guarantee: 46.4
-                    mem_limit: 512G
-                    cpu_limit: 64
-            image: &profile_list_profile_options_image
-              display_name: Image
-              unlisted_choice: &profile_list_unlisted_choice
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+            display_name: Node share
+            choices:
+              mem_512:
+                display_name: ~512 GB, ~64.0 CPU
                 kubespawner_override:
-                  image: "{value}"
-              choices:
-                pangeo:
-                  display_name: Base Pangeo Notebook (2025.01.24)
-                  default: true
-                  slug: "pangeo"
-                  kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2025.01.24"
-                tensorflow:
-                  display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
-                  slug: "tensorflow"
-                  kubespawner_override:
-                    image: "pangeo/ml-notebook:2025.01.24"
-                pytorch:
-                  display_name: Pangeo PyTorch ML Notebook (2025.01.24)
-                  slug: "pytorch"
-                  kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2025.01.24"
-                leap-pangeo-edu:
-                  display_name: LEAP Education Notebook (Testing Prototype)
-                  slug: "leap_edu"
-                  kubespawner_override:
-                    image: "quay.io/jbusecke/leap-edu-image:fa442ab4851c"
-          kubespawner_override:
-            cpu_limit: null
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-64
+                  mem_guarantee: 462.196G
+                  cpu_guarantee: 46.4
+                  mem_limit: 512G
+                  cpu_limit: 64
+          image: &profile_list_profile_options_image
+            display_name: Image
+            unlisted_choice: &profile_list_unlisted_choice
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              pangeo:
+                display_name: Base Pangeo Notebook (2025.01.24)
+                default: true
+                slug: pangeo
+                kubespawner_override:
+                  image: pangeo/pangeo-notebook:2025.01.24
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
+                slug: tensorflow
+                kubespawner_override:
+                  image: pangeo/ml-notebook:2025.01.24
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook (2025.01.24)
+                slug: pytorch
+                kubespawner_override:
+                  image: pangeo/pytorch-notebook:2025.01.24
+              leap-pangeo-edu:
+                display_name: LEAP Education Notebook (Testing Prototype)
+                slug: leap_edu
+                kubespawner_override:
+                  image: quay.io/jbusecke/leap-edu-image:fa442ab4851c
+        kubespawner_override:
+          cpu_limit:
+          mem_limit:
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-64
 
-        - display_name: "CPU only"
-          description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
-          slug: medium-full
-          default: true
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - leap-stc:leap-pangeo-full-access
-            - leap-stc:data-and-compute
-          profile_options:
-            requests:
+      - display_name: CPU only
+        description: &profile_list_description Start a container limited to a chosen share of capacity on a node of this type
+        slug: medium-full
+        default: true
+        allowed_groups:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - leap-stc:leap-pangeo-full-access
+        - leap-stc:data-and-compute
+        profile_options:
+          requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
               #
               #       This specific setup is not a standard node sharing setup,
               #       don't copy it!
               #
-              display_name: Node share
-              choices:
+            display_name: Node share
+            choices:
                 # mem_1:
                 #   display_name: ~1 GB, ~0.125 CPU
                 #   kubespawner_override:
@@ -235,138 +262,138 @@ basehub:
                 #   kubespawner_override:
                 #     mem_guarantee: 3.611G
                 #     cpu_guarantee: 0.05
-                mem_8: &medium_mem_8
-                  display_name: ~8 GB, ~1.0 CPU
-                  default: true
-                  kubespawner_override:
-                    mem_guarantee: 7.222G
-                    cpu_guarantee: 0.1
-                    mem_limit: 8G
-                    cpu_limit: 1
-                mem_16: &medium_mem_16
-                  display_name: ~16 GB, ~2.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 14.444G
-                    cpu_guarantee: 0.2
-                    mem_limit: 16G
-                    cpu_limit: 2
-                mem_32: &medium_mem_32
-                  display_name: ~32 GB, ~4.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 28.887G
-                    cpu_guarantee: 0.4
-                    mem_limit: 32G
-                    cpu_limit: 4
-                mem_64:
-                  display_name: ~64 GB, ~8.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 57.775G
-                    cpu_guarantee: 0.8
-                    mem_limit: 64G
-                    cpu_limit: 8
-                mem_128:
-                  display_name: ~128 GB, ~16.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 115.549G
-                    cpu_guarantee: 1.6
-                    mem_limit: 128G
-                    cpu_limit: 16
-            image:
-              display_name: Image
-              dynamic_image_building:
-                enabled: True
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              mem_8: &medium_mem_8
+                display_name: ~8 GB, ~1.0 CPU
+                default: true
                 kubespawner_override:
-                  image: "{value}"
-              choices:
-                pangeo:
-                  display_name: Base Pangeo Notebook (2025.01.24)
-                  default: true
-                  slug: "pangeo"
-                  kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2025.01.24"
-                tensorflow:
-                  display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
-                  slug: "tensorflow"
-                  kubespawner_override:
-                    image: "pangeo/ml-notebook:2025.01.24"
-                pytorch:
-                  display_name: Pangeo PyTorch ML Notebook (2025.01.24)
-                  slug: "pytorch"
-                  kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2025.01.24"
-                leap-pangeo-edu:
-                  display_name: LEAP Education Notebook (Testing Prototype)
-                  slug: "leap_edu"
-                  kubespawner_override:
-                    image: "quay.io/jbusecke/leap-edu-image:fa442ab4851c"
-          kubespawner_override: &medium_kubespawner_override
-            cpu_limit: null
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-16
+                  mem_guarantee: 7.222G
+                  cpu_guarantee: 0.1
+                  mem_limit: 8G
+                  cpu_limit: 1
+              mem_16: &medium_mem_16
+                display_name: ~16 GB, ~2.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 14.444G
+                  cpu_guarantee: 0.2
+                  mem_limit: 16G
+                  cpu_limit: 2
+              mem_32: &medium_mem_32
+                display_name: ~32 GB, ~4.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 28.887G
+                  cpu_guarantee: 0.4
+                  mem_limit: 32G
+                  cpu_limit: 4
+              mem_64:
+                display_name: ~64 GB, ~8.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 57.775G
+                  cpu_guarantee: 0.8
+                  mem_limit: 64G
+                  cpu_limit: 8
+              mem_128:
+                display_name: ~128 GB, ~16.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 115.549G
+                  cpu_guarantee: 1.6
+                  mem_limit: 128G
+                  cpu_limit: 16
+          image:
+            display_name: Image
+            dynamic_image_building:
+              enabled: true
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              pangeo:
+                display_name: Base Pangeo Notebook (2025.01.24)
+                default: true
+                slug: pangeo
+                kubespawner_override:
+                  image: pangeo/pangeo-notebook:2025.01.24
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
+                slug: tensorflow
+                kubespawner_override:
+                  image: pangeo/ml-notebook:2025.01.24
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook (2025.01.24)
+                slug: pytorch
+                kubespawner_override:
+                  image: pangeo/pytorch-notebook:2025.01.24
+              leap-pangeo-edu:
+                display_name: LEAP Education Notebook (Testing Prototype)
+                slug: leap_edu
+                kubespawner_override:
+                  image: quay.io/jbusecke/leap-edu-image:fa442ab4851c
+        kubespawner_override: &medium_kubespawner_override
+          cpu_limit:
+          mem_limit:
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
 
         # NOTE: This is the second medium profile list entry, with less node
         #       share options for a different subset of users via the basehub
         #       specific allowed_groups configuration.
         #
-        - display_name: "CPU only"
-          description: *profile_list_description
-          slug: medium-base
-          allowed_groups:
-            - leap-stc:leap-pangeo-base-access
-          profile_options:
-            requests:
+      - display_name: CPU only
+        description: *profile_list_description
+        slug: medium-base
+        allowed_groups:
+        - leap-stc:leap-pangeo-base-access
+        profile_options:
+          requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
               #
               #       This specific setup is not a standard node sharing setup,
               #       don't copy it!
               #
-              display_name: Node share
-              choices:
-                mem_8: *medium_mem_8
-                mem_16: *medium_mem_16
-                mem_32: *medium_mem_32
-            image: *profile_list_profile_options_image
-          kubespawner_override: *medium_kubespawner_override
+            display_name: Node share
+            choices:
+              mem_8: *medium_mem_8
+              mem_16: *medium_mem_16
+              mem_32: *medium_mem_32
+          image: *profile_list_profile_options_image
+        kubespawner_override: *medium_kubespawner_override
 
-        - display_name: GPU
-          slug: gpu
-          description: NVIDIA Tesla T4, 24GB RAM, 8 CPUs
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - leap-stc:leap-pangeo-full-access
-            - leap-stc:data-and-compute
-          profile_options:
-            image:
-              display_name: Image
-              unlisted_choice: *profile_list_unlisted_choice
-              choices:
-                tensorflow:
-                  display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
-                  slug: "tensorflow"
-                  kubespawner_override:
-                    image: "pangeo/ml-notebook:2025.01.24"
-                pytorch:
-                  display_name: Pangeo PyTorch ML Notebook (2025.01.24)
-                  slug: "pytorch"
-                  kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2025.01.24"
-          kubespawner_override:
-            environment:
-              NVIDIA_DRIVER_CAPABILITIES: compute,utility
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-8
-              cloud.google.com/gke-accelerator: nvidia-tesla-t4
-            mem_limit: 30G
-            mem_guarantee: 24G
-            extra_resource_limits:
-              nvidia.com/gpu: "1"
+      - display_name: GPU
+        slug: gpu
+        description: NVIDIA Tesla T4, 24GB RAM, 8 CPUs
+        allowed_groups:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - leap-stc:leap-pangeo-full-access
+        - leap-stc:data-and-compute
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice: *profile_list_unlisted_choice
+            choices:
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
+                slug: tensorflow
+                kubespawner_override:
+                  image: pangeo/ml-notebook:2025.01.24
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook (2025.01.24)
+                slug: pytorch
+                kubespawner_override:
+                  image: pangeo/pytorch-notebook:2025.01.24
+        kubespawner_override:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-8
+            cloud.google.com/gke-accelerator: nvidia-tesla-t4
+          mem_limit: 30G
+          mem_guarantee: 24G
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
   binderhub-service:
     enabled: true
     config:
@@ -374,10 +401,15 @@ basehub:
         image_prefix: us-central1-docker.pkg.dev/leap-pangeo/imagebuilding-registry/
     buildPodsRegistryCredentials:
       server: https://us-central1-docker.pkg.dev
-      username: "_json_key"
+      username: _json_key
   jupyterhub-home-nfs:
     enabled: true
     prometheusExporter:
       enabled: true
     gke:
       enabled: true
+  jupyterhub-groups-exporter:
+    enabled: true
+    config:
+      groupsExporter:
+        update_exporter_interval: 3600

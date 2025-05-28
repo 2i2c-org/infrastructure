@@ -6,37 +6,13 @@ basehub:
     eks:
       volumeId: vol-0f45c2be7f71f07f8
     quotaEnforcer:
-      hardQuota: "10" # in GB
-      path: "/export/prod"
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 20M
-        limits:
-          cpu: 0.04
-          memory: 30M
-    nfsServer:
-      resources:
-        requests:
-          cpu: 0.2
-          memory: 2G
-        limits:
-          cpu: 0.4
-          memory: 6G
-    prometheusExporter:
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 15M
-        limits:
-          cpu: 0.04
-          memory: 20M
+      hardQuota: '10' # in GB
   jupyterhub:
     ingress:
       hosts: [smithsonian.2i2c.cloud]
       tls:
-        - hosts: [smithsonian.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [smithsonian.2i2c.cloud]
+        secretName: https-auto-tls
     hub:
       config:
         GitHubOAuthenticator:

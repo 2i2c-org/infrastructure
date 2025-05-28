@@ -4,12 +4,12 @@ nfs:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
     baseShareName: /
 dask-gateway:
   enabled: true
@@ -38,7 +38,7 @@ jupyterhub:
         funded_by:
           name: Reflective
           url: https://reflective.org/
-        learn_more: |
+        learn_more: |2
 
           Are you a researcher looking to gain access to the Reflective Cloud?
           Please fill in this
@@ -53,14 +53,43 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
-      Authenticator:
-        admin_users:
-          - alistairduffey
       GitHubOAuthenticator:
+        populate_teams_in_auth_state: true
         allowed_organizations:
-          - ReflectiveCloud
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - ReflectiveCloud
         scope:
-          - read:org
+        - read:org
+      Authenticator:
+        enable_auth_state: true
+        manage_groups: true
+        admin_users:
+        - alistairduffey
+    services:
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+        - jupyterhub-groups-exporter
+        scopes:
+        - users
+        - groups
+    extraConfig:
+      custom-auth-state-groups-key: |
+        async def custom_auth_state_groups_key(auth_state):
+          groups_list = []
+          if auth_state is None:
+            print("Auth state is None")
+            return groups_list
+          else:
+            for team in auth_state["teams"]:
+              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
+                continue
+              else:
+                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+            return groups_list
+        if c.GitHubOAuthenticator:
+          c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
   scheduling:
     userScheduler:
       enabled: true
@@ -69,112 +98,117 @@ jupyterhub:
       blockWithIptables: false
     defaultUrl: /lab
     profileList:
-      - display_name: Choose your environment and resources
-        default: true
-        profile_options:
-          image:
-            display_name: Environment
-            unlisted_choice:
-              enabled: True
-              display_name: "Custom image"
-              display_name_in_choices: "Bring your own image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+    - display_name: Choose your environment and resources
+      default: true
+      profile_options:
+        image:
+          display_name: Environment
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            display_name_in_choices: Bring your own image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            01-scipy:
+              display_name: Jupyter SciPy Notebook
+              description: Scientific Python image
+              slug: scipy
               kubespawner_override:
-                image: "{value}"
-            choices:
-              01-scipy:
-                display_name: Jupyter SciPy Notebook
-                description: "Scientific Python image"
-                slug: scipy
-                kubespawner_override:
-                  image: quay.io/jupyter/scipy-notebook:2025-01-06
-              02-pangeo:
-                display_name: Pangeo Notebook Image
-                description: "Python image with scientific, dask and geospatial tools"
-                kubespawner_override:
-                  image: pangeo/pangeo-notebook:2025.01.24
-              03-rocker:
-                display_name: Rocker Geospatial with RStudio
-                description: R environment with many geospatial libraries pre-installed
-                kubespawner_override:
-                  image: rocker/binder:4.4
-                  image_pull_policy: Always
+                image: quay.io/jupyter/scipy-notebook:2025-01-06
+            02-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2025.01.24
+            03-rocker:
+              display_name: Rocker Geospatial with RStudio
+              description: R environment with many geospatial libraries pre-installed
+              kubespawner_override:
+                image: rocker/binder:4.4
+                image_pull_policy: Always
                   # Launch RStudio after the user logs in
-                  default_url: /rstudio
+                default_url: /rstudio
                   # Ensures container working dir is homedir
                   # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
-          resource_allocation:
-            display_name: Resource Allocation
-            choices:
-              mem_1_9:
-                display_name: 1.9 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 1991244775
-                  mem_limit: 1991244775
-                  cpu_guarantee: 0.2328125
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-                default: true
-              mem_3_7:
-                display_name: 3.7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 3982489550
-                  mem_limit: 3982489550
-                  cpu_guarantee: 0.465625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_7_4:
-                display_name: 7.4 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 7964979101
-                  mem_limit: 7964979101
-                  cpu_guarantee: 0.93125
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_14_8:
-                display_name: 14.8 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 15929958203
-                  mem_limit: 15929958203
-                  cpu_guarantee: 1.8625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_7:
-                display_name: 29.7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 31859916406
-                  mem_limit: 31859916406
-                  cpu_guarantee: 3.725
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_60_6:
-                display_name: 60.6 GB RAM, upto 15.6 CPUs
-                kubespawner_override:
-                  mem_guarantee: 65094448840
-                  mem_limit: 65094448840
-                  cpu_guarantee: 7.8475
-                  cpu_limit: 15.695
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.4xlarge
-              mem_121_2:
-                display_name: 121.2 GB RAM, upto 15.6 CPUs
-                kubespawner_override:
-                  mem_guarantee: 130188897681
-                  mem_limit: 130188897681
-                  cpu_guarantee: 15.695
-                  cpu_limit: 15.695
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.4xlarge
+                working_dir: /home/rstudio
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_1_9:
+              display_name: 1.9 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 1991244775
+                mem_limit: 1991244775
+                cpu_guarantee: 0.2328125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+              default: true
+            mem_3_7:
+              display_name: 3.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 3982489550
+                mem_limit: 3982489550
+                cpu_guarantee: 0.465625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_7_4:
+              display_name: 7.4 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 7964979101
+                mem_limit: 7964979101
+                cpu_guarantee: 0.93125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_14_8:
+              display_name: 14.8 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 15929958203
+                mem_limit: 15929958203
+                cpu_guarantee: 1.8625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_7:
+              display_name: 29.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 31859916406
+                mem_limit: 31859916406
+                cpu_guarantee: 3.725
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_60_6:
+              display_name: 60.6 GB RAM, upto 15.6 CPUs
+              kubespawner_override:
+                mem_guarantee: 65094448840
+                mem_limit: 65094448840
+                cpu_guarantee: 7.8475
+                cpu_limit: 15.695
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_121_2:
+              display_name: 121.2 GB RAM, upto 15.6 CPUs
+              kubespawner_override:
+                mem_guarantee: 130188897681
+                mem_limit: 130188897681
+                cpu_guarantee: 15.695
+                cpu_limit: 15.695
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
 jupyterhub-home-nfs:
   enabled: true
   eks:
     enabled: true
   prometheusExporter:
     enabled: true
+jupyterhub-groups-exporter:
+  enabled: true
+  config:
+    groupsExporter:
+      update_exporter_interval: 3600

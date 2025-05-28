@@ -6,8 +6,8 @@ basehub:
     ingress:
       hosts: [openscapes.2i2c.cloud]
       tls:
-        - hosts: [openscapes.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [openscapes.2i2c.cloud]
+        secretName: https-auto-tls
     singleuser:
       nodeSelector:
         2i2c/hub-name: prod
@@ -17,9 +17,34 @@ basehub:
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: "https://openscapes.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: https://openscapes.2i2c.cloud/hub/oauth_callback
         CILogonOAuthenticator:
-          oauth_callback_url: "https://openscapes.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: https://openscapes.2i2c.cloud/hub/oauth_callback
+      services:
+        jupyterhub-groups-exporter: {}
+      loadRoles:
+        jupyterhub-groups-exporter:
+          services:
+          - jupyterhub-groups-exporter
+          scopes:
+          - users
+          - groups
+      extraConfig:
+        custom-auth-state-groups-key: |
+          async def custom_auth_state_groups_key(auth_state):
+            groups_list = []
+            if auth_state is None:
+              print("Auth state is None")
+              return groups_list
+            else:
+              for team in auth_state["teams"]:
+                if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
+                  continue
+                else:
+                  groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+              return groups_list
+          if c.GitHubOAuthenticator:
+            c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
 
   dask-gateway:
     gateway:
@@ -34,33 +59,14 @@ basehub:
               2i2c/hub-name: prod
   jupyterhub-home-nfs:
     quotaEnforcer:
-      hardQuota: "100" # in GB
-      path: "/export/prod"
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 20M
-        limits:
-          cpu: 0.04
-          memory: 30M
-    nfsServer:
-      resources:
-        requests:
-          cpu: 0.2
-          memory: 2G
-        limits:
-          cpu: 0.4
-          memory: 6G
-    prometheusExporter:
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 15M
-        limits:
-          cpu: 0.04
-          memory: 20M
+      hardQuota: '100' # in GB
     eks:
       volumeId: vol-0cddd71981a7ff6ba
   nfs:
     pv:
       serverIP: 10.100.91.5
+  jupyterhub-groups-exporter:
+    enabled: true
+    config:
+      groupsExporter:
+        update_exporter_interval: 3600

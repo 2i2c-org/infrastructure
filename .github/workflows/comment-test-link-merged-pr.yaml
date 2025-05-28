@@ -3,13 +3,13 @@ name: Comment GitHub Actions link on a merged PR
 on:
   push:
     branches:
-      - main
+    - main
     paths:
-      - deployer/**
-      - requirements.txt
-      - helm-charts/**
-      - config/clusters/**
-      - .github/actions/setup-deploy/**
+    - deployer/**
+    - requirements.txt
+    - helm-charts/**
+    - config/clusters/**
+    - .github/actions/setup-deploy/**
 
 jobs:
   comment-actions-links:
@@ -20,16 +20,16 @@ jobs:
       actions: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
-      - run: pip install requests
-      - run: python extra-scripts/comment-test-link-merged-pr.py
-        env:
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-          GITHUB_REPO: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: "main"
-          EVENT: "push"
+    - uses: actions/checkout@v4
+    - run: pip install requests
+    - run: python extra-scripts/comment-test-link-merged-pr.py
+      env:
+        COMMIT_MSG: ${{ github.event.head_commit.message }}
+        GITHUB_REPO: ${{ github.repository }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: main
+        EVENT: push
           # WORKFLOW_NAME *MUST* match what is set in the name field in the
           # deploy-hubs.yaml workflow file
           # https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml
-          WORKFLOW_NAME: "Deploy and test hubs"
+        WORKFLOW_NAME: Deploy and test hubs

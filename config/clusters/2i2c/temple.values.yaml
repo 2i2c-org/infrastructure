@@ -1,15 +1,15 @@
 jupyterhub:
   ingress:
     hosts:
-      - temple.2i2c.cloud
+    - temple.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - temple.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - temple.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -46,43 +46,19 @@ jupyterhub:
           https://fim.temple.edu/idp/shibboleth:
             default: true
             username_derivation:
-              username_claim: "eppn"
+              username_claim: eppn
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - jmsmith1@temple.edu
+        - jmsmith1@temple.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-temple
   quotaEnforcer:
-    hardQuota: "20" # in GB
-    path: "/export/temple"
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 20M
-      limits:
-        cpu: 0.04
-        memory: 30M
-  nfsServer:
-    resources:
-      requests:
-        cpu: 0.2
-        memory: 2G
-      limits:
-        cpu: 0.4
-        memory: 6G
-  prometheusExporter:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 15M
-      limits:
-        cpu: 0.04
-        memory: 20M
+    hardQuota: '20' # in GB
 nfs:
   pv:
     serverIP: 10.3.243.151

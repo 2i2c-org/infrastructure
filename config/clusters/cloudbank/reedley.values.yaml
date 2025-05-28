@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [reedley.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [reedley.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [reedley.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -39,18 +39,18 @@ jupyterhub:
           https://idp.scccd.edu/idp/shibboleth:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - reedleycollege.edu
-              - scccd.net
-              - my.scccd.edu
+            - reedleycollege.edu
+            - scccd.net
+            - my.scccd.edu
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
       Authenticator:
         admin_users:
-          - simon.sultana@reedleycollege.edu
-          - ss063@reedleycollege.edu
-          - ericvd@berkeley.edu
-          - k_usovich@berkeley.edu
-          - sean.smorris@berkeley.edu
+        - simon.sultana@reedleycollege.edu
+        - ss063@reedleycollege.edu
+        - ericvd@berkeley.edu
+        - k_usovich@berkeley.edu
+        - sean.smorris@berkeley.edu

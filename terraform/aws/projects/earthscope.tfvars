@@ -22,7 +22,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 1536 # 1.5T
+    size        = 1843 # 1.8TiB (rounded from 1843.2)
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
@@ -42,6 +42,10 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "prod" },
   },
+  "scratch-binder" : {
+    "delete_after" : 1,
+    "tags" : { "2i2c:hub-name" : "binder" },
+  },
 }
 
 hub_cloud_permissions = {
@@ -50,5 +54,8 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch"],
+  },
+  "binder" : {
+    bucket_admin_access : ["scratch-binder"],
   },
 }

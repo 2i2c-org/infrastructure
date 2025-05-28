@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [authoring.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [authoring.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [authoring.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   prePuller:
     # hook prePuller shouldn't be enabled when configuring images in any other
     # way than singleuser.image
@@ -14,12 +14,12 @@ jupyterhub:
       guarantee: 512M
       limit: 1G
     image:
-      name: public.ecr.aws/s7x4g6w9/cal-icor/base-user-image
-      tag: a4e1b2e1c4f9
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 88d0254c55f0
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     homepage:
       templateVars:
         org:
@@ -42,13 +42,13 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://authoring.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - ucb-ds
+        - ucb-ds
         scope:
-          - read:org
+        - read:org
       Authenticator:
         admin_users:
-          - sean-morris
-          - ericvd-ucb
+        - sean-morris
+        - ericvd-ucb
     extraFiles:
       configurator-schema-default:
         data:
@@ -57,23 +57,21 @@ jupyterhub:
               type: string
               title: Default User Interface
               enum:
-                - "/tree"
-                - "/lab"
-                - "/retro"
-              default: "/lab"
+              - /tree
+              - /lab
+              - /retro
+              default: /lab
               enumMetadata:
                 interfaces:
-                  - value: "/tree"
-                    title: Classic Notebook
-                    description:
-                      The original single-document interface for creating
-                      Jupyter Notebooks.
-                  - value: "/lab"
-                    title: JupyterLab
-                    description: A Powerful next generation notebook interface
-                  - value: "/retro"
-                    title: RetroLab
-                    description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.
+                - value: /tree
+                  title: Classic Notebook
+                  description: The original single-document interface for creating Jupyter Notebooks.
+                - value: /lab
+                  title: JupyterLab
+                  description: A Powerful next generation notebook interface
+                - value: /retro
+                  title: RetroLab
+                  description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.
   cull:
     # Cull after 30min of inactivity
     every: 300

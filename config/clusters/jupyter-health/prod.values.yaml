@@ -10,37 +10,13 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-02741e24417a9c2c2
   quotaEnforcer:
-    hardQuota: "10" # in GB
-    path: "/export/prod"
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 20M
-      limits:
-        cpu: 0.04
-        memory: 30M
-  nfsServer:
-    resources:
-      requests:
-        cpu: 0.2
-        memory: 2G
-      limits:
-        cpu: 0.4
-        memory: 6G
-  prometheusExporter:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 15M
-      limits:
-        cpu: 0.04
-        memory: 20M
+    hardQuota: '10' # in GB
 jupyterhub:
   ingress:
     hosts: [jupyter-health.2i2c.cloud]
     tls:
-      - hosts: [jupyter-health.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [jupyter-health.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       GenericOAuthenticator:
@@ -51,7 +27,7 @@ jupyterhub:
         userdata_url: https://berkeley-jhe-demo.jupyterhealth.org/api/v1/users/profile
         login_service: JupyterHealth Exchange (Demo)
         allowed_groups:
-          - "20014" # JupyterHub users (~all users are here)
+        - '20014'   # JupyterHub users (~all users are here)
   singleuser:
     extraEnv:
       JHE_URL: https://berkeley-jhe-demo.jupyterhealth.org

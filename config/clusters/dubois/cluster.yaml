@@ -20,13 +20,13 @@ gcp:
       billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: ephemeral
-    display_name: Dubois ephemeral
-    domain: dubois.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - ephemeral.values.yaml
+- name: ephemeral
+  display_name: Dubois ephemeral
+  domain: dubois.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ephemeral.values.yaml

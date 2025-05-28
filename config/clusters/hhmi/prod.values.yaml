@@ -5,16 +5,16 @@ basehub:
   jupyterhub:
     ingress:
       hosts:
-        - hhmi.2i2c.cloud
+      - hhmi.2i2c.cloud
       tls:
-        - secretName: https-auto-tls
-          hosts:
-            - hhmi.2i2c.cloud
+      - secretName: https-auto-tls
+        hosts:
+        - hhmi.2i2c.cloud
     custom:
       homepage:
         templateVars:
           org:
-            name: "HHMI"
+            name: HHMI
     hub:
       config:
         CILogonOAuthenticator:
@@ -25,27 +25,3 @@ basehub:
       volumeId: projects/hhmi-398911/zones/us-west2-b/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
       hardQuota: 2 # in GB
-      path: "/export/prod"
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 20M
-        limits:
-          cpu: 0.04
-          memory: 30M
-    nfsServer:
-      resources:
-        requests:
-          cpu: 0.2
-          memory: 2G
-        limits:
-          cpu: 0.4
-          memory: 6G
-    prometheusExporter:
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 15M
-        limits:
-          cpu: 0.04
-          memory: 20M

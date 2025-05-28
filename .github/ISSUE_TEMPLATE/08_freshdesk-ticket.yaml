@@ -1,79 +1,79 @@
-name: "🎫 Freshdesk ticket tracker"
+name: 🎫 Freshdesk ticket tracker
 description: Track work on GitHub requested via a Freshdesk ticket
-title: "[Support] {{ Ticket name }}"
-labels: ["support"]
+title: '[Support] {{ Ticket name }}'
+labels: [support]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        This template is designed to help the support triagers provide information about a Freshdesk ticket that could not be solved in [the first 30min support window](https://compass.2i2c.org/projects/managed-hubs/timeboxed-initial-ticket-evaluation/#support-timeboxed-evaluation).
+- type: markdown
+  attributes:
+    value: |
+      This template is designed to help the support triagers provide information about a Freshdesk ticket that could not be solved in [the first 30min support window](https://compass.2i2c.org/projects/managed-hubs/timeboxed-initial-ticket-evaluation/#support-timeboxed-evaluation).
 
-        This information will then be used to plan, prioritize and assign capacity in order to resolve this ticket.
+      This information will then be used to plan, prioritize and assign capacity in order to resolve this ticket.
 
-        # Ticket Information
+      # Ticket Information
 
-  - type: input
-    id: ticket_id
-    attributes:
-      label: The Freshdesk ticket link
-      description: |
-        Copy-paste the Freshdesk link here
-    validations:
-      required: true
+- type: input
+  id: ticket_id
+  attributes:
+    label: The Freshdesk ticket link
+    description: |
+      Copy-paste the Freshdesk link here
+  validations:
+    required: true
 
-  - type: dropdown
-    id: ticket_type
-    attributes:
-      label: Ticket request type
-      description: |
-        The general topic of request in the Freshdesk ticket. Note that the Event type has its own issue template! Select "Other" if none of the first options qualify.
-      options:
-        - Feature Request
-        - Something is not working
-        - Technical questions
-        - Other
-    validations:
-      required: true
+- type: dropdown
+  id: ticket_type
+  attributes:
+    label: Ticket request type
+    description: |
+      The general topic of request in the Freshdesk ticket. Note that the Event type has its own issue template! Select "Other" if none of the first options qualify.
+    options:
+    - Feature Request
+    - Something is not working
+    - Technical questions
+    - Other
+  validations:
+    required: true
 
-  - type: dropdown
-    id: ticket_impact
-    attributes:
-      label: Ticket impact
-      description: |
-        The impact the support triager believes the ticket has. Choose the most appropriate one from the drowpdown below. This information will be used to prioritize the ticket.
+- type: dropdown
+  id: ticket_impact
+  attributes:
+    label: Ticket impact
+    description: |
+      The impact the support triager believes the ticket has. Choose the most appropriate one from the drowpdown below. This information will be used to prioritize the ticket.
 
-        Checkout the [non-incident support process](https://compass.2i2c.org/projects/managed-hubs/support/#non-incident-response-process) for more information about choosing the impact level.
-      options:
-        - 🟩 Low
-        - 🟨 Medium
-        - 🟧 High
-        - 🟥 Critical
-    validations:
-      required: true
+      Checkout the [non-incident support process](https://compass.2i2c.org/projects/managed-hubs/support/#non-incident-response-process) for more information about choosing the impact level.
+    options:
+    - 🟩 Low
+    - 🟨 Medium
+    - 🟧 High
+    - 🟥 Critical
+  validations:
+    required: true
 
-  - type: textarea
-    id: description
-    attributes:
-      label: Short ticket description
-      description: |
-        Short description of what the ticket is about and what kind of work needs to be done to fix it.
-    validations:
-      required: true
+- type: textarea
+  id: description
+  attributes:
+    label: Short ticket description
+    description: |
+      Short description of what the ticket is about and what kind of work needs to be done to fix it.
+  validations:
+    required: true
 
-  - type: markdown
-    attributes:
-      value: |
-        # Initial 30m Investigation Context
+- type: markdown
+  attributes:
+    value: |
+      # Initial 30m Investigation Context
 
-        Use the following section to provide the results of the initial 30min investigation.
+      Use the following section to provide the results of the initial 30min investigation.
 
-        If no initial investigation was performed because it was clear that the the ticket cannot be resolved by the support triager in the first 30min window, then leave the next section blank.
+      If no initial investigation was performed because it was clear that the the ticket cannot be resolved by the support triager in the first 30min window, then leave the next section blank.
 
-  - type: textarea
-    id: results
-    attributes:
-      label: (Optional) Investigation results
-      description: |
-        Paste any useful information that was discovered during the initial ticket triaging.
-    validations:
-      required: false
+- type: textarea
+  id: results
+  attributes:
+    label: (Optional) Investigation results
+    description: |
+      Paste any useful information that was discovered during the initial ticket triaging.
+  validations:
+    required: false

@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [csulb.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [csulb.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [csulb.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -13,7 +13,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -39,26 +39,26 @@ jupyterhub:
           https://its-shib.its.csulb.edu/idp/shibboleth:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - csulb.edu
-              - student.csulb.edu
+            - csulb.edu
+            - student.csulb.edu
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - shabnam.sodagari@csulb.edu
-          - Kagba.Suaray@csulb.edu
-          - Tianni.Zhou@csulb.edu
-          - Antonio.Martinez@csulb.edu
-          - Babette.Benken@csulb.edu
-          - Florence.Newberger@csulb.edu
-          - Seungjoon.Lee@csulb.edu
-          - tyler.nakamura@csulb.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - shabnam.sodagari@csulb.edu
+        - Kagba.Suaray@csulb.edu
+        - Tianni.Zhou@csulb.edu
+        - Antonio.Martinez@csulb.edu
+        - Babette.Benken@csulb.edu
+        - Florence.Newberger@csulb.edu
+        - Seungjoon.Lee@csulb.edu
+        - tyler.nakamura@csulb.edu
   cull:
     # Cull after 30min of inactivity
     every: 300

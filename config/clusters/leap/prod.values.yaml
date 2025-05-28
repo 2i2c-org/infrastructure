@@ -19,8 +19,8 @@ basehub:
     ingress:
       hosts: [leap.2i2c.cloud]
       tls:
-        - hosts: [leap.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [leap.2i2c.cloud]
+        secretName: https-auto-tls
     proxy:
       chp:
         resources:
@@ -51,27 +51,3 @@ basehub:
       volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
       hardQuota: 250 # in GB
-      path: "/export/prod"
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 20M
-        limits:
-          cpu: 0.04
-          memory: 30M
-    nfsServer:
-      resources:
-        requests:
-          cpu: 0.2
-          memory: 2G
-        limits:
-          cpu: 0.4
-          memory: 6G
-    prometheusExporter:
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 15M
-        limits:
-          cpu: 0.04
-          memory: 20M

@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [r-staging.datatools.utoronto.ca]
     tls:
-      - hosts: [r-staging.datatools.utoronto.ca]
-        secretName: https-auto-tls
+    - hosts: [r-staging.datatools.utoronto.ca]
+      secretName: https-auto-tls
   hub:
     db:
       pvc:

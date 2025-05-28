@@ -17,8 +17,8 @@ jupyterhub:
   ingress:
     hosts: [hub.disasters.2i2c.cloud]
     tls:
-      - hosts: [hub.disasters.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [hub.disasters.2i2c.cloud]
+      secretName: https-auto-tls
 
 dask-gateway:
   gateway:
@@ -31,7 +31,7 @@ dask-gateway:
         extraPodConfig:
           node_selector:
             2i2c/hub-name: prod
-      imagePullSecrets: [{ name: image-pull-secret }]
+      imagePullSecrets: [name: image-pull-secret]
 
 binderhub-service:
   dockerApi:
@@ -48,28 +48,4 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-08f3d124fcfd518b0
   quotaEnforcer:
-    hardQuota: "200" # in GB
-    path: "/export/prod"
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 20M
-      limits:
-        cpu: 0.04
-        memory: 30M
-  nfsServer:
-    resources:
-      requests:
-        cpu: 0.2
-        memory: 2G
-      limits:
-        cpu: 0.4
-        memory: 6G
-  prometheusExporter:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 15M
-      limits:
-        cpu: 0.04
-        memory: 20M
+    hardQuota: '200' # in GB

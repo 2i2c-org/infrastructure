@@ -2,17 +2,39 @@ jupyterhub:
   ingress:
     hosts: [high.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [high.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [high.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
+    defaultUrl: /lab
     memory:
-      guarantee: 384M
+      guarantee: 1.5G
       limit: 2G
+    cpu:
+      guarantee: 1
+      limit: 2
+    initContainers:
+    - name: volume-mount-ownership-fix
+      image: busybox:1.36.1
+      command:
+      - sh
+      - -c
+      - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
+    storage:
+      extraVolumeMounts: []
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
+      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
+      # is merged
+      gitRepoBranch: unify-logins-2
       templateVars:
         org:
           name: High Schools Experimental
@@ -27,28 +49,12 @@ jupyterhub:
         funded_by:
           name: CloudBank
           url: http://cloudbank.org/
+    jupyterhubConfigurator:
+      enabled: false
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        oauth_callback_url: https://high.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            username_derivation:
-              username_claim: "email"
-            allowed_domains:
-              - basisindependent.com
-              - basisinds.com
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: "email"
-            allowed_domains:
-              - scusd.net
-              - ausdk12.org
-              - peddie.org
+        authenticator_class: dummy
       Authenticator:
-        admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
+        admin_users: []
+        enable_auth_state: false

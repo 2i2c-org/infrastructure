@@ -7,7 +7,7 @@ regional_cluster = false
 
 enable_filestore_backups = true
 filestores = {
-  "filestore" : { "capacity_gb" : 1536 }
+  "filestore" : { "capacity_gb" : 1792 }
 }
 
 # Cloud costs for this project are not passed through by 2i2c

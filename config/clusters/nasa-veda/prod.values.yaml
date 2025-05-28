@@ -9,12 +9,12 @@ basehub:
     ingress:
       hosts: [hub.openveda.cloud]
       tls:
-        - hosts: [hub.openveda.cloud]
-          secretName: https-auto-tls
+      - hosts: [hub.openveda.cloud]
+        secretName: https-auto-tls
     custom:
       homepage:
-        gitRepoBranch: "master"
-        gitRepoUrl: "https://github.com/NASA-IMPACT/veda-hub-homepage"
+        gitRepoBranch: master
+        gitRepoUrl: https://github.com/NASA-IMPACT/veda-hub-homepage
     singleuser:
       nodeSelector:
         2i2c/hub-name: prod
@@ -50,28 +50,4 @@ basehub:
     eks:
       volumeId: vol-0063ecd342e052ef5
     quotaEnforcer:
-      hardQuota: "200" # in GB
-      path: "/export/prod"
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 20M
-        limits:
-          cpu: 0.04
-          memory: 30M
-    nfsServer:
-      resources:
-        requests:
-          cpu: 0.2
-          memory: 2G
-        limits:
-          cpu: 0.4
-          memory: 6G
-    prometheusExporter:
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 15M
-        limits:
-          cpu: 0.04
-          memory: 20M
+      hardQuota: '200' # in GB

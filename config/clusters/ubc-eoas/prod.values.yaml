@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [ubc-eoas.2i2c.cloud]
     tls:
-      - hosts: [ubc-eoas.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [ubc-eoas.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       CILogonOAuthenticator:
@@ -11,3 +11,9 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-084a510095d5b3b9b
+nfs:
+  pv:
+    serverIP: 10.100.98.222

@@ -5,8 +5,8 @@ jupyterhub:
   ingress:
     hosts: [hub.binder.ghg.2i2c.cloud]
     tls:
-      - hosts: [hub.binder.ghg.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [hub.binder.ghg.2i2c.cloud]
+      secretName: https-auto-tls
   cull:
     every: 300
     # No pods over 12h long
@@ -39,52 +39,52 @@ jupyterhub:
     initContainers: []
     profileList: []
     cmd:
-      - python3
-      - "-c"
-      - |
-        import os
-        import sys
+    - python3
+    - -c
+    - |
+      import os
+      import sys
 
-        try:
-            import jupyterlab
-            import jupyterlab.labapp
-            major = int(jupyterlab.__version__.split(".", 1)[0])
-        except Exception as e:
-            print("Failed to import jupyterlab: {e}", file=sys.stderr)
-            have_lab = False
-        else:
-            have_lab = major >= 3
+      try:
+          import jupyterlab
+          import jupyterlab.labapp
+          major = int(jupyterlab.__version__.split(".", 1)[0])
+      except Exception as e:
+          print("Failed to import jupyterlab: {e}", file=sys.stderr)
+          have_lab = False
+      else:
+          have_lab = major >= 3
 
-        if have_lab:
-            # technically, we could accept another jupyter-server-based frontend
-            print("Launching jupyter-lab", file=sys.stderr)
-            exe = "jupyter-lab"
-        else:
-            print("jupyter-lab not found, launching jupyter-notebook", file=sys.stderr)
-            exe = "jupyter-notebook"
+      if have_lab:
+          # technically, we could accept another jupyter-server-based frontend
+          print("Launching jupyter-lab", file=sys.stderr)
+          exe = "jupyter-lab"
+      else:
+          print("jupyter-lab not found, launching jupyter-notebook", file=sys.stderr)
+          exe = "jupyter-notebook"
 
-        # launch the notebook server
-        os.execvp(exe, sys.argv)
+      # launch the notebook server
+      os.execvp(exe, sys.argv)
   hub:
     config:
       BinderSpawnerMixin:
         auth_enabled: false
       JupyterHub:
-        authenticator_class: "null"
+        authenticator_class: 'null'
     redirectToServer: false
     loadRoles:
       binder:
         services:
-          - binder
+        - binder
         scopes:
-          - servers
-          - admin:users
+        - servers
+        - admin:users
       user:
         scopes:
-          - self
+        - self
           # Admin users will by default have access:services, so this is only
           # observed to be required for non-admin users.
-          - access:services!service=binder
+        - access:services!service=binder
 binderhub-service:
   enabled: true
   networkPolicy:
@@ -96,8 +96,8 @@ binderhub-service:
     enabled: true
     hosts: [binder.ghg.2i2c.cloud]
     tls:
-      - hosts: [binder.ghg.2i2c.cloud]
-        secretName: binder-https-auto-tls
+    - hosts: [binder.ghg.2i2c.cloud]
+      secretName: binder-https-auto-tls
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
@@ -118,19 +118,19 @@ binderhub-service:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
   extraEnv:
-    - name: JUPYTERHUB_API_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: hub
-          key: hub.services.binder.apiToken
-    - name: JUPYTERHUB_CLIENT_ID
-      value: "service-binder"
-    - name: JUPYTERHUB_API_URL
-      value: "https://hub.binder.ghg.2i2c.cloud/hub/api"
+  - name: JUPYTERHUB_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: hub
+        key: hub.services.binder.apiToken
+  - name: JUPYTERHUB_CLIENT_ID
+    value: service-binder
+  - name: JUPYTERHUB_API_URL
+    value: https://hub.binder.ghg.2i2c.cloud/hub/api
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
-    - name: JUPYTERHUB_BASE_URL
-      value: "https://hub.binder.ghg.2i2c.cloud/"
+  - name: JUPYTERHUB_BASE_URL
+    value: https://hub.binder.ghg.2i2c.cloud/
   buildPodsRegistryCredentials:
     server: *url
     username: *username

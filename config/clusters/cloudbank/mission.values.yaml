@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [mission.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [mission.cloudbank.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [mission.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -39,21 +39,21 @@ jupyterhub:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - missioncollege.edu
-              - mywvm.wvm.edu
+            - missioncollege.edu
+            - mywvm.wvm.edu
           http://google.com/accounts/o8/id:
             default: false
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - missioncollege.edu
-              - mywvm.wvm.edu
+            - missioncollege.edu
+            - mywvm.wvm.edu
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - Max.Sklar@missioncollege.edu
-          - Kristen.Purdum@missioncollege.edu
-          - Michael.Cao@missioncollege.edu
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - Max.Sklar@missioncollege.edu
+        - Kristen.Purdum@missioncollege.edu
+        - Michael.Cao@missioncollege.edu

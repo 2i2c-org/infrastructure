@@ -28,15 +28,29 @@ def validate_jsonnet_version():
 
 
 @contextmanager
-def render_jsonnet(jsonnet_file: Path, jsonnet_search_paths: list[Path]):
+def render_jsonnet(jsonnet_file: Path, cluster_name: str, hub_name: str | None):
     """
     Provide path to rendered json file for given jsonnet file
+
+    cluster_name and hub_name are passed as jsonnet extVars.
+    Be careful in adding more, as that may cause right to replicate issues.
     """
 
-    command = ["jsonnet", "--jpath", str(jsonnet_file.parent)]
-    for jsp in jsonnet_search_paths:
-        command += ["--jpath", jsp]
-    command += [jsonnet_file]
+    # WARNING: Be careful in adding more ext-str arguments, as that may cause
+    # right to replicate issues.
+    command = [
+        "jsonnet",
+        "--jpath",
+        str(jsonnet_file.parent),
+        "--ext-str",
+        f"2I2C_VARS.CLUSTER_NAME={cluster_name}",
+    ]
+    if hub_name is not None:
+        command += ["--ext-str", f"2I2C_VARS.HUB_NAME={hub_name}"]
+    # Make the jsonnet file passed be an absolute path, but do not *resolve*
+    # it - so symlinks are resolved by jsonnet rather than us. This is important
+    # for daskhub compatibility.
+    command += [jsonnet_file.absolute()]
 
     print(f"Rendering jsonnet file {jsonnet_file} with the command: ", end="")
     # We print it without the temporary filename so deployers can reuse the command

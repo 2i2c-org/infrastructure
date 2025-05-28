@@ -8,8 +8,8 @@ jupyterhub:
   ingress:
     hosts: [reflective.2i2c.cloud]
     tls:
-      - hosts: [reflective.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [reflective.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       GitHubOAuthenticator:
@@ -35,30 +35,3 @@ dask-gateway:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0ac31776780207b43
-  quotaEnforcer:
-    path: "/export/prod"
-    # Default per-user quota is 10GB. Uncomment below line to change this.
-    # hardQuota: "10" # in GB
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 20M
-      limits:
-        cpu: 0.04
-        memory: 30M
-  nfsServer:
-    resources:
-      requests:
-        cpu: 0.2
-        memory: 2G
-      limits:
-        cpu: 0.4
-        memory: 6G
-  prometheusExporter:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 15M
-      limits:
-        cpu: 0.04
-        memory: 20M

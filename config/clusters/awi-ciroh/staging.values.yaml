@@ -9,14 +9,13 @@ basehub:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-staging
     quotaEnforcer:
-      hardQuota: "10" # in GB
-      path: "/export/staging"
+      hardQuota: '10' # in GB
   jupyterhub:
     ingress:
       hosts: [staging.ciroh.awi.2i2c.cloud]
       tls:
-        - hosts: [staging.ciroh.awi.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [staging.ciroh.awi.2i2c.cloud]
+        secretName: https-auto-tls
     singleuser:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
@@ -39,98 +38,98 @@ basehub:
         #        -[ ] Make this cluster have a node sharing setup like in the
         #             basehub/daskhub template.
         #
-        - display_name: "Small"
-          description: 5GB RAM, 2 CPUs
-          default: true
-          profile_options: &profile_options
-            image:
-              display_name: Image
+      - display_name: Small
+        description: 5GB RAM, 2 CPUs
+        default: true
+        profile_options: &profile_options
+          image:
+            display_name: Image
               # Requested in https://2i2c.freshdesk.com/a/tickets/1387
-              choices:
-                old:
-                  display_name: Original Pangeo Notebook base image 2023.09.11
-                  slug: "old"
-                  kubespawner_override:
-                    image: "quay.io/2i2c/awi-ciroh-image:d9f753c83a6b"
-                new:
-                  display_name: New Pangeo Notebook base image 2024.04.08
-                  default: true
-                  slug: "new"
-                  kubespawner_override:
-                    image: "quay.io/2i2c/awi-ciroh-image:43afa7f902b4"
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+            choices:
+              old:
+                display_name: Original Pangeo Notebook base image 2023.09.11
+                slug: old
                 kubespawner_override:
-                  image: "{value}"
-          kubespawner_override:
-            mem_limit: 7G
-            mem_guarantee: 5G
-            cpu_limit: 2
-            cpu_guarantee: 0.938
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-16
-        - display_name: Medium
-          description: 11GB RAM, 4 CPUs
-          profile_options: *profile_options
-          kubespawner_override:
-            mem_limit: 15G
-            mem_guarantee: 11G
-            cpu_limit: 4
-            cpu_guarantee: 1.875
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-16
-        - display_name: Large
-          description: 24GB RAM, 8 CPUs
-          profile_options: *profile_options
-          kubespawner_override:
-            mem_limit: 30G
-            mem_guarantee: 24G
-            cpu_limit: 8
-            cpu_guarantee: 3.75
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-16
-        - display_name: Huge
-          description: 52GB RAM, 16 CPUs
-          profile_options: *profile_options
-          kubespawner_override:
-            mem_limit: 60G
-            mem_guarantee: 52G
-            cpu_limit: 16
-            cpu_guarantee: 7.5
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-16
-        - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-          description: "Start a container on a dedicated node with a GPU"
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - AlabamaWaterInstitute:2i2c_portal_users_gpu
-          profile_options:
-            image:
-              display_name: Image
-              choices:
-                tensorflow:
-                  display_name: Pangeo Tensorflow ML Notebook
-                  slug: "tensorflow"
-                  kubespawner_override:
-                    image: "pangeo/ml-notebook:2024.05.07"
-                pytorch:
-                  display_name: Pangeo PyTorch ML Notebook
-                  default: true
-                  slug: "pytorch"
-                  kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2024.05.07"
-          kubespawner_override:
-            environment:
-              NVIDIA_DRIVER_CAPABILITIES: compute,utility
-            mem_limit: null
-            mem_guarantee: 14G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-highmem-8
-            extra_resource_limits:
-              nvidia.com/gpu: "1"
+                  image: quay.io/2i2c/awi-ciroh-image:d9f753c83a6b
+              new:
+                display_name: New Pangeo Notebook base image 2024.04.08
+                default: true
+                slug: new
+                kubespawner_override:
+                  image: quay.io/2i2c/awi-ciroh-image:44784e65e9a1
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+        kubespawner_override:
+          mem_limit: 7G
+          mem_guarantee: 5G
+          cpu_limit: 2
+          cpu_guarantee: 0.938
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+      - display_name: Medium
+        description: 11GB RAM, 4 CPUs
+        profile_options: *profile_options
+        kubespawner_override:
+          mem_limit: 15G
+          mem_guarantee: 11G
+          cpu_limit: 4
+          cpu_guarantee: 1.875
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+      - display_name: Large
+        description: 24GB RAM, 8 CPUs
+        profile_options: *profile_options
+        kubespawner_override:
+          mem_limit: 30G
+          mem_guarantee: 24G
+          cpu_limit: 8
+          cpu_guarantee: 3.75
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+      - display_name: Huge
+        description: 52GB RAM, 16 CPUs
+        profile_options: *profile_options
+        kubespawner_override:
+          mem_limit: 60G
+          mem_guarantee: 52G
+          cpu_limit: 16
+          cpu_guarantee: 7.5
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: Start a container on a dedicated node with a GPU
+        allowed_groups:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - AlabamaWaterInstitute:2i2c_portal_users_gpu
+        profile_options:
+          image:
+            display_name: Image
+            choices:
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook
+                slug: tensorflow
+                kubespawner_override:
+                  image: pangeo/ml-notebook:2024.05.07
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                default: true
+                slug: pytorch
+                kubespawner_override:
+                  image: pangeo/pytorch-notebook:2024.05.07
+        kubespawner_override:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          mem_limit:
+          mem_guarantee: 14G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-highmem-8
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
       extraEnv:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch-staging/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://awi-ciroh-scratch-staging/$(JUPYTERHUB_USER)
@@ -142,4 +141,4 @@ basehub:
           # make it easier to test custom images
           image_pull_policy: Always
         GitHubOAuthenticator:
-          oauth_callback_url: "https://staging.ciroh.awi.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: https://staging.ciroh.awi.2i2c.cloud/hub/oauth_callback

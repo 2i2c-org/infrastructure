@@ -7,12 +7,12 @@ basehub:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
       baseShareName: /
   dask-gateway:
     enabled: true
@@ -22,31 +22,35 @@ basehub:
       enabled: true
     prometheusExporter:
       enabled: true
+  jupyterhub-groups-exporter:
+    enabled: true
+    config:
+      groupsExporter:
+        update_exporter_interval: 3600
   jupyterhub:
     custom:
       daskhubSetup:
         enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
+        add_staff_user_ids_of_type: github
       jupyterhubConfigurator:
         enabled: false
-
       singleuserAdmin:
         extraVolumeMounts:
-          - name: home
-            mountPath: /home/jovyan/allusers
-          - name: home
-            mountPath: /home/rstudio/allusers
+        - name: home
+          mountPath: /home/jovyan/allusers
+        - name: home
+          mountPath: /home/rstudio/allusers
           # mounts below are copied from basehub's values that we override by
           # specifying extraVolumeMounts (lists get overridden when helm values
           # are combined)
-          - name: home
-            mountPath: /home/jovyan/shared-readwrite
-            subPath: _shared
-          - name: home
-            mountPath: /home/rstudio/shared-readwrite
-            subPath: _shared
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
+        - name: home
+          mountPath: /home/rstudio/shared-readwrite
+          subPath: _shared
       homepage:
         templateVars:
           org:
@@ -71,17 +75,44 @@ basehub:
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - smithsonian
-            - sidatasciencelab
-            - Smithsonian-SDCH
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - smithsonian
+          - sidatasciencelab
+          - Smithsonian-SDCH
           scope:
-            - read:org
+          - read:org
         Authenticator:
           enable_auth_state: true
+          manage_groups: true
           admin_users:
-            - MikeTrizna # Mike Trizna
-            - rdikow # Rebecca Dikow
-            - aewhite100 # Alex White
+          - MikeTrizna   # Mike Trizna
+          - rdikow   # Rebecca Dikow
+          - aewhite100   # Alex White
+      services:
+        jupyterhub-groups-exporter: {}
+      loadRoles:
+        jupyterhub-groups-exporter:
+          services:
+          - jupyterhub-groups-exporter
+          scopes:
+          - users
+          - groups
+      extraConfig:
+        custom-auth-state-groups-key: |
+          async def custom_auth_state_groups_key(auth_state):
+            groups_list = []
+            if auth_state is None:
+              print("Auth state is None")
+              return groups_list
+            else:
+              for team in auth_state["teams"]:
+                if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
+                  continue
+                else:
+                  groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+              return groups_list
+          if c.GitHubOAuthenticator:
+            c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
 
     scheduling:
       userScheduler:
@@ -91,134 +122,134 @@ basehub:
       cloudMetadata:
         blockWithIptables: false
       profileList:
-        - display_name: "Pangeo Notebook"
-          slug: pangeo
-          description: Pangeo based notebook with a Python environment
-          default: true
-          kubespawner_override:
-            image: quay.io/pangeo/pangeo-notebook:2024.03.22
-          profile_options: &profile_options
-            resource_allocation: &profile_options_resource_allocation
-              display_name: Resource Allocation
-              choices:
-                mem_1_9:
-                  display_name: 1.9 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 1991244775
-                    mem_limit: 1991244775
-                    cpu_guarantee: 0.2328125
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                  default: true
-                mem_3_7:
-                  display_name: 3.7 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 3982489550
-                    mem_limit: 3982489550
-                    cpu_guarantee: 0.465625
-                    cpu_limit: 3.725
-                    node_selector:
+      - display_name: Pangeo Notebook
+        slug: pangeo
+        description: Pangeo based notebook with a Python environment
+        default: true
+        kubespawner_override:
+          image: quay.io/pangeo/pangeo-notebook:2024.03.22
+        profile_options: &profile_options
+          resource_allocation: &profile_options_resource_allocation
+            display_name: Resource Allocation
+            choices:
+              mem_1_9:
+                display_name: 1.9 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
+                  cpu_guarantee: 0.2328125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                  node_selector:
                       # Bump to a larger node for https://2i2c.freshdesk.com/a/tickets/1929
-                      node.kubernetes.io/instance-type: r5.4xlarge
-                mem_7_4:
-                  display_name: 7.4 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 7964979101
-                    mem_limit: 7964979101
-                    cpu_guarantee: 0.93125
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_14_8:
-                  display_name: 14.8 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 15929958203
-                    mem_limit: 15929958203
-                    cpu_guarantee: 1.8625
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_29_7:
-                  display_name: 29.7 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 31859916406
-                    mem_limit: 31859916406
-                    cpu_guarantee: 3.725
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_60_6:
-                  display_name: 60.6 GB RAM, upto 15.6 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 65094448840
-                    mem_limit: 65094448840
-                    cpu_guarantee: 7.8475
-                    cpu_limit: 15.695
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
-                mem_121_2:
-                  display_name: 121.2 GB RAM, upto 15.6 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 130188897681
-                    mem_limit: 130188897681
-                    cpu_guarantee: 15.695
-                    cpu_limit: 15.695
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
-        - display_name: "Rocker Geospatial with RStudio"
-          slug: rocker
-          description: R environment with many geospatial libraries pre-installed
-          kubespawner_override:
-            image: rocker/binder:4.3
-            image_pull_policy: Always
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 15929958203
+                  mem_limit: 15929958203
+                  cpu_guarantee: 1.8625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_7:
+                display_name: 29.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 31859916406
+                  mem_limit: 31859916406
+                  cpu_guarantee: 3.725
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 65094448840
+                  mem_limit: 65094448840
+                  cpu_guarantee: 7.8475
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_121_2:
+                display_name: 121.2 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 130188897681
+                  mem_limit: 130188897681
+                  cpu_guarantee: 15.695
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: Rocker Geospatial with RStudio
+        slug: rocker
+        description: R environment with many geospatial libraries pre-installed
+        kubespawner_override:
+          image: rocker/binder:4.3
+          image_pull_policy: Always
             # Launch RStudio after the user logs in
-            default_url: /rstudio
+          default_url: /rstudio
             # Ensures container working dir is homedir
             # https://github.com/2i2c-org/infrastructure/issues/2559
-            working_dir: /home/rstudio
-          profile_options: *profile_options
-        - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-          slug: gpu
-          description: "Start a container on a dedicated node with a GPU"
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - Smithsonian-SDCH:gpu-users
-          profile_options:
-            image:
-              display_name: Image
-              choices:
-                tensorflow:
-                  display_name: Pangeo Tensorflow ML Notebook
-                  slug: tensorflow
-                  kubespawner_override:
-                    image: "pangeo/ml-notebook:2024.03.22"
-                pytorch:
-                  display_name: Pangeo PyTorch ML Notebook
-                  slug: pytorch
-                  kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2024.03.22"
-          kubespawner_override:
-            mem_limit: null
-            environment:
-              NVIDIA_DRIVER_CAPABILITIES: compute,utility
-            mem_guarantee: 14G
-            node_selector:
-              node.kubernetes.io/instance-type: g4dn.xlarge
-            extra_resource_limits:
-              nvidia.com/gpu: "1"
-        - display_name: "Bring your own image"
-          description: Specify your own docker image (must have python and jupyterhub installed in it)
-          slug: custom
-          profile_options:
-            image:
-              display_name: Image
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+          working_dir: /home/rstudio
+        profile_options: *profile_options
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        slug: gpu
+        description: Start a container on a dedicated node with a GPU
+        allowed_groups:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - Smithsonian-SDCH:gpu-users
+        profile_options:
+          image:
+            display_name: Image
+            choices:
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook
+                slug: tensorflow
                 kubespawner_override:
-                  image: "{value}"
-              choices: {}
-            resource_allocation: *profile_options_resource_allocation
+                  image: pangeo/ml-notebook:2024.03.22
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                slug: pytorch
+                kubespawner_override:
+                  image: pangeo/pytorch-notebook:2024.03.22
+        kubespawner_override:
+          mem_limit:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          mem_guarantee: 14G
+          node_selector:
+            node.kubernetes.io/instance-type: g4dn.xlarge
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
+      - display_name: Bring your own image
+        description: Specify your own docker image (must have python and jupyterhub installed in it)
+        slug: custom
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices: {}
+          resource_allocation: *profile_options_resource_allocation

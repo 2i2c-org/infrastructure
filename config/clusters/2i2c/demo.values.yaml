@@ -1,15 +1,15 @@
 jupyterhub:
   ingress:
     hosts:
-      - demo.2i2c.cloud
+    - demo.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - demo.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - demo.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -36,43 +36,16 @@ jupyterhub:
           https://enterprise.login.utexas.edu/idp/shibboleth:
             default: true
             username_derivation:
-              username_claim: "eppn"
+              username_claim: eppn
             allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - rmbl.org
+            - rmbl.org
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-demo
-  quotaEnforcer:
-    # The default quota is 10GB per user. Uncomment below variable to edit this.
-    # hardQuota: "10" # in GB
-    path: "/export/demo"
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 20M
-      limits:
-        cpu: 0.04
-        memory: 30M
-  nfsServer:
-    resources:
-      requests:
-        cpu: 0.2
-        memory: 2G
-      limits:
-        cpu: 0.4
-        memory: 6G
-  prometheusExporter:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 15M
-      limits:
-        cpu: 0.04
-        memory: 20M
 nfs:
   pv:
     serverIP: 10.3.243.135

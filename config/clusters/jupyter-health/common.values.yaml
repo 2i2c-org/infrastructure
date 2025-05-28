@@ -6,12 +6,12 @@ nfs:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
     baseShareName: /
 
 jupyterhub-home-nfs:
@@ -21,11 +21,17 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
+jupyterhub-groups-exporter:
+  enabled: true
+  config:
+    groupsExporter:
+      update_exporter_interval: 3600
+
 jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     jupyterhubConfigurator:
       enabled: false
     homepage:
@@ -35,13 +41,13 @@ jupyterhub:
           logo_url: https://jupyterhealth.org/images/JupyterHealthLogoTransparentNoSpace.png
           url: https://github.com/jupyterhealth/
         designed_by:
-          name: "Jupyter Health"
+          name: Jupyter Health
           url: https://github.com/jupyterhealth/
         operated_by:
-          name: "2i2c"
+          name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: "Jupyter Health"
+          name: Jupyter Health
           url: https://github.com/jupyterhealth/
   hub:
     # FIXME: Experiment to use oauthenticator 17.1, should be transitioned away
@@ -69,21 +75,30 @@ jupyterhub:
         username_claim: email
         login_service: JupyterHealth Exchange
         scope:
-          - openid
+        - openid
         enable_auth_state: true
         admin_users:
-          - benjaminrk@gmail.com
-          - yuvipanda@2i2c.org
-          - rylo@berkeley.edu
+        - benjaminrk@gmail.com
+        - yuvipanda@2i2c.org
+        - rylo@berkeley.edu
         manage_groups: true
-        auth_state_groups_key: "organizations"
+        auth_state_groups_key: organizations
         allowed_groups:
-          - "20013" # BIDS (~all users are here)
-          - "20014" # 2i2c
-          - "20008" # Yaffe Lab
-          - "20005" # Moslehi Lab
-          - "20006" # Olgin Lab
-          - "20026" # BIDS - URAP
+        - '20013'   # BIDS (~all users are here)
+        - '20014'   # 2i2c
+        - '20008'   # Yaffe Lab
+        - '20005'   # Moslehi Lab
+        - '20006'   # Olgin Lab
+        - '20026'   # BIDS - URAP
+    services:
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+        - jupyterhub-groups-exporter
+        scopes:
+        - users
+        - groups
     extraConfig:
       # get organization membership for managed groups:
       managed_organizations.py: |
@@ -135,7 +150,7 @@ jupyterhub:
       JHE_CLIENT_ID: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
     image:
       name: quay.io/jupyterhealth/singleuser-premvp
-      tag: "latest"
+      tag: latest
     memory:
       limit: 1991244775
       guarantee: 1991244775

@@ -1,61 +1,61 @@
 jupyterhub:
   ingress:
     hosts:
-      - staging.ucmerced.2i2c.cloud
+    - staging.ucmerced.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - staging.ucmerced.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - staging.ucmerced.2i2c.cloud
   singleuser:
     profileList:
-      - display_name: Python
-        description: Start a Python server with JupyterLab and scientific Python stack
-        default: true
-        kubespawner_override:
+    - display_name: Python
+      description: Start a Python server with JupyterLab and scientific Python stack
+      default: true
+      kubespawner_override:
           # From https://github.com/SaiUCM/example-inherit-from-community-image
-          image: quay.io/cirt_ucm/jupyter-scipy-xarray:ee81c09169f2
+        image: quay.io/cirt_ucm/jupyter-scipy-xarray:ee81c09169f2
           # Launch into JupyterLab after the user logs in
-          default_url: /lab
-        profile_options: &profile_options
-          requests: &profile_options_resource_allocation
-            display_name: Resource Allocation
-            choices:
-              mem_1:
-                display_name: 1 GB RAM
-                kubespawner_override:
-                  mem_guarantee: 995622387
-                  mem_limit: 995622387
-                default: true
-              mem_2:
-                display_name: 2 GB RAM
-                kubespawner_override:
-                  mem_guarantee: 1991244775
-                  mem_limit: 1991244775
-      - display_name: R
-        description: Start a R server with tidyverse & Geospatial tools
-        kubespawner_override:
+        default_url: /lab
+      profile_options: &profile_options
+        requests: &profile_options_resource_allocation
+          display_name: Resource Allocation
+          choices:
+            mem_1:
+              display_name: 1 GB RAM
+              kubespawner_override:
+                mem_guarantee: 995622387
+                mem_limit: 995622387
+              default: true
+            mem_2:
+              display_name: 2 GB RAM
+              kubespawner_override:
+                mem_guarantee: 1991244775
+                mem_limit: 1991244775
+    - display_name: R
+      description: Start a R server with tidyverse & Geospatial tools
+      kubespawner_override:
           # From https://github.com/2i2c-org/rocker-with-nbgitpuller
-          image: quay.io/2i2c/rocker-with-nbgitpuller:3edc87d73e3d
-          default_url: /lab
+        image: quay.io/2i2c/rocker-with-nbgitpuller:3edc87d73e3d
+        default_url: /lab
           # Ensures container working dir is homedir
           # https://github.com/2i2c-org/infrastructure/issues/2559
-          working_dir: /home/rstudio
-        profile_options: *profile_options
-      - display_name: Custom Image
-        description: Bring your own image to test
-        kubespawner_override: {}
-        profile_options:
-          requests: *profile_options_resource_allocation
-          image:
-            display_name: Docker Image
-            unlisted_choice:
-              enabled: True
-              display_name: "Custom image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-              kubespawner_override:
-                image: "{value}"
-            choices: {}
+        working_dir: /home/rstudio
+      profile_options: *profile_options
+    - display_name: Custom Image
+      description: Bring your own image to test
+      kubespawner_override: {}
+      profile_options:
+        requests: *profile_options_resource_allocation
+        image:
+          display_name: Docker Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices: {}
   hub:
     config:
       CILogonOAuthenticator:
@@ -63,10 +63,6 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-ucmerced-staging
-  quotaEnforcer:
-    # Default quota is 10GB per user. Uncomment below variable to edit this.
-    # hardQuota: "10" # in GB
-    path: "/export/ucmerced-staging"
 nfs:
   pv:
     serverIP: 10.3.242.252

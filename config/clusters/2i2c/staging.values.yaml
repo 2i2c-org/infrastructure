@@ -17,15 +17,15 @@ staticWebsite:
 jupyterhub:
   ingress:
     hosts:
-      - staging.2i2c.cloud
+    - staging.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - staging.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - staging.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
@@ -59,19 +59,15 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: "https://staging.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://staging.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-staging
-  quotaEnforcer:
-    # Default quota is 10 GB per user. Uncomment below variable to edit this.
-    # hardQuota: "10" # in GB
-    path: "/export/staging"
 nfs:
   pv:
     serverIP: 10.3.249.107

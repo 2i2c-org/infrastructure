@@ -3,8 +3,8 @@ nfs:
   pv:
     enabled: true
     mountOptions:
-      - soft
-      - noatime
+    - soft
+    - noatime
     baseShareName: /
 jupyterhub-home-nfs:
   enabled: true

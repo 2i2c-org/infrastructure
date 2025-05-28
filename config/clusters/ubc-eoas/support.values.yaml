@@ -16,22 +16,22 @@ grafana:
       allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.ubc-eoas.2i2c.cloud
+    - grafana.ubc-eoas.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.ubc-eoas.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.ubc-eoas.2i2c.cloud
 
 prometheus:
   server:
     ingress:
       enabled: true
       hosts:
-        - prometheus.ubc-eoas.2i2c.cloud
+      - prometheus.ubc-eoas.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.ubc-eoas.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.ubc-eoas.2i2c.cloud
 
 aws-ce-grafana-backend:
   enabled: true

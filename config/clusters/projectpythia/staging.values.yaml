@@ -6,15 +6,14 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-039e18f9304722450
   quotaEnforcer:
-    hardQuota: "0.5" # in GB
-    path: "/export/staging"
+    hardQuota: '0.5' # in GB
 
 jupyterhub:
   ingress:
     hosts: [staging.projectpythia.2i2c.cloud]
     tls:
-      - hosts: [staging.projectpythia.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.projectpythia.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
@@ -24,7 +23,3 @@ jupyterhub:
     config:
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.projectpythia.2i2c.cloud/hub/oauth_callback
-        allowed_organizations:
-          - ProjectPythia
-        scope:
-          - read:org

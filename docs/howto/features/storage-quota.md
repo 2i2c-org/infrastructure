@@ -153,7 +153,6 @@ This can be done by updating `basehub.jupyterhub-home-nfs.quotaEnforcer` in the 
 jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "10" # in GB
-    path: "/export/staging"
 ```
 
 The `path` field is the path to the parent directory of the user's home directory in the NFS server. The `hardQuota` field is the maximum allowed size of the user's home directory in GB.
@@ -165,44 +164,6 @@ deployer deploy $CLUSTER_NAME $HUB_NAME
 ```
 
 Once this is deployed, the hub will automatically enforce the storage quota for each user. If a user's home directory exceeds the quota, the user's pod may not be able to start successfully.
-
-## Enforcing resource constraints on `jupyterhub-home-nfs` components
-
-We also need to apply some resource constraints to the `jupyterhub-home-nfs` containers to ensure they do not take up more than required and cost our communities money.
-
-```{attention}
-We are only applying these requests and limits to production hubs presently.
-Staging hubs should be left unset.
-This is why we are adding these values here, instead of in the basehub values.
-```
-
-```yaml
-jupyterhub-home-nfs:
-  quotaEnforcer:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 20M
-      limits:
-        cpu: 0.04
-        memory: 30M
-  nfsServer:
-    resources:
-      requests:
-        cpu: 0.2
-        memory: 2G
-      limits:
-        cpu: 0.4
-        memory: 6G
-  prometheusExporter:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 15M
-      limits:
-        cpu: 0.04
-        memory: 20M
-```
 
 ## Increasing the size of the disk used by the NFS server
 

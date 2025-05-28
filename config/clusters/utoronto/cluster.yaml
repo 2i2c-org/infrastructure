@@ -5,57 +5,57 @@ kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "University of Toronto (staging)"
+- name: staging
+  display_name: University of Toronto (staging)
     # to access this staging hub, visit this link directly
     # https://staging.utoronto.2i2c.cloud/hub/home
-    domain: staging.utoronto.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - default-common.values.yaml
-      - default-staging.values.yaml
-      - enc-default-staging.secret.values.yaml
-  - name: prod
-    display_name: "University of Toronto (prod)"
-    domain: jupyter.utoronto.ca
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - default-common.values.yaml
-      - default-prod.values.yaml
-      - enc-default-prod.secret.values.yaml
-  - name: r-staging
-    display_name: "University of Toronto (r-staging)"
+  domain: staging.utoronto.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - default-common.values.yaml
+  - default-staging.values.yaml
+  - enc-default-staging.secret.values.yaml
+- name: prod
+  display_name: University of Toronto (prod)
+  domain: jupyter.utoronto.ca
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - default-common.values.yaml
+  - default-prod.values.yaml
+  - enc-default-prod.secret.values.yaml
+- name: r-staging
+  display_name: University of Toronto (r-staging)
     # to access this staging hub, visit this link directly
     # https://r-staging.datatools.utoronto.ca/hub/home
-    domain: r-staging.datatools.utoronto.ca
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - r-common.values.yaml
-      - r-staging.values.yaml
-      - enc-r-staging.secret.values.yaml
-  - name: r-prod
-    display_name: "University of Toronto (R)"
-    domain: r.datatools.utoronto.ca
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - r-common.values.yaml
-      - r-prod.values.yaml
-      - enc-r-prod.secret.values.yaml
-  - name: highmem
-    display_name: "University of Toronto (highmem)"
+  domain: r-staging.datatools.utoronto.ca
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - r-common.values.yaml
+  - r-staging.values.yaml
+  - enc-r-staging.secret.values.yaml
+- name: r-prod
+  display_name: University of Toronto (R)
+  domain: r.datatools.utoronto.ca
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - r-common.values.yaml
+  - r-prod.values.yaml
+  - enc-r-prod.secret.values.yaml
+- name: highmem
+  display_name: University of Toronto (highmem)
     # to access this hub, visit this link directly
     # https://highmem.utoronto.2i2c.cloud/hub/home
-    domain: highmem.datatools.utoronto.ca
-    helm_chart: "basehub"
-    helm_chart_values_files:
-      - common.values.yaml
-      - default-common.values.yaml
-      - highmem.values.yaml
-      - enc-highmem.secret.values.yaml
+  domain: highmem.datatools.utoronto.ca
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - default-common.values.yaml
+  - highmem.values.yaml
+  - enc-highmem.secret.values.yaml

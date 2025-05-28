@@ -2,16 +2,16 @@ jupyterhub:
   ingress:
     hosts: [must.af.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [must.af.catalystproject.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [must.af.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:
-          name: "MUST"
+          name: MUST
           url: https://www.must.ac.mw/
           logo_url: https://www.must.ac.mw/imgs/logo/must%20log%20black.png
   hub:
@@ -26,10 +26,23 @@ jupyterhub:
             username_derivation:
               username_claim: email
             allowed_domains:
-              - must.ac.mw
+            - must.ac.mw
       Authenticator:
         admin_users:
-          - "bkankuzi@must.ac.mw"
+        - bkankuzi@must.ac.mw
   singleuser:
     nodeSelector:
       2i2c/hub-name: must
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    # one user has 343G
+    hardQuota: '350' # in GB
+  eks:
+    volumeId: vol-0e86b4abbf3083190
+
+jupyterhub-groups-exporter:
+  enabled: false
+
+nfs:
+  pv:
+    serverIP: 10.100.179.246

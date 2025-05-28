@@ -11,43 +11,26 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0ead627e253d8383a
   quotaEnforcer:
-    hardQuota: "10" # in GB
-    path: "/export/sciencecore"
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 20M
-      limits:
-        cpu: 0.04
-        memory: 30M
-  nfsServer:
-    resources:
-      requests:
-        cpu: 0.2
-        memory: 2G
-      limits:
-        cpu: 0.4
-        memory: 6G
-  prometheusExporter:
-    resources:
-      requests:
-        cpu: 0.02
-        memory: 15M
-      limits:
-        cpu: 0.04
-        memory: 20M
+    hardQuota: '10' # in GB
+
+jupyterhub-groups-exporter:
+  enabled: true
+  config:
+    groupsExporter:
+      update_exporter_interval: 3600
+
 jupyterhub:
   ingress:
     hosts:
-      - sciencecore.opensci.2i2c.cloud
+    - sciencecore.opensci.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
-        hosts:
-          - sciencecore.opensci.2i2c.cloud
+    - secretName: https-auto-tls
+      hosts:
+      - sciencecore.opensci.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     jupyterhubConfigurator:
       enabled: false
     homepage:
@@ -63,8 +46,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: ""
-          url: ""
+          name: ''
+          url: ''
   singleuser:
     nodeSelector:
       2i2c/hub-name: sciencecore
@@ -73,108 +56,108 @@ jupyterhub:
       SCRATCH_BUCKET: s3://opensci-scratch-sciencecore/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://opensci-persistent-sciencecore/$(JUPYTERHUB_USER)
     profileList:
-      - display_name: Choose your environment and resources
-        slug: only-choice
-        profile_options:
-          image:
-            display_name: Image
-            dynamic_image_building:
-              enabled: True
-            unlisted_choice: &profile_list_unlisted_choice
-              enabled: True
-              display_name: "Custom image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-              display_name_in_choices: "Specify an existing docker image"
-              description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
-                image: "{value}"
-            choices:
-              pangeo:
-                display_name: Pangeo Notebook Image
-                description: "Python image with scientific, dask and geospatial tools"
-                kubespawner_override:
-                  image: pangeo/pangeo-notebook:2024.04.08
-              geospatial:
-                display_name: Rocker Geospatial
-                description: "R image with RStudio, the tidyverse & Geospatial tools"
-                default: true
-                slug: geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
+                image: pangeo/pangeo-notebook:2024.04.08
+            geospatial:
+              display_name: Rocker Geospatial
+              description: R image with RStudio, the tidyverse & Geospatial tools
+              default: true
+              slug: geospatial
+              kubespawner_override:
+                image: rocker/binder:4.3
+                image_pull_policy: Always
                   # Launch into RStudio after the user logs in
-                  default_url: /rstudio
+                default_url: /rstudio
                   # Ensures container working dir is homedir
                   # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
-              scipy:
-                display_name: Jupyter SciPy Notebook
-                slug: scipy
-                kubespawner_override:
-                  image: quay.io/jupyter/scipy-notebook:2024-04-15
-              school-r:
-                display_name: "TOPST SCHOOL Project - R"
-                description: "quay.io/repository/isciences/tops-school:latest"
-                slug: "school-r"
-                kubespawner_override:
-                  image: quay.io/isciences/tops-school:latest
+                working_dir: /home/rstudio
+            scipy:
+              display_name: Jupyter SciPy Notebook
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2024-04-15
+            school-r:
+              display_name: TOPST SCHOOL Project - R
+              description: quay.io/repository/isciences/tops-school:latest
+              slug: school-r
+              kubespawner_override:
+                image: quay.io/isciences/tops-school:latest
                   # Launch into RStudio after the user logs in
-                  default_url: /rstudio
-                  working_dir: /home/rstudio
-              school-py:
-                display_name: "TOPST SCHOOL Project - Python"
+                default_url: /rstudio
+                working_dir: /home/rstudio
+            school-py:
+              display_name: TOPST SCHOOL Project - Python
                 # Source repo: https://github.com/ciesin-geospatial/TOPSTSCHOOL-air-quality/
-                description: "quay.io/repository/isciences/tops-school-py:latest"
-                slug: "school-py"
-                kubespawner_override:
-                  image: quay.io/isciences/tops-school-py:latest
-              climaterisk:
-                display_name: NASA TOPS-T ScienceCore-ClimateRisk
-                description: "quay.io/2i2c/sciencecore-climaterisk-image"
-                slug: climaterisk
-                kubespawner_override:
-                  image: quay.io/2i2c/sciencecore-climaterisk-image:69d8d944f907
-          resources:
-            display_name: Resource Allocation
-            choices:
-              mem_3_7:
-                display_name: 3.7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 3982489550
-                  mem_limit: 3982489550
-                  cpu_guarantee: 0.465625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-                default: true
-              mem_7_4:
-                display_name: 7.4 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 7964979101
-                  mem_limit: 7964979101
-                  cpu_guarantee: 0.93125
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_14_8:
-                display_name: 14.8 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 15929958203
-                  mem_limit: 15929958203
-                  cpu_guarantee: 1.8625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_7:
-                display_name: 29.7 GB RAM, upto 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 31859916406
-                  mem_limit: 31859916406
-                  cpu_guarantee: 3.725
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
+              description: quay.io/repository/isciences/tops-school-py:latest
+              slug: school-py
+              kubespawner_override:
+                image: quay.io/isciences/tops-school-py:latest
+            climaterisk:
+              display_name: NASA TOPS-T ScienceCore-ClimateRisk
+              description: quay.io/2i2c/sciencecore-climaterisk-image
+              slug: climaterisk
+              kubespawner_override:
+                image: quay.io/2i2c/sciencecore-climaterisk-image:69d8d944f907
+        resources:
+          display_name: Resource Allocation
+          choices:
+            mem_3_7:
+              display_name: 3.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 3982489550
+                mem_limit: 3982489550
+                cpu_guarantee: 0.465625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+              default: true
+            mem_7_4:
+              display_name: 7.4 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 7964979101
+                mem_limit: 7964979101
+                cpu_guarantee: 0.93125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_14_8:
+              display_name: 14.8 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 15929958203
+                mem_limit: 15929958203
+                cpu_guarantee: 1.8625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_7:
+              display_name: 29.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 31859916406
+                mem_limit: 31859916406
+                cpu_guarantee: 3.725
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
 
   hub:
     allowNamedServers: true
@@ -183,14 +166,43 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://sciencecore.opensci.2i2c.cloud/hub/oauth_callback
+        populate_teams_in_auth_state: true
         allowed_organizations:
-          - 2i2c-demo-hub-access
-          - ScienceCore
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - 2i2c-demo-hub-access
+        - ScienceCore
         scope:
-          - read:org
+        - read:org
       Authenticator:
+        enable_auth_state: true
+        manage_groups: true
         admin_users:
-          - kyttmacmanus # Kytt MacManus, added as part of https://2i2c.freshdesk.com/a/tickets/1454
+        - kyttmacmanus   # Kytt MacManus, added as part of https://2i2c.freshdesk.com/a/tickets/1454
+    services:
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+        - jupyterhub-groups-exporter
+        scopes:
+        - users
+        - groups
+    extraConfig:
+      custom-github-oauthenticator: |
+        class CustomGitHubOAuthenticator(GitHubOAuthenticator):
+          async def authenticate(self, *args, **kwargs):
+              resp = await super().authenticate(*args, **kwargs)
+              if resp["auth_state"]["teams"] is None:
+                return resp
+              groups = []
+              for team in resp["auth_state"]["teams"]:
+                if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
+                  continue
+                else:
+                  groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
+              resp["groups"] = groups
+              return resp
+        c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
 
 binderhub-service:
   enabled: true

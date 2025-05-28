@@ -8,12 +8,12 @@ nfs:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
     serverIP: fs-0c29370cc50856b5d.efs.us-west-2.amazonaws.com
     baseShareName: /
 
@@ -24,23 +24,29 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
+jupyterhub-groups-exporter:
+  enabled: true
+  config:
+    groupsExporter:
+      update_exporter_interval: 3600
+
 jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     jupyterhubConfigurator:
       enabled: false
     homepage:
       templateVars:
         designed_by:
-          name: "2i2c"
+          name: 2i2c
           url: https://2i2c.org
         operated_by:
-          name: "2i2c"
+          name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: "NSF"
+          name: NSF
           url: https://doi.org/10.5281/zenodo.8184298
         org:
           url: https://projectpythia.org/
@@ -51,10 +57,45 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
+      GitHubOAuthenticator:
+        populate_teams_in_auth_state: true
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - ProjectPythia
+        scope:
+        - read:org
       Authenticator:
+        enable_auth_state: true
+        manage_groups: true
         admin_users:
-          - jmunroe
-          - ktyle
+        - jmunroe
+        - ktyle
+    services:
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+        - jupyterhub-groups-exporter
+        scopes:
+        - users
+        - groups
+    extraConfig:
+      custom-auth-state-groups-key: |
+        from oauthenticator.github import GitHubOAuthenticator
+        async def custom_auth_state_groups_key(auth_state):
+          groups_list = []
+          if auth_state is None:
+            print("Auth state is None")
+            return groups_list
+          else:
+            for team in auth_state["teams"]:
+              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
+                continue
+              else:
+                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+            return groups_list
+        if c.GitHubOAuthenticator:
+          c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
 
   scheduling:
     userScheduler:
@@ -63,106 +104,106 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     extraEnv:
-      GH_SCOPED_CREDS_CLIENT_ID: "Iv23liaEC5WLtjKehTtK"
-      GH_SCOPED_CREDS_APP_URL: "https://github.com/apps/2i2c-project-pythia-push-access"
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23liaEC5WLtjKehTtK
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-project-pythia-push-access
     profileList:
-      - display_name: Choose your environment and resources
-        slug: only-choice
-        profile_options:
-          image:
-            display_name: Image
-            unlisted_choice: &profile_list_unlisted_choice
-              enabled: True
-              display_name: "Custom image"
-              validation_regex: "^.+:.+$"
-              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-              display_name_in_choices: "Specify an existing docker image"
-              description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pangeo:
+              display_name: Pangeo Notebook Image
+              slug: pangeo
+              default: true
+              description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
-                image: "{value}"
-            choices:
-              pangeo:
-                display_name: Pangeo Notebook Image
-                slug: pangeo
-                default: true
-                description: "Python image with scientific, dask and geospatial tools"
-                kubespawner_override:
-                  image: pangeo/pangeo-notebook:2024.05.21
-              scipy:
-                display_name: Jupyter SciPy Notebook
-                slug: scipy
-                kubespawner_override:
-                  image: quay.io/jupyter/scipy-notebook:2024-04-15
-              tensorflow:
-                display_name: Pangeo Tensorflow ML Notebook
-                slug: tensorflow
-                kubespawner_override:
-                  image: pangeo/ml-notebook:2024.05.21
-              pytorch:
-                display_name: Pangeo PyTorch ML Notebook
-                slug: pytorch
-                kubespawner_override:
-                  image: pangeo/pytorch-notebook:2024.05.21
-          resources:
-            display_name: Resource Allocation
-            choices:
-              mem_1_9:
-                display_name: 1.9 GB RAM, up to 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 1991244775
-                  mem_limit: 1991244775
-                  cpu_guarantee: 0.2328125
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-                default: true
-              mem_3_7:
-                display_name: 3.7 GB RAM, up to 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 3982489550
-                  mem_limit: 3982489550
-                  cpu_guarantee: 0.465625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_7_4:
-                display_name: 7.4 GB RAM, up to 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 7964979101
-                  mem_limit: 7964979101
-                  cpu_guarantee: 0.93125
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_14_8:
-                display_name: 14.8 GB RAM, up to 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 15929958203
-                  mem_limit: 15929958203
-                  cpu_guarantee: 1.8625
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_7:
-                display_name: 29.7 GB RAM, up to 3.7 CPUs
-                kubespawner_override:
-                  mem_guarantee: 31859916406
-                  mem_limit: 31859916406
-                  cpu_guarantee: 3.725
-                  cpu_limit: 3.725
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              gpu:
-                display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-                kubespawner_override:
-                  environment:
-                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
-                  mem_limit: null
-                  mem_guarantee: 14G
-                  node_selector:
-                    node.kubernetes.io/instance-type: g4dn.xlarge
-                extra_resource_limits:
-                  nvidia.com/gpu: "1"
+                image: pangeo/pangeo-notebook:2024.05.21
+            scipy:
+              display_name: Jupyter SciPy Notebook
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2024-04-15
+            tensorflow:
+              display_name: Pangeo Tensorflow ML Notebook
+              slug: tensorflow
+              kubespawner_override:
+                image: pangeo/ml-notebook:2024.05.21
+            pytorch:
+              display_name: Pangeo PyTorch ML Notebook
+              slug: pytorch
+              kubespawner_override:
+                image: pangeo/pytorch-notebook:2024.05.21
+        resources:
+          display_name: Resource Allocation
+          choices:
+            mem_1_9:
+              display_name: 1.9 GB RAM, up to 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 1991244775
+                mem_limit: 1991244775
+                cpu_guarantee: 0.2328125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+              default: true
+            mem_3_7:
+              display_name: 3.7 GB RAM, up to 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 3982489550
+                mem_limit: 3982489550
+                cpu_guarantee: 0.465625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_7_4:
+              display_name: 7.4 GB RAM, up to 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 7964979101
+                mem_limit: 7964979101
+                cpu_guarantee: 0.93125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_14_8:
+              display_name: 14.8 GB RAM, up to 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 15929958203
+                mem_limit: 15929958203
+                cpu_guarantee: 1.8625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_7:
+              display_name: 29.7 GB RAM, up to 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 31859916406
+                mem_limit: 31859916406
+                cpu_guarantee: 3.725
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            gpu:
+              display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+              kubespawner_override:
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                mem_limit:
+                mem_guarantee: 14G
+                node_selector:
+                  node.kubernetes.io/instance-type: g4dn.xlarge
+              extra_resource_limits:
+                nvidia.com/gpu: '1'
 
 binderhub-service:
   enabled: true
@@ -173,5 +214,5 @@ binderhub-service:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/projectpythia-
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
-    server: "https://quay.io"
-    username: "imagebuilding-non-gcp-hubs+image_builder"
+    server: https://quay.io
+    username: imagebuilding-non-gcp-hubs+image_builder

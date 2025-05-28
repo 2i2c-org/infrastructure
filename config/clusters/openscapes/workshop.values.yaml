@@ -17,8 +17,8 @@ basehub:
     ingress:
       hosts: [workshop.openscapes.2i2c.cloud]
       tls:
-        - hosts: [workshop.openscapes.2i2c.cloud]
-          secretName: https-auto-tls
+      - hosts: [workshop.openscapes.2i2c.cloud]
+        secretName: https-auto-tls
     hub:
       allowNamedServers: true
       config:
@@ -26,23 +26,32 @@ basehub:
           authenticator_class: dummy
         Authenticator:
           enable_auth_state: false
+          manage_groups: false
           admin_users: []
     singleuser:
       initContainers:
-        - name: volume-mount-ownership-fix
-          image: busybox:1.36.1
-          command:
-            - sh
-            - -c
-            - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{escaped_username}"
+      - name: volume-mount-ownership-fix
+        image: busybox:1.36.1
+        command:
+        - sh
+        - -c
+        - id && chown 1000:1000 /home/jovyan /home/jovyan/shared-public && ls -lhd /home/jovyan
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: home
+          mountPath: /home/jovyan
+          subPath: '{escaped_username}'
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
       storage:
-        extraVolumeMounts: []
+        extraVolumeMounts:
+          # A shared folder readable & writeable by everyone
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
       defaultUrl: /lab
       nodeSelector:
         2i2c/hub-name: workshop
@@ -50,107 +59,107 @@ basehub:
         SCRATCH_BUCKET: s3://openscapeshub-scratch-workshop/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://openscapeshub-persistent-workshop/$(JUPYTERHUB_USER)
       profileList:
-        - display_name: Python
-          description: Python datascience environment
-          default: true
-          kubespawner_override:
-            image: openscapes/python:f7d3d14
-          profile_options: &profile_options
-            requests: &profile_options_resource_allocation
-              display_name: Resource Allocation
-              choices:
-                mem_1_9:
-                  display_name: 1.9 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 1991244775
-                    mem_limit: 1991244775
-                    cpu_guarantee: 0.2328125
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                  default: true
-                mem_3_7:
-                  display_name: 3.7 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 3982489550
-                    mem_limit: 3982489550
-                    cpu_guarantee: 0.465625
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_7_4:
-                  display_name: 7.4 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 7964979101
-                    mem_limit: 7964979101
-                    cpu_guarantee: 0.93125
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_14_8:
-                  display_name: 14.8 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 15929958203
-                    mem_limit: 15929958203
-                    cpu_guarantee: 1.8625
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_29_7:
-                  display_name: 29.7 GB RAM, upto 3.7 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 31859916406
-                    mem_limit: 31859916406
-                    cpu_guarantee: 3.725
-                    cpu_limit: 3.725
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
-                mem_60_6:
-                  display_name: 60.6 GB RAM, upto 15.6 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 65094448840
-                    mem_limit: 65094448840
-                    cpu_guarantee: 7.8475
-                    cpu_limit: 15.695
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
-                mem_121_2:
-                  display_name: 121.2 GB RAM, upto 15.6 CPUs
-                  kubespawner_override:
-                    mem_guarantee: 130188897681
-                    mem_limit: 130188897681
-                    cpu_guarantee: 15.695
-                    cpu_limit: 15.695
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
-        - display_name: R
-          description: R (with RStudio) + Python environment
-          kubespawner_override:
-            image: openscapes/rocker:a7596b5
+      - display_name: Python
+        description: Python datascience environment
+        default: true
+        kubespawner_override:
+          image: openscapes/python:f7d3d14
+        profile_options: &profile_options
+          requests: &profile_options_resource_allocation
+            display_name: Resource Allocation
+            choices:
+              mem_1_9:
+                display_name: 1.9 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
+                  cpu_guarantee: 0.2328125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 15929958203
+                  mem_limit: 15929958203
+                  cpu_guarantee: 1.8625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_7:
+                display_name: 29.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 31859916406
+                  mem_limit: 31859916406
+                  cpu_guarantee: 3.725
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 65094448840
+                  mem_limit: 65094448840
+                  cpu_guarantee: 7.8475
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_121_2:
+                display_name: 121.2 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 130188897681
+                  mem_limit: 130188897681
+                  cpu_guarantee: 15.695
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: R
+        description: R (with RStudio) + Python environment
+        kubespawner_override:
+          image: openscapes/rocker:a7596b5
             # Ensures container working dir is homedir
             # https://github.com/2i2c-org/infrastructure/issues/2559
-            working_dir: /home/rstudio
-          profile_options: *profile_options
-        - display_name: Matlab
-          description: Matlab environment
-          kubespawner_override:
-            image: openscapes/matlab:2023-11-28
-          profile_options: *profile_options
-        - display_name: "Bring your own image"
-          description: Specify your own docker image (must have python and jupyterhub installed in it)
-          slug: custom
-          profile_options:
-            image:
-              display_name: Image
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-                kubespawner_override:
-                  image: "{value}"
-              choices: {}
-            resource_allocation: *profile_options_resource_allocation
+          working_dir: /home/rstudio
+        profile_options: *profile_options
+      - display_name: Matlab
+        description: Matlab environment
+        kubespawner_override:
+          image: openscapes/matlab:2023-11-28
+        profile_options: *profile_options
+      - display_name: Bring your own image
+        description: Specify your own docker image (must have python and jupyterhub installed in it)
+        slug: custom
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices: {}
+          resource_allocation: *profile_options_resource_allocation
 
   dask-gateway:
     gateway:
@@ -165,31 +174,7 @@ basehub:
               2i2c/hub-name: workshop
   jupyterhub-home-nfs:
     quotaEnforcer:
-      hardQuota: "16" # in GB
-      path: "/export/workshop"
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 20M
-        limits:
-          cpu: 0.04
-          memory: 30M
-    nfsServer:
-      resources:
-        requests:
-          cpu: 0.2
-          memory: 2G
-        limits:
-          cpu: 0.4
-          memory: 6G
-    prometheusExporter:
-      resources:
-        requests:
-          cpu: 0.02
-          memory: 15M
-        limits:
-          cpu: 0.04
-          memory: 20M
+      hardQuota: '16' # in GB
     eks:
       volumeId: vol-03afdfb4245b63dfb
 jupyterhub-home-nfs:

@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [strudel.2i2c.cloud]
     tls:
-      - hosts: [strudel.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [strudel.2i2c.cloud]
+      secretName: https-auto-tls
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod

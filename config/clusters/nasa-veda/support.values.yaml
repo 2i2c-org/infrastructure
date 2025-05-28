@@ -16,31 +16,31 @@ grafana:
       allowed_organizations: 2i2c-org veda-analytics-access
   ingress:
     hosts:
-      - grafana.nasa-veda.2i2c.cloud
+    - grafana.nasa-veda.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.nasa-veda.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.nasa-veda.2i2c.cloud
 
 redirects:
   rules:
     # nasa-veda.2i2c.cloud was the old URL
     # Moved due to https://github.com/2i2c-org/infrastructure/issues/3029
-    - from: nasa-veda.2i2c.cloud
-      to: hub.openveda.cloud
-    - from: staging.nasa-veda.2i2c.cloud
-      to: staging.hub.openveda.cloud
+  - from: nasa-veda.2i2c.cloud
+    to: hub.openveda.cloud
+  - from: staging.nasa-veda.2i2c.cloud
+    to: staging.hub.openveda.cloud
 
 prometheus:
   server:
     ingress:
       enabled: true
       hosts:
-        - prometheus.nasa-veda.2i2c.cloud
+      - prometheus.nasa-veda.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.nasa-veda.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.nasa-veda.2i2c.cloud
 
 aws-ce-grafana-backend:
   enabled: true

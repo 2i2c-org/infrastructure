@@ -13,29 +13,29 @@ gcp:
       billing_id: 01A164-923D17-3199D9
 support:
   helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  - support.values.yaml
+  - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "LEAP Staging"
-    domain: staging.leap.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: prod
-    display_name: "LEAP Prod"
-    domain: leap.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - prod.values.yaml
-      - enc-prod.secret.values.yaml
-  - name: public
-    display_name: "LEAP Public"
-    domain: public.leap.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - public.values.yaml
-      - enc-public.secret.values.yaml
+- name: staging
+  display_name: LEAP Staging
+  domain: staging.leap.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - daskhub-common.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: prod
+  display_name: LEAP Prod
+  domain: leap.2i2c.cloud
+  helm_chart: daskhub
+  helm_chart_values_files:
+  - daskhub-common.values.yaml
+  - prod.values.yaml
+  - enc-prod.secret.values.yaml
+- name: public
+  display_name: LEAP Public
+  domain: public.leap.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - public.values.yaml
+  - enc-public.secret.values.yaml

@@ -2,8 +2,8 @@ jupyterhub:
   ingress:
     hosts: [molerhealth.af.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [molerhealth.af.catalystproject.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [molerhealth.af.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
@@ -15,13 +15,50 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://molerhealth.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        populate_teams_in_auth_state: true
         allowed_organizations:
-          - CatalystProject-Hubs:molerhealth
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - CatalystProject-Hubs:molerhealth
         scope:
-          - read:org
+        - read:org
       Authenticator:
+        enable_auth_state: true
+        manage_groups: true
         admin_users:
-          - Monsurat-Onabajo
+        - Monsurat-Onabajo
+    services:
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+        - jupyterhub-groups-exporter
+        scopes:
+        - users
+        - groups
+    extraConfig:
+      custom-github-oauthenticator: |
+        class CustomGitHubOAuthenticator(GitHubOAuthenticator):
+          async def authenticate(self, *args, **kwargs):
+              resp = await super().authenticate(*args, **kwargs)
+              if resp["auth_state"]["teams"] is None:
+                return resp
+              groups = []
+              for team in resp["auth_state"]["teams"]:
+                if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
+                  continue
+                else:
+                  groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
+              resp["groups"] = groups
+              return resp
+        c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
   singleuser:
     nodeSelector:
       2i2c/hub-name: molerhealth
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    hardQuota: '350' # in GB
+  eks:
+    volumeId: vol-0818b363dec5d022f
+nfs:
+  pv:
+    serverIP: 10.100.5.142

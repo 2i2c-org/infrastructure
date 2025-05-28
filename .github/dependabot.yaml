@@ -26,72 +26,72 @@ updates:
   # By default, the directory to be checked is .github/workflows for the github-actions
   # package ecosystem
   # ref: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
-      interval: "monthly"
-    groups:
+    interval: monthly
+  groups:
       # Group all GHA updates together (to avoid desync in related actions e.g. upload-artifact, download-artifact)
       # ref: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups
-      actions:
-        patterns:
-          - "*"
-    ignore:
+    actions:
+      patterns:
+      - '*'
+  ignore:
       # Ignore patch upgrades to further reduce noise
-      - update-types: ["version-update:semver-patch"]
-        dependency-name: "*" # Match all packages
-    reviewers:
-      - "2i2c-org/engineering"
+  - update-types: [version-update:semver-patch]
+    dependency-name: '*'     # Match all packages
+  reviewers:
+  - 2i2c-org/engineering
   # Maintain dependencies for GitHub Actions in our setup-deploy action
-  - package-ecosystem: "github-actions"
-    directory: "/.github/actions/setup-deploy/"
-    schedule:
+- package-ecosystem: github-actions
+  directory: /.github/actions/setup-deploy/
+  schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
-      interval: "monthly"
-    ignore:
+    interval: monthly
+  ignore:
       # Ignore patch upgrades to further reduce noise
-      - update-types: ["version-update:semver-patch"]
-        dependency-name: "*" # Match all packages
-    reviewers:
-      - "2i2c-org/engineering"
+  - update-types: [version-update:semver-patch]
+    dependency-name: '*'     # Match all packages
+  reviewers:
+  - 2i2c-org/engineering
   # Maintain dependencies for pip defined in project root (deployer module)
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
+- package-ecosystem: pip
+  directory: /
+  schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
-      interval: "monthly"
-    ignore:
+    interval: monthly
+  ignore:
       # Ignore patch upgrades to further reduce noise
-      - update-types: ["version-update:semver-patch"]
-        dependency-name: "*" # Match all packages
-    reviewers:
-      - "2i2c-org/engineering"
+  - update-types: [version-update:semver-patch]
+    dependency-name: '*'     # Match all packages
+  reviewers:
+  - 2i2c-org/engineering
   # Maintain dependencies for pip defined in docs folder (documentation)
-  - package-ecosystem: "pip"
-    directory: "/docs"
-    schedule:
+- package-ecosystem: pip
+  directory: /docs
+  schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
-      interval: "monthly"
-    ignore:
+    interval: monthly
+  ignore:
       # Ignore patch upgrades to further reduce noise
-      - update-types: ["version-update:semver-patch"]
-        dependency-name: "*" # Match all packages
-    reviewers:
-      - "2i2c-org/engineering"
+  - update-types: [version-update:semver-patch]
+    dependency-name: '*'     # Match all packages
+  reviewers:
+  - 2i2c-org/engineering
   # Signal pip dependencies updates in helm-charts/images/hub folder (default hub image)
-  - package-ecosystem: "pip"
-    directory: "/helm-charts/images/hub"
-    schedule:
+- package-ecosystem: pip
+  directory: /helm-charts/images/hub
+  schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
-      interval: "monthly"
-    ignore:
+    interval: monthly
+  ignore:
       # Ignore patch upgrades to further reduce noise
-      - update-types: ["version-update:semver-patch"]
-        dependency-name: "*" # Match all packages
-    reviewers:
-      - "2i2c-org/engineering"
-    labels:
+  - update-types: [version-update:semver-patch]
+    dependency-name: '*'     # Match all packages
+  reviewers:
+  - 2i2c-org/engineering
+  labels:
       # This dependabot PRs should not be merged as is, because additional manual steps are required also.
       # Checkout https://infrastructure.2i2c.org/en/latest/topic/infrastructure/hub-image.html#updating-the-hub-image
-      - "requires follow-up"
+  - requires follow-up

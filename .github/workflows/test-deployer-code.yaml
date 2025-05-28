@@ -3,36 +3,36 @@ name: Run tests on the deployer code
 on:
   push:
     branches:
-      - main
+    - main
     paths:
-      - deployer/**
-      - tests/**
-      - requirements.txt
-      - dev-requirements.txt
+    - deployer/**
+    - tests/**
+    - requirements.txt
+    - dev-requirements.txt
     tags:
-      - "**"
+    - '**'
   pull_request:
     branches:
-      - main
+    - main
     paths:
-      - deployer/**
-      - tests/**
-      - requirements.txt
-      - dev-requirements.txt
+    - deployer/**
+    - tests/**
+    - requirements.txt
+    - dev-requirements.txt
   workflow_dispatch:
 
 jobs:
   test-deployer:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install dependencies
-        run: |
-          pip install -U pip
-          pip install --editable .
-      - name: Run tests
-        run: |
-          python -m pytest -vvv --color=yes
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: |
+        pip install -U pip
+        pip install --editable .
+    - name: Run tests
+      run: |
+        python -m pytest -vvv --color=yes

@@ -3,8 +3,8 @@ nfs:
   pv:
     enabled: true
     mountOptions:
-      - soft
-      - noatime
+    - soft
+    - noatime
     serverIP: 10.103.254.0
     baseShareName: /
 jupyterhub-home-nfs:
@@ -15,18 +15,17 @@ jupyterhub-home-nfs:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-staging
   quotaEnforcer:
-    hardQuota: "1" # in GB
-    path: "/export/staging"
+    hardQuota: '1' # in GB
 jupyterhub:
   ingress:
     hosts: [staging.uk.2i2c.cloud]
     tls:
-      - hosts: [staging.uk.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.uk.2i2c.cloud]
+      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_of_type: github
     homepage:
       templateVars:
         org:
@@ -47,9 +46,9 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: "https://staging.uk.2i2c.cloud/hub/oauth_callback"
+        oauth_callback_url: https://staging.uk.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
-              username_claim: "email"
+              username_claim: email
