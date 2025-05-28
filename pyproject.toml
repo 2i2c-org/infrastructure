@@ -1,6 +1,31 @@
+[build-system]
+requires = ["hatchling", "hatch-requirements-txt"]
+build-backend = "hatchling.build"
+
+[project]
+name = "2i2c-deployer"
+description = "Deploy JupyterHubs for the 2i2c Infrastructure"
+version = "0.0.1"
+readme = "README.md"
+license = "BSD-3-Clause"
+requires-python = ">=3.9"
+dynamic = ["dependencies", "optional-dependencies"]
+
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]
+
+[tool.hatch.metadata.hooks.requirements_txt.optional-dependencies]
+dev = ["dev-requirements.txt"]
+
+[project.scripts]
+deployer = "deployer.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["deployer"]
+
 [tool.black]
 # target-version should be all supported versions
-target-version = ['py37', 'py38', 'py39', 'py310']
+target-version = ['py39', 'py310', 'py310', 'py311', 'py312', 'py313']
 
 [tool.isort]
 profile = "black"
