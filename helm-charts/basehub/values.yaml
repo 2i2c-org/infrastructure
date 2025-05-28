@@ -1580,7 +1580,7 @@ jupyterhub:
               deepcopy(c.KubeSpawner.profile_list)
             )
 
-      06-salted-username: |
+      07-salted-username: |
         # Allow anonymizing username to not store *any* PII
         import json
         import os
@@ -1648,7 +1648,7 @@ jupyterhub:
           # https://jupyterhub.readthedocs.io/en/stable/reference/api/auth.html#jupyterhub.auth.Authenticator.post_auth_hook
           c.Authenticator.post_auth_hook = salt_username
 
-      07-enable-fancy-profiles: |
+      08-enable-fancy-profiles: |
         from jupyterhub_fancy_profiles import setup_ui
         setup_ui(c)
 

@@ -188,21 +188,15 @@ jupyterhub:
     config:
       Authenticator:
         enable_auth_state: true
+        manage_groups: true
       GitHubOAuthenticator:
         populate_teams_in_auth_state: true
 ```
 
-```{note}
-GitHubOAuthenticator is currently special cased in our code, until
-[this PR](https://github.com/jupyterhub/oauthenticator/pull/735) is merged
-and deployed. `allowed_groups` will treat GitHub team membership as groups,
-but other JupyterHub functionality that depends on groups will not.
-```
-
 ### Enabling access for 2i2c engineers
 
-All 2i2c engineers are part of the GitHub team `2i2c-org:hub-access-for-2i2c-staff`, so
-every `allowed_group` entry should have an explicit mention of that team so 2i2c engineers
+All 2i2c engineers are part of the GitHub team `2i2c-org:hub-access-for-2i2c-staff` and this group will always be added to the list of `GitHubOAuthenticator.allowed_organizations`, so
+every `allowed_group` entry for profile lists should have an explicit mention of that team so 2i2c engineers
 can access that option / profile and test it out when needed.
 
 ## Enabling this feature for other Authenticators
