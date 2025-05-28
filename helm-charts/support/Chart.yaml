@@ -15,7 +15,7 @@ dependencies:
   - name: prometheus
     # NOTE: CHECK INSTRUCTIONS UNDER prometheus.server.command IN support/values.yaml
     # EACH TIME THIS VERSION IS BUMPED!
-    version: 27.7.1
+    version: 27.16.0
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
