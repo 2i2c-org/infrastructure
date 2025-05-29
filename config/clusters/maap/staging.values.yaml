@@ -20,8 +20,6 @@ jupyterhub:
       command:
       - sh
       - -c
-        # create the shared group directories and fix ownership
-        # so that they are owned by the user
       - >
         id &&
         chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public &&
