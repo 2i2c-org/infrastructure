@@ -370,7 +370,7 @@ class Cluster:
         )
         if not grafana_tls_config:
             raise ValueError(
-                f"grafana.ingress.tls config for {self.spec["name"]} missing!"
+                f'grafana.ingress.tls config for {self.spec["name"]} missing!'
             )
 
         # We only have one tls host right now. Modify this when things change.
@@ -389,7 +389,7 @@ class Cluster:
 
         if "grafana_token" not in config.keys():
             raise ValueError(
-                f"Grafana service account token not found, use `deployer new-grafana-token {self.spec["cluster_name"]}`"
+                f'Grafana service account token not found, use `deployer new-grafana-token {self.spec["cluster_name"]}`'
             )
 
         return config["grafana_token"]
@@ -410,7 +410,7 @@ class Cluster:
             "enabled", False
         ):
             raise ValueError(
-                f"`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"
+                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
             )
 
         tls_config = (
@@ -422,11 +422,11 @@ class Cluster:
 
         if not tls_config:
             raise ValueError(
-                f"No tls config was found for the prometheus instance of {self.spec["name"]}"
+                f'No tls config was found for the prometheus instance of {self.spec["name"]}'
             )
 
         # We only have one tls host right now. Modify this when things change.
-        return f"https://{tls_config[0]["hosts"][0]}"
+        return f'https://{tls_config[0]["hosts"][0]}'
 
     def get_cluster_prometheus_creds(self) -> tuple[str, str]:
         """
@@ -443,7 +443,7 @@ class Cluster:
         # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
         if "prometheusIngressAuthSecret" not in support_config:
             raise ValueError(
-                f"`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"
+                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
             )
 
         return (
