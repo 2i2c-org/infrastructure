@@ -14,41 +14,41 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: staging
     initContainers:
-      - &volume_ownership_fix_initcontainer
-        name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-        - sh
-        - -c
+    - &volume_ownership_fix_initcontainer
+      name: volume-mount-ownership-fix
+      image: busybox:1.36.1
+      command:
+      - sh
+      - -c
         # create the shared group directories and fix ownership
         # so that they are owned by the user
-        - >
-          id &&
-          chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public &&
-          chown 1000:1000 /home/jovyan/shared-group/* &&
-          ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-        - name: home
-          mountPath: /home/jovyan
-          subPath: "{escaped_username}"
+      - >
+        id &&
+        chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public &&
+        chown 1000:1000 /home/jovyan/shared-group/* &&
+        ls -lhd /home/jovyan
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
         # Mounted without readonly attribute here,
         # so we can chown it appropriately
-        - name: home
-          mountPath: /home/jovyan/shared
-          subPath: _shared
-        - name: home
-          mountPath: /home/jovyan/shared-public
-          subPath: _shared-public
-        - name: home
-          mountPath: /home/jovyan/shared-group/CPU_L
-          subPath: _shared-group/CPU_L
-        - name: home
-          mountPath: /home/jovyan/shared-group/GPU_T4
-          subPath: _shared-group/GPU_T4
+      - name: home
+        mountPath: /home/jovyan/shared
+        subPath: _shared
+      - name: home
+        mountPath: /home/jovyan/shared-public
+        subPath: _shared-public
+      - name: home
+        mountPath: /home/jovyan/shared-group/CPU_L
+        subPath: _shared-group/CPU_L
+      - name: home
+        mountPath: /home/jovyan/shared-group/GPU_T4
+        subPath: _shared-group/GPU_T4
     storage:
-      type: null
+      type:
 
     profileList:
     - display_name: Choose your environment and resources
@@ -249,15 +249,15 @@ jupyterhub:
             secret:
               secretName: singleuser
               items:
-                - key: ghsa-w3vc-fx9p-wp4v-check-patch-run
-                  mode: 493
-                  path: ghsa-w3vc-fx9p-wp4v-check-patch-run
-                - key: ipython_kernel_config.json
-                  path: ipython_kernel_config.json
-                - key: jupyter_notebook_config.json
-                  path: jupyter_notebook_config.json
-                - key: jupyter_server_config.json
-                  path: jupyter_server_config.json
+              - key: ghsa-w3vc-fx9p-wp4v-check-patch-run
+                mode: 493
+                path: ghsa-w3vc-fx9p-wp4v-check-patch-run
+              - key: ipython_kernel_config.json
+                path: ipython_kernel_config.json
+              - key: jupyter_notebook_config.json
+                path: jupyter_notebook_config.json
+              - key: jupyter_server_config.json
+                path: jupyter_server_config.json
           03-shared-group:
             name: shared-group-placeholder
             emptyDir:
@@ -267,7 +267,7 @@ jupyterhub:
           00-home-nfs:
             name: home
             mountPath: /home/jovyan
-            subPath: "{escaped_username}"
+            subPath: '{escaped_username}'
           01-home-shared:
             name: home
             mountPath: /home/jovyan/shared
@@ -305,7 +305,7 @@ jupyterhub:
         group_overrides:
           # Explicitly mount the shared group folders based on group membership
           00-group-CPU-L-extra-volume-mounts:
-            groups: ["CPU:L"]
+            groups: [CPU:L]
             spawner_override:
               volume_mounts:
                 00-group-CPU-L-extra-volume-mounts:
@@ -313,7 +313,7 @@ jupyterhub:
                   mountPath: /home/jovyan/shared-group/CPU_L
                   subPath: _shared-group/CPU_L
           01-group-GPU-T4-extra-volume-mounts:
-            groups: ["GPU:T4"]
+            groups: [GPU:T4]
             spawner_override:
               volume_mounts:
                 01-group-GPU-T4-extra-volume-mounts:
