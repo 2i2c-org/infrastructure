@@ -48,6 +48,7 @@ def promql(
     else:
         if len(result) == 0:
             print("No data returned")
+            return
 
         column_names = list(result[0]["metric"].keys())
 
