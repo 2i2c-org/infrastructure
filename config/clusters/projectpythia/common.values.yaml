@@ -26,9 +26,6 @@ jupyterhub-home-nfs:
 
 jupyterhub-groups-exporter:
   enabled: true
-  config:
-    groupsExporter:
-      update_exporter_interval: 3600
 
 jupyterhub:
   custom:
@@ -60,7 +57,6 @@ jupyterhub:
       GitHubOAuthenticator:
         populate_teams_in_auth_state: true
         allowed_organizations:
-        - 2i2c-org:hub-access-for-2i2c-staff
         - ProjectPythia
         scope:
         - read:org
@@ -70,32 +66,6 @@ jupyterhub:
         admin_users:
         - jmunroe
         - ktyle
-    services:
-      jupyterhub-groups-exporter: {}
-    loadRoles:
-      jupyterhub-groups-exporter:
-        services:
-        - jupyterhub-groups-exporter
-        scopes:
-        - users
-        - groups
-    extraConfig:
-      custom-auth-state-groups-key: |
-        from oauthenticator.github import GitHubOAuthenticator
-        async def custom_auth_state_groups_key(auth_state):
-          groups_list = []
-          if auth_state is None:
-            print("Auth state is None")
-            return groups_list
-          else:
-            for team in auth_state["teams"]:
-              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
-                continue
-              else:
-                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
-            return groups_list
-        if c.GitHubOAuthenticator:
-          c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
 
   scheduling:
     userScheduler:
