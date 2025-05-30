@@ -25,7 +25,7 @@ def aws(
     ),
 ):
     """
-    Exec into a shall with appropriate AWS credentials (including MFA)
+    Exec into a shell with appropriate AWS credentials (including MFA)
     """
     creds = json.loads(
         subprocess.check_output(

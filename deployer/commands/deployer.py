@@ -18,7 +18,6 @@ from deployer.commands.validate.config import hub_config as validate_hub_config
 from deployer.commands.validate.config import support_config as validate_support_config
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
-    find_absolute_path_to_cluster_file,
     get_decrypted_file,
 )
 from deployer.utils.rendering import print_colour
@@ -42,9 +41,7 @@ def use_cluster_credentials(
     # command only - it is not used by the rest of the deployer codebase.
     validate_cluster_config(cluster_name)
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
 
     # Cluster.auth() method has the context manager decorator so cannot call
     # it like a normal function
@@ -86,9 +83,7 @@ def deploy_support(
     validate_cluster_config(cluster_name)
     validate_support_config(cluster_name)
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
 
     if cluster.support:
         with cluster.auth():
@@ -129,9 +124,7 @@ def deploy(
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name, skip_refresh)
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
 
     with cluster.auth():
         hubs = cluster.hubs
@@ -159,10 +152,7 @@ def run_hub_health_check(
     Run a health check on a given hub on a given cluster. Optionally check scaling
     of dask workers if the hub is a daskhub.
     """
-    # Read in the cluster.yaml file
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
 
     # Find the hub's config
     hub_indx = [
@@ -183,7 +173,7 @@ def run_hub_health_check(
             substr in os.path.basename(values_file_name)
             for substr in ["secret", "common"]
         ):
-            values_file = config_file_path.parent.joinpath(values_file_name)
+            values_file = cluster.config_dir / values_file_name
             config = yaml.load(values_file)
             basehub = config.get("basehub", {})
             if basehub:
@@ -216,7 +206,7 @@ def run_hub_health_check(
         domain_override_file = hub.spec["domain_override_file"]
 
         with get_decrypted_file(
-            hub.cluster.config_path.joinpath(domain_override_file)
+            hub.cluster.config_dir / domain_override_file
         ) as decrypted_path:
             with open(decrypted_path) as f:
                 domain_override_config = yaml.load(f)
@@ -262,7 +252,7 @@ def run_hub_health_check(
 
     for values_file in hub.spec["helm_chart_values_files"]:
         if "secret" not in os.path.basename(values_file):
-            values_file = config_file_path.parent.joinpath(values_file)
+            values_file = cluster.config_dir / values_file
             config = yaml.load(values_file)
             # Check if there's config that enables dask-gateway
             if config.get("basehub", {}):

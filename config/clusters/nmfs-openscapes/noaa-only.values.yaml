@@ -276,6 +276,9 @@ jupyterhub:
         admin_users:
         - eli.holmes@noaa.gov
 
+jupyterhub-groups-exporter:
+  enabled: false
+
 binderhub-service:
   config:
     BinderHub:

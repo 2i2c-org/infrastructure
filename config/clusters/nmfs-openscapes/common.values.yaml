@@ -21,6 +21,9 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
+jupyterhub-groups-exporter:
+  enabled: true
+
 dask-gateway:
   enabled: true
 
@@ -273,7 +276,6 @@ jupyterhub:
         - ateucher   # Andy Teucher
         - jules32   # Julia Stewart Lowndes
         - eeholmes   # Eli Holmes
-
   scheduling:
     userScheduler:
       enabled: true

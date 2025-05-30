@@ -443,6 +443,6 @@ $ pwd
 [...]/infrastructure/deployer
 $ cd .. && pwd
 [...]/infrastructure
-$ pip install -r deployer/dev-requirements.txt
+$ pip install -e .[dev]
 $ python -m pytest -vvv
 ```

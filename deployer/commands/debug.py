@@ -12,7 +12,6 @@ from ruamel.yaml import YAML
 
 from deployer.cli_app import debug_app
 from deployer.infra_components.cluster import Cluster
-from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -64,9 +63,9 @@ def component_logs(
         cmd += ["-f"]
     if previous:
         cmd += ["--previous"]
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    cluster = Cluster.from_name(cluster_name)
+
     with cluster.auth():
         subprocess.check_call(cmd)
 
@@ -112,9 +111,7 @@ def user_logs(
         cmd += ["-f"]
     if previous:
         cmd += ["--previous"]
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(cluster_name)
     with cluster.auth():
         # hub_name is also the name of the namespace the hub is in
         subprocess.check_call(cmd)
@@ -133,9 +130,7 @@ def start_docker_proxy(
     print(
         "Run `export DOCKER_HOST=tcp://localhost:23760` on another terminal to use the remote docker daemon"
     )
-    config_file_path = find_absolute_path_to_cluster_file(docker_daemon_cluster)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    cluster = Cluster.from_name(docker_daemon_cluster)
     with cluster.auth():
         cmd = [
             "kubectl",

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import os
 import subprocess
@@ -5,9 +7,12 @@ import tempfile
 from contextlib import ExitStack, contextmanager
 from pathlib import Path
 
+from ruamel.yaml import YAML
+
 from deployer.infra_components.hub import Hub
 from deployer.utils.env_vars_management import unset_env_vars
 from deployer.utils.file_acquisition import (
+    CONFIG_CLUSTERS_PATH,
     HELM_CHARTS_DIR,
     get_decrypted_file,
     get_decrypted_files,
@@ -16,15 +21,29 @@ from deployer.utils.helm import wait_for_deployments_daemonsets
 from deployer.utils.jsonnet import render_jsonnet
 from deployer.utils.rendering import print_colour
 
+yaml = YAML(typ="rt")
+
 
 class Cluster:
     """
     A single k8s cluster we can deploy to
     """
 
-    def __init__(self, spec, config_path):
+    @classmethod
+    def from_name(cls, cluster_name: str) -> Cluster:
+        cluster_config_path = CONFIG_CLUSTERS_PATH / cluster_name / "cluster.yaml"
+
+        if not cluster_config_path.exists():
+            raise FileNotFoundError(f"No cluster named {cluster_name} found")
+
+        with open(cluster_config_path) as f:
+            config = yaml.load(f)
+        return cls(config, cluster_config_path)
+
+    def __init__(self, spec, config_path: Path):
         self.spec = spec
         self.config_path = config_path
+        self.config_dir = config_path.parent
         self.hubs = [Hub(self, hub_spec) for hub_spec in self.spec.get("hubs", [])]
         self.support = self.spec.get("support", {})
 
@@ -133,14 +152,12 @@ class Cluster:
             support_dir.joinpath("enc-support.secret.values.yaml"),
             support_dir.joinpath("enc-cryptnono.secret.values.yaml"),
             support_dir.joinpath("values.jsonnet"),
-        ] + [
-            self.config_path.joinpath(p)
-            for p in self.support["helm_chart_values_files"]
-        ]
+        ] + [self.config_dir / p for p in self.support["helm_chart_values_files"]]
 
-        with get_decrypted_files(
-            values_file_paths
-        ) as values_files, ExitStack() as jsonnet_stack:
+        with (
+            get_decrypted_files(values_file_paths) as values_files,
+            ExitStack() as jsonnet_stack,
+        ):
             cmd = [
                 "helm",
                 "upgrade",
@@ -180,10 +197,11 @@ class Cluster:
            we call (primarily helm) will use that as config
         """
         config = self.spec["kubeconfig"]
-        config_path = self.config_path.joinpath(config["file"])
+        config_path = self.config_dir / config["file"]
 
-        with get_decrypted_file(config_path) as decrypted_key_path, unset_env_vars(
-            ["KUBECONFIG"]
+        with (
+            get_decrypted_file(config_path) as decrypted_key_path,
+            unset_env_vars(["KUBECONFIG"]),
         ):
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
@@ -198,7 +216,7 @@ class Cluster:
         side-effects on existing local configuration.
         """
         config = self.spec["aws"]
-        key_path = self.config_path.joinpath(config["key"])
+        key_path = self.config_dir / config["key"]
         cluster_name = config["clusterName"]
         region = config["region"]
 
@@ -239,13 +257,14 @@ class Cluster:
         activate the appropriate subscription, then authenticate against the
         cluster using `az aks get-credentials`.
         """
-        config = self.spect["azure"]
-        key_path = self.config_path.joinpath(config["key"])
+        config = self.spec["azure"]
+        key_path = self.config_dir / config["key"]
         cluster = config["cluster"]
         resource_group = config["resource_group"]
 
-        with tempfile.NamedTemporaryFile() as kubeconfig, unset_env_vars(
-            ["KUBECONFIG"]
+        with (
+            tempfile.NamedTemporaryFile() as kubeconfig,
+            unset_env_vars(["KUBECONFIG"]),
         ):
             os.environ["KUBECONFIG"] = kubeconfig.name
 
@@ -294,7 +313,7 @@ class Cluster:
 
     def auth_gcp(self):
         config = self.spec["gcp"]
-        key_path = self.config_path.joinpath(config["key"])
+        key_path = self.config_dir / config["key"]
         project = config["project"]
         # If cluster is regional, it'll have a `region` key set.
         # Else, it'll just have a `zone` key set. Let's respect either.
@@ -335,3 +354,99 @@ class Cluster:
                 os.environ["CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE"] = orig_file
             else:
                 os.environ.pop("CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE")
+
+    def get_grafana_url(self) -> str:
+        """
+        Return full Grafana URL for this cluster.
+
+        Raises an exception if URL is not correctly set.
+        """
+        config_file = self.config_dir / "support.values.yaml"
+        with open(config_file) as f:
+            support_config = yaml.load(f)
+
+        grafana_tls_config = (
+            support_config.get("grafana", {}).get("ingress", {}).get("tls", [])
+        )
+        if not grafana_tls_config:
+            raise ValueError(
+                f'grafana.ingress.tls config for {self.spec["name"]} missing!'
+            )
+
+        # We only have one tls host right now. Modify this when things change.
+        return "https://" + grafana_tls_config[0]["hosts"][0]
+
+    def get_grafana_token(self) -> str:
+        """
+        Return access token for talking to the Grafana API on this cluster
+        """
+        grafana_token_file = self.config_dir / "enc-grafana-token.secret.yaml"
+
+        # Read the secret grafana token file
+        with get_decrypted_file(grafana_token_file) as decrypted_file_path:
+            with open(decrypted_file_path) as f:
+                config = yaml.load(f)
+
+        if "grafana_token" not in config.keys():
+            raise ValueError(
+                f'Grafana service account token not found, use `deployer new-grafana-token {self.spec["cluster_name"]}`'
+            )
+
+        return config["grafana_token"]
+
+    def get_external_prometheus_url(self) -> str:
+        """
+        Return full Prometheus URL for this cluster.
+
+        Raises an exception if URL is not correctly configured
+        """
+
+        config_file = self.config_dir / "support.values.yaml"
+        with open(config_file) as f:
+            support_config = yaml.load(f)
+
+        # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
+        if not support_config.get("prometheusIngressAuthSecret", {}).get(
+            "enabled", False
+        ):
+            raise ValueError(
+                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
+            )
+
+        tls_config = (
+            support_config.get("prometheus", {})
+            .get("server", {})
+            .get("ingress", {})
+            .get("tls", [])
+        )
+
+        if not tls_config:
+            raise ValueError(
+                f'No tls config was found for the prometheus instance of {self.spec["name"]}'
+            )
+
+        # We only have one tls host right now. Modify this when things change.
+        return f'https://{tls_config[0]["hosts"][0]}'
+
+    def get_cluster_prometheus_creds(self) -> tuple[str, str]:
+        """
+        Retrieve basic auth credentials for accessing the prometheus instance of this cluster
+
+        Raises an exception if it was not correctly configured
+        """
+        config_filename = self.config_dir / "enc-support.secret.values.yaml"
+
+        with get_decrypted_file(config_filename) as decrypted_path:
+            with open(decrypted_path) as f:
+                support_config = yaml.load(f)
+
+        # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
+        if "prometheusIngressAuthSecret" not in support_config:
+            raise ValueError(
+                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
+            )
+
+        return (
+            support_config["prometheusIngressAuthSecret"]["username"],
+            support_config["prometheusIngressAuthSecret"]["password"],
+        )

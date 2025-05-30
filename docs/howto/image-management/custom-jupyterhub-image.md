@@ -109,7 +109,7 @@ Rebuild the Docker image and push it to the [Quay.io registry](https://quay.io/r
   pip install chartpress
   ```
 
-  This package is also listed under `dev-requirements.txt`, so it should be present if you've installed the dev dependencies.
+  This package is also listed under the `dev` extra in pyproject.toml`, so it should be present if you've installed the dev dependencies.
 
 - Make sure you are in the `helm-charts` directory, where the `chartpress.yaml` is located:
 

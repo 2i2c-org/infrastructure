@@ -27,9 +27,8 @@ from ruamel.yaml import YAML
 from yarl import URL
 
 from deployer.cli_app import cilogon_client_app
+from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
-    build_absolute_path_to_hub_encrypted_config_file,
-    find_absolute_path_to_cluster_file,
     get_cluster_names_list,
     get_decrypted_file,
     persist_config_in_encrypted_file,
@@ -142,9 +141,8 @@ def create_client(admin_id, admin_secret, cluster_name, hub_name, callback_url):
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
     """
     client_details = build_client_details(cluster_name, hub_name, callback_url)
-    config_filename = build_absolute_path_to_hub_encrypted_config_file(
-        cluster_name, hub_name
-    )
+    cluster = Cluster.from_name(cluster_name)
+    config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
 
     # Check if there's a client id already stored in the config file for this hub
     if Path(config_filename).is_file():
@@ -198,9 +196,9 @@ def update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url):
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
     """
     client_details = build_client_details(cluster_name, hub_name, callback_url)
-    config_filename = build_absolute_path_to_hub_encrypted_config_file(
-        cluster_name, hub_name
-    )
+
+    cluster = Cluster.from_name(cluster_name)
+    config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
     if not Path(config_filename).is_file():
         print_colour("Can't update a client that doesn't exist", "red")
         return
@@ -233,9 +231,8 @@ def get_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None):
 
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
     """
-    config_filename = build_absolute_path_to_hub_encrypted_config_file(
-        cluster_name, hub_name
-    )
+    cluster = Cluster.from_name(cluster_name)
+    config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
     if not Path(config_filename).is_file():
         return
 
@@ -342,18 +339,16 @@ def find_orphaned_clients(clients):
     clusters = get_cluster_names_list()
 
     for client in clients:
-        cluster = next((cl for cl in clusters if cl in client["name"]), "")
+        cluster_name = next((cl for cl in clusters if cl in client["name"]), "")
 
-        if cluster:
-            cluster_config_file = find_absolute_path_to_cluster_file(cluster)
-            with open(cluster_config_file) as f:
-                cluster_config = yaml.load(f)
+        if cluster_name:
+            cluster = Cluster.from_name(cluster_name)
 
             hub = next(
                 (
-                    hub["name"]
-                    for hub in cluster_config["hubs"]
-                    if hub["name"] in client["name"]
+                    hub.spec["name"]
+                    for hub in cluster.hubs
+                    if hub.spec["name"] in client["name"]
                 ),
                 "",
             )
@@ -469,9 +464,8 @@ def delete(
     Delete an existing CILogon client. This deletes both the CILogon client application,
     and the client credentials from the configuration file.
     """
-    config_filename = build_absolute_path_to_hub_encrypted_config_file(
-        cluster_name, hub_name
-    )
+    cluster = Cluster.from_name(cluster_name)
+    config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
 
     if not client_id:
@@ -546,9 +540,8 @@ def cleanup(
         # Establish the cluster and hub name from the client name and build the
         # absolute path to the encrypted hub values file
         cluster_name, hub_name = duped_client.split("-")
-        config_filename = build_absolute_path_to_hub_encrypted_config_file(
-            cluster_name, hub_name
-        )
+        cluster = Cluster.from_name(cluster_name)
+        config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
 
         with get_decrypted_file(config_filename) as decrypted_path:
             with open(decrypted_path) as f:

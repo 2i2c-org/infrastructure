@@ -74,6 +74,11 @@ local makePVCApproachingFullAlert = function(
             'Hub Database Disk about to be full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
             'hub-db-dir',
           ),
+          makePVCApproachingFullAlert(
+            'PrometheusDiskApproachingFull',
+            'Prometheus Disk about to be full: cluster:%s' % [cluster_name],
+            'support-prometheus-server',
+          ),
         ],
       },
     },
