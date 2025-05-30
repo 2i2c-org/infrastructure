@@ -35,6 +35,7 @@ def discover_modified_common_files(modified_paths):
     common_filepaths = [
         # Filepaths related to the deployer infrastructure
         "deployer/*",
+        "pyproject.toml",
         "requirements.txt",
         # Filepath to local GitHub Action that sets up clusters for deploy
         ".github/actions/setup-deploy/*",
