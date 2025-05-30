@@ -30,7 +30,7 @@ jupyterhub:
       2i2c/hub-name: binder
     memory:
       guarantee: 1G
-      limit: 2G
+      limit: 8G
     cpu:
       limit: 1
     storage:
