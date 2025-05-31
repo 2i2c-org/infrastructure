@@ -15,9 +15,6 @@ jupyterhub-home-nfs:
 
 jupyterhub-groups-exporter:
   enabled: true
-  config:
-    groupsExporter:
-      update_exporter_interval: 3600
 
 jupyterhub:
   ingress:
@@ -168,9 +165,8 @@ jupyterhub:
         oauth_callback_url: https://sciencecore.opensci.2i2c.cloud/hub/oauth_callback
         populate_teams_in_auth_state: true
         allowed_organizations:
-        - 2i2c-org:hub-access-for-2i2c-staff
         - 2i2c-demo-hub-access
-        - ScienceCore
+        - ScienceCore:climaterisk-team
         scope:
         - read:org
       Authenticator:
@@ -178,31 +174,6 @@ jupyterhub:
         manage_groups: true
         admin_users:
         - kyttmacmanus   # Kytt MacManus, added as part of https://2i2c.freshdesk.com/a/tickets/1454
-    services:
-      jupyterhub-groups-exporter: {}
-    loadRoles:
-      jupyterhub-groups-exporter:
-        services:
-        - jupyterhub-groups-exporter
-        scopes:
-        - users
-        - groups
-    extraConfig:
-      custom-github-oauthenticator: |
-        class CustomGitHubOAuthenticator(GitHubOAuthenticator):
-          async def authenticate(self, *args, **kwargs):
-              resp = await super().authenticate(*args, **kwargs)
-              if resp["auth_state"]["teams"] is None:
-                return resp
-              groups = []
-              for team in resp["auth_state"]["teams"]:
-                if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
-                  continue
-                else:
-                  groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
-              resp["groups"] = groups
-              return resp
-        c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
 
 binderhub-service:
   enabled: true

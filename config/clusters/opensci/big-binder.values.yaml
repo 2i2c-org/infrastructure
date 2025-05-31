@@ -13,9 +13,6 @@ dask-gateway:
             2i2c/hub-name: big-binder
 jupyterhub-groups-exporter:
   enabled: true
-  config:
-    groupsExporter:
-      update_exporter_interval: 3600
 jupyterhub:
   ingress:
     hosts: [hub.big.binder.opensci.2i2c.cloud]
@@ -89,34 +86,16 @@ jupyterhub:
         populate_teams_in_auth_state: true
         allowed_organizations:
         - 2i2c-ephemeral-hubs:access
-        - 2i2c-org:hub-access-for-2i2c-staff
         scope:
         - read:org
       Authenticator:
         enable_auth_state: true
         manage_groups: true
-    extraConfig:
-      custom-github-oauthenticator: |
-        class CustomGitHubOAuthenticator(GitHubOAuthenticator):
-          async def authenticate(self, *args, **kwargs):
-              resp = await super().authenticate(*args, **kwargs)
-              if resp["auth_state"]["teams"] is None:
-                return resp
-              groups = []
-              for team in resp["auth_state"]["teams"]:
-                if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
-                  continue
-                else:
-                  groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
-              resp["groups"] = groups
-              return resp
-        c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
 
     redirectToServer: false
     services:
       binder:
         oauth_redirect_uri: https://big.binder.opensci.2i2c.cloud/oauth_callback
-      jupyterhub-groups-exporter: {}
     loadRoles:
       binder:
         services:
@@ -124,12 +103,6 @@ jupyterhub:
         scopes:
         - servers
         - read:users   # admin:users is required if authentication isn't enabled
-      jupyterhub-groups-exporter:
-        services:
-        - jupyterhub-groups-exporter
-        scopes:
-        - users
-        - groups
       user:
         scopes:
         - self

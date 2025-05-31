@@ -36,5 +36,3 @@ jupyterhub:
         admin_users:
         - aquevedo@unc.edu.ar
         - nicolasw@famaf.unc.edu.ar
-jupyterhub-groups-exporter:
-  enabled: false

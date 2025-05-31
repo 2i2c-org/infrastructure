@@ -23,9 +23,6 @@ jupyterhub-home-nfs:
 
 jupyterhub-groups-exporter:
   enabled: true
-  config:
-    groupsExporter:
-      update_exporter_interval: 3600
 
 jupyterhub:
   custom:
@@ -90,15 +87,6 @@ jupyterhub:
         - '20005'   # Moslehi Lab
         - '20006'   # Olgin Lab
         - '20026'   # BIDS - URAP
-    services:
-      jupyterhub-groups-exporter: {}
-    loadRoles:
-      jupyterhub-groups-exporter:
-        services:
-        - jupyterhub-groups-exporter
-        scopes:
-        - users
-        - groups
     extraConfig:
       # get organization membership for managed groups:
       managed_organizations.py: |

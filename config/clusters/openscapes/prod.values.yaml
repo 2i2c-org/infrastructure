@@ -20,31 +20,6 @@ basehub:
           oauth_callback_url: https://openscapes.2i2c.cloud/hub/oauth_callback
         CILogonOAuthenticator:
           oauth_callback_url: https://openscapes.2i2c.cloud/hub/oauth_callback
-      services:
-        jupyterhub-groups-exporter: {}
-      loadRoles:
-        jupyterhub-groups-exporter:
-          services:
-          - jupyterhub-groups-exporter
-          scopes:
-          - users
-          - groups
-      extraConfig:
-        custom-auth-state-groups-key: |
-          async def custom_auth_state_groups_key(auth_state):
-            groups_list = []
-            if auth_state is None:
-              print("Auth state is None")
-              return groups_list
-            else:
-              for team in auth_state["teams"]:
-                if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
-                  continue
-                else:
-                  groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
-              return groups_list
-          if c.GitHubOAuthenticator:
-            c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
 
   dask-gateway:
     gateway:
@@ -67,6 +42,3 @@ basehub:
       serverIP: 10.100.91.5
   jupyterhub-groups-exporter:
     enabled: true
-    config:
-      groupsExporter:
-        update_exporter_interval: 3600
