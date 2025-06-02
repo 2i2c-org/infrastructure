@@ -4,6 +4,15 @@ jupyterhub:
     tls:
     - hosts: [sbcc-dev.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 88d0254c55f0
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
