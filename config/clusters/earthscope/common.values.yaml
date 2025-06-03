@@ -196,44 +196,7 @@ basehub:
         - geolab
         - geolab:dev
         - geolab:power
-        profile_options: &profile_options
-          image:
-            display_name: Image
-            unlisted_choice:
-              enabled: true
-              display_name: Custom image
-              validation_regex: ^.+:.+$
-              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
-              kubespawner_override:
-                image: '{value}'
-            choices:
-              geolab-general:
-                display_name: GeoLab
-                slug: geolab-general
-                kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/geolab:td-dev-dd5851e6
-              mt-shortcourse:
-                display_name: MT-ShortCourse
-                slug: mt-shortcourse
-                kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/geolab_default:mt_shortcourse-1a6a2fbd
-              jupyter-scipy:
-                display_name: Jupyter
-                slug: jupyter-scipy
-                kubespawner_override:
-                    # FIXME: use quay.io/ for tags after 2023-10-20
-                  image: jupyter/scipy-notebook:2023-06-27
-              rocker-geospatial:
-                display_name: RStudio
-                slug: rocker-geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
-                    # Launch into RStudio after the user logs in
-                  default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
+        profile_options: *profile_options
         kubespawner_override:
           mem_guarantee: 14.468G
           cpu_guarantee: 0.1
