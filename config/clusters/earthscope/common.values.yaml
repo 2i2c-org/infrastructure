@@ -151,7 +151,7 @@ basehub:
         - geolab
         - geolab:dev
         - geolab:power
-        profile_options:
+        profile_options: &profile_options
           image:
             display_name: Image
             unlisted_choice:
