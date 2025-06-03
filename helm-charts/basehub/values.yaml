@@ -1656,19 +1656,25 @@ jupyterhub:
         from jupyterhub_fancy_profiles import setup_ui
         setup_ui(c)
 
-      08-auth-state-groups: |
-        # Pass the user's GitHub teams from auth_state as groups to the authenticator. Refreshes the auth_state to keep group information up to date.
+      08-2i2c-add-staff-gh-team: |
+        # Add 2i2c staff access by GitHub team membership by default for GitHub authenticated hubs.
+        if (c.GitHubOAuthenticator and hasattr(c.GitHubOAuthenticator, "allowed_organizations")):
+          c.GitHubOAuthenticator.allowed_organizations.append("2i2c-org:hub-access-for-2i2c-staff")
+
+      09-auth-state-groups: |
+        # Pass the user's GitHub teams from auth_state to JupyterHub group memberships. Requires c.Authenticator.manage_groups = True
+        
         async def custom_auth_state_groups_key(auth_state):
-          groups_list = []
-          if auth_state is None:
-            print("Auth state is None")
-            return groups_list
+          if "teams" not in auth_state.keys():
+            print("No GitHub teams found in auth_state.")
+            return None
           else:
+            groups_list = []
             for team in auth_state["teams"]:
               groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+            custom_auth_state_groups_key.groups_list = groups_list
             return groups_list
         if c.GitHubOAuthenticator:
-          c.GitHubOAuthenticator.allowed_organizations.append("2i2c-org:hub-access-for-2i2c-staff")
           c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
 
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
