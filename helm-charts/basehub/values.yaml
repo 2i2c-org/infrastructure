@@ -1665,10 +1665,7 @@ jupyterhub:
             return groups_list
           else:
             for team in auth_state["teams"]:
-              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
-                continue
-              else:
-                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+              groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
             return groups_list
         if c.GitHubOAuthenticator:
           c.GitHubOAuthenticator.allowed_organizations.append("2i2c-org:hub-access-for-2i2c-staff")
