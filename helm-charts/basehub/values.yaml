@@ -1675,7 +1675,10 @@ jupyterhub:
           else:
             groups_list = []
             for team in auth_state["teams"]:
-              groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
+                continue
+              else:
+                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
             custom_auth_state_groups_key.groups_list = groups_list
             return groups_list
         if c.GitHubOAuthenticator:
