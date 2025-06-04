@@ -11,7 +11,10 @@ so we have some augmented methods here primarily for AWS use.
 
 import json
 import os
+import secrets
+import string
 import subprocess
+import tempfile
 
 import typer
 
@@ -125,9 +128,9 @@ def offboard(
         subprocess.check_output(
             ["aws", "iam", "list-groups-for-user", "--user-name", username],
             env=env,
-        ).decode()["Groups"]
+        ).decode()
     )
-    if groups:
+    if groups["Groups"]:
         print(f"Removing {username} from all {groups} groups...")
         for group in groups["Groups"]:
             group_name = group["GroupName"]
@@ -196,3 +199,192 @@ def offboard(
         env=env,
     )
     print_colour(f"User {username} has been deleted from AWS account {profile}.")
+
+
+@aws.command()
+def onboard(
+    new_username: str = typer.Argument(..., help="Username to onboard to AWS account"),
+    existing_username: str = typer.Argument(
+        ...,
+        help="Username of an existing user to copy group memberships and policies from",
+    ),
+    profile: str = typer.Argument(..., help="Name of AWS profile to operate on"),
+    mfa_device_id: str = typer.Argument(
+        None,
+        help="Full ARN of MFA Device the code is from (leave empty if not using MFA)",
+    ),
+    auth_token: str = typer.Argument(
+        None,
+        help="6 digit 2 factor authentication code from the MFA device (leave empty if not using MFA)",
+    ),
+):
+    env = setup_aws_env(profile, mfa_device_id, auth_token)
+    print(f"Onboarding {new_username} to AWS account {profile}")
+
+    # Create the IAM user
+    print(f"Creating user {new_username}...")
+    subprocess.check_call(
+        ["aws", "iam", "create-user", "--user-name", new_username], env=env
+    )
+
+    # Generate and assign password
+    alphabet = string.ascii_letters + string.digits + string.punctuation
+    password = "".join(secrets.choice(alphabet) for _ in range(20))
+
+    print(f"The generated password for {new_username} is: {password}")
+    subprocess.check_call(
+        [
+            "aws",
+            "iam",
+            "create-login-profile",
+            "--user-name",
+            new_username,
+            "--password",
+            password,
+            "--password-reset-required",
+        ],
+        env=env,
+    )
+    print_colour("Done! Login profile created")
+
+    # Copy group memberships from another existing user
+    print("Copying group memberships...")
+    groups = json.loads(
+        subprocess.check_output(
+            ["aws", "iam", "list-groups-for-user", "--user-name", existing_username],
+            env=env,
+        ).decode()
+    )
+
+    for group in groups["Groups"]:
+        print(f"Adding to group: {group['GroupName']}")
+        subprocess.check_call(
+            [
+                "aws",
+                "iam",
+                "add-user-to-group",
+                "--user-name",
+                new_username,
+                "--group-name",
+                group["GroupName"],
+            ],
+            env=env,
+        )
+        print_colour("Done!")
+
+    # Copy managed policies from another existing user
+    print("Copying attached managed policies...")
+    policies = json.loads(
+        subprocess.check_output(
+            [
+                "aws",
+                "iam",
+                "list-attached-user-policies",
+                "--user-name",
+                existing_username,
+                "--query",
+                "AttachedPolicies[].PolicyArn",
+                "--output",
+                "json",
+            ],
+            env=env,
+        ).decode()
+    )
+    for policy_arn in policies:
+        print(f"Attaching policy: {policy_arn}")
+        subprocess.check_call(
+            [
+                "aws",
+                "iam",
+                "attach-user-policy",
+                "--user-name",
+                new_username,
+                "--policy-arn",
+                policy_arn,
+            ],
+            env=env,
+        )
+    print_colour("Done!")
+    # Copy inline policies
+    print("Copying inline policies...")
+    inline_list = json.loads(
+        subprocess.check_output(
+            [
+                "aws",
+                "iam",
+                "list-user-policies",
+                "--user-name",
+                existing_username,
+                "--query",
+                "PolicyNames",
+                "--output",
+                "json",
+            ],
+            env=env,
+        ).decode()
+    )
+    for policy_name in inline_list:
+        print(f"Copying inline policy: {policy_name}")
+        policy_doc = json.loads(
+            subprocess.check_output(
+                [
+                    "aws",
+                    "iam",
+                    "get-user-policy",
+                    "--user-name",
+                    existing_username,
+                    "--policy-name",
+                    policy_name,
+                    "--query",
+                    "PolicyDocument",
+                    "--output",
+                    "json",
+                ],
+                env=env,
+            ).decode()
+        )
+        with tempfile.NamedTemporaryFile(mode="w", delete=True) as temp_file:
+            json.dump(policy_doc, temp_file)
+            temp_file.flush()
+            subprocess.check_call(
+                [
+                    "aws",
+                    "iam",
+                    "put-user-policy",
+                    "--user-name",
+                    new_username,
+                    "--policy-name",
+                    policy_name,
+                    "--policy-document",
+                    f"file://{temp_file.name}",
+                ],
+                env=env,
+            )
+
+    print_colour("Done!")
+    account_id = (
+        subprocess.check_output(
+            [
+                "aws",
+                "sts",
+                "get-caller-identity",
+                "--query",
+                "Account",
+                "--output",
+                "text",
+            ],
+            env=env,
+        )
+        .decode()
+        .strip()
+    )
+    password = "heey"
+    print_colour(
+        f"""
+        Hey {new_username}! I have created an account for you in {profile}.
+        The password was randomly generated and you must change it on first login.
+
+        Use the following link to log in: https://{account_id}.signin.aws.amazon.com/console
+        The password is: {password}""",
+        "yellow",
+    )
