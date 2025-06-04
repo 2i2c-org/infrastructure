@@ -9,7 +9,7 @@ jupyterhub:
       # Increased to help deal with possible kernel restarts
       # https://2i2c.freshdesk.com/a/tickets/567
       guarantee: 384M
-      limit: 1.5G
+      limit: 2G
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
       tag: 88d0254c55f0
