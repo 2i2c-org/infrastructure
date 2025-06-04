@@ -42,7 +42,7 @@ persistent_disks = {
     name_suffix = "staging"
   },
   "lis" = {
-    size        = 400 # in GB
+    size        = 440 # in GB
     name_suffix = "lis"
   }
 }
