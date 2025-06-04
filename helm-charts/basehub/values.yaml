@@ -903,6 +903,15 @@ jupyterhub:
         # Increase timeout for Jupyter server to become 'ready', until
         # https://github.com/2i2c-org/infrastructure/issues/2047 is fixed
         http_timeout: 120
+      GitHubOAuthenticator:
+        # Applies only if hub.config.JupyterHub.authenticator_class is set to github
+        enable_auth_state: true
+        manage_groups: true
+        populate_teams_in_auth_state: true
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        scope:
+        - read:org
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
@@ -1656,12 +1665,7 @@ jupyterhub:
         from jupyterhub_fancy_profiles import setup_ui
         setup_ui(c)
 
-      08-2i2c-add-staff-gh-team: |
-        # Add 2i2c staff access by GitHub team membership by default for GitHub authenticated hubs.
-        if (c.GitHubOAuthenticator and hasattr(c.GitHubOAuthenticator, "allowed_organizations")):
-          c.GitHubOAuthenticator.allowed_organizations.append("2i2c-org:hub-access-for-2i2c-staff")
-
-      09-auth-state-groups: |
+      08-auth-state-groups: |
         # Pass the user's GitHub teams from auth_state to JupyterHub group memberships. Requires c.Authenticator.manage_groups = True
         
         async def custom_auth_state_groups_key(auth_state):
@@ -1746,4 +1750,4 @@ jupyterhub-home-nfs:
     enabled: true
 
 jupyterhub-groups-exporter:
-  enabled: false
+  enabled: true
