@@ -378,7 +378,6 @@ def onboard(
         .decode()
         .strip()
     )
-    password = "heey"
     print_colour(
         f"""
         Hey {new_username}! I have created an account for you in {profile}.
