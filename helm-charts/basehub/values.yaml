@@ -908,8 +908,6 @@ jupyterhub:
         enable_auth_state: true
         manage_groups: true
         populate_teams_in_auth_state: true
-        allowed_organizations:
-        - 2i2c-org:hub-access-for-2i2c-staff
         scope:
         - read:org
       Authenticator:
