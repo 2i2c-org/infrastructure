@@ -11,8 +11,6 @@ dask-gateway:
         extraPodConfig:
           nodeSelector:
             2i2c/hub-name: big-binder
-jupyterhub-groups-exporter:
-  enabled: true
 jupyterhub:
   ingress:
     hosts: [hub.big.binder.opensci.2i2c.cloud]
@@ -83,14 +81,8 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://hub.big.binder.opensci.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - 2i2c-ephemeral-hubs:access
-        scope:
-        - read:org
-      Authenticator:
-        enable_auth_state: true
-        manage_groups: true
 
     redirectToServer: false
     services:

@@ -15,14 +15,9 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://aibst.af.catalystproject.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - CatalystProject-Hubs:aibst
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - zchikwambi
   singleuser:
@@ -36,5 +31,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.100.18.60
-jupyterhub-groups-exporter:
-  enabled: true

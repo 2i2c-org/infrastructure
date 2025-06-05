@@ -17,15 +17,9 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.af.catalystproject.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - czi-catalystproject
         - CatalystProject-Hubs:staging
-        scope:
-        - read:org
-      Authenticator:
-        enable_auth_state: true
-        manage_groups: true
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
@@ -37,5 +31,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.100.47.209
-jupyterhub-groups-exporter:
-  enabled: true

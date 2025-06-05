@@ -84,16 +84,11 @@ basehub:
           #     Running servers may be forcefully stopped and service disruption
           #     is expected.
         GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
           allowed_organizations:
           - leap-stc:leap-pangeo-base-access
           - leap-stc:leap-pangeo-full-access
           - leap-stc:data-and-compute
-          scope:
-          - read:org
         Authenticator:
-          enable_auth_state: true
-          manage_groups: true
           admin_users:
             # ref: https://2i2c.freshdesk.com/a/tickets/2761
           - RobertPincus
@@ -382,5 +377,3 @@ basehub:
       enabled: true
     gke:
       enabled: true
-  jupyterhub-groups-exporter:
-    enabled: true

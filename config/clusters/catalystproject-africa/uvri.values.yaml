@@ -17,14 +17,9 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://uvri.af.catalystproject.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - CatalystProject-Hubs:uvri
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - eddUG
   singleuser:
@@ -38,5 +33,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.100.113.220
-jupyterhub-groups-exporter:
-  enabled: true

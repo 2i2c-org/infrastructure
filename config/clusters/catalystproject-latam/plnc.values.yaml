@@ -1,6 +1,3 @@
-jupyterhub-groups-exporter:
-  enabled: true
-
 jupyterhub:
   ingress:
     # From https://2i2c.freshdesk.com/a/tickets/1591
@@ -20,14 +17,9 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://hub.pln.villena.cl/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - CatalystProject-Hubs:plnc
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - fvillena
   singleuser:

@@ -20,8 +20,6 @@ basehub:
       enabled: true
     prometheusExporter:
       enabled: true
-  jupyterhub-groups-exporter:
-    enabled: true
   dask-gateway:
     enabled: true
     gateway:
@@ -57,7 +55,6 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
           allowed_organizations:
           - US-GHG-Center:ghgc-hub-access
           - US-GHG-Center:ghg-use-case-1
@@ -67,11 +64,7 @@ basehub:
           - US-GHG-Center:ghg-workshop-access
           - US-GHG-Center:ghg-trial-access
           - US-GHG-Center:ssim-ghg-2025
-          scope:
-          - read:org
         Authenticator:
-          enable_auth_state: true
-          manage_groups: true
           admin_users:
           - freitagb
           - j08lue

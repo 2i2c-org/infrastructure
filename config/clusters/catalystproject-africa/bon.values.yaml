@@ -15,14 +15,9 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://bon.af.catalystproject.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - CatalystProject-Hubs:bon
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - Seunolufemi123
         - Emmanuel19-ada
@@ -37,5 +32,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.100.204.80
-jupyterhub-groups-exporter:
-  enable: true

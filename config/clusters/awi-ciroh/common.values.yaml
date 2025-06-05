@@ -13,8 +13,6 @@ basehub:
       enabled: true
     gke:
       enabled: true
-  jupyterhub-groups-exporter:
-    enabled: true
     config:
       groupsExporter:
         update_exporter_interval: 3600
@@ -62,15 +60,10 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
           allowed_organizations:
           - alabamawaterinstitute
           - NOAA-OWP
-          scope:
-          - read:org
         Authenticator:
-          enable_auth_state: true
-          manage_groups: true
           admin_users:
           - jameshalgren
           - arpita0911patel

@@ -14,9 +14,6 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
-jupyterhub-groups-exporter:
-  enabled: true
-
 jupyterhub:
   singleuser:
     memory:
@@ -99,14 +96,9 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - ClimateMatchAcademy:2025students
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - iamzoltan
         - abodner

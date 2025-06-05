@@ -48,7 +48,6 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
           allowed_organizations:
           - CASI-LIS-Dashboard:dev-veda-jupyterhub
           - veda-analytics-access:all-users
@@ -58,11 +57,7 @@ basehub:
           - Earth-Information-System:eis-fire
           - Earth-Information-System:swot
           - veda-analytics-access:harvard-data-team
-          scope:
-          - read:org
         Authenticator:
-          enable_auth_state: true
-          manage_groups: true
           admin_users:
           - abarciauskas-bgse
           - freitagb
@@ -315,6 +310,3 @@ basehub:
       enabled: true
     prometheusExporter:
       enabled: true
-
-  jupyterhub-groups-exporter:
-    enabled: true

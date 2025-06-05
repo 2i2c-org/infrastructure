@@ -24,13 +24,6 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
-      GitHubOAuthenticator:
-        populate_teams_in_auth_state: true
-        scope:
-        - read:org
-      Authenticator:
-        enable_auth_state: true
-        manage_groups: true
 
 jupyterhub-home-nfs:
   enabled: true
@@ -39,5 +32,3 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
-jupyterhub-groups-exporter:
-  enabled: true

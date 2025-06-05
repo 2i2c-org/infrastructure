@@ -40,5 +40,3 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.91.5
-  jupyterhub-groups-exporter:
-    enabled: true

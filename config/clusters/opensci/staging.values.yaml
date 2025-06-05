@@ -8,9 +8,6 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: '0.5' # in GB
 
-jupyterhub-groups-exporter:
-  enabled: true
-
 jupyterhub:
   ingress:
     hosts:
@@ -131,12 +128,6 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.opensci.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - 2i2c-demo-hub-access
-        scope:
-        - read:org
-      Authenticator:
-        enable_auth_state: true
-        manage_groups: true
 

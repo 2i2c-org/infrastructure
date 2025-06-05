@@ -13,9 +13,6 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: '10' # in GB
 
-jupyterhub-groups-exporter:
-  enabled: true
-
 jupyterhub:
   ingress:
     hosts:
@@ -163,15 +160,10 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://sciencecore.opensci.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - 2i2c-demo-hub-access
         - ScienceCore:climaterisk-team
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - kyttmacmanus   # Kytt MacManus, added as part of https://2i2c.freshdesk.com/a/tickets/1454
 

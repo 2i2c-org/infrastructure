@@ -54,14 +54,9 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - ReflectiveCloud
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - alistairduffey
   scheduling:
@@ -181,5 +176,3 @@ jupyterhub-home-nfs:
     enabled: true
   prometheusExporter:
     enabled: true
-jupyterhub-groups-exporter:
-  enabled: true

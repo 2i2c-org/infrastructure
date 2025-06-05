@@ -248,7 +248,6 @@ basehub:
     eks:
       enabled: true
   jupyterhub-groups-exporter:
-    enabled: true
     config:
       groupsExporter:
         allowed_groups:

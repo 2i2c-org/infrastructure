@@ -18,14 +18,9 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://bhki.af.catalystproject.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - CatalystProject-Hubs:bhki
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - LandiMi2
   singleuser:
@@ -41,5 +36,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.100.143.254
-jupyterhub-groups-exporter:
-  enabled: true

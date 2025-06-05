@@ -21,9 +21,6 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
-jupyterhub-groups-exporter:
-  enabled: true
-
 jupyterhub:
   custom:
     2i2c:

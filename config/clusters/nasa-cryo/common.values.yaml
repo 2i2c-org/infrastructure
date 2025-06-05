@@ -52,18 +52,13 @@ basehub:
         GitHubOAuthenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to populate the teams in the auth state
-          populate_teams_in_auth_state: true
           allowed_organizations:
           - CryoInTheCloud:cryoclouduser
           - CryoInTheCloud:cryocloudadvanced
           - CryoInTheCloud:csdms-2025-workshop
-          scope:
-          - read:org
         Authenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to persist auth state
-          enable_auth_state: true
-          manage_groups: true
           admin_users:
           - tsnow03
           - JessicaS11
@@ -283,5 +278,4 @@ basehub:
       enabled: true
     prometheusExporter:
       enabled: true
-  jupyterhub-groups-exporter:
-    enabled: true
+

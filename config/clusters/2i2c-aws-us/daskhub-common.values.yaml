@@ -26,10 +26,6 @@ basehub:
       enabled: true
     prometheusExporter:
       enabled: true
-
-  jupyterhub-groups-exporter:
-    enabled: true
-
   jupyterhub:
     scheduling:
       userScheduler:
@@ -44,10 +40,3 @@ basehub:
       config:
         JupyterHub:
           authenticator_class: github
-        GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
-          scope:
-          - read:org
-        Authenticator:
-          enable_auth_state: true
-          manage_groups: true

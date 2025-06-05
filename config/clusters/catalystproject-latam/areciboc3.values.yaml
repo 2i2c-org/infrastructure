@@ -1,8 +1,6 @@
 userServiceAccount:
   annotations:
     iam.gke.io/gcp-service-account: latam-areciboc3@catalystproject-392106.iam.gserviceaccount.com
-jupyterhub-groups-exporter:
-  enabled: true
 jupyterhub:
   ingress:
     hosts: [areciboc3.latam.catalystproject.2i2c.cloud]
@@ -23,14 +21,9 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://areciboc3.latam.catalystproject.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - catalystproject-hubs:areciboc3
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - pattiordonez
         - danielhjacobs

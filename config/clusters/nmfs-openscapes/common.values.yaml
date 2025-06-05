@@ -21,9 +21,6 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
-jupyterhub-groups-exporter:
-  enabled: true
-
 dask-gateway:
   enabled: true
 

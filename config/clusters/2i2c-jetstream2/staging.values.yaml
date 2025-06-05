@@ -69,12 +69,6 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.js.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
-        scope:
-        - read:org
-      Authenticator:
-        enable_auth_state: true
-        manage_groups: true
   singleuser:
     defaultUrl: /lab
     nodeSelector:
@@ -154,5 +148,3 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: 1 # in GB
     path: /export/staging
-jupyterhub-groups-exporter:
-  enabled: true
