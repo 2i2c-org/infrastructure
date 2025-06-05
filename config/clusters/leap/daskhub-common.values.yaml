@@ -203,21 +203,21 @@ basehub:
                 image: '{value}'
             choices:
               pangeo:
-                display_name: Base Pangeo Notebook (2025.01.24)
+                display_name: Base Pangeo Notebook (2025.05.22)
                 default: true
                 slug: pangeo
                 kubespawner_override:
-                  image: pangeo/pangeo-notebook:2025.01.24
+                  image: pangeo/pangeo-notebook:2025.05.22
               tensorflow:
-                display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
+                display_name: Pangeo Tensorflow ML Notebook (2025.05.22)
                 slug: tensorflow
                 kubespawner_override:
-                  image: pangeo/ml-notebook:2025.01.24
+                  image: pangeo/ml-notebook:2025.05.22
               pytorch:
-                display_name: Pangeo PyTorch ML Notebook (2025.01.24)
+                display_name: Pangeo PyTorch ML Notebook (2025.05.22)
                 slug: pytorch
                 kubespawner_override:
-                  image: pangeo/pytorch-notebook:2025.01.24
+                  image: pangeo/pytorch-notebook:2025.05.22
               leap-pangeo-edu:
                 display_name: LEAP Education Notebook (Testing Prototype)
                 slug: leap_edu
@@ -311,21 +311,21 @@ basehub:
                 image: '{value}'
             choices:
               pangeo:
-                display_name: Base Pangeo Notebook (2025.01.24)
+                display_name: Base Pangeo Notebook (2025.05.22)
                 default: true
                 slug: pangeo
                 kubespawner_override:
-                  image: pangeo/pangeo-notebook:2025.01.24
+                  image: pangeo/pangeo-notebook:2025.05.22
               tensorflow:
-                display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
+                display_name: Pangeo Tensorflow ML Notebook (2025.05.22)
                 slug: tensorflow
                 kubespawner_override:
-                  image: pangeo/ml-notebook:2025.01.24
+                  image: pangeo/ml-notebook:2025.05.22
               pytorch:
-                display_name: Pangeo PyTorch ML Notebook (2025.01.24)
+                display_name: Pangeo PyTorch ML Notebook (2025.05.22)
                 slug: pytorch
                 kubespawner_override:
-                  image: pangeo/pytorch-notebook:2025.01.24
+                  image: pangeo/pytorch-notebook:2025.05.22
               leap-pangeo-edu:
                 display_name: LEAP Education Notebook (Testing Prototype)
                 slug: leap_edu
@@ -375,15 +375,15 @@ basehub:
             unlisted_choice: *profile_list_unlisted_choice
             choices:
               tensorflow:
-                display_name: Pangeo Tensorflow ML Notebook (2025.01.24)
+                display_name: Pangeo Tensorflow ML Notebook (2025.05.22)
                 slug: tensorflow
                 kubespawner_override:
-                  image: pangeo/ml-notebook:2025.01.24
+                  image: pangeo/ml-notebook:2025.05.22
               pytorch:
-                display_name: Pangeo PyTorch ML Notebook (2025.01.24)
+                display_name: Pangeo PyTorch ML Notebook (2025.05.22)
                 slug: pytorch
                 kubespawner_override:
-                  image: pangeo/pytorch-notebook:2025.01.24
+                  image: pangeo/pytorch-notebook:2025.05.22
         kubespawner_override:
           environment:
             NVIDIA_DRIVER_CAPABILITIES: compute,utility
