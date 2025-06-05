@@ -16,8 +16,8 @@ yaml = YAML(typ="safe", pure=True)
 
 @exec_app.command()
 def promql(
-    cluster_name: str = typer.Argument(help="Name of the Cluster to Query"),
     query: str = typer.Argument(help="PromQL query to execute"),
+    cluster_name: str = typer.Argument(help="Name of the Cluster to Query"),
     output_json: bool = typer.Option(
         False, "--json", help="Output JSON rather than pretty table"
     ),
