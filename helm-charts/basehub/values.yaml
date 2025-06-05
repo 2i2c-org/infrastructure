@@ -1666,7 +1666,7 @@ jupyterhub:
         setup_ui(c)
 
       08-auth-state-groups: |
-        # Pass the user's GitHub teams from auth_state to JupyterHub group memberships. Requires c.Authenticator.manage_groups = True
+        # Pass the user's GitHub teams from auth_state to JupyterHub group memberships.
         
         async def custom_auth_state_groups_key(auth_state):
           if "teams" not in auth_state.keys():
@@ -1681,8 +1681,13 @@ jupyterhub:
                 groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
             custom_auth_state_groups_key.groups_list = groups_list
             return groups_list
-        if c.GitHubOAuthenticator:
+        if c.JupyterHub.authenticator_class == "github":
           c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
+
+      09-2i2c-add-staff-gh-team: |
+        # Appends 2i2c staff access by GitHub team membership by default for GitHub authenticated hubs.
+        if c.JupyterHub.authenticator_class == "github":
+          c.GitHubOAuthenticator.allowed_organizations.append("2i2c-org:hub-access-for-2i2c-staff")
 
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
