@@ -903,6 +903,13 @@ jupyterhub:
         # Increase timeout for Jupyter server to become 'ready', until
         # https://github.com/2i2c-org/infrastructure/issues/2047 is fixed
         http_timeout: 120
+      GitHubOAuthenticator:
+        # Applies only if hub.config.JupyterHub.authenticator_class is set to github
+        enable_auth_state: true
+        manage_groups: true
+        populate_teams_in_auth_state: true
+        scope:
+        - read:org
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
@@ -1071,6 +1078,14 @@ jupyterhub:
         display: false
         url: http://binderhub:8090
         oauth_no_confirm: true
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+        - jupyterhub-groups-exporter
+        scopes:
+        - users
+        - groups
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.12172.hf6a94ef2"
@@ -1576,7 +1591,6 @@ jupyterhub:
               profile_list_allowed_groups_filter,
               deepcopy(c.KubeSpawner.profile_list)
             )
-
       06-salted-username: |
         # Allow anonymizing username to not store *any* PII
         import json
@@ -1649,6 +1663,33 @@ jupyterhub:
         from jupyterhub_fancy_profiles import setup_ui
         setup_ui(c)
 
+      08-auth-state-groups: |
+        # Pass the user's GitHub teams from auth_state to JupyterHub group memberships.
+        
+        async def custom_auth_state_groups_key(auth_state):
+          if "teams" not in auth_state.keys():
+            print("No GitHub teams found in auth_state.")
+            return None
+          else:
+            groups_list = []
+            for team in auth_state["teams"]:
+              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
+                continue
+              else:
+                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
+            custom_auth_state_groups_key.groups_list = groups_list
+            return groups_list
+        if c.JupyterHub.authenticator_class == "github":
+          c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
+
+      09-2i2c-add-staff-gh-team: |
+        # Appends 2i2c staff access by GitHub team membership by default for GitHub authenticated hubs.
+        if c.JupyterHub.authenticator_class == "github" and type(c.GitHubOAuthenticator.allowed_organizations) == list:
+          c.GitHubOAuthenticator.allowed_organizations.append("2i2c-org:hub-access-for-2i2c-staff")
+        else:
+          print("No GitHubOAuthenticator.allowed_organizations found, setting to ['2i2c-org:hub-access-for-2i2c-staff']")
+          c.GitHubOAuthenticator.allowed_organizations = ["2i2c-org:hub-access-for-2i2c-staff"]
+
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
         # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
@@ -1718,4 +1759,4 @@ jupyterhub-home-nfs:
     enabled: true
 
 jupyterhub-groups-exporter:
-  enabled: false
+  enabled: true

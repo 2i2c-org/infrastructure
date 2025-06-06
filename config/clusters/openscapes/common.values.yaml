@@ -179,9 +179,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
           allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
           - NASA-Openscapes:workshopaccess-2i2c
           - NASA-Openscapes:longtermaccess-2i2c
           - NASA-Openscapes:championsaccess-2i2c
@@ -191,11 +189,7 @@ basehub:
           - nasa-openscapes-workshops:ChampionsAccess-2i2c
           - nasa-openscapes-workshops:WorkshopAccess-2i2c
           - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
-          scope:
-          - read:org
         Authenticator:
-          enable_auth_state: true
-          manage_groups: true
           admin_users:
           - amfriesz
           - jules32

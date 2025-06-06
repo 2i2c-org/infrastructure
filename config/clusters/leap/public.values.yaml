@@ -42,14 +42,10 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        populate_teams_in_auth_state: true
         oauth_callback_url: https://public.leap.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - leap-stc:leap-pangeo-public-access
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
         admin_users:
         - RobertPincus
         - SammyAgrawal

@@ -21,12 +21,6 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
-jupyterhub-groups-exporter:
-  enabled: true
-  config:
-    groupsExporter:
-      update_exporter_interval: 3600
-
 dask-gateway:
   enabled: true
 
@@ -275,38 +269,10 @@ jupyterhub:
     allowNamedServers: true
     config:
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - ateucher   # Andy Teucher
         - jules32   # Julia Stewart Lowndes
         - eeholmes   # Eli Holmes
-    services:
-      jupyterhub-groups-exporter: {}
-    loadRoles:
-      jupyterhub-groups-exporter:
-        services:
-        - jupyterhub-groups-exporter
-        scopes:
-        - users
-        - groups
-    extraConfig:
-      custom-auth-state-groups-key: |
-        async def custom_auth_state_groups_key(auth_state):
-          groups_list = []
-          if auth_state is None:
-            print("Auth state is None")
-            return groups_list
-          else:
-            for team in auth_state["teams"]:
-              if f'{team["organization"]["login"]}:{team["slug"]}' not in c.GitHubOAuthenticator.allowed_organizations:
-                continue
-              else:
-                groups_list.append(f'{team["organization"]["login"]}:{team["slug"]}')
-            return groups_list
-        if c.GitHubOAuthenticator:
-          c.GitHubOAuthenticator.auth_state_groups_key = custom_auth_state_groups_key
-
   scheduling:
     userScheduler:
       enabled: true

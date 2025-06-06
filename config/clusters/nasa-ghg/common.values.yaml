@@ -20,11 +20,6 @@ basehub:
       enabled: true
     prometheusExporter:
       enabled: true
-  jupyterhub-groups-exporter:
-    enabled: true
-    config:
-      groupsExporter:
-        update_exporter_interval: 3600
   dask-gateway:
     enabled: true
     gateway:
@@ -60,9 +55,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
           allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
           - US-GHG-Center:ghgc-hub-access
           - US-GHG-Center:ghg-use-case-1
           - US-GHG-Center:ghg-use-case-2
@@ -71,42 +64,13 @@ basehub:
           - US-GHG-Center:ghg-workshop-access
           - US-GHG-Center:ghg-trial-access
           - US-GHG-Center:ssim-ghg-2025
-          scope:
-          - read:org
         Authenticator:
-          enable_auth_state: true
-          manage_groups: true
           admin_users:
           - freitagb
           - j08lue
           - slesaad
           - Jeanne-le-Roux
           - amarouane-ABDELHAK
-      services:
-        jupyterhub-groups-exporter: {}
-      loadRoles:
-        jupyterhub-groups-exporter:
-          services:
-          - jupyterhub-groups-exporter
-          scopes:
-          - users
-          - groups
-      extraConfig:
-        custom-github-oauthenticator: |
-          class CustomGitHubOAuthenticator(GitHubOAuthenticator):
-            async def authenticate(self, *args, **kwargs):
-                resp = await super().authenticate(*args, **kwargs)
-                if resp["auth_state"]["teams"] is None:
-                  return resp
-                groups = []
-                for team in resp["auth_state"]["teams"]:
-                  if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
-                    continue
-                  else:
-                    groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
-                resp["groups"] = groups
-                return resp
-          c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
     singleuser:
       cloudMetadata:
         blockWithIptables: false
