@@ -1,6 +1,3 @@
-jupyterhub-groups-exporter:
-  enabled: true
-
 jupyterhub:
   ingress:
     hosts: [gita.latam.catalystproject.2i2c.cloud]

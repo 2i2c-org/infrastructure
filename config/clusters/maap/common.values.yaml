@@ -53,16 +53,12 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        populate_teams_in_auth_state: true
         allowed_organizations:
         - MAAP-Project:data
         - MAAP-Project:maap-all
         - MAAP-Project:platform
         - MAAP-Project:gpu
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
         admin_users:
         - freitagb
         - wildintellect
