@@ -1686,7 +1686,7 @@ jupyterhub:
         # Appends 2i2c staff access by GitHub team membership by default for GitHub authenticated hubs.
         if c.JupyterHub.authenticator_class == "github" and type(c.GitHubOAuthenticator.allowed_organizations) == list:
           c.GitHubOAuthenticator.allowed_organizations.append("2i2c-org:hub-access-for-2i2c-staff")
-        else:
+        elif c.JupyterHub.authenticator_class == "github":
           print("No GitHubOAuthenticator.allowed_organizations found, setting to ['2i2c-org:hub-access-for-2i2c-staff']")
           c.GitHubOAuthenticator.allowed_organizations = ["2i2c-org:hub-access-for-2i2c-staff"]
 
