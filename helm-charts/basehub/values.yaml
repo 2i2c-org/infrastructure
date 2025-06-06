@@ -1684,8 +1684,11 @@ jupyterhub:
 
       09-2i2c-add-staff-gh-team: |
         # Appends 2i2c staff access by GitHub team membership by default for GitHub authenticated hubs.
-        if c.JupyterHub.authenticator_class == "github":
+        if c.JupyterHub.authenticator_class == "github" and type(c.GitHubOAuthenticator.allowed_organizations) == list:
           c.GitHubOAuthenticator.allowed_organizations.append("2i2c-org:hub-access-for-2i2c-staff")
+        else:
+          print("No GitHubOAuthenticator.allowed_organizations found, setting to ['2i2c-org:hub-access-for-2i2c-staff']")
+          c.GitHubOAuthenticator.allowed_organizations = ["2i2c-org:hub-access-for-2i2c-staff"]
 
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
