@@ -27,6 +27,7 @@ per-user-db.md
 private-nbgitpuller.md
 rocker.md
 shared-db.md
+shared-group-directories.md
 static-sites.md
 storage-quota.md
 community-docs.md
