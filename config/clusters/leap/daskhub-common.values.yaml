@@ -28,7 +28,6 @@ basehub:
         extraVolumeMounts:
         - name: home
           mountPath: /home/jovyan/allusers
-          readOnly: true
           # mounts below are copied from basehub's values that we override by
           # specifying extraVolumeMounts (lists get overridden when helm values
           # are combined)
