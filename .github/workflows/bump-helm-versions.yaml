@@ -11,7 +11,7 @@ on:
         default: false
         required: false
   schedule:
-    - cron: "0 0 1 * *" # Run first of every month at 00:00 UTC
+  - cron: 0 0 1 * *     # Run first of every month at 00:00 UTC
 
 env:
   team_reviewers: engineering
