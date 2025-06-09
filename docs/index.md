@@ -71,6 +71,7 @@ howto/image-management/index
 howto/filesystem-management/index
 howto/prepare-for-events/index.md
 howto/manage-domains/index.md
+howto/manage-alerts/index.md
 howto/grafana-github-auth.md
 howto/regenerate-smce-creds.md
 howto/troubleshoot/index.md
