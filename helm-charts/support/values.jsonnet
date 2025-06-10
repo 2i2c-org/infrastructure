@@ -46,8 +46,8 @@ local makePodRestartAlert = function(
     {
       alert: name,
       expr: |||
-        # Count container restarts with pod name containing 'pod_name_substring' in 1 hour.
-        sum(rate(kube_pod_container_status_restarts_total{pod=~".*%s.*"}[1h])) by (namespace) * 3600 >= 1
+        # Count total container restarts with pod name containing 'pod_name_substring'.
+        kube_pod_container_status_restarts_total{pod=~'.*%s.*'} >= 1
       ||| % [pod_name_substring],
       'for': '5m',
       labels: {
@@ -105,7 +105,7 @@ local makePodRestartAlert = function(
           ),
           makePodRestartAlert(
             'GroupsExporterPodRestarted',
-            'jupyterhub-groups-exporter pod has restarted: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
+            'jupyterhub-groups-exporter pod has restarted cluster:%s:{{ $labels.namespace }}' % [cluster_name],
             'groups-exporter',
           ),
         ],
