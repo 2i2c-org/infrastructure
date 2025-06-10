@@ -26,7 +26,7 @@ The alert is triggered when the volume is more than 90% full.
 To resolve the alert, follow the guidance below
 
 - [](../../howto/filesystem-management/increase-disk-size.md)
-- **TODO: add instructions for hub database**
+- To be documented, see [GH issue](https://github.com/2i2c-org/infrastructure/issues/6187)
 - [](../../sre-guide/prometheus-disk-resize.md)
 
 ## When a pod has restarted
