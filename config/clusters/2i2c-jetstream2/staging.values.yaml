@@ -36,7 +36,7 @@ jupyterhub:
   prePuller:
     hook:
       nodeSelector:
-        capi.stackhpc.com/node-group: user-m3-large
+        capi.stackhpc.com/node-group: user-m3-quad
   ingress:
     hosts: [staging.js.2i2c.cloud]
     tls:
@@ -72,7 +72,7 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     nodeSelector:
-      capi.stackhpc.com/node-group: user-m3-large
+      capi.stackhpc.com/node-group: user-m3-quad
     profileList:
     - display_name: Choose your environment and resources
       slug: only-choice
