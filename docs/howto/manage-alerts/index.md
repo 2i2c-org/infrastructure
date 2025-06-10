@@ -35,7 +35,7 @@ We monitor pod restarts for the following services:
 
 - `jupyterhub-groups-exporter`
 
-If a pod has restarted, it may indicate an issue with the service or its configuration. Check the logs of the pod to identify any errors or issues that may have caused the restart. If necessary, redeploy the service or adjust its configuration to resolve the issue.
+If a pod has restarted, it may indicate an issue with the service or its configuration. Check the logs of the pod to identify any errors or issues that may have caused the restart. If necessary, add more error handling to the code, redeploy the service or adjust its configuration to resolve the issue.
 
 Once the pod is stable, ensure that the alert is resolved by checking whether the pod has been running without restarts, e.g. by running the following command:
 
