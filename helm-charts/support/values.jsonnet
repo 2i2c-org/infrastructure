@@ -36,6 +36,30 @@ local makePVCApproachingFullAlert = function(
   ],
 };
 
+local makePodRestartAlert = function(
+  name,
+  summary,
+  pod_name_substring,
+                            ) {
+  name: name,
+  rules: [
+    {
+      alert: name,
+      expr: |||
+        # Count total container restarts with pod name containing 'pod_name_substring'.
+        kube_pod_container_status_restarts_total{pod=~'.*%s.*'} >= 1
+      ||| % [pod_name_substring],
+      'for': '5m',
+      labels: {
+        cluster: cluster_name,
+      },
+      annotations: {
+        summary: summary,
+      },
+    },
+  ],
+};
+
 {
   prometheus: {
     alertmanager: {
@@ -78,6 +102,11 @@ local makePVCApproachingFullAlert = function(
             'PrometheusDiskApproachingFull',
             'Prometheus Disk about to be full: cluster:%s' % [cluster_name],
             'support-prometheus-server',
+          ),
+          makePodRestartAlert(
+            'GroupsExporterPodRestarted',
+            'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
+            'groups-exporter',
           ),
         ],
       },
