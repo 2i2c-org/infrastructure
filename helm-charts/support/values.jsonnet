@@ -105,7 +105,7 @@ local makePodRestartAlert = function(
           ),
           makePodRestartAlert(
             'GroupsExporterPodRestarted',
-            'jupyterhub-groups-exporter pod has restarted cluster:%s:{{ $labels.namespace }}' % [cluster_name],
+            'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
             'groups-exporter',
           ),
         ],
