@@ -1760,10 +1760,3 @@ jupyterhub-home-nfs:
 
 jupyterhub-groups-exporter:
   enabled: true
-  resources:
-    requests:
-      cpu: 0.001
-      memory: 64Mi
-    limits:
-      cpu: 0.01
-      memory: 128Mi
