@@ -99,8 +99,12 @@ basehub:
                 }
               }
 
+              # The spawner expands environment variables using string.format, so we need to escape braces.
+              settings_str = json.dumps(settings)
+              escaped_settings_str = settings_str.replace("{", "{{").replace("}", "}}")
+
               spawner.environment.update({
-                "ES_BOOTSTRAP_SETTINGS": json.dumps(settings)
+                "ES_BOOTSTRAP_SETTINGS": escaped_settings_str
               })
 
           c.Spawner.auth_state_hook = populate_token
