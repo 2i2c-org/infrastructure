@@ -147,6 +147,11 @@ jupyterhub:
               slug: pace
               kubespawner_override:
                 image: quay.io/pacehackweek/pace-2024:latest
+            pangeoml:
+              display_name: Pangeo ML with TensorFlow
+              slug: pangeoml
+              kubespawner_override:
+                image: quay.io/pangeo/ml-notebook:2025.05.22
           unlisted_choice:
             enabled: true
             display_name: Custom image
