@@ -29,6 +29,7 @@ basehub:
     hub:
       extraConfig:
         001-username-claim: |
+          import json
           from oauthenticator.generic import GenericOAuthenticator
           from traitlets import List, Unicode
           from urllib.parse import urlparse
@@ -85,6 +86,7 @@ basehub:
               base_url = f"{url_parts.scheme}://{url_parts.netloc}"
               scope_str = " ".join(spawner.authenticator.scope)
 
+              # Deprecated; but keep for backwards compatibility
               token_env = {
                 'ES_OAUTH2__AUDIENCE': spawner.authenticator.extra_authorize_params.get("audience", ""),
                 'ES_OAUTH2__CLIENT_ID': spawner.authenticator.client_id,
@@ -95,6 +97,23 @@ basehub:
                 'ES_OAUTH2__REFRESH_TOKEN': auth_state.get('refresh_token', '')
               }
               spawner.environment.update(token_env)
+
+              # Bootstrap EarthScope SDK settings
+              settings = {
+                "oauth2": {
+                  "audience": spawner.authenticator.extra_authorize_params.get("audience", ""),
+                  "client_id": spawner.authenticator.client_id,
+                  "domain": base_url,
+                  "scope": scope_str,
+                  "access_token": auth_state.get("access_token", ""),
+                  "id_token": auth_state.get("id_token", ""),
+                  "refresh_token": auth_state.get("refresh_token", "")
+                }
+              }
+
+              spawner.environment.update({
+                "ES_BOOTSTRAP_SETTINGS": json.dumps(settings)
+              })
 
           c.Spawner.auth_state_hook = populate_token
 
