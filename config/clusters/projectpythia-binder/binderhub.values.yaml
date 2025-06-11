@@ -35,7 +35,7 @@ jupyterhub:
       limit: 8G
       guarantee: 8G
     nodeSelector:
-      capi.stackhpc.com/node-group: user-m3-quad
+      capi.stackhpc.com/node-group: user-m3-large
     storage:
       type: none
       extraVolumeMounts: []
@@ -80,7 +80,7 @@ jupyterhub:
   prePuller:
     hook:
       nodeSelector:
-        capi.stackhpc.com/node-group: user-m3-quad
+        capi.stackhpc.com/node-group: user-m3-large
   hub:
     nodeSelector:
       capi.stackhpc.com/node-group: core
@@ -120,7 +120,7 @@ binderhub-service:
   dockerApi:
     nodeSelector:
       hub.jupyter.org/node-purpose:
-      capi.stackhpc.com/node-group: user-m3-quad
+      capi.stackhpc.com/node-group: user-m3-large
   config:
     GitHubRepoProvider:
       allowed_specs:
@@ -143,7 +143,7 @@ binderhub-service:
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose:
-        capi.stackhpc.com/node-group: user-m3-quad
+        capi.stackhpc.com/node-group: user-m3-large
   extraEnv:
   - name: JUPYTERHUB_API_TOKEN
     valueFrom:
