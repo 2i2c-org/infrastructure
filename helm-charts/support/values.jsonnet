@@ -47,7 +47,9 @@ local makePodRestartAlert = function(
       alert: name,
       expr: |||
         # Count total container restarts with pod name containing 'pod_name_substring'.
-        kube_pod_container_status_restarts_total{pod=~'.*%s.*'} >= 1
+        # We sum by pod name (which resets after restart) and namespace, so we don't get all
+        # the other labels of the metric in our alert.
+        sum(kube_pod_container_status_restarts_total{pod=~'.*%s.*'}) by (pod, namespace) >= 1
       ||| % [pod_name_substring],
       'for': '5m',
       labels: {
@@ -69,6 +71,12 @@ local makePodRestartAlert = function(
           group_wait: '10s',
           group_interval: '5m',
           receiver: 'pagerduty',
+          group_by: [
+            # Deliver alerts individually for each alert as well as each namespace
+            # an alert is for. We don't specify "cluster" here because each alertmanager
+            # only handles one cluster
+            "alertname", "namespace"
+          ],
           repeat_interval: '3h',
           routes: [
             {
