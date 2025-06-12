@@ -37,10 +37,10 @@ local makePVCApproachingFullAlert = function(
 };
 
 local diskIOApproachingSaturation = {
-  name: "DiskIOApproachingSaturation",
+  name: 'DiskIOApproachingSaturation',
   rules: [
     {
-      alert: "DiskIOApproachingSaturation",
+      alert: 'DiskIOApproachingSaturation',
       expr: |||
         # We calculate the utilization for any given disk on our cluster,
         # and alert if that goes over 80%. This is primarily here to catch
@@ -59,7 +59,7 @@ local diskIOApproachingSaturation = {
         cluster: cluster_name,
       },
       annotations: {
-        summary: "Disk {{ $labels.device }} on node {{ $labels.node }} is approaching saturation on cluster %s" % [cluster_name],
+        summary: 'Disk {{ $labels.device }} on node {{ $labels.node }} is approaching saturation on cluster %s' % [cluster_name],
       },
     },
   ],
@@ -145,7 +145,7 @@ local makePodRestartAlert = function(
             'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
             'groups-exporter',
           ),
-          diskIOApproachingSaturation
+          diskIOApproachingSaturation,
         ],
       },
     },
