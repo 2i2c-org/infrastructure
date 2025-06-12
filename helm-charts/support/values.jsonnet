@@ -36,6 +36,35 @@ local makePVCApproachingFullAlert = function(
   ],
 };
 
+local diskIOApproachingSaturation = {
+  name: 'DiskIOApproachingSaturation',
+  rules: [
+    {
+      alert: 'DiskIOApproachingSaturation',
+      expr: |||
+        # We calculate the utilization for any given disk on our cluster,
+        # and alert if that goes over 80%. This is primarily here to catch
+        # overutilization of NFS host disk, which may cause serious outages.
+        # https://brian-candler.medium.com/interpreting-prometheus-metrics-for-linux-disk-i-o-utilization-4db53dfedcfc
+        # has helpful explanations for this metric, and why this particular query
+        # is utilization %.
+        sum(
+          rate(
+            node_disk_io_time_seconds_total[5m]
+          )
+        ) by (device, node) > 0.8
+      |||,
+      'for': '5m',
+      labels: {
+        cluster: cluster_name,
+      },
+      annotations: {
+        summary: 'Disk {{ $labels.device }} on node {{ $labels.node }} is approaching saturation on cluster %s' % [cluster_name],
+      },
+    },
+  ],
+};
+
 local makePodRestartAlert = function(
   name,
   summary,
@@ -117,6 +146,7 @@ local makePodRestartAlert = function(
             'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
             'groups-exporter',
           ),
+          diskIOApproachingSaturation,
         ],
       },
     },
