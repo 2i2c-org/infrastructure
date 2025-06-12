@@ -72,10 +72,11 @@ local makePodRestartAlert = function(
           group_interval: '5m',
           receiver: 'pagerduty',
           group_by: [
-            # Deliver alerts individually for each alert as well as each namespace
-            # an alert is for. We don't specify "cluster" here because each alertmanager
-            # only handles one cluster
-            "alertname", "namespace"
+            // Deliver alerts individually for each alert as well as each namespace
+            // an alert is for. We don't specify "cluster" here because each alertmanager
+            // only handles one cluster
+            'alertname',
+            'namespace',
           ],
           repeat_interval: '3h',
           routes: [
