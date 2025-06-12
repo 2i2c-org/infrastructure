@@ -145,15 +145,11 @@ basehub:
       cloudMetadata:
         blockWithIptables: false
       profileList:
-      - display_name: 'Shared Small: 1-4 CPU, 7.2 GB'
-        description: A shared machine, the recommended option until you experience a limitation.
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
-        profile_options: &profile_options
+      - display_name: Choose your environment and resources
+        default: true
+        profile_options:
           image:
-            display_name: Image
+            display_name: Environment
             unlisted_choice:
               enabled: true
               display_name: Custom image
@@ -184,62 +180,97 @@ basehub:
                     # Ensures container working dir is homedir
                     # https://github.com/2i2c-org/infrastructure/issues/2559
                   working_dir: /home/rstudio
-        kubespawner_override:
-          mem_guarantee: 7.234G
-          cpu_guarantee: 0.1
-          mem_limit: 7.234G
-          node_selector:
-            node.kubernetes.io/instance-type: r5.xlarge
-      - display_name: 'Shared Small: 1-4 CPU, 14 GB'
-        description: A shared machine, the recommended option until you experience a limitation.
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
-        profile_options: *profile_options
-        kubespawner_override:
-          mem_guarantee: 14.468G
-          cpu_guarantee: 0.1
-          mem_limit: 14.468G
-          node_selector:
-            node.kubernetes.io/instance-type: r5.xlarge
-      - display_name: 'Small: 4 CPU, 32 GB'
-        description: A dedicated machine for you.
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
-        profile_options: *profile_options
-        kubespawner_override:
-          mem_guarantee: 28.937G
-          cpu_guarantee: 0.4
-          mem_limit:
-          node_selector:
-            node.kubernetes.io/instance-type: r5.xlarge
-      - display_name: 'Medium: 16 CPU, 128 GB'
-        description: A dedicated machine for you.
-        profile_options: *profile_options
-        allowed_groups:
-        - geolab:dev
-        - geolab:power
-        kubespawner_override:
-          mem_guarantee: 120.513G
-          cpu_guarantee: 1.6
-          mem_limit:
-          node_selector:
-            node.kubernetes.io/instance-type: r5.4xlarge
-      - display_name: 'Large: 64 CPU, 512 GB'
-        description: A dedicated machine for you
-        profile_options: *profile_options
-        allowed_groups:
-        - geolab:power
-        kubespawner_override:
-          mem_guarantee: 489.13G
-          cpu_guarantee: 6.4
-          mem_limit:
-          node_selector:
-            node.kubernetes.io/instance-type: r5.16xlarge
-
+          resource_allocation:
+            display_name: Resource Allocation
+            choices:
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                default: true
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.7 CPUs
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 15929958203
+                  mem_limit: 15929958203
+                  cpu_guarantee: 1.8625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_7:
+                display_name: 29.7 GB RAM, upto 3.7 CPUs
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 31859916406
+                  mem_limit: 31859916406
+                  cpu_guarantee: 3.725
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.6 CPUs
+                allowed_groups:
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 65094448840
+                  mem_limit: 65094448840
+                  cpu_guarantee: 7.8475
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_121_2:
+                display_name: 121.2 GB RAM, upto 15.6 CPUs
+                allowed_groups:
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 130188897681
+                  mem_limit: 130188897681
+                  cpu_guarantee: 15.695
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_489_9:
+                display_name: 489.9 GB RAM, upto 63.5 CPUs
+                allowed_groups:
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 525987313876
+                  mem_limit: 525987313876
+                  cpu_guarantee: 63.575
+                  cpu_limit: 63.575
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.16xlarge
     scheduling:
       userScheduler:
         enabled: true
