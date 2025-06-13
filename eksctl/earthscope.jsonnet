@@ -169,9 +169,7 @@ local daskNodes = [
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
+          // We use tigera for networkpolicy enforcement
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -193,6 +191,10 @@ local daskNodes = [
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
