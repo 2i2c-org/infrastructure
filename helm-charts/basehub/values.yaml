@@ -750,6 +750,8 @@ jupyterhub:
           # https://github.com/jupyterlab/jupyterlab/issues/11304#issuecomment-945466766
           ContentsManager:
             allow_hidden: true
+          SQLiteYStore:
+            db_path: /tmp/jupyterlab_ystore.db
           # MappingKernelManager configuration reference:
           # https://jupyter-server.readthedocs.io/en/latest/api/jupyter_server.services.kernels.html#jupyter_server.services.kernels.kernelmanager.MappingKernelManager
           #
