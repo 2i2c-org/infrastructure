@@ -12,7 +12,7 @@ Some hubs have [shared password authentication](../../hub-deployment-guide/confi
 1. Before the "End date", reset the shared password and update the issue with the new password by using the `sops` command to edit the password key of the `config/clusters/$CLUSTER_NAME/${HUB_NAME}.secret.values.yaml` file
 
    ```bash
-    sops edit enc-$HUB_NAME.secret.values.yaml
+    sops edit enc-${HUB_NAME}.secret.values.yaml
    ```
 
    :::{note}
