@@ -58,7 +58,7 @@ local diskIOApproachingSaturation = {
       'for': '5m',
       labels: {
         cluster: cluster_name,
-        page: "yuvipanda", # Temporarily, until we figure out a more premanent fix
+        page: 'yuvipanda',  // Temporarily, until we figure out a more premanent fix
       },
       annotations: {
         summary: 'Disk {{ $labels.device }} on node {{ $labels.node }} is approaching saturation on cluster %s' % [cluster_name],
