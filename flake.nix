@@ -18,6 +18,9 @@
         inherit system;
         config.allowUnfree = true;
       };
+      gdk = pkgs.google-cloud-sdk.withExtraComponents (with pkgs.google-cloud-sdk.components; [
+        gke-gcloud-auth-plugin
+      ]);
       envWithScript = script:
         (pkgs.buildFHSUserEnv {
           name = "2i2c-env";
@@ -35,7 +38,7 @@
             helm
             kubectl
             sops
-            google-cloud-sdk
+            gdk
             awscli2
             azure-cli
             terraform
