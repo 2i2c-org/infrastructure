@@ -21,7 +21,7 @@ This page documents what we do to prep, based on our prior experiences.
       - 🔲 Access and login to the cluster grafana
       - 🔲 Access and login to the cloud console
       - 🔲 Test access to Logs Explorer for container logs if on GCP
-      - 🔲 Test that running `deployer use-cluster-credentials $CLUSTER` and then `kubectl get pods -A` work
+      - 🔲 Test that running `deployer use-cluster-credentials $CLUSTER_NAME` and then `kubectl get pods -A` work
 
 3. **Ensure user pods have a guaranteed quality of service class**
 
