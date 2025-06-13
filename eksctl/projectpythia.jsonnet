@@ -32,6 +32,7 @@ local notebookNodes = [
     instanceType: 'g4dn.xlarge',
     tags+: {
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     taints+: {
       'nvidia.com/gpu': 'present:NoSchedule',
