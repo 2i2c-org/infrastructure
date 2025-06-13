@@ -38,6 +38,7 @@ local notebookNodes = [
     },
     labels: {
       '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     // Allow provisioning GPUs across all AZs, to prevent situation where all
     // GPUs in a single AZ are in use and no new nodes can be spawned

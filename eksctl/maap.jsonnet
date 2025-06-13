@@ -70,6 +70,7 @@ local notebookNodes = [
     labels+: {
       '2i2c/hub-name': 'staging',
       '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     tags+: {
       '2i2c:hub-name': 'staging',
@@ -88,6 +89,7 @@ local notebookNodes = [
     labels+: {
       '2i2c/hub-name': 'prod',
       '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     tags+: {
       '2i2c:hub-name': 'prod',
