@@ -7,9 +7,9 @@ Some hubs have [shared password authentication](../../hub-deployment-guide/confi
 1. A community will usually indicate that they require a shared password reset for an event through FreshDesk support.
 1. Acknowledge receipt of the request and confirm the password to be used and the implementation date, as well as event details.
 1. Open an [Event for a community](https://github.com/2i2c-org/infrastructure/issues/new?template=07_event-hub.yaml) issue in the infrastructure repository and follow the instructions. Remember to add the event to the [Hub Events calendar](https://calendar.google.com/calendar/u/2?cid=Y19rdDg0c2g3YW5tMHNsb2NqczJzdTNqdnNvY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t).
-1. Add a sub-issue of the event issue to reset the shared password. This sub-issue should be titled "[`$CLUSTER`, `$HUB`] Reset shared password".
+1. Add a sub-issue of the event issue to reset the shared password. This sub-issue should be titled "[`$CLUSTER_NAME`, `$HUB`] Reset shared password".
 1. Add the sub-issue to the GH project board with the "End date" set to the date.
-1. Before the "End date", reset the shared password and update the issue with the new password by using the `sops` command to edit the password key of the `config/clusters/$CLUSTER/${HUB}.secret.values.yaml` file
+1. Before the "End date", reset the shared password and update the issue with the new password by using the `sops` command to edit the password key of the `config/clusters/$CLUSTER_NAME/${HUB}.secret.values.yaml` file
 
    ```bash
     sops edit enc-$HUB.secret.values.yaml
