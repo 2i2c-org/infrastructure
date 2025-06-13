@@ -2,6 +2,21 @@
 
 In addition to [](#uptime-checks), we also have a set of alerts that are configured in support deployments using [](#topic/jsonnet).
 
+## Paging
+
+We don't have an on-call rotation currently, and nobody is expected to
+respond outside working hours. Hence, we don't really currently have paging
+alerts.
+
+However, we may temporarily mark some alerts to page specific people during
+ongoing incidents that have not been resolved yet. This is usually done
+to monitor a temporary fix that may or may not have solved the issue. By
+adding a paging alert, we buy ourselves a little peace of mind - as long
+as the page is not firing, we are doing ok.
+
+Alerts should have a label named `page` that can be set to the pagerduty
+of whoever should be paged for that alert.
+
 ## Configuration
 
 We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
