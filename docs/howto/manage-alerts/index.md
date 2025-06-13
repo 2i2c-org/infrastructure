@@ -15,7 +15,7 @@ adding a paging alert, we buy ourselves a little peace of mind - as long
 as the page is not firing, we are doing ok.
 
 Alerts should have a label named `page` that can be set to the pagerduty
-of whoever should be paged for that alert.
+username of whoever should be paged for that alert.
 
 ## Configuration
 
