@@ -4,6 +4,7 @@ local makePVCApproachingFullAlert = function(
   name,
   summary,
   persistentvolumeclaim,
+  labels={},
                                     ) {
   // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
   name: name,
@@ -28,7 +29,7 @@ local makePVCApproachingFullAlert = function(
       'for': '5m',
       labels: {
         cluster: cluster_name,
-      },
+      } + labels,
       annotations: {
         summary: summary,
       },
@@ -57,6 +58,7 @@ local diskIOApproachingSaturation = {
       'for': '5m',
       labels: {
         cluster: cluster_name,
+        page: 'yuvipanda',  // Temporarily, until we figure out a more premanent fix
       },
       annotations: {
         summary: 'Disk {{ $labels.device }} on node {{ $labels.node }} is approaching saturation on cluster %s' % [cluster_name],
@@ -69,6 +71,7 @@ local makePodRestartAlert = function(
   name,
   summary,
   pod_name_substring,
+  labels={}
                             ) {
   name: name,
   rules: [
@@ -83,7 +86,7 @@ local makePodRestartAlert = function(
       'for': '5m',
       labels: {
         cluster: cluster_name,
-      },
+      } + labels,
       annotations: {
         summary: summary,
       },
