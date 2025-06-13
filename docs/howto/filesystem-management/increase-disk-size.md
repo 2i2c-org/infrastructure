@@ -1,6 +1,34 @@
 (howto:increase-disk-size)=
 # Increase the size of a disk storing home directories
 
+## Community check-in
+
+Increasing the size of a storage disk has cost implications. Downsizing the volume is also a [complicated process](howto:decrease-size-gcp-filestore). Please confirm with the community using an email thread on FreshDesk before performing this action.
+
+<details open>
+<summary>Email template</summary>
+<br>
+
+> Dear all,
+> 
+> The home directory disk capacity for the <$CLUSTER_NAME> <$HUB_NAME> hub is approaching its maximum limit.
+> 
+> Recommended actions:
+> 
+> 1. Instruct users to delete any unused files from their home directories (saves cloud costs)
+> 
+> OR
+> 
+> 2. Instruct us to increase the home directory disk capacity (incurs cloud costs)
+> 
+> You can make use of the Grafana Dashboard *JupyterHub Default Dashboards >
+> Home Directory Usage Dashboard* to get an overview of home directory usage per-user:
+> 
+> <$GRAFANA_URL>
+</details>
+
+## Procedure
+
 ```bash
 export CLUSTER_NAME=<cluster-name>;
 export HUB_NAME=<hub-name>
