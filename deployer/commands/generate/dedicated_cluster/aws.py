@@ -39,8 +39,7 @@ def get_infra_files_to_be_created(cluster_name):
     ]
 
 
-def generate_infra_files(vars):
-    cluster_name = vars["cluster_name"]
+def generate_eksctl(cluster_name):
     with open(REPO_ROOT_PATH / "eksctl/template.jsonnet") as f:
         # jsonnet files have `}}` in there, which causes jinja2 to
         # freak out. So we use different delimiters.
@@ -53,10 +52,17 @@ def generate_infra_files(vars):
             variable_end_string=">>",
         )
 
-    print_colour("Generating the eksctl jsonnet file...", "yellow")
     jsonnet_file_path = REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet"
     with open(jsonnet_file_path, "w") as f:
         f.write(jsonnet_template.render(**vars))
+    return jsonnet_file_path
+
+
+def generate_infra_files(vars):
+    cluster_name = vars["cluster_name"]
+
+    print_colour("Generating the eksctl jsonnet file...", "yellow")
+    jsonnet_file_path = generate_eksctl(cluster_name)
     print_colour(f"{jsonnet_file_path} created")
 
     print_colour("Generating the terraform infrastructure file...", "yellow")
