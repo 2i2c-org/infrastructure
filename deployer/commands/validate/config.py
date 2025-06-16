@@ -246,7 +246,7 @@ def authenticator_config(
                     if hub.legacy_daskhub:
                         config = config.get("basehub", {})
                     hub_config = (
-                        config.get("jupyterhub", {}).get("hub", {}).get("config")
+                        config.get("jupyterhub", {}).get("hub", {}).get("config", {})
                     )
                     allowed_users = hub_config.get("Authenticator", {}).get(
                         "allowed_users"
