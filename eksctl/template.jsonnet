@@ -60,7 +60,7 @@ local daskNodes = [
   // A not yet fully established policy is being developed about using a single
   // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
   //
-<% for hub in hubs %>
+<% for hub in dask_hubs %>
   {
     namePrefix: 'dask-<< hub >>',
     labels+: { '2i2c/hub-name': '<< hub >>' },
