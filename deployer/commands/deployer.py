@@ -168,31 +168,7 @@ def run_hub_health_check(
         sys.exit(1)
 
     # Skip the regular hub health check for hubs with binderhub ui that are not authenticated
-    for values_file_name in hub.spec["helm_chart_values_files"]:
-        if not any(
-            substr in os.path.basename(values_file_name)
-            for substr in ["secret", "common"]
-        ):
-            values_file = cluster.config_dir / values_file_name
-            config = yaml.load(values_file)
-            basehub = config.get("basehub", {})
-            if basehub:
-                config = config.get("basehub", {})
-            binderhub_ui = (
-                config.get("jupyterhub", {})
-                .get("custom", {})
-                .get("binderhubUI", {})
-                .get("enabled")
-            )
-            authentication = (
-                config.get("jupyterhub", {})
-                .get("hub", {})
-                .get("config", {})
-                .get("JupyterHub", {})
-                .get("authenticator_class", "")
-            )
-
-    if binderhub_ui and authentication == "null":
+    if hub.binderhub_ui and hub.authenticator == "null":
         print_colour(
             f"Testing {hub.spec['name']} is not yet supported. Skipping ...",
             "yellow",
@@ -250,26 +226,7 @@ def run_hub_health_check(
         f"--hub-type={hub.spec['helm_chart']}",
     ]
 
-    for values_file in hub.spec["helm_chart_values_files"]:
-        if "secret" not in os.path.basename(values_file):
-            values_file = cluster.config_dir / values_file
-            config = yaml.load(values_file)
-            # Check if there's config that enables dask-gateway
-            if config.get("basehub", {}):
-                dask_gateway_enabled = (
-                    config.get("basehub", {})
-                    .get("dask-gateway", {})
-                    .get("enabled", False)
-                )
-            else:
-                dask_gateway_enabled = config.get("dask-gateway", {}).get(
-                    "enabled", False
-                )
-
-            if dask_gateway_enabled:
-                break
-
-    if dask_gateway_enabled and check_dask_scaling:
+    if hub.type == "daskhub" and check_dask_scaling:
         pytest_args.append("--check-dask-scaling")
 
     if gh_ci == "true":
