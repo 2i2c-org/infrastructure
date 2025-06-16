@@ -11,6 +11,10 @@ def eksctl(
     cluster_name: str = typer.Argument(
         ..., help="Name of the cluster to update its eksctl config"
     ),
+    gpu_hubs: str = typer.Option(
+        "",
+        prompt="The list of hubs that will be have a gpu",
+    ),
 ):
     """
     Update the eksctl config file for an existing cluster based on the template file
@@ -37,6 +41,8 @@ def eksctl(
         "cluster_name": cluster_name,
         "cluster_region": cluster.spec["aws"]["region"],
         "hubs": hubs,
+        "gpu_nodes": True if gpu_hubs else False,
+        "gpu_hubs": gpu_hubs.replace(",", " ").split() if gpu_hubs else [],
     }
     jsonnet_file_path = generate_eksctl(cluster_name, vars)
     print_colour(f"{jsonnet_file_path} Updated")
