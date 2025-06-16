@@ -120,9 +120,9 @@ def aws(
         "staging",
         prompt="The list of hubs that will be deployed in the cluster separated by a comma. Example: staging, prod.",
     ),
-    dask_nodes: bool = typer.Option(
-        False,
-        prompt='If this cluster needs dask nodes, please type "y", otherwise hit ENTER.',
+    dask_hubs: bool = typer.Option(
+        "",
+        prompt="The list of hubs that will be have dask enabled",
     ),
     force: bool = typer.Option(
         False,
@@ -148,10 +148,13 @@ def aws(
         # Also store the provider, as it's useful for some jinja templates
         # to differentiate between them when rendering the configuration
         "provider": "aws",
-        "dask_nodes": dask_nodes,
+        "dask_nodes": True if dask_hubs else False,
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
         "hubs": hubs.replace(
+            ",", " "
+        ).split(),  # Convert the comma separated string to a list
+        "dask_hubs": dask_hubs.replace(
             ",", " "
         ).split(),  # Convert the comma separated string to a list
         "sign_in_url": sign_in_url,

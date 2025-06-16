@@ -26,13 +26,14 @@ def eksctl(
         )
         raise typer.Exit(code=1)
     hubs = []
-    dask_nodes = False
+    dask_hubs = []
     for hub in cluster.hubs:
         hubs.append(hub.spec["name"])
         if hub.get_hub_types().get("type") == "daskhub":
-            dask_nodes = True
+            dask_hubs.append(hub.spec["name"])
     vars = {
-        "dask_nodes": dask_nodes,
+        "dask_nodes": True if dask_hubs else False,
+        "dask_hubs": dask_hubs,
         "cluster_name": cluster_name,
         "cluster_region": cluster.spec["aws"]["region"],
         "hubs": hubs,
