@@ -20,7 +20,6 @@ def eksctl(
     Update the eksctl config file for an existing cluster based on the template file
     """
     # These are the variables needed by the templates used to generate the support files
-    print_colour("Updating the eksctl jsonnet file...", "yellow")
     cluster = Cluster.from_name(cluster_name)
     provider = cluster.spec["provider"]
     if provider != "aws":
@@ -28,7 +27,8 @@ def eksctl(
             f"Cluster {cluster_name} is not an AWS cluster, cannot update eksctl config",
             "red",
         )
-        raise typer.Exit(code=1)
+        exit(1)
+    print_colour("Updating the eksctl jsonnet file...", "yellow")
     hubs = []
     dask_hubs = []
     for hub in cluster.hubs:

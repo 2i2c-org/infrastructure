@@ -40,10 +40,6 @@ class Hub:
         Available types are:
         - basehub
         - daskhub
-        - binderhub-ui
-        - imagebuilding
-        - authenticated
-        The return values is a list as some hubs may have more than one characteristic.
         """
         characteristics = {
             "type": "basehub",
