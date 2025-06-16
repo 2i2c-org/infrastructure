@@ -1,0 +1,41 @@
+import typer
+
+from deployer.cli_app import update_app
+from deployer.commands.generate.dedicated_cluster.aws import generate_eksctl
+from deployer.infra_components.cluster import Cluster
+from deployer.utils.rendering import print_colour
+
+
+@update_app.command()
+def eksctl(
+    cluster_name: str = typer.Argument(
+        ..., help="Name of the cluster to update its eksctl config"
+    ),
+):
+    """
+    Update the eksctl config file for an existing cluster based on the template file
+    """
+    # These are the variables needed by the templates used to generate the support files
+    print_colour("Updating the eksctl jsonnet file...", "yellow")
+    cluster = Cluster.from_name(cluster_name)
+    provider = cluster.spec["provider"]
+    if provider != "aws":
+        print_colour(
+            f"Cluster {cluster_name} is not an AWS cluster, cannot update eksctl config",
+            "red",
+        )
+        raise typer.Exit(code=1)
+    hubs = []
+    dask_nodes = False
+    for hub in cluster.hubs:
+        hubs.append(hub.spec["name"])
+        if hub.get_hub_types().get("type") == "daskhub":
+            dask_nodes = True
+    vars = {
+        "dask_nodes": dask_nodes,
+        "cluster_name": cluster_name,
+        "cluster_region": cluster.spec["aws"]["region"],
+        "hubs": hubs,
+    }
+    jsonnet_file_path = generate_eksctl(cluster_name, vars)
+    print_colour(f"{jsonnet_file_path} Updated")
