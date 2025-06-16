@@ -103,7 +103,6 @@ local notebookNodes = [
   },
 ];
 
-
 local daskNodes = [
   // Node definitions for dask worker nodes. Config here is merged
   // with our dask worker node definition, which uses spot instances.
@@ -125,12 +124,6 @@ local daskNodes = [
     namePrefix: 'dask-showcase',
     labels+: { '2i2c/hub-name': 'showcase' },
     tags+: { '2i2c:hub-name': 'showcase' },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
-  },
-  {
-    namePrefix: 'dask-ncar-cisl',
-    labels+: { '2i2c/hub-name': 'ncar-cisl' },
-    tags+: { '2i2c:hub-name': 'ncar-cisl' },
     instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
   },
 ];
@@ -172,9 +165,6 @@ local daskNodes = [
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -192,10 +182,16 @@ local daskNodes = [
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
@@ -231,12 +227,12 @@ local daskNodes = [
             'hub.jupyter.org/node-purpose': 'user',
             'k8s.dask.org/node-purpose': 'scheduler',
           },
-          tags+: {
-            '2i2c:node-purpose': 'user',
-          },
           taints+: {
             'hub.jupyter.org_dedicated': 'user:NoSchedule',
             'hub.jupyter.org/dedicated': 'user:NoSchedule',
+          },
+          tags+: {
+            '2i2c:node-purpose': 'user',
           },
         } + n
         for n in notebookNodes
