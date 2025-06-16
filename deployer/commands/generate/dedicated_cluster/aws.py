@@ -39,8 +39,7 @@ def get_infra_files_to_be_created(cluster_name):
     ]
 
 
-def generate_infra_files(vars):
-    cluster_name = vars["cluster_name"]
+def generate_eksctl(cluster_name, vars):
     with open(REPO_ROOT_PATH / "eksctl/template.jsonnet") as f:
         # jsonnet files have `}}` in there, which causes jinja2 to
         # freak out. So we use different delimiters.
@@ -53,10 +52,17 @@ def generate_infra_files(vars):
             variable_end_string=">>",
         )
 
-    print_colour("Generating the eksctl jsonnet file...", "yellow")
     jsonnet_file_path = REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet"
     with open(jsonnet_file_path, "w") as f:
         f.write(jsonnet_template.render(**vars))
+    return jsonnet_file_path
+
+
+def generate_infra_files(vars):
+    cluster_name = vars["cluster_name"]
+
+    print_colour("Generating the eksctl jsonnet file...", "yellow")
+    jsonnet_file_path = generate_eksctl(cluster_name, vars)
     print_colour(f"{jsonnet_file_path} created")
 
     print_colour("Generating the terraform infrastructure file...", "yellow")
@@ -114,9 +120,13 @@ def aws(
         "staging",
         prompt="The list of hubs that will be deployed in the cluster separated by a comma. Example: staging, prod.",
     ),
-    dask_nodes: bool = typer.Option(
-        False,
-        prompt='If this cluster needs dask nodes, please type "y", otherwise hit ENTER.',
+    dask_hubs: str = typer.Option(
+        "",
+        prompt="The list of hubs that will be have dask enabled",
+    ),
+    gpu_hubs: str = typer.Option(
+        "",
+        prompt="The list of hubs that will be have a gpu",
     ),
     force: bool = typer.Option(
         False,
@@ -142,10 +152,17 @@ def aws(
         # Also store the provider, as it's useful for some jinja templates
         # to differentiate between them when rendering the configuration
         "provider": "aws",
-        "dask_nodes": dask_nodes,
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
         "hubs": hubs.replace(
+            ",", " "
+        ).split(),  # Convert the comma separated string to a list
+        "dask_nodes": True if dask_hubs else False,
+        "dask_hubs": dask_hubs.replace(
+            ",", " "
+        ).split(),  # Convert the comma separated string to a list
+        "gpu_nodes": True if gpu_hubs else False,
+        "gpu_hubs": gpu_hubs.replace(
             ",", " "
         ).split(),  # Convert the comma separated string to a list
         "sign_in_url": sign_in_url,

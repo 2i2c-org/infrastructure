@@ -34,6 +34,67 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
+    def get_hub_types(self):
+        """
+        Return a dict of hub characteristics that this hub is using.
+        Available types are:
+        - basehub
+        - daskhub
+        """
+        characteristics = {
+            "type": "basehub",
+            "legacy_daskhub": False,
+            "binderhub_ui": False,
+            "imagebuilding": False,
+            "authenticated": False,
+        }
+        dask_gateway = False
+        daskhub_setup = False
+        binderhub_ui = False
+        binderhub_service = False
+
+        # Check if the hub is using the legacy daskhub helm chart
+        if self.spec["helm_chart"] == "daskhub":
+            characteristics["type"] = "daskhub"
+            characteristics["legacy_daskhub"] = True
+        # Go through the values files and check for other characteristics
+        for values_file in self.spec["helm_chart_values_files"]:
+            if "enc-" not in values_file:
+                config_filename = self.cluster.config_dir / values_file
+                with open(config_filename) as f:
+                    config = yaml.load(f)
+                    # If its a legacy daskhub, the config will be nested under the "basehub" key
+                    if "daskhub" in characteristics["type"]:
+                        config = config.get("basehub", {})
+                    else:
+                        if config.get("dask-gateway", {}).get("enabled", False):
+                            dask_gateway = True
+                        if (
+                            config.get("jupyterhub", {})
+                            .get("custom", {})
+                            .get("daskhubSetup", {})
+                            .get("enabled", False)
+                        ):
+                            daskhub_setup = True
+                    if (
+                        config.get("jupyterhub", {})
+                        .get("custom", {})
+                        .get("binderhubUI", {})
+                        .get("enabled", False)
+                    ):
+                        binderhub_ui = True
+                    if config.get("binderhub-service", {}).get("enabled", False):
+                        binderhub_service = True
+        if dask_gateway and daskhub_setup:
+            characteristics["type"] = "daskhub"
+        if binderhub_ui and binderhub_service:
+            characteristics["binderhub-ui"] = True
+        # If it just has the binderhub-service enabled, but not the binderhub-ui,
+        # then we consider it an imagebuilding hub
+        elif binderhub_service:
+            characteristics["imagebuilding"] = True
+        return characteristics
+
     def deploy(self, dask_gateway_version, debug, dry_run):
         """
         Deploy this hub

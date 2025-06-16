@@ -20,6 +20,7 @@ grafana_app = typer.Typer(pretty_exceptions_show_locals=False)
 validate_app = typer.Typer(pretty_exceptions_show_locals=False)
 transform_app = typer.Typer(pretty_exceptions_show_locals=False)
 verify_backups_app = typer.Typer(pretty_exceptions_show_locals=False)
+update_app = typer.Typer(pretty_exceptions_show_locals=False)
 
 app.add_typer(
     generate_app,
@@ -57,6 +58,11 @@ app.add_typer(
     transform_app,
     name="transform",
     help="Programmatically transform datasets, such as cost tables for billing purposes.",
+)
+app.add_typer(
+    update_app,
+    name="update",
+    help="Update existing resources, such as clusters or configurations.",
 )
 app.add_typer(
     verify_backups_app,
