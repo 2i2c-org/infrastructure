@@ -233,7 +233,6 @@ def authenticator_config(
             f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
         )
 
-        authenticator_class = ""
         allowed_users = []
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
@@ -249,7 +248,9 @@ def authenticator_config(
                     hub_config = (
                         config.get("jupyterhub", {}).get("hub", {}).get("config")
                     )
-                    allowed_users = hub_config["Authenticator"]["allowed_users"]
+                    allowed_users = hub_config.get("Authenticator", {}).get(
+                        "allowed_users"
+                    )
                     org_based_github_auth = False
                     if hub_config.get("GitHubOAuthenticator", None):
                         org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
