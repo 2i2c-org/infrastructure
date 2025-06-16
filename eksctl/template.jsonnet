@@ -46,6 +46,29 @@ local notebookNodes = [
     tags+: { '2i2c:hub-name': '<< hub >>' },
   },
 <% endfor %>
+<% if gpu_nodes %>
+<% for hub in gpu_hubs %>
+  {
+    instanceType: 'g4dn.xlarge',
+    namePrefix: 'gpu-<< hub >>',
+    minSize: 0,
+    labels+: {
+      '2i2c/hub-name': '<< hub >>',
+      '2i2c/has-gpu': 'true',
+    },
+    tags+: {
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      '2i2c:hub-name': '<< hub >>',
+    },
+    taints+: {
+      'nvidia.com/gpu': 'present:NoSchedule',
+    },
+    // Allow provisioning GPUs across all AZs, to prevent situation where all
+    // GPUs in a single AZ are in use and no new nodes can be spawned
+    availabilityZones: masterAzs,
+  },
+<% endfor %>
+<% endif %>
 ];
 
 <% if dask_nodes %>
