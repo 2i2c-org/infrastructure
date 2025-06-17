@@ -99,6 +99,14 @@ basehub:
       profileList:
       - display_name: Choose environment and resources
         default: true
+        allowed_groups:
+          - US-GHG-Center:ghgc-hub-access
+          - US-GHG-Center:ghg-use-case-1
+          - US-GHG-Center:ghg-use-case-2
+          - US-GHG-Center:ghg-use-case-3
+          - US-GHG-Center:ghg-external-collaborators
+          - US-GHG-Center:ghg-workshop-access
+          - US-GHG-Center:ghg-trial-access        
         profile_options:
           image:
             display_name: Environment
@@ -221,6 +229,54 @@ basehub:
                   cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: SSIM GHG Workshop 2025
+        default: true
+        allowed_groups:
+          - US-GHG-Center:ssim-ghg-2025      
+        profile_options:
+          image:
+            display_name: Environment
+            dynamic_image_building:
+              enabled: false
+            unlisted_choice:
+              enabled: false
+            choices:
+              01-workshop-image:
+                display_name: SSIM-GHG Workshop 2025 Image
+                description: Workshop image with Python and R environments
+                kubespawner_override:
+                  image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2025-image:dbe5860
+                  init_containers:
+                  - *volume_ownership_fix_initcontainer
+                      # this container uses nbgitpuller to mount https://github.com/US-GHG-Center/ghgc-docs/ for user pods
+                      # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+                  - name: jupyterhub-gitpuller-init
+                    image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                    env:
+                    - name: TARGET_PATH
+                      value: ghgc-docs
+                    - name: SOURCE_REPO
+                      value: https://github.com/US-GHG-Center/ghgc-docs
+                    volumeMounts:
+                    - name: home
+                      mountPath: /home/jovyan
+                      subPath: '{escaped_username}'
+                    securityContext:
+                      runAsUser: 1000
+                      runAsGroup: 1000
+          resource_allocation:
+            display_name: Resource Allocation
+            choices:
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 65094448840
+                  mem_limit: 65094448840
+                  cpu_guarantee: 7.8475
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+
 
     scheduling:
       userScheduler:
