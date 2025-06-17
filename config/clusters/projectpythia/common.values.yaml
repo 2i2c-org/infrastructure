@@ -164,8 +164,8 @@ jupyterhub:
                 mem_guarantee: 14G
                 node_selector:
                   node.kubernetes.io/instance-type: g4dn.xlarge
-              extra_resource_limits:
-                nvidia.com/gpu: '1'
+                extra_resource_limits:
+                  nvidia.com/gpu: '1'
 
 binderhub-service:
   enabled: true
