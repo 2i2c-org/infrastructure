@@ -33,7 +33,7 @@ def eksctl(
     dask_hubs = []
     for hub in cluster.hubs:
         hubs.append(hub.spec["name"])
-        if hub.get_hub_types().get("type") == "daskhub":
+        if hub.type == "daskhub":
             dask_hubs.append(hub.spec["name"])
     vars = {
         "dask_nodes": True if dask_hubs else False,

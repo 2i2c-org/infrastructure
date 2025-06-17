@@ -233,7 +233,6 @@ def authenticator_config(
             f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
         )
 
-        authenticator_class = ""
         allowed_users = []
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
@@ -244,15 +243,14 @@ def authenticator_config(
                 try:
                     # This special casing is needed for legacy daskhubs still
                     # using the daskhub chart
-                    if hub.spec["helm_chart"] != "basehub":
-                        hub_config = config["basehub"]["jupyterhub"]["hub"]["config"]
-                    else:
-                        hub_config = config["jupyterhub"]["hub"]["config"]
-
-                    authenticator_class = hub_config["JupyterHub"][
-                        "authenticator_class"
-                    ]
-                    allowed_users = hub_config["Authenticator"]["allowed_users"]
+                    if hub.legacy_daskhub:
+                        config = config.get("basehub", {})
+                    hub_config = (
+                        config.get("jupyterhub", {}).get("hub", {}).get("config", {})
+                    )
+                    allowed_users = hub_config.get("Authenticator", {}).get(
+                        "allowed_users"
+                    )
                     org_based_github_auth = False
                     if hub_config.get("GitHubOAuthenticator", None):
                         org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
@@ -263,7 +261,7 @@ def authenticator_config(
 
         # If the authenticator class is github, then raise an error
         # if `Authenticator.allowed_users` is set
-        if authenticator_class == "github" and allowed_users and org_based_github_auth:
+        if hub.authenticator == "github" and allowed_users and org_based_github_auth:
             raise ValueError(
                 f"""
                     Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
@@ -304,14 +302,10 @@ def configurator_config(
                 try:
                     # This special casing is needed for legacy daskhubs still
                     # using the daskhub chart
-                    if hub.spec["helm_chart"] != "basehub":
-                        singleuser_config = config["basehub"]["jupyterhub"][
-                            "singleuser"
-                        ]
-                        custom_config = config["basehub"]["jupyterhub"]["custom"]
-                    else:
-                        singleuser_config = config["jupyterhub"]["singleuser"]
-                        custom_config = config["jupyterhub"]["custom"]
+                    if hub.legacy_daskhub:
+                        config = config.get("basehub", {})
+                    singleuser_config = config.get("jupyterhub", {}).get("singleuser")
+                    custom_config = config.get("jupyterhub", {}).get("custom")
                     configurator_enabled = custom_config.get(
                         "jupyterhubConfigurator", {}
                     ).get("enabled")
