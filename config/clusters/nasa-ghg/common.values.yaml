@@ -100,13 +100,13 @@ basehub:
       - display_name: Choose environment and resources
         default: true
         allowed_groups:
-          - US-GHG-Center:ghgc-hub-access
-          - US-GHG-Center:ghg-use-case-1
-          - US-GHG-Center:ghg-use-case-2
-          - US-GHG-Center:ghg-use-case-3
-          - US-GHG-Center:ghg-external-collaborators
-          - US-GHG-Center:ghg-workshop-access
-          - US-GHG-Center:ghg-trial-access        
+        - US-GHG-Center:ghgc-hub-access
+        - US-GHG-Center:ghg-use-case-1
+        - US-GHG-Center:ghg-use-case-2
+        - US-GHG-Center:ghg-use-case-3
+        - US-GHG-Center:ghg-external-collaborators
+        - US-GHG-Center:ghg-workshop-access
+        - US-GHG-Center:ghg-trial-access
         profile_options:
           image:
             display_name: Environment
@@ -232,7 +232,7 @@ basehub:
       - display_name: SSIM GHG Workshop 2025
         default: true
         allowed_groups:
-          - US-GHG-Center:ssim-ghg-2025      
+        - US-GHG-Center:ssim-ghg-2025
         profile_options:
           image:
             display_name: Environment
@@ -276,8 +276,6 @@ basehub:
                   cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
-
-
     scheduling:
       userScheduler:
         enabled: true
