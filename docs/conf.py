@@ -18,6 +18,7 @@ extensions = [
     "sphinxcontrib.mermaid",
     "sphinxcontrib.jquery",
     "sphinx_togglebutton",
+    "sphinx_last_updated_by_git",
 ]
 
 intersphinx_mapping = {
