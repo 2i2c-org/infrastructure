@@ -99,6 +99,7 @@ jupyterhub:
     config:
       BinderSpawnerMixin:
         auth_enabled: false
+        cors_allow_origin: '*'
       JupyterHub:
         authenticator_class: 'null'
 
@@ -136,6 +137,7 @@ binderhub-service:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/jetstream2-projectpythia-pythia-binder-
       banner_message: Binder on Jetstream2 for use with Project Pythia
       about_message: ''
+      cors_allow_origin: '*'
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
