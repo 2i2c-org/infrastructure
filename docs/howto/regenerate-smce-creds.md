@@ -11,7 +11,7 @@ This document describes how we regenerate credentials for _users_ and the `deplo
    export CLUSTER_NAME=...
    ```
 
-1. Authenticate yourself using the `deployer exec aws` command.
+1. Authenticate yourself using the `deployer exec aws shell` command.
    See [](cloud-access:aws-individual-accounts) and the `--help` information for more details.
 
 1. Navigate to the AWS terraform folder in the infrastructure repo.
