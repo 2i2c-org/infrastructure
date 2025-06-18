@@ -46,7 +46,7 @@ jupyterhub:
         mountPath: /home/jovyan/shared-group/GPU_T4
         subPath: _shared-group/GPU_T4
     storage:
-      type: 'none'
+      type: none
 
     profileList:
     - display_name: Choose your environment and resources
