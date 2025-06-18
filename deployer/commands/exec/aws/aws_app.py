@@ -15,6 +15,7 @@ import secrets
 import string
 import subprocess
 import tempfile
+import textwrap
 
 import typer
 
@@ -221,31 +222,42 @@ def onboard(
     env = setup_aws_env(profile, mfa_device_id, auth_token)
     print(f"Onboarding {new_username} to AWS account {profile}")
 
-    # Create the IAM user
-    print(f"Creating user {new_username}...")
+    # Check if the existing user actually exists
     subprocess.check_call(
-        ["aws", "iam", "create-user", "--user-name", new_username], env=env
+        ["aws", "iam", "get-user", "--user-name", existing_username], env=env
     )
 
-    # Generate and assign password
-    alphabet = string.ascii_letters + string.digits + string.punctuation
-    password = "".join(secrets.choice(alphabet) for _ in range(20))
+    # Check if the new user exists
+    password = None
+    try:
+        subprocess.check_call(
+            ["aws", "iam", "get-user", "--user-name", new_username], env=env
+        )
+    except subprocess.CalledProcessError as error:
+        print(f"Creating user {new_username}...")
+        subprocess.check_call(
+            ["aws", "iam", "create-user", "--user-name", new_username], env=env
+        )
 
-    print(f"The generated password for {new_username} is: {password}")
-    subprocess.check_call(
-        [
-            "aws",
-            "iam",
-            "create-login-profile",
-            "--user-name",
-            new_username,
-            "--password",
-            password,
-            "--password-reset-required",
-        ],
-        env=env,
-    )
-    print_colour("Done! Login profile created")
+        # Generate and assign password
+        alphabet = string.ascii_letters + string.digits + string.punctuation
+        password = "".join(secrets.choice(alphabet) for _ in range(20))
+
+        print(f"The generated password for {new_username} is: {password}")
+        subprocess.check_call(
+            [
+                "aws",
+                "iam",
+                "create-login-profile",
+                "--user-name",
+                new_username,
+                "--password",
+                password,
+                "--password-reset-required",
+            ],
+            env=env,
+        )
+        print_colour("Done! Login profile created")
 
     # Copy group memberships from another existing user
     print("Copying group memberships...")
@@ -378,12 +390,21 @@ def onboard(
         .decode()
         .strip()
     )
-    print_colour(
-        f"""
-        Hey {new_username}! I have created an account for you in {profile}.
-        The password was randomly generated and you must change it on first login.
+    if password:
+        print_colour(
+            textwrap.dedent(
+                f"""
+                Hey {new_username}! I have created an account for you in {profile}.
+                The password was randomly generated and you must change it on first login.
 
-        Use the following link to log in: https://{account_id}.signin.aws.amazon.com/console
-        The password is: {password}""",
-        "yellow",
-    )
+                Use the following link to log in: https://{account_id}.signin.aws.amazon.com/console
+                The password is: {password}
+                """
+            ),
+            "yellow",
+        )
+    else:
+        print_colour(
+            f"{new_username} permissions have been updated in {profile}-{account_id} AWS account.",
+            "yellow",
+        )
