@@ -230,7 +230,6 @@ basehub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
       - display_name: SSIM GHG Workshop 2025
-        default: true
         allowed_groups:
         - US-GHG-Center:ssim-ghg-2025
         profile_options:
