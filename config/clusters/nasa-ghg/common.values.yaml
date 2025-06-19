@@ -233,6 +233,7 @@ basehub:
       - display_name: SSIM GHG Workshop 2025
         allowed_groups:
         - US-GHG-Center:ssim-ghg-2025
+        - 2i2c-org:hub-access-for-2i2c-staff
         profile_options:
           image:
             display_name: Environment
