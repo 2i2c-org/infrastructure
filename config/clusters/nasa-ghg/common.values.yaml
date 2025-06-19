@@ -107,6 +107,7 @@ basehub:
         - US-GHG-Center:ghg-external-collaborators
         - US-GHG-Center:ghg-workshop-access
         - US-GHG-Center:ghg-trial-access
+        - 2i2c-org:hub-access-for-2i2c-staff
         profile_options:
           image:
             display_name: Environment
