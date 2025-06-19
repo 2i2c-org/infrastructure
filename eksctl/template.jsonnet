@@ -55,10 +55,12 @@ local notebookNodes = [
     labels+: {
       '2i2c/hub-name': '<< hub >>',
       '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     tags+: {
-      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
       '2i2c:hub-name': '<< hub >>',
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     taints+: {
       'nvidia.com/gpu': 'present:NoSchedule',
