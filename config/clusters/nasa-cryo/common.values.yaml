@@ -123,7 +123,7 @@ basehub:
         default: true
         kubespawner_override:
             # Image repo: https://github.com/CryoInTheCloud/hub-image
-          image: quay.io/cryointhecloud/cryo-hub-image:25e9cee21f58
+          image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
         profile_options: &profile_options
           resource_allocation: &profile_options_resource_allocation
             display_name: Resource Allocation
