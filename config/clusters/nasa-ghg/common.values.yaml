@@ -246,7 +246,7 @@ basehub:
                 display_name: SSIM-GHG Workshop 2025 Image
                 description: Workshop image with Python and R environments
                 kubespawner_override:
-                  image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2025-image:dbe5860
+                  image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2025-image:17b088b
                   init_containers:
                   - *volume_ownership_fix_initcontainer
                       # this container uses nbgitpuller to mount https://github.com/US-GHG-Center/ghgc-docs/ for user pods
