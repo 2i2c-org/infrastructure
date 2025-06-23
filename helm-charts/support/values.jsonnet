@@ -55,7 +55,7 @@ local diskIOApproachingSaturation = {
           )
         ) by (device, node) > 0.8
       |||,
-      # Don't fire unless the alert fires for 15min, to reduce possible false alerts
+      // Don't fire unless the alert fires for 15min, to reduce possible false alerts
       'for': '15m',
       labels: {
         cluster: cluster_name,
