@@ -9,7 +9,6 @@ enable_logging         = false
 enable_filestore_backups = true
 filestores               = {}
 
-enable_nfs_backup = true
 persistent_disks = {
   "staging" = {
     size        = 120 # in GB
