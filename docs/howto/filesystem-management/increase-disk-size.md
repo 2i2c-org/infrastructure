@@ -27,6 +27,8 @@ Increasing the size of a storage disk has cost implications. Downsizing the volu
 > <$GRAFANA_URL>
 </details>
 
+If the community does not respond within a week, you can proceed with increasing the capacity so that at least 10% is free.
+
 ## Procedure
 
 ```bash
@@ -41,7 +43,7 @@ To increase the size of a disk storing users' home directories, we need to incre
 ```
 ebs_volumes = {
   "staging" = {
-    size        = 100  # in GB. Increase this!
+    size        = 100  # in GiB. Increase this!
     type        = "gp3"
     name_suffix = "staging"
     tags        = { "2i2c:hub-name": "staging" }
@@ -53,7 +55,7 @@ ebs_volumes = {
 ```
 persistent_disks = {
   "staging" = {
-    size        = 100  # in GB. Increase this!
+    size        = 100  # in GiB. Increase this!
     name_suffix = "staging"
   }
 }
@@ -73,11 +75,11 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 The size of a disk can **only** be increased, *not* decreased.
 ```
 
-Once terraform has successfully applied, we also need to grow the size of the filesystem.
+Once terraform has successfully applied, we also need to grow the size of the filesystem with `xfs`.
 
 1. Run `deployer use-cluster-credentials $CLUSTER_NAME` to gain `kubectl` access to the cluster
 1. Run `kubectl -n $HUB_NAME get pods` to find the NFS deployment pod name. It should look something like `${HUB_NAME}-nfs-deployment-<HASH>`.
 1. Exec into the the quota enforcer container: `kubectl -n $HUB_NAME exec -it $POD_NAME -c enforce-xfs-quota -- /bin/bash`
-1. Run `df -h` to find out where the directory is mounted, it's current size, and if that size reflects what you just deployed with terraform or not. The directory is _usually_ under `/export`, but is not guaranteed.
-1. Run `xfs_growfs $DIR_NAME` to resize the directory
-1. Re-run `df -h` to confirm new size
+1. Run `df -h` to find out where the directory is mounted, it's current size prior to the `terraform apply`. The mounted directory is _usually_ under `/export`, but is not guaranteed.
+1. Run `xfs_growfs $DIR_NAME` to resize the directory to the new size specified in the tfvars file. Replace `$DIR_NAME` with the _mounted_ directory you found in the previous step.
+1. Re-run `df -h` to confirm the new size
