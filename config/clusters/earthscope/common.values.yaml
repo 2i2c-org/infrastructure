@@ -157,6 +157,8 @@ basehub:
               validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
               kubespawner_override:
                 image: '{value}'
+            dynamic_image_building:
+              enabled: true
             choices:
               geolab-general:
                 display_name: GeoLab
@@ -285,3 +287,22 @@ basehub:
         - geolab
         - geolab:dev
         - geolab:power
+  binderhub-service:
+    enabled: true
+    networkPolicy:
+      enabled: true
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: binder
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          node.kubernetes.io/instance-type: r5.xlarge
+      BinderHub:
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
+      DockerRegistry:
+        url: &url https://quay.io
+        username: &username imagebuilding-non-gcp-hubs+image_builder
+    buildPodsRegistryCredentials:
+      server: *url
+      username: *username
