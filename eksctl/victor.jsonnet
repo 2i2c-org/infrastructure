@@ -25,6 +25,7 @@ local nodeAz = 'us-west-2a';
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+  // staging
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-staging',
@@ -43,9 +44,18 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'staging' },
     tags+: { '2i2c:hub-name': 'staging' },
   },
+  // prod
+  // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-prod',
+    labels+: { '2i2c/hub-name': 'prod' },
+    tags+: { '2i2c:hub-name': 'prod' },
+  },
+  {
+    instanceType: 'r5.xlarge',
+    namePrefix: 'nb-prod',
+    nameSuffix: 'a',
     labels+: { '2i2c/hub-name': 'prod' },
     tags+: { '2i2c:hub-name': 'prod' },
   },
@@ -64,7 +74,12 @@ local notebookNodes = [
   {
     instanceType: 'g4dn.xlarge',
     namePrefix: 'gpu-staging',
-    labels+: { '2i2c/hub-name': 'staging' },
+    minSize: 0,
+    labels+: {
+      '2i2c/hub-name': 'staging',
+      '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+    },
     tags+: {
       '2i2c:hub-name': 'staging',
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
@@ -80,7 +95,12 @@ local notebookNodes = [
   {
     instanceType: 'g4dn.xlarge',
     namePrefix: 'gpu-prod',
-    labels+: { '2i2c/hub-name': 'prod' },
+    minSize: 0,
+    labels+: {
+      '2i2c/hub-name': 'prod',
+      '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+    },
     tags+: {
       '2i2c:hub-name': 'prod',
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
@@ -127,7 +147,7 @@ local daskNodes = [
   metadata+: {
     name: 'victor',
     region: clusterRegion,
-    version: '1.30',
+    version: '1.32',
     tags+: {
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': $.metadata.name,
@@ -157,9 +177,6 @@ local daskNodes = [
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -177,10 +194,16 @@ local daskNodes = [
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
@@ -191,12 +214,9 @@ local daskNodes = [
       [
         ng {
           namePrefix: 'core',
-          nameSuffix: 'b',
+          nameSuffix: 'a',
           nameIncludeInstanceType: false,
           availabilityZones: [nodeAz],
-          ssh: {
-            publicKeyPath: 'ssh-keys/victor.key.pub',
-          },
           instanceType: 'r5.xlarge',
           minSize: 1,
           maxSize: 6,
@@ -215,9 +235,6 @@ local daskNodes = [
           minSize: 0,
           maxSize: 500,
           instanceType: n.instanceType,
-          ssh: {
-            publicKeyPath: 'ssh-keys/victor.key.pub',
-          },
           labels+: {
             'hub.jupyter.org/node-purpose': 'user',
             'k8s.dask.org/node-purpose': 'scheduler',
@@ -229,35 +246,34 @@ local daskNodes = [
           tags+: {
             '2i2c:node-purpose': 'user',
           },
-
         } + n
         for n in notebookNodes
-      ] + [
-        ng {
-          namePrefix: 'dask',
-          availabilityZones: [nodeAz],
-          minSize: 0,
-          maxSize: 500,
-          ssh: {
-            publicKeyPath: 'ssh-keys/victor.key.pub',
-          },
-          labels+: {
-            'k8s.dask.org/node-purpose': 'worker',
-          },
-          tags+: {
-            '2i2c:node-purpose': 'worker',
-          },
-          taints+: {
-            'k8s.dask.org_dedicated': 'worker:NoSchedule',
-            'k8s.dask.org/dedicated': 'worker:NoSchedule',
-          },
-          instancesDistribution+: {
-            onDemandBaseCapacity: 0,
-            onDemandPercentageAboveBaseCapacity: 0,
-            spotAllocationStrategy: 'capacity-optimized',
-          },
-        } + n
-        for n in daskNodes
-      ]
+      ] + (
+        if daskNodes != null then
+          [
+            ng {
+              namePrefix: 'dask',
+              availabilityZones: [nodeAz],
+              minSize: 0,
+              maxSize: 500,
+              labels+: {
+                'k8s.dask.org/node-purpose': 'worker',
+              },
+              taints+: {
+                'k8s.dask.org_dedicated': 'worker:NoSchedule',
+                'k8s.dask.org/dedicated': 'worker:NoSchedule',
+              },
+              tags+: {
+                '2i2c:node-purpose': 'worker',
+              },
+              instancesDistribution+: {
+                onDemandBaseCapacity: 0,
+                onDemandPercentageAboveBaseCapacity: 0,
+                spotAllocationStrategy: 'capacity-optimized',
+              },
+            } + n
+            for n in daskNodes
+          ] else []
+      )
   ],
 }
