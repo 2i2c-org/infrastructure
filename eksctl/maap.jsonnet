@@ -63,10 +63,10 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'prod' },
     tags+: { '2i2c:hub-name': 'prod' },
   },
-  // gpus
   {
     instanceType: 'g4dn.xlarge',
     namePrefix: 'gpu-staging',
+    minSize: 0,
     labels+: {
       '2i2c/hub-name': 'staging',
       '2i2c/has-gpu': 'true',
@@ -87,6 +87,7 @@ local notebookNodes = [
   {
     instanceType: 'g4dn.xlarge',
     namePrefix: 'gpu-prod',
+    minSize: 0,
     labels+: {
       '2i2c/hub-name': 'prod',
       '2i2c/has-gpu': 'true',
@@ -168,9 +169,6 @@ local daskNodes = [
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -188,10 +186,16 @@ local daskNodes = [
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]

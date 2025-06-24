@@ -25,6 +25,7 @@ local nodeAz = 'ca-central-1a';
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+  // staging
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-staging',
@@ -33,39 +34,11 @@ local notebookNodes = [
     tags+: { '2i2c:hub-name': 'staging' },
   },
   {
-    instanceType: 'r5.xlarge',
-    namePrefix: 'nb-prod',
-    nameSuffix: 'b',
-    labels+: { '2i2c/hub-name': 'prod' },
-    tags+: { '2i2c:hub-name': 'prod' },
-  },
-  {
-    instanceType: 'r5.2xlarge',
-    namePrefix: 'nb-staging',
-    nameSuffix: 'b',
-    labels+: { '2i2c/hub-name': 'staging' },
-    tags+: { '2i2c:hub-name': 'staging' },
-  },
-  {
-    instanceType: 'r5.2xlarge',
-    namePrefix: 'nb-prod',
-    nameSuffix: 'b',
-    labels+: { '2i2c/hub-name': 'prod' },
-    tags+: { '2i2c:hub-name': 'prod' },
-  },
-  {
     instanceType: 'r5.4xlarge',
     namePrefix: 'nb-staging',
     nameSuffix: 'b',
     labels+: { '2i2c/hub-name': 'staging' },
     tags+: { '2i2c:hub-name': 'staging' },
-  },
-  {
-    instanceType: 'r5.4xlarge',
-    namePrefix: 'nb-prod',
-    nameSuffix: 'b',
-    labels+: { '2i2c/hub-name': 'prod' },
-    tags+: { '2i2c:hub-name': 'prod' },
   },
   {
     instanceType: 'r5.16xlarge',
@@ -73,6 +46,21 @@ local notebookNodes = [
     nameSuffix: 'b',
     labels+: { '2i2c/hub-name': 'staging' },
     tags+: { '2i2c:hub-name': 'staging' },
+  },
+  // prod
+  {
+    instanceType: 'r5.xlarge',
+    nameSuffix: 'b',
+    namePrefix: 'nb-prod',
+    labels+: { '2i2c/hub-name': 'prod' },
+    tags+: { '2i2c:hub-name': 'prod' },
+  },
+  {
+    instanceType: 'r5.4xlarge',
+    namePrefix: 'nb-prod',
+    nameSuffix: 'b',
+    labels+: { '2i2c/hub-name': 'prod' },
+    tags+: { '2i2c:hub-name': 'prod' },
   },
   {
     instanceType: 'r5.16xlarge',
@@ -84,6 +72,7 @@ local notebookNodes = [
 ];
 
 local daskNodes = [];
+
 
 {
   apiVersion: 'eksctl.io/v1alpha5',
@@ -121,9 +110,6 @@ local daskNodes = [];
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -141,10 +127,16 @@ local daskNodes = [];
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
@@ -203,6 +195,9 @@ local daskNodes = [];
               taints+: {
                 'k8s.dask.org_dedicated': 'worker:NoSchedule',
                 'k8s.dask.org/dedicated': 'worker:NoSchedule',
+              },
+              tags+: {
+                '2i2c:node-purpose': 'worker',
               },
               instancesDistribution+: {
                 onDemandBaseCapacity: 0,

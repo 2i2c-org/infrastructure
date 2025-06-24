@@ -152,9 +152,6 @@ local daskNodes = [
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -172,10 +169,16 @@ local daskNodes = [
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
@@ -186,12 +189,9 @@ local daskNodes = [
       [
         ng {
           namePrefix: 'core',
-          nameSuffix: 'a',
+          nameSuffix: 'b',
           nameIncludeInstanceType: false,
           availabilityZones: [nodeAz],
-          ssh: {
-            publicKeyPath: 'ssh-keys/reflective.key.pub',
-          },
           instanceType: 'r5.xlarge',
           minSize: 1,
           maxSize: 6,
@@ -210,9 +210,6 @@ local daskNodes = [
           minSize: 0,
           maxSize: 500,
           instanceType: n.instanceType,
-          ssh: {
-            publicKeyPath: 'ssh-keys/reflective.key.pub',
-          },
           labels+: {
             'hub.jupyter.org/node-purpose': 'user',
             'k8s.dask.org/node-purpose': 'scheduler',
@@ -234,9 +231,6 @@ local daskNodes = [
               availabilityZones: [nodeAz],
               minSize: 0,
               maxSize: 500,
-              ssh: {
-                publicKeyPath: 'ssh-keys/reflective.key.pub',
-              },
               labels+: {
                 'k8s.dask.org/node-purpose': 'worker',
               },
