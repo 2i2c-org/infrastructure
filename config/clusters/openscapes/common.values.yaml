@@ -91,13 +91,10 @@ basehub:
                 kubespawner_override:
                   image: openscapes/python:3ad4036
               02-R:
-                display_name: R
-                description: R (with RStudio) + Python environment
+                display_name: R + Python Geospatial
+                description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
                 kubespawner_override:
-                  image: openscapes/rocker:a7596b5
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
+                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
               03-Matlab:
                 display_name: Matlab
                 description: Matlab environment

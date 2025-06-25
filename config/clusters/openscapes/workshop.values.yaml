@@ -132,13 +132,10 @@ basehub:
                   cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
-      - display_name: R
-        description: R (with RStudio) + Python environment
+      - display_name: R + Python Geospatial
+        description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
         kubespawner_override:
-          image: openscapes/rocker:a7596b5
-            # Ensures container working dir is homedir
-            # https://github.com/2i2c-org/infrastructure/issues/2559
-          working_dir: /home/rstudio
+          image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
         profile_options: *profile_options
       - display_name: Matlab
         description: Matlab environment
