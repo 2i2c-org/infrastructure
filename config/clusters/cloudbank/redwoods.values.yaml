@@ -1,8 +1,8 @@
 jupyterhub:
   ingress:
-    hosts: [merritt.cloudbank.2i2c.cloud]
+    hosts: [redwoods.cloudbank.2i2c.cloud]
     tls:
-    - hosts: [merritt.cloudbank.2i2c.cloud]
+    - hosts: [redwoods.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
     memory:
@@ -26,23 +26,22 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.mccd.edu/wp-content/uploads/2023/09/MicrosoftTeams-image-15-300x300.png
-          name: Merritt College
-          url: https://www.merritt.edu/
+          logo_url: https://www.redwoods.edu/fs/communications/_images/CR_WM_RED.jpg
+          name: College of the Redwoods
+          url: https://www.redwoods.edu/
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://merritt.cloudbank.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://redwoods.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
               username_claim: email
             allowed_domains:
-            - cc.peralta.edu
-            - peralta.edu
+            - redwoods.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
@@ -50,4 +49,4 @@ jupyterhub:
         admin_users:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
-        - courtneybrown@peralta.edu
+        - jonothan-pace@redwoods.edu
