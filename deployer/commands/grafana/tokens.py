@@ -266,5 +266,4 @@ def new_token(
         "Generating a new token for the Grafana `deployer` service account...", "yellow"
     )
     token = create_deployer_token(sa_endpoint, sa_id, headers)
-
-    update_central_grafana_token(cluster, token)
+    update_central_grafana_token(cluster_name, token)
