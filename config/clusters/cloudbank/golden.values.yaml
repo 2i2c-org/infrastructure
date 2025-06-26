@@ -36,11 +36,12 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://golden.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
-          https://pgsso.cccd.edu/sso:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
               username_claim: email
-            allow_all: true
+            allowed_domains:
+            - cccd.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
