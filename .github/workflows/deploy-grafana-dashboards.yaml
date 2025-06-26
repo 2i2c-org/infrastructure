@@ -38,6 +38,7 @@ jobs:
         - cluster_name: nasa-cryo
         - cluster_name: nasa-ghg
         - cluster_name: nasa-veda
+        - cluster_name: neurohackademy
         - cluster_name: nmfs-openscapes
         - cluster_name: openscapes
         - cluster_name: opensci
