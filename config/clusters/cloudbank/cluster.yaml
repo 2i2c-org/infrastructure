@@ -196,6 +196,14 @@ hubs:
   - common.values.yaml
   - glendale.values.yaml
   - enc-glendale.secret.values.yaml
+- name: golden
+  display_name: Golden West College
+  domain: golden.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - golden.values.yaml
+  - enc-golden.secret.values.yaml
 - name: high
   display_name: High School Experimental Hub
   domain: high.cloudbank.2i2c.cloud
