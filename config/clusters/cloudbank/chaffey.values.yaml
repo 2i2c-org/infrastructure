@@ -40,7 +40,7 @@ jupyterhub:
             default: true
             username_derivation:
               username_claim: email
-            allowed_all: true
+            allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
