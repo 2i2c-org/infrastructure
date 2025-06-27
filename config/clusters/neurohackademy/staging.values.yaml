@@ -1,0 +1,18 @@
+nfs:
+  pv:
+    serverIP: 10.100.231.167
+
+jupyterhub:
+  ingress:
+    hosts: [staging.neurohackademy.2i2c.cloud]
+    tls:
+    - hosts: [staging.neurohackademy.2i2c.cloud]
+      secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.neurohackademy.2i2c.cloud/hub/oauth_callback
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0971ad91e7e4e270f
