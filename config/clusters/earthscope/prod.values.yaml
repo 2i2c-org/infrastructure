@@ -46,3 +46,12 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.182.228
+
+  binderhub-service:
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: prod
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          2i2c/hub-name: prod
