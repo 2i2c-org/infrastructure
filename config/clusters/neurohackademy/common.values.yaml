@@ -1,7 +1,7 @@
 nfs:
-  enabled: false
+  enabled: true
   pv:
-    enabled: false
+    enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
     - rsize=1048576
