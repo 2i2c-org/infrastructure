@@ -41,5 +41,8 @@ jupyterhub:
       Authenticator:
         admin_users:
         - sfirouzian@miracosta.edu
+        - sfallstrom@miracosta.edu
+        - SMercado@miracosta.edu
+        - amariscal@miracosta.edu
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
