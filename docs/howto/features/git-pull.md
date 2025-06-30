@@ -30,11 +30,11 @@ jupyterhub:
         image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
         env:
           - name: TARGET_PATH
-            value: climaterisk
+            value: <YOUR_CLONE_PATH>
           - name: SOURCE_REPO
-            value: https://github.com/ScienceCore/climaterisk
+            value: <YOUR_GIT_REPO>
           - name: SOURCE_BRANCH
-            value: notebooks
+            value: <YOUR_GIT_BRANCH>
         volumeMounts:
           - name: home
             mountPath: /home/jovyan
