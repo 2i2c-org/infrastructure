@@ -68,24 +68,24 @@ jupyterhub:
       - name: home
         mountPath: /home/jovyan
         subPath: '{escaped_username}'
-          # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-          # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
-      - name: jupyterhub-gitpuller-init
-        image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-        env:
-        - name: TARGET_PATH
-          value: climaterisk
-        - name: SOURCE_REPO
-          value: https://github.com/ScienceCore/climaterisk
-        - name: SOURCE_BRANCH
-          value: notebooks
-        volumeMounts:
-        - name: home
-          mountPath: /home/jovyan
-          subPath: '{escaped_username}'
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 1000
+    # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+    # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+    - name: jupyterhub-gitpuller-init
+      image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+      env:
+      - name: TARGET_PATH
+        value: climaterisk
+      - name: SOURCE_REPO
+        value: https://github.com/ScienceCore/climaterisk
+      - name: SOURCE_BRANCH
+        value: notebooks
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
     storage:
       extraVolumeMounts: []
 dask-gateway:
