@@ -51,7 +51,7 @@ class Hub:
         # Go through the values files and check for other characteristics
         for values_file in self.spec["helm_chart_values_files"]:
             if "secret" not in values_file:
-                config_filename = self.cluster.config_path / values_file
+                config_filename = self.cluster.config_dir / values_file
                 with open(config_filename) as f:
                     config = yaml.load(f)
                     # If its a legacy daskhub, the config will be nested under the "basehub" key

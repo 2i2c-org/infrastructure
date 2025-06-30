@@ -24,7 +24,7 @@ def get_clusters(
     cluster_names = []
     for config_file_path in get_all_cluster_yaml_files():
         with open(config_file_path) as f:
-            cluster = Cluster(yaml.load(f), config_file_path.parent)
+            cluster = Cluster(yaml.load(f), config_file_path)
         if provider and cluster.spec["provider"] != provider:
             continue
         cluster_names.append(os.path.basename(config_file_path.parent))
