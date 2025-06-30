@@ -4,6 +4,7 @@ resource "aws_ebs_volume" "nfs_home_dirs" {
   availability_zone = var.cluster_nodes_location
   size              = each.value.size
   type              = each.value.type
+  iops              = each.value.iops
   encrypted         = true
 
   tags = merge(each.value.tags, {
