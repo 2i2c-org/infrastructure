@@ -10,6 +10,7 @@ jupyterhub:
       # https://2i2c.freshdesk.com/a/tickets/567
       guarantee: 384M
       limit: 2G
+    defaultUrl: /lab
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
       tag: 79e7ee67211e

@@ -13,6 +13,7 @@ jupyterhub:
     memory:
       guarantee: 512M
       limit: 1G
+    defaultUrl: /lab
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
       tag: 79e7ee67211e
