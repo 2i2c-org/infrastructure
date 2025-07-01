@@ -9,4 +9,4 @@
 #
 git+https://github.com/yuvipanda/jupyterhub-configurator@backported-jh41-compatibility
 
-jupyterhub-fancy-profiles==0.4.1
+jupyterhub-fancy-profiles==0.5.0
