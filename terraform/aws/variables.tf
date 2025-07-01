@@ -291,6 +291,7 @@ variable "ebs_volumes" {
     type        = string
     name_suffix = optional(string, null)
     tags        = optional(map(string), {})
+    iops        = optional(number, 3000)
   }))
   default     = {}
   description = <<-EOT
