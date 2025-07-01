@@ -1,4 +1,5 @@
 (hub-features)=
+
 # Enable specific hub features
 
 There are several extra features and services that can be enabled on the 2i2c JupyterHubs.
@@ -18,6 +19,7 @@ dask.md
 dedicated-nodepool.md
 ephemeral.md
 github.md
+git-pull.md
 gpu.md
 identity-provider.md
 image.md
