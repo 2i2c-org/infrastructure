@@ -57,12 +57,12 @@ local jupyterhubGroupsExporterResources = {
   // CPU resources chosen by querying PromQL "max(irate(container_cpu_usage_seconds_total{name!='', pod=~'.*groups-exporter.*'}[5m]))" over all hubs
   resources: {
     requests: {
-      cpu: 0.001,
-      memory: '64Mi',
-    },
-    limits: {
       cpu: 0.01,
       memory: '128Mi',
+    },
+    limits: {
+      cpu: 0.1,
+      memory: '256Mi',
     },
   },
 };
