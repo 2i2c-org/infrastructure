@@ -207,7 +207,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 200 # 200GB
+    size = 200 # 200GB
     # ref https://github.com/2i2c-org/infrastructure/issues/6293
     iops        = 10000 # Temporarily have 10k iops for the summer workshop
     type        = "gp3"
