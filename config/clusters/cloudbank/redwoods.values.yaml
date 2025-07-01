@@ -35,15 +35,34 @@ jupyterhub:
           url: https://www.redwoods.edu/
   hub:
     config:
+      # JupyterHub:
+      #   authenticator_class: github
+      # GitHubOAuthenticator:
+      #   oauth_callback_url: https://redwoods.cloudbank.2i2c.cloud/hub/oauth_callback
+      #   allowed_organizations:
+      #   - redwoods-datascience
+      #   scope:
+      #   - read:org
+      # Authenticator:
+      #   admin_users:
+      #   - sean-morris
+      #   - jpace-redwoods      
       JupyterHub:
-        authenticator_class: github
-      GitHubOAuthenticator:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
         oauth_callback_url: https://redwoods.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_organizations:
-        - redwoods-datascience
-        scope:
-        - read:org
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - redwoods.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
       Authenticator:
         admin_users:
-        - sean-morris
-        - jpace-redwoods
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - jonothan-pace@redwoods.edu
