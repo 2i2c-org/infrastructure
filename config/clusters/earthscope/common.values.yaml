@@ -225,17 +225,17 @@ basehub:
                   cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_7:
-                display_name: 29.7 GB RAM, upto 3.7 CPUs
+              mem_29_1:
+                display_name: 29.1 GB RAM, upto 3.6 CPUs
                 allowed_groups:
                 - geolab
                 - geolab:dev
                 - geolab:power
                 kubespawner_override:
-                  mem_guarantee: 31859916406
-                  mem_limit: 31859916406
-                  cpu_guarantee: 3.725
-                  cpu_limit: 3.725
+                  mem_guarantee: 31222718077
+                  mem_limit: 31222718077
+                  cpu_guarantee: 3.6505
+                  cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_60_6:
@@ -256,10 +256,10 @@ basehub:
                 - geolab:dev
                 - geolab:power
                 kubespawner_override:
-                  mem_guarantee: 130188897681
-                  mem_limit: 130188897681
-                  cpu_guarantee: 15.695
-                  cpu_limit: 15.695
+                  mem_guarantee: 127585119727
+                  mem_limit: 127585119727
+                  cpu_guarantee: 15.3811
+                  cpu_limit: 15.3811
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
               mem_489_9:
@@ -267,10 +267,10 @@ basehub:
                 allowed_groups:
                 - geolab:power
                 kubespawner_override:
-                  mem_guarantee: 525987313876
-                  mem_limit: 525987313876
-                  cpu_guarantee: 63.575
-                  cpu_limit: 63.575
+                  mem_guarantee: 515467567598
+                  mem_limit: 515467567598
+                  cpu_guarantee: 62.3035
+                  cpu_limit: 62.3035
                   node_selector:
                     node.kubernetes.io/instance-type: r5.16xlarge
     scheduling:
