@@ -17,6 +17,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "user_bucket_expiry" {
     expiration {
       days = each.value.delete_after
     }
+
+    filter {
+      prefix = ""
+    }
   }
 
   dynamic "rule" {
