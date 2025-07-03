@@ -1,0 +1,56 @@
+name: 'Recurrent: Generate CSAT report'
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: 0 0 1 * *
+
+jobs:
+  create_issue:
+    name: Create issue
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - name: Get Deadline
+      id: get_deadline
+        # The deadline is 4 days after the issue is opened
+      run: |
+        echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
+        echo "deadline_as_iso_date=$(date -d '+4 days' +"%Y-%m-%d")" >> $GITHUB_ENV
+
+    - name: Create issue
+      run: |
+        issue=$(gh issue create \
+          --label "recurrent" \
+          --title "[${{ env.deadline }}] Generate CSAT report" \
+          --body "$BODY")
+        echo "issue=$issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          ### Context
+
+          We need to generate a CSAT report for the previous month. This team KPI is used to track our progress and gather feedback from our users.
+
+          Full instructions can be found in the Google Drive [README](https://docs.google.com/document/d/1bH5fN2lXcZ-vjQ4Pb4lfaeQbmoCBkN1QYjA7ZaxkmsY/edit?usp=sharing)
+
+          ### Definition of Done
+
+          - [ ] The CSAT report is generated and shared with the team
+
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
+
+    - name: Set the "Status" and "Estimate" project board fields
+      uses: EndBug/project-fields@v2
+      id: set-fields
+      with:
+        operation: set
+          # If the fields name or type will change
+          # expect this step to fail
+        fields: Status,Estimate,End date
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Up Next,1,${{ env.deadline_as_iso_date }}
+        resource_url: ${{ env.issue }}
