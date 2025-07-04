@@ -25,7 +25,11 @@ account.
 
 For all other projects, we will need to make a manual entry in the project's [IAM Page](https://console.cloud.google.com/iam-admin/iam) for the engineer's `@2i2c.org` account, with `Owner` permissions.
 
-The canonical list of GCP projects we have access to is maintained [in this google sheet](https://docs.google.com/spreadsheets/d/1NSaAKLG2_njXxs6JlGUAhSWeHONz9QSGLVwEK790IZo/edit#gid=846555027)
+:::{tip} Cloud Infrastructure Credentials
+:label: accounts-sheet
+
+The canonical list of GCP and AWS projects we have access to is maintained [in this Google Sheet](https://docs.google.com/spreadsheets/d/1m3m5fVcLOeYPiVZG1fP05PzBt9s7bT1-a7Tz_mEao9A/).
+:::
 
 (cloud-access:aws)=
 ## AWS Access
@@ -139,7 +143,7 @@ To do so, follow these steps for each 2i2c engineer:
 1. Ask the client to create an individual [IAM User Account](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html) for them.
 2. This should have the broadest set of permissions for the client's account.
 
-The canonical list of AWS accounts we have access to is maintained [in this google sheet](https://docs.google.com/spreadsheets/d/1NSaAKLG2_njXxs6JlGUAhSWeHONz9QSGLVwEK790IZo/edit#gid=537065664).
+See [the Google Sheet](#accounts-sheet) for a canonical list of AWS (and GCP) accounts we have access to.
 
 #### Access AWS web console
 
