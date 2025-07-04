@@ -25,7 +25,7 @@ account.
 
 For all other projects, we will need to make a manual entry in the project's [IAM Page](https://console.cloud.google.com/iam-admin/iam) for the engineer's `@2i2c.org` account, with `Owner` permissions.
 
-:::{tip} Cloud Infrastructure Credentials
+:::{tip}
 :name: accounts-sheet
 
 The canonical list of GCP and AWS projects we have access to is maintained [in this Google Sheet](https://docs.google.com/spreadsheets/d/1m3m5fVcLOeYPiVZG1fP05PzBt9s7bT1-a7Tz_mEao9A/).
