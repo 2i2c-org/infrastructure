@@ -95,6 +95,34 @@ local makePodRestartAlert = function(
   ],
 };
 
+local makeUserPodUnschedulableAlert = function(
+  name,
+  summary,
+  labels={},
+                                      ) {
+  name: name,
+  rules: [
+    {
+      alert: name,
+      expr: |||
+        # This alert fires when a user pod is unschedulable for more than 5 minutes.
+        # We use kube_pod_status_unschedulable to detect unschedulable pods.
+        count(
+          kube_pod_status_unschedulable{pod=~"jupyter-.*"} == 1
+          and (time() - kube_pod_created > 300)
+        ) > 0
+      |||,
+      'for': '5m',
+      labels: {
+        cluster: cluster_name,
+      } + labels,
+      annotations: {
+        summary: summary,
+      },
+    },
+  ],
+};
+
 {
   prometheus: {
     alertmanager: {
@@ -149,6 +177,10 @@ local makePodRestartAlert = function(
             'GroupsExporterPodRestarted',
             'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
             'groups-exporter',
+          ),
+          makeUserPodUnschedulableAlert(
+            'UserPodUnschedulable',
+            'The user pod {{ $pod.namespace }} is unschedulable on cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
           ),
           diskIOApproachingSaturation,
         ],
