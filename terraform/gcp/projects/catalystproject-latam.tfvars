@@ -40,7 +40,7 @@ notebook_nodes = {
   },
   "gpu-t4-highmem-4" : {
     min : 0,
-    max : 20,
+    max : 50,
     machine_type : "n1-highmem-4",
     gpu : {
       enabled : true,
