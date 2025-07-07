@@ -4,6 +4,8 @@ cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
 
+enable_nfs_backup = true
+
 filestores = {}
 
 ebs_volumes = {
@@ -14,7 +16,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   }
   "prod" = {
-    size        = 50 # in GB
+    size        = 5000 # in GB
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
