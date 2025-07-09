@@ -112,7 +112,7 @@ local makeUserPodUnschedulableAlert = function(
           and (time() - kube_pod_created > 300)
         ) by (namespace, pod) > 0
       |||,
-      'for': '3m',
+      'for': '0m',
       labels: {
         cluster: cluster_name,
       } + labels,
@@ -149,6 +149,15 @@ local makeUserPodUnschedulableAlert = function(
                 // is present on all alerts we have. This makes the 'cluster' label *required* for
                 // all alerts if they need to come to pagerduty.
                 'cluster =~ .*',
+                'alertname !~ UserPodUnschedulable.*',
+              ],
+            },
+            {
+              receiver: 'pagerduty-no-auto-resolution',
+              matchers: [
+                // UserPodUnschedulable alerts should not be auto-resolved when the pod is deleted
+                //due to unscheduled timeout reached.
+                'alertname =~ UserPodUnschedulable.*',
               ],
             },
           ],
