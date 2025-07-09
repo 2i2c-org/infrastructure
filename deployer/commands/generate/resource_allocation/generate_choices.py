@@ -49,9 +49,10 @@ def proportional_memory_strategy(
     # as well as daemonsets we run on every node. This represents the resources that are available
     # for user pods.
 
-    # FIXME: Add some more more wiggle room here
-    available_node_mem = nodeinfo["available"]["memory"]
-    available_node_cpu = nodeinfo["available"]["cpu"]
+    WIGGLE_ROOM = 0.02
+
+    available_node_mem = nodeinfo["available"]["memory"] * (1 - WIGGLE_ROOM)
+    available_node_cpu = nodeinfo["available"]["cpu"] * (1 - WIGGLE_ROOM)
 
     # Only show one digit after . for CPU, but round *down* not up so we never
     # say they are getting more CPU than our limit is set to. We multiply & divide
