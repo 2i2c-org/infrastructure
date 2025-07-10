@@ -15,6 +15,12 @@ nfs:
     # hub admins can *write* to the shared directory there and it'll show up readonly here.
     shareNameOverride: prod
 
+jupyterhub-home-nfs:
+  enabled: true
+  gke:
+    enabled: true
+    volumeId: projects/hhmi-398911/zones/us-west2-b/disks/hub-nfs-homedirs-spyglass
+
 jupyterhub:
   ingress:
     hosts:

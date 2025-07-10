@@ -25,6 +25,10 @@ persistent_disks = {
     size        = 120 # in GB
     name_suffix = "prod"
   }
+  "spyglass" = {
+    size        = 60 # in GB
+    name_suffix = "spyglass"
+  }
 }
 
 hub_cloud_permissions = {
