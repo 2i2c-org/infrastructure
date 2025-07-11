@@ -117,6 +117,13 @@ basehub:
         - name: home
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
+        - name: home
+          mountPath: /home/rstudio
+          subPath: '{escaped_username}'
+        - name: home
+          mountPath: /home/rstudio/shared
+          subPath: _shared
+          readOnly: true
       profileList:
       - display_name: Python
         slug: python
