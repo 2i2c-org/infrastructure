@@ -18,8 +18,8 @@ jupyterhub:
       # a guarantee of 0.05 set in basehub/values.yaml
       limit: 2
     image:
-      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: 79e7ee67211e
+      name: quay.io/2i2c/cloudbank-data8-image
+      tag: e0390051a2d9
     nodeSelector:
       # Put everything on the most appropriate instance type for these users
       node.kubernetes.io/instance-type: n2-highmem-4
