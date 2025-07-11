@@ -100,7 +100,7 @@ basehub:
         extraVolumeMounts:
         - name: home
           mountPath: /home/rstudio
-          subPath: "{escaped_username}"
+          subPath: '{escaped_username}'
         - name: home
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
