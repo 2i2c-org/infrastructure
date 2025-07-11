@@ -99,6 +99,9 @@ basehub:
       storage:
         extraVolumeMounts:
         - name: home
+          mountPath: /home/rstudio
+          subPath: "{escaped_username}"
+        - name: home
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
           readOnly: false
@@ -108,6 +111,10 @@ basehub:
           readOnly: false
         - name: home
           mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+        - name: home
+          mountPath: /home/rstudio/shared
           subPath: _shared
           readOnly: true
         - name: dev-shm
