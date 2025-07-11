@@ -21,10 +21,6 @@ persistent_disks = {
     size        = 50 # in GB
     name_suffix = "staging"
   },
-  "prod" = {
-    size        = 120 # in GB
-    name_suffix = "prod"
-  }
   "spyglass" = {
     size        = 60 # in GB
     name_suffix = "spyglass"
