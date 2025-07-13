@@ -25,9 +25,9 @@
         (pkgs.buildFHSUserEnv {
           name = "2i2c-env";
           targetPkgs = pkgs: (with pkgs; [
-            python3
-            python3Packages.pip
-            python3Packages.virtualenv
+            python313
+            python313Packages.pip
+            python313Packages.virtualenv
             pythonManylinuxPackages.manylinux2014Package
             cmake
             ninja
