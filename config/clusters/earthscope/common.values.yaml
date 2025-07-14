@@ -191,7 +191,7 @@ basehub:
             display_name: Resource Allocation
             choices:
               # mem_3_7:
-              #   display_name: Try It: 3.7 GB RAM, >= 0.5 CPU
+              #   display_name: Try It - 3.7 GB RAM, >= 0.5 CPU
               #   default: true
               #   allowed_groups:
               #   - geolab
@@ -205,7 +205,7 @@ basehub:
               #     node_selector:
               #       node.kubernetes.io/instance-type: r5.xlarge
               mem_7_4:
-                display_name: Light Workload: 7.4 GB RAM, >= 1 CPU
+                display_name: Light Workload - 7.4 GB RAM, >= 1 CPU
                 allowed_groups:
                 - geolab
                 - geolab:dev
@@ -218,7 +218,7 @@ basehub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_14_8:
-                display_name: Moderate Workload: 14.8 GB RAM, >= 2 CPUs
+                display_name: Moderate Workload - 14.8 GB RAM, >= 2 CPUs
                 allowed_groups:
                 - geolab
                 - geolab:dev
@@ -231,7 +231,7 @@ basehub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_29_7:
-                display_name: Standard Workload: 30 GB RAM, 4 CPUs
+                display_name: Standard Workload - 30 GB RAM, 4 CPUs
                 allowed_groups:
                 - geolab
                 - geolab:dev
@@ -244,7 +244,7 @@ basehub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_60_6:
-                display_name: Heavy Workload: 60 GB RAM, >= 8 CPUs
+                display_name: Heavy Workload - 60 GB RAM, >= 8 CPUs
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
@@ -256,7 +256,7 @@ basehub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
               mem_121_2:
-                display_name: Mega Workload: 120 GB RAM, 16 CPUs
+                display_name: Mega Workload - 120 GB RAM, 16 CPUs
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
@@ -268,7 +268,7 @@ basehub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
               mem_489_9:
-                display_name: Extreme Workload: 490 GB RAM, 64 CPUs
+                display_name: Extreme Workload - 490 GB RAM, 64 CPUs
                 allowed_groups:
                 - geolab:power
                 kubespawner_override:
