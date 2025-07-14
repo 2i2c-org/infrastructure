@@ -13,6 +13,11 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: staging
+  jupyterhub-home-nfs:
+    enabled:
+    eks:
+      enabled: true
+      volumeId: vol-0a4147126b73d7ff9
   jupyterhub:
     ingress:
       hosts: [staging.hub.victorproject.org]
