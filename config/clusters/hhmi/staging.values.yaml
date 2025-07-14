@@ -104,6 +104,3 @@ jupyterhub:
         authenticator_class: tmp
       Authenticator:
         allow_all: true
-
-  jupyterhub-home-nfs:
-    enabled: false
