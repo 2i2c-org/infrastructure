@@ -19,11 +19,9 @@ hubs:
 - name: staging
   display_name: HHMI Staging
   domain: staging.hhmi.2i2c.cloud
-  helm_chart: daskhub
+  helm_chart: basehub
   helm_chart_values_files:
-  - daskhub-common.values.yaml
   - staging.values.yaml
-  - enc-staging.secret.values.yaml
 - name: spyglass
   display_name: HHMI Spyglass (ephemeral)
   domain: spyglass.hhmi.2i2c.cloud
