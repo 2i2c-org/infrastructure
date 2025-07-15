@@ -16,7 +16,7 @@ basehub:
       serverIP: fs-00c0183a99b47c9ed.efs.us-west-2.amazonaws.com
       baseShareName: /
   jupyterhub-home-nfs:
-    enabled:
+    enabled: true
     eks:
       enabled: true
   jupyterhub:
