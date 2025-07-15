@@ -23,7 +23,7 @@ basehub:
     custom:
       homepage:
         gitRepoBranch: staging
-        gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
+        gitRepoUrl: https://github.com/US-GHG-Center/ghgc-hub-homepage
     hub:
       config:
         GitHubOAuthenticator:
