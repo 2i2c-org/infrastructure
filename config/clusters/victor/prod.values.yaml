@@ -13,6 +13,12 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: prod
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-0aa2e34864c248eb2
+    quotaEnforcer:
+      hardQuota: '1000'
+
   jupyterhub:
     ingress:
       hosts: [hub.victorproject.org]

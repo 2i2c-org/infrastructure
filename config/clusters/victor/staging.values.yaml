@@ -14,10 +14,10 @@ basehub:
             nodeSelector:
               2i2c/hub-name: staging
   jupyterhub-home-nfs:
-    enabled:
     eks:
-      enabled: true
       volumeId: vol-0a4147126b73d7ff9
+    quotaEnforcer:
+      hardQuota: '1' # in GB
   jupyterhub:
     ingress:
       hosts: [staging.hub.victorproject.org]
