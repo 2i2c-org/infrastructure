@@ -1,0 +1,22 @@
+nfs:
+  pv:
+    serverIP: 10.100.164.227
+
+jupyterhub:
+  ingress:
+    hosts: [neurohackademy.2i2c.cloud]
+    tls:
+    - hosts: [neurohackademy.2i2c.cloud]
+      secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0c264a6c8c39e0955
+  quotaEnforcer:
+    enabled: false
+    hardQuota: '5000' # in GB
+    path: /export/prod

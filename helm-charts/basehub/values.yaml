@@ -405,29 +405,23 @@ jupyterhub:
       add_staff_user_ids_of_type: ""
       staff_github_ids:
         - agoose77
-        - AIDEA775
         - choldgraf
         - colliand
-        - damianavila
         - GeorgianaElena
         - Gman0909
         - haroldcampbell
         - jmunroe
         - jnywong
-        - sgibson91
         - yuvipanda
       staff_google_ids:
         - ahollands@2i2c.org
-        - asilva@2i2c.org
         - choldgraf@2i2c.org
         - colliand@2i2c.org
-        - damianavila@2i2c.org
         - georgianaelena@2i2c.org
         - gmaciocci@2i2c.org
         - hcampbell@2i2c.org
         - jmunroe@2i2c.org
         - jwong@2i2c.org
-        - sgibson@2i2c.org
         - yuvipanda@2i2c.org
     homepage:
       gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
@@ -750,6 +744,10 @@ jupyterhub:
           # https://github.com/jupyterlab/jupyterlab/issues/11304#issuecomment-945466766
           ContentsManager:
             allow_hidden: true
+          # Stop putting RTC state db on NFS. Sqlite on NFS always ends in tears
+          # https://github.com/2i2c-org/infrastructure/issues/2245
+          SQLiteYStore:
+            db_path: /tmp/jupyterlab_ystore.db
           # MappingKernelManager configuration reference:
           # https://jupyter-server.readthedocs.io/en/latest/api/jupyter_server.services.kernels.html#jupyter_server.services.kernels.kernelmanager.MappingKernelManager
           #

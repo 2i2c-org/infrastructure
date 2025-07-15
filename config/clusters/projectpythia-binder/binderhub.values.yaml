@@ -35,7 +35,7 @@ jupyterhub:
       limit: 8G
       guarantee: 8G
     nodeSelector:
-      capi.stackhpc.com/node-group: user-m3-quad
+      capi.stackhpc.com/node-group: user-m3-large
     storage:
       type: none
       extraVolumeMounts: []
@@ -80,7 +80,7 @@ jupyterhub:
   prePuller:
     hook:
       nodeSelector:
-        capi.stackhpc.com/node-group: user-m3-quad
+        capi.stackhpc.com/node-group: user-m3-large
   hub:
     nodeSelector:
       capi.stackhpc.com/node-group: core
@@ -99,6 +99,7 @@ jupyterhub:
     config:
       BinderSpawnerMixin:
         auth_enabled: false
+        cors_allow_origin: '*'
       JupyterHub:
         authenticator_class: 'null'
 
@@ -120,7 +121,7 @@ binderhub-service:
   dockerApi:
     nodeSelector:
       hub.jupyter.org/node-purpose:
-      capi.stackhpc.com/node-group: user-m3-quad
+      capi.stackhpc.com/node-group: user-m3-large
   config:
     GitHubRepoProvider:
       allowed_specs:
@@ -136,6 +137,7 @@ binderhub-service:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/jetstream2-projectpythia-pythia-binder-
       banner_message: Binder on Jetstream2 for use with Project Pythia
       about_message: ''
+      cors_allow_origin: '*'
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
@@ -143,7 +145,7 @@ binderhub-service:
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose:
-        capi.stackhpc.com/node-group: user-m3-quad
+        capi.stackhpc.com/node-group: user-m3-large
   extraEnv:
   - name: JUPYTERHUB_API_TOKEN
     valueFrom:

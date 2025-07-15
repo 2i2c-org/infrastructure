@@ -1,0 +1,167 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
+    baseShareName: /
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: neurohackademy
+          logo_url: https://user-images.githubusercontent.com/118582/178122521-aa5b83e7-f898-415a-89ff-dc288f599b4f.png
+          url: https://neurohackademy.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: The National Institutes of Health grant 2R25MH112480-06
+          url: https://reporter.nih.gov/search/ydTvTwXxk0yd6eGdRznbLQ/project-details/10409452
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - NeuroHackademy2025
+        - 2i2c-org:hub-access-for-2i2c-staff
+        scope:
+        - read:org
+      Authenticator:
+        admin_users:
+        - arokem
+        - noahbenson
+  scheduling:
+    userScheduler:
+      enabled: true
+  singleuser:
+    extraFiles:
+      gitconfig:
+        mountPath: /srv/conda/envs/notebook/etc/gitconfig
+        stringData: |
+          [credential "https://github.com"]
+          helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 356717
+          useHttpPath = true
+    defaultUrl: /lab
+    profileList:
+    - display_name: Default
+      description: Choose image and resource allocation
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          choices:
+            nh2024:
+              display_name: arokem/nh2024
+              slug: regular-profile
+              kubespawner_override:
+                image: quay.io/arokem/nh2024:6a7f72572771
+                init_containers: &init_containers
+                - name: volume-mount-ownership-fix
+                  image: busybox:1.36.1
+                  command:
+                  - sh
+                  - -c
+                  - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
+                  securityContext:
+                    runAsUser: 0
+                  volumeMounts:
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
+                        # Mounted without readonly attribute here,
+                        # so we can chown it appropriately
+                  - name: home
+                    mountPath: /home/jovyan/shared
+                    subPath: _shared
+                    # this container uses nbgitpuller to mount https://github.com/NeuroHackademy2024/curriculum for user pods
+                    # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+                - name: jupyterhub-gitpuller-init
+                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
+                  env:
+                  - name: TARGET_PATH
+                    value: curriculum
+                  - name: SOURCE_REPO
+                    value: https://github.com/NeuroHackademy2024/curriculum
+                  - name: SOURCE_BRANCH
+                    value: main
+                  volumeMounts:
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
+                  securityContext:
+                    runAsUser: 1000
+                    runAsGroup: 1000
+            nh2024-gpu:
+              display_name: arokem/nh2024-gpu
+              slug: gpu-profile
+              kubespawner_override:
+                image: quay.io/arokem/nh2024-gpu:74cb5cb5c8ad
+                init_containers: *init_containers
+            nh2024-r:
+              display_name: arokem/nh2024-r
+              slug: r-profile
+              kubespawner_override:
+                image: quay.io/arokem/nh2024-r:f36d1dbaa3d7
+                init_containers: *init_containers
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+                init_containers: *init_containers
+        requests:
+          display_name: Resource Allocation
+          choices:
+            regular:
+              display_name: Regular CPU instance
+              slug: small
+              default: true
+              kubespawner_override:
+                cpu_guarantee: 0.5
+                cpu_limit: 14
+                mem_guarantee: 4G
+                mem_limit: 16G
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+            gpu:
+              display_name: GPU machine
+              slug: gpu
+              description: Start a container on a dedicated node with a GPU
+              kubespawner_override:
+                mem_limit:
+                mem_guarantee: 14G
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                node_selector:
+                  node.kubernetes.io/instance-type: g4dn.xlarge
+                extra_resource_limits:
+                  nvidia.com/gpu: '1'
+
+jupyterhub-home-nfs:
+  enabled: true
+  eks:
+    enabled: true
+  prometheusExporter:
+    enabled: true

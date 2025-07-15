@@ -120,6 +120,13 @@ jupyterhub:
         readOnly: true
       - name: dev-shm
         mountPath: /dev/shm
+      - name: home
+        mountPath: /home/rstudio
+        subPath: '{escaped_username}'
+      - name: home
+        mountPath: /home/rstudio/shared
+        subPath: _shared
+        readOnly: true
     profileList:
     - display_name: Choose your environment and resources
       default: true

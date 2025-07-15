@@ -2,7 +2,9 @@
 
 # Upgrade Kubernetes cluster on AWS
 
-## Pre-requisites
+## Upgrade k8s version
+
+### Pre-requisites
 
 1. *Install/upgrade CLI tools*
 
@@ -23,9 +25,9 @@
    jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
    ```
 
-## Cluster upgrade
+### Cluster upgrade
 
-### 1. Prepare two terminal sessions
+#### 1. Prepare two terminal sessions
 
 Start two terminal sessions and set `CLUSTER_NAME=...` in both.
 
@@ -43,7 +45,7 @@ AWS credentials, you would no longer act as your your AWS user but the
 `eksctl`.
 ```
 
-### 2. Check cluster status and activity
+#### 2. Check cluster status and activity
 
 Before upgrading, get a sense of the current status of the cluster and users
 activity in it.
@@ -64,14 +66,14 @@ kubectl get pod -A -l "component=singleuser-server"
 kubectl get pod -A -l "app.kubernetes.io/component in (dask-scheduler, dask-worker)"
 ```
 
-### 3. Notify in slack
+#### 3. Notify in slack
 
 Notify others in 2i2c that your are starting this cluster upgrade in the
 `#maintenance-notices` Slack channel.
 
-### 4. Upgrade the k8s control plane[^2]
+#### 4. Upgrade the k8s control plane[^2]
 
-#### 4.1. Upgrade the k8s control plane one minor version
+##### 4.1. Upgrade the k8s control plane one minor version
 
 The k8s control plane can only be upgraded one minor version at the time,[^1] so
 increment the version field in the `.jsonnet` file.
@@ -99,7 +101,7 @@ credentials` don't worry, if you try it again you will find that the cluster is
 now upgraded.
 ```
 
-#### 4.2. Upgrade EKS add-ons
+##### 4.2. Upgrade EKS add-ons
 
 As documented in `eksctl`'s documentation[^2], we also need to upgrade EKS
 add-ons. This upgrade is believed to very briefly disrupt networking.
@@ -115,14 +117,14 @@ add-ons and not self-managed as they were before when `eksctl` installed them
 without involving EKS.
 ```
 
-#### 4.3. Repeat to upgrade multiple minor versions
+##### 4.3. Repeat to upgrade multiple minor versions
 
 If you need to upgrade multiple minor versions, repeat the previous steps
 starting with the minor version upgrade.
 
 (upgrade-cluster:aws:node-groups)=
 
-### 5. Upgrade node groups
+#### 5. Upgrade node groups
 
 All of the cluster's node groups should be upgraded. Strategies to upgrade nodes
 are introduced in [](upgrade-cluster:node-upgrade-strategies).
@@ -138,7 +140,7 @@ currently active nodes:
 kubectl get node --label-columns=alpha.eksctl.io/nodegroup-name
 ```
 
-#### Performing rolling upgrades (using drain or not)
+##### Performing rolling upgrades (using drain or not)
 
 1. *Create a new node group*
 
@@ -225,7 +227,7 @@ kubectl get node --label-columns=alpha.eksctl.io/nodegroup-name
    manually forcefully terminating them with `kubectl delete pod --force <...>`.
    ```
 
-#### Performing re-creation upgrades
+##### Performing re-creation upgrades
 
 If you do maintenance on a cluster with no running user workloads (user servers,
 dask gateway workers), a quick and simple strategy is to delete all user node
@@ -258,17 +260,43 @@ can work with multiple node group at the time by using wildcards in the
    eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*,gpu-*"
    ```
 
-### 6. Notify in slack
+#### 6. Notify in slack
 
 Notify others in 2i2c that you've finalized the cluster upgrade in the
 `#maintenance-notices` Slack channel.
 
-### 7. Commit changes
+#### 7. Commit changes
 
 During this upgrade, the k8s version and possibly the node group name might have
 been changed. Make sure you commit this changes after the upgrade is finished.
 
-## References
+### References
 
 [^1]: About Kubernetes' version skew policy: <upgrade-cluster:k8s-version-skew>
 [^2]: `eksctl`'s cluster upgrade documentation: <https://eksctl.io/usage/cluster-upgrade/>
+
+## Update ekctl configuration
+
+Sometimes, we need to update the `ekctl` configuration file of all clusters to
+reflect a general, organization-wide change (eg. adding a certain label to a node group).
+
+This can either be done manually, by editing the `CLUSTER_NAME.eksctl.yaml` file
+of each cluster directly, or by updating the template, then use a `deployer` command
+to re-render the `CLUSTER_NAME.eksctl.yaml` file of each cluster using the template.
+
+```bash
+deployer update eksctl config <cluster-name>
+```
+The command will then ask for the hub names that have GPU nodegroups setup for
+them. This is the only information that is too hard to infer from existing config,
+so you need to feed it to the command manually.
+
+```{attention}
+There are some legacy clusters, or clusters that have been particularly tailored
+for their specific needs, that may not follow the standard configuration defined
+in the template.
+
+So pay special attention to the `git diff` output and drop any changes that
+should not be applied to the cluster (eg. node availability zone, different
+instance types, etc).
+```

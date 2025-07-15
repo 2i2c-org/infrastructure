@@ -25,6 +25,7 @@ local nodeAz = 'us-west-2a';
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+  // staging
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-staging',
@@ -43,6 +44,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'staging' },
     tags+: { '2i2c:hub-name': 'staging' },
   },
+  // prod
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-prod',
@@ -62,6 +64,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'prod' },
     tags+: { '2i2c:hub-name': 'prod' },
   },
+  // binder
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-binder',
@@ -71,13 +74,16 @@ local notebookNodes = [
   {
     instanceType: 'g4dn.xlarge',
     namePrefix: 'gpu-staging',
+    minSize: 0,
     labels+: {
       '2i2c/hub-name': 'staging',
       '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     tags+: {
       '2i2c:hub-name': 'staging',
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     taints+: {
       'nvidia.com/gpu': 'present:NoSchedule',
@@ -89,13 +95,16 @@ local notebookNodes = [
   {
     instanceType: 'g4dn.xlarge',
     namePrefix: 'gpu-prod',
+    minSize: 0,
     labels+: {
       '2i2c/hub-name': 'prod',
       '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     tags+: {
       '2i2c:hub-name': 'prod',
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     taints+: {
       'nvidia.com/gpu': 'present:NoSchedule',
@@ -168,9 +177,6 @@ local daskNodes = [
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -188,10 +194,16 @@ local daskNodes = [
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
@@ -227,12 +239,12 @@ local daskNodes = [
             'hub.jupyter.org/node-purpose': 'user',
             'k8s.dask.org/node-purpose': 'scheduler',
           },
-          tags+: {
-            '2i2c:node-purpose': 'user',
-          },
           taints+: {
             'hub.jupyter.org_dedicated': 'user:NoSchedule',
             'hub.jupyter.org/dedicated': 'user:NoSchedule',
+          },
+          tags+: {
+            '2i2c:node-purpose': 'user',
           },
         } + n
         for n in notebookNodes
@@ -247,12 +259,12 @@ local daskNodes = [
               labels+: {
                 'k8s.dask.org/node-purpose': 'worker',
               },
-              tags+: {
-                '2i2c:node-purpose': 'worker',
-              },
               taints+: {
                 'k8s.dask.org_dedicated': 'worker:NoSchedule',
                 'k8s.dask.org/dedicated': 'worker:NoSchedule',
+              },
+              tags+: {
+                '2i2c:node-purpose': 'worker',
               },
               instancesDistribution+: {
                 onDemandBaseCapacity: 0,

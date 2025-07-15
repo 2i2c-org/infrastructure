@@ -227,6 +227,7 @@ jobs:
       failure_nasa-cryo: ${{ steps.declare-failure.outputs.failure_nasa-cryo }}
       failure_nasa-ghg: ${{ steps.declare-failure.outputs.failure_nasa-ghg }}
       failure_nasa-veda: ${{ steps.declare-failure.outputs.failure_nasa-veda }}
+      failure_neurohackademy: ${{ steps.declare-failure.outputs.failure_neurohackademy }}
       failure_nmfs-openscapes: ${{ steps.declare-failure.outputs.failure_nmfs-openscapes }}
       failure_openscapes: ${{ steps.declare-failure.outputs.failure_openscapes }}
       failure_opensci: ${{ steps.declare-failure.outputs.failure_opensci }}
@@ -467,6 +468,7 @@ jobs:
       failure_nasa-cryo_staging: ${{ steps.declare-failure.outputs.failure_nasa-cryo_staging }}
       failure_nasa-ghg_staging: ${{ steps.declare-failure.outputs.failure_nasa-ghg_staging }}
       failure_nasa-veda_staging: ${{ steps.declare-failure.outputs.failure_nasa-veda_staging }}
+      failure_neurohackademy_staging: ${{ steps.declare-failure.outputs.failure_neurohackademy_staging }}
       failure_nmfs-openscapes_staging: ${{ steps.declare-failure.outputs.failure_nmfs-openscapes_staging }}
       failure_openscapes_staging: ${{ steps.declare-failure.outputs.failure_openscapes_staging }}
       failure_opensci_staging: ${{ steps.declare-failure.outputs.failure_opensci_staging }}

@@ -106,6 +106,7 @@ series nodes.
 We use `eksctl` with `jsonnet` to provision our kubernetes clusters on
 AWS, and we can configure a node group there to provide us GPUs.
 
+
 1. In the `notebookNodes` definition in the appropriate `.jsonnet` file,
    add a node definition for the appropriate GPU node type:
 
@@ -114,8 +115,13 @@ AWS, and we can configure a node group there to provide us GPUs.
         instanceType: "g4dn.xlarge",
         namePrefix: "gpu-{{hub-name}}",
         minSize: 0,
-        labels+: { "2i2c/hub-name": "{{hub-name}}", "2i2c/has-gpu": "true" },
+        labels+: {
+            "k8s.amazonaws.com/accelerator": "nvidia-tesla-t4",
+            "2i2c/hub-name": "{{hub-name}}",
+            "2i2c/has-gpu": "true"
+        },
         tags+: {
+            "k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator": "nvidia-tesla-t4",
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
             "2i2c:hub-name": "{{hub-name}}",
         },
@@ -133,7 +139,11 @@ AWS, and we can configure a node group there to provide us GPUs.
    1 GPU per node and also for the cost attribution system to differentiate
    between hubs. The `taints` definition is required to prevent scheduling of
    non-GPU pods onto the GPU nodes. If you're using a different machine type with
-   more GPUs, adjust this definition accordingly.
+   more GPUs, adjust this definition accordingly. The `tags` and `labels` entries
+   are used to label the GPU nodes with their GPU resources before they join the cluster.
+   See [the AWS documentation](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#special-note-on-gpu-instances) for more details. The rule for the accelerator name is
+   not clearly published anywhere, but can probably be derived from `nvidia-smi`, e.g.
+   see [this comment](https://github.com/NVIDIA/k8s-device-plugin/issues/294#issue-1154321965).
 
    We use a prior variable, `masterAzs`, to allow for GPU nodes to spawn in all
    AZ in the region, rather than just a specific one. This is helpful as a single

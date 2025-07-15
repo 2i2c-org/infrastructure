@@ -36,6 +36,14 @@ hubs:
   - common.values.yaml
   - bcc.values.yaml
   - enc-bcc.secret.values.yaml
+- name: chaffey
+  display_name: Chaffey College
+  domain: chaffey.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - chaffey.values.yaml
+  - enc-chaffey.secret.values.yaml
 - name: ccc
   display_name: Contra Costa College
   domain: ccc.cloudbank.2i2c.cloud
@@ -196,6 +204,14 @@ hubs:
   - common.values.yaml
   - glendale.values.yaml
   - enc-glendale.secret.values.yaml
+- name: golden
+  display_name: Golden West College
+  domain: golden.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - golden.values.yaml
+  - enc-golden.secret.values.yaml
 - name: high
   display_name: High School Experimental Hub
   domain: high.cloudbank.2i2c.cloud
@@ -228,6 +244,14 @@ hubs:
   - common.values.yaml
   - lacc.values.yaml
   - enc-lacc.secret.values.yaml
+- name: lahc
+  display_name: Los Angeles Harbor College
+  domain: lahc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - lahc.values.yaml
+  - enc-lahc.secret.values.yaml
 - name: lamission
   display_name: Los Angeles Mission College
   domain: lamission.cloudbank.2i2c.cloud
@@ -276,6 +300,14 @@ hubs:
   - common.values.yaml
   - merced.values.yaml
   - enc-merced.secret.values.yaml
+- name: merritt
+  display_name: Merritt College
+  domain: merritt.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - merritt.values.yaml
+  - enc-merritt.secret.values.yaml
 - name: mills
   display_name: Mills College
   domain: datahub.mills.edu
@@ -332,6 +364,14 @@ hubs:
   - common.values.yaml
   - pasadena.values.yaml
   - enc-pasadena.secret.values.yaml
+- name: redwoods
+  display_name: College of the Redwoods
+  domain: redwoods.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - redwoods.values.yaml
+  - enc-redwoods.secret.values.yaml
 - name: reedley
   display_name: Reedley College
   domain: reedley.cloudbank.2i2c.cloud

@@ -1,0 +1,55 @@
+jupyterhub:
+  ingress:
+    hosts: [chaffey.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [chaffey.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+    defaultUrl: /lab
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 79e7ee67211e
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.chaffey.edu/_resources/img/logo.svg
+          name: Chaffey College
+          url: https://www.chaffey.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://chaffey.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          https://chaffey.ondemandlogin.com:
+            default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - sharon.solis@chaffey.edu

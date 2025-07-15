@@ -137,6 +137,20 @@ jupyterhub:
           mountPath: /home/jovyan/shared
           subPath: _shared
           readOnly: true
+        # Mounts below are copied from basehub's values that we override by
+        # specifying singleuser.storage.extraVolumeMounts (lists get overridden when helm values
+        # are combined).
+        # Consider keeping the ones that are relevant for the hub, i.e. if the hub uses RStudio,
+        # then make sure that /home/rstudio and /home/rstudio/shared gets mounted. 
+        - name: dev-shm
+          mountPath: /dev/shm
+        - name: home 
+          mountPath: /home/rstudio
+          subPath: "{escaped_username}"
+        - name: home
+          mountPath: /home/rstudio/shared
+          subPath: _shared
+          readOnly: true
     initContainers:
       - name: volume-mount-ownership-fix
         image: busybox:1.36.1

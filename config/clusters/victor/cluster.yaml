@@ -1,5 +1,5 @@
 name: victor
-provider: aws # https://2i2c.awsapps.com/start#/
+provider: aws # https://129856558350.signin.aws.amazon.com/console
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks

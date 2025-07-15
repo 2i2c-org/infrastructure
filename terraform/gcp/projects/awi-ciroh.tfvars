@@ -9,18 +9,17 @@ enable_logging         = false
 enable_filestore_backups = true
 filestores               = {}
 
-enable_nfs_backup = true
 persistent_disks = {
   "staging" = {
-    size        = 120 # in GB
+    size        = 120 # in GiB
     name_suffix = "staging"
   }
   "prod" = {
-    size        = 2500 # in GB
+    size        = 2800 # in GiB
     name_suffix = "prod"
   }
   "workshop" = {
-    size        = 1000 # in GB
+    size        = 1000 # in GiB
     name_suffix = "workshop"
   }
 }

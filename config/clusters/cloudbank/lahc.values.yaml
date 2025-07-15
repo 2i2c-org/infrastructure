@@ -1,0 +1,39 @@
+jupyterhub:
+  ingress:
+    hosts: [lahc.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [lahc.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: Los Angeles Harbor College
+          logo_url: https://www.lahc.edu/sites/lahc.edu/files/lahc-logo.svg
+          url: https://www.lahc.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://lahc.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - LAHS-DataScience
+        scope:
+        - read:org
+      Authenticator:
+        admin_users:
+        - sean-morris
+        - jmaciasatelcamino
