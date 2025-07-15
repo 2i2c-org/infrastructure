@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.127.66
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/victor-staging
@@ -17,7 +20,7 @@ basehub:
     eks:
       volumeId: vol-0a4147126b73d7ff9
     quotaEnforcer:
-      hardQuota: '1' # in GB
+      hardQuota: '5' # in GB
   jupyterhub:
     ingress:
       hosts: [staging.hub.victorproject.org]
