@@ -3,6 +3,7 @@ import math
 import sys
 from enum import Enum
 from pathlib import Path
+from typing import List
 
 import typer
 from ruamel.yaml import YAML
@@ -66,12 +67,26 @@ def proportional_memory_strategy(
         # This makes sure we utilize all the memory on a node all the time.
         cpu_guarantee = (mem_limit / available_node_mem) * available_node_cpu
 
-        # Memory is in bytes, let's convert it to GB (with only 1 digit after .) to display
-        mem_display = f"{mem_limit / 1024 / 1024 / 1024:.1f}"
-        display_name = f"{mem_display} GB RAM, upto {cpu_display} CPUs"
+        # Memory is in bytes, let's convert it to GB or MB (with no digits after 0) to display
+        if mem_limit < 1024 * 1024 * 1024:
+            mem_display = f"{mem_limit / 1024 / 1024:.0f} MB"
+        else:
+            mem_display = f"{mem_limit / 1024 / 1024 / 1024:.0f} GB"
+
+        if cpu_guarantee < 2:
+            cpu_guarantee_display = f"~{cpu_guarantee:0.1f}"
+        else:
+            cpu_guarantee_display = f"~{cpu_guarantee:0.0f}"
+
+        display_name = f"{mem_display} RAM, {cpu_guarantee_display} CPUs"
+        if cpu_guarantee != available_node_cpu:
+            description = f"Upto ~{available_node_cpu:.0f} CPUs when available"
+        else:
+            description = f"~{available_node_cpu:.0f} CPUs always available"
 
         choice = {
             "display_name": display_name,
+            "description": description,
             "kubespawner_override": {
                 # Guarantee and Limit are the same - this strategy has no oversubscription
                 "mem_guarantee": int(mem_limit),
@@ -90,7 +105,8 @@ def proportional_memory_strategy(
         # Use the amount of RAM made available as a slug, to allow combining choices from
         # multiple instance types in the same profile. This does mean you can not have
         # the same RAM allocation from multiple node selectors. But that's a feature, not a bug.
-        choices[f"mem_{mem_display.replace('.', '_')}"] = choice
+        choice_key = f"mem_{mem_display.replace('.', '_').replace(' ', '_')}".lower()
+        choices[choice_key] = choice
 
         # Halve the mem_limit for the next choice
         mem_limit = mem_limit / 2
@@ -98,18 +114,14 @@ def proportional_memory_strategy(
     # Reverse the choices so the smallest one is first
     choices = dict(reversed(choices.items()))
 
-    # Make the smallest choice the default explicitly
-    choices[list(choices.keys())[0]]["default"] = True
-
     return choices
 
 
 @resource_allocation_app.command()
 def choices(
-    instance_type: str = typer.Argument(
-        ..., help="Instance type to generate Resource Allocation options for"
+    instance_specification: List[str] = typer.Argument(
+        ..., help="Instance type and number of choices to generate Resource Allocation options for. Specify as instance_type:count."
     ),
-    num_allocations: int = typer.Option(5, help="Number of choices to generate"),
     strategy: ResourceAllocationStrategies = typer.Option(
         ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY,
         help="Strategy to use for generating resource allocation choices choices",
@@ -121,19 +133,22 @@ def choices(
     """
     with open(HERE / "node-capacity-info.json") as f:
         nodeinfo = json.load(f)
+    choices = {}
+    for instance_spec in instance_specification:
+        instance_type, num_allocations = instance_spec.split(":", 2)
 
-    if instance_type not in nodeinfo:
-        print(
-            f"Capacity information about {instance_type} not available", file=sys.stderr
-        )
-        print("TODO: Provide information on how to update it", file=sys.stderr)
-        sys.exit(1)
+        if instance_type not in nodeinfo:
+            print(
+                f"Capacity information about {instance_type} not available", file=sys.stderr
+            )
+            print("TODO: Provide information on how to update it", file=sys.stderr)
+            sys.exit(1)
 
-    # Call appropriate function based on what strategy we want to use
-    if strategy == ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY:
-        choices = proportional_memory_strategy(
-            instance_type, nodeinfo[instance_type], num_allocations
-        )
-    else:
-        raise ValueError(f"Strategy {strategy} is not currently supported")
+        # Call appropriate function based on what strategy we want to use
+        if strategy == ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY:
+            choices.update(proportional_memory_strategy(
+                instance_type, nodeinfo[instance_type], int(num_allocations)
+            ))
+        else:
+            raise ValueError(f"Strategy {strategy} is not currently supported")
     yaml.dump(choices, sys.stdout)
