@@ -11,8 +11,8 @@ jupyterhub:
       guarantee: 384M
       limit: 1.5G
     image:
-      name: quay.io/2i2c/cloudbank-data8-image
-      tag: e0390051a2d9
+      name: quay.io/ccsf/jupyterhub
+      tag: latest
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
