@@ -48,16 +48,14 @@ def proportional_memory_strategy(
     # We operate on *available* memory, which already accounts for system components (like kubelet & systemd)
     # as well as daemonsets we run on every node. This represents the resources that are available
     # for user pods.
+    # In addition, we provide some wiggle room to account for additional daemonset requests or other
+    # issues that may pop up due to changes outside our control (like k8s upgrades). This is either
+    # 2% of the available capacity, or 2GB / 1 CPU (whichever is smaller)
+    mem_overhead_wiggle = min(nodeinfo["available"]["memory"] * 0.02, 2 * 1024 * 1024 * 1024)
+    cpu_overhead_wiggle = min(nodeinfo["available"]["cpu"] * 0.02, 1)
 
-    WIGGLE_ROOM = 0.02
-
-    available_node_mem = nodeinfo["available"]["memory"] * (1 - WIGGLE_ROOM)
-    available_node_cpu = nodeinfo["available"]["cpu"] * (1 - WIGGLE_ROOM)
-
-    # Only show one digit after . for CPU, but round *down* not up so we never
-    # say they are getting more CPU than our limit is set to. We multiply & divide
-    # with a floor, as otherwise 3.75 gets rounded to 3.8, not 3.7
-    cpu_display = math.floor(available_node_cpu * 10) / 10
+    available_node_mem = nodeinfo["available"]["memory"] - mem_overhead_wiggle
+    available_node_cpu = nodeinfo["available"]["cpu"] - cpu_overhead_wiggle
 
     # We always start from the top, and provide a choice that takes up the whole node.
     mem_limit = available_node_mem
