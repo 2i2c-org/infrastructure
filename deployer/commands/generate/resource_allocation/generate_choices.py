@@ -52,7 +52,9 @@ def proportional_memory_strategy(
     # In addition, we provide some wiggle room to account for additional daemonset requests or other
     # issues that may pop up due to changes outside our control (like k8s upgrades). This is either
     # 2% of the available capacity, or 2GB / 1 CPU (whichever is smaller)
-    mem_overhead_wiggle = min(nodeinfo["available"]["memory"] * 0.02, 2 * 1024 * 1024 * 1024)
+    mem_overhead_wiggle = min(
+        nodeinfo["available"]["memory"] * 0.02, 2 * 1024 * 1024 * 1024
+    )
     cpu_overhead_wiggle = min(nodeinfo["available"]["cpu"] * 0.02, 1)
 
     available_node_mem = nodeinfo["available"]["memory"] - mem_overhead_wiggle
@@ -120,7 +122,8 @@ def proportional_memory_strategy(
 @resource_allocation_app.command()
 def choices(
     instance_specification: List[str] = typer.Argument(
-        ..., help="Instance type and number of choices to generate Resource Allocation options for. Specify as instance_type:count."
+        ...,
+        help="Instance type and number of choices to generate Resource Allocation options for. Specify as instance_type:count.",
     ),
     strategy: ResourceAllocationStrategies = typer.Option(
         ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY,
@@ -139,16 +142,19 @@ def choices(
 
         if instance_type not in nodeinfo:
             print(
-                f"Capacity information about {instance_type} not available", file=sys.stderr
+                f"Capacity information about {instance_type} not available",
+                file=sys.stderr,
             )
             print("TODO: Provide information on how to update it", file=sys.stderr)
             sys.exit(1)
 
         # Call appropriate function based on what strategy we want to use
         if strategy == ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY:
-            choices.update(proportional_memory_strategy(
-                instance_type, nodeinfo[instance_type], int(num_allocations)
-            ))
+            choices.update(
+                proportional_memory_strategy(
+                    instance_type, nodeinfo[instance_type], int(num_allocations)
+                )
+            )
         else:
             raise ValueError(f"Strategy {strategy} is not currently supported")
     yaml.dump(choices, sys.stdout)
