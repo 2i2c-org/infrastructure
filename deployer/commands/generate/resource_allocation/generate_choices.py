@@ -51,10 +51,11 @@ def proportional_memory_strategy(
     # In addition, we provide some wiggle room to account for additional daemonset requests or other
     # issues that may pop up due to changes outside our control (like k8s upgrades). This is either
     # 2% of the available capacity, or 2GB / 1 CPU (whichever is smaller)
+    WIGGLE_PERCENTAGE = 0.02
     mem_overhead_wiggle = min(
-        nodeinfo["available"]["memory"] * 0.02, 2 * 1024 * 1024 * 1024
+        nodeinfo["available"]["memory"] * WIGGLE_PERCENTAGE, 2 * 1024 * 1024 * 1024
     )
-    cpu_overhead_wiggle = min(nodeinfo["available"]["cpu"] * 0.02, 1)
+    cpu_overhead_wiggle = min(nodeinfo["available"]["cpu"] * WIGGLE_PERCENTAGE, 1)
 
     available_node_mem = nodeinfo["available"]["memory"] - mem_overhead_wiggle
     available_node_cpu = nodeinfo["available"]["cpu"] - cpu_overhead_wiggle
