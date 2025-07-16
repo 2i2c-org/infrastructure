@@ -18,3 +18,6 @@ jupyterhub:
         allowed_organizations:
         - czi-catalystproject
         - CatalystProject-Hubs:staging
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-staging

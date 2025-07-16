@@ -21,3 +21,6 @@ jupyterhub:
         admin_users:
         - Gabo8611
         - Yalbibalderas
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-iner

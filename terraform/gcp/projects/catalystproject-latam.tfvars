@@ -13,10 +13,58 @@ k8s_versions = {
 }
 
 persistent_disks = {
+  "areciboc3" = {
+    size        = 1 # in GiB
+    name_suffix = "areciboc3"
+  },
+  "cabana" = {
+    size        = 2 # in GiB
+    name_suffix = "cabana"
+  },
+  "cicada" = {
+    size        = 90 # in GiB
+    name_suffix = "cicada"
+  },
+  "gita" = {
+    size        = 1 # in GiB
+    name_suffix = "gita"
+  },
+  "iner" = {
+    size        = 35 # in GiB
+    name_suffix = "iner"
+  },
+  "labi" = {
+    size        = 130 # in GiB
+    name_suffix = "labi"
+  },
+  "nnb-ccg" = {
+    size        = 1 # in GiB
+    name_suffix = "nnb-ccg"
+  },
+  "plnc" = {
+    size        = 1 # in GiB
+    name_suffix = "plnc"
+  },
+  "staging" = {
+    size        = 10 # in GiB
+    name_suffix = "staging"
+  },
   "unam" = {
     size        = 900 # in GiB
     name_suffix = "unam"
   }
+  "unitefa-conicet" = {
+    size        = 25 # in GiB
+    name_suffix = "unitefa-conicet"
+  },
+  "uprrp" = {
+    size        = 1 # in GiB
+    name_suffix = "uprrp"
+  },
+  "valledellili" = {
+    size        = 1 # in GiB
+    name_suffix = "valledellili"
+  },
 }
 
 enable_filestore_backups = true

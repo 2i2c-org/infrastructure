@@ -36,3 +36,6 @@ jupyterhub:
         admin_users:
         - aquevedo@unc.edu.ar
         - nicolasw@famaf.unc.edu.ar
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-unitefa-conicet
