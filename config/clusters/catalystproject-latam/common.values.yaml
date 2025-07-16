@@ -9,10 +9,6 @@ nfs:
     serverIP: 172.16.137.210
     # Name of Google Filestore share
     baseShareName: /homes/
-jupyterhub-home-nfs:
-  enabled: true
-  gke:
-    enabled: true
 jupyterhub:
   custom:
     2i2c:

@@ -32,5 +32,7 @@ jupyterhub:
         - pattiordonez
         - danielhjacobs
 jupyterhub-home-nfs:
+  enabled: true
   gke:
+    enabled: true
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-areciboc3
