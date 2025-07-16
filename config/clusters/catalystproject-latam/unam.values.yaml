@@ -1,3 +1,8 @@
+nfs:
+  pv:
+    serverIP: 10.15.251.101
+    baseShareName: /
+
 userServiceAccount:
   annotations:
     # singleuser.networkPolicy.egressAllowRules.cloudMetadataServer=true and

@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.15.241.229
+    baseShareName: /
 jupyterhub:
   ingress:
     hosts: [cabana.latam.catalystproject.2i2c.cloud]
