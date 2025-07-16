@@ -80,9 +80,9 @@ def proportional_memory_strategy(
         else:
             cpu_guarantee_display = f"~{cpu_guarantee:0.0f}"
 
-        display_name = f"{mem_display} RAM, {cpu_guarantee_display} CPUs"
+        display_name = f"~{mem_display} RAM, {cpu_guarantee_display} CPUs"
         if cpu_guarantee != available_node_cpu:
-            description = f"Upto ~{available_node_cpu:.0f} CPUs when available"
+            description = f"Up to ~{available_node_cpu:.0f} CPUs when available"
         else:
             description = f"~{available_node_cpu:.0f} CPUs always available"
 
