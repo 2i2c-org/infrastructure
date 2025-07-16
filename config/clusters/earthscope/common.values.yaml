@@ -164,7 +164,7 @@ basehub:
                 display_name: GeoLab
                 slug: geolab-general
                 kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/geolab_default:extensions-c1c714c1
+                  image: public.ecr.aws/earthscope/geolab/geolab-default:latest
               mspass-shortcourse:
                 display_name: MsPASS ShortCourse
                 slug: mspass-shortcourse
