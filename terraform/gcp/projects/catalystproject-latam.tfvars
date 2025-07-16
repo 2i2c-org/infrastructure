@@ -12,6 +12,13 @@ k8s_versions = {
   notebook_nodes_version : "1.32.1-gke.1357001",
 }
 
+persistent_disks = {
+  "unam" = {
+    size        = 900 # in GiB
+    name_suffix = "unam"
+  }
+}
+
 enable_filestore_backups = true
 filestores = {
   "filestore_b" = {
