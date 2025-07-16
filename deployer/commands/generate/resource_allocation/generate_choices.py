@@ -1,5 +1,4 @@
 import json
-import math
 import sys
 from enum import Enum
 from pathlib import Path
