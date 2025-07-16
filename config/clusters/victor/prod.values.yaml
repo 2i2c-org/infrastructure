@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.192.110
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/victor-prod
@@ -17,7 +20,7 @@ basehub:
     eks:
       volumeId: vol-0aa2e34864c248eb2
     quotaEnforcer:
-      hardQuota: '1000'
+      hardQuota: '250'
 
   jupyterhub:
     ingress:
