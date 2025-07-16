@@ -50,7 +50,7 @@ persistent_disks = {
     name_suffix = "staging"
   },
   "unam" = {
-    size        = 900 # in GiB
+    size        = 950 # in GiB
     name_suffix = "unam"
   }
   "unitefa-conicet" = {
