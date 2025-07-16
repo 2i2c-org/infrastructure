@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.15.250.54
+    baseShareName: /
 userServiceAccount:
   annotations:
     iam.gke.io/gcp-service-account: latam-areciboc3@catalystproject-392106.iam.gserviceaccount.com
