@@ -133,3 +133,6 @@ jupyterhub:
         default_url: /lab
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-plnc

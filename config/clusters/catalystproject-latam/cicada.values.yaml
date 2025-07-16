@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.15.248.146
+    baseShareName: /
 jupyterhub:
   ingress:
     hosts: [cicada.latam.catalystproject.2i2c.cloud]
@@ -100,3 +104,10 @@ jupyterhub:
               image: '{value}'
           choices: {}
         resource_allocation: *resource_allocation
+jupyterhub-home-nfs:
+  enabled: true
+  gke:
+    enabled: true
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-cicada
+  quotaEnforcer:
+    hardQuota: '20'

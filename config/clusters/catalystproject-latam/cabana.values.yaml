@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.15.241.229
+    baseShareName: /
 jupyterhub:
   ingress:
     hosts: [cabana.latam.catalystproject.2i2c.cloud]
@@ -20,3 +24,8 @@ jupyterhub:
       Authenticator:
         admin_users:
         - rebcamsan
+jupyterhub-home-nfs:
+  enabled: true
+  gke:
+    enabled: true
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-cabana

@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.15.250.54
+    baseShareName: /
 userServiceAccount:
   annotations:
     iam.gke.io/gcp-service-account: latam-areciboc3@catalystproject-392106.iam.gserviceaccount.com
@@ -27,3 +31,8 @@ jupyterhub:
         admin_users:
         - pattiordonez
         - danielhjacobs
+jupyterhub-home-nfs:
+  enabled: true
+  gke:
+    enabled: true
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-areciboc3
