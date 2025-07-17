@@ -8,9 +8,9 @@ basehub:
       enabled: false
   jupyterhub:
     ingress:
-      hosts: [hub.binder.earthscope.2i2c.cloud]
+      hosts: [hub.binder.geolab.earthscope.cloud]
       tls:
-      - hosts: [hub.binder.earthscope.2i2c.cloud]
+      - hosts: [hub.binder.geolab.earthscope.cloud]
         secretName: https-auto-tls
     cull:
       every: 300
@@ -103,9 +103,9 @@ basehub:
         2i2c/hub-name: binder
     ingress:
       enabled: true
-      hosts: [binder.earthscope.2i2c.cloud]
+      hosts: [binder.geolab.earthscope.cloud]
       tls:
-      - hosts: [binder.earthscope.2i2c.cloud]
+      - hosts: [binder.geolab.earthscope.cloud]
         secretName: binder-https-auto-tls
     custom:
       sendLogsOfLaunchEventsTo2i2c: true
@@ -116,8 +116,8 @@ basehub:
           node.kubernetes.io/instance-type: r5.xlarge
       BinderHub:
         base_url: /
-        hub_url: https://hub.binder.earthscope.2i2c.cloud
-        badge_base_url: https://binder.earthscope.2i2c.cloud
+        hub_url: https://hub.binder.geolab.earthscope.cloud
+        badge_base_url: https://binder.geolab.earthscope.cloud
         auth_enabled: false
         enable_api_only_mode: false
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
@@ -133,11 +133,11 @@ basehub:
     - name: JUPYTERHUB_CLIENT_ID
       value: service-binder
     - name: JUPYTERHUB_API_URL
-      value: https://hub.binder.earthscope.2i2c.cloud/hub/api
+      value: https://hub.binder.geolab.earthscope.cloud/hub/api
       # Without this, the redirect URL to /hub/api/... gets
       # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
-      value: https://hub.binder.earthscope.2i2c.cloud/
+      value: https://hub.binder.geolab.earthscope.cloud/
     buildPodsRegistryCredentials:
       server: *url
       username: *username
