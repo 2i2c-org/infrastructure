@@ -92,14 +92,6 @@ hubs:
   - common.values.yaml
   - csum.values.yaml
   - enc-csum.secret.values.yaml
-- name: csumb
-  display_name: Cal State Monterey Bay
-  domain: csumb.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - csumb.values.yaml
-  - enc-csumb.secret.values.yaml
 - name: csus
   display_name: California State University Sacramento
   domain: csus.cloudbank.2i2c.cloud
