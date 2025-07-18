@@ -44,14 +44,6 @@ hubs:
   - common.values.yaml
   - chaffey.values.yaml
   - enc-chaffey.secret.values.yaml
-- name: ccc
-  display_name: Contra Costa College
-  domain: ccc.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - ccc.values.yaml
-  - enc-ccc.secret.values.yaml
 - name: ccsf
   display_name: City College SF
   domain: ccsf.cloudbank.2i2c.cloud
@@ -164,14 +156,6 @@ hubs:
   - common.values.yaml
   - high.values.yaml
   - enc-high.secret.values.yaml
-- name: howard
-  display_name: Howard University
-  domain: howard.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - howard.values.yaml
-  - enc-howard.secret.values.yaml
 - name: humboldt
   display_name: Cal Poly Humboldt
   domain: humboldt.cloudbank.2i2c.cloud
@@ -196,14 +180,6 @@ hubs:
   - common.values.yaml
   - lahc.values.yaml
   - enc-lahc.secret.values.yaml
-- name: lamission
-  display_name: Los Angeles Mission College
-  domain: lamission.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - lamission.values.yaml
-  - enc-lamission.secret.values.yaml
 - name: laney
   display_name: Laney College
   domain: laney.cloudbank.2i2c.cloud
@@ -332,14 +308,6 @@ hubs:
   - common.values.yaml
   - saddleback.values.yaml
   - enc-saddleback.secret.values.yaml
-- name: santiago
-  display_name: Santiago Canyon College
-  domain: santiago.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - santiago.values.yaml
-  - enc-santiago.secret.values.yaml
 - name: sbcc
   display_name: Santa Barbara City College
   domain: sbcc.cloudbank.2i2c.cloud
