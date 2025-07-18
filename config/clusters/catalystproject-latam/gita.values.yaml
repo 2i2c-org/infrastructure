@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.15.254.24
+    baseShareName: /
 jupyterhub:
   ingress:
     hosts: [gita.latam.catalystproject.2i2c.cloud]
