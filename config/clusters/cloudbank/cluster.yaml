@@ -76,14 +76,6 @@ hubs:
   - common.values.yaml
   - csm.values.yaml
   - enc-csm.secret.values.yaml
-- name: csun
-  display_name: California State University Northridge
-  domain: csun.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - csun.values.yaml
-  - enc-csun.secret.values.yaml
 - name: csum
   display_name: Cal Maritime
   domain: csum.cloudbank.2i2c.cloud
@@ -92,14 +84,6 @@ hubs:
   - common.values.yaml
   - csum.values.yaml
   - enc-csum.secret.values.yaml
-- name: csus
-  display_name: California State University Sacramento
-  domain: csus.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - csus.values.yaml
-  - enc-csus.secret.values.yaml
 - name: demo
   display_name: Cloudbank demo
   domain: demo.cloudbank.2i2c.cloud
@@ -268,14 +252,6 @@ hubs:
   - common.values.yaml
   - merritt.values.yaml
   - enc-merritt.secret.values.yaml
-- name: mills
-  display_name: Mills College
-  domain: datahub.mills.edu
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - mills.values.yaml
-  - enc-mills.secret.values.yaml
 - name: miracosta
   display_name: MiraCosta College
   domain: miracosta.cloudbank.2i2c.cloud
@@ -348,14 +324,6 @@ hubs:
   - common.values.yaml
   - riohondo.values.yaml
   - enc-riohondo.secret.values.yaml
-- name: sacramento
-  display_name: Sacramento City College
-  domain: sacramento.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - sacramento.values.yaml
-  - enc-sacramento.secret.values.yaml
 - name: saddleback
   display_name: Saddleback College
   domain: saddleback.cloudbank.2i2c.cloud
