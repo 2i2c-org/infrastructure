@@ -76,14 +76,6 @@ hubs:
   - common.values.yaml
   - csm.values.yaml
   - enc-csm.secret.values.yaml
-- name: csulb
-  display_name: California State University Long Beach
-  domain: csulb.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - csulb.values.yaml
-  - enc-csulb.secret.values.yaml
 - name: csun
   display_name: California State University Northridge
   domain: csun.cloudbank.2i2c.cloud
