@@ -23,15 +23,13 @@ basehub:
         enabled: false
       binderhubUI:
         enabled: true
-      2i2c:
-        add_staff_user_ids_to_admin_users: false
       jupyterhubConfigurator:
         enabled: false
       singleuserAdmin:
         extraVolumeMounts: []
       homepage:
         templateVars:
-          enabled: false
+          redirect_to: https://www.earthscope.org/data/geolab/
     singleuser:
       nodeSelector:
         2i2c/hub-name: binder
@@ -73,11 +71,20 @@ basehub:
         # launch the notebook server
         os.execvp(exe, sys.argv)
     hub:
+      services:
+        binder:
+          oauth_redirect_uri: https://binder.geolab.earthscope.cloud/oauth_callback
       config:
         BinderSpawnerMixin:
-          auth_enabled: false
-        JupyterHub:
-          authenticator_class: 'null'
+          auth_enabled: true
+        GenericOAuthenticator:
+          token_url: https://login.earthscope.org/oauth/token
+          authorize_url: https://login.earthscope.org/authorize
+          userdata_url: https://login.earthscope.org/userinfo
+          logout_redirect_url: https://login.earthscope.org/v2/logout?client_id=2PbhUTbRU6e7uIaaEZIShotx15MbvsJJ
+          extra_authorize_params:
+            # This isn't an actual URL, just a string. Must not have a trailing slash
+            audience: https://api.earthscope.org
       redirectToServer: false
       loadRoles:
         binder:
@@ -85,7 +92,7 @@ basehub:
           - binder
           scopes:
           - servers
-          - admin:users
+          - read:users
         user:
           scopes:
           - self
@@ -118,7 +125,7 @@ basehub:
         base_url: /
         hub_url: https://hub.binder.geolab.earthscope.cloud
         badge_base_url: https://binder.geolab.earthscope.cloud
-        auth_enabled: false
+        auth_enabled: true
         enable_api_only_mode: false
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
       DockerRegistry:
@@ -138,6 +145,8 @@ basehub:
       # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
       value: https://hub.binder.geolab.earthscope.cloud/
+    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+      value: https://binder.geolab.earthscope.cloud/oauth_callback
     buildPodsRegistryCredentials:
       server: *url
       username: *username
