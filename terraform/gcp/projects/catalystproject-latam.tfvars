@@ -34,7 +34,7 @@ persistent_disks = {
     name_suffix = "iner"
   },
   "labi" = {
-    size        = 130 # in GiB
+    size        = 120 # in GiB
     name_suffix = "labi"
   },
   "nnb-ccg" = {
@@ -54,12 +54,8 @@ persistent_disks = {
     name_suffix = "unam"
   }
   "unitefa-conicet" = {
-    size        = 25 # in GiB
+    size        = 28 # in GiB
     name_suffix = "unitefa-conicet"
-  },
-  "uprrp" = {
-    size        = 1 # in GiB
-    name_suffix = "uprrp"
   },
   "valledellili" = {
     size        = 1 # in GiB

@@ -1,3 +1,6 @@
+nfs:
+  pv:
+    serverIP: 10.15.246.63
 jupyterhub:
   ingress:
     hosts: [iner.latam.catalystproject.2i2c.cloud]
