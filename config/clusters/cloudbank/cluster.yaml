@@ -324,14 +324,6 @@ hubs:
   - common.values.yaml
   - riohondo.values.yaml
   - enc-riohondo.secret.values.yaml
-- name: sacramento
-  display_name: Sacramento City College
-  domain: sacramento.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - sacramento.values.yaml
-  - enc-sacramento.secret.values.yaml
 - name: saddleback
   display_name: Saddleback College
   domain: saddleback.cloudbank.2i2c.cloud
