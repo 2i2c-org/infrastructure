@@ -180,14 +180,6 @@ hubs:
   - common.values.yaml
   - lahc.values.yaml
   - enc-lahc.secret.values.yaml
-- name: lamission
-  display_name: Los Angeles Mission College
-  domain: lamission.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - lamission.values.yaml
-  - enc-lamission.secret.values.yaml
 - name: laney
   display_name: Laney College
   domain: laney.cloudbank.2i2c.cloud
