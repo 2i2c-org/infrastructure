@@ -24,6 +24,7 @@ jupyterhub:
       Authenticator:
         admin_users:
         - rebcamsan
+        - l-g-g
 jupyterhub-home-nfs:
   enabled: true
   gke:
