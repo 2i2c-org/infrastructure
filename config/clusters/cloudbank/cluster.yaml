@@ -76,22 +76,6 @@ hubs:
   - common.values.yaml
   - csm.values.yaml
   - enc-csm.secret.values.yaml
-- name: csueb
-  display_name: California State University East Bay
-  domain: csueb.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - csueb.values.yaml
-  - enc-csueb.secret.values.yaml
-- name: csuf
-  display_name: California State University Fullerton
-  domain: csuf.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - csuf.values.yaml
-  - enc-csuf.secret.values.yaml
 - name: csula
   display_name: Cal State LA
   domain: calstatela.cloudbank.2i2c.cloud
