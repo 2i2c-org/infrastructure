@@ -252,14 +252,6 @@ hubs:
   - common.values.yaml
   - merritt.values.yaml
   - enc-merritt.secret.values.yaml
-- name: mills
-  display_name: Mills College
-  domain: datahub.mills.edu
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - mills.values.yaml
-  - enc-mills.secret.values.yaml
 - name: miracosta
   display_name: MiraCosta College
   domain: miracosta.cloudbank.2i2c.cloud
