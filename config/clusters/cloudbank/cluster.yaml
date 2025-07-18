@@ -84,14 +84,6 @@ hubs:
   - common.values.yaml
   - csum.values.yaml
   - enc-csum.secret.values.yaml
-- name: csus
-  display_name: California State University Sacramento
-  domain: csus.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - csus.values.yaml
-  - enc-csus.secret.values.yaml
 - name: demo
   display_name: Cloudbank demo
   domain: demo.cloudbank.2i2c.cloud
