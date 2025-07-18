@@ -69,11 +69,11 @@ jupyterhub:
           dynamic_image_building:
             enabled: true
           choices:
-            nh2024:
-              display_name: arokem/nh2024
+            nh2025:
+              display_name: nh2025
               slug: regular-profile
               kubespawner_override:
-                image: quay.io/arokem/nh2024:6a7f72572771
+                image: quay.io/arokem/nh2025:34511738d501
                 init_containers: &init_containers
                 - name: volume-mount-ownership-fix
                   image: busybox:1.36.1
@@ -92,7 +92,7 @@ jupyterhub:
                   - name: home
                     mountPath: /home/jovyan/shared
                     subPath: _shared
-                    # this container uses nbgitpuller to mount https://github.com/NeuroHackademy2024/curriculum for user pods
+                    # this container uses nbgitpuller to mount https://github.com/NeuroHackademy2025/curriculum for user pods
                     # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
@@ -100,7 +100,7 @@ jupyterhub:
                   - name: TARGET_PATH
                     value: curriculum
                   - name: SOURCE_REPO
-                    value: https://github.com/NeuroHackademy2024/curriculum
+                    value: https://github.com/NeuroHackademy2025/curriculum
                   - name: SOURCE_BRANCH
                     value: main
                   volumeMounts:
@@ -110,17 +110,11 @@ jupyterhub:
                   securityContext:
                     runAsUser: 1000
                     runAsGroup: 1000
-            nh2024-gpu:
-              display_name: arokem/nh2024-gpu
+            nh2025-gpu:
+              display_name: nh2025-gpu
               slug: gpu-profile
               kubespawner_override:
-                image: quay.io/arokem/nh2024-gpu:74cb5cb5c8ad
-                init_containers: *init_containers
-            nh2024-r:
-              display_name: arokem/nh2024-r
-              slug: r-profile
-              kubespawner_override:
-                image: quay.io/arokem/nh2024-r:f36d1dbaa3d7
+                image: quay.io/arokem/nh2025-gpu:726a3d89f074
                 init_containers: *init_containers
             unlisted_choice:
               enabled: true
