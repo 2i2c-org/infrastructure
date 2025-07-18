@@ -1,7 +1,6 @@
 nfs:
   pv:
     serverIP: 10.15.248.146
-    baseShareName: /
 jupyterhub:
   ingress:
     hosts: [cicada.latam.catalystproject.2i2c.cloud]

@@ -32,4 +32,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.15.255.113
-    baseShareName: /
