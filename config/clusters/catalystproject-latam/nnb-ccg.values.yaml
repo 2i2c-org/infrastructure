@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.15.246.238
+    baseShareName: /
 jupyterhub:
   ingress:
     hosts: [nnb-ccg.latam.catalystproject.2i2c.cloud]
