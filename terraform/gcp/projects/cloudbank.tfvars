@@ -23,9 +23,9 @@ persistent_disks = {
     size        = 350
     name_suffix = "ccsf"
   }
-  "chatbot" = {
+  "chabot" = {
     size        = 1
-    name_suffix = "chatbot"
+    name_suffix = "chabot"
   }
   "chaffey" = {
     size        = 1
