@@ -10,6 +10,193 @@ filestores = {
   "filestore" : { "capacity_gb" : 1792 }
 }
 
+persistent_disks = {
+  "authoring" = {
+    size        = 1
+    name_suffix = "authoring"
+  }
+  "bcc" = {
+    size        = 1
+    name_suffix = "bcc"
+  }
+  "ccsf" = {
+    size        = 350
+    name_suffix = "ccsf"
+  }
+  "chatbot" = {
+    size        = 1
+    name_suffix = "chatbot"
+  }
+  "chaffey" = {
+    size        = 1
+    name_suffix = "chaffey"
+  }
+  "csm" = {
+    size        = 95
+    name_suffix = "csm"
+  }
+  "csum" = {
+    size        = 25
+    name_suffix = "csum"
+  }
+  "demo" = {
+    size        = 35
+    name_suffix = "demo"
+  }
+  "dvc" = {
+    size        = 90
+    name_suffix = "dvc"
+  }
+  "elac" = {
+    size        = 1
+    name_suffix = "elac"
+  }
+  "elcamino" = {
+    size        = 175
+    name_suffix = "elcamino"
+  }
+  "evc" = {
+    size        = 50
+    name_suffix = "evc"
+  }
+  "foothill" = {
+    size        = 60
+    name_suffix = "foothill"
+  }
+  "fresno" = {
+    size        = 25
+    name_suffix = "fresno"
+  }
+  "glendale" = {
+    size        = 25
+    name_suffix = "glendale"
+  }
+  "golden" = {
+    size        = 1
+    name_suffix = "golden"
+  }
+  "high" = {
+    size        = 85
+    name_suffix = "high"
+  }
+  "humboldt" = {
+    size        = 75
+    name_suffix = "humboldt"
+  }
+  "lacc" = {
+    size        = 55
+    name_suffix = "lacc"
+  }
+  "lahc" = {
+    size        = 1
+    name_suffix = "lahc"
+  }
+  "laney" = {
+    size        = 75
+    name_suffix = "laney"
+  }
+  "lavc" = {
+    size        = 1
+    name_suffix = "lavc"
+  }
+  "lbcc" = {
+    size        = 1
+    name_suffix = "lbcc"
+  }
+  "mendocino" = {
+    size        = 1
+    name_suffix = "mendocino"
+  }
+  "merced" = {
+    size        = 2
+    name_suffix = "merced"
+  }
+  "merritt" = {
+    size        = 1
+    name_suffix = "merritt"
+  }
+  "miracosta" = {
+    size        = 8
+    name_suffix = "miracosta"
+  }
+  "mission" = {
+    size        = 1
+    name_suffix = "mission"
+  }
+  "moreno" = {
+    size        = 9
+    name_suffix = "moreno"
+  }
+  "norco" = {
+    size        = 20
+    name_suffix = "norco"
+  }
+  "palomar" = {
+    size        = 23
+    name_suffix = "palomar"
+  }
+  "pasadena" = {
+    size        = 75
+    name_suffix = "pasadena"
+  }
+  "redwoods" = {
+    size        = 1
+    name_suffix = "redwoods"
+  }
+  "reedley" = {
+    size        = 1
+    name_suffix = "reedley"
+  }
+  "riohondo" = {
+    size        = 6
+    name_suffix = "riohondo"
+  }
+  "saddleback" = {
+    size        = 20
+    name_suffix = "saddleback"
+  }
+  "sbcc" = {
+    size        = 50
+    name_suffix = "sbcc"
+  }
+  "sbcc-dev" = {
+    size        = 1
+    name_suffix = "sbcc-dev"
+  }
+  "sierra" = {
+    size        = 1
+    name_suffix = "sierra"
+  }
+  "sjcc" = {
+    size        = 30
+    name_suffix = "sjcc"
+  }
+  "sjsu" = {
+    size        = 1
+    name_suffix = "sjsu"
+  }
+  "skyline" = {
+    size        = 80
+    name_suffix = "skyline"
+  }
+  "staging" = {
+    size        = 2
+    name_suffix = "staging"
+  }
+  "tuskegee" = {
+    size        = 17
+    name_suffix = "tuskegee"
+  }
+  "ucsc" = {
+    size        = 3
+    name_suffix = "ucsc"
+  }
+  "wlac" = {
+    size        = 8
+    name_suffix = "wlac"
+  }
+}
+
 # Cloud costs for this project are not passed through by 2i2c
 budget_alert_enabled = false
 billing_account_id   = ""
