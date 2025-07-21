@@ -26,26 +26,6 @@
       envWithScript = script:
         (pkgs.buildFHSUserEnv {
           name = "2i2c-env";
-          targetPkgs = pkgs: (with pkgs; [
-            python313
-            python313Packages.pip
-            python313Packages.virtualenv
-            pythonManylinuxPackages.manylinux2014Package
-            cmake
-            ninja
-            gcc
-            pre-commit
-            # Infra packages
-            go-jsonnet
-            helm
-            kubectl
-            sops
-            gdk
-            awscli2
-            azure-cli
-            terraform
-            eksctl
-          ]);
           targetPkgs = pkgs:
             [
               python
