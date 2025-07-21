@@ -54,3 +54,6 @@ jupyterhub:
         - jegeronimo@berkeley.edu
         - mark.barranda@berkeley.edu
         - skompalli@berkeley.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-elcamino

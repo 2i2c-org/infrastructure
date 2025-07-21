@@ -52,3 +52,6 @@ jupyterhub:
     timeout: 1800
     # No pods over 12h long
     maxAge: 43200
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-demo

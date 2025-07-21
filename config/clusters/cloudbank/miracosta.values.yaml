@@ -46,3 +46,6 @@ jupyterhub:
         - amariscal@miracosta.edu
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-miracosta
