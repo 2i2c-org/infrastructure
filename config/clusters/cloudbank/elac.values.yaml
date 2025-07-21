@@ -66,3 +66,6 @@ jupyterhub:
         admin_users:
         - sean.smorris@berkeley.edu
         - rrregis@gmail.com
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/b-nfs-homedirs-elac

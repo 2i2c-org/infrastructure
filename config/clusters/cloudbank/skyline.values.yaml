@@ -48,3 +48,6 @@ jupyterhub:
         - sean.smorris@berkeley.edu
         - dhum1@my.smccd.edu
         - momenik1@my.smccd.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-skyline

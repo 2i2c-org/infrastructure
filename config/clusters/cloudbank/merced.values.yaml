@@ -46,3 +46,6 @@ jupyterhub:
         - ghogan42
         - svetla-gargova
         - basaadMerced
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-merced
