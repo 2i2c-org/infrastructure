@@ -50,18 +50,30 @@
             ]);
           # If there is a higher power, why does it allow such horrible autoformatting below
           runScript = "${pkgs.writeShellScriptBin "runScript" (''
-                               set -e
-                               if [[ ! -d .venv ]]; then
-                          __setup_env() {
-                     tmp_path="$(mktemp -d)"
-                    	  ${python.interpreter} -m venv "$tmp_path"
-                                   "''${tmp_path}/bin/python" -m pip install -e .[dev]
-              mv "$tmp_path" "''${PWD}/.venv"
-                   }
-                   __setup_env
-                               fi
-                               source .venv/bin/activate
-                               set +e
+              set -e
+
+              # Setup if not defined ####
+              if [[ ! ( -d ".venv" && -f ".venv/marker" ) ]]; then
+                  __setup_env() {
+                      # Remove existing venv
+                      if [[ -d .venv ]]; then
+                          rm -r .venv
+                      fi
+
+                      # Stand up new venv
+                      ${python.interpreter} -m venv .venv
+                      ".venv/bin/python" -m pip install -e .[dev]
+
+                      # Add a marker that marks this venv as "ready"
+                      touch .venv/marker
+                  }
+
+                  __setup_env
+              fi
+              ###########################
+
+              source .venv/bin/activate
+              set +e
             ''
             + script)}/bin/runScript";
         })
