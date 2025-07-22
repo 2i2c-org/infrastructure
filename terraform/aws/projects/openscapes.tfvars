@@ -22,6 +22,7 @@ ebs_volumes = {
   },
   "workshop" = {
     size        = 128
+    iops        = 10000 # Temporarily have 10k iops for the workshop
     type        = "gp3"
     name_suffix = "workshop"
     tags        = { "2i2c:hub-name" : "workshop" }
