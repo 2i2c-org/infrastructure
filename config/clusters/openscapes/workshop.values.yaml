@@ -20,6 +20,12 @@ basehub:
       - hosts: [workshop.openscapes.2i2c.cloud]
         secretName: https-auto-tls
     hub:
+      resources:
+        requests:
+          cpu: 1
+          memory: 512Mi
+        limits:
+          memory: 8Gi
       allowNamedServers: true
       config:
         JupyterHub:
