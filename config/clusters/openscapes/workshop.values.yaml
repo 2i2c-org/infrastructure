@@ -70,14 +70,14 @@ basehub:
             choices:
               mem_15_gb:
                 display_name: ~15 GB RAM, ~1.9 CPUs
-                description: Up to ~15 CPUs when available
+                description: Up to ~3.7 CPUs when available
                 kubespawner_override:
                   mem_guarantee: 16005176754
                   mem_limit: 16005176754
                   cpu_guarantee: 1.9226375
-                  cpu_limit: 15.3811
+                  cpu_limit: 3.7
                   node_selector:
-                    node.kubernetes.io/instance-type: r5.4xlarge
+                    node.kubernetes.io/instance-type: r5.16xlarge
       - display_name: Bring your own image
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
