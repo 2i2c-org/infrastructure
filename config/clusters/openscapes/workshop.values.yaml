@@ -107,7 +107,7 @@ basehub:
               2i2c/hub-name: workshop
   jupyterhub-home-nfs:
     quotaEnforcer:
-      hardQuota: '16' # in GB
+      hardQuota: '8' # in GB
     eks:
       volumeId: vol-03afdfb4245b63dfb
 jupyterhub-home-nfs:
