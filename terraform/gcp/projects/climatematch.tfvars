@@ -42,7 +42,7 @@ persistent_disks = {
   },
 
   "prod" = {
-    size        = 100 # in GB
+    size        = 130 # in GB
     name_suffix = "prod"
   }
 }
