@@ -64,12 +64,7 @@ persistent_disks = {
 }
 
 enable_filestore_backups = true
-filestores = {
-  "filestore_b" = {
-    name_suffix = "b",
-    capacity_gb = 2304 # 2.25TiB
-  }
-}
+filestores               = {}
 
 core_node_machine_type = "n2-highmem-2"
 
