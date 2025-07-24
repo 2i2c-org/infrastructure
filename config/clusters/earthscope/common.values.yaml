@@ -293,6 +293,40 @@ basehub:
                   cpu_limit: 63.575
                   node_selector:
                     node.kubernetes.io/instance-type: r5.16xlarge
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: Start a container on a dedicated node with a GPU
+        slug: gpu
+        allowed_groups:
+        - geolab
+        - geolab:dev
+        - geolab:power
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                default: true
+                slug: pytorch
+                kubespawner_override:
+                  image: quay.io/pangeo/pytorch-notebook:2025.05.22
+        kubespawner_override:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          mem_limit:
+          mem_guarantee: 14G
+          node_selector:
+            node.kubernetes.io/instance-type: g4dn.xlarge
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
+
     scheduling:
       userScheduler:
         enabled: true
