@@ -177,8 +177,8 @@ local makeUserPodUnschedulableAlert = function(
             'home-nfs',
           ),
           makePVCApproachingFullAlert(
-            'HomeDirectoryDiskApproachingFull',
-            'Home Directory Disk about to be full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
+            'TakeActionHomeDirectoryDangerouslyCloseToFull',
+            'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
             'home-nfs',
             0.05,
             'critical',
