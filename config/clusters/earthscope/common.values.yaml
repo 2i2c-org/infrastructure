@@ -311,6 +311,11 @@ basehub:
               kubespawner_override:
                 image: '{value}'
             choices:
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook
+                slug: tensorflow
+                kubespawner_override:
+                  image: quay.io/pangeo/ml-notebook:2025.07.09
               pytorch:
                 display_name: Pangeo PyTorch ML Notebook
                 default: true
