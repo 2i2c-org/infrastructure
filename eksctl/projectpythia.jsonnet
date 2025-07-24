@@ -30,6 +30,7 @@ local notebookNodes = [
   { instanceType: 'r5.16xlarge' },
   {
     instanceType: 'g4dn.xlarge',
+    minSize: 0,
     tags+: {
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
       'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
@@ -37,7 +38,7 @@ local notebookNodes = [
     taints+: {
       'nvidia.com/gpu': 'present:NoSchedule',
     },
-    labels: {
+    labels+: {
       '2i2c/has-gpu': 'true',
       'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
@@ -148,6 +149,9 @@ local daskNodes = [];
             'hub.jupyter.org_dedicated': 'user:NoSchedule',
             'hub.jupyter.org/dedicated': 'user:NoSchedule',
           },
+          tags+: {
+            '2i2c:node-purpose': 'user',
+          },
         } + n
         for n in notebookNodes
       ] + (
@@ -164,6 +168,9 @@ local daskNodes = [];
               taints+: {
                 'k8s.dask.org_dedicated': 'worker:NoSchedule',
                 'k8s.dask.org/dedicated': 'worker:NoSchedule',
+              },
+              tags+: {
+                '2i2c:node-purpose': 'worker',
               },
               instancesDistribution+: {
                 onDemandBaseCapacity: 0,
