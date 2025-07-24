@@ -44,7 +44,7 @@ jupyterhub:
           url: https://doi.org/10.5281/zenodo.8184298
         org:
           url: https://projectpythia.org/
-          logo_url: https://projectpythia.org/_static/images/logos/pythia_logo-blue-rtext.svg
+          logo_url: https://raw.githubusercontent.com/ProjectPythia/projectpythia.github.io/refs/heads/main/portal/_static/images/logos/pythia_logo-blue-rtext.svg
 
   hub:
     allowNamedServers: true
