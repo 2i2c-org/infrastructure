@@ -74,6 +74,9 @@ jupyterhub:
       profile_options:
         image:
           display_name: Image
+          # Enables dynamic image building for this profile
+          dynamic_image_building:
+            enabled: true
           unlisted_choice:
             enabled: true
             display_name: Custom image
