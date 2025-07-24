@@ -96,6 +96,48 @@ local notebookNodes = [
       'earthscope:application:owner': 'research-onramp-to-the-cloud',
     },
   },
+  {
+    instanceType: 'g4dn.xlarge',
+    namePrefix: 'gpu-staging',
+    minSize: 0,
+    labels+: {
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+      '2i2c/hub-name': 'staging',
+      '2i2c/has-gpu': 'true',
+    },
+    tags+: {
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      '2i2c:hub-name': 'staging',
+    },
+    taints+: {
+      'nvidia.com/gpu': 'present:NoSchedule',
+    },
+    // Allow provisioning GPUs across all AZs, to prevent situation where all
+    // GPUs in a single AZ are in use and no new nodes can be spawned
+    availabilityZones: masterAzs,
+  },
+  {
+    instanceType: 'g4dn.xlarge',
+    namePrefix: 'gpu-prod',
+    minSize: 0,
+    labels+: {
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+      '2i2c/hub-name': 'prod',
+      '2i2c/has-gpu': 'true',
+    },
+    tags+: {
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      '2i2c:hub-name': 'prod',
+    },
+    taints+: {
+      'nvidia.com/gpu': 'present:NoSchedule',
+    },
+    // Allow provisioning GPUs across all AZs, to prevent situation where all
+    // GPUs in a single AZ are in use and no new nodes can be spawned
+    availabilityZones: masterAzs,
+  },
 ];
 local daskNodes = [
   // Node definitions for dask worker nodes. Config here is merged
