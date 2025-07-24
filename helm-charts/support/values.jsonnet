@@ -26,7 +26,7 @@ local makePVCApproachingFullAlert = function(
         min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='%s'}) by (namespace)
         /
         min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='%s'}) by (namespace)
-        < '%f'
+        < %.2f
       ||| % [persistentvolumeclaim, persistentvolumeclaim, threshold],
       'for': '5m',
       labels: {
