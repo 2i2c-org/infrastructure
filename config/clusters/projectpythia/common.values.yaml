@@ -121,6 +121,7 @@ jupyterhub:
                 cpu_limit: 15.695
                 node_selector:
                   node.kubernetes.io/instance-type: r5.4xlarge
+              default: true
             mem_30_3:
               display_name: 30.3 GB RAM, upto 15.6 CPUs
               kubespawner_override:
