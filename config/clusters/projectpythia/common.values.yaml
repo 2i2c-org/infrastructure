@@ -53,7 +53,7 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
-        - ProjectPythia
+        - ProjectPythia:cookoff2025
       Authenticator:
         admin_users:
         - jmunroe
