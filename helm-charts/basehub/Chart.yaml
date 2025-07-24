@@ -30,6 +30,6 @@ dependencies:
     repository: oci://ghcr.io/2i2c-org/jupyterhub-home-nfs
     condition: jupyterhub-home-nfs.enabled
   - name: jupyterhub-groups-exporter
-    version: 0.0.1-0.dev.git.107.h5e5159c
+    version: 0.0.1-0.dev.git.110.h7b374a1
     repository: https://2i2c.org/jupyterhub-groups-exporter
     condition: jupyterhub-groups-exporter.enabled
