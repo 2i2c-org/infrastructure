@@ -4,6 +4,8 @@ local makePVCApproachingFullAlert = function(
   name,
   summary,
   persistentvolumeclaim,
+  threshold=0.1,  // Default to 10% free space
+  severity='warning',
   labels={},
                                     ) {
   // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
@@ -24,11 +26,13 @@ local makePVCApproachingFullAlert = function(
         min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='%s'}) by (namespace)
         /
         min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='%s'}) by (namespace)
-        < 0.1
-      ||| % [persistentvolumeclaim, persistentvolumeclaim],
+        < %.2f
+      ||| % [persistentvolumeclaim, persistentvolumeclaim, threshold],
       'for': '5m',
       labels: {
         cluster: cluster_name,
+        severity: severity,
+
       } + labels,
       annotations: {
         summary: summary,
@@ -171,6 +175,13 @@ local makeUserPodUnschedulableAlert = function(
             'HomeDirectoryDiskApproachingFull',
             'Home Directory Disk about to be full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
             'home-nfs',
+          ),
+          makePVCApproachingFullAlert(
+            'TakeActionHomeDirectoryDangerouslyCloseToFull',
+            'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
+            'home-nfs',
+            0.05,
+            'critical',
           ),
           makePVCApproachingFullAlert(
             'HubDatabaseDiskApproachingFull',
