@@ -99,16 +99,6 @@ jupyterhub:
               slug: scipy
               kubespawner_override:
                 image: quay.io/jupyter/scipy-notebook:2024-04-15
-            tensorflow:
-              display_name: Pangeo Tensorflow ML Notebook
-              slug: tensorflow
-              kubespawner_override:
-                image: pangeo/ml-notebook:2024.05.21
-            pytorch:
-              display_name: Pangeo PyTorch ML Notebook
-              slug: pytorch
-              kubespawner_override:
-                image: pangeo/pytorch-notebook:2024.05.21
         resources:
           display_name: Resource Allocation
           choices:
