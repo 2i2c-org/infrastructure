@@ -149,17 +149,42 @@ jupyterhub:
                 cpu_limit: 15.695
                 node_selector:
                   node.kubernetes.io/instance-type: r5.4xlarge
-            gpu:
-              display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a container on a dedicated node with a GPU
+      slug: gpu
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            tensorflow:
+              display_name: Pangeo Tensorflow ML Notebook
+              slug: tensorflow
               kubespawner_override:
-                environment:
-                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
-                mem_limit:
-                mem_guarantee: 14G
-                node_selector:
-                  node.kubernetes.io/instance-type: g4dn.xlarge
-                extra_resource_limits:
-                  nvidia.com/gpu: '1'
+                image: quay.io/pangeo/ml-notebook:2025.07.09
+            pytorch:
+              display_name: Pangeo PyTorch ML Notebook
+              default: true
+              slug: pytorch
+              kubespawner_override:
+                image: quay.io/pangeo/pytorch-notebook:2025.05.22
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
 
 binderhub-service:
   enabled: true
