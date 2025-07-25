@@ -43,7 +43,9 @@ hub_cloud_permissions = {
               "s3:ListBucket",
               "s3:DeleteObject",
               "s3:GetBucketLocation",
-              "s3:ListMultipartUploadParts"
+              "s3:ListMultipartUploadParts",
+              "s3:PutObjectTagging",
+              "s3:GetObjectTagging"
             ],
             "Resource": [
               "arn:aws:s3:::veda-data-store",
