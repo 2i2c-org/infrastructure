@@ -60,10 +60,10 @@ jupyterhub:
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             username_derivation:
-              username_claim: "email"
+              username_claim: email
             allowed_domains:
-              - basisindependent.com
-              - basisinds.com
+            - basisindependent.com
+            - basisinds.com
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
