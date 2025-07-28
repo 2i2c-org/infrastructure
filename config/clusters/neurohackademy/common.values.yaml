@@ -152,7 +152,23 @@ jupyterhub:
                   node.kubernetes.io/instance-type: g4dn.xlarge
                 extra_resource_limits:
                   nvidia.com/gpu: '1'
-
+binderhub-service:
+  enabled: true
+  networkPolicy:
+    enabled: true
+  dockerApi:
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        node.kubernetes.io/instance-type: r5.xlarge
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
 jupyterhub-home-nfs:
   enabled: true
   eks:
