@@ -3,6 +3,9 @@ nfs:
     serverIP: 10.100.164.227
 
 jupyterhub:
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: prod
   ingress:
     hosts: [neurohackademy.2i2c.cloud]
     tls:
@@ -12,7 +15,6 @@ jupyterhub:
     config:
       GitHubOAuthenticator:
         oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
-
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0c264a6c8c39e0955
