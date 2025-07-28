@@ -68,61 +68,61 @@ jupyterhub:
           display_name: Image
           dynamic_image_building:
             enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+              init_containers: &init_containers
+              - name: volume-mount-ownership-fix
+                image: busybox:1.36.1
+                command:
+                - sh
+                - -c
+                - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
+                securityContext:
+                  runAsUser: 0
+                volumeMounts:
+                - name: home
+                  mountPath: /home/jovyan
+                  subPath: '{escaped_username}'
+                  # Mounted without readonly attribute here,
+                  # so we can chown it appropriately
+                - name: home
+                  mountPath: /home/jovyan/shared
+                  subPath: _shared
+                  # this container uses nbgitpuller to mount https://github.com/NeuroHackademy2025/curriculum for user pods
+                  # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+              - name: jupyterhub-gitpuller-init
+                image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
+                env:
+                - name: TARGET_PATH
+                  value: curriculum
+                - name: SOURCE_REPO
+                  value: https://github.com/NeuroHackademy2025/curriculum
+                - name: SOURCE_BRANCH
+                  value: main
+                volumeMounts:
+                - name: home
+                  mountPath: /home/jovyan
+                  subPath: '{escaped_username}'
+                securityContext:
+                  runAsUser: 1000
+                  runAsGroup: 1000
           choices:
             nh2025:
               display_name: nh2025
               slug: regular-profile
               kubespawner_override:
                 image: quay.io/arokem/nh2025:11f1cd342757
-                init_containers: &init_containers
-                - name: volume-mount-ownership-fix
-                  image: busybox:1.36.1
-                  command:
-                  - sh
-                  - -c
-                  - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
-                  securityContext:
-                    runAsUser: 0
-                  volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: '{escaped_username}'
-                        # Mounted without readonly attribute here,
-                        # so we can chown it appropriately
-                  - name: home
-                    mountPath: /home/jovyan/shared
-                    subPath: _shared
-                    # this container uses nbgitpuller to mount https://github.com/NeuroHackademy2025/curriculum for user pods
-                    # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
-                - name: jupyterhub-gitpuller-init
-                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
-                  env:
-                  - name: TARGET_PATH
-                    value: curriculum
-                  - name: SOURCE_REPO
-                    value: https://github.com/NeuroHackademy2025/curriculum
-                  - name: SOURCE_BRANCH
-                    value: main
-                  volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: '{escaped_username}'
-                  securityContext:
-                    runAsUser: 1000
-                    runAsGroup: 1000
+                init_containers: *init_containers
             nh2025-gpu:
               display_name: nh2025-gpu
               slug: gpu-profile
               kubespawner_override:
                 image: quay.io/arokem/nh2025-gpu:726a3d89f074
-                init_containers: *init_containers
-            unlisted_choice:
-              enabled: true
-              display_name: Custom image
-              validation_regex: ^.+:.+$
-              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
-              kubespawner_override:
-                image: '{value}'
                 init_containers: *init_containers
         requests:
           display_name: Resource Allocation
