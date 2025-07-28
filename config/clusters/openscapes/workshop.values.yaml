@@ -20,12 +20,6 @@ basehub:
       - hosts: [workshop.openscapes.2i2c.cloud]
         secretName: https-auto-tls
     hub:
-      resources:
-        requests:
-          cpu: 1
-          memory: 512Mi
-        limits:
-          memory: 8Gi
       allowNamedServers: true
       config:
         JupyterHub:
@@ -70,20 +64,84 @@ basehub:
         default: true
         kubespawner_override:
           image: openscapes/python:3ad4036
-        profile_options:
+        profile_options: &profile_options
           requests: &profile_options_resource_allocation
             display_name: Resource Allocation
             choices:
-              mem_15_gb:
-                display_name: ~15 GB RAM, ~1.9 CPUs
-                description: Up to ~3.7 CPUs when available
+              mem_1_9:
+                display_name: 1.9 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 16005176754
-                  mem_limit: 16005176754
-                  cpu_guarantee: 1.9226375
-                  cpu_limit: 3.7
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
+                  cpu_guarantee: 0.2328125
+                  cpu_limit: 3.725
                   node_selector:
-                    node.kubernetes.io/instance-type: r5.16xlarge
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 15929958203
+                  mem_limit: 15929958203
+                  cpu_guarantee: 1.8625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_7:
+                display_name: 29.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 31859916406
+                  mem_limit: 31859916406
+                  cpu_guarantee: 3.725
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 65094448840
+                  mem_limit: 65094448840
+                  cpu_guarantee: 7.8475
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_121_2:
+                display_name: 121.2 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 130188897681
+                  mem_limit: 130188897681
+                  cpu_guarantee: 15.695
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: R + Python Geospatial
+        description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
+        kubespawner_override:
+          image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
+        profile_options: *profile_options
+      - display_name: Matlab
+        description: Matlab environment
+        kubespawner_override:
+          image: openscapes/matlab:2023-11-28
+        profile_options: *profile_options
       - display_name: Bring your own image
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
