@@ -58,6 +58,8 @@ jupyterhub:
         admin_users:
         - jmunroe
         - ktyle
+        - erogluorhan
+        - jukent
 
   scheduling:
     userScheduler:
