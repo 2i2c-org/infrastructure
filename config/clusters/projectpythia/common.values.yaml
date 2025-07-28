@@ -59,6 +59,7 @@ jupyterhub:
         - jmunroe
         - ktyle
         - erogluorhan
+        - jukent
 
   scheduling:
     userScheduler:
