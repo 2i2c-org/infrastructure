@@ -24,7 +24,7 @@
       python = pkgs.python313;
       pythonPackages = pkgs.python313Packages;
       envWithScript = script:
-        (pkgs.buildFHSUserEnv {
+        (pkgs.buildFHSEnv {
           name = "2i2c-env";
           targetPkgs = pkgs:
             [
