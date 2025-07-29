@@ -214,8 +214,7 @@ basehub:
                   cpu_guarantee: 0.465625
                   cpu_limit: 3.725
                   node_selector:
-                    # Temporary bump up for shortcourse, revert when done
-                    node.kubernetes.io/instance-type: r5.16xlarge
+                    node.kubernetes.io/instance-type: r5.xlarge
               mem_7_4:
                 display_name: 7.4 GB RAM, upto 3.7 CPUs
                 allowed_groups:
@@ -228,8 +227,7 @@ basehub:
                   cpu_guarantee: 0.93125
                   cpu_limit: 3.725
                   node_selector:
-                    # Temporary bump up for shortcourse, revert when done
-                    node.kubernetes.io/instance-type: r5.16xlarge
+                    node.kubernetes.io/instance-type: r5.xlarge
               mem_14_8:
                 display_name: 14.8 GB RAM, upto 3.7 CPUs
                 allowed_groups:
@@ -242,8 +240,7 @@ basehub:
                   cpu_guarantee: 1.8625
                   cpu_limit: 3.725
                   node_selector:
-                    # Temporary bump up for shortcourse, revert when done
-                    node.kubernetes.io/instance-type: r5.16xlarge
+                    node.kubernetes.io/instance-type: r5.xlarge
               mem_29_7:
                 display_name: 29.7 GB RAM, upto 3.7 CPUs
                 allowed_groups:
@@ -256,8 +253,7 @@ basehub:
                   cpu_guarantee: 3.725
                   cpu_limit: 3.725
                   node_selector:
-                    # Temporary bump up for shortcourse, revert when done
-                    node.kubernetes.io/instance-type: r5.16xlarge
+                    node.kubernetes.io/instance-type: r5.xlarge
               mem_60_6:
                 display_name: 60.6 GB RAM, upto 15.6 CPUs
                 allowed_groups:
