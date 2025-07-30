@@ -73,7 +73,7 @@ deployer use-cluster-credentials $CLUSTER_NAME
 ```
 
 ```bash
-kubectl --namespace=support get service support-ingress-nginx-controller
+kubectl --namespace=support get service support-ingress-nginx-controller  --template="{{(index .status.loadBalancer.ingress 0).hostname}}"
 ```
 
 Add DNS records for the `2i2c.cloud` domain [under "Advanced DNS" in
