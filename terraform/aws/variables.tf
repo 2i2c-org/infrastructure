@@ -285,6 +285,14 @@ variable "enable_aws_ce_grafana_backend_iam" {
   EOT
 }
 
+variable "enable_jupyterhub_cost_monitoring_iam" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Create an IAM role with attached policy to permit read use of AWS Cost Explorer API.
+  EOT
+}
+
 variable "ebs_volumes" {
   type = map(object({
     size        = number
