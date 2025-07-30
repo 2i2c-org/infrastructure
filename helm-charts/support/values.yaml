@@ -426,11 +426,14 @@ cryptnono:
           memory: 16Mi
           cpu: 1m
 
-# aws-ce-grafana-backend exposes AWS Cost Explorer API info to Grafana
-#
-# values ref: https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/aws-ce-grafana-backend/values.yaml
+# jupyterhub-cost-monitoring, cost reporting for Grafana
+# https://github.com/2i2c-org/jupyterhub-cost-monitoring
+
+# values ref: https://github.com/2i2c-org/jupyterhub-cost-monitoring/blob/main/helm/jupyterhub-cost-monitoring/values.yaml
 #
 aws-ce-grafana-backend:
+  enabled: false
+jupyterhub-cost-monitoring:
   enabled: false
 
 # Configuration of templates provided directly by this chart

@@ -38,13 +38,14 @@ grafana:
       enabled: true
       allowed_organizations: 2i2c-org NASA-Openscapes
 
-aws-ce-grafana-backend:
+jupyterhub-cost-monitoring:
   enabled: true
-  envBasedConfig:
-    clusterName: openscapeshub
+  extraEnv:
+  - name: CLUSTER_NAME
+    value: openscapeshub
   serviceAccount:
     annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/aws_ce_grafana_backend_iam_role
+      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/jupyterhub_cost_monitoring_iam_role
 
 calico:
   enabled: true
