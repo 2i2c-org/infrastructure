@@ -30,7 +30,7 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://lahc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-        - LAHS-DataScience
+        - LAHC-DataScience
         scope:
         - read:org
       Authenticator:
