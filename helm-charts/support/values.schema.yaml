@@ -14,7 +14,7 @@ required:
   - cryptnono
   - redirects
   - gcpFilestoreBackups
-  - aws-ce-grafana-backend
+  - jupyterhub-cost-monitoring
   - global
 properties:
   # We don't control validation of dependent charts here
@@ -30,7 +30,7 @@ properties:
   grafana:
     type: object
     additionalProperties: true
-  aws-ce-grafana-backend:
+  jupyterhub-cost-monitoring:
     type: object
     additionalProperties: true
   cryptnono:
