@@ -60,7 +60,7 @@ class Cluster:
         else:
             raise ValueError(f'Provider {self.spec["provider"]} not supported')
 
-    def deploy_support(self, cert_manager_version, debug):
+    def deploy_support(self, cert_manager_version, debug, dry_run):
         cert_manager_url = "https://charts.jetstack.io"
 
         print_colour("Provisioning cert-manager...")
@@ -180,6 +180,9 @@ class Cluster:
 
             if debug:
                 cmd.append("--debug")
+
+            if dry_run:
+                cmd.append("--dry-run")
 
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             subprocess.check_call(cmd)

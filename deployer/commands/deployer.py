@@ -76,6 +76,11 @@ def deploy_support(
         "--debug",
         help="When present, the `--debug` flag will be passed to the `helm upgrade` command.",
     ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="When present, the `--dry-run` flag will be passed to the `helm upgrade` command.",
+    ),
 ):
     """
     Deploy support components to a cluster
@@ -88,7 +93,9 @@ def deploy_support(
     if cluster.support:
         with cluster.auth():
             cluster.deploy_support(
-                cert_manager_version=cert_manager_version, debug=debug
+                cert_manager_version=cert_manager_version,
+                debug=debug,
+                dry_run=dry_run,
             )
 
 
