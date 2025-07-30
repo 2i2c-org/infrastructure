@@ -6,8 +6,9 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_aws_ce_grafana_backend_iam = true
-disable_cluster_wide_filestore    = true
+enable_aws_ce_grafana_backend_iam     = true
+enable_jupyterhub_cost_monitoring_iam = true
+disable_cluster_wide_filestore        = true
 
 # The initial EFS is now used by the prod hub only
 # So we tag it appropriately for costs purposes
