@@ -46,6 +46,13 @@ dependencies:
     repository: https://cryptnono.github.io/cryptnono/
     condition: cryptnono.enabled
 
+  # aws-ce-grafana-backend, exposes AWS Cost Explorer API info to Grafana
+  # Source code: https://github.com/2i2c/infrastructure/
+  - name: aws-ce-grafana-backend
+    version: "0.0.1-set.by.chartpress"
+    repository: "file://../aws-ce-grafana-backend"
+    condition: aws-ce-grafana-backend.enabled
+
   # jupyterhub-cost-monitoring, cost reporting for Grafana
   # https://github.com/2i2c-org/jupyterhub-cost-monitoring
   - name: jupyterhub-cost-monitoring
