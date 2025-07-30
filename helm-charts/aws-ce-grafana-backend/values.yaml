@@ -1,0 +1,82 @@
+# General configuration
+# -----------------------------------------------------------------------------
+#
+nameOverride: ""
+fullnameOverride: ""
+global: {}
+
+# Software configuration
+# -----------------------------------------------------------------------------
+#
+# FIXME: This chart currently configures software via environment variables, and
+#        it doesn't scale well for a few string values without validation logic.
+#
+#        A better scaling approach is for example to use traitlets and config from the
+#        chart be mounted via a k8s Secret to be read by the software. That way,
+#        the chart doesn't have to be updated and maintained to be in parity
+#        with the software config options.
+#
+envBasedConfig:
+  clusterName: ""
+
+# Deployment resource
+# -----------------------------------------------------------------------------
+#
+replicas: 1
+extraEnv: []
+image:
+  repository: quay.io/2i2c/aws-ce-grafana-backend
+  tag: "0.0.1-0.dev.git.10263.hc87b65cf"
+  pullPolicy: ""
+  pullSecrets: []
+resources: {}
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65534 # nobody user
+  runAsGroup: 65534 # nobody group
+
+podSecurityContext: {}
+podAnnotations: {}
+nodeSelector: {}
+affinity: {}
+tolerations: []
+
+# ServiceAccount resource
+# -----------------------------------------------------------------------------
+#
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# Service resource
+# -----------------------------------------------------------------------------
+#
+service:
+  type: ClusterIP
+  port: 80
+
+# Ingress resource
+# -----------------------------------------------------------------------------
+#
+ingress:
+  enabled: false
+  annotations: {}
+  ingressClassName:
+  hosts: []
+  pathSuffix:
+  pathType: Prefix
+  tls: []
+
+# NetworkPolicy resource
+# -----------------------------------------------------------------------------
+#
+networkPolicy:
+  enabled: true
+  ingress: []
+  ingressAllowRules:
+    localGrafanaInstances: true
