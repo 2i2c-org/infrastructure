@@ -1,3 +1,8 @@
+nfs:
+  pv:
+    # Not a real IP
+    serverIP: 10.10.0.0
+
 jupyterhub:
   ingress:
     hosts: [berkeley-geojupyter.2i2c.cloud]
@@ -6,5 +11,16 @@ jupyterhub:
         secretName: https-auto-tls
   hub:
     config:
+      JupyterHub:
+        authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://berkeley-geojupyter.2i2c.cloud/hub/oauth_callback
+
+        allowed_organizations:
+          - geojupyter:jupyterhub-users
+
+jupyterhub-home-nfs:
+  enabled: true # can be migrated to common values file
+  eks:
+    enabled: true # can be migrated to common values file
+    volumeId: vol-03eed37ae04a744e2

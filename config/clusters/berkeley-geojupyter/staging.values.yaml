@@ -1,6 +1,5 @@
 nfs:
   pv:
-    # Not a real IP
     serverIP: 10.100.249.1
 
 jupyterhub:

@@ -25,12 +25,12 @@ hubs:
       - staging.values.yaml
       - enc-staging.secret.values.yaml
 
-#  - name: prod
-#    # Tip: consider changing this to something more human friendly
-#    display_name: "Berkeley GeoJupyter"
-#    domain: berkeley-geojupyter.2i2c.cloud
-#    helm_chart: basehub
-#    helm_chart_values_files:
-#      - common.values.yaml
-#      - prod.values.yaml
-#      - enc-prod.secret.values.yaml
+  - name: prod
+    # Tip: consider changing this to something more human friendly
+    display_name: "Berkeley GeoJupyter"
+    domain: berkeley-geojupyter.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml
