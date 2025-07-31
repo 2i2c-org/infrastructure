@@ -69,10 +69,16 @@ jupyterhub:
               image: '{value}'
           choices:
             scipy:
-              display_name: Jupyter SciPy Notebook
-              slug: scipy
+              display_name: GeoJupyer Notebook Image
+              slug: geojupyter
               kubespawner_override:
-                image: quay.io/jupyter/scipy-notebook:2025-07-28
+                image: ghcr.io/geojupyter/geojupyter:latest
+            pangeo:
+              display_name: Pangeo Notebook Image
+              slug: pangeo
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: quay.io/pangeo/pangeo-notebook:2025.07.09
         resource_allocation:
           display_name: Resource Allocation
           choices:
