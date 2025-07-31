@@ -116,7 +116,7 @@ jupyterhub:
               display_name: nh2025
               slug: regular-profile
               kubespawner_override:
-                image: quay.io/arokem/nh2025:11f1cd342757
+                image: quay.io/arokem/nh2025:6bc685ec9dca
                 init_containers: *init_containers
             nh2025-gpu:
               display_name: nh2025-gpu
