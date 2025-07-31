@@ -1,7 +1,7 @@
 nfs:
   pv:
     # Not a real IP
-    serverIP: 10.0.0.1
+    serverIP: 10.100.249.1
 
 jupyterhub:
   ingress:

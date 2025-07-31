@@ -1,7 +1,7 @@
 #If the hub is a daskhub, please indent everything under a basehub key
 #basehub:
 nfs:
-  enabled: false
+  enabled: true
   pv:
     enabled: true
 
