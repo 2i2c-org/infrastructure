@@ -1,15 +1,17 @@
-(topic:billing:cost-attribution)=
-# Cost Attribution System
+(topic:billing:cost-monitoring)=
+# Cost Monitoring System
 
-The Cost Attribution System is designed to monitor and attribute cloud
+The Cost Monitoring System is designed to monitor and attribute cloud
 infrastructure costs to 2i2c hub deployments. This system integrates with the
 [AWS Cost Explorer
 API](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-api.html)
 to provide detailed cost insights from a hub's Grafana dashboard.
 
-{{% callout note %}} Note that this feature is currently available to AWS
+:::{note}
+This feature is currently available to AWS
 hosted hubs only and will be rolled out to other cloud providers in the
-future. {{% /callout %}}
+future.
+:::
 
 ## Components
 
@@ -20,19 +22,16 @@ role](https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/aws-ce-
 is created to grant the necessary permissions for accessing the Cost Explorer
 API.
 
-2. Python Web Server
+1. JupyterHub Cost Monitoring
 
 A [Python-based web
-server](https://github.com/2i2c-org/infrastructure/tree/main/helm-charts/images/aws-ce-grafana-backend)
+server](https://github.com/2i2c-org/jupyterhub-cost-monitoring/)
 is deployed to interact with the Cost Explorer API. It retrieves cost data
-and serves it as JSON, making it accessible for Grafana.
+from the AWS Cost Explorer API and serves it as JSON for Grafana to consume.
 
-3. Grafana Integration
+1. Grafana Integration
 
-A custom Helm chart,
-[`aws-ce-grafana-backend`](https://github.com/2i2c-org/infrastructure/tree/main/helm-charts/aws-ce-grafana-backend),
-is introduced to facilitate the deployment of the Python web server alongside
-Grafana.
+A [custom dashboard](https://github.com/2i2c-org/infrastructure/tree/main/grafana-dashboards) is presently defined in the infrastructure repository (to be upstreamed to [jupyterhub/grafana-dashboards](https://github.com/jupyterhub/grafana-dashboards)).
 
 This enables Grafana to query the web server for cost data, allowing users to
 visualize and analyze cloud expenses directly within the Grafana interface.
@@ -65,7 +64,7 @@ tags are present and used instead.
 
 New clusters have _all_ eksctl managed resources configured to be tagged, not
 just the node groups. This isn't important to ensure for existing clusters'
-cost attribution though.
+cost monitoring though.
 ```
 
 The system also relies on the tag `2i2c:hub-name` to be specified in addition to
@@ -84,7 +83,3 @@ to incur costs.
 - **EFS storage** in terraform
 - **EBS volumes** in terraform
 - **Node groups** in eksctl
-
-```{important}
-There are still some clusters that don't have separate EFS storage per hub yet.
-```
