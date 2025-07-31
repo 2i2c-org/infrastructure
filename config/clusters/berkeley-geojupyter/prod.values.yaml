@@ -24,3 +24,8 @@ jupyterhub-home-nfs:
   eks:
     enabled: true # can be migrated to common values file
     volumeId: vol-03eed37ae04a744e2
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/berkeley-geojupyter-prod-

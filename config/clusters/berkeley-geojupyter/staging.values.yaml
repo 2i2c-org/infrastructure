@@ -6,8 +6,8 @@ jupyterhub:
   ingress:
     hosts: [staging.berkeley-geojupyter.2i2c.cloud]
     tls:
-      - hosts: [staging.berkeley-geojupyter.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [staging.berkeley-geojupyter.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       JupyterHub:
@@ -15,10 +15,15 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.berkeley-geojupyter.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - geojupyter:jupyterhub-users
+        - geojupyter:jupyterhub-users
 
 jupyterhub-home-nfs:
   enabled: true # can be migrated to common values file
   eks:
     enabled: true # can be migrated to common values file
     volumeId: vol-018ab2eba48b7d895
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/berkeley-geojupyter-staging-
