@@ -7,12 +7,12 @@ nfs:
 
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
     baseShareName: /
 
 jupyterhub:
@@ -42,11 +42,77 @@ jupyterhub:
         authenticator_class: github
       Authenticator:
         admin_users:
-          - mfisher87
+        - mfisher87
 
   scheduling:
     userScheduler:
       enabled: true
+
+  singleuser:
+    profileList:
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+            # Enables dynamic image building for this profile
+          dynamic_image_building:
+            enabled: false
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            scipy:
+              display_name: Jupyter SciPy Notebook
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2025-07-28
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_3_7:
+              display_name: 3.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 3982489550
+                mem_limit: 3982489550
+                cpu_guarantee: 0.465625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+              default: true
+            mem_7_4:
+              display_name: 7.4 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 7964979101
+                mem_limit: 7964979101
+                cpu_guarantee: 0.93125
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_14_8:
+              display_name: 14.8 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 15929958203
+                mem_limit: 15929958203
+                cpu_guarantee: 1.8625
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_7:
+              display_name: 29.7 GB RAM, upto 3.7 CPUs
+              kubespawner_override:
+                mem_guarantee: 31859916406
+                mem_limit: 31859916406
+                cpu_guarantee: 3.725
+                cpu_limit: 3.725
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
 
 jupyterhub-home-nfs:
   enabled: true

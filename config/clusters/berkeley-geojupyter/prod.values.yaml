@@ -1,14 +1,14 @@
 nfs:
   pv:
     # Not a real IP
-    serverIP: 10.10.0.0
+    serverIP: 10.100.10.242
 
 jupyterhub:
   ingress:
     hosts: [berkeley-geojupyter.2i2c.cloud]
     tls:
-      - hosts: [berkeley-geojupyter.2i2c.cloud]
-        secretName: https-auto-tls
+    - hosts: [berkeley-geojupyter.2i2c.cloud]
+      secretName: https-auto-tls
   hub:
     config:
       JupyterHub:
@@ -17,7 +17,7 @@ jupyterhub:
         oauth_callback_url: https://berkeley-geojupyter.2i2c.cloud/hub/oauth_callback
 
         allowed_organizations:
-          - geojupyter:jupyterhub-users
+        - geojupyter:jupyterhub-users
 
 jupyterhub-home-nfs:
   enabled: true # can be migrated to common values file
