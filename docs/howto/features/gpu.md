@@ -136,7 +136,7 @@ AWS, and we can configure a node group there to provide us GPUs.
 
    `g4dn.xlarge` gives us 1 Nvidia T4 GPU and ~4 CPUs. The `tags` definition
    is necessary to let the autoscaler know that this nodegroup has
-   1 GPU per node and also for the cost attribution system to differentiate
+   1 GPU per node and also for the [cost monitoring system](topic:billing:cost-monitoring) to differentiate
    between hubs. The `taints` definition is required to prevent scheduling of
    non-GPU pods onto the GPU nodes. If you're using a different machine type with
    more GPUs, adjust this definition accordingly. The `tags` and `labels` entries
