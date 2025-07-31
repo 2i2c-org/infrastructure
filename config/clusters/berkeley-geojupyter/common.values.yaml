@@ -1,0 +1,56 @@
+#If the hub is a daskhub, please indent everything under a basehub key
+#basehub:
+nfs:
+  enabled: false
+  pv:
+    enabled: true
+
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    baseShareName: /
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: berkeley-geojupyter
+          logo_url: https://github.com/user-attachments/assets/0218ad87-061f-4b3a-b1e4-7555a9a83876
+          url: https://geojupyter.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: The Eric & Wendy Schmidt Center for Data Science & Environment at UC Berkeley
+          url: https://dse.berkeley.edu/
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      Authenticator:
+        admin_users:
+          - mfisher87
+
+  scheduling:
+    userScheduler:
+      enabled: true
+
+jupyterhub-home-nfs:
+  enabled: true
+  eks:
+    enabled: true
+  prometheusExporter:
+    enabled: true
