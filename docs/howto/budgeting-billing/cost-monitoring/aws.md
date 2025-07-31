@@ -1,20 +1,17 @@
-(howto:cost-attribution:enable-aws)=
-# Enable AWS cost attribution system
+(howto:cost-monitoring:enable-aws)=
+# Enable JupyterHub Cost Monitoring
 
-The AWS cost attribution system, referenced as the system in this document,
-consists of the `aws-ce-grafana-backend` Helm chart and a Grafana dashboard
-using the backend as a data source.
+The JupyterHub Cost Monitoring system consists of the [jupyterhub-cost-monitoring](https://github.com/2i2c-org/jupyterhub-cost-monitoring/) backend and Grafana cloud cost dashboards
+that use the backend as a data source.
 
-Checkout the docs at [](topic:billing:cost-attribution) for more information on
-the system.
+Checkout the [topic guide](topic:billing:cost-monitoring) for more information on the system.
 
 ## Steps
 
 ### 1. Enable cost allocation tags
 
 Enabling cost allocation tags via terraform can be done for standalone AWS
-accounts, but not for member accounts part of an organization that we don't manage.
-Due to this, we'll provide separate ways of doing this depending on the situation.
+accounts, but not for member accounts part of an organization that we don't manage. Due to this, we'll provide separate ways of doing this depending on the situation.
 
 `````{tab-set}
 
@@ -95,7 +92,7 @@ account:
 
 ```{note}
 The `kubernetes.io/created-for/pvc/namespace` is enabled even if its currently
-not used by `aws-ce-grafana-backend`, as it could help us attribute cost for
+not used by `jupyterhub-cost-monitoring`, as it could help us attribute cost for
 storage disks dynamically provisioned in case that's relevant in the future.
 ```
 
@@ -109,32 +106,31 @@ process the request. Make a request through the AWS web console by navigating to
 "Cost allocation tags" under "Billing and Cost Management", then from there
 click the "Backfill tags" button.
 
-### 3. Install `aws-ce-grafana-backend`
+### 3. Install `jupyterhub-cost-monitoring` Helm chart
 
 In the cluster's terraform variables, make sure the following is present:
 
-```
-enable_aws_ce_grafana_backend_iam = true
-```
-
-After applying this, look at the terraform output named `aws_ce_grafana_backend_k8s_sa_annotation`:
-
-```
-terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation
+```bash
+enable_jupyterhub_cost_monitoring_iam = true
 ```
 
-Open the cluster's support.values.yaml file and update add a section like below,
-updating `clusterName` and add the annotation (key and value) from the terraform
-output.
+After applying this, look at the terraform output named `jupyterhub_cost_monitoring_k8s_sa_annotation`:
+
+```bash
+terraform output -raw jupyterhub_cost_monitoring_k8s_sa_annotation
+```
+
+Open the cluster's `support.values.yaml` file and update add a section like below, updating the `CLUSTER_NAME` and adding the service account annotation (key and value) from the terraform output.
 
 ```yaml
-aws-ce-grafana-backend:
+jupyterhub-cost-monitoring:
   enabled: true
-  envBasedConfig:
-    clusterName: <declare cluster name to the value of cluster_name in the cluster's .tfvars file>
+  extraEnv:
+    - name: CLUSTER_NAME
+      value: openscapeshub
   serviceAccount:
     annotations:
-      <declare annotation key and value here>
+      eks.amazonaws.com/role-arn: arn:aws:iam::<aws_account_number>:role/jupyterhub_cost_monitoring_iam_role
 ```
 
 Finally deploy the support chart:
@@ -145,6 +141,5 @@ deployer deploy-support $CLUSTER_NAME
 
 ## Troubleshooting
 
-If you don't see data in the cost attribution dashboard, you may want to look to
-ensure the `aws-ce-grafana-backend` deployment's pod is running in the support
-namespace, or if it reports errors in its logs.
+If you don't see data in the cost monitoring dashboard, you may want to look to
+ensure the `jupyterhub-cost-monitoring` deployment's pod is running in the support namespace, or if it reports errors in its logs.
