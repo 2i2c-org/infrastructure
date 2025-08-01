@@ -126,7 +126,7 @@ basehub:
                 display_name: Modified Pangeo Notebook
                 description: Pangeo based notebook with a Python environment
                 kubespawner_override:
-                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2024.11.11-v1
+                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.06.02-v1
                   init_containers:
                   - *volume_ownership_fix_initcontainer
                       # this container uses nbgitpuller to mount https://github.com/US-GHG-Center/ghgc-docs/ for user pods
