@@ -49,6 +49,8 @@ jupyterhub:
       enabled: true
 
   singleuser:
+    defaultUrl: /lab
+
     profileList:
     - display_name: Choose your environment and resources
       slug: only-choice
