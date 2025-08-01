@@ -71,6 +71,7 @@ jupyterhub:
             scipy:
               display_name: GeoJupyer Notebook Image
               slug: geojupyter
+              description: A Docker image containing bleeding-edge GeoJupyter (and other) geospatial tools.
               kubespawner_override:
                 image: ghcr.io/geojupyter/geojupyter:latest
               default: true
