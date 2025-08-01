@@ -73,6 +73,7 @@ jupyterhub:
               slug: geojupyter
               kubespawner_override:
                 image: ghcr.io/geojupyter/geojupyter:latest
+              default: true
             pangeo:
               display_name: Pangeo Notebook Image
               slug: pangeo
