@@ -46,6 +46,26 @@ jupyterhub:
       Authenticator:
         admin_users:
         - mfisher87
+      loadRoles:
+        # Override the user role with scopes for sharing UI & impl
+        user:
+          scopes:
+          - self
+            # Sharing scopes
+          - shares!user
+          - servers!user
+          - read:users:name
+          - list:users
+
+    extraConfig:
+      # Allow these sharing scopes for oauth tokens issued by the oauth client
+      permitSharingScopes: |
+        c.Spawner.oauth_client_allowed_scopes = [
+          "shares!user",
+          "servers!user",
+          "read:users:name", 
+          "list:users", 
+        ]
 
   scheduling:
     userScheduler:
