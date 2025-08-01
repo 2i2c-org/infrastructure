@@ -2,6 +2,10 @@ nfs:
   pv:
     serverIP: 10.100.249.1
 
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::622703418259:role/berkeley-geojupyter-staging
+
 jupyterhub:
   ingress:
     hosts: [staging.berkeley-geojupyter.2i2c.cloud]
@@ -16,6 +20,9 @@ jupyterhub:
         oauth_callback_url: https://staging.berkeley-geojupyter.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - geojupyter:jupyterhub-users
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://berkeley-geojupyter-scratch-staging/$(JUPYTERHUB_USER)
 
 jupyterhub-home-nfs:
   enabled: true # can be migrated to common values file
