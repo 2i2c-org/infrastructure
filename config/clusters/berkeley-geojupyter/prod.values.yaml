@@ -19,8 +19,6 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://berkeley-geojupyter.2i2c.cloud/hub/oauth_callback
 
-        allowed_organizations:
-        - geojupyter:jupyterhub-users
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://berkeley-geojupyter-scratch/$(JUPYTERHUB_USER)

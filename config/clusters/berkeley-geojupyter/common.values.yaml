@@ -40,6 +40,9 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - geojupyter:jupyterhub-users
       Authenticator:
         admin_users:
         - mfisher87
