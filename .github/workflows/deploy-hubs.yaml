@@ -17,7 +17,7 @@ on:
     - .github/actions/setup-deploy/**
     - helm-charts/**
     - config/clusters/**
-      # Exclude the template configuration files
+        # Exclude the template configuration files
     - '!config/clusters/templates/**'
     - '!terraform/aws/projects/template.tfvars'
     - '!terraform/gcp/projects/cluster.tfvars.template'
@@ -39,7 +39,7 @@ on:
     - .github/actions/setup-deploy/**
     - helm-charts/**
     - config/clusters/**
-      # Exclude the template configuration files
+        # Exclude the template configuration files
     - '!config/clusters/templates/**'
     - '!terraform/aws/projects/template.tfvars'
     - '!terraform/gcp/projects/cluster.tfvars.template'
@@ -79,10 +79,10 @@ jobs:
         python-version: '3.13'
     - uses: actions/setup-go@v5
 
-      # There will almost never be a cache hit on the cache key when this job is
-      # run, as it is the first of all jobs in this workflow. An exception is if
-      # this job is re-attempted as part of the same workflow run after
-      # succeeding previously.
+        # There will almost never be a cache hit on the cache key when this job is
+        # run, as it is the first of all jobs in this workflow. An exception is if
+        # this job is re-attempted as part of the same workflow run after
+        # succeeding previously.
     - name: Save pip's install cache on job completion
       uses: actions/cache@v4
       with:
@@ -130,7 +130,7 @@ jobs:
           return label_names
 
     - name: Identify files that have been added or modified
-        # Action repo: https://github.com/dorny/paths-filter
+          # Action repo: https://github.com/dorny/paths-filter
       uses: dorny/paths-filter@v3
       id: changed-files
       with:
@@ -146,22 +146,22 @@ jobs:
             - added|modified: helm-charts/support/**
             - added|modified: config/clusters/**
 
-      # This step will create a comment-body.txt file containing the jobs to be run in a
-      # Markdown table format to be posted on a Pull Request
+        # This step will create a comment-body.txt file containing the jobs to be run in a
+        # Markdown table format to be posted on a Pull Request
     - name: Generate matrix jobs
       id: generate-jobs
       run: |
         deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
 
-      # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
-      # know the PR number, so we save it to a file to pass to that workflow
+        # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
+        # know the PR number, so we save it to a file to pass to that workflow
     - name: Save Pull Request number to a file
       if: github.event_name == 'pull_request'
       run: |
         echo "${{ github.event.number }}" > pr-number.txt
 
-      # Upload the pr-number.txt and comment-body.txt files as artifacts for the
-      # comment-deployment-plan-pr.yaml workflow to access
+        # Upload the pr-number.txt and comment-body.txt files as artifacts for the
+        # comment-deployment-plan-pr.yaml workflow to access
     - name: Upload artifacts
       if: >
         github.event_name == 'pull_request' &&
@@ -175,10 +175,10 @@ jobs:
           pr-number.txt
           comment-body.txt
 
-      # https://github.com/ravsamhq/notify-slack-action
-      # Needs to be added per job
-      # When https://github.com/integrations/slack/issues/1563 gets implemented,
-      # we can use that instead
+        # https://github.com/ravsamhq/notify-slack-action
+        # Needs to be added per job
+        # When https://github.com/integrations/slack/issues/1563 gets implemented,
+        # we can use that instead
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
@@ -186,8 +186,8 @@ jobs:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
         notify_when: failure
-        status: ${{ job.status }}   # required
-          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+        status: ${{ job.status }} # required
+            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
         message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
         footer: <{run_url}|Failing Run>
       env:
@@ -205,6 +205,7 @@ jobs:
     # variation. We are currently required to do this in a hardcoded fashion,
     # see this post for feature requests for this to be improved:
     # https://github.community/t/bug-jobs-output-should-return-a-list-for-a-matrix-job/128626/32?u=consideratio
+    # above link is dead, but referenced in https://github.com/orgs/community/discussions/17245
     #
     # If you are adding a new cluster, please remember to list it here!
     outputs:
@@ -238,6 +239,7 @@ jobs:
       failure_ubc-eoas: ${{ steps.declare-failure.outputs.failure_ubc-eoas }}
       failure_utoronto: ${{ steps.declare-failure.outputs.failure_utoronto }}
       failure_victor: ${{ steps.declare-failure.outputs.failure_victor }}
+      failure_berkeley_geojupyter: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter }}
 
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -275,19 +277,19 @@ jobs:
         with open(output_file, "a") as f:
             f.write(f"failure_{name}={failure}")
 
-      # https://github.com/ravsamhq/notify-slack-action
-      # Needs to be added per job
-      # FIXME: when https://github.com/integrations/slack/issues/1563 gets implemented,
-      # we can use that instead
+        # https://github.com/ravsamhq/notify-slack-action
+        # Needs to be added per job
+        # FIXME: when https://github.com/integrations/slack/issues/1563 gets implemented,
+        # we can use that instead
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
-        # Warning: there are multiple "Report Status" steps in this file (one per job).
-        # Make sure they are all updated
+          # Warning: there are multiple "Report Status" steps in this file (one per job).
+          # Make sure they are all updated
       with:
         notify_when: failure
-        status: ${{ job.status }}   # required
-          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+        status: ${{ job.status }} # required
+            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
         message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
         footer: <{run_url}|Failing Run>
       env:
@@ -347,10 +349,10 @@ jobs:
             f.write(f"filtered-staging-jobs={json.dumps(filtered_staging_jobs)}\n")
             f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
 
-      # https://github.com/ravsamhq/notify-slack-action
-      # Needs to be added per job
-      # When https://github.com/integrations/slack/issues/1563 gets implemented,
-      # we can use that instead
+        # https://github.com/ravsamhq/notify-slack-action
+        # Needs to be added per job
+        # When https://github.com/integrations/slack/issues/1563 gets implemented,
+        # we can use that instead
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
@@ -358,8 +360,8 @@ jobs:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
         notify_when: failure
-        status: ${{ job.status }}   # required
-          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+        status: ${{ job.status }} # required
+            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
         message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
         footer: <{run_url}|Failing Run>
       env:
@@ -403,10 +405,10 @@ jobs:
             f.write(f"staging-jobs={json.dumps(staging_jobs)}\n")
             f.write(f"prod-jobs={json.dumps(prod_jobs)}\n")
 
-      # https://github.com/ravsamhq/notify-slack-action
-      # Needs to be added per job
-      # When https://github.com/integrations/slack/issues/1563 gets implemented,
-      # we can use that instead
+        # https://github.com/ravsamhq/notify-slack-action
+        # Needs to be added per job
+        # When https://github.com/integrations/slack/issues/1563 gets implemented,
+        # we can use that instead
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
@@ -414,8 +416,8 @@ jobs:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
         notify_when: failure
-        status: ${{ job.status }}   # required
-          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+        status: ${{ job.status }} # required
+            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
         message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
         footer: <{run_url}|Failing Run>
       env:
@@ -480,6 +482,7 @@ jobs:
       failure_utoronto_staging: ${{ steps.declare-failure.outputs.failure_utoronto_staging }}
       failure_utoronto_r-staging: ${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
+      failure_berkeley_geojupyter_staging: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter_staging }}
 
     steps:
     - uses: actions/checkout@v4
@@ -494,7 +497,7 @@ jobs:
       run: |
         deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
-      # Retry action: https://github.com/marketplace/actions/retry-step
+        # Retry action: https://github.com/marketplace/actions/retry-step
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
       uses: nick-fields/retry@v3
       with:
@@ -518,10 +521,10 @@ jobs:
         with open(output_file, "a") as f:
             f.write(f"failure_{cluster_name}_{hub_name}={failure}\n")
 
-      # https://github.com/ravsamhq/notify-slack-action
-      # Needs to be added per job
-      # When https://github.com/integrations/slack/issues/1563 gets implemented,
-      # we can use that instead
+        # https://github.com/ravsamhq/notify-slack-action
+        # Needs to be added per job
+        # When https://github.com/integrations/slack/issues/1563 gets implemented,
+        # we can use that instead
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
@@ -529,8 +532,8 @@ jobs:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
         notify_when: failure
-        status: ${{ job.status }}   # required
-          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+        status: ${{ job.status }} # required
+            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
         message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
         footer: <{run_url}|Failing Run>
       env:
@@ -582,10 +585,10 @@ jobs:
         with open(output_file, "a") as f:
             f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
 
-      # https://github.com/ravsamhq/notify-slack-action
-      # Needs to be added per job
-      # When https://github.com/integrations/slack/issues/1563 gets implemented,
-      # we can use that instead
+        # https://github.com/ravsamhq/notify-slack-action
+        # Needs to be added per job
+        # When https://github.com/integrations/slack/issues/1563 gets implemented,
+        # we can use that instead
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
@@ -593,8 +596,8 @@ jobs:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
         notify_when: failure
-        status: ${{ job.status }}   # required
-          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+        status: ${{ job.status }} # required
+            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
         message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
         footer: <{run_url}|Failing Run>
       env:
@@ -632,7 +635,7 @@ jobs:
       run: |
         deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
-      # Retry action: https://github.com/marketplace/actions/retry-step
+        # Retry action: https://github.com/marketplace/actions/retry-step
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
       uses: nick-fields/retry@v3
       with:
@@ -641,10 +644,10 @@ jobs:
         command: |
           deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
-      # https://github.com/ravsamhq/notify-slack-action
-      # Needs to be added per job
-      # When https://github.com/integrations/slack/issues/1563 gets implemented,
-      # we can use that instead
+        # https://github.com/ravsamhq/notify-slack-action
+        # Needs to be added per job
+        # When https://github.com/integrations/slack/issues/1563 gets implemented,
+        # we can use that instead
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
@@ -652,8 +655,8 @@ jobs:
           # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
         notify_when: failure
-        status: ${{ job.status }}   # required
-          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+        status: ${{ job.status }} # required
+            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
         message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
         footer: <{run_url}|Failing Run>
       env:
