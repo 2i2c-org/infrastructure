@@ -140,7 +140,7 @@ basehub:
                 display_name: Modified Pangeo Notebook
                 description: Pangeo based notebook with a Python environment
                 kubespawner_override:
-                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2024.11.11-v1
+                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.06.02-v1
                   init_containers:
                       # Need to explicitly fix ownership here, as otherwise these directories will be owned
                       # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
