@@ -299,7 +299,6 @@ basehub:
         description: Start a container on a dedicated node with a GPU
         slug: gpu
         allowed_groups:
-        - geolab
         - geolab:dev
         - geolab:power
         profile_options:
