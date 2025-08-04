@@ -14,3 +14,9 @@ hubs:
   helm_chart_values_files:
   - binderhub.values.yaml
   - enc-binderhub.secret.values.yaml
+- name: staging
+  display_name: Staging Project Pythia BinderHub on Jetstream2
+  domain: staging.binder-pythia.jetstream2.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - staging.values.yaml
