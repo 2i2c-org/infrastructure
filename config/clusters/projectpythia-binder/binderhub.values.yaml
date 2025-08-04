@@ -122,28 +122,29 @@ binderhub-service:
     nodeSelector:
       hub.jupyter.org/node-purpose:
       capi.stackhpc.com/node-group: user-m3-large
-  extraConfig: |
-    from binderhub.build import KubernetesBuildExecutor
-    from kubernetes import client
+  extraConfig:
+    patch-build-spec.py: |
+      from binderhub.build import KubernetesBuildExecutor
+      from kubernetes import client
 
-    class LimitedBuildExecutor(KubernetesBuildExecutor):
+      class LimitedBuildExecutor(KubernetesBuildExecutor):
 
-        def pre_process_pod(self, pod):
-          container, = pod.spec.containers
-          container.resources.requests['ephemeral-storage'] = "9Gi"
-          print("Patching build pod definition to set ephemeral-storage request:\n", pod)
-          return pod
+          def pre_process_pod(self, pod):
+            container, = pod.spec.containers
+            container.resources.requests['ephemeral-storage'] = "9Gi"
+            print("Patching build pod definition to set ephemeral-storage request:\n", pod)
+            return pod
 
-        @property
-        def pod(self):
-            # No custom error handling, this is internal
-            return self._pod
+          @property
+          def pod(self):
+              # No custom error handling, this is internal
+              return self._pod
 
-        @pod.setter
-        def pod(self, value):
-            self._pod = self.pre_process_pod(value)
+          @pod.setter
+          def pod(self, value):
+              self._pod = self.pre_process_pod(value)
 
-        c.BinderHub.build_class = LimitedBuildExecutor
+          c.BinderHub.build_class = LimitedBuildExecutor
 
   config:
     GitHubRepoProvider:
