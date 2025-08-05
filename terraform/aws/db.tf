@@ -106,7 +106,7 @@ provider "mysql" {
   # not an empty string, so we set it to "does-not-exist"
   endpoint = var.db_enabled ? aws_db_instance.db[0].endpoint : "does-not-exist"
 
-  username = var.db_enabled ? aws_db_instance.db[0].username : ""
+  username = var.db_enabled ? aws_db_instance.db[0].username : "not-a-real-user"
   password = var.db_enabled ? random_password.db_root_password[0].result : ""
 }
 
