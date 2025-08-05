@@ -26,7 +26,7 @@
       python = pkgs.python313;
       packages =
         [
-          (python.withPackages (pypkgs: with pypkgs; [virtualenv]))
+          python
         ]
         ++ (with pkgs; [
           cmake
@@ -45,6 +45,9 @@
           eksctl
         ]);
       shellHook = ''
+        # Unset leaky PYTHONPATH
+        unset PYTHONPATH
+
         # Setup if not defined ####
         if [[ ! ( -d ".venv" && -f ".venv/marker" ) ]]; then
             __setup_env() {
@@ -56,9 +59,6 @@
                 # Stand up new venv
                 ${python.interpreter} -m venv .venv
 
-                # Unset leaky PYTHONPATH
-                unset PYTHONPATH
-
                 ".venv/bin/python" -m pip install -e ".[dev]"
 
                 # Add a marker that marks this venv as "ready"
@@ -66,9 +66,6 @@
             }
 
             __setup_env
-        else
-            # Unset leaky PYTHONPATH
-            unset PYTHONPATH
         fi
         ###########################
 
