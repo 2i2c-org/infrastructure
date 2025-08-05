@@ -18,67 +18,68 @@
         inherit system;
         config.allowUnfree = true;
       };
+      inherit (pkgs) lib;
+
       gdk = pkgs.google-cloud-sdk.withExtraComponents (with pkgs.google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
       ]);
       python = pkgs.python313;
-      pythonPackages = pkgs.python313Packages;
-      envWithScript = script:
-        (pkgs.buildFHSEnv {
-          name = "2i2c-env";
-          targetPkgs = pkgs:
-            [
-              python
-              pkgs.pythonManylinuxPackages.manylinux2014Package
-            ]
-            ++ (with pythonPackages; [pip virtualenv])
-            ++ (with pkgs; [
-              cmake
-              ninja
-              gcc
-              pre-commit
-              # Infra packages
-              go-jsonnet
-              kubernetes-helm
-              kubectl
-              sops
-              gdk
-              awscli2
-              azure-cli
-              terraform
-              eksctl
-            ]);
-          # If there is a higher power, why does it allow such horrible autoformatting below
-          runScript = "${pkgs.writeShellScriptBin "runScript" (''
-              set -e
+      packages =
+        [
+          python
+        ]
+        ++ (with pkgs; [
+          cmake
+          ninja
+          gcc
+          pre-commit
+          # Infra packages
+          go-jsonnet
+          kubernetes-helm
+          kubectl
+          sops
+          gdk
+          awscli2
+          azure-cli
+          terraform
+          eksctl
+        ]);
+      shellHook = ''
+        # Unset leaky PYTHONPATH
+        unset PYTHONPATH
 
-              # Setup if not defined ####
-              if [[ ! ( -d ".venv" && -f ".venv/marker" ) ]]; then
-                  __setup_env() {
-                      # Remove existing venv
-                      if [[ -d .venv ]]; then
-                          rm -r .venv
-                      fi
+        # Setup if not defined ####
+        if [[ ! ( -d ".venv" && -f ".venv/marker" ) ]]; then
+            __setup_env() {
+                # Remove existing venv
+                if [[ -d .venv ]]; then
+                    rm -r .venv
+                fi
 
-                      # Stand up new venv
-                      ${python.interpreter} -m venv .venv
-                      ".venv/bin/python" -m pip install -e .[dev]
+                # Stand up new venv
+                ${python.interpreter} -m venv .venv
 
-                      # Add a marker that marks this venv as "ready"
-                      touch .venv/marker
-                  }
+                ".venv/bin/python" -m pip install -e ".[dev]"
 
-                  __setup_env
-              fi
-              ###########################
+                # Add a marker that marks this venv as "ready"
+                touch .venv/marker
+            }
 
-              source .venv/bin/activate
-              set +e
-            ''
-            + script)}/bin/runScript";
-        })
-        .env;
+            __setup_env
+        fi
+        ###########################
+
+        # Activate venv
+        source .venv/bin/activate
+      '';
+      env = lib.optionalAttrs pkgs.stdenv.isLinux {
+        # Python uses dynamic loading for certain libraries.
+        # We'll set the linker path instead of patching RPATH
+        LD_LIBRARY_PATH = lib.makeLibraryPath pkgs.pythonManylinuxPackages.manylinux2014;
+      };
     in {
-      devShell = envWithScript "bash";
+      devShell = pkgs.mkShell {
+        inherit env packages shellHook;
+      };
     });
 }
