@@ -24,12 +24,10 @@
         gke-gcloud-auth-plugin
       ]);
       python = pkgs.python313;
-      pythonPackages = pkgs.python313Packages;
       packages =
         [
-          python
+          (python.withPackages (pypkgs: with pypkgs; [virtualenv]))
         ]
-        ++ (with pythonPackages; [virtualenv])
         ++ (with pkgs; [
           cmake
           ninja
