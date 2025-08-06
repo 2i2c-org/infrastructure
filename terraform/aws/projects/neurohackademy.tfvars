@@ -20,5 +20,6 @@ ebs_volumes = {
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
+    iops        = 10000
   }
 }
