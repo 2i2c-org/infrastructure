@@ -28,12 +28,21 @@ def validate_jsonnet_version():
 
 
 @contextmanager
-def render_jsonnet(jsonnet_file: Path, cluster_name: str, hub_name: str | None):
+def render_jsonnet(
+    jsonnet_file: Path,
+    cluster_name: str,
+    hub_name: str | None,
+    provider: str | None,
+    cost_monitoring_iam: str | None,
+):
     """
     Provide path to rendered json file for given jsonnet file
 
-    cluster_name and hub_name are passed as jsonnet extVars.
-    Be careful in adding more, as that may cause right to replicate issues.
+    cluster_name, hub_name and provider are passed as jsonnet extVars.
+
+    cost_monitoring_iam is passed as an extVar to allow for cost monitoring IAM role.
+
+    Be careful in adding more extVars, as that may cause right to replicate issues.
     """
 
     # WARNING: Be careful in adding more ext-str arguments, as that may cause
@@ -47,6 +56,10 @@ def render_jsonnet(jsonnet_file: Path, cluster_name: str, hub_name: str | None):
     ]
     if hub_name is not None:
         command += ["--ext-str", f"2I2C_VARS.HUB_NAME={hub_name}"]
+    if provider is not None:
+        command += ["--ext-str", f"2I2C_VARS.PROVIDER={provider}"]
+    if cost_monitoring_iam is not None:
+        command += ["--ext-str", f"2I2C_VARS.COST_MONITORING_IAM={cost_monitoring_iam}"]
     # Make the jsonnet file passed be an absolute path, but do not *resolve*
     # it - so symlinks are resolved by jsonnet rather than us. This is important
     # for daskhub compatibility.
