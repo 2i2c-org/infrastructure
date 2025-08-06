@@ -40,7 +40,7 @@ jobs:
         - cluster_name: nasa-veda
         - cluster_name: neurohackademy
         - cluster_name: nmfs-openscapes
-        - cluster_name: openscapes
+        - cluster_name: openscapeshub
         - cluster_name: opensci
         - cluster_name: projectpythia
         - cluster_name: projectpythia-binder
