@@ -2,7 +2,10 @@ jupyterhub:
   singleuser:
     image:
       name: quay.io/2i2c/utoronto-r-image
+      # TODO: unset Always once latest tag is used
       tag: update-latest
+      pullPolicy: Always
+
   ingress:
     hosts: [r-staging.datatools.utoronto.ca]
     tls:
