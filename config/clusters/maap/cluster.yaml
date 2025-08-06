@@ -1,5 +1,6 @@
 name: maap
 provider: aws # https://916098889494.signin.aws.amazon.com/console
+account: '916098889494'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks

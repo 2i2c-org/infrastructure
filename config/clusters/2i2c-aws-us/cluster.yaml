@@ -1,5 +1,6 @@
 name: 2i2c-aws-us
 provider: aws # https://2i2c.awsapps.com/start#/ under the two-eye-two-see account
+account: '790657130469'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
