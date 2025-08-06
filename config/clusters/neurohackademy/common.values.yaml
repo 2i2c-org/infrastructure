@@ -128,16 +128,15 @@ jupyterhub:
           display_name: Resource Allocation
           choices:
             regular:
-              display_name: Regular CPU instance
-              slug: small
-              default: true
+              display_name: ~15 GB RAM, ~1.9 CPUs
+              description: Up to ~15 CPUs when available
               kubespawner_override:
-                cpu_guarantee: 0.5
-                cpu_limit: 14
-                mem_guarantee: 4G
-                mem_limit: 16G
+                mem_guarantee: 16005176754
+                mem_limit: 16005176754
+                cpu_guarantee: 1.9226375
+                cpu_limit: 15.3811
                 node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
+                  node.kubernetes.io/instance-type: r5.4xlarge
                 default: true
             gpu:
               display_name: GPU machine
