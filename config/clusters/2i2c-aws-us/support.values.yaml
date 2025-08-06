@@ -29,14 +29,6 @@ prometheus:
     persistentVolume:
       size: 500Gi
 
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: 2i2c-aws-us
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/aws_ce_grafana_backend_iam_role
-
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
