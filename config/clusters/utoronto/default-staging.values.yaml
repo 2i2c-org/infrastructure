@@ -2,7 +2,9 @@ jupyterhub:
   singleuser:
     image:
       name: quay.io/2i2c/utoronto-image
+      # TODO: unset Always once latest tag is used
       tag: update-latest
+      pullPolicy: Always
   ingress:
     hosts: [staging.utoronto.2i2c.cloud]
     tls:
