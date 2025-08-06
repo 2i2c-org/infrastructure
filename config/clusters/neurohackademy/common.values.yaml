@@ -137,7 +137,7 @@ jupyterhub:
                 cpu_limit: 15.3811
                 node_selector:
                   node.kubernetes.io/instance-type: r5.4xlarge
-                default: true
+              default: true
             gpu:
               display_name: GPU machine
               slug: gpu
