@@ -33,7 +33,7 @@ def render_jsonnet(
     cluster_name: str,
     hub_name: str = None,
     provider: str = None,
-    cost_monitoring_iam: str = None,
+    aws_account_id: str = None,
 ):
     """
     Provide path to rendered json file for given jsonnet file
@@ -42,7 +42,7 @@ def render_jsonnet(
         - cluster_name
         - hub_name (optional)
         - provider (optional)
-        - cost_monitoring_iam (optional)
+        - aws_account_id (optional)
 
     Be careful in adding more extVars, as that may cause right to replicate issues.
     """
@@ -60,8 +60,8 @@ def render_jsonnet(
         command += ["--ext-str", f"2I2C_VARS.HUB_NAME={hub_name}"]
     if provider is not None:
         command += ["--ext-str", f"2I2C_VARS.PROVIDER={provider}"]
-    if cost_monitoring_iam is not None:
-        command += ["--ext-str", f"2I2C_VARS.COST_MONITORING_IAM={cost_monitoring_iam}"]
+    if aws_account_id is not None:
+        command += ["--ext-str", f"2I2C_VARS.AWS_ACCOUNT_ID={aws_account_id}"]
     # Make the jsonnet file passed be an absolute path, but do not *resolve*
     # it - so symlinks are resolved by jsonnet rather than us. This is important
     # for daskhub compatibility.
