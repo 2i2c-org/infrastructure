@@ -1,4 +1,4 @@
-name: nasa-ghg
+name: nasa-ghg-hub
 provider: aws # https://smce-ghg-center.signin.aws.amazon.com/console
 account: smce-ghg-center
 aws:
