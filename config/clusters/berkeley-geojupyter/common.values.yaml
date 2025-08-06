@@ -56,15 +56,13 @@ jupyterhub:
       Authenticator:
         admin_users:
         - mfisher87
-    extraConfig:
-      # Allow these sharing scopes for oauth tokens issued by the oauth client
-      permitSharingScopes: |
-        c.Spawner.oauth_client_allowed_scopes = [
-          "shares!server",
-          "servers!server",
-          "read:users:name", 
-          "list:users", 
-        ]
+      Spawner:
+        # Allow these sharing scopes for oauth tokens issued by the oauth client
+        oauth_client_allowed_scopes:
+        - shares!server
+        - servers!server
+        - read:users:name
+        - list:users
 
   scheduling:
     userScheduler:
