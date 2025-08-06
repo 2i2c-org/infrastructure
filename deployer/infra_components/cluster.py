@@ -172,7 +172,13 @@ class Cluster:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(Path(values_file), self.spec["name"], None)
+                        render_jsonnet(
+                            Path(values_file),
+                            self.spec["name"],
+                            None,
+                            self.spec["provider"],
+                            self.get_cost_monitoring_iam(),
+                        )
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:
@@ -453,3 +459,26 @@ class Cluster:
             support_config["prometheusIngressAuthSecret"]["username"],
             support_config["prometheusIngressAuthSecret"]["password"],
         )
+
+    def get_cost_monitoring_iam(self) -> str | None:
+        """
+        Return the IAM role used for cost monitoring k8s service account annotation.
+        """
+        if self.spec["provider"] != "aws":
+            return None
+        else:
+            result = subprocess.run(
+                [
+                    "kubectl",
+                    "-n",
+                    "support",
+                    "get",
+                    "serviceaccount",
+                    "jupyterhub-cost-monitoring",
+                    "-o",
+                    "jsonpath={.metadata.annotations.eks\\.amazonaws\\.com/role-arn}",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            return result.stdout.strip() if result.stdout else None
