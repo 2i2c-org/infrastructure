@@ -1,5 +1,6 @@
 name: opensci
 provider: aws # https://2i2c.awsapps.com/start#/
+account: '211125293633'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks

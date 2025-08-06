@@ -1,5 +1,6 @@
 name: nmfs-openscapes
 provider: aws # https://891612562472.signin.aws.amazon.com/console
+account: '891612562472'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
