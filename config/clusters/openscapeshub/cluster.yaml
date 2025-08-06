@@ -1,4 +1,4 @@
-name: openscapes
+name: openscapeshub
 provider: aws # https://783616723547.signin.aws.amazon.com/console
 account: '783616723547'
 aws:
