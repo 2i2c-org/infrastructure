@@ -468,7 +468,7 @@ jobs:
       failure_leap_staging: ${{ steps.declare-failure.outputs.failure_leap_staging }}
       failure_maap_staging: ${{ steps.declare-failure.outputs.failure_maap_staging }}
       failure_nasa-cryo_staging: ${{ steps.declare-failure.outputs.failure_nasa-cryo_staging }}
-      failure_nasa-ghg_staging: ${{ steps.declare-failure.outputs.failure_nasa-ghg_staging }}
+      failure_nasa-ghg-hub_staging: ${{ steps.declare-failure.outputs.failure_nasa-ghg-hub_staging }}
       failure_nasa-veda_staging: ${{ steps.declare-failure.outputs.failure_nasa-veda_staging }}
       failure_neurohackademy_staging: ${{ steps.declare-failure.outputs.failure_neurohackademy_staging }}
       failure_nmfs-openscapes_staging: ${{ steps.declare-failure.outputs.failure_nmfs-openscapes_staging }}
