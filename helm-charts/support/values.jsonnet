@@ -109,11 +109,11 @@ local makeUserPodUnschedulableAlert = function(
     {
       alert: name,
       expr: |||
-        # This alert fires when a user pod is unschedulable for more than 5 minutes.
+        # This alert fires when a user pod is unschedulable for more than 10 minutes.
         # We use kube_pod_status_unschedulable to detect unschedulable pods.
         count(
           kube_pod_status_unschedulable{pod=~'jupyter-.*'} == 1
-          and (time() - kube_pod_created > 300)
+          and (time() - kube_pod_created > 600)
         ) by (namespace, pod) > 0
       |||,
       'for': '0m',
