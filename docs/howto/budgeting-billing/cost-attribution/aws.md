@@ -83,8 +83,10 @@ account:
 
    - 2i2c:hub-name
    - 2i2c.org/cluster-name
+   - 2i2c.org/node-purpose
    - alpha.eksctl.io/cluster-name
    - kubernetes.io/cluster/<cluster name>
+   - kubernetes.io/created-for/pvc/name
    - kubernetes.io/created-for/pvc/namespace
 ```
 ````
