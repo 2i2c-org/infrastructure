@@ -1,0 +1,34 @@
+nfs:
+  pv:
+    serverIP: 10.100.249.1
+
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::622703418259:role/berkeley-geojupyter-staging
+
+jupyterhub:
+  ingress:
+    hosts: [staging.berkeley-geojupyter.2i2c.cloud]
+    tls:
+    - hosts: [staging.berkeley-geojupyter.2i2c.cloud]
+      secretName: https-auto-tls
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.berkeley-geojupyter.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://berkeley-geojupyter-scratch-staging/$(JUPYTERHUB_USER)
+
+jupyterhub-home-nfs:
+  enabled: true # can be migrated to common values file
+  eks:
+    enabled: true # can be migrated to common values file
+    volumeId: vol-018ab2eba48b7d895
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/berkeley-geojupyter-staging-
