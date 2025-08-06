@@ -1,4 +1,5 @@
 local cluster_name = std.extVar('2I2C_VARS.CLUSTER_NAME');
+local provider_name = std.extVar('2I2C_VARS.PROVIDER');
 
 local makePVCApproachingFullAlert = function(
   name,
@@ -127,6 +128,16 @@ local makeUserPodUnschedulableAlert = function(
   ],
 };
 
+local configCostMonitoring = {
+  enabled: true,
+  extraEnv: [
+    {
+      name: 'CLUSTER_NAME',
+      value: cluster_name,
+    },
+  ],
+};
+
 {
   prometheus: {
     alertmanager: {
@@ -207,4 +218,5 @@ local makeUserPodUnschedulableAlert = function(
       },
     },
   },
+  'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
 }
