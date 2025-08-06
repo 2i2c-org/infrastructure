@@ -1,0 +1,178 @@
+#If the hub is a daskhub, please indent everything under a basehub key
+#basehub:
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
+    baseShareName: /
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: berkeley-geojupyter
+          logo_url: https://github.com/user-attachments/assets/0218ad87-061f-4b3a-b1e4-7555a9a83876
+          url: https://geojupyter.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: The Eric & Wendy Schmidt Center for Data Science & Environment at UC Berkeley
+          url: https://dse.berkeley.edu/
+  hub:
+    allowNamedServers: true
+    loadRoles:
+      # Override the user role with scopes for sharing UI & impl
+      user:
+        scopes:
+        - self
+          # Sharing scopes
+        - shares!user
+        - read:users:name
+        - list:users
+
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - geojupyter:jupyterhub-users
+      Authenticator:
+        admin_users:
+        - mfisher87
+    extraConfig:
+      # Allow these sharing scopes for oauth tokens issued by the oauth client
+      permitSharingScopes: |
+        c.Spawner.oauth_client_allowed_scopes = [
+          "shares!server",
+          "servers!server",
+          "read:users:name", 
+          "list:users", 
+        ]
+
+  scheduling:
+    userScheduler:
+      enabled: true
+
+  singleuser:
+    defaultUrl: /lab
+
+    profileList:
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+              # Enables dynamic image building for this profile
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            scipy:
+              display_name: GeoJupyer Notebook Image
+              slug: geojupyter
+              description: A Docker image containing bleeding-edge GeoJupyter (and other) geospatial tools.
+              kubespawner_override:
+                image: ghcr.io/geojupyter/geojupyter:latest
+              default: true
+            pangeo:
+              display_name: Pangeo Notebook Image
+              slug: pangeo
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: quay.io/pangeo/pangeo-notebook:2025.07.09
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_4_gb:
+              display_name: ~4 GB RAM, ~0.5 CPUs
+              description: Up to ~4 CPUs when available
+              default: true
+              kubespawner_override:
+                mem_guarantee: 3902839759
+                mem_limit: 3902839759
+                cpu_guarantee: 0.4563125
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7805679519
+                mem_limit: 7805679519
+                cpu_guarantee: 0.912625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_15_gb:
+              display_name: ~15 GB RAM, ~1.8 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 15611359038
+                mem_limit: 15611359038
+                cpu_guarantee: 1.82525
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_gb:
+              display_name: ~29 GB RAM, ~4 CPUs
+              description: ~4 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 31222718077
+                mem_limit: 31222718077
+                cpu_guarantee: 3.6505
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+
+binderhub-service:
+  enabled: true
+    # Explicitly specify what nodes we want for our builds
+    # Otherwise we may scale up a larger node than needed
+  networkPolicy:
+    enabled: true
+  dockerApi:
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        node.kubernetes.io/instance-type: r5.xlarge
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
+
+jupyterhub-home-nfs:
+  enabled: true
+  eks:
+    enabled: true
+  prometheusExporter:
+    enabled: true

@@ -152,50 +152,50 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
       1. **Determine the address of the storage server that a hub on this cluster should use to connect to it**
 
-      `````{tab-set}
-      ````{tab-item} AWS
-      :sync: aws-key
-      Get the address of the storage via terraform and store it as it will be required in a later step.
+          `````{tab-set}
+          ````{tab-item} AWS
+          :sync: aws-key
+          Get the address of the storage via terraform and store it as it will be required in a later step.
 
-      Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
+          Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
 
-      For persistent disks, run:
+          For persistent disks, run:
 
-      ```bash
-      terraform output ebs_volume_id_map
-      ```
+          ```bash
+          terraform output ebs_volume_id_map
+          ```
 
-      For EFS instances, run:
+          For EFS instances, run:
 
-      ```bash
-      terraform output nfs_server_dns_map
-      ```
-      ````
+          ```bash
+          terraform output nfs_server_dns_map
+          ```
+          ````
 
-      ````{tab-item} Google Cloud
-      :sync: gcp-key
-      Get the address of the storage via terraform and store it as it will be required in a later step.
+          ````{tab-item} Google Cloud
+          :sync: gcp-key
+          Get the address of the storage via terraform and store it as it will be required in a later step.
 
-      Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
+          Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
 
-      For persistent disks, run:
+          For persistent disks, run:
 
-      ```bash
-      terraform output persistent_disk_id_map
-      ```
-      
-      For Google FileStore instances, get the IP address from the GCP UI.
-      ````
+          ```bash
+          terraform output persistent_disk_id_map
+          ```
+          
+          For Google FileStore instances, get the IP address from the GCP UI.
+          ````
 
-      ````{tab-item} Azure
-      :sync: azure-key
-      tf output azure_fileshare_url
-      ````
-      `````
+          ````{tab-item} Azure
+          :sync: azure-key
+          tf output azure_fileshare_url
+          ````
+          `````
       1. **Run the deployer command below to generate config for the common hubs configuration, passing the admin users one by one:**
-      ```bash
-      deployer generate hub-asset common-values-file --admin-users admin1 --admin-users admin2
-      ```
+          ```bash
+          deployer generate hub-asset common-values-file --admin-users admin1 --admin-users admin2
+          ```
 
       ```{warning}
       If the admin users list is not passed independently as arguments and is instead left to be passed via de prompt with all the other args, then the following error is raised no matter the value passed: `Error: Value must be an iterable.`.

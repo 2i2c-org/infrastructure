@@ -205,6 +205,7 @@ jobs:
     # variation. We are currently required to do this in a hardcoded fashion,
     # see this post for feature requests for this to be improved:
     # https://github.community/t/bug-jobs-output-should-return-a-list-for-a-matrix-job/128626/32?u=consideratio
+    # above link is dead, but referenced in https://github.com/orgs/community/discussions/17245
     #
     # If you are adding a new cluster, please remember to list it here!
     outputs:
@@ -238,6 +239,7 @@ jobs:
       failure_ubc-eoas: ${{ steps.declare-failure.outputs.failure_ubc-eoas }}
       failure_utoronto: ${{ steps.declare-failure.outputs.failure_utoronto }}
       failure_victor: ${{ steps.declare-failure.outputs.failure_victor }}
+      failure_berkeley_geojupyter: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter }}
 
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -480,6 +482,7 @@ jobs:
       failure_utoronto_staging: ${{ steps.declare-failure.outputs.failure_utoronto_staging }}
       failure_utoronto_r-staging: ${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
+      failure_berkeley_geojupyter_staging: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter_staging }}
 
     steps:
     - uses: actions/checkout@v4
