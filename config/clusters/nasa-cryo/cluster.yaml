@@ -1,5 +1,6 @@
 name: nasa-cryo
 provider: aws # https://2i2c.awsapps.com/start#/
+account: '574251165169'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks

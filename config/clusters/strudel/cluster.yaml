@@ -1,5 +1,6 @@
 name: strudel
 provider: aws # https://2i2c.awsapps.com/start#/
+account: '207567775686'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks

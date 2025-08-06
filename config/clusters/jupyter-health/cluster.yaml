@@ -1,5 +1,6 @@
 name: jupyter-health
 provider: aws # https://2i2c.awsapps.com/start/#/
+account: '211125465508'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks

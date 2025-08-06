@@ -1,5 +1,6 @@
 name: victor
 provider: aws # https://129856558350.signin.aws.amazon.com/console
+account: '129856558350'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
