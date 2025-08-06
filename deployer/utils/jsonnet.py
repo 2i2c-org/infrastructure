@@ -31,16 +31,18 @@ def validate_jsonnet_version():
 def render_jsonnet(
     jsonnet_file: Path,
     cluster_name: str,
-    hub_name: str | None,
-    provider: str | None,
-    cost_monitoring_iam: str | None,
+    hub_name: str = None,
+    provider: str = None,
+    cost_monitoring_iam: str = None,
 ):
     """
     Provide path to rendered json file for given jsonnet file
 
-    cluster_name, hub_name and provider are passed as jsonnet extVars.
-
-    cost_monitoring_iam is passed as an extVar to allow for cost monitoring IAM role.
+    The following variables are passed as extVars to jsonnet:
+        - cluster_name
+        - hub_name (optional)
+        - provider (optional)
+        - cost_monitoring_iam (optional)
 
     Be careful in adding more extVars, as that may cause right to replicate issues.
     """
