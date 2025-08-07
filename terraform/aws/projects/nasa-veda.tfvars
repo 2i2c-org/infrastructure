@@ -6,7 +6,7 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring_iam = true
 
 user_buckets = {
   "scratch-staging" : {

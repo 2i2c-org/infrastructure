@@ -6,8 +6,8 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_aws_ce_grafana_backend_iam = true
-disable_cluster_wide_filestore    = true
+enable_jupyterhub_cost_monitoring_iam = true
+disable_cluster_wide_filestore        = true
 
 # FIXME: placeholder bucket to get the 2i2c:hub-name tag in place
 # so the community cand enable it for cost allocation purposes
