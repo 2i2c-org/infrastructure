@@ -7,7 +7,7 @@ region                 = "{{ cluster_region }}"
 cluster_name           = "{{ cluster_name }}"
 cluster_nodes_location = "{{ cluster_region }}a"
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring_iam = true
 
 # Tip: uncomment and verify any missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
