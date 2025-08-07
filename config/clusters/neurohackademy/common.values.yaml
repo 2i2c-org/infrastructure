@@ -148,7 +148,7 @@ jupyterhub:
                 environment:
                   NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 node_selector:
-                  node.kubernetes.io/instance-type: g4dn.xlarge
+                  node.kubernetes.io/instance-type: g4dn.4xlarge
                 extra_resource_limits:
                   nvidia.com/gpu: '1'
 binderhub-service:
