@@ -37,7 +37,7 @@ local dailyCosts =
   + ts.queryOptions.withTargets([
     common.queryTarget
     {
-      url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs?from=${__from:date}&to=${__to:date}',
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs?from=${__from:date}&to=${__to:date}',
     },
   ]);
 
@@ -71,7 +71,7 @@ local dailyCostsPerHub =
   + ts.queryOptions.withTargets([
     common.queryTarget
     {
-      url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}',
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}',
     },
   ]);
 
@@ -82,7 +82,7 @@ local dailyCostsPerComponent =
   + ts.panelOptions.withDescription(
     |||
       Components are human friendly groupings of AWS services, as [defined
-      here](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/aws-ce-grafana-backend/mounted-files/const.py#L11-L20).
+      here](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/jupyterhub-cost-monitoring/mounted-files/const.py#L11-L20).
 
       ---
 
@@ -95,7 +95,7 @@ local dailyCostsPerComponent =
   + ts.queryOptions.withTargets([
     common.queryTarget
     {
-      url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}',
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}',
     },
   ]);
 
@@ -106,7 +106,7 @@ local dailyCostsPerComponentAndHub =
   + ts.panelOptions.withDescription(
     |||
       Components are human friendly groupings of AWS services, as [defined
-      here](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/aws-ce-grafana-backend/mounted-files/const.py#L11-L20).
+      here](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/jupyterhub-cost-monitoring/mounted-files/const.py#L11-L20).
 
       **Note**
 
@@ -121,7 +121,7 @@ local dailyCostsPerComponentAndHub =
   + ts.queryOptions.withTargets([
     common.queryTarget
     {
-      url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=${hub}',
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=${hub}',
     },
   ]);
 
