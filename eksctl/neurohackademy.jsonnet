@@ -105,6 +105,48 @@ local notebookNodes = [
     // GPUs in a single AZ are in use and no new nodes can be spawned
     availabilityZones: masterAzs,
   },
+  {
+    instanceType: 'g4dn.2xlarge',
+    namePrefix: 'gpu-prod-2xlarge',
+    minSize: 0,
+    labels+: {
+      '2i2c/hub-name': 'prod',
+      '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+    },
+    tags+: {
+      '2i2c:hub-name': 'prod',
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+    },
+    taints+: {
+      'nvidia.com/gpu': 'present:NoSchedule',
+    },
+    // Allow provisioning GPUs across all AZs, to prevent situation where all
+    // GPUs in a single AZ are in use and no new nodes can be spawned
+    availabilityZones: masterAzs,
+  },
+  {
+    instanceType: 'g4dn.4xlarge',
+    namePrefix: 'gpu-prod-4xlarge',
+    minSize: 0,
+    labels+: {
+      '2i2c/hub-name': 'prod',
+      '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+    },
+    tags+: {
+      '2i2c:hub-name': 'prod',
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+    },
+    taints+: {
+      'nvidia.com/gpu': 'present:NoSchedule',
+    },
+    // Allow provisioning GPUs across all AZs, to prevent situation where all
+    // GPUs in a single AZ are in use and no new nodes can be spawned
+    availabilityZones: masterAzs,
+  },
 ];
 
 local daskNodes = [];
