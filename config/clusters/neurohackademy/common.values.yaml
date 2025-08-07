@@ -143,8 +143,8 @@ jupyterhub:
               slug: gpu
               description: Start a container on a dedicated node with a GPU
               kubespawner_override:
-                mem_limit: 30G
-                mem_guarantee: 30G
+                mem_limit: 29G
+                mem_guarantee: 29G
                 environment:
                   NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 node_selector:
