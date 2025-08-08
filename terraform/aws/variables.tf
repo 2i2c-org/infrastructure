@@ -245,54 +245,6 @@ variable "filestores" {
   EOT
 }
 
-variable "active_cost_allocation_tags" {
-  type    = list(string)
-  default = []
-
-  description = <<-EOT
-  Tags to be treated as active cost allocation tags.
-
-  Without permissions on the billing account, we get the following
-  error if we try to use this:
-
-      Failed to update Cost Allocation Tag:
-      Linked account doesn't have access to cost allocation tags.
-
-  Due to that, we don't provide a default value here, but if we could,
-  we would want to activate at least the following that are relevant
-  to cost attribution currently as piloted by the openscapes cluster:
-
-  - 2i2c:hub-name
-  - 2i2c.org/cluster-name
-  - alpha.eksctl.io/cluster-name
-  - kubernetes.io/cluster/{var_cluster_name}
-
-  Cost allocation tags can only be activated after sufficient amount of
-  time has passed since resources was tagged, so expect a few hours or
-  up to 24 hours in order you can activate them without running into
-  this error:
-
-      Failed to update Cost Allocation Tag:
-      Tag keys not found: 2i2c.org/cluster-name
-  EOT
-}
-
-variable "enable_aws_ce_grafana_backend_iam" {
-  type        = bool
-  default     = false
-  description = <<-EOT
-  Create an IAM role with attached policy to permit read use of AWS Cost Explorer API.
-  EOT
-}
-
-variable "enable_jupyterhub_cost_monitoring_iam" {
-  type        = bool
-  default     = false
-  description = <<-EOT
-  Create an IAM role with attached policy to permit read use of AWS Cost Explorer API.
-  EOT
-}
-
 variable "ebs_volumes" {
   type = map(object({
     size        = number
@@ -310,11 +262,11 @@ variable "ebs_volumes" {
   EOT
 }
 
-variable "enable_nfs_backup" {
+variable "enable_jupyterhub_cost_monitoring" {
   type        = bool
   default     = false
   description = <<-EOT
-  Enable backup of NFS home directories on EBS using Data Lifecycle Manager (DLM).
+  Create an IAM role to read AWS Cost Explorer API and enable cost allocation tags.
   EOT
 }
 
@@ -325,4 +277,12 @@ variable "enable_efs_backup" {
   Enable backup of EFS home directories
   EOT
 
+}
+
+variable "enable_nfs_backup" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Enable backup of NFS home directories on EBS using Data Lifecycle Manager (DLM).
+  EOT
 }

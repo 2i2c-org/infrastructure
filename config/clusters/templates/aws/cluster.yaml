@@ -1,11 +1,13 @@
 name: {{ cluster_name }}
 provider: aws # {{ sign_in_url }}
+account: {{ cluster_account_id }}
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: {{ cluster_name }}
   region: {{ cluster_region }}
   billing:
+    access: {{ billing_access }}
     paid_by_us: {{ paid_by_us }}
 support:
   helm_chart_values_files:

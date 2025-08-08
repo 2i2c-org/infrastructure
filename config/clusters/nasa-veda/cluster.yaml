@@ -1,12 +1,13 @@
 name: nasa-veda
 provider: aws # https://smce-veda.signin.aws.amazon.com/console
-account: smce-veda
+account: '444055461661'
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: nasa-veda
   region: us-west-2
   billing:
+    active_cost_tags: false
     paid_by_us: false
 support:
   helm_chart_values_files:
