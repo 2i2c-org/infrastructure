@@ -6,8 +6,6 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_jupyterhub_cost_monitoring_iam = true
-
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
