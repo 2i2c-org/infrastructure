@@ -77,11 +77,3 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-noaa-only"],
   },
 }
-
-active_cost_allocation_tags = [
-  "2i2c:hub-name",
-  "2i2c.org/cluster-name",
-  "alpha.eksctl.io/cluster-name",
-  "kubernetes.io/cluster/{var_cluster_name}",
-  "kubernetes.io/created-for/pvc/namespace",
-]
