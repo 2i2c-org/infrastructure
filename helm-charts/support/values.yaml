@@ -431,8 +431,7 @@ cryptnono:
 
 # values ref: https://github.com/2i2c-org/jupyterhub-cost-monitoring/blob/main/helm/jupyterhub-cost-monitoring/values.yaml
 #
-aws-ce-grafana-backend:
-  enabled: false
+
 jupyterhub-cost-monitoring:
   enabled: false
 
