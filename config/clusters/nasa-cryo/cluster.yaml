@@ -7,6 +7,7 @@ aws:
   clusterName: nasa-cryo
   region: us-west-2
   billing:
+    active_cost_tags: true
     paid_by_us: true
 support:
   helm_chart_values_files:
