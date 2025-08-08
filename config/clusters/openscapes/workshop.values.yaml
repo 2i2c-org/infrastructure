@@ -91,17 +91,57 @@ basehub:
           resource_allocation:
             display_name: Resource Allocation
             choices:
+              mem_2_gb:
+                display_name: ~2 GB RAM, ~0.2 CPUs
+                description: Up to ~4 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 1951419879
+                  mem_limit: 1951419879
+                  cpu_guarantee: 0.22815625
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_4_gb:
+                display_name: ~4 GB RAM, ~0.5 CPUs
+                description: Up to ~4 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 3902839759
+                  mem_limit: 3902839759
+                  cpu_guarantee: 0.4563125
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_gb:
+                display_name: ~7 GB RAM, ~0.9 CPUs
+                description: Up to ~4 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 7805679519
+                  mem_limit: 7805679519
+                  cpu_guarantee: 0.912625
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
               mem_15_gb:
-                display_name: ~15 GB RAM, ~4 CPUs
-                description: ~4 CPUs always available
+                display_name: ~15 GB RAM, ~1.8 CPUs
+                description: Up to ~4 CPUs when available
+                default: true
                 kubespawner_override:
                   mem_guarantee: 15611359038
                   mem_limit: 15611359038
+                  cpu_guarantee: 1.82525
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_gb:
+                display_name: ~29 GB RAM, ~4 CPUs
+                description: ~4 CPUs always available
+                kubespawner_override:
+                  mem_guarantee: 31222718077
+                  mem_limit: 31222718077
                   cpu_guarantee: 3.6505
                   cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
-                default: true
 
   dask-gateway:
     gateway:
