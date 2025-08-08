@@ -37,6 +37,5 @@ filestores = {
 #  },
 {% endfor %}
 
-# Uncomment to enable cost monitoring if we have access to AWS Cost Explorer API, otherwise work with community to enable cost allocation tags (see https://infrastructure.2i2c.org/howto/budgeting-billing/cost-attribution/aws/#enable-cost-allocation-tags)
-
+# Uncomment if aws.billing.active_cost_tags is true in cluster.yaml
 # enable_jupyterhub_cost_monitoring = true
