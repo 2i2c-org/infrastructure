@@ -7,8 +7,6 @@ region                 = "{{ cluster_region }}"
 cluster_name           = "{{ cluster_name }}"
 cluster_nodes_location = "{{ cluster_region }}a"
 
-enable_jupyterhub_cost_monitoring_iam = true
-
 # Tip: uncomment and verify any missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
 #
@@ -39,15 +37,6 @@ filestores = {
 #  },
 {% endfor %}
 
-# Uncomment the lines below to Enable cost allocation tags
-# for standalone AWS accounts
+# Uncomment to enable cost monitoring if we have access to AWS Cost Explorer API, otherwise work with community to enable cost allocation tags (see https://infrastructure.2i2c.org/howto/budgeting-billing/cost-attribution/aws/#enable-cost-allocation-tags)
 
-# active_cost_allocation_tags = [
-#   "2i2c:hub-name",
-#   "2i2c.org/cluster-name",
-#   "2i2c:node-purpose",
-#   "alpha.eksctl.io/cluster-name",
-#   "kubernetes.io/cluster/{var_cluster_name}",
-#   "kubernetes.io/created-for/pvc/name",
-#   "kubernetes.io/created-for/pvc/namespace",
-# ]
+# enable_jupyterhub_cost_monitoring = true
