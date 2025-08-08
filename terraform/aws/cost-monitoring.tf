@@ -1,3 +1,6 @@
+// Cost monitoring resources for IAM role and cost allocation tags.
+// Note: if the name of the IAM role is changed, then update the config in helm-charts/support/values.jsonnet for the k8s service account annotation.
+
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "jupyterhub_cost_monitoring_iam_role" {
   count = var.enable_jupyterhub_cost_monitoring ? 1 : 0

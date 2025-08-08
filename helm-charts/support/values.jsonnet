@@ -1,6 +1,6 @@
 local cluster_name = std.extVar('2I2C_VARS.CLUSTER_NAME');
 local provider_name = std.extVar('2I2C_VARS.PROVIDER');
-local aws_account_id = std.extVar('2I2C_VARS.AWS_ACCOUNT_ID');
+local aws_account_id = std.extVar('2I2C_VARS.AWS_ACCOUNT_ID');  // undefined if provider_name != 'aws'
 
 local makePVCApproachingFullAlert = function(
   name,
@@ -139,6 +139,7 @@ local configCostMonitoring = {
   ],
   serviceAccount: {
     annotations: {
+      // See terraform/aws/cost-monitoring.tf
       'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_cost_monitoring_iam_role' % aws_account_id,
     },
   },
