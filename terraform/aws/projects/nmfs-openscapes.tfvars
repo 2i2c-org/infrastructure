@@ -6,7 +6,7 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_jupyterhub_cost_monitoring_iam = true
+enable_jupyterhub_cost_monitoring = true
 
 disable_cluster_wide_filestore = true
 ebs_volumes = {

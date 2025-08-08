@@ -2,8 +2,8 @@ region                 = "us-west-2"
 cluster_name           = "2i2c-aws-us"
 cluster_nodes_location = "us-west-2a"
 
-enable_jupyterhub_cost_monitoring_iam = true
-disable_cluster_wide_filestore        = true
+enable_jupyterhub_cost_monitoring = true
+disable_cluster_wide_filestore    = true
 
 user_buckets = {
   "scratch-staging" : {
