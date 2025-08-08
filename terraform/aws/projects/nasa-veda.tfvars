@@ -6,8 +6,6 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_jupyterhub_cost_monitoring_iam = true
-
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
@@ -249,3 +247,13 @@ ebs_volumes = {
 }
 
 enable_nfs_backup = true
+
+active_cost_allocation_tags = [
+  "2i2c:hub-name",
+  "2i2c.org/cluster-name",
+  "2i2c:node-purpose",
+  "alpha.eksctl.io/cluster-name",
+  "kubernetes.io/cluster/{var_cluster_name}",
+  "kubernetes.io/created-for/pvc/name",
+  "kubernetes.io/created-for/pvc/namespace",
+]

@@ -2,7 +2,7 @@ region                 = "us-west-2"
 cluster_name           = "disasters"
 cluster_nodes_location = "us-west-2a"
 
-enable_jupyterhub_cost_monitoring_iam = true
+enable_nfs_backup = true
 
 user_buckets = {
   "scratch-staging" : {
@@ -146,4 +146,3 @@ ebs_volumes = {
   }
 }
 
-enable_nfs_backup = true

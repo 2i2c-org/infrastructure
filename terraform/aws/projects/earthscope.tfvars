@@ -30,8 +30,7 @@ ebs_volumes = {
 }
 enable_nfs_backup = true
 
-enable_jupyterhub_cost_monitoring_iam = true
-disable_cluster_wide_filestore        = true
+disable_cluster_wide_filestore = true
 
 user_buckets = {
   "scratch-staging" : {
