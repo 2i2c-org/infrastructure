@@ -42,13 +42,12 @@ def render_jsonnet(
         - cluster_name
         - hub_name (optional)
         - provider (optional)
+
+    The following variables are passed as top-level arguments to jsonnet:
         - aws_account_id (optional)
 
-    Be careful in adding more extVars, as that may cause right to replicate issues.
+    Be careful in adding more arguments, as that may cause right to replicate issues.
     """
-
-    # WARNING: Be careful in adding more ext-str arguments, as that may cause
-    # right to replicate issues.
     command = [
         "jsonnet",
         "--jpath",
@@ -61,7 +60,7 @@ def render_jsonnet(
     if provider is not None:
         command += ["--ext-str", f"2I2C_VARS.PROVIDER={provider}"]
     if aws_account_id is not None:
-        command += ["--ext-str", f"2I2C_VARS.AWS_ACCOUNT_ID={aws_account_id}"]
+        command += ["--tla-str", f"aws_account_id={aws_account_id}"]
     # Make the jsonnet file passed be an absolute path, but do not *resolve*
     # it - so symlinks are resolved by jsonnet rather than us. This is important
     # for daskhub compatibility.
