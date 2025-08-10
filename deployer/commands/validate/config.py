@@ -89,8 +89,14 @@ def cluster_config(
 
     with open(cluster_schema_file) as sf:
         schema = yaml.load(sf)
-        # Raises useful exception if validation fails
-        jsonschema.validate(cluster.spec, schema)
+        try:
+            jsonschema.validate(cluster.spec, schema)
+        except jsonschema.ValidationError as e:
+            print_colour(
+                f"JSON schema validation error in cluster.yaml for {cluster_name}: {e.message}",
+                colour="red",
+            )
+            sys.exit(1)
 
 
 @validate_app.command()
