@@ -1,7 +1,7 @@
 name: openscapeshub
 provider: aws # https://783616723547.signin.aws.amazon.com/console
 aws:
-  account: '783616723547'
+  account: 783616723547
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: openscapeshub

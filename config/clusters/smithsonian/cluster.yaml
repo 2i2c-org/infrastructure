@@ -1,7 +1,7 @@
 name: smithsonian
 provider: aws # https://2i2c.awsapps.com/start#/
 aws:
-  account: '969396938818'
+  account: 969396938818
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: smithsonian
