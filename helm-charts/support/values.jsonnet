@@ -225,5 +225,5 @@ function(aws_account_id=null)
         },
       },
     },
-    'jupyterhub-cost-monitoring': if std.type(aws_account_id) != 'null' then configCostMonitoring(aws_account_id) else { enabled: false },
+    'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring(aws_account_id) else { enabled: false },
   }
