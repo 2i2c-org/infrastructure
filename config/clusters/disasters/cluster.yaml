@@ -1,7 +1,7 @@
 name: disasters
 provider: aws # https://smce-aws-disasters.signin.aws.amazon.com/console
-account: '515966502221'
 aws:
+  account: '515966502221'
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: disasters

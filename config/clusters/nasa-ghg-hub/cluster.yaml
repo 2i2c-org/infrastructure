@@ -1,7 +1,7 @@
 name: nasa-ghg-hub
 provider: aws # https://smce-ghg-center.signin.aws.amazon.com/console
-account: '597746869805'
 aws:
+  account: '597746869805'
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: nasa-ghg-hub
