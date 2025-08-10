@@ -180,11 +180,8 @@ class Cluster:
                             else self.spec["name"]
                         ),
                     }
-                    if (
-                        self.spec["provider"] == "aws"
-                        and self.spec["aws"]["billing"]["active_cost_tags"]
-                    ):
-                        render_args["aws_account_id"] = self.spec["account"]
+                    if self.spec["provider"] == "aws":
+                        render_args["aws_account_id"] = self.spec["aws"]["account"]
                     else:
                         render_args["aws_account_id"] = None
                     rendered_path = jsonnet_stack.enter_context(
