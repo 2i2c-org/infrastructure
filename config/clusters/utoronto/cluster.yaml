@@ -1,6 +1,5 @@
 name: utoronto
 provider: kubeconfig # azure based, cloud infra work requires a dedicated utoronto account
-account: UTORid
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:
