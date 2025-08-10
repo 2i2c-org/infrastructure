@@ -40,8 +40,8 @@ def render_jsonnet(
 
     The following variables are passed as extVars to jsonnet:
         - cluster_name
+        - provider
         - hub_name (optional)
-        - provider (optional)
 
     The following variables are passed as top-level arguments to jsonnet:
         - aws_account_id (optional)
