@@ -1,7 +1,7 @@
 name: earthscope
 provider: aws # https://762698921361.signin.aws.amazon.com/console
 aws:
-  account: '762698921361'
+  account: 762698921361
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: earthscope
