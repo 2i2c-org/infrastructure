@@ -13,7 +13,24 @@ Checkout the [topic guide](topic:billing:cost-monitoring) for more information o
 Enabling cost allocation tags via terraform can be done for AWS
 accounts that we have billing permissions for, but not for standalone accounts that communities manage themselves.
 
+If cost allocation tags are not activated, then you can set
+
+```yaml
+jupyterhub-cost-monitoring:
+  enabled: false
+```
+
+in the `config/clusters/<cluster_name>/support.values.yaml` file to disable deployment of the cost monitoring system.
+
 `````{tab-set}
+
+````{tab-item} Member account (2i2c SSO)
+:sync: member-2i2c
+
+AWS accounts that can be accessed with the [2i2c SSO](cloud-access:aws-sso) have cost allocation tags already enabled.
+
+See the [topic guide](topic:billing:cost-monitoring) for more information on which cost allocation tags are activated.
+````
 
 ````{tab-item} Standalone account with billing permissions
 :sync: standalone
@@ -35,64 +52,37 @@ If the apply operation fails with the following errors:
    This means we do not have billing permissions on the AWS account and is likely managed by a community (see Community-managed account).
 ````
 
-````{tab-item} Member account (2i2c SSO)
-:sync: member-2i2c
-
-2i2c's AWS organization have all but one cost allocation tags activated already,
-you only need to activate `kubernetes.io/cluster/<cluster name>` manually.
-
-To do this, visit https://2i2c.awsapps.com/start/#/ and login to the
-`2i2c-sandbox` account, then from [cost allocation tags] find and enable the tag
-`kubernetes.io/cluster/<cluster name>`. If you can't find it and created the
-cluster very recently, come back in a few hours and try again.
-
-[cost allocation tags]: https://us-east-1.console.aws.amazon.com/billing/home?region=us-east-1#/tags
-````
-
 ````{tab-item} Community-managed account without billing permissions
 :sync: member-community
 
-We can't do this ourselves, but we can communicate instructions to the community
-on what they need to do in order to have this function.
+We require a community member with the relevant billing permissions to enable the cost allocation tags on our behalf.
 
-Below is part of a message that could be used when communicating with a community
-representative about this. Note that the message mentions `<cluster name>` as
-part of a tag, update that to be the community's actual cluster name as listed
-within a eksctl .jsonnet file.
+Below is a template message you can send to the technical contact. Note that `<cluster_name>` should be updated to the community's cluster name.
 
 ```
-In order for 2i2c to provide an overview cloud costs via a Grafana dashboard,
-the following changes needs to be made in the AWS organization's management
-account:
+In order for 2i2c to enable the cloud cost monitoring feature for your community, the following changes needs to be made in the AWS organization's management account:
 
 1. Declare that linked member accounts are allowed to access Cost Explorer.
 
-   This can be done via "Billing and Cost Management" -> "Cost Management Preferences",
-   where the checkbox "Linked account access" should be checked.
+   This can be done via "Billing and Cost Management" -> "Cost Management Preferences", where the checkbox "Linked account access" should be checked.
 
 2. Enable a specific set of cost allocation tags.
 
    This can be done via "Billing and Cost Management" -> "Cost Allocation Tags".
 
-   The tags that needs to be enabled to function as cost allocation tags are:
+   The tags that to be activated are:
 
    - 2i2c:hub-name
    - 2i2c.org/cluster-name
    - 2i2c.org/node-purpose
    - alpha.eksctl.io/cluster-name
-   - kubernetes.io/cluster/<cluster name>
+   - kubernetes.io/cluster/<cluster_name>
    - kubernetes.io/created-for/pvc/name
    - kubernetes.io/created-for/pvc/namespace
 ```
 ````
 
 `````
-
-```{note}
-The `kubernetes.io/created-for/pvc/namespace` is enabled even if its currently
-not used by `jupyterhub-cost-monitoring`, as it could help us attribute cost for
-storage disks dynamically provisioned in case that's relevant in the future.
-```
 
 ### 2. (optional) Backfill billing data
 
@@ -106,30 +96,13 @@ click the "Backfill tags" button.
 
 ### 3. Install `jupyterhub-cost-monitoring` Helm chart
 
-In the cluster's terraform variables, make sure the following is present:
+In the cluster's `terraform/aws/projects/<cluster_name>.tf` file, set
 
 ```bash
-enable_jupyterhub_cost_monitoring_iam = true
+enable_jupyterhub_cost_monitoring = true
 ```
 
-After applying this, look at the terraform output named `jupyterhub_cost_monitoring_k8s_sa_annotation`:
-
-```bash
-terraform output -raw jupyterhub_cost_monitoring_k8s_sa_annotation
-```
-
-Open the cluster's `support.values.yaml` file and update add a section like below, updating the `CLUSTER_NAME` and adding the service account annotation (key and value) from the terraform output.
-
-```yaml
-jupyterhub-cost-monitoring:
-  enabled: true
-  extraEnv:
-    - name: CLUSTER_NAME
-      value: openscapeshub
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::<aws_account_number>:role/jupyterhub_cost_monitoring_iam_role
-```
+The helm deployment is unconditionally enabled with jsonnet, unless explicitly overridden in the `config/clusters/<cluster_name>/support.values.yaml` file, and the configuration is automatically defined in the `helm-charts/support/values.jsonnet` file.
 
 Finally deploy the support chart:
 
