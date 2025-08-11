@@ -15,42 +15,47 @@ future.
 
 ## Components
 
-1. AWS IAM Role Configuration
+### 1. AWS IAM Role Configuration
 
-A [dedicated IAM
-role](https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/aws-ce-grafana-backend-iam.tf)
-is created to grant the necessary permissions for accessing the Cost Explorer
-API.
+  A [dedicated IAM
+  role](https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/cost-monitoring.tf)
+  called `jupyterhub_cost_monitoring_iam_role` is created using terraform in order to grant the necessary permissions for accessing the Cost Explorer
+  API.
 
-1. JupyterHub Cost Monitoring
+### 2. JupyterHub Cost Monitoring
 
-A [Python-based web
-server](https://github.com/2i2c-org/jupyterhub-cost-monitoring/)
-is deployed to interact with the Cost Explorer API. It retrieves cost data
-from the AWS Cost Explorer API and serves it as JSON for Grafana to consume.
+  A [Python-based web
+  server](https://github.com/2i2c-org/jupyterhub-cost-monitoring/)
+  is deployed to interact with the Cost Explorer API. It retrieves cost data
+  from the AWS Cost Explorer API and serves it as JSON for Grafana to consume.
 
-1. Grafana Integration
+  The helm deployment is unconditionally enabled, unless explicitly overridden in the `config/clusters/<cluster_name>/support.values.yaml` file, and the configuration is automatically defined in the `helm-charts/support/values.jsonnet` file.
 
-A [custom dashboard](https://github.com/2i2c-org/infrastructure/tree/main/grafana-dashboards) is presently defined in the infrastructure repository (to be upstreamed to [jupyterhub/grafana-dashboards](https://github.com/jupyterhub/grafana-dashboards)).
+### 3.  Grafana Dashboard
 
-This enables Grafana to query the web server for cost data, allowing users to
-visualize and analyze cloud expenses directly within the Grafana interface.
+  A [custom dashboard](https://github.com/2i2c-org/infrastructure/tree/main/grafana-dashboards) is presently defined in the infrastructure repository (to be upstreamed to [jupyterhub/grafana-dashboards](https://github.com/jupyterhub/grafana-dashboards)).
 
-It
-[uses](https://github.com/2i2c-org/infrastructure/blob/48e06a02a411e31b03db2f30fd6a090b5f6eeeb5/helm-charts/support/values.yaml#L405-L406)
-the [Infinity Grafana
-plugin](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/)
-to serve JSON from AWS Cost Explorer API, for use by Grafana dashboard
-panels.
+  This enables Grafana to query the web server for cost data, allowing users to
+  visualize and analyze cloud expenses directly within the Grafana interface.
 
-## Technical implementation details
+  It
+  [uses](https://github.com/2i2c-org/infrastructure/blob/48e06a02a411e31b03db2f30fd6a090b5f6eeeb5/helm-charts/support/values.yaml#L405-L406)
+  the [Infinity Grafana
+  plugin](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/)
+  to serve JSON from AWS Cost Explorer API, for use by Grafana dashboard
+  panels.
 
-The system relies on _at least one of these tags_ to be on any cloud infra to
-attribute cost to.
+## Technical implementation
 
+The system relies on _at least one of these tags_ activated to track resource cost allocations:
+
+- `2i2c:hub-name`
+- `2i2c:node-purpose`
 - `2i2c.org/cluster-name`
 - `alpha.eksctl.io/cluster-name`
-- `kubernetes.io/cluster/<cluster name>`
+- `kubernetes.io/cluster/<cluster_name>`
+- `kubernetes.io/created-for/pvc/name`
+- `kubernetes.io/created-for/pvc/namespace`
 
 ```{important}
 Currently, on clusters that have a k8s version greater or equal with 1.30,
