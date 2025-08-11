@@ -37,5 +37,5 @@ filestores = {
 #  },
 {% endfor %}
 
-# Uncomment if aws.billing.active_cost_tags is true in cluster.yaml
+# Uncomment to enable cost monitoring
 # enable_jupyterhub_cost_monitoring = true
