@@ -10,12 +10,12 @@ Checkout the [topic guide](topic:billing:cost-monitoring) for more information o
 
 ### 1. Enable cost allocation tags
 
-Enabling cost allocation tags via terraform can be done for standalone AWS
-accounts, but not for member accounts part of an organization that we don't manage. Due to this, we'll provide separate ways of doing this depending on the situation.
+Enabling cost allocation tags via terraform can be done for AWS
+accounts that we have billing permissions for, but not for standalone accounts that communities manage themselves.
 
 `````{tab-set}
 
-````{tab-item} Standalone account
+````{tab-item} Standalone account with billing permissions
 :sync: standalone
 
 The relevant tags are already present in the terraform template used to generate
@@ -32,12 +32,10 @@ If the apply operation fails with the following errors:
 
 2. _Linked account doesn't have access to cost allocation tags._
 
-   This means the AWS account wasn't a standalone account, but a member account
-   after all. If the account isn't a member account 2i2c's AWS organization,
-   then its likely a member of a community's AWS organization.
+   This means we do not have billing permissions on the AWS account and is likely managed by a community (see Community-managed account).
 ````
 
-````{tab-item} Member account (2i2c org)
+````{tab-item} Member account (2i2c SSO)
 :sync: member-2i2c
 
 2i2c's AWS organization have all but one cost allocation tags activated already,
@@ -51,7 +49,7 @@ cluster very recently, come back in a few hours and try again.
 [cost allocation tags]: https://us-east-1.console.aws.amazon.com/billing/home?region=us-east-1#/tags
 ````
 
-````{tab-item} Member account (community org)
+````{tab-item} Community-managed account without billing permissions
 :sync: member-community
 
 We can't do this ourselves, but we can communicate instructions to the community
