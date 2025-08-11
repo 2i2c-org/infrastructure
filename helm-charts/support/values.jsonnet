@@ -1,7 +1,7 @@
-local cluster_name = std.extVar('2I2C_VARS.CLUSTER_NAME');
-local provider_name = std.extVar('2I2C_VARS.PROVIDER');
+local cluster_name = std.extVar('VARS_2I2C_CLUSTER_NAME');
+local provider_name = std.extVar('VARS_2I2C_PROVIDER');
 
-function(aws_account_id=null)
+function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   local makePVCApproachingFullAlert = function(
     name,
     summary,
@@ -129,7 +129,7 @@ function(aws_account_id=null)
     ],
   };
 
-  local configCostMonitoring = function(aws_account_id) {
+  local configCostMonitoring = function(VARS_2I2C_AWS_ACCOUNT_ID) {
     enabled: true,
     extraEnv: [
       {
@@ -140,7 +140,7 @@ function(aws_account_id=null)
     serviceAccount: {
       annotations: {
         // See terraform/aws/cost-monitoring.tf
-        'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_cost_monitoring_iam_role' % aws_account_id,
+        'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_cost_monitoring_iam_role' % VARS_2I2C_AWS_ACCOUNT_ID,
       },
     },
   };
@@ -225,5 +225,5 @@ function(aws_account_id=null)
         },
       },
     },
-    'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring(aws_account_id) else { enabled: false },
+    'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring(VARS_2I2C_AWS_ACCOUNT_ID) else { enabled: false },
   }
