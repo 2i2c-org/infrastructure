@@ -13,22 +13,20 @@ enable_aws_ce_grafana_backend_iam = true
 #       to setup scratch buckets for the hubs on this cluster.
 #
 
-
-filestores = {
+ebs_volumes = {
   "staging" = {
-    name_suffix = "staging",
-    tags        = { "2i2c:hub-name" : "staging" },
+    size        = 1
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
   },
-}
-
-filestores = {
   "prod" = {
-    name_suffix = "prod",
-    tags        = { "2i2c:hub-name" : "prod" },
+    size        = 100 # in GB 
+    type        = "gp3"
+    name_suffix = "prod"
+    tags        = { "2i2c:hub-name" : "prod" }
   },
 }
-
-
 
 # "scratch-staging" : {
 #   "delete_after" : 7,
@@ -65,3 +63,4 @@ filestores = {
 #   "kubernetes.io/cluster/{var_cluster_name}",
 #   "kubernetes.io/created-for/pvc/namespace",
 # ]
+
