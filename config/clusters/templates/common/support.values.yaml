@@ -43,4 +43,3 @@ cluster-autoscaler:
 
 calico:
   enabled: true
-{% endif %}
