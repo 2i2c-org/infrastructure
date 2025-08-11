@@ -44,3 +44,6 @@ prometheus:
 
 calico:
   enabled: true
+
+jupyterhub-cost-monitoring:
+  enabled: false
