@@ -37,7 +37,7 @@ aws-ce-grafana-backend:
     clusterName: temple
   serviceAccount:
     annotations:
-      eks.amazonaws.com/role-arn: <output of `terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation`>
+      eks.amazonaws.com/role-arn: arn:aws:iam::324830304144:role/aws_ce_grafana_backend_iam_role
 
 cluster-autoscaler:
   enabled: true
