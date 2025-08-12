@@ -1,0 +1,37 @@
+name: temple
+provider: aws # https://2i2c.awsapps.com/start#/
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: temple
+  region: us-west-2
+  billing:
+    paid_by_us: true
+support:
+  helm_chart_values_files:
+  - support.values.yaml
+  - enc-support.secret.values.yaml
+hubs: []
+  # Uncomment the lines below once the support infrastructure was deployed and
+  # you are ready to add the first cluster
+
+
+  # - name: staging
+  #   # Tip: consider changing this to something more human friendly
+  #   display_name: "temple - staging"
+  #   domain: staging.temple.2i2c.cloud
+  #   helm_chart: basehub
+  #   helm_chart_values_files:
+  #     - common.values.yaml
+  #     - staging.values.yaml
+  #     - enc-staging.secret.values.yaml
+
+  # - name: prod
+  #   # Tip: consider changing this to something more human friendly
+  #   display_name: "temple - prod"
+  #   domain: prod.temple.2i2c.cloud
+  #   helm_chart: basehub
+  #   helm_chart_values_files:
+  #     - common.values.yaml
+  #     - prod.values.yaml
+  #     - enc-prod.secret.values.yaml
