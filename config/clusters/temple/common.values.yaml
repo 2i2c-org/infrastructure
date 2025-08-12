@@ -69,7 +69,7 @@ jupyterhub:
         image:
           display_name: Image
           dynamic_image_building:
-            enabled: false
+            enabled: true
           unlisted_choice:
             enabled: true
             display_name: Custom image
@@ -128,3 +128,23 @@ jupyterhub:
   scheduling:
     userScheduler:
       enabled: true
+
+binderhub-service:
+  enabled: true
+    # Explicitly specify what nodes we want for our builds
+    # Otherwise we may scale up a larger node than needed
+  networkPolicy:
+    enabled: true
+  dockerApi:
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        node.kubernetes.io/instance-type: r5.xlarge
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
