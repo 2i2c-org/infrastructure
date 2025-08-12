@@ -7,17 +7,17 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: '10' # in GB
   eks:
-    volumeId: vol-09652a5540fdbd50f
+    volumeId: vol-0b5fc915293bd5bec
 jupyterhub:
   hub:
     config:
       CILogonOAuthenticator:
-        oauth_callback_url: https://staging.temple.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
   singleuser:
     nodeSelector:
-      2i2c/hub-name: staging
+      2i2c/hub-name: prod
   ingress:
-    hosts: [staging.temple.2i2c.cloud]
+    hosts: [temple.2i2c.cloud]
     tls:
-    - hosts: [staging.temple.2i2c.cloud]
+    - hosts: [temple.2i2c.cloud]
       secretName: https-auto-tls
