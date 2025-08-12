@@ -1,6 +1,7 @@
 #If the hub is a daskhub, please indent everything under a basehub key
 #basehub:
 nfs:
+  enabled: false
   pv:
     serverIP: 10.100.162.19
 jupyterhub-home-nfs:
