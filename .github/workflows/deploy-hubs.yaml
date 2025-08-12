@@ -241,6 +241,7 @@ jobs:
       failure_utoronto: ${{ steps.declare-failure.outputs.failure_utoronto }}
       failure_victor: ${{ steps.declare-failure.outputs.failure_victor }}
       failure_berkeley_geojupyter: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter }}
+      failure_temple: ${{ steps.declare-failure.outputs.failure_temple }}
 
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -484,6 +485,7 @@ jobs:
       failure_utoronto_r-staging: ${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
       failure_berkeley_geojupyter_staging: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter_staging }}
+      failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
 
     steps:
     - uses: actions/checkout@v4
