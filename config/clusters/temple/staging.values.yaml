@@ -1,0 +1,23 @@
+#If the hub is a daskhub, please indent everything under a basehub key
+#basehub:
+nfs:
+  pv:
+    serverIP: 192.168.1.1
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    hardQuota: '10' # in GB
+  eks:
+    volumeId: vol-09652a5540fdbd50f
+jupyterhub:
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
+  ingress:
+    hosts: [staging.temple.2i2c.cloud]
+    tls:
+    - hosts: [staging.temple.2i2c.cloud]
+      secretName: https-auto-tls

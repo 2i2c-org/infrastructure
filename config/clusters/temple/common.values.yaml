@@ -1,0 +1,61 @@
+#If the hub is a daskhub, please indent everything under a basehub key
+#basehub:
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
+    baseShareName: /
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: cilogon
+    homepage:
+      templateVars:
+        org:
+          name: Temple University JupyterHub
+          logo_url: https://www.temple.edu/sites/all/modules/custom/tu_global/images/svg/temple-logo-t-box.svg
+          url: https://www.temple.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: Temple University
+          url: https://www.temple.edu/
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          https://fim.temple.edu/idp/shibboleth:
+            default: true
+            username_derivation:
+              username_claim: eppn
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - jmsmith1@temple.edu
+        allowed_users:
+        - georgianaelena@2i2c.org
+        allow_existing_users: true
+
+  scheduling:
+    userScheduler:
+      enabled: true
