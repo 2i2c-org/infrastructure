@@ -48,7 +48,7 @@
         # Unset leaky PYTHONPATH
         unset PYTHONPATH
 
-        local __hash=$(command -v python | sha256sum)
+        __hash=$(echo ${python.interpreter} | sha256sum)
 
         # Setup if not defined ####
         if [[ ! -f ".venv/$__hash" ]]; then
