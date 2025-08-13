@@ -27,6 +27,6 @@ jupyterhub:
       # Put everything on the most appropriate instance type for these users
       node.kubernetes.io/instance-type: n2-highmem-4
 jupyterhub-home-nfs:
-  enabled: false
+  enabled: true
   gke:
-    enabled: false
+    enabled: true
