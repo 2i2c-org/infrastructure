@@ -42,8 +42,9 @@ jupyterhub:
     defaultUrl: /lab/tree/climaterisk/book/Startup.ipynb
     image:
       name: quay.io/2i2c/sciencecore-climaterisk-image
-      tag: 09c3a11f1698
+      tag: 08ac55553c5e
     extraEnv:
+      R2D_ENTRYPOINT: /home/jovyan/climaterisk/start
       GH_SCOPED_CREDS_CLIENT_ID: Iv23lijUItbe0FgDL5Dr
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/climaterisk-gh-scoped-creds
     nodeSelector:
