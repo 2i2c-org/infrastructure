@@ -12,7 +12,7 @@ jupyterhub:
       limit: 1.5G
     image:
       name: quay.io/ccsf/jupyterhub
-      tag: fa25
+      tag: 713e5d27350e
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
