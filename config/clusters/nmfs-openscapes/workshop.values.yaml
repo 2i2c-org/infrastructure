@@ -85,11 +85,6 @@ jupyterhub:
               slug: python
               kubespawner_override:
                 image: openscapes/python:07980b9
-            pyrbase:
-              display_name: Py-R - py-rocket-base image 4.4-3.10
-              slug: pyrbase
-              kubespawner_override:
-                image: ghcr.io/nmfs-opensci/py-rocket-base:latest
             cefi:
               display_name: Py-R - CEFI image latest
               slug: cefi
@@ -106,6 +101,11 @@ jupyterhub:
               default: true
               kubespawner_override:
                 image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
+            ohw:
+              display_name: OceanHackWeek latest
+              slug: ohw
+              kubespawner_override:
+                image: ghcr.io/oceanhackweek/python:latest
             coastwatch:
               display_name: Py-R - CoastWatch - coastwatch latest
               slug: coastwatch
@@ -139,7 +139,7 @@ jupyterhub:
               display_name: Py - PACE image with OCSSW tools
               slug: pace
               kubespawner_override:
-                image: quay.io/pacehackweek/pace-2024:latest
+                image: ghcr.io/nasa/oceandata-notebooks:912dae9bd439
           unlisted_choice:
             enabled: true
             display_name: Custom image
