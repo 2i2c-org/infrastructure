@@ -4,6 +4,7 @@ Actions available provisioning credentials to deploy against Kubernetes clusters
 
 import os
 import subprocess
+from pathlib import Path
 
 import typer
 from ruamel.yaml import YAML
@@ -14,6 +15,13 @@ from deployer.infra_components.cluster import Cluster
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
+
+
+def ensure_single_kubeconfig_context():
+    if "KUBECONFIG" in os.environ or (Path.home() / ".kube" / "config").exists():
+        raise RuntimeError(
+            "Attempting to create a nested KUBECONFIG context, which has been explicitly forbidden by the presence of the DEPLOYER_NO_NESTED_KUBECONFIG environment variable."
+        )
 
 
 @app.command()
@@ -27,10 +35,9 @@ def use_cluster_credentials(
     """
     Pop a new shell or execute a command after authenticating to the given cluster using the deployer's credentials
     """
-    if "DEPLOYER_NO_NESTED_KUBECONFIG" in os.environ and "KUBECONFIG" in os.environ:
-        raise RuntimeError(
-            "Attempting to create a nested KUBECONFIG context, which has been explicitly forbidden by the presence of the DEPLOYER_NO_NESTED_KUBECONFIG environment variable."
-        )
+    if "DEPLOYER_NO_NESTED_KUBECONFIG" in os.environ:
+        ensure_single_kubeconfig_context()
+
     # This function is to be used with the `use-cluster-credentials` CLI
     # command only - it is not used by the rest of the deployer codebase.
     validate_cluster_config(cluster_name)
