@@ -79,6 +79,7 @@ In order for 2i2c to enable the cloud cost monitoring feature for your community
    - kubernetes.io/cluster/<cluster_name>
    - kubernetes.io/created-for/pvc/name
    - kubernetes.io/created-for/pvc/namespace
+   - Name
 ```
 ````
 
