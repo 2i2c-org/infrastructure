@@ -65,6 +65,7 @@ locals {
     "kubernetes.io/cluster/{var_cluster_name}",
     "kubernetes.io/created-for/pvc/name",
     "kubernetes.io/created-for/pvc/namespace",
+    "Name",
   ] : []
 }
 
