@@ -37,6 +37,10 @@ def use_cluster_credentials(
     """
     Pop a new shell or execute a command after authenticating to the given cluster using the deployer's credentials
     """
+    if "DEPLOYER_NO_NESTED_KUBECONFIG" in os.environ and "KUBECONFIG" in os.environ:
+        raise RuntimeError(
+            "Attempting to create a nested KUBECONFIG context, which has been explicitly forbidden by the presence of the DEPLOYER_NO_NESTED_KUBECONFIG environment variable."
+        )
     # This function is to be used with the `use-cluster-credentials` CLI
     # command only - it is not used by the rest of the deployer codebase.
     validate_cluster_config(cluster_name)

@@ -9,6 +9,7 @@ on:
     - deployer/**
     - '!deployer/README.md'
     - '!deployer/health_check_tests/**'
+    - '!deployer/commands/develop/**'
     - '!deployer/commands/generate/billing/**'
     - '!deployer/commands/generate/dedicated_cluster/**'
     - '!deployer/commands/generate/hub_asset/**'
