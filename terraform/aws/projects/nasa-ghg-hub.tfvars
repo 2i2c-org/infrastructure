@@ -6,8 +6,6 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_aws_ce_grafana_backend_iam = true
-
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,

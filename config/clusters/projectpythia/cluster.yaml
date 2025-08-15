@@ -1,11 +1,13 @@
 name: projectpythia
 provider: aws # https://590183926898.signin.aws.amazon.com/console
 aws:
+  account: 590183926898
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: projectpythia
   region: us-west-2
   billing:
+    active_cost_tags: false
     paid_by_us: false
 support:
   helm_chart_values_files:
