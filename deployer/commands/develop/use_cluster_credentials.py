@@ -18,7 +18,17 @@ yaml = YAML(typ="safe", pure=True)
 
 
 def ensure_single_kubeconfig_context():
-    if "KUBECONFIG" in os.environ or (Path.home() / ".kube" / "config").exists():
+    kubeconfig_path = Path.home() / ".kube" / "config"
+
+    if (
+        # Do not allow non-empty KUBECONFIG
+        os.environ.get("KUBECONFIG")
+        or (
+            # Do not allow non-empty kubectl config file
+            kubeconfig_path.exists()
+            and kubeconfig_path.stat().st_size > 0
+        )
+    ):
         raise RuntimeError(
             "Attempting to create a nested KUBECONFIG context, which has been explicitly forbidden by the presence of the DEPLOYER_NO_NESTED_KUBECONFIG environment variable."
         )
