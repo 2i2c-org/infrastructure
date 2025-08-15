@@ -22,8 +22,3 @@ charts:
           REQUIREMENTS_FILE: pkce-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
-  - name: aws-ce-grafana-backend
-    images:
-      aws-ce-grafana-backend:
-        imageName: quay.io/2i2c/aws-ce-grafana-backend
-        valuesPath: image

@@ -14,7 +14,6 @@ required:
   - cryptnono
   - redirects
   - gcpFilestoreBackups
-  - aws-ce-grafana-backend
   - jupyterhub-cost-monitoring
   - global
 properties:
@@ -29,9 +28,6 @@ properties:
     type: object
     additionalProperties: true
   grafana:
-    type: object
-    additionalProperties: true
-  aws-ce-grafana-backend:
     type: object
     additionalProperties: true
   jupyterhub-cost-monitoring:

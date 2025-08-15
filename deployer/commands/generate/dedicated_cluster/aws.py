@@ -112,9 +112,13 @@ def aws(
     cluster_region: str = typer.Option(
         ..., prompt="The region where to deploy the cluster"
     ),
-    account_id: str = typer.Option(
+    account_id: int = typer.Option(
         ...,
-        prompt="The AWS account id or alias. Declare 2i2c for 2i2c's SSO based accounts and paid_by_us=true",
+        prompt="The AWS account id (12 digits)",
+    ),
+    paid_by_us: bool = typer.Option(
+        ...,
+        prompt="Is this cluster paid by 2i2c?",
     ),
     hubs: str = typer.Option(
         "staging",
@@ -139,12 +143,10 @@ def aws(
     Use --force to force existing configuration files to be overwritten by this command.
     """
 
-    if account_id == "2i2c":
+    if paid_by_us:
         sign_in_url = "https://2i2c.awsapps.com/start#/"
-        paid_by_us = True
     else:
         sign_in_url = f"https://{account_id}.signin.aws.amazon.com/console"
-        paid_by_us = False
 
     # These are the variables needed by the templates used to generate the cluster config file
     # and support files
@@ -152,6 +154,7 @@ def aws(
         # Also store the provider, as it's useful for some jinja templates
         # to differentiate between them when rendering the configuration
         "provider": "aws",
+        "cluster_account_id": account_id,
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
         "hubs": hubs.replace(

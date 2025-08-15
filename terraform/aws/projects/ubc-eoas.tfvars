@@ -2,7 +2,7 @@ region                 = "ca-central-1"
 cluster_name           = "ubc-eoas"
 cluster_nodes_location = "ca-central-1a"
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring = true
 disable_cluster_wide_filestore    = true
 
 ebs_volumes = {
