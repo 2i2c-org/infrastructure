@@ -7,7 +7,6 @@ aws:
   clusterName: nmfs-openscapes
   region: us-west-2
   billing:
-    active_cost_tags: true
     paid_by_us: false
 support:
   helm_chart_values_files:
