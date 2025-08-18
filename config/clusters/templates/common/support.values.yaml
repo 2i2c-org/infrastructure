@@ -35,6 +35,7 @@ grafana:
         hosts:
           - grafana.{{ cluster_name }}.2i2c.cloud
 
+{% if provider == "aws" %}
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
@@ -43,3 +44,4 @@ cluster-autoscaler:
 
 calico:
   enabled: true
+{% endif %}
