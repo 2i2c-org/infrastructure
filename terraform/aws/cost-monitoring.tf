@@ -60,6 +60,7 @@ locals {
   cost_allocation_tags = var.enable_jupyterhub_cost_monitoring ? [
     "2i2c:hub-name",
     "2i2c:node-purpose",
+    "2i2c:volume-purpose",
     "2i2c.org/cluster-name",
     "alpha.eksctl.io/cluster-name",
     "kubernetes.io/cluster/{var_cluster_name}",
