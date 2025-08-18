@@ -16,7 +16,7 @@ persistent_disks = {
     name_suffix = "authoring"
   }
   "bcc" = {
-    size        = 1
+    size        = 2
     name_suffix = "bcc"
   }
   "ccsf" = {
@@ -24,7 +24,7 @@ persistent_disks = {
     name_suffix = "ccsf"
   }
   "chabot" = {
-    size        = 1
+    size        = 2
     name_suffix = "chabot"
   }
   "chaffey" = {
