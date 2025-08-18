@@ -195,6 +195,10 @@ persistent_disks = {
     size        = 3
     name_suffix = "ucsc"
   }
+  "unr" = {
+    size        = 10
+    name_suffix = "unr"
+  }
   "wlac" = {
     size        = 8
     name_suffix = "wlac"
