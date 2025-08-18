@@ -180,13 +180,8 @@ properties:
         type: object
         additionalProperties: false
         required:
-        - active_cost_tags
         - paid_by_us
         properties:
-          active_cost_tags:
-            type: boolean
-            description: |
-              Set to true if cloud cost allocation tags are activated. Tags are activated programmatically with terraform for AWS accounts we manage. For other AWS accounts, we need communities to manually activate tags on our behalf.
           paid_by_us:
             type: boolean
             description: |
