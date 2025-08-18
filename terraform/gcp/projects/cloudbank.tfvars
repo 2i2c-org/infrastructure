@@ -28,7 +28,7 @@ persistent_disks = {
     name_suffix = "chabot"
   }
   "chaffey" = {
-    size        = 1
+    size        = 3
     name_suffix = "chaffey"
   }
   "csm" = {
