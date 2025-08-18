@@ -72,6 +72,8 @@ jupyterhub:
             - blakeschool.org
             - scusd.net
             - peddie.org
+            - boiseschools.org
+            - boiseschools.net
       Authenticator:
         admin_users: []
         enable_auth_state: false
