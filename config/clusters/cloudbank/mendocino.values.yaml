@@ -47,3 +47,7 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-mendocino
+nfs:
+  pv:
+    serverIP: 10.3.247.27
+    baseShareName: /
