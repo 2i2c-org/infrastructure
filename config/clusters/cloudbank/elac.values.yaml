@@ -69,3 +69,7 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-elac
+nfs:
+  pv:
+    serverIP: 10.3.245.195
+    baseShareName: /
