@@ -1,8 +1,8 @@
 jupyterhub:
   ingress:
-    hosts: [bcc.cloudbank.2i2c.cloud]
+    hosts: [unr.cloudbank.2i2c.cloud]
     tls:
-    - hosts: [bcc.cloudbank.2i2c.cloud]
+    - hosts: [unr.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
     memory:
@@ -10,6 +10,9 @@ jupyterhub:
       # https://2i2c.freshdesk.com/a/tickets/567
       guarantee: 384M
       limit: 1.5G
+    image:
+      name: quay.io/2i2c/cloudbank-data8-image
+      tag: e0390051a2d9
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -26,36 +29,30 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.berkeleycitycollege.edu/hubfs/BCC%20Images/logos/logo-berkeley-city-college-full-color.svg
-          name: Berkeley City College
-          url: https://www.berkeleycitycollege.edu/
+          logo_url: https://www.unr.edu/Assets/Icons/logos/university-logo.svg
+          name: University of Nevada, Reno
+          url: https://www.unr.edu/
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://bcc.cloudbank.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://unr.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+          https://idp2.unr.edu/idp/shibboleth:
             default: true
             username_derivation:
               username_claim: email
             allowed_domains:
-            - cc.peralta.edu
-            - peralta.edu
+            - unr.edu
           http://google.com/accounts/o8/id:
-            default: true
             username_derivation:
               username_claim: email
       Authenticator:
         admin_users:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
-        - jeronimoperez@peralta.edu
+        - tmckim@unr.edu
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-bcc
-nfs:
-  pv:
-    serverIP: 10.3.245.236
-    baseShareName: /
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-evc

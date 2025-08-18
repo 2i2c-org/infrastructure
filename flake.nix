@@ -48,8 +48,10 @@
         # Unset leaky PYTHONPATH
         unset PYTHONPATH
 
+        __hash=$(echo ${python.interpreter} | sha256sum)
+
         # Setup if not defined ####
-        if [[ ! ( -d ".venv" && -f ".venv/marker" ) ]]; then
+        if [[ ! -f ".venv/$__hash" ]]; then
             __setup_env() {
                 # Remove existing venv
                 if [[ -d .venv ]]; then
@@ -62,7 +64,7 @@
                 ".venv/bin/python" -m pip install -e ".[dev]"
 
                 # Add a marker that marks this venv as "ready"
-                touch .venv/marker
+                touch ".venv/$__hash"
             }
 
             __setup_env

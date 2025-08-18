@@ -4,6 +4,7 @@ import deployer.commands.cilogon  # noqa: F401
 import deployer.commands.config.get_clusters  # noqa: F401
 import deployer.commands.debug  # noqa: F401
 import deployer.commands.deployer  # noqa: F401
+import deployer.commands.develop.use_cluster_credentials  # noqa: F401
 import deployer.commands.exec.aws.aws_app  # noqa: F401
 import deployer.commands.exec.infra_components  # noqa: F401
 import deployer.commands.exec.promql  # noqa: F401

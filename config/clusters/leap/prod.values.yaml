@@ -11,7 +11,7 @@ dask-gateway:
 basehub:
   nfs:
     pv:
-      serverIP: 10.3.250.100
+      serverIP: 10.3.248.134
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: leap-prod@leap-pangeo.iam.gserviceaccount.com
