@@ -7,5 +7,5 @@ This documentation covers tasks relating to budgeting and billing of 2i2c hubs.
 :maxdepth: 2
 bill
 budget-alerts
-cost-monitoring/index
+cost-attribution/index
 ```

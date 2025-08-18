@@ -10,5 +10,5 @@ accounts
 reports
 tools
 budget-alerts
-cost-monitoring-system
+cost-attribution-system
 ```
