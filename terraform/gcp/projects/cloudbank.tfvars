@@ -28,7 +28,7 @@ persistent_disks = {
     name_suffix = "chabot"
   }
   "chaffey" = {
-    size        = 1
+    size        = 3
     name_suffix = "chaffey"
   }
   "csm" = {
@@ -194,6 +194,10 @@ persistent_disks = {
   "ucsc" = {
     size        = 3
     name_suffix = "ucsc"
+  }
+  "unr" = {
+    size        = 10
+    name_suffix = "unr"
   }
   "wlac" = {
     size        = 8
