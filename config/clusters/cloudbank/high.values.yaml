@@ -14,7 +14,7 @@ jupyterhub:
       limit: 2
     image:
       name: quay.io/ccsf/jupyterhub
-      tag: 7f20a5d6ab92
+      tag: 143569ff145d
     initContainers:
     - name: volume-mount-ownership-fix
       image: busybox:1.36.1
