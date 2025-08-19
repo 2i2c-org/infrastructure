@@ -158,7 +158,7 @@ local daskNodes = [
       'earthscope:application:name': 'geolab',
       'earthscope:application:owner': 'research-onramp-to-the-cloud',
     },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
+    instancesDistribution+: { instanceTypes: ['r5.4xlarge', 'r6i.4xlarge', 'r7i.4xlarge'] },
   },
   {
     namePrefix: 'dask-prod',
@@ -168,7 +168,7 @@ local daskNodes = [
       'earthscope:application:name': 'geolab',
       'earthscope:application:owner': 'research-onramp-to-the-cloud',
     },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
+    instancesDistribution+: { instanceTypes: ['r5.4xlarge', 'r6i.4xlarge', 'r7i.4xlarge'] },
   },
 ];
 
