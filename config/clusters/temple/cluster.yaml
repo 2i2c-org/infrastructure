@@ -1,6 +1,7 @@
 name: temple
 provider: aws # https://2i2c.awsapps.com/start#/
 aws:
+  account: 324830304144
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: temple
