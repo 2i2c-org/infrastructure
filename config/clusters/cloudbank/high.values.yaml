@@ -13,8 +13,8 @@ jupyterhub:
       guarantee: 1
       limit: 2
     image:
-      name: quay.io/sean_smorris/ccsf-user-image
-      tag: latest
+      name: quay.io/ccsf/jupyterhub
+      tag: 7f20a5d6ab92
     initContainers:
     - name: volume-mount-ownership-fix
       image: busybox:1.36.1
