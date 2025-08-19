@@ -12,6 +12,9 @@ jupyterhub:
     cpu:
       guarantee: 1
       limit: 2
+    image:
+      name: quay.io/ccsf/jupyterhub
+      tag: 143569ff145d
     initContainers:
     - name: volume-mount-ownership-fix
       image: busybox:1.36.1
@@ -72,9 +75,15 @@ jupyterhub:
             - blakeschool.org
             - scusd.net
             - peddie.org
+            - boiseschools.org
+            - boiseschools.net
       Authenticator:
         admin_users: []
         enable_auth_state: false
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-high
+nfs:
+  pv:
+    serverIP: 10.3.254.163
+    baseShareName: /

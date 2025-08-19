@@ -146,12 +146,17 @@ jupyterhub:
               display_name: Py - PACE image with OCSSW tools
               slug: pace
               kubespawner_override:
-                image: quay.io/pacehackweek/pace-2024:latest
+                image: ghcr.io/nasa/oceandata-notebooks:latest
             pangeoml:
               display_name: Pangeo ML with TensorFlow
               slug: pangeoml
               kubespawner_override:
                 image: quay.io/pangeo/ml-notebook:2025.05.22
+            ohw:
+              display_name: OceanHackWeek latest
+              slug: ohw
+              kubespawner_override:
+                image: ghcr.io/oceanhackweek/python:latest
           unlisted_choice:
             enabled: true
             display_name: Custom image
