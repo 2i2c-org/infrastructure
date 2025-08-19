@@ -1,6 +1,7 @@
 name: berkeley-geojupyter
 provider: aws # https://2i2c.awsapps.com/start#/
 aws:
+  account: 622703418259
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: berkeley-geojupyter

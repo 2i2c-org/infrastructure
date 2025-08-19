@@ -1,6 +1,9 @@
+// Cost monitoring resources for IAM role and cost allocation tags.
+// Note: if the name of the IAM role is changed, then update the config in helm-charts/support/values.jsonnet for the k8s service account annotation.
+
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "jupyterhub_cost_monitoring_iam_role" {
-  count = var.enable_jupyterhub_cost_monitoring_iam ? 1 : 0
+  count = var.enable_jupyterhub_cost_monitoring ? 1 : 0
 
   name = "jupyterhub_cost_monitoring_iam_role"
 
@@ -23,7 +26,7 @@ resource "aws_iam_role" "jupyterhub_cost_monitoring_iam_role" {
 }
 
 resource "aws_iam_role_policy" "jupyterhub_cost_monitoring_iam_policy" {
-  count = var.enable_jupyterhub_cost_monitoring_iam ? 1 : 0
+  count = var.enable_jupyterhub_cost_monitoring ? 1 : 0
   name  = "jupyterhub_cost_monitoring_iam_policy"
   role  = aws_iam_role.jupyterhub_cost_monitoring_iam_role[count.index].name
   # ref: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awscostexplorerservice.html
@@ -43,11 +46,33 @@ resource "aws_iam_role_policy" "jupyterhub_cost_monitoring_iam_policy" {
 }
 
 resource "aws_iam_role_policies_exclusive" "jupyterhub_cost_monitoring_iam_role_policies_exclusive" {
-  count        = var.enable_jupyterhub_cost_monitoring_iam ? 1 : 0
+  count        = var.enable_jupyterhub_cost_monitoring ? 1 : 0
   role_name    = aws_iam_role.jupyterhub_cost_monitoring_iam_role[count.index].name
   policy_names = [aws_iam_role_policy.jupyterhub_cost_monitoring_iam_policy[count.index].name]
 }
 
 output "jupyterhub_cost_monitoring_k8s_sa_annotation" {
-  value = var.enable_jupyterhub_cost_monitoring_iam ? "eks.amazonaws.com/role-arn: ${aws_iam_role.jupyterhub_cost_monitoring_iam_role[0].arn}" : null
+  value = var.enable_jupyterhub_cost_monitoring ? "eks.amazonaws.com/role-arn: ${aws_iam_role.jupyterhub_cost_monitoring_iam_role[0].arn}" : null
+}
+
+# If enable_jupyterhub_cost_monitoring = true, then provide active cost allocation tags for the AWS Cost Explorer. Can take up to 24 hours to activate after being applied to a resource.
+locals {
+  cost_allocation_tags = var.enable_jupyterhub_cost_monitoring ? [
+    "2i2c:hub-name",
+    "2i2c:node-purpose",
+    "2i2c:volume-purpose",
+    "2i2c.org/cluster-name",
+    "alpha.eksctl.io/cluster-name",
+    "kubernetes.io/cluster/{var_cluster_name}",
+    "kubernetes.io/created-for/pvc/name",
+    "kubernetes.io/created-for/pvc/namespace",
+  ] : []
+}
+
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ce_cost_allocation_tag
+resource "aws_ce_cost_allocation_tag" "cost_allocation_tags" {
+  for_each = toset(local.cost_allocation_tags)
+
+  tag_key = replace(each.key, "{var_cluster_name}", var.cluster_name)
+  status  = "Active"
 }

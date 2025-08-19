@@ -1,6 +1,7 @@
 name: {{ cluster_name }}
 provider: aws # {{ sign_in_url }}
 aws:
+  account: {{ cluster_account_id }}
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: {{ cluster_name }}

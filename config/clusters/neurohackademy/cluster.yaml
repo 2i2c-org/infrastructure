@@ -1,6 +1,7 @@
 name: neurohackademy
 provider: aws # https://2i2c.awsapps.com/start#/
 aws:
+  account: 181398284065
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: neurohackademy

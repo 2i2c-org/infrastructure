@@ -171,8 +171,21 @@ class Cluster:
             for values_file in values_files:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
+                    render_args = {
+                        "jsonnet_file": Path(values_file),
+                        "provider": self.spec["provider"],
+                        "cluster_name": (
+                            self.spec["aws"]["clusterName"]
+                            if self.spec["provider"] == "aws"
+                            else self.spec["name"]
+                        ),
+                    }
+                    if self.spec["provider"] == "aws":
+                        render_args["aws_account_id"] = self.spec["aws"]["account"]
+                    else:
+                        render_args["aws_account_id"] = None
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(Path(values_file), self.spec["name"], None)
+                        render_jsonnet(**render_args)
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:

@@ -1,6 +1,7 @@
 name: catalystproject-africa
 provider: aws # https://2i2c.awsapps.com/start#/
 aws:
+  account: 495928966746
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: catalystproject-africa

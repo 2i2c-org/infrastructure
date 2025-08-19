@@ -231,7 +231,7 @@ jobs:
       failure_nasa-veda: ${{ steps.declare-failure.outputs.failure_nasa-veda }}
       failure_neurohackademy: ${{ steps.declare-failure.outputs.failure_neurohackademy }}
       failure_nmfs-openscapes: ${{ steps.declare-failure.outputs.failure_nmfs-openscapes }}
-      failure_openscapes: ${{ steps.declare-failure.outputs.failure_openscapes }}
+      failure_openscapeshub: ${{ steps.declare-failure.outputs.failure_openscapeshub }}
       failure_opensci: ${{ steps.declare-failure.outputs.failure_opensci }}
       failure_projectpythia: ${{ steps.declare-failure.outputs.failure_projectpythia }}
       failure_reflective: ${{ steps.declare-failure.outputs.failure_reflective }}
@@ -469,11 +469,11 @@ jobs:
       failure_leap_staging: ${{ steps.declare-failure.outputs.failure_leap_staging }}
       failure_maap_staging: ${{ steps.declare-failure.outputs.failure_maap_staging }}
       failure_nasa-cryo_staging: ${{ steps.declare-failure.outputs.failure_nasa-cryo_staging }}
-      failure_nasa-ghg_staging: ${{ steps.declare-failure.outputs.failure_nasa-ghg_staging }}
+      failure_nasa-ghg-hub_staging: ${{ steps.declare-failure.outputs.failure_nasa-ghg-hub_staging }}
       failure_nasa-veda_staging: ${{ steps.declare-failure.outputs.failure_nasa-veda_staging }}
       failure_neurohackademy_staging: ${{ steps.declare-failure.outputs.failure_neurohackademy_staging }}
       failure_nmfs-openscapes_staging: ${{ steps.declare-failure.outputs.failure_nmfs-openscapes_staging }}
-      failure_openscapes_staging: ${{ steps.declare-failure.outputs.failure_openscapes_staging }}
+      failure_openscapeshub_staging: ${{ steps.declare-failure.outputs.failure_openscapeshub_staging }}
       failure_opensci_staging: ${{ steps.declare-failure.outputs.failure_opensci_staging }}
       failure_projectpythia_staging: ${{ steps.declare-failure.outputs.failure_projectpythia_staging }}
       failure_reflective_staging: ${{ steps.declare-failure.outputs.failure_reflective_staging }}
