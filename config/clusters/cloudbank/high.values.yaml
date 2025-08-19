@@ -12,9 +12,6 @@ jupyterhub:
     cpu:
       guarantee: 1
       limit: 2
-    image:
-      name: quay.io/sean_smorris/ccsf-user-image
-      tag: latest
     initContainers:
     - name: volume-mount-ownership-fix
       image: busybox:1.36.1
