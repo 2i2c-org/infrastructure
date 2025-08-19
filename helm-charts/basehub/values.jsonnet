@@ -1,4 +1,4 @@
-local hub_name = std.extVar('2I2C_VARS.HUB_NAME');
+local hub_name = std.extVar('VARS_2I2C_HUB_NAME');
 
 // Assume we are a staging hub if the word 'staging' is in the
 // name of the hub.
