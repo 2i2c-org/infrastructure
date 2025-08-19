@@ -37,7 +37,7 @@ jobs:
           ### Context
           AWS credentials for our hub deployer must be renewed for the following clusters:
           - [ ] nasa-veda
-          - [ ] nasa-ghg
+          - [ ] nasa-ghg-hub
           - [ ] maap
           - [ ] disasters
 

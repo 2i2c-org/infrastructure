@@ -1,6 +1,7 @@
 name: projectpythia
 provider: aws # https://590183926898.signin.aws.amazon.com/console
 aws:
+  account: 590183926898
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: projectpythia

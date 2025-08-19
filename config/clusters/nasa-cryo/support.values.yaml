@@ -33,13 +33,5 @@ prometheus:
         hosts:
         - prometheus.cryointhecloud.2i2c.cloud
 
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: nasa-cryo
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/aws_ce_grafana_backend_iam_role
-
 calico:
   enabled: true

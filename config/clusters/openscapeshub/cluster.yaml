@@ -1,10 +1,10 @@
-name: nasa-ghg
-provider: aws # https://smce-ghg-center.signin.aws.amazon.com/console
-account: smce-ghg-center
+name: openscapeshub
+provider: aws # https://783616723547.signin.aws.amazon.com/console
 aws:
+  account: 783616723547
   key: enc-deployer-credentials.secret.json
   clusterType: eks
-  clusterName: nasa-ghg-hub
+  clusterName: openscapeshub
   region: us-west-2
   billing:
     paid_by_us: false
@@ -14,8 +14,8 @@ support:
   - enc-support.secret.values.yaml
 hubs:
 - name: staging
-  display_name: NASA GHG Center (staging)
-  domain: staging.ghg.2i2c.cloud
+  display_name: Openscapes (staging)
+  domain: staging.openscapes.2i2c.cloud
   helm_chart: daskhub
   helm_chart_values_files:
   - common.values.yaml
@@ -23,18 +23,19 @@ hubs:
   - staging.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
-  display_name: NASA GHG Center (prod)
-  domain: hub.ghg.center
+  display_name: Openscapes (prod)
+  domain: openscapes.2i2c.cloud
   helm_chart: daskhub
   helm_chart_values_files:
   - common.values.yaml
   - enc-common.secret.values.yaml
   - prod.values.yaml
   - enc-prod.secret.values.yaml
-- name: binder
-  display_name: NASA GHG Center BinderHub
-  domain: binder.ghg.2i2c.cloud
-  helm_chart: basehub
+- name: workshop
+  display_name: Openscapes Workshop
+  domain: workshop.openscapes.2i2c.cloud
+  helm_chart: daskhub
   helm_chart_values_files:
-  - binder.values.yaml
-  - enc-binder.secret.values.yaml
+  - common.values.yaml
+  - workshop.values.yaml
+  - enc-workshop.secret.values.yaml

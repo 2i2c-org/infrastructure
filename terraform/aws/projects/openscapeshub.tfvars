@@ -6,9 +6,8 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_aws_ce_grafana_backend_iam     = false
-enable_jupyterhub_cost_monitoring_iam = true
-disable_cluster_wide_filestore        = true
+enable_jupyterhub_cost_monitoring = true
+disable_cluster_wide_filestore    = true
 
 # The initial EFS is now used by the prod hub only
 # So we tag it appropriately for costs purposes
@@ -89,13 +88,3 @@ hub_cloud_permissions = {
     ],
   },
 }
-
-active_cost_allocation_tags = [
-  "2i2c:hub-name",
-  "2i2c:node-purpose",
-  "2i2c.org/cluster-name",
-  "alpha.eksctl.io/cluster-name",
-  "kubernetes.io/cluster/{var_cluster_name}",
-  "kubernetes.io/created-for/pvc/name",
-  "kubernetes.io/created-for/pvc/namespace",
-]

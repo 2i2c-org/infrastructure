@@ -27,14 +27,6 @@ grafana:
       hosts:
       - grafana.projectpythia.2i2c.cloud
 
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: projectpythia
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::590183926898:role/aws_ce_grafana_backend_iam_role
-
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
@@ -43,3 +35,6 @@ cluster-autoscaler:
 
 calico:
   enabled: true
+
+jupyterhub-cost-monitoring:
+  enabled: false

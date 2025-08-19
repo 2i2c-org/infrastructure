@@ -2,7 +2,7 @@ region                 = "af-south-1"
 cluster_name           = "catalystproject-africa"
 cluster_nodes_location = "af-south-1a"
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring = true
 disable_cluster_wide_filestore    = true
 
 user_buckets = {

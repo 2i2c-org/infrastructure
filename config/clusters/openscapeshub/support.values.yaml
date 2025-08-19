@@ -38,14 +38,5 @@ grafana:
       enabled: true
       allowed_organizations: 2i2c-org NASA-Openscapes
 
-jupyterhub-cost-monitoring:
-  enabled: true
-  extraEnv:
-  - name: CLUSTER_NAME
-    value: openscapeshub
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/jupyterhub_cost_monitoring_iam_role
-
 calico:
   enabled: true

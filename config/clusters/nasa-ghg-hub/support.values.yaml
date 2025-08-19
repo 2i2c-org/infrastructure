@@ -33,13 +33,8 @@ prometheus:
         hosts:
         - prometheus.nasa-ghg.2i2c.cloud
 
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: nasa-ghg-hub
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::597746869805:role/aws_ce_grafana_backend_iam_role
-
 calico:
   enabled: true
+
+jupyterhub-cost-monitoring:
+  enabled: false

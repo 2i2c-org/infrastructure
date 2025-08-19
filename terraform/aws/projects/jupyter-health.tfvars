@@ -2,7 +2,7 @@ region                 = "us-east-2"
 cluster_name           = "jupyter-health"
 cluster_nodes_location = "us-east-2a"
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring = true
 disable_cluster_wide_filestore    = true
 
 user_buckets = {
