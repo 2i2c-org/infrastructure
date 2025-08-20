@@ -76,6 +76,14 @@ hubs:
   - common.values.yaml
   - csum.values.yaml
   - enc-csum.secret.values.yaml
+- name: deanza
+  display_name: DeAnza College
+  domain: deanza.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - deanza.values.yaml
+  - enc-deanza.secret.values.yaml
 - name: demo
   display_name: Cloudbank demo
   domain: demo.cloudbank.2i2c.cloud
