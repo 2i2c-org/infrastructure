@@ -16,7 +16,7 @@ persistent_disks = {
     name_suffix = "authoring"
   }
   "bcc" = {
-    size        = 2
+    size        = 3
     name_suffix = "bcc"
   }
   "ccsf" = {
