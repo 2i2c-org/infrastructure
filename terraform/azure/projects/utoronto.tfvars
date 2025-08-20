@@ -18,7 +18,7 @@ storage_size                   = 17000
 ssh_pub_key                    = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJ4h39UYNi1wybxAH+jCFkNK2aqRcuhDkQSMx0Hak5xkbt3KnT3cOwAgUP1Vt/SjhltSTuxpOHxiAKCRnjwRk60SxKhUNzPHih2nkfYTmBBjmLfdepDPSke/E0VWvTDIEXz/L8vW8aI0QGPXnXyqzEDO9+U1buheBlxB0diFAD3vEp2SqBOw+z7UgrGxXPdP+2b3AV+X6sOtd6uSzpV8Qvdh+QAkd4r7h9JrkFvkrUzNFAGMjlTb0Lz7qAlo4ynjEwzVN2I1i7cVDKgsGz9ZG/8yZfXXx+INr9jYtYogNZ63ajKR/dfjNPovydhuz5zQvQyxpokJNsTqt1CiWEUNj georgiana@georgiana"
 
 # List available versions via: tf output latest_supported_k8s_versions
-kubernetes_version = "1.30.3"
+kubernetes_version = "1.33.2"
 
 # Ref https://github.com/2i2c-org/meta/issues/539
 kubernetes_rbac_enabled = false
@@ -54,6 +54,15 @@ node_pools = {
       name : "usere8sv5b",
       vm_size : "Standard_E8s_v5",
       os_disk_size_gb : 200,
+      min : 0,
+      max : 3,
+      kubernetes_version : "1.30.3"
+    },
+    {
+      name : "usere8sv5c",
+      vm_size : "Standard_E8s_v5",
+      os_disk_size_gb : 200,
+      kubelet_disk_type : "OS",
       min : 0,
       max : 100,
     },
