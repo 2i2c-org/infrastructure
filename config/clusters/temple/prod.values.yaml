@@ -12,12 +12,12 @@ jupyterhub:
   hub:
     config:
       CILogonOAuthenticator:
-        oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://advanced.temple.2i2c.cloud/hub/oauth_callback
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod
   ingress:
-    hosts: [temple.2i2c.cloud]
+    hosts: [advanced.temple.2i2c.cloud]
     tls:
-    - hosts: [temple.2i2c.cloud]
+    - hosts: [advanced.temple.2i2c.cloud]
       secretName: https-auto-tls

@@ -27,7 +27,7 @@ hubs:
 - name: prod
       # Tip: consider changing this to something more human friendly
   display_name: Temple University
-  domain: temple.2i2c.cloud
+  domain: advanced.temple.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
