@@ -56,7 +56,7 @@ node_pools = {
       os_disk_size_gb : 200,
       min : 0,
       max : 3,
-      kubernetes_version: "1.30.3"
+      kubernetes_version : "1.30.3"
     },
     {
       name : "usere8sv5c",
