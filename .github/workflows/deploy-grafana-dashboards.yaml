@@ -24,6 +24,7 @@ jobs:
         - cluster_name: 2i2c-jetstream2
         - cluster_name: 2i2c-uk
         - cluster_name: awi-ciroh
+        - cluster_name: berkeley_geojupyter
         - cluster_name: catalystproject-africa
         - cluster_name: catalystproject-latam
         - cluster_name: climatematch
