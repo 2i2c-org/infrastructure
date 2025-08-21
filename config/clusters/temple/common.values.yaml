@@ -57,6 +57,7 @@ jupyterhub:
       Authenticator:
         admin_users:
         - jmsmith1@temple.edu
+        - rebecca.beadling@temple.edu
         allowed_users:
         - georgianaelena@2i2c.org
         allow_existing_users: true
