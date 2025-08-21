@@ -51,14 +51,6 @@ node_pools = {
 
   user : [
     {
-      name : "usere8sv5b",
-      vm_size : "Standard_E8s_v5",
-      os_disk_size_gb : 200,
-      min : 0,
-      max : 3,
-      kubernetes_version : "1.30.3"
-    },
-    {
       name : "usere8sv5c",
       vm_size : "Standard_E8s_v5",
       os_disk_size_gb : 200,
