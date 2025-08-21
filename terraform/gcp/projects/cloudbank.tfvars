@@ -52,7 +52,7 @@ persistent_disks = {
     name_suffix = "elac"
   }
   "elcamino" = {
-    size        = 175
+    size        = 190
     name_suffix = "elcamino"
   }
   "evc" = {
