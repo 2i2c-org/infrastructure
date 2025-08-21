@@ -199,17 +199,10 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         'alerting_rules.yml': {
           groups: [
             makePVCApproachingFullAlert(
-              'Home directory has 20% space left',
-              'Home Directory Disk about to be full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
-              'home-nfs',
-              0.2,
-              'action needed this week',
-            ),
-            makePVCApproachingFullAlert(
-              'Home directory has 5% space left',
+              'Home directory has 10% space left',
               'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'home-nfs',
-              0.05,
+              0.1,
               'same day action needed',
             ),
             makePVCApproachingFullAlert(
