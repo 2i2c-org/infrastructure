@@ -21,3 +21,13 @@ jupyterhub:
     tls:
     - hosts: [staging.temple.2i2c.cloud]
       secretName: https-auto-tls
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: staging
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: staging
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-staging-
