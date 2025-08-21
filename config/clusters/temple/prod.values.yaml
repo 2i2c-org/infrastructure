@@ -1,0 +1,33 @@
+#If the hub is a daskhub, please indent everything under a basehub key
+#basehub:
+nfs:
+  pv:
+    serverIP: 10.100.117.245
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    hardQuota: '10' # in GB
+  eks:
+    volumeId: vol-0b5fc915293bd5bec
+jupyterhub:
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://advanced.temple.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: prod
+  ingress:
+    hosts: [advanced.temple.2i2c.cloud]
+    tls:
+    - hosts: [advanced.temple.2i2c.cloud]
+      secretName: https-auto-tls
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: prod
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: prod
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-prod-
