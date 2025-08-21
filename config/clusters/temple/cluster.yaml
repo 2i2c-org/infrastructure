@@ -26,7 +26,7 @@ hubs:
 
 - name: prod
       # Tip: consider changing this to something more human friendly
-  display_name: Temple University
+  display_name: Temple University (Advanced)
   domain: advanced.temple.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
