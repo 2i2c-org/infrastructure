@@ -83,7 +83,7 @@ jupyterhub:
               display_name: Data Science
               slug: regular-profile
               kubespawner_override:
-                image: quay.io/laserchemist/datascience:v13
+                image: docker.io/laserchemist/datascience:v13
         requests:
           display_name: Resource Allocation
           choices:
