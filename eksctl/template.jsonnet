@@ -115,6 +115,11 @@ local daskNodes = [];
       '2i2c.org/cluster-name': $.metadata.name,
     },
   },
+  vpc: {
+    nat: {
+      gateway: "Disable"
+    }
+  },
   availabilityZones: masterAzs,
   iam: {
     withOIDC: true,
