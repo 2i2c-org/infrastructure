@@ -6,8 +6,9 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     name,
     summary,
     persistentvolumeclaim,
-    threshold=0.1,  // Default to 10% free space
-    severity='warning',
+    threshold,
+    severity,
+    forInterval='5m',
     labels={},
                                       ) {
     // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
@@ -30,11 +31,10 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
           min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='%s'}) by (namespace)
           < %.2f
         ||| % [persistentvolumeclaim, persistentvolumeclaim, threshold],
-        'for': '5m',
+        'for': forInterval,
         labels: {
           cluster: cluster_name,
           severity: severity,
-
         } + labels,
         annotations: {
           summary: summary,
@@ -43,8 +43,11 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     ],
   };
 
-  local diskIOApproachingSaturation = {
-    name: 'DiskIOApproachingSaturation',
+  local diskIOApproachingSaturation = function(
+    name,
+    severity,
+                                      ) {
+    name: name,
     rules: [
       {
         alert: 'DiskIOApproachingSaturation',
@@ -65,7 +68,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         'for': '15m',
         labels: {
           cluster: cluster_name,
-          page: 'yuvipanda',  // Temporarily, until we figure out a more premanent fix
+          severity: severity,
         },
         annotations: {
           summary: 'Disk {{ $labels.device }} on node {{ $labels.node }} is approaching saturation on cluster %s' % [cluster_name],
@@ -78,6 +81,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     name,
     summary,
     pod_name_substring,
+    severity,
     labels={}
                               ) {
     name: name,
@@ -93,6 +97,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         'for': '5m',
         labels: {
           cluster: cluster_name,
+          severity: severity,
         } + labels,
         annotations: {
           summary: summary,
@@ -104,6 +109,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   local makeUserPodUnschedulableAlert = function(
     name,
     summary,
+    severity,
     labels={},
                                         ) {
     name: name,
@@ -121,6 +127,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         'for': '0m',
         labels: {
           cluster: cluster_name,
+          severity: severity,
         } + labels,
         annotations: {
           summary: summary,
@@ -156,9 +163,10 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
             receiver: 'pagerduty',
             group_by: [
               // Deliver alerts individually for each alert as well as each namespace
-              // an alert is for. We don't specify "cluster" here because each alertmanager
-              // only handles one cluster
+              // an alert is for. Each alertmanager only handles one cluster so 'cluster'
+              // is a bit obsolete here. Still, see if it fixes the grouping issues we have.
               'alertname',
+              'cluster',
               'namespace',
             ],
             repeat_interval: '3h',
@@ -179,6 +187,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 matchers: [
                   // UserPodUnschedulable alerts should not be auto-resolved when the pod is deleted
                   //due to unscheduled timeout reached.
+                  'cluster =~ .*',
                   'alertname =~ UserPodUnschedulable.*',
                 ],
               },
@@ -190,37 +199,55 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         'alerting_rules.yml': {
           groups: [
             makePVCApproachingFullAlert(
-              'HomeDirectoryDiskApproachingFull',
+              'Home directory has 20% space left',
               'Home Directory Disk about to be full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'home-nfs',
+              0.2,
+              'action needed this week',
             ),
             makePVCApproachingFullAlert(
-              'TakeActionHomeDirectoryDangerouslyCloseToFull',
+              'Home directory has 5% space left',
               'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'home-nfs',
               0.05,
-              'critical',
+              'same day action needed',
             ),
             makePVCApproachingFullAlert(
-              'HubDatabaseDiskApproachingFull',
+              'Home directory has 0% space left!',
+              'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
+              'home-nfs',
+              0,
+              'take immediate action',
+              '1m',
+            ),
+            makePVCApproachingFullAlert(
+              'Hub Database has 10% space left',
               'Hub Database Disk about to be full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'hub-db-dir',
+              0.1,
+              'same day action needed'
             ),
             makePVCApproachingFullAlert(
-              'PrometheusDiskApproachingFull',
+              'Prometheus has 10% space left',
               'Prometheus Disk about to be full: cluster:%s' % [cluster_name],
               'support-prometheus-server',
+              0.1,
+              'same day action needed'
             ),
             makePodRestartAlert(
-              'GroupsExporterPodRestarted',
+              'Groups exporter pod has restarted',
               'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
               'groups-exporter',
+              'action needed this week'
             ),
             makeUserPodUnschedulableAlert(
-              'UserPodUnschedulable',
+              'A user pod was unschedulable',
               'The user pod {{ $labels.pod }} is unschedulable on cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
+              'same day action needed',
             ),
-            diskIOApproachingSaturation,
+            diskIOApproachingSaturation(
+              'action needed this week'
+            ),
           ],
         },
       },
