@@ -47,6 +47,7 @@ jobs:
         - cluster_name: reflective
         - cluster_name: smithsonian
         - cluster_name: strudel
+        - cluster_name: temple
         - cluster_name: ubc-eoas
         - cluster_name: utoronto
         - cluster_name: victor
