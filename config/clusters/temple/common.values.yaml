@@ -24,9 +24,6 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: cilogon
     homepage:
-      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
-      # is merged
-      gitRepoBranch: unify-logins-2
       templateVars:
         org:
           name: Temple University JupyterHub
@@ -45,7 +42,7 @@ jupyterhub:
     allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: dummy
+        authenticator_class: cilogon
       CILogonOAuthenticator:
         allowed_idps:
           https://fim.temple.edu/idp/shibboleth:
