@@ -57,6 +57,12 @@ binderhub-service:
       base_url: /services/binder
       use_registry: true
       auth_enabled: true
+    BuildExecutor:
+      # Put the contents of the repo under `/srv/repo`
+      # By default they go under `/home/jovyan`, which gets overwritten
+      # by the home directory
+      repo2docker_extra_args:
+      - --target-repo-dir=/srv/repo
     KubernetesBuildExecutor:
       build_image: quay.io/jupyterhub/repo2docker:2025.12.1.dev94-gd3893dba2
       node_selector:
