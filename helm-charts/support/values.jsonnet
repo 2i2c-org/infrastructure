@@ -43,6 +43,33 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     ],
   };
 
+  local makeServerStartupFailureAlert = function(
+    name,
+    summary,
+    severity,
+    labels={},
+                                        ) {
+    // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
+    name: name,
+    rules: [
+      {
+        alert: name,
+        expr: |||
+          # We trigger any time there is a server startup failure, for any reason.
+          jupyterhub_server_spawn_duration_seconds_count{status="failure"} > 0
+        |||,
+        'for': '1m',
+        labels: {
+          cluster: cluster_name,
+          severity: severity,
+        } + labels,
+        annotations: {
+          summary: summary,
+        },
+      },
+    ],
+  };
+
   local diskIOApproachingSaturation = function(
     name,
     severity,
@@ -205,6 +232,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               0.1,
               'same day action needed',
             ),
+
+            makeServerStartupFailureAlert(
+              'Server Startup Failed',
+              'Outage alert: Server Startup failed: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
+              'take immediate action'
+            ),
             makePVCApproachingFullAlert(
               'Home directory has 0% space left!',
               'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
@@ -232,11 +265,6 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
               'groups-exporter',
               'action needed this week'
-            ),
-            makeUserPodUnschedulableAlert(
-              'A user pod was unschedulable',
-              'The user pod {{ $labels.pod }} is unschedulable on cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
-              'same day action needed',
             ),
             diskIOApproachingSaturation(
               'Disk IO approaching saturation',
