@@ -38,7 +38,7 @@ Also, each  alert setup with Jsonnet has a severity level that can be one of:
 
 This severity level is what determines how quickly you should respond to the alert and translates into the priority of the incident created in PagerDuty.
 It does this by running an [Event Orchestration](https://support.pagerduty.com/main/docs/event-orchestration) after an incident is created.
-The Event Orchestration sets an incident priority based on the severity label of the alert that triggered the incident.
+The Event Orchestration sets a priority based on the severity label of the alert that triggered it.
 
 ```{important}
 - `P1`:`take immediate action` (a community currently affected and experiencing an outage)
@@ -46,7 +46,7 @@ The Event Orchestration sets an incident priority based on the severity label of
 - `P3`:`action needed this week` (community about to be affected if we don't do something soon, but not immediately)
 - `P4`:`to be planned in sprint planning` (community not necessarily affected on a specific timeline, but we must take some action into the committed column of next sprint)
 
-Also, all of the P1 incidents will show up in the 2i2c [status page](https://2i2c-hubs.trust.pagerduty.com/posts/dashboard) as well.
+Also, all of the P1 PagerDuty alerts will show up in the 2i2c [status page](https://2i2c-hubs.trust.pagerduty.com/posts/dashboard) as well.
 ```
 
 (uptime-checks)=
