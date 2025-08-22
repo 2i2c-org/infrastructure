@@ -12,11 +12,11 @@ filestores = {
 
 persistent_disks = {
   "authoring" = {
-    size        = 1
+    size        = 25
     name_suffix = "authoring"
   }
   "bcc" = {
-    size        = 5
+    size        = 25
     name_suffix = "bcc"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -25,11 +25,11 @@ persistent_disks = {
     name_suffix = "ccsf"
   }
   "chabot" = {
-    size        = 2
+    size        = 25
     name_suffix = "chabot"
   }
   "chaffey" = {
-    size        = 3
+    size        = 25
     name_suffix = "chaffey"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -55,7 +55,7 @@ persistent_disks = {
     name_suffix = "dvc"
   }
   "elac" = {
-    size        = 1
+    size        = 25
     name_suffix = "elac"
   }
   "elcamino" = {
@@ -81,7 +81,7 @@ persistent_disks = {
     name_suffix = "glendale"
   }
   "golden" = {
-    size        = 1
+    size        = 25
     name_suffix = "golden"
   }
   "high" = {
@@ -98,7 +98,7 @@ persistent_disks = {
     name_suffix = "lacc"
   }
   "lahc" = {
-    size        = 1
+    size        = 25
     name_suffix = "lahc"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -107,31 +107,31 @@ persistent_disks = {
     name_suffix = "laney"
   }
   "lavc" = {
-    size        = 1
+    size        = 25
     name_suffix = "lavc"
   }
   "lbcc" = {
-    size        = 1
+    size        = 25
     name_suffix = "lbcc"
   }
   "mendocino" = {
-    size        = 1
+    size        = 25
     name_suffix = "mendocino"
   }
   "merced" = {
-    size        = 2
+    size        = 25
     name_suffix = "merced"
   }
   "merritt" = {
-    size        = 1
+    size        = 25
     name_suffix = "merritt"
   }
   "miracosta" = {
-    size        = 8
+    size        = 25
     name_suffix = "miracosta"
   }
   "mission" = {
-    size        = 1
+    size        = 25
     name_suffix = "mission"
   }
   # not migrated to jupyterhub-home-nfs yet
