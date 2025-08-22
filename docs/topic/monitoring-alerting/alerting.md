@@ -24,7 +24,7 @@ At the time of writing, we have the following classes of alerts:
 
 1. when a persistent volume claim (PVC) is approaching full capacity
 2. when a pod has restarted
-3. when a user pod has had an unschedulable status for more than 5 minutes
+3. when a user server has failed to start
 4. when a disk is approaching IO saturation
 
 When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
