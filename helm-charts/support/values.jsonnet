@@ -48,7 +48,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     summary,
     severity,
     labels={},
-                                      ) {
+                                        ) {
     // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
     name: name,
     rules: [
