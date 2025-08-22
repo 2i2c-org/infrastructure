@@ -1,11 +1,62 @@
+# Alerting
+We have a few alerts configured to notify us when things go wrong and we use PagerDuty to manage them.
+
+## Paging
+We don't have an on-call rotation currently, and nobody is expected to
+respond outside working hours. Hence, we don't really currently have paging
+alerts.
+
+However, we may temporarily mark some alerts to page specific people during
+ongoing incidents that have not been resolved yet. This is usually done
+to monitor a temporary fix that may or may not have solved the issue. By
+adding a paging alert, we buy ourselves a little peace of mind - as long
+as the page is not firing, we are doing ok.
+
+Alerts should have a label named `page` that can be set to the pagerduty username of whoever should be paged for that alert.
+
+## Alerts configured with Jsonnet
+There are a set of alerts that are configured in support deployments using [](#topic/jsonnet).
+
+### Configuration
+We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
+
+At the time of writing, we have the following classes of alerts:
+
+1. when a persistent volume claim (PVC) is approaching full capacity
+2. when a pod has restarted
+3. when a user pod has had an unschedulable status for more than 5 minutes
+4. when a disk is approaching IO saturation
+
+When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
+
+Also, each  alert setup with Jsonnet has a severity level that can be one of:
+
+- `take immediate action`
+- `same day action needed`
+- `action needed this week`
+- `to be planned in sprint planning`
+
+This severity level is what determines how quickly you should respond to the alert and translates into the priority of the incident created in PagerDuty.
+It does this by running an [Event Orchestration](https://support.pagerduty.com/main/docs/event-orchestration) after an incident is created.
+The Event Orchestration sets a priority based on the severity label of the alert that triggered it.
+
+```{important}
+- `P1`:`take immediate action` (a community currently affected and experiencing an outage)
+- `P2`:`same day action needed` (community about to be affected if we don't do something immediately)
+- `P3`:`action needed this week` (community about to be affected if we don't do something soon, but not immediately)
+- `P4`:`to be planned in sprint planning` (community not necessarily affected on a specific timeline, but we must take some action into the committed column of next sprint)
+
+Also, all of the P1 PagerDuty alerts will show up in the 2i2c [status page](https://2i2c-hubs.trust.pagerduty.com/posts/dashboard) as well.
+```
+
 (uptime-checks)=
-# Simple HTTPS uptime checks
+## Simple HTTPS uptime checks
 
 Ideally, when a hub is down, a machine alerts us - we do not have to wait for a user
 to report it to our helpdesk. While we aren't quite there, we currently have very simple
 uptime monitoring for all our hubs with free [GCP Uptime Checks](https://cloud.google.com/monitoring/uptime-checks).
 
-## Where are the checks?
+### Where are the checks?
 
 Uptime checks are *centralized* - they don't exist in the same project or cloud provider
 as the hubs they are checking, but in one centralized GCP project (`two-eye-two-see`). This
@@ -19,7 +70,7 @@ has a few advantages:
 You can browse the existing checks [on the GCP Console](https://console.cloud.google.com/monitoring/uptime?project=two-eye-two-see)
 as well.
 
-## Cost
+### Cost
 
 Note that as of October 2022 [Google Stackdriver
 Pricing](https://cloud.google.com/stackdriver/pricing) the free monthly quota is
@@ -29,7 +80,7 @@ Pricing](https://cloud.google.com/stackdriver/pricing) the free monthly quota is
 | --- | --- | --- | --- |
 | Execution of Monitoring uptime checks| $0.30/1,000 executions| 1 million executions per Google Cloud project|	October 1, 2022 |
 
-## When are notifications triggered?
+### When are notifications triggered?
 
 Our uptime checks are performed every 15 minutes, and we alert if checks have failed for 31 minutes.
 This make sure there are at least 2 failed checks before we alert.
@@ -37,7 +88,7 @@ This make sure there are at least 2 failed checks before we alert.
 We are optimizing for *actionable alerts* that we can completely *trust*,
 and prevent any kind of alert fatigue for our engineers.
 
-### JupyterHub health checks
+#### JupyterHub health checks
 
 The JupyterHub *does* get restarted during deployment, and this can cause a few
 seconds of downtime - and we do not want to alert in case the uptime check hits
@@ -50,7 +101,7 @@ When an alert is triggered, it automatically opens an Incident in the
 we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
 the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
 
-### Prometheus health checks
+#### Prometheus health checks
 
 Our prometheus instances are protected by auth, so we just check to see if we get a
 `401 Unauthorized` response from the prometheus instance.
@@ -61,7 +112,7 @@ we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` chan
 the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
 
 
-## How are the checks set up?
+### How are the checks set up?
 
 We use Terraform in the [terraform/uptime-checks](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/uptime-checks)
 directory to set up the checks, notifications channel and alerting policies. This allows new
@@ -77,7 +128,7 @@ steps required.
  wrong, so it is alright to run this without human supervision on GitHub Actions
 
 (uptime-checks:snoozes)=
-## How do I snoooze a check?
+### How do I snoooze a check?
 
 As the checks are all in GCP they can be created through the [monitoring console](https://console.cloud.google.com/monitoring/alerting?project=two-eye-two-see).
 
