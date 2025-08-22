@@ -21,7 +21,7 @@ local ts = grafonnet.panel.timeSeries;
             refId: 'variable',
             source: 'url',
             type: 'json',
-            url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/hub-names?from=${__from:date}&to=${__to:date}',
+            url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/hub-names?from=${__from:date}&to=${__to:date}',
             url_options: {
               data: '',
               method: 'GET',
