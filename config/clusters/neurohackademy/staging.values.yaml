@@ -31,10 +31,8 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0971ad91e7e4e270f
   quotaEnforcer:
-    path: /export/staging
     config:
       QuotaManager:
         hardQuota: '1' # in GB
-        path: /export/staging
   persistentVolume:
     size: 10Gi
