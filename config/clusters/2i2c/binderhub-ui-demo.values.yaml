@@ -4,6 +4,8 @@ nfs:
     enabled: false
 jupyterhub-home-nfs:
   enabled: false
+  persistentVolume:
+    size: 10Gi
 jupyterhub:
   ingress:
     hosts:

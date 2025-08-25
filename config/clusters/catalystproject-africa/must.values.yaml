@@ -42,6 +42,8 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0e86b4abbf3083190
 
+  persistentVolume:
+    size: 10Gi
 nfs:
   pv:
     serverIP: 10.100.179.246
