@@ -6,8 +6,12 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-02a23da5b534a990a
   quotaEnforcer:
-    hardQuota: '0.5' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '0.5' # in GB
 
+  persistentVolume:
+    size: 10Gi
 jupyterhub:
   ingress:
     hosts:

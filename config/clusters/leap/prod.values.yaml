@@ -50,4 +50,8 @@ basehub:
     gke:
       volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
-      hardQuota: 120 # in GB
+      config:
+        QuotaManager:
+          hardQuota: 120 # in GB
+    persistentVolume:
+      size: 10Gi

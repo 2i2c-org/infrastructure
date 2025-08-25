@@ -47,7 +47,11 @@ basehub:
     eks:
       volumeId: vol-050b22932c5cf210e
     quotaEnforcer:
-      hardQuota: '50' # in GB
+      config:
+        QuotaManager:
+          hardQuota: '50' # in GB
+    persistentVolume:
+      size: 10Gi
   nfs:
     pv:
       serverIP: 10.100.13.73
