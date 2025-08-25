@@ -40,3 +40,5 @@ basehub:
       config:
         QuotaManager:
           hardQuota: '400' # in GB
+    persistentVolume:
+      size: 10Gi
