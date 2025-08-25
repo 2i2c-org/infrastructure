@@ -109,7 +109,9 @@ jupyterhub-home-nfs:
   gke:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-labi
   quotaEnforcer:
-    hardQuota: '100' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '100' # in GB
 nfs:
   pv:
     serverIP: 10.15.243.18

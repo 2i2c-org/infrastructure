@@ -20,7 +20,9 @@ basehub:
     eks:
       volumeId: vol-0aa2e34864c248eb2
     quotaEnforcer:
-      hardQuota: '250'
+      config:
+        QuotaManager:
+          hardQuota: '250'
 
   jupyterhub:
     ingress:

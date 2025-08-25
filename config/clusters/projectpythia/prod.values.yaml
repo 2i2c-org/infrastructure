@@ -6,7 +6,9 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0cdc25a68ca0303ce
   quotaEnforcer:
-    hardQuota: '2' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '2' # in GB
 jupyterhub:
   ingress:
     hosts: [projectpythia.2i2c.cloud]
