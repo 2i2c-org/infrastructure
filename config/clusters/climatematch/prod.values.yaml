@@ -6,7 +6,9 @@ jupyterhub-home-nfs:
   gke:
     volumeId: projects/climatematch/zones/us-central1-b/disks/hub-nfs-homedirs-prod
   quotaEnforcer:
-    hardQuota: '10' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '10' # in GB
 
 jupyterhub:
   ingress:

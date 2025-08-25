@@ -25,7 +25,9 @@ jupyterhub:
       2i2c/hub-name: molerhealth
 jupyterhub-home-nfs:
   quotaEnforcer:
-    hardQuota: '350' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '350' # in GB
   eks:
     volumeId: vol-0818b363dec5d022f
 nfs:

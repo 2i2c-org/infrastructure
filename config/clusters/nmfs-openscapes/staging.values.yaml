@@ -79,7 +79,9 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-08dafa2e06872afbd
   quotaEnforcer:
-    hardQuota: '0.1' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '0.1' # in GB
 
 binderhub-service:
   config:

@@ -69,4 +69,6 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0cb9118aa95971a6a
   quotaEnforcer:
-    hardQuota: '100' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '100' # in GB

@@ -20,7 +20,9 @@ basehub:
     eks:
       volumeId: vol-0a4147126b73d7ff9
     quotaEnforcer:
-      hardQuota: '5' # in GB
+      config:
+        QuotaManager:
+          hardQuota: '5' # in GB
   jupyterhub:
     ingress:
       hosts: [staging.hub.victorproject.org]
