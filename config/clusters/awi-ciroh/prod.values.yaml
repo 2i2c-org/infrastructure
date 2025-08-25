@@ -9,7 +9,9 @@ basehub:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
-      hardQuota: '250' # in GB
+      config:
+        QuotaManager:
+          hardQuota: '250' # in GB
   jupyterhub:
     ingress:
       hosts: [ciroh.awi.2i2c.cloud]

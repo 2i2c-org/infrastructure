@@ -30,5 +30,9 @@ jupyterhub-home-nfs:
     volumeId: vol-0c264a6c8c39e0955
   quotaEnforcer:
     enabled: false
-    hardQuota: '5000' # in GB
     path: /export/prod
+    config:
+      QuotaManager:
+        enabled: false
+        hardQuota: '5000' # in GB
+        path: /export/prod

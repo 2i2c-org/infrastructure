@@ -37,4 +37,6 @@ basehub:
     eks:
       volumeId: vol-00b9cf4a258bce8ef
     quotaEnforcer:
-      hardQuota: '400' # in GB
+      config:
+        QuotaManager:
+          hardQuota: '400' # in GB

@@ -25,7 +25,9 @@ jupyterhub:
       2i2c/hub-name: kush
 jupyterhub-home-nfs:
   quotaEnforcer:
-    hardQuota: '1' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '1' # in GB
   eks:
     volumeId: vol-0de5b955b6bd6dfc6
 nfs:

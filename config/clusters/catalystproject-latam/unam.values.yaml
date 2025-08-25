@@ -143,4 +143,6 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     # the shared dir has 509 GB in July 2025, so we set the quota to match the disk capacity
     # i.e. no quota
-    hardQuota: '950' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '950' # in GB

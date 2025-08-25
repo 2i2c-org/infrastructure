@@ -12,7 +12,9 @@ basehub:
     eks:
       volumeId: vol-0a55e84bbf716b456
     quotaEnforcer:
-      hardQuota: '20' # in GB
+      config:
+        QuotaManager:
+          hardQuota: '20' # in GB
   jupyterhub:
     ingress:
       hosts: [showcase.2i2c.cloud]

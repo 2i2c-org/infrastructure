@@ -6,7 +6,9 @@ basehub:
     eks:
       volumeId: vol-0f45c2be7f71f07f8
     quotaEnforcer:
-      hardQuota: '10' # in GB
+      config:
+        QuotaManager:
+          hardQuota: '10' # in GB
   jupyterhub:
     ingress:
       hosts: [smithsonian.2i2c.cloud]

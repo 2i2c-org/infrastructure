@@ -109,4 +109,6 @@ jupyterhub-home-nfs:
     enabled: true
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-cicada
   quotaEnforcer:
-    hardQuota: '20'
+    config:
+      QuotaManager:
+        hardQuota: '20'

@@ -13,7 +13,9 @@ jupyterhub-home-nfs:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
   quotaEnforcer:
-    hardQuota: '35' # in GB
+    config:
+      QuotaManager:
+        hardQuota: '35' # in GB
 jupyterhub:
   ingress:
     hosts: [ds.lis.2i2c.cloud]

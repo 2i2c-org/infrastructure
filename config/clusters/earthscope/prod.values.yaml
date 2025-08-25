@@ -40,7 +40,9 @@ basehub:
               2i2c/hub-name: prod
   jupyterhub-home-nfs:
     quotaEnforcer:
-      hardQuota: '150' # in GB
+      config:
+        QuotaManager:
+          hardQuota: '150' # in GB
     eks:
       volumeId: vol-06f3c3dc2ded0cd06
   nfs:

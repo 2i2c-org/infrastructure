@@ -9,7 +9,9 @@ basehub:
     eks:
       volumeId: vol-002bff088152dd5e9
     quotaEnforcer:
-      hardQuota: '10' # in GB
+      config:
+        QuotaManager:
+          hardQuota: '10' # in GB
   jupyterhub:
     ingress:
       hosts: [dask-staging.aws.2i2c.cloud]
