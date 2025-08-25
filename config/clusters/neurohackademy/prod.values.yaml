@@ -36,3 +36,5 @@ jupyterhub-home-nfs:
         enabled: false
         hardQuota: '5000' # in GB
         path: /export/prod
+  persistentVolume:
+    size: 10Gi

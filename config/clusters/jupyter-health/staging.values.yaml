@@ -14,6 +14,8 @@ jupyterhub-home-nfs:
       QuotaManager:
         hardQuota: '0.5' # in GB
 
+  persistentVolume:
+    size: 10Gi
 jupyterhub:
   ingress:
     hosts: [staging.jupyter-health.2i2c.cloud]

@@ -10,6 +10,8 @@ jupyterhub-home-nfs:
         hardQuota: '10' # in GB
   eks:
     volumeId: vol-0b5fc915293bd5bec
+  persistentVolume:
+    size: 10Gi
 jupyterhub:
   hub:
     config:

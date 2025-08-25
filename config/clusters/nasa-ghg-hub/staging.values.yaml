@@ -51,6 +51,8 @@ basehub:
         QuotaManager:
           hardQuota: '1' # in GB
 
+    persistentVolume:
+      size: 10Gi
   nfs:
     pv:
       serverIP: 10.100.204.122

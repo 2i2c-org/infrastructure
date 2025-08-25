@@ -151,3 +151,5 @@ jupyterhub-home-nfs:
       QuotaManager:
         hardQuota: 1 # in GB
         path: /export/staging
+  persistentVolume:
+    size: 10Gi

@@ -112,6 +112,8 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hardQuota: '100' # in GB
+  persistentVolume:
+    size: 10Gi
 nfs:
   pv:
     serverIP: 10.15.243.18
