@@ -16,7 +16,7 @@ persistent_disks = {
     name_suffix = "authoring"
   }
   "bcc" = {
-    size        = 25
+    size        = 60
     name_suffix = "bcc"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -25,7 +25,7 @@ persistent_disks = {
     name_suffix = "ccsf"
   }
   "chabot" = {
-    size        = 25
+    size        = 60
     name_suffix = "chabot"
   }
   "chaffey" = {
@@ -43,7 +43,7 @@ persistent_disks = {
     name_suffix = "csum"
   }
   "deanza" = {
-    size        = 25
+    size        = 60
     name_suffix = "deanza"
   }
   "demo" = {
@@ -55,29 +55,29 @@ persistent_disks = {
     name_suffix = "dvc"
   }
   "elac" = {
-    size        = 25
+    size        = 40
     name_suffix = "elac"
   }
   "elcamino" = {
-    size        = 190
+    size        = 350
     name_suffix = "elcamino"
   }
   # not migrated to jupyterhub-home-nfs yet
   "evc" = {
-    size        = 50
+    size        = 200
     name_suffix = "evc"
   }
   "foothill" = {
-    size        = 70
+    size        = 200
     name_suffix = "foothill"
   }
   # not migrated to jupyterhub-home-nfs yet
   "fresno" = {
-    size        = 25
+    size        = 60
     name_suffix = "fresno"
   }
   "glendale" = {
-    size        = 25
+    size        = 60
     name_suffix = "glendale"
   }
   "golden" = {
@@ -85,16 +85,16 @@ persistent_disks = {
     name_suffix = "golden"
   }
   "high" = {
-    size        = 85
+    size        = 120
     name_suffix = "high"
   }
   # not migrated to jupyterhub-home-nfs yet
   "humboldt" = {
-    size        = 75
+    size        = 200
     name_suffix = "humboldt"
   }
   "lacc" = {
-    size        = 55
+    size        = 140
     name_suffix = "lacc"
   }
   "lahc" = {
@@ -103,7 +103,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "laney" = {
-    size        = 75
+    size        = 200
     name_suffix = "laney"
   }
   "lavc" = {
@@ -115,11 +115,11 @@ persistent_disks = {
     name_suffix = "lbcc"
   }
   "mendocino" = {
-    size        = 25
+    size        = 40
     name_suffix = "mendocino"
   }
   "merced" = {
-    size        = 25
+    size        = 60
     name_suffix = "merced"
   }
   "merritt" = {
@@ -127,7 +127,7 @@ persistent_disks = {
     name_suffix = "merritt"
   }
   "miracosta" = {
-    size        = 25
+    size        = 60
     name_suffix = "miracosta"
   }
   "mission" = {
@@ -136,62 +136,62 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "moreno" = {
-    size        = 9
+    size        = 60
     name_suffix = "moreno"
   }
   # not migrated to jupyterhub-home-nfs yet
   "norco" = {
-    size        = 20
+    size        = 40
     name_suffix = "norco"
   }
   # not migrated to jupyterhub-home-nfs yet
   "palomar" = {
-    size        = 23
+    size        = 40
     name_suffix = "palomar"
   }
   # not migrated to jupyterhub-home-nfs yet
   "pasadena" = {
-    size        = 75
+    size        = 140
     name_suffix = "pasadena"
   }
   # not migrated to jupyterhub-home-nfs yet
   "redwoods" = {
-    size        = 1
+    size        = 40
     name_suffix = "redwoods"
   }
   # not migrated to jupyterhub-home-nfs yet
   "reedley" = {
-    size        = 1
+    size        = 40
     name_suffix = "reedley"
   }
   # not migrated to jupyterhub-home-nfs yet
   "riohondo" = {
-    size        = 6
+    size        = 20
     name_suffix = "riohondo"
   }
   # not migrated to jupyterhub-home-nfs yet
   "saddleback" = {
-    size        = 20
+    size        = 60
     name_suffix = "saddleback"
   }
   # not migrated to jupyterhub-home-nfs yet
   "sbcc" = {
-    size        = 50
+    size        = 100
     name_suffix = "sbcc"
   }
   # not migrated to jupyterhub-home-nfs yet
   "sbcc-dev" = {
-    size        = 1
+    size        = 10
     name_suffix = "sbcc-dev"
   }
   # not migrated to jupyterhub-home-nfs yet
   "sierra" = {
-    size        = 1
+    size        = 20
     name_suffix = "sierra"
   }
   # not migrated to jupyterhub-home-nfs yet
   "sjcc" = {
-    size        = 30
+    size        = 10
     name_suffix = "sjcc"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -206,7 +206,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "srjc" = {
-    size        = 30
+    size        = 20
     name_suffix = "srjc"
   }
   "staging" = {
@@ -215,7 +215,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "tuskegee" = {
-    size        = 17
+    size        = 20
     name_suffix = "tuskegee"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -225,7 +225,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "unr" = {
-    size        = 10
+    size        = 40
     name_suffix = "unr"
   }
   # not migrated to jupyterhub-home-nfs yet
