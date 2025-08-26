@@ -23,8 +23,6 @@ basehub:
       config:
         QuotaManager:
           hardQuota: '5' # in GB
-    persistentVolume:
-      size: 10Gi
   jupyterhub:
     ingress:
       hosts: [staging.hub.victorproject.org]

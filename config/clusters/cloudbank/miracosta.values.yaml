@@ -49,8 +49,6 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-miracosta
-  persistentVolume:
-    size: 10Gi
 nfs:
   pv:
     serverIP: 10.3.248.125

@@ -30,8 +30,6 @@ jupyterhub-home-nfs:
         hardQuota: '50' # in GB
   eks:
     volumeId: vol-05810452a41759168
-  persistentVolume:
-    size: 10Gi
 nfs:
   pv:
     serverIP: 10.100.18.60

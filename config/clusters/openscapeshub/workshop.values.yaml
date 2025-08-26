@@ -161,5 +161,3 @@ basehub:
           hardQuota: '5' # in GB
     eks:
       volumeId: vol-0ab191452f5c85c6b
-    persistentVolume:
-      size: 10Gi

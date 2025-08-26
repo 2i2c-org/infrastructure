@@ -39,8 +39,6 @@ basehub:
           hardQuota: '100' # in GB
     eks:
       volumeId: vol-0cddd71981a7ff6ba
-    persistentVolume:
-      size: 10Gi
   nfs:
     pv:
       serverIP: 10.100.91.5

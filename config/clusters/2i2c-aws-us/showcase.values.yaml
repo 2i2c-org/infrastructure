@@ -15,8 +15,6 @@ basehub:
       config:
         QuotaManager:
           hardQuota: '20' # in GB
-    persistentVolume:
-      size: 10Gi
   jupyterhub:
     ingress:
       hosts: [showcase.2i2c.cloud]

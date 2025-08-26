@@ -222,7 +222,5 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-07154b7def3b80b96
 
-  persistentVolume:
-    size: 10Gi
 binderhub-service:
   enabled: false

@@ -35,5 +35,3 @@ dask-gateway:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0ac31776780207b43
-  persistentVolume:
-    size: 10Gi

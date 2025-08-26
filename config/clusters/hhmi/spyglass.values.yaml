@@ -18,8 +18,6 @@ jupyterhub-home-nfs:
     enabled: true
     volumeId: projects/hhmi-398911/zones/us-west2-b/disks/hub-nfs-homedirs-spyglass
 
-  persistentVolume:
-    size: 10Gi
 jupyterhub:
   ingress:
     hosts:
