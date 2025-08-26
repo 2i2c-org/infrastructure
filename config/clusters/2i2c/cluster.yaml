@@ -33,14 +33,6 @@ hubs:
   - daskhub-common.values.yaml
   - dask-staging.values.yaml
   - enc-dask-staging.secret.values.yaml
-- name: imagebuilding-demo
-  display_name: 2i2c image building demo
-  domain: imagebuilding-demo.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - basehub-common.values.yaml
-  - imagebuilding-demo.values.yaml
-  - enc-imagebuilding-demo.secret.values.yaml
 - name: binderhub-ui-demo
   display_name: 2i2c Binderhub UI demo
   domain: hub.binderhub-ui-demo.2i2c.cloud
