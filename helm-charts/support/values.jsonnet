@@ -56,7 +56,10 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         alert: name,
         expr: |||
           # We trigger any time there is a server startup failure, for any reason.
-          jupyterhub_server_spawn_duration_seconds_count{status="failure"} > 0
+          # The 'min' is to reduce the labels being passed to only the necessary ones
+          min(
+            jupyterhub_server_spawn_duration_seconds_count{status="failure"} > 0
+          ) by (namespace)
         |||,
         'for': '1m',
         labels: {
