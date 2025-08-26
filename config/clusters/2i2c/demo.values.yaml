@@ -46,8 +46,6 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-demo
-  persistentVolume:
-    size: 10Gi
 nfs:
   pv:
     serverIP: 10.3.243.135

@@ -83,8 +83,6 @@ jupyterhub-home-nfs:
       QuotaManager:
         hardQuota: '0.1' # in GB
 
-  persistentVolume:
-    size: 10Gi
 binderhub-service:
   config:
     BinderHub:

@@ -12,8 +12,6 @@ basehub:
       config:
         QuotaManager:
           hardQuota: '10' # in GB
-    persistentVolume:
-      size: 10Gi
   jupyterhub:
     ingress:
       hosts: [dask-staging.aws.2i2c.cloud]

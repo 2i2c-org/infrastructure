@@ -39,8 +39,6 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-unitefa-conicet
-  persistentVolume:
-    size: 10Gi
 nfs:
   pv:
     serverIP: 10.15.250.177

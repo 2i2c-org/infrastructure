@@ -24,8 +24,6 @@ basehub:
         QuotaManager:
           hardQuota: '250'
 
-    persistentVolume:
-      size: 10Gi
   jupyterhub:
     ingress:
       hosts: [hub.victorproject.org]

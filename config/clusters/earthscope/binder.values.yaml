@@ -74,8 +74,6 @@ basehub:
     enabled: false
     eks:
       enabled: false
-    persistentVolume:
-      size: 10Gi
   binderhub-service:
     enabled: true
     networkPolicy:

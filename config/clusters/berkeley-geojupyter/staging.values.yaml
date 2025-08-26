@@ -28,8 +28,6 @@ jupyterhub-home-nfs:
     enabled: true # can be migrated to common values file
     volumeId: vol-018ab2eba48b7d895
 
-  persistentVolume:
-    size: 10Gi
 binderhub-service:
   config:
     BinderHub:
