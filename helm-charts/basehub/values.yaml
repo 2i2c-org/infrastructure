@@ -1756,6 +1756,8 @@ jupyterhub-home-nfs:
   fullnameOverride: storage-quota
   prometheusExporter:
     enabled: true
+  persistentVolume:
+    addStandardLabels: true
 
 jupyterhub-groups-exporter:
   enabled: true
