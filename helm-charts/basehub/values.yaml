@@ -1753,6 +1753,7 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   enabled: false
+  fullnameOverride: storage-quota
   prometheusExporter:
     enabled: true
 
