@@ -49,7 +49,7 @@ dependencies:
   # jupyterhub-cost-monitoring, cost reporting for Grafana
   # https://github.com/2i2c-org/jupyterhub-cost-monitoring
   - name: jupyterhub-cost-monitoring
-    version: "0.0.1-0.dev.git.66.haa11cf5"
+    version: "0.0.1-0.dev.git.89.h1fc0d0f"
     repository: https://2i2c.org/jupyterhub-cost-monitoring/
     condition: jupyterhub-cost-monitoring.enabled
 
