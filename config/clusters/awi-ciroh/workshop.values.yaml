@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.99.248.245
+      serverIP: storage-quota-home-nfs.workshop.svc.cluster.local
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: awi-ciroh-workshop@ciroh-jupyterhub-423218.iam.gserviceaccount.com
