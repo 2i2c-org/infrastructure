@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.15.251.101
+    serverIP: storage-quota-home-nfs.unam.svc.cluster.local
 
 userServiceAccount:
   annotations:

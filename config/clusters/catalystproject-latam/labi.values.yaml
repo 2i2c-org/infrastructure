@@ -114,4 +114,4 @@ jupyterhub-home-nfs:
         hardQuota: '100' # in GB
 nfs:
   pv:
-    serverIP: 10.15.243.18
+    serverIP: storage-quota-home-nfs.labi.svc.cluster.local

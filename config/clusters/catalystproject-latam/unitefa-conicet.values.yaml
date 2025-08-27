@@ -41,4 +41,4 @@ jupyterhub-home-nfs:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-unitefa-conicet
 nfs:
   pv:
-    serverIP: 10.15.250.177
+    serverIP: storage-quota-home-nfs.unitefa-conicet.svc.cluster.local

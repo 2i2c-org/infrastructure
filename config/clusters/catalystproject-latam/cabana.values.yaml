@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.15.241.229
+    serverIP: storage-quota-home-nfs.cabana.svc.cluster.local
 jupyterhub:
   ingress:
     hosts: [cabana.latam.catalystproject.2i2c.cloud]
