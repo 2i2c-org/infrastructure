@@ -66,4 +66,4 @@ jupyterhub-home-nfs:
         hardQuota: '10' # in GB
 nfs:
   pv:
-    serverIP: 10.3.243.151
+    serverIP: storage-quota-home-nfs.temple.svc.cluster.local
