@@ -42,5 +42,5 @@ jupyterhub-home-nfs:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-lacc
 nfs:
   pv:
-    serverIP: 10.3.249.94
+    serverIP: storage-quota-home-nfs.lacc.svc.cluster.local
     baseShareName: /

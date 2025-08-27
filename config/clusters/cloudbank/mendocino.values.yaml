@@ -49,5 +49,5 @@ jupyterhub-home-nfs:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-mendocino
 nfs:
   pv:
-    serverIP: 10.3.247.27
+    serverIP: storage-quota-home-nfs.mendocino.svc.cluster.local
     baseShareName: /
