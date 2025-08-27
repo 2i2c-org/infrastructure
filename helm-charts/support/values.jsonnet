@@ -29,7 +29,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
           min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='%s'}) by (namespace)
           /
           min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='%s'}) by (namespace)
-          < %.2f
+          <= %.2f
         ||| % [persistentvolumeclaim, persistentvolumeclaim, threshold],
         'for': forInterval,
         labels: {
@@ -136,6 +136,8 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     ],
   };
 
+  // This alert is not currently used august 2025
+  // FIXME: consider removing it if we end up not needing it
   local makeUserPodUnschedulableAlert = function(
     name,
     summary,
