@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.66.17
+    serverIP: 10.100.129.224
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/maap-staging
