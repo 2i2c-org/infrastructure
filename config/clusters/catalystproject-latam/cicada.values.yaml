@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.15.248.146
+    serverIP: storage-quota-home-nfs.cicada.svc.cluster.local
 jupyterhub:
   ingress:
     hosts: [cicada.latam.catalystproject.2i2c.cloud]
