@@ -1,6 +1,7 @@
 local grafonnet = import 'grafonnet/main.libsonnet';
 local var = grafonnet.dashboard.variable;
 local ts = grafonnet.panel.timeSeries;
+local bc = grafonnet.panel.barChart;
 
 {
   // grafonnet ref: https://grafana.github.io/grafonnet/API/dashboard/variable.html
@@ -79,4 +80,7 @@ local ts = grafonnet.panel.timeSeries;
       sortBy: 'Total',
       sortDesc: true,
     }),
+
+  bcOptions:
+    bc.standardOptions.withMin(0),
 }
