@@ -71,5 +71,5 @@ jupyterhub-home-nfs:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-elac
 nfs:
   pv:
-    serverIP: 10.3.245.195
+    serverIP: storage-quota-home-nfs.elac.svc.cluster.local
     baseShareName: /
