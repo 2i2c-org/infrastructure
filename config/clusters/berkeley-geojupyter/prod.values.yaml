@@ -1,7 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.10.242
-
+    serverIP: 10.100.90.206
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::622703418259:role/berkeley-geojupyter-prod
