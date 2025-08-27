@@ -32,10 +32,6 @@ persistent_disks = {
     size        = 3 # in GB
     name_suffix = "dask-staging"
   },
-  "imagebuilding-demo" = {
-    size        = 10 # in GB
-    name_suffix = "imagebuilding-demo"
-  },
   "demo" = {
     size        = 2 # in GB
     name_suffix = "demo"
