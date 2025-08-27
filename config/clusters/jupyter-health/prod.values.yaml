@@ -4,8 +4,7 @@ userServiceAccount:
 
 nfs:
   pv:
-    serverIP: 10.100.118.64
-
+    serverIP: 10.100.254.159
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-02741e24417a9c2c2
