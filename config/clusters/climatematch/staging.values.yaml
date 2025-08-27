@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 34.118.237.80
+    serverIP: storage-quota-home-nfs.staging.svc.cluster.local
 
 jupyterhub-home-nfs:
   gke:
