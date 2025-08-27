@@ -16,4 +16,4 @@ jupyterhub-home-nfs:
     volumeId: vol-09051a9e20963690a
 nfs:
   pv:
-    serverIP: storage-quota-home-nfs.staging.svc.cluster.local
+    serverIP: 10.100.188.202
