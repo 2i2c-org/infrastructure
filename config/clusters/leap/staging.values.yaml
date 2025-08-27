@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: staging-nfs-service.staging.svc.cluster.local
+      serverIP: storage-quota-home-nfs.staging.svc.cluster.local
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: leap-staging@leap-pangeo.iam.gserviceaccount.com
