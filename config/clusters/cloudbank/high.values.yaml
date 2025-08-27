@@ -75,7 +75,10 @@ jupyterhub:
             - boiseschools.org
             - boiseschools.net
       Authenticator:
-        admin_users: []
+        admin_users: 
+        - smorris@ausdk12.org
+        - sean.smorris@berkeley.edu
+        - mburton@blakeschool.org
         enable_auth_state: false
 jupyterhub-home-nfs:
   gke:
