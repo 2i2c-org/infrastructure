@@ -54,4 +54,4 @@ jupyterhub-home-nfs:
         hardQuota: '20' # in GB
 nfs:
   pv:
-    serverIP: 10.3.252.119
+    serverIP: storage-quota-home-nfs.ucmerced.svc.cluster.local
