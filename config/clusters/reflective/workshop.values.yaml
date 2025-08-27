@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.85.125
+    serverIP: 10.100.92.0
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/reflective-workshop
