@@ -47,8 +47,7 @@ basehub:
       volumeId: vol-06f3c3dc2ded0cd06
   nfs:
     pv:
-      serverIP: 10.100.182.228
-
+      serverIP: 10.100.106.116
   binderhub-service:
     dockerApi:
       nodeSelector:
