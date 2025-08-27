@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.65.44
+    serverIP: 10.100.120.249
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/reflective-staging
