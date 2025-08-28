@@ -43,7 +43,7 @@ local ts = grafonnet.panel.timeSeries;
     },
     columns: [
       { selector: 'date', text: 'Date', type: 'timestamp' },
-      { selector: 'name', text: 'Name', type: 'string' },
+      { selector: 'component', text: 'Component', type: 'string' },
       { selector: 'cost', text: 'Cost', type: 'number' },
     ],
     parser: 'backend',
