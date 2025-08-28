@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.115.246
+    serverIP: 10.100.150.169
 
 jupyterhub:
   singleuser:
