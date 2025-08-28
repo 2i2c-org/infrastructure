@@ -10,7 +10,7 @@ nfs:
     - retrans=2
     - noresvport
     baseShareName: /
-    serverIP: 10.100.21.149
+    serverIP: 10.100.33.250
     shareNameOverride: prod
 jupyterhub-home-nfs:
   enabled: false

@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.177.142
+      serverIP: 10.100.198.51
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-staging
