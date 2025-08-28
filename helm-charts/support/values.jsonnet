@@ -51,6 +51,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                                         ) {
     // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
     name: name,
+
     rules: [
       {
         alert: name,
@@ -241,7 +242,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
             makeServerStartupFailureAlert(
               'Server Startup Failed',
               'Outage alert: Server Startup failed: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
-              'take immediate action'
+              'same day action needed'
             ),
             makePVCApproachingFullAlert(
               'Home directory has 0% space left!',
