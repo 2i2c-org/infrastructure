@@ -49,6 +49,7 @@ jupyterhub:
             - stu.evc.edu
             - evc.edu
             - student.sdccd.edu
+            - my.yosemite.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
