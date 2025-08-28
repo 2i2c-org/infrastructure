@@ -1,7 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.92.26
-
+    serverIP: 10.100.19.201
 dask-gateway:
   gateway:
     backend:
