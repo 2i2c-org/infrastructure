@@ -1,7 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.21.149
-
+    serverIP: 10.100.33.250
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-prod
