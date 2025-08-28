@@ -53,4 +53,4 @@ basehub:
 
   nfs:
     pv:
-      serverIP: 10.100.204.122
+      serverIP: 10.100.52.143
