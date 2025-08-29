@@ -1,8 +1,4 @@
 jupyterhub:
-  singleuser:
-    image:
-      name: quay.io/2i2c/utoronto-image
-      tag: 34b2777825b1
   ingress:
     hosts: [staging.utoronto.2i2c.cloud]
     tls:

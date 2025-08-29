@@ -20,4 +20,4 @@ jupyterhub:
     defaultUrl: /rstudio
     image:
       name: quay.io/2i2c/utoronto-r-image
-      tag: e8fb739a9b64
+      tag: 217c910c5072

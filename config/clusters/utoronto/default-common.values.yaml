@@ -2,7 +2,7 @@ jupyterhub:
   singleuser:
     image:
       name: quay.io/2i2c/utoronto-image
-      tag: 5e0cbe50c587
+      tag: 34b2777825b1
   hub:
     config:
       Authenticator:
