@@ -52,4 +52,11 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hardQuota: 120 # in GB
+          hard_quota: 120 # in GB
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 1G
+      limits:
+        cpu: 0.4
+        memory: 2G
