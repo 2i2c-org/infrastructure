@@ -17,6 +17,7 @@ local jupyterhubHomeNFSResources = {
     config: {
       QuotaManager: {
         paths: ['/export/%s' % hub_name],
+        hard_quota: 0,
       },
     },
     resources: {
