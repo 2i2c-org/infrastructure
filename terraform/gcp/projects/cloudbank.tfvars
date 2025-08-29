@@ -250,7 +250,7 @@ k8s_versions = {
 }
 
 core_node_machine_type = "n2-highmem-2"
-core_node_max_count    = 15
+core_node_max_count    = 20
 enable_network_policy  = true
 
 notebook_nodes = {
