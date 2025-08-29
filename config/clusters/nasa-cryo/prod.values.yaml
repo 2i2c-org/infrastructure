@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.217.176
+      serverIP: 10.100.102.109
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-prod
@@ -39,4 +39,4 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hardQuota: '400' # in GB
+          hard_quota: 400 # in GB
