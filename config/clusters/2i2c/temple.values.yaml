@@ -65,6 +65,13 @@ jupyterhub-home-nfs:
       QuotaManager:
         paths: [/export/temple]
         hard_quota: 200 # in GB
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 1G
+      limits:
+        cpu: 0.4
+        memory: 2G
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.temple.svc.cluster.local
