@@ -21,12 +21,12 @@ local jupyterhubHomeNFSResources = {
     },
     resources: {
       requests: {
-        cpu: 0.02,
-        memory: '150M',
+        cpu: 0.2,
+        memory: '750M',
       },
       limits: {
-        cpu: 0.04,
-        memory: '170M',
+        cpu: 0.4,
+        memory: '1G',
       },
     },
   },
