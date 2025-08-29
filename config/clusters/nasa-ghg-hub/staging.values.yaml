@@ -49,8 +49,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hardQuota: '1' # in GB
-
+          hard_quota: 1
   nfs:
     pv:
       serverIP: 10.100.52.143

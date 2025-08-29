@@ -52,4 +52,4 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hardQuota: '200' # in GB
+          hard_quota: 200

@@ -32,5 +32,4 @@ jupyterhub-home-nfs:
     enabled: false
     config:
       QuotaManager:
-        enabled: false
-        hardQuota: '5000' # in GB
+        hard_quota: 5000

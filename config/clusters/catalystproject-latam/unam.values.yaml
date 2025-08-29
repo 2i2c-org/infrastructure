@@ -145,4 +145,4 @@ jupyterhub-home-nfs:
     # i.e. no quota
     config:
       QuotaManager:
-        hardQuota: '950' # in GB
+        hard_quota: 950

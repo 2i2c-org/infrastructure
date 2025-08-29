@@ -80,8 +80,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hardQuota: '64' # in GB
-
+        hard_quota: 64
 binderhub-service:
   config:
     BinderHub:

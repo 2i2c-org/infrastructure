@@ -8,7 +8,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hardQuota: '0.5' # in GB
+          hard_quota: 1 # in GB
   jupyterhub:
     ingress:
       hosts: [staging.smithsonian.2i2c.cloud]

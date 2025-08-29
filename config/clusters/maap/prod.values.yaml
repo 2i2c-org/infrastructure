@@ -71,4 +71,4 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hardQuota: '100' # in GB
+        hard_quota: 100

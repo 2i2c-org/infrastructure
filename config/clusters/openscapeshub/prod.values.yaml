@@ -36,7 +36,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hardQuota: '100' # in GB
+          hard_quota: 100
     eks:
       volumeId: vol-0cddd71981a7ff6ba
   nfs:

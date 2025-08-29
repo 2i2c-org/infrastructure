@@ -7,7 +7,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hardQuota: '10' # in GB
+        hard_quota: 10
 jupyterhub:
   ingress:
     hosts: [climaterisk.opensci.2i2c.cloud]
