@@ -63,7 +63,8 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hardQuota: '10' # in GB
+        paths: [/export/temple]
+        hard_quota: 200 # in GB
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.temple.svc.cluster.local
