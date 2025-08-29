@@ -7,7 +7,7 @@ nfs:
     mountOptions:
     - soft
     - noatime
-    serverIP: 10.87.241.201
+    serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
     baseShareName: /
     # The staging hub will be using the same *shared* directory from the 'spyglass' hub
     shareNameOverride: spyglass
