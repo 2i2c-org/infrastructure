@@ -138,4 +138,4 @@ jupyterhub-home-nfs:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-plnc
 nfs:
   pv:
-    serverIP: 10.15.247.107
+    serverIP: storage-quota-home-nfs.plnc.svc.cluster.local

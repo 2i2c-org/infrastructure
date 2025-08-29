@@ -4,14 +4,14 @@ userServiceAccount:
 
 nfs:
   pv:
-    serverIP: 10.100.150.10
-
+    serverIP: 10.100.113.233
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-097e117991afc3759
   quotaEnforcer:
-    hardQuota: '0.5' # in GB
-
+    config:
+      QuotaManager:
+        hard_quota: 1
 jupyterhub:
   ingress:
     hosts: [staging.jupyter-health.2i2c.cloud]

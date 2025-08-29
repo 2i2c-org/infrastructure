@@ -57,5 +57,5 @@ jupyterhub-home-nfs:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-demo
 nfs:
   pv:
-    serverIP: 10.3.245.239
+    serverIP: storage-quota-home-nfs.demo.svc.cluster.local
     baseShareName: /

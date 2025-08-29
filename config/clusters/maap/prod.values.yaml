@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.26.92
+    serverIP: 10.100.56.44
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/maap-prod
@@ -69,4 +69,6 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0cb9118aa95971a6a
   quotaEnforcer:
-    hardQuota: '100' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 100

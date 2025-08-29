@@ -1,7 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.15.21
-
+    serverIP: 10.100.91.72
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-staging
@@ -79,7 +78,9 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-08dafa2e06872afbd
   quotaEnforcer:
-    hardQuota: '0.1' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 1
 
 binderhub-service:
   config:

@@ -30,9 +30,11 @@ jupyterhub:
       PERSISTENT_BUCKET: s3://catalystproject-africa-persistent-bhki/$(JUPYTERHUB_USER)
 jupyterhub-home-nfs:
   quotaEnforcer:
-    hardQuota: '350' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 350
   eks:
     volumeId: vol-010d4c82c22dd5e69
 nfs:
   pv:
-    serverIP: 10.100.143.254
+    serverIP: 10.100.231.92

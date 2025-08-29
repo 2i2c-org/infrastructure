@@ -51,5 +51,5 @@ jupyterhub-home-nfs:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-miracosta
 nfs:
   pv:
-    serverIP: 10.3.248.125
+    serverIP: storage-quota-home-nfs.miracosta.svc.cluster.local
     baseShareName: /

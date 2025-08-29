@@ -2,10 +2,12 @@
 #basehub:
 nfs:
   pv:
-    serverIP: 10.100.162.19
+    serverIP: 10.100.153.248
 jupyterhub-home-nfs:
   quotaEnforcer:
-    hardQuota: '10' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 10
   eks:
     volumeId: vol-09652a5540fdbd50f
 jupyterhub:

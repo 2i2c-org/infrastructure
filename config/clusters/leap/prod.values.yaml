@@ -11,7 +11,7 @@ dask-gateway:
 basehub:
   nfs:
     pv:
-      serverIP: 10.3.248.134
+      serverIP: storage-quota-home-nfs.prod.svc.cluster.local
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: leap-prod@leap-pangeo.iam.gserviceaccount.com
@@ -50,4 +50,13 @@ basehub:
     gke:
       volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
-      hardQuota: 120 # in GB
+      config:
+        QuotaManager:
+          hard_quota: 0
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 1G
+      limits:
+        cpu: 0.4
+        memory: 2G

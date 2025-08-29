@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.1.220
+    serverIP: 10.100.36.26
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/reflective-prod

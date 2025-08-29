@@ -40,13 +40,14 @@ basehub:
               2i2c/hub-name: prod
   jupyterhub-home-nfs:
     quotaEnforcer:
-      hardQuota: '150' # in GB
+      config:
+        QuotaManager:
+          hard_quota: 150
     eks:
       volumeId: vol-06f3c3dc2ded0cd06
   nfs:
     pv:
-      serverIP: 10.100.182.228
-
+      serverIP: 10.100.106.116
   binderhub-service:
     dockerApi:
       nodeSelector:

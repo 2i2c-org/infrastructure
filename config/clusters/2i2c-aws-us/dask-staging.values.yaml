@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.135.254
+      serverIP: 10.100.228.29
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-dask-staging
@@ -9,7 +9,9 @@ basehub:
     eks:
       volumeId: vol-002bff088152dd5e9
     quotaEnforcer:
-      hardQuota: '10' # in GB
+      config:
+        QuotaManager:
+          hard_quota: 10
   jupyterhub:
     ingress:
       hosts: [dask-staging.aws.2i2c.cloud]

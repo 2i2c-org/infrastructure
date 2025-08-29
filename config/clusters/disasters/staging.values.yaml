@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.165.154
+    serverIP: 10.100.200.179
 jupyterhub:
   singleuser:
     nodeSelector:
@@ -47,4 +47,6 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-08f3d124fcfd518b0
   quotaEnforcer:
-    hardQuota: '10' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 10

@@ -11,7 +11,7 @@ nfs:
     - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
     - retrans=2
     - noresvport
-    serverIP: 172.24.110.218
+    serverIP: 172.27.96.56
     baseShareName: /
 
 jupyterhub:
@@ -146,5 +146,6 @@ jupyterhub-home-nfs:
     enabled: true
     volumeId: 694b2c04-6b08-4ebe-8cb9-74f7d42c1b1c
   quotaEnforcer:
-    hardQuota: 1 # in GB
-    path: /export/staging
+    config:
+      QuotaManager:
+        hard_quota: 1

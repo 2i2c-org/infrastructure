@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.99.243.170
+      serverIP: storage-quota-home-nfs.prod.svc.cluster.local
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: awi-ciroh-prod@ciroh-jupyterhub-423218.iam.gserviceaccount.com
@@ -9,7 +9,9 @@ basehub:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
-      hardQuota: '250' # in GB
+      config:
+        QuotaManager:
+          hard_quota: 250
   jupyterhub:
     ingress:
       hosts: [ciroh.awi.2i2c.cloud]

@@ -1753,8 +1753,19 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   enabled: false
+  fullnameOverride: storage-quota
+  autoResizer:
+    enabled: true
+    resources:
+      requests:
+        cpu: 0.01
+        memory: 64Mi
+      limits:
+        memory: 1G
   prometheusExporter:
     enabled: true
+  persistentVolume:
+    addStandardLabels: true
 
 jupyterhub-groups-exporter:
   enabled: true

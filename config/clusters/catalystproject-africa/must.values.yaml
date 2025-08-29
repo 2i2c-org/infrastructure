@@ -36,10 +36,12 @@ jupyterhub:
 jupyterhub-home-nfs:
   quotaEnforcer:
     # one user has 343G
-    hardQuota: '350' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 350
   eks:
     volumeId: vol-0e86b4abbf3083190
 
 nfs:
   pv:
-    serverIP: 10.100.179.246
+    serverIP: 10.100.98.165

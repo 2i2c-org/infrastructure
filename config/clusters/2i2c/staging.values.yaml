@@ -70,4 +70,4 @@ jupyterhub-home-nfs:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-staging
 nfs:
   pv:
-    serverIP: 10.3.249.107
+    serverIP: storage-quota-home-nfs.staging.svc.cluster.local

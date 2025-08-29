@@ -191,7 +191,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "sjcc" = {
-    size        = 10
+    size        = 30
     name_suffix = "sjcc"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -206,7 +206,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "srjc" = {
-    size        = 20
+    size        = 30
     name_suffix = "srjc"
   }
   "staging" = {

@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.15.246.238
+    serverIP: storage-quota-home-nfs.nnb-ccg.svc.cluster.local
 jupyterhub:
   ingress:
     hosts: [nnb-ccg.latam.catalystproject.2i2c.cloud]

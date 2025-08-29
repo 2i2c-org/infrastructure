@@ -14,15 +14,20 @@ local emitDaskHubCompatibleConfig(basehubConfig) =
 
 local jupyterhubHomeNFSResources = {
   quotaEnforcer: {
-    path: '/export/%s' % hub_name,
+    config: {
+      QuotaManager: {
+        paths: ['/export/%s' % hub_name],
+        hard_quota: 0,
+      },
+    },
     resources: {
       requests: {
-        cpu: 0.02,
-        memory: '20M',
+        cpu: 0.2,
+        memory: '750M',
       },
       limits: {
-        cpu: 0.04,
-        memory: '30M',
+        cpu: 0.4,
+        memory: '1G',
       },
     },
   },
@@ -68,6 +73,6 @@ local jupyterhubGroupsExporterResources = {
 };
 
 emitDaskHubCompatibleConfig({
-  'jupyterhub-home-nfs': if is_staging then {} else jupyterhubHomeNFSResources,
-  'jupyterhub-groups-exporter': if is_staging then {} else jupyterhubGroupsExporterResources,
+  'jupyterhub-home-nfs': jupyterhubHomeNFSResources,
+  'jupyterhub-groups-exporter': jupyterhubGroupsExporterResources,
 })
