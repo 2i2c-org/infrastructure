@@ -77,7 +77,7 @@ basehub:
                 display_name: Python
                 description: Python datascience environment
                 kubespawner_override:
-                  image: openscapes/python:3ad4036
+                  image: openscapes/python:8d3d96f
               02-R:
                 display_name: R + Python Geospatial
                 description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
