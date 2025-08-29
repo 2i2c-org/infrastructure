@@ -1,5 +1,7 @@
 nfs:
   enabled: true
+  shareCreator:
+    enabled: false
   pv:
     enabled: true
     mountOptions:
@@ -7,7 +9,7 @@ nfs:
     - noatime
     serverIP: 10.80.94.178
     # MUST HAVE TRAILING SLASH
-    baseShareName: /homes/homes/
+    baseShareName: /
 jupyterhub:
   custom:
     jupyterhubConfigurator:
