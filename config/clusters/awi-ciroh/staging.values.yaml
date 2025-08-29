@@ -11,7 +11,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hardQuota: '10' # in GB
+          hard_quota: 20 # in GB
   jupyterhub:
     ingress:
       hosts: [staging.ciroh.awi.2i2c.cloud]
