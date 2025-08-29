@@ -22,11 +22,11 @@ local jupyterhubHomeNFSResources = {
     resources: {
       requests: {
         cpu: 0.02,
-        memory: '20M',
+        memory: '150M',
       },
       limits: {
         cpu: 0.04,
-        memory: '30M',
+        memory: '170M',
       },
     },
   },
@@ -72,6 +72,6 @@ local jupyterhubGroupsExporterResources = {
 };
 
 emitDaskHubCompatibleConfig({
-  'jupyterhub-home-nfs': if is_staging then {} else jupyterhubHomeNFSResources,
-  'jupyterhub-groups-exporter': if is_staging then {} else jupyterhubGroupsExporterResources,
+  'jupyterhub-home-nfs': jupyterhubHomeNFSResources,
+  'jupyterhub-groups-exporter': jupyterhubGroupsExporterResources,
 })
