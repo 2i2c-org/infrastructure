@@ -21,7 +21,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "ccsf" = {
-    size        = 350
+    size        = 450
     name_suffix = "ccsf"
   }
   "chabot" = {
@@ -181,7 +181,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "sbcc-dev" = {
-    size        = 10
+    size        = 20
     name_suffix = "sbcc-dev"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -196,7 +196,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "sjsu" = {
-    size        = 1
+    size        = 20
     name_suffix = "sjsu"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -220,7 +220,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "ucsc" = {
-    size        = 3
+    size        = 20
     name_suffix = "ucsc"
   }
   # not migrated to jupyterhub-home-nfs yet
@@ -230,7 +230,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "wlac" = {
-    size        = 8
+    size        = 20
     name_suffix = "wlac"
   }
 }
