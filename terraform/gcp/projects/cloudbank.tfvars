@@ -34,7 +34,7 @@ persistent_disks = {
   }
   # not migrated to jupyterhub-home-nfs yet
   "csm" = {
-    size        = 95
+    size        = 150
     name_suffix = "csm"
   }
   # not migrated to jupyterhub-home-nfs yet
