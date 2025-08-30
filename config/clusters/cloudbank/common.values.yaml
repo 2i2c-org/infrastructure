@@ -8,7 +8,6 @@ nfs:
     - soft
     - noatime
     # MUST HAVE TRAILING SLASH
-    # baseShareName: /homes/homes/
     baseShareName: /
 jupyterhub:
   custom:
