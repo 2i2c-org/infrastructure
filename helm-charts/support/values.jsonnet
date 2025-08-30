@@ -136,38 +136,6 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     ],
   };
 
-  // This alert is not currently used august 2025
-  // FIXME: consider removing it if we end up not needing it
-  local makeUserPodUnschedulableAlert = function(
-    name,
-    summary,
-    severity,
-    labels={},
-                                        ) {
-    name: name,
-    rules: [
-      {
-        alert: name,
-        expr: |||
-          # This alert fires when a user pod is unschedulable for more than 10 minutes.
-          # We use kube_pod_status_unschedulable to detect unschedulable pods.
-          count(
-            kube_pod_status_unschedulable{pod=~'jupyter-.*'} == 1
-            and (time() - kube_pod_created > 600)
-          ) by (namespace, pod) > 0
-        |||,
-        'for': '0m',
-        labels: {
-          cluster: cluster_name,
-          severity: severity,
-        } + labels,
-        annotations: {
-          summary: summary,
-        },
-      },
-    ],
-  };
-
   local configCostMonitoring = function(VARS_2I2C_AWS_ACCOUNT_ID) {
     enabled: true,
     extraEnv: [
@@ -270,6 +238,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
               'groups-exporter',
               'action needed this week'
+            ),
+            makePodRestartAlert(
+              'NFS Server Pod has restarted',
+              'jupyterhub-home-nfs pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
+              'storage-quota-home-nfs',
+              'same day action needed'
             ),
             diskIOApproachingSaturation(
               'Disk IO approaching saturation',
