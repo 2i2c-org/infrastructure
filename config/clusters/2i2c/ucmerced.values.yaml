@@ -7,6 +7,9 @@ jupyterhub:
       hosts:
       - ucmerced.2i2c.cloud
   singleuser:
+    nodeSelector:
+      # Schedule on a n2-highmem-8
+      node.kubernetes.io/instance-type: n2-highmem-8
     profileList:
     - display_name: Python
       description: Start a Python server with JupyterLab and scientific Python stack

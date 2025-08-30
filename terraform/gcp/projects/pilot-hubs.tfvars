@@ -49,7 +49,7 @@ persistent_disks = {
     name_suffix = "ucmerced-staging"
   },
   "ucmerced" = {
-    size        = 150 # in GB
+    size        = 250 # in GB
     name_suffix = "ucmerced"
   }
 }
@@ -59,6 +59,11 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
+  },
+  "n2-highmem-8" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-8",
   },
   "n2-highmem-16" : {
     min : 0,
