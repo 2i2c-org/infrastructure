@@ -73,7 +73,7 @@ jobs:
       prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - uses: actions/setup-python@v5
       with:
@@ -253,7 +253,7 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
       uses: ./.github/actions/setup-deploy
@@ -488,7 +488,7 @@ jobs:
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
@@ -626,7 +626,7 @@ jobs:
         jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
