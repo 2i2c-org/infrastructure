@@ -79,7 +79,7 @@ jobs:
       (github.event_name == 'pull_request' && contains(github.head_ref, fromJson('["dependabot", "pre-commit"]')) == false)
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: actions/setup-python@v5
       with:
         python-version: '3.13'
@@ -210,7 +210,7 @@ jobs:
         jobs: ${{ fromJson(needs.generate-clusters-to-validate.outputs.cluster_matrix) }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: actions/setup-python@v5
       with:
         python-version: '3.13'
