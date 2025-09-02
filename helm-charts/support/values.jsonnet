@@ -35,6 +35,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         labels: {
           cluster: cluster_name,
           severity: severity,
+          service: 'persistent storage',
         } + labels,
         annotations: {
           summary: summary,
@@ -183,6 +184,13 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 ],
               },
               {
+                receiver: 'persistent-storage',
+                matchers: [
+                  'cluster =~ .*',
+                  'service = persistent-storage',
+                ],
+              },
+              {
                 receiver: 'pagerduty-no-auto-resolution',
                 matchers: [
                   // UserPodUnschedulable alerts should not be auto-resolved when the pod is deleted
@@ -198,18 +206,13 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
       serverFiles: {
         'alerting_rules.yml': {
           groups: [
+            // Persistent storage related alerts
             makePVCApproachingFullAlert(
               'Home directory has 10% space left',
               'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'home-nfs',
               0.1,
               'same day action needed',
-            ),
-
-            makeServerStartupFailureAlert(
-              'Server Startup Failed',
-              'Outage alert: Server Startup failed: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
-              'same day action needed'
             ),
             makePVCApproachingFullAlert(
               'Home directory has 0% space left!',
@@ -233,6 +236,13 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               0.1,
               'same day action needed'
             ),
+            // User server startup related alerts
+            makeServerStartupFailureAlert(
+              'Server Startup Failed',
+              'Outage alert: Server Startup failed: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
+              'same day action needed'
+            ),
+            // Pod restarts for important pods
             makePodRestartAlert(
               'Groups exporter pod has restarted',
               'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
@@ -245,6 +255,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               'storage-quota-home-nfs',
               'same day action needed'
             ),
+            // General disk IO saturation alert
             diskIOApproachingSaturation(
               'Disk IO approaching saturation',
               'action needed this week'
