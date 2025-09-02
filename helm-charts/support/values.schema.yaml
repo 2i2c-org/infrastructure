@@ -42,6 +42,9 @@ properties:
   global:
     type: object
     additionalProperties: true
+  dcgm-exporter:
+    type: object
+    additionalProperties: true
 
   # These provide values for objects we create, so we validate their schema
   # to the best of our ability.
