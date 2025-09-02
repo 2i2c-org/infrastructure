@@ -22,7 +22,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 5
+          hard_quota: 0
   jupyterhub:
     ingress:
       hosts: [hub.victorproject.org]
