@@ -3,7 +3,6 @@ local provider_name = std.extVar('VARS_2I2C_PROVIDER');
 
 function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   local makePVCApproachingFullAlert = function(
-    name,
     summary,
     persistentvolumeclaim,
     threshold,
@@ -12,10 +11,10 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     labels={},
                                       ) {
     // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
-    name: name,
+    name: persistentvolumeclaim + ' has ' + threshold * 100 + '% of space left',
     rules: [
       {
-        alert: name,
+        alert: persistentvolumeclaim + ' has ' + threshold * 100 + '% of space left',
         expr: |||
           # We use min() here for two reasons:
           # 1. kubelet_volume_stats_* is reported once per each node the PVC is mounted on, which can be
@@ -35,7 +34,6 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         labels: {
           cluster: cluster_name,
           severity: severity,
-          service: 'persistent storage',
         } + labels,
         annotations: {
           summary: summary,
@@ -180,23 +178,13 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                   // is present on all alerts we have. This makes the 'cluster' label *required* for
                   // all alerts if they need to come to pagerduty.
                   'cluster =~ .*',
-                  'alertname !~ UserPodUnschedulable.*',
                 ],
               },
               {
                 receiver: 'persistent-storage',
                 matchers: [
                   'cluster =~ .*',
-                  'service = persistent-storage',
-                ],
-              },
-              {
-                receiver: 'pagerduty-no-auto-resolution',
-                matchers: [
-                  // UserPodUnschedulable alerts should not be auto-resolved when the pod is deleted
-                  //due to unscheduled timeout reached.
-                  'cluster =~ .*',
-                  'alertname =~ UserPodUnschedulable.*',
+                  'name =~ .*space left',
                 ],
               },
             ],
@@ -208,14 +196,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
           groups: [
             // Persistent storage related alerts
             makePVCApproachingFullAlert(
-              'Home directory has 10% space left',
               'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'home-nfs',
               0.1,
               'same day action needed',
             ),
             makePVCApproachingFullAlert(
-              'Home directory has 0% space left!',
               'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'home-nfs',
               0,
@@ -223,14 +209,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               '1m',
             ),
             makePVCApproachingFullAlert(
-              'Hub Database has 10% space left',
               'Hub Database Disk about to be full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'hub-db-dir',
               0.1,
               'same day action needed'
             ),
             makePVCApproachingFullAlert(
-              'Prometheus has 10% space left',
               'Prometheus Disk about to be full: cluster:%s' % [cluster_name],
               'support-prometheus-server',
               0.1,
