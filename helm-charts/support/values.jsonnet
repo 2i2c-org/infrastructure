@@ -11,7 +11,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     labels={},
                                       ) {
     // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
-    name: persistentvolumeclaim + ' has ' + threshold * 100 + '% of space left',
+    name: 'PVC available capacity',
     rules: [
       {
         alert: persistentvolumeclaim + ' has ' + threshold * 100 + '% of space left',
@@ -43,16 +43,15 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   };
 
   local makeServerStartupFailureAlert = function(
-    name,
     summary,
     severity,
     labels={},
                                         ) {
     // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
-    name: name,
+    name: 'Server Startup Failure',
     rules: [
       {
-        alert: name,
+        alert: 'Server Startup Failed',
         expr: |||
           # We trigger any time there is a server startup failure, for any reason.
           # The 'min' is to reduce the labels being passed to only the necessary ones
@@ -107,16 +106,15 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   };
 
   local makePodRestartAlert = function(
-    name,
     summary,
     pod_name_substring,
     severity,
     labels={}
                               ) {
-    name: name,
+    name: 'Pod Restart',
     rules: [
       {
-        alert: name,
+        alert: pod_name_substring + ' pod has restarted',
         expr: |||
           # Count total container restarts with pod name containing 'pod_name_substring'.
           # We sum by pod name (which resets after restart) and namespace, so we don't get all
@@ -159,7 +157,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
           route: {
             group_wait: '10s',
             group_interval: '5m',
-            receiver: 'pagerduty',
+            receiver: 'pagerduty-pager',
             group_by: [
               // Deliver alerts individually for each alert as well as each namespace
               // an alert is for. Each alertmanager only handles one cluster so 'cluster'
@@ -171,20 +169,24 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
             repeat_interval: '3h',
             routes: [
               {
-                receiver: 'pagerduty',
+                receiver: 'persistent-storage-pager',
                 matchers: [
-                  // We want to match all alerts, but not add additional labels as they
-                  // clutter the view. So we look for the presence of the 'cluster' label, as that
-                  // is present on all alerts we have. This makes the 'cluster' label *required* for
-                  // all alerts if they need to come to pagerduty.
                   'cluster =~ .*',
+                  'alertname =~ ".*space left.*"',
                 ],
               },
               {
-                receiver: 'persistent-storage',
+                receiver: 'pod-restarts-pager',
                 matchers: [
                   'cluster =~ .*',
-                  'name =~ .*space left',
+                  'alertname =~ ".*pod has restarted"',
+                ],
+              },
+              {
+                receiver: 'server-startup-pager',
+                matchers: [
+                  'cluster =~ .*',
+                  'alertname = "Server Startup Failed"',
                 ],
               },
             ],
@@ -198,8 +200,9 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
             makePVCApproachingFullAlert(
               'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
               'home-nfs',
-              0.1,
+              0.98,
               'same day action needed',
+              '1m',
             ),
             makePVCApproachingFullAlert(
               'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
@@ -222,19 +225,16 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
             ),
             // User server startup related alerts
             makeServerStartupFailureAlert(
-              'Server Startup Failed',
               'Outage alert: Server Startup failed: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
               'same day action needed'
             ),
             // Pod restarts for important pods
             makePodRestartAlert(
-              'Groups exporter pod has restarted',
               'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
               'groups-exporter',
               'action needed this week'
             ),
             makePodRestartAlert(
-              'NFS Server Pod has restarted',
               'jupyterhub-home-nfs pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
               'storage-quota-home-nfs',
               'same day action needed'
