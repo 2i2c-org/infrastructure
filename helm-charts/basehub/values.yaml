@@ -1307,6 +1307,13 @@ jupyterhub:
         if get_config("custom.binderhubUI.enabled"):
             spawner_base_classes = [BinderSpawnerMixin, KubeSpawner]
 
+            # Set start timeout to 15minutes
+            # This isn't ideal - they should start sooner than that! But
+            # we recognize that sometimes pulling in a lot of images takes
+            # a while, especially with node spinup. So we increase the timeout
+            # to reduce our rate of false positives
+            c.Spawner.start_timeout = 15 * 60
+
         class BaseHubSpawner(*spawner_base_classes):
             def start(self, *args, **kwargs):
                 """
