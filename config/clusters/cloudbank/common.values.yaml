@@ -31,7 +31,7 @@ jupyterhub-home-nfs:
   enabled: true
   gke:
     enabled: true
-  config:
-    QuotaManager:
-      quotaEnforcer:
-        hardQuota: '5' # in GB
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 5 # in GB
