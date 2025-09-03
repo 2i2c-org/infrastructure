@@ -25,9 +25,11 @@ jupyterhub:
       2i2c/hub-name: aibst
 jupyterhub-home-nfs:
   quotaEnforcer:
-    hardQuota: '50' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 50
   eks:
     volumeId: vol-05810452a41759168
 nfs:
   pv:
-    serverIP: 10.100.18.60
+    serverIP: 10.100.88.97

@@ -177,3 +177,5 @@ ebs_volumes = {
 }
 
 enable_nfs_backup = true
+
+enable_jupyterhub_cost_monitoring = true

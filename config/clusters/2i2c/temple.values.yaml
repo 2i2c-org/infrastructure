@@ -15,7 +15,7 @@ jupyterhub:
         org:
           name: Temple University JupyterHub
           url: https://www.temple.edu/
-          logo_url: https://www.temple.edu/sites/all/modules/custom/tu_global/images/svg/temple-logo-t-box.svg
+          logo_url: https://www.temple.edu/modules/custom/tu_layout/images/brand/t-cherry.svg
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -61,7 +61,17 @@ jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-temple
   quotaEnforcer:
-    hardQuota: '20' # in GB
+    config:
+      QuotaManager:
+        paths: [/export/temple]
+        hard_quota: 10 # in GB
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 1G
+      limits:
+        cpu: 0.4
+        memory: 2G
 nfs:
   pv:
-    serverIP: 10.3.243.151
+    serverIP: storage-quota-home-nfs.temple.svc.cluster.local

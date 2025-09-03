@@ -12,9 +12,6 @@ jupyterhub:
     cpu:
       guarantee: 1
       limit: 2
-    image:
-      name: quay.io/ccsf/jupyterhub
-      tag: 143569ff145d
     initContainers:
     - name: volume-mount-ownership-fix
       image: busybox:1.36.1
@@ -78,12 +75,15 @@ jupyterhub:
             - boiseschools.org
             - boiseschools.net
       Authenticator:
-        admin_users: []
+        admin_users:
+        - smorris@ausdk12.org
+        - sean.smorris@berkeley.edu
+        - mburton@blakeschool.org
         enable_auth_state: false
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-high
 nfs:
   pv:
-    serverIP: 10.3.254.163
+    serverIP: storage-quota-home-nfs.high.svc.cluster.local
     baseShareName: /

@@ -2,34 +2,23 @@
 
 In addition to [](#uptime-checks), we also have a set of alerts that are configured in support deployments using [](#topic/jsonnet).
 
-## Paging
+## What to do when an alert fires based on its type and severity
+When an alert fires a person should decide how to handle it based on the type of alert and its severity.
+Below are some guidelines on how to handle the different types of alerts we have configured.
 
-We don't have an on-call rotation currently, and nobody is expected to
-respond outside working hours. Hence, we don't really currently have paging
-alerts.
+### Severity and timeline
 
-However, we may temporarily mark some alerts to page specific people during
-ongoing incidents that have not been resolved yet. This is usually done
-to monitor a temporary fix that may or may not have solved the issue. By
-adding a paging alert, we buy ourselves a little peace of mind - as long
-as the page is not firing, we are doing ok.
+When an alert fires, it will create an incident in PagerDuty and notify the `#pagerduty-notifications` channel on the 2i2c Slack.
+Also, each  alert setup with Jsonnet has a severity level that can be one of:
 
-Alerts should have a label named `page` that can be set to the pagerduty
-username of whoever should be paged for that alert.
+- `take immediate action`
+- `same day action needed`
+- `action needed this week`
+- `to be planned in sprint planning`
 
-## Configuration
+This severity level is what determines how quickly you should respond to the alert.
 
-We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
-
-At the time of writing, we have the following classes of alerts:
-
-1. when a persistent volume claim (PVC) is approaching full capacity
-2. when a pod has restarted
-3. when a user pod has had an unschedulable status for more than 5 minutes
-
-When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
-
-## When a PVC is approaching full capacity
+### What to do when a PVC is approaching full capacity
 
 We monitor the capacity of the following volumes:
 
@@ -37,7 +26,7 @@ We monitor the capacity of the following volumes:
 - hub database
 - prometheus database
 
-The alert is triggered when the volume is more than 90% full.
+The alert is triggered when the volume has less than 10% of free space remaining.
 
 To resolve the alert, follow the guidance below
 
@@ -45,7 +34,7 @@ To resolve the alert, follow the guidance below
 - To be documented, see [GH issue](https://github.com/2i2c-org/infrastructure/issues/6187)
 - [](../../sre-guide/prometheus-disk-resize.md)
 
-## When a pod has restarted
+### What to do when a pod has restarted
 
 We monitor pod restarts for the following services:
 
@@ -61,13 +50,21 @@ NAME                                                 READY   STATUS    RESTARTS 
 staging-groups-exporter-deployment-9b4c6749c-sgfcc   1/1     Running   0   10m
 ```
 
-If you have taken the above actions and the issue persists, then open a GitHub issue capturing the details of the problem for consideration by the wider 2i2c team. See [](#uptime-checks) on how to snooze an alert in the meantime.
+If you have taken the above actions and the issue persists, then open a GitHub issue capturing the details of the problem for consideration by the wider 2i2c team.
 
+## What to do when a server can not be started
 
-## When a user pod has had an unschedulable status for more than 5 minutes
+Any time a server startup fails for any reason, we trigger an alert ("Server Startup Failed").
 
-This alert is triggered when a user pod has been in an unschedulable state for more than 5 minutes based on the value of [`kube_pod_status_unschedulable`](https://docs.cloudera.com/management-console/1.5.4/monitoring-metrics/topics/cdppvc_ds_kube_pod_status_unschedulable_trics.html).
+The causes for this can be varied, and it always requires investigation.
+Some common causes are:
 
-This can happen when there are insufficient resources available in the cluster to schedule the pod, or there are issues with taints and tolerations.
+1. Node was too slow to spin up. This may be transient - test again, and if this works, it's fine.
+2. The user may try to bring their own image and that image is not available or buggy in some way. There is not much we can do here.
+3. Appropriate nodepools have not been created somehow. Check the autoscaler logs, and examine the pod specification carefully (particularly `affinity` and `nodeSelector`).
+4. The requested resources are too big to fit on the node type that was requested. Our resource generation script is designed to guard against this. Check to see if we are actually using the resource generation script here.
+5. There is not enough quota in the cloud project for node spin up to happen. Check the cloud console to see if this is the case, and request additional quota.
+6. There is a cloud provider outage. Check out their status page.
+7. A mysterious 7th option. Form a mental model of our infrastructure, and poke around.
 
-Because a user pod usually gets deleted after it failed to get scheduled and start after 10 minutes and the metric would not be available after that, this alert will not self-resolve once the condition is not true anymore and instead requires manual ticking the "Resolve" button after the cause has been addressed.
+Since the metric we use here is a counter, it will *mostly* not autoresolve - once you have debugged it, you must manually resolve it. It *will* autoresolve if you delete the hub pod though - so watch for that as a false positive.

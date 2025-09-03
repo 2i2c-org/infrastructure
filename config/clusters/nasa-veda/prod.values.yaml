@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.52.135
+      serverIP: 10.100.32.135
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-prod
@@ -50,4 +50,6 @@ basehub:
     eks:
       volumeId: vol-0063ecd342e052ef5
     quotaEnforcer:
-      hardQuota: '200' # in GB
+      config:
+        QuotaManager:
+          hard_quota: 200

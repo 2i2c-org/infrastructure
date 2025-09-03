@@ -12,7 +12,7 @@ jupyterhub:
       limit: 1.5G
     image:
       name: quay.io/ccsf/jupyterhub
-      tag: sp25
+      tag: fa25
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -89,3 +89,6 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ccsf
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.ccsf.svc.cluster.local

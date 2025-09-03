@@ -1,34 +1,6 @@
 (howto:increase-disk-size)=
 # Increase the size of a disk storing home directories
 
-## Community check-in
-
-Increasing the size of a storage disk has cost implications. Downsizing the volume is also a [complicated process](howto:decrease-size-gcp-filestore). Please confirm with the community using an email thread on FreshDesk before performing this action.
-
-<details open>
-<summary>Email template</summary>
-<br>
-
-> Dear all,
-> 
-> The home directory disk capacity for the <$CLUSTER_NAME> <$HUB_NAME> hub is approaching its maximum limit.
-> 
-> Recommended actions:
-> 
-> 1. Instruct users to delete any unused files from their home directories (saves cloud costs)
-> 
-> OR
-> 
-> 2. Instruct us to increase the home directory disk capacity (incurs cloud costs)
-> 
-> You can make use of the Grafana Dashboard *JupyterHub Default Dashboards >
-> Home Directory Usage Dashboard* to get an overview of home directory usage per-user:
-> 
-> <$GRAFANA_URL>
-</details>
-
-If the community does not respond within a week, you can proceed with increasing the capacity so that at least 10% is free.
-
 ## Procedure
 
 ```bash
@@ -83,3 +55,30 @@ Once terraform has successfully applied, we also need to grow the size of the fi
 1. Run `df -h` to find out where the directory is mounted, it's current size prior to the `terraform apply`. The mounted directory is _usually_ under `/export`, but is not guaranteed.
 1. Run `xfs_growfs $DIR_NAME` to resize the directory to the new size specified in the tfvars file. Replace `$DIR_NAME` with the _mounted_ directory you found in the previous step.
 1. Re-run `df -h` to confirm the new size
+
+## Community communication
+
+Increasing the size of a storage disk has cost implications. Downsizing the volume is also a [complicated process](howto:decrease-size-gcp-filestore).
+Please let the community know that we've performed an emergency resize using an email thread on FreshDesk after such resize has happened.
+
+<details open>
+<summary>Email template</summary>
+<br>
+
+> Dear all,
+> 
+> The home directory disk capacity for the <$CLUSTER_NAME> <$HUB_NAME> was close to its maximum limit.
+> We have increased the disk so that now there is between 10% to 15% free space remaining.
+> Recommended actions:
+> 
+> 1. Instruct users to delete any unused files from their home directories (saves cloud costs)
+> 
+> OR
+> 
+> 2. Instruct us to increase the home directory disk capacity in case you are expecting more of such increased usage (incurs cloud costs)
+> 
+> You can make use of the Grafana Dashboard *JupyterHub Default Dashboards >
+> Home Directory Usage Dashboard* to get an overview of home directory usage per-user:
+> 
+> <$GRAFANA_URL>
+</details>

@@ -55,7 +55,9 @@ jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-mtu
   quotaEnforcer:
-    hardQuota: '20' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 20
 nfs:
   pv:
-    serverIP: 10.3.244.132
+    serverIP: storage-quota-home-nfs.mtu.svc.cluster.local

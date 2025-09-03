@@ -48,20 +48,21 @@ body:
       | Name of the hub | | |
       | Dask gateway? | `Yes/No` | |
       | Splash image URL | | |
-      | Homepage URL | | | 
+      | Homepage URL | | |
       | Funded by? | | |
       | Authentication Mechanism | | |
       | Admin Users (GitHub handles or emails, depending on Mechanism) | | |
 
       At the end of this phase, both 2i2c engineers and the admin users mentioned can login to the hub.
 
-      #### Phase 3.2: Object storage access
+      #### Phase 3.2: Additional features
 
       | Question | Answer | Notes |
       | :--- | :--- | :--- |
       | Scratch bucket enabled? | `Yes/No` |  |
       | Persistent bucket enabled? | `Yes/No` |  |
-      | Requester pays requests to external buckets allowed? | `Yes/No` | |  
+      | Requester pays requests to external buckets allowed? (GCP only) | `Yes/No` | |
+      | `gh-scoped-creds` setup? | `Yes/No` | |
 
       At the end of this phase, both 2i2c engineers and the admin users mentioned can access any object storage setup.
 
@@ -74,24 +75,31 @@ body:
       | :--- | :--- | :--- |
       | Pangeo Notebook?  | `Yes/No` | |
       | RStudio (with Rocker)? | `Yes/No` |  |
-      | Allow users to specify any image they want to use? | `Yes/No` | If Yes, enable `unlisted_choice`. | 
+      | Allow users to specify any image they want to use? | `Yes/No` | If Yes, enable `unlisted_choice`. |
       | Max RAM option allowed | | |
+      | Dynamic Image Building? | `Yes/No` | |
       | GPU enabled? | `Yes/No` | |
       | Default Interface | `Classic/JupyterLab/Other` | |
       | Allow multiple concurrent servers per user? | `Yes/No` | If yes, enable `allowNamedServers`. |
 
       At the end of this phase, the admin users mentioned should be able to start a server with their desired environment(s).
 
-      #### Phase 3.4: Authentication tuning
+      #### Phase 3.4: GitHub Authentication tuning (delete if not using GitHub auth)
 
       | Question | Answer | Notes |
       | :--- | :--- | :-- |
-      | Authentication Mechanism | | |
-      | GitHub Teams based access? | `Yes/No/NA` | |
-      | List of GitHub Teams to be granted access (if required) | | |
+      | List of GitHub Teams to be granted access | | |
+      | Profile options restricted via teams? | `Yes/No/NA` | Provide info on what teams get what access |
+
+      #### Phase 3.4: CILogon Authentication tuning (delete if not using CILogon auth)
+
+      | Question | Answer | Notes |
+      | :--- | :--- | :-- |
+      | Institution id to be given access | | Pick from https://cilogon.org/idplist/ |
 
       #### Phase 3.5: Profile List finetuning
 
       | Question | Answer | Notes |
       | :--- | :--- | :--- |
-      | Custom image to be specified? | `Yes/No` |  |
+      | Custom image to be specified? | `Yes/No` | Specify what image here |
+      | Custom image to be default? | `Yes/No` | |

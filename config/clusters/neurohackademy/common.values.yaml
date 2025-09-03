@@ -39,7 +39,7 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
-        - NeuroHackademy2025
+        - NeuroHackademy2025:hubbers
         - 2i2c-org:hub-access-for-2i2c-staff
         scope:
         - read:org

@@ -21,7 +21,7 @@ local ts = grafonnet.panel.timeSeries;
             refId: 'variable',
             source: 'url',
             type: 'json',
-            url: 'http://aws-ce-grafana-backend.support.svc.cluster.local/hub-names?from=${__from:date}&to=${__to:date}',
+            url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/hub-names?from=${__from:date}&to=${__to:date}',
             url_options: {
               data: '',
               method: 'GET',
@@ -43,7 +43,7 @@ local ts = grafonnet.panel.timeSeries;
     },
     columns: [
       { selector: 'date', text: 'Date', type: 'timestamp' },
-      { selector: 'name', text: 'Name', type: 'string' },
+      { selector: 'component', text: 'Component', type: 'string' },
       { selector: 'cost', text: 'Cost', type: 'number' },
     ],
     parser: 'backend',

@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.15.254.24
+    serverIP: storage-quota-home-nfs.gita.svc.cluster.local
 jupyterhub:
   ingress:
     hosts: [gita.latam.catalystproject.2i2c.cloud]

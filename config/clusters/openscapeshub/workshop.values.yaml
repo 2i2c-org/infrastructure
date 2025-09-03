@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.8.223
+      serverIP: 10.100.50.169
   jupyterhub:
     custom:
       2i2c:
@@ -77,7 +77,7 @@ basehub:
                 display_name: Python
                 description: Python datascience environment
                 kubespawner_override:
-                  image: openscapes/python:3ad4036
+                  image: openscapes/python:8d3d96f
               02-R:
                 display_name: R + Python Geospatial
                 description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
@@ -156,6 +156,8 @@ basehub:
               2i2c/hub-name: workshop
   jupyterhub-home-nfs:
     quotaEnforcer:
-      hardQuota: '5' # in GB
+      config:
+        QuotaManager:
+          hard_quota: 100
     eks:
       volumeId: vol-0ab191452f5c85c6b

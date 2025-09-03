@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.164.227
+    serverIP: 10.100.33.138
 
 jupyterhub:
   singleuser:
@@ -30,5 +30,6 @@ jupyterhub-home-nfs:
     volumeId: vol-0c264a6c8c39e0955
   quotaEnforcer:
     enabled: false
-    hardQuota: '5000' # in GB
-    path: /export/prod
+    config:
+      QuotaManager:
+        hard_quota: 5000

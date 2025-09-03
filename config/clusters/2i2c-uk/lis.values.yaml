@@ -5,7 +5,7 @@ nfs:
     mountOptions:
     - soft
     - noatime
-    serverIP: 10.103.253.53
+    serverIP: storage-quota-home-nfs.lis.svc.cluster.local
     baseShareName: /
 jupyterhub-home-nfs:
   enabled: true
@@ -13,7 +13,9 @@ jupyterhub-home-nfs:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
   quotaEnforcer:
-    hardQuota: '35' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 35
 jupyterhub:
   ingress:
     hosts: [ds.lis.2i2c.cloud]

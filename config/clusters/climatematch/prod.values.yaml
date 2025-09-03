@@ -1,13 +1,14 @@
 nfs:
   pv:
-    serverIP: 34.118.234.48
+    serverIP: storage-quota-home-nfs.prod.svc.cluster.local
 
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/climatematch/zones/us-central1-b/disks/hub-nfs-homedirs-prod
   quotaEnforcer:
-    hardQuota: '10' # in GB
-
+    config:
+      QuotaManager:
+        hard_quota: 10
 jupyterhub:
   ingress:
     hosts:

@@ -1,12 +1,13 @@
 nfs:
   pv:
-    serverIP: 10.100.227.102
-
+    serverIP: 10.100.18.124
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0cdc25a68ca0303ce
   quotaEnforcer:
-    hardQuota: '2' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 2
 jupyterhub:
   ingress:
     hosts: [projectpythia.2i2c.cloud]

@@ -9,7 +9,7 @@ nfs:
     mountOptions:
     - soft
     - noatime
-    serverIP: 10.87.241.201
+    serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
     baseShareName: /
 
 jupyterhub-home-nfs:

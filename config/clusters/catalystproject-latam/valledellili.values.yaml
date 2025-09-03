@@ -31,4 +31,4 @@ jupyterhub-home-nfs:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-valledellili
 nfs:
   pv:
-    serverIP: 10.15.255.113
+    serverIP: storage-quota-home-nfs.valledellili.svc.cluster.local

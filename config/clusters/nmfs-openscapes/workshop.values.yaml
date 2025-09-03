@@ -1,7 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.92.26
-
+    serverIP: 10.100.19.201
 dask-gateway:
   gateway:
     backend:
@@ -221,6 +220,9 @@ jupyterhub:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-07154b7def3b80b96
-
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GB
 binderhub-service:
   enabled: false

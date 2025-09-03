@@ -1,0 +1,35 @@
+#If the hub is a daskhub, please indent everything under a basehub key
+#basehub:
+nfs:
+  pv:
+    serverIP: 10.100.153.248
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10
+  eks:
+    volumeId: vol-09652a5540fdbd50f
+jupyterhub:
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://staging.temple.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
+  ingress:
+    hosts: [staging.temple.2i2c.cloud]
+    tls:
+    - hosts: [staging.temple.2i2c.cloud]
+      secretName: https-auto-tls
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: staging
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: staging
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-staging-

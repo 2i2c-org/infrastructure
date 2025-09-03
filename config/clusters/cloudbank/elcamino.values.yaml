@@ -57,7 +57,15 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-elcamino
+  quotaEnforcer:
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 1G
+      limits:
+        cpu: 0.4
+        memory: 1.2G
 nfs:
   pv:
-    serverIP: 10.3.250.42
+    serverIP: storage-quota-home-nfs.elcamino.svc.cluster.local
     baseShareName: /

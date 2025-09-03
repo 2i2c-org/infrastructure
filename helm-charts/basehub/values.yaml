@@ -890,6 +890,9 @@ jupyterhub:
                   - 172.16.0.0/12
                   - 192.168.0.0/16
   hub:
+    # Lift from default 64, as that seems to be a bit
+    # too low for our communities
+    concurrentSpawnLimit: 100
     config:
       JupyterHub:
         # Allow unauthenticated prometheus requests
@@ -1753,8 +1756,19 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   enabled: false
+  fullnameOverride: storage-quota
+  autoResizer:
+    enabled: true
+    resources:
+      requests:
+        cpu: 0.01
+        memory: 64Mi
+      limits:
+        memory: 1G
   prometheusExporter:
     enabled: true
+  persistentVolume:
+    addStandardLabels: true
 
 jupyterhub-groups-exporter:
   enabled: true

@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.15.250.54
+    serverIP: storage-quota-home-nfs.areciboc3.svc.cluster.local
 userServiceAccount:
   annotations:
     iam.gke.io/gcp-service-account: latam-areciboc3@catalystproject-392106.iam.gserviceaccount.com

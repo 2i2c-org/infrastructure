@@ -63,7 +63,7 @@ variable "kubernetes_version" {
 
 variable "k8s_version_prefixes" {
   type        = set(string)
-  default     = ["1.29", "1.30", "1."]
+  default     = ["1.30", "1.31", "1.32", "1.33", "1."]
   description = <<-EOT
   A list of k8s version prefixes that can be evaluated to their latest version by
   the output defined in cluster.tf called latest_supported_k8s_versions.
