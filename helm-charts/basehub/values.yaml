@@ -352,7 +352,7 @@ nfs:
   volumeReporter:
     enabled: true
   shareCreator:
-    enabled: true
+    enabled: false
     tolerations: []
   pv:
     enabled: false
