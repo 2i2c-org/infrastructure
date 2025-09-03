@@ -182,9 +182,8 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 makePVCApproachingFullAlert(
                   'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
                   'home-nfs',
-                  0.98,
+                  0.1,
                   'same day action needed',
-                  '1m',
                 ),
                 makePVCApproachingFullAlert(
                   'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
