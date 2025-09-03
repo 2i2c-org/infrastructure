@@ -51,6 +51,10 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-foothill
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GB
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.foothill.svc.cluster.local
