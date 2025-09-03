@@ -47,14 +47,8 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 The size of a disk can **only** be increased, *not* decreased.
 ```
 
-Once terraform has successfully applied, we also need to grow the size of the filesystem with `xfs`.
-
-1. Run `deployer use-cluster-credentials $CLUSTER_NAME` to gain `kubectl` access to the cluster
-1. Run `kubectl -n $HUB_NAME get pods` to find the NFS deployment pod name. It should look something like `${HUB_NAME}-nfs-deployment-<HASH>`.
-1. Exec into the the quota enforcer container: `kubectl -n $HUB_NAME exec -it $POD_NAME -c enforce-xfs-quota -- /bin/bash`
-1. Run `df -h` to find out where the directory is mounted, it's current size prior to the `terraform apply`. The mounted directory is _usually_ under `/export`, but is not guaranteed.
-1. Run `xfs_growfs $DIR_NAME` to resize the directory to the new size specified in the tfvars file. Replace `$DIR_NAME` with the _mounted_ directory you found in the previous step.
-1. Re-run `df -h` to confirm the new size
+This automatically grows the filesystem within the
+next 5 minutes.
 
 ## Community communication
 
