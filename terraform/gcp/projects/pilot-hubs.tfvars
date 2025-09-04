@@ -61,6 +61,22 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-8",
   },
+  "n2-highmem-8-ucmerced" : {
+    min : 5,
+    max : 100,
+    machine_type : "n2-highmem-8",
+    labels : {
+      "2i2c.org/hub-name" : "ucmerced"
+    },
+    taints : [{
+      key : "2i2c.org/hub-name",
+      value : "ucmerced",
+      effect : "NO_SCHEDULE",
+    }],
+    resource_labels : {
+      "hub-name" : "ucmerced",
+    },
+  },
   "n2-highmem-16" : {
     min : 0,
     max : 100,
