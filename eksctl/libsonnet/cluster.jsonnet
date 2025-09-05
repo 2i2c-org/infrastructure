@@ -178,7 +178,7 @@
         '2i2c.org/cluster-name': name,
       },
     },
-    availabilityZones: ['%s-%s' % [region, i] for i in ['a', 'b', 'c']],
+    availabilityZones: ['%s%s' % [region, i] for i in ['a', 'b', 'c']],
     iam: {
       withOIDC: true,
     },
