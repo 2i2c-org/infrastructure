@@ -373,7 +373,7 @@ Then you can change into the terraform subdirectory for the appropriate cloud pr
 Our AWS *terraform* code is now used to deploy supporting infrastructure for the EKS cluster, including:
 
 - An IAM identity account for use with our CI/CD system
-- Appropriately networked EFS storage to serve as an NFS server for hub home directories
+- EBS volumes for use with `jupyterhub-home-nfs`
 - Optionally, setup a [shared database](features:shared-db:aws)
 - Optionally, setup [user buckets](howto:features:storage-buckets)
 

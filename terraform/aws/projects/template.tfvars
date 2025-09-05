@@ -11,14 +11,17 @@ cluster_nodes_location = "{{ cluster_region }}a"
 #       to setup scratch buckets for the hubs on this cluster.
 #
 
+ebs_volumes = {
 {% for hub in hubs %}
-filestores = {
   "{{ hub }}" = {
     name_suffix = "{{ hub }}",
+    type        = "gp3",
+    size        = 10,
     tags        = { "2i2c:hub-name" : "{{ hub }}" },
   },
-}
 {% endfor %}
+}
+enable_nfs_backup = true
 
 {% for hub in hubs %}
 # "scratch-{{ hub }}" : {
