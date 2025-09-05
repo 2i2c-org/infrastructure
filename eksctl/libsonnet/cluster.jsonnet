@@ -149,7 +149,7 @@
     } + extraTags
   ) + {
     _kind:: 'notebook',
-    _hubName: hubName,
+    _hubName:: hubName,
   },
   makeNotebookGPUNodeGroup(
     clusterName,
