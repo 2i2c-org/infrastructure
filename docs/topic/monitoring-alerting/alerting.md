@@ -78,9 +78,11 @@ All of the P1 PagerDuty alerts will show up in the 2i2c [status page](https://2i
 ```
 ````
 
-```{warning}
+````{warning}
 If an Alert goes from P1 to another priority number or no number at all, Pagerduty's status page will loose track of it and will forever show up on the status page unless it is manually removed.
+```{figure} ../../images/manually-remove-outage.png
 ```
+````
 
 ### Important Pagerduty pages to know about
 All of the alerts we have configured are managed by [Pagerduty](https://www.pagerduty.com/)

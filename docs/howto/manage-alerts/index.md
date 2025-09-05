@@ -2,7 +2,7 @@
 # Manage alerts
 
 In addition to [](#uptime-checks), we also have a set of alerts that are configured in support deployments using [](#topic/jsonnet).
-More about these alerts at [](#topic/alerting:jsonnet-alerts)
+More about these alerts at [](alerting:jsonnet-alerts)
 
 ## What to do when an alert fires based on its type and severity
 When an alert fires a person should decide how to handle it based on the type of alert and its severity.
@@ -87,7 +87,7 @@ Also, clicking on an alert in PagerDuty, gets you all the metadata associated wi
 ## How to add a new alert
 
 1. To add a new alert, you'll have to add it to `/helm-charts/support/values.jsonnet` first after checking out [](#topic/jsonnet).
-2. Then, if this is an alert that doesn't pertain to any of the existing alerting groups as defined in [](#topic/alerting:configuration), you'll have to:
+2. Then, if this is an alert that doesn't pertain to any of the existing alerting groups as defined in [](alerting:configuration), you'll have to:
   - create a new group
   - create a new Service in Pagerduty for this groups
   - get the integration key of this service and store it encrypted under a new Pagerduty receiver
