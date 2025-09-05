@@ -14,6 +14,7 @@ as the page is not firing, we are doing ok.
 
 Alerts should have a label named `page` that can be set to the pagerduty username of whoever should be paged for that alert.
 
+(jsonnet-alerts)=
 ## Alerts configured with Jsonnet
 There are a set of alerts that are configured in support deployments using [](#topic/jsonnet).
 
