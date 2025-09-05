@@ -5,11 +5,11 @@ local c = cluster.makeCluster(
   region='us-west-2',
   nodeAz='us-west-2a',
   version='1.32',
-  coreNodeInstanceType="r8i-flex.large",
+  coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     'r5.xlarge',
     'r5.4xlarge',
-    'r5.16xlarge'
+    'r5.16xlarge',
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[
@@ -18,21 +18,21 @@ local c = cluster.makeCluster(
     },
   ],
   nodeGroupSuffixes=['a']
-//     {
-//         suffix: 'a',
-//         autoscale: false
-//     },
-//     {
-//         suffix: 'b',
-//         autoscale: true
-//     }
-//   ]
+  //     {
+  //         suffix: 'a',
+  //         autoscale: false
+  //     },
+  //     {
+  //         suffix: 'b',
+  //         autoscale: true
+  //     }
+  //   ]
 );
 
 cluster.withNodeGroupConfigOverride(
-    c,
-    kind="core",
-    overrides={
-        maxSize: 5
-    }
+  c,
+  kind='core',
+  overrides={
+    maxSize: 5,
+  }
 )
