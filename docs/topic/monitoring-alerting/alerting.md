@@ -22,6 +22,7 @@ There are a set of alerts that are configured in support deployments using [](#t
 [](howto:alerts) has lots of useful howto guides about how to manage this type of alerts that we have setup.
 ```
 
+
 ### Configuration
 We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
 
@@ -78,6 +79,21 @@ All of the P1 PagerDuty alerts will show up in the 2i2c [status page](https://2i
 ```{warning}
 If an Alert goes from P1 to another priority number or no number at all, Pagerduty's status page will loose track of it and will forever show up on the status page unless it is manually removed.
 ```
+
+### Important Pagerduty pages to know about
+All of the alerts we have configured are managed by [Pagerduty](https://www.pagerduty.com/)
+There are some important web pages provided by Pagerduty that are relevant to know about:
+
+1. [2i2c's Pagerduty page](https://2i2c-org.pagerduty.com)
+2. [List of incidents](https://2i2c-org.pagerduty.com/incidents)
+   This is where **all** incidents can be found
+3. [Internal status page](https://2i2c-org.pagerduty.com/status-dashboard)
+   This is where **outages** will show up, per business service. Clicking on an incident from this page will link you to the alert.
+4. [External status page](https://2i2c-hubs.trust.pagerduty.com/)
+   This is where **outages** will show up, per business service to the outside world. This is where people can:
+   - subscribe for updates about outages
+   - subscribe to get info about maintenance windows that we might post
+   - Find out about the uptime of each Business Service.
 
 (uptime-checks)=
 ## Simple HTTPS uptime checks
