@@ -13,6 +13,7 @@ jupyterhub:
     image:
       name: quay.io/ccsf/jupyterhub
       tag: fa25_1
+    imagePullPolicy: Always
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
