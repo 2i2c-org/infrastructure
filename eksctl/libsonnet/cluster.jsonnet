@@ -8,7 +8,7 @@
     minSize=0,
     maxSize=100,
     extraLabels={},
-    extraTaints={},
+    extraTaints=[],
     extraTags={}
   ):: {
     local makeCaLabelTags(labels) = {
@@ -33,7 +33,8 @@
       'node.kubernetes.io/instance-type': instanceType,
     } + extraLabels,
     taints: extraTaints,
-    tags: makeCaLabelTags(self.labels) + makeCaTaintTags(self.taints) + {
+    // tags: makeCaLabelTags(self.labels) + makeCaTaintTags(self.taints) + {
+    tags: {
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': clusterName,
     } + extraTags,
@@ -67,7 +68,7 @@
     minSize=0,
     maxSize=0,
     extraLabels={},
-    extraTaints={},
+    extraTaints=[],
     extraTags={}
   ):: $.makeNodeGroup(
     clusterName,
@@ -82,10 +83,18 @@
       'k8s.dask.org/node-purpose': 'scheduler',
       '2i2c/hub-name': hubName,
     } + extraLabels,
-    extraTaints={
-      'hub.jupyter.org_dedicated': 'user:NoSchedule',
-      'hub.jupyter.org/dedicated': 'user:NoSchedule',
-    } + extraTaints,
+    extraTaints=[
+      {
+        key: 'hub.jupyter.org_dedicated',
+        value: 'user',
+        effect: 'NoSchedule',
+      },
+      {
+        key: 'hub.jupyter.org/dedicated',
+        value: 'user',
+        effect: 'NoSchedule',
+      },
+    ] + extraTaints,
     extraTags={
       '2i2c:node-purpose': 'user',
       '2i2c:hub-name': hubName,
@@ -116,9 +125,14 @@
     extraTags={
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': std.toString(gpuCount),
     },
-    extraTaints={
-      'nvidia.com/gpu': 'present:NoSchedule',
-    }
+
+    extraTaints=[
+      {
+        key: 'nvidia.com/gpu',
+        value: 'present',
+        effect: 'NoSchedule',
+      },
+    ]
   ),
   makeDaskNodeGroup(
     clusterName,
@@ -139,10 +153,19 @@
         extraLabels={
           'k8s.dask.org/node-purpose': 'worker',
         },
-        extraTaints={
-          'k8s.dask.org_dedicated': 'worker:NoSchedule',
-          'k8s.dask.org/dedicated': 'worker:NoSchedule',
-        },
+
+        extraTaints=[
+          {
+            key: 'k8s.dask.org_dedicated',
+            value: 'worker',
+            effect: 'NoSchedule',
+          },
+          {
+            key: 'k8s.dask.org/dedicated',
+            value: 'worker',
+            effect: 'NoSchedule',
+          },
+        ],
         extraTags={
           '2i2c:node-purpose': 'worker',
         }
@@ -219,7 +242,7 @@
           },
         ]
     ],
-    nodeGroups: [
+    managedNodeGroups: [
       $.makeCoreNodeGroup(
         name,
         'r5.xlarge',
