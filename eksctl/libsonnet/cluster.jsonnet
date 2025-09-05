@@ -99,11 +99,11 @@
     nameSuffix=nameSuffix
   ) + {
     iam: {
-        withAddonPolicies: {
-            # So autoscaler can run here with regular IAM access
-            # TODO: Migrate that to IRSA
-            autoScaler: true,
-        },
+      withAddonPolicies: {
+        // So autoscaler can run here with regular IAM access
+        // TODO: Migrate that to IRSA
+        autoScaler: true,
+      },
     },
     _kind:: 'core',
   },
