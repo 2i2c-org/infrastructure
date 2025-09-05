@@ -266,7 +266,10 @@
     ] + [
       $.makeNotebookGPUNodeGroup(
         clusterName=name,
-        availabilityZones=[nodeAz],
+        // Default to having GPUs spawn across zones, to increase
+        // availability at the cost of some network latency + cross
+        // zone traffic costs
+        availabilityZones=self.availabilityZones,
         hubName=hubName,
         instanceType=gpuConfig.instanceType,
         gpuCount=std.get(gpuConfig, 'gpuCount', 1),
