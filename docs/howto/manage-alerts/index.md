@@ -1,3 +1,4 @@
+(howto:alerts)=
 # Manage alerts configured with Jsonnet
 
 In addition to [](#uptime-checks), we also have a set of alerts that are configured in support deployments using [](#topic/jsonnet).

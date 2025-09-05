@@ -17,6 +17,10 @@ Alerts should have a label named `page` that can be set to the pagerduty usernam
 ## Alerts configured with Jsonnet
 There are a set of alerts that are configured in support deployments using [](#topic/jsonnet).
 
+```{important}
+[](howto:alerts) has lots of useful howto guides about how to manage this type of alerts that we have setup.
+```
+
 ### Configuration
 We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
 
