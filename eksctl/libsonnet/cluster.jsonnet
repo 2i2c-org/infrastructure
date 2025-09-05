@@ -29,6 +29,7 @@
     availabilityZones: availabilityZones,
     minSize: minSize,
     desiredCapacity: minSize,
+    instanceType: instanceType,
     volumeSize: 80,
     amiFamily: "AmazonLinux2023",
     labels: {
