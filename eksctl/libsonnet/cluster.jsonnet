@@ -4,9 +4,9 @@
     namePrefix,
     instanceType,
     availabilityZones,
-    nameSuffix='',
-    minSize=0,
-    maxSize=100,
+    nameSuffix,
+    minSize,
+    maxSize,
     extraLabels={},
     extraTaints=[],
     extraTags={}
@@ -19,6 +19,7 @@
       ['k8s.io/cluster-autoscaler/node-template/taint/%s' % taint.key]: "%s:%s" % [taint.value, taint.effect]
       for taint in taints
     },
+    _suffix:: nameSuffix,
     // Include name prefix, filtered instance type (because names can't have .)
     // and name suffix (if given) in the nodegroup name
     name: std.join('-', std.filter(function(x) x != '', [
@@ -46,9 +47,9 @@
     clusterName,
     instanceType,
     availabilityZones,
-    nameSuffix='',
-    minSize=1,
-    maxSize=10,
+    nameSuffix,
+    minSize,
+    maxSize,
   ):: $.makeNodeGroup(
     clusterName=clusterName,
     namePrefix='core',
@@ -64,15 +65,17 @@
     minSize=minSize,
     maxSize=maxSize,
     nameSuffix=nameSuffix
-  ),
+  ) + {
+    _kind:: "core"
+  },
   makeNotebookCPUNodeGroup(
     clusterName,
     hubName,
     instanceType,
     availabilityZones,
-    nameSuffix='',
-    minSize=0,
-    maxSize=100,
+    nameSuffix,
+    minSize,
+    maxSize,
     extraLabels={},
     extraTaints=[],
     extraTags={}
@@ -105,7 +108,10 @@
       '2i2c:node-purpose': 'user',
       '2i2c:hub-name': hubName,
     } + extraTags
-  ),
+  ) + {
+    _kind:: "notebook",
+    _hubName: hubName
+  },
   makeNotebookGPUNodeGroup(
     clusterName,
     hubName,
@@ -113,9 +119,9 @@
     availabilityZones,
     gpuCount,
     gpuType,
-    nameSuffix='',
-    minSize=0,
-    maxSize=100
+    nameSuffix,
+    minSize,
+    maxSize
   ):: $.makeNotebookCPUNodeGroup(
     clusterName=clusterName,
     hubName=hubName,
@@ -145,9 +151,9 @@
     hubName,
     instanceType,
     availabilityZones,
-    nameSuffix='',
-    minSize=0,
-    maxSize=100
+    nameSuffix,
+    minSize,
+    maxSize,
   ):: $.makeNodeGroup(
         clusterName,
         'dask-%s' % [hubName],
@@ -177,6 +183,8 @@
         }
       ) +
       {
+        _kind:: "dask-worker",
+        _hubName:: hubName,
         instancesDistribution+: {
           onDemandBaseCapacity: 0,
           onDemandPercentageAboveBaseCapacity: 0,
@@ -189,11 +197,8 @@
     nodeAz,
     version,
     hubs,
-    notebookCPUInstanceTypes=[
-      'r5.xlarge',
-      'r5.4xlarge',
-      'r5.16xlarge',
-    ],
+    coreNodeInstanceType,
+    notebookCPUInstanceTypes,
     notebookGPUNodeGroups=[],
     daskInstanceTypes=[],
     nodeGroupSuffixes=[]
@@ -258,9 +263,11 @@
     managedNodeGroups: [
       $.makeCoreNodeGroup(
         name,
-        'r5.xlarge',
+        coreNodeInstanceType,
         availabilityZones=[nodeAz],
-        nameSuffix=suffix
+        nameSuffix=suffix,
+        minSize=1,
+        maxSize=100
       ) for suffix in nodeGroupSuffixes
     ] + [
       $.makeNotebookCPUNodeGroup(
@@ -268,7 +275,9 @@
         availabilityZones=[nodeAz],
         hubName=hubName,
         instanceType=instanceType,
-        nameSuffix=suffix
+        nameSuffix=suffix,
+        minSize=0,
+        maxSize=100
       )
       for hubName in hubs
       for instanceType in notebookCPUInstanceTypes
@@ -284,7 +293,9 @@
         instanceType=gpuConfig.instanceType,
         gpuCount=std.get(gpuConfig, 'gpuCount', 1),
         gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4'),
-        nameSuffix=suffix
+        nameSuffix=suffix,
+        minSize=0,
+        maxSize=100
       )
       for hubName in hubs
       for gpuConfig in notebookGPUNodeGroups
@@ -296,11 +307,28 @@
         availabilityZones=[nodeAz],
         hubName=hubName,
         instanceType=instanceType,
-        nameSuffix=suffix
+        nameSuffix=suffix,
+        minSize=0,
+        maxSize=100
       )
       for hubName in hubs
       for instanceType in daskInstanceTypes
       for suffix in nodeGroupSuffixes
     ],
   },
+  withNodeGroupConfigOverride(
+    clusterConfig,
+    kind=null,
+    hubName=null,
+    suffix=null,
+    instanceType=null,
+    overrides={}
+  ):: clusterConfig + {
+    managedNodeGroups: [
+        if (kind == null || ng._kind == kind) && (suffix == null || ng._suffix == suffix) && (hubName == null || std.get(ng, "_hubName", "") == hubName) && (instanceType == null || ng.instanceType == instanceType)
+        then ng + overrides
+        else ng
+        for ng in clusterConfig.managedNodeGroups
+    ]
+  }
 }
