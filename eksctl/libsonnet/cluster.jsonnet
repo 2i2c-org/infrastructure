@@ -28,6 +28,7 @@
     ])),
     availabilityZones: availabilityZones,
     minSize: minSize,
+    maxSize: maxSize,
     desiredCapacity: minSize,
     instanceType: instanceType,
     volumeSize: 80,
