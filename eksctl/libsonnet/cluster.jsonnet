@@ -1,4 +1,20 @@
 {
+  /**
+   Create a managed nodegroup config that can autoscale from 0.
+
+   Parameters:
+   - clusterName [string]: Name of the EKS cluster this nodeGroup is for
+   - namePrefix [string]:
+   - instanceType [string]: Type of instance this nodeGroup should contain
+   - availabilityZones [array[string]]: List of AZs this nodeGroup should span
+   - nameSuffix [string]:
+   - minSize [int]: Minimum number of nodes. Also sets desiredCapacity
+   - maxSize [int]: Maximum number of nodes
+   - extraLabels [dict[string, string]]: Extra labels to add to nodes in this nodeGroup
+   - extraTaints [array[dict[string, string]]]: Extra taints to add to nodes in this nodeGroup.
+                                                List of dicts with keys 'key', 'value', 'effect'
+   - extraTags [dict[string, string]]: Extra resource tags to add to EC2 instances spawned by this nodeGroup
+   */
   makeNodeGroup(
     clusterName,
     namePrefix,
@@ -11,16 +27,31 @@
     extraTaints=[],
     extraTags={}
   ):: {
+    /**
+     Generate EC2 resource tags representing node labels that cluster autoscaler's autodiscovery understands
+     https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#auto-discovery-setup
+     */
     local makeCaLabelTags(labels) = {
       ['k8s.io/cluster-autoscaler/node-template/label/%s' % key]: labels[key]
       for key in std.objectFields(labels)
     },
+    /**
+     Generate EC2 resource tags representing node taints that cluster autoscaler's autodiscovery understands
+     https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#auto-discovery-setup
+     */
     local makeCaTaintTags(taints) = {
       ['k8s.io/cluster-autoscaler/node-template/taint/%s' % taint.key]: '%s:%s' % [taint.value, taint.effect]
       for taint in taints
     },
+    /*
+    Private field saving the nameSuffix so withNodeGroupConfigOverride can filter on suffix
+    */
     _suffix:: nameSuffix,
-    // Include name prefix, filtered instance type (because names can't have .)
+
+    /**
+    Construct the name of the nodegroup based on the *prefix*
+     */
+    // Include name prefix, escaped instance type (because names can't have .)
     // and name suffix (if given) in the nodegroup name
     name: std.join('-', std.filter(function(x) x != '', [
       namePrefix,
@@ -43,6 +74,7 @@
       '2i2c.org/cluster-name': clusterName,
     } + extraTags,
   },
+
   makeCoreNodeGroup(
     clusterName,
     instanceType,
@@ -191,6 +223,17 @@
           spotAllocationStrategy: 'capacity-optimized',
         },
       },
+  /**
+   Create a valid eksctl Cluster configuration
+
+   Arguments:
+   - name [string]: Name of the EKS cluster
+   - region [string]: Region the cluster should live in
+   - nodeAz [string]: Primary zone the cluster should live in
+   - version [string]: Version of EKS control plane + new nodegroups
+   - coreNodeInstanceType [string]: Instance Type to be used for core nodes
+   - notebookCPUInstanceTypes
+   */
   makeCluster(
     name,
     region,
