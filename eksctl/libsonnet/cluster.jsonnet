@@ -19,10 +19,10 @@
       ['k8s.io/cluster-autoscaler/node-template/taint/%s' % key]: taints[key]
       for key in std.objectFields(taints)
     },
-    name: std.join('-', std.filter(function(x) x!= '', [
-        namePrefix,
-        std.strReplace(instanceType, '.', '-'),
-        nameSuffix,
+    name: std.join('-', std.filter(function(x) x != '', [
+      namePrefix,
+      std.strReplace(instanceType, '.', '-'),
+      nameSuffix,
     ])),
     availabilityZones: availabilityZones,
     minSize: minSize,
@@ -46,20 +46,81 @@
     maxSize=0,
   ):: $.makeNodeGroup(
     clusterName=clusterName,
-    namePrefix="core",
+    namePrefix='core',
     instanceType=instanceType,
     availabilityZones=availabilityZones,
     extraLabels={
-        'hub.jupyter.org/node-purpose': 'core',
-        'k8s.dask.org/node-purpose': 'core',
+      'hub.jupyter.org/node-purpose': 'core',
+      'k8s.dask.org/node-purpose': 'core',
     },
     extraTags={
-        '2i2c:node-purpose': 'core',
+      '2i2c:node-purpose': 'core',
     }
   ),
-  makeNotebookNodeGroup(
+  makeNotebookCPUNodeGroup(
     clusterName,
-    namePrefix,
+    hubName,
+    instanceType,
+    availabilityZones,
+    nameSuffix='',
+    minSize=0,
+    maxSize=0,
+    extraLabels={},
+    extraTaints={},
+    extraTags={}
+  ):: $.makeNodeGroup(
+    clusterName,
+    'nb-%s' % [hubName],
+    availabilityZones=availabilityZones,
+    instanceType=instanceType,
+    nameSuffix=nameSuffix,
+    minSize=minSize,
+    maxSize=maxSize,
+    extraLabels={
+      'hub.jupyter.org/node-purpose': 'user',
+      'k8s.dask.org/node-purpose': 'scheduler',
+      '2i2c/hub-name': hubName,
+    } + extraLabels,
+    extraTaints={
+      'hub.jupyter.org_dedicated': 'user:NoSchedule',
+      'hub.jupyter.org/dedicated': 'user:NoSchedule',
+    } + extraTaints,
+    extraTags={
+      '2i2c:node-purpose': 'user',
+      '2i2c:hub-name': hubName,
+    } + extraTags
+  ),
+  makeNotebookGPUNodeGroup(
+    clusterName,
+    hubName,
+    instanceType,
+    availabilityZones,
+    gpuCount,
+    gpuType,
+    nameSuffix='',
+    minSize=0,
+    maxSize=100
+  ):: $.makeNotebookCPUNodeGroup(
+    clusterName=clusterName,
+    hubName=hubName,
+    instanceType=instanceType,
+    availabilityZones=availabilityZones,
+    nameSuffix=nameSuffix,
+    minSize=minSize,
+    maxSize=maxSize,
+    extraLabels={
+      '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': gpuType,
+    },
+    extraTags={
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': std.toString(gpuCount),
+    },
+    extraTaints={
+      'nvidia.com/gpu': 'present:NoSchedule',
+    }
+  ),
+  makeDaskNodeGroup(
+    clusterName,
     hubName,
     instanceType,
     availabilityZones,
@@ -67,34 +128,44 @@
     minSize=0,
     maxSize=0
   ):: $.makeNodeGroup(
-    clusterName,
-    "%s-%s" % [namePrefix, hubName],
-    availabilityZones=availabilityZones,
-    instanceType=instanceType,
-    nameSuffix=nameSuffix,
-    minSize=minSize,
-    maxSize=maxSize,
-    extraLabels={
-        'hub.jupyter.org/node-purpose': 'user',
-        'k8s.dask.org/node-purpose': 'scheduler',
-    },
-    extraTaints={
-        'hub.jupyter.org_dedicated': 'user:NoSchedule',
-        'hub.jupyter.org/dedicated': 'user:NoSchedule',
-    },
-    extraTags={
-        '2i2c:node-purpose': 'user',
-    }
-  ),
+        clusterName,
+        'dask-%s' % [hubName],
+        availabilityZones=availabilityZones,
+        instanceType=instanceType,
+        nameSuffix=nameSuffix,
+        minSize=minSize,
+        maxSize=maxSize,
+        extraLabels={
+          'k8s.dask.org/node-purpose': 'worker',
+        },
+        extraTaints={
+          'k8s.dask.org_dedicated': 'worker:NoSchedule',
+          'k8s.dask.org/dedicated': 'worker:NoSchedule',
+        },
+        extraTags={
+          '2i2c:node-purpose': 'worker',
+        }
+      ) +
+      {
+        instancesDistribution+: {
+          onDemandBaseCapacity: 0,
+          onDemandPercentageAboveBaseCapacity: 0,
+          spotAllocationStrategy: 'capacity-optimized',
+        },
+      },
   makeCluster(
     name,
     region,
     nodeAz,
     version,
     hubs,
-    instanceTypes=[
-        'r5.xlarge', 'r5.4xlarge', 'r5.16xlarge',
-    ]
+    notebookCPUInstanceTypes=[
+      'r5.xlarge',
+      'r5.4xlarge',
+      'r5.16xlarge',
+    ],
+    notebookGPUNodeGroups=[],
+    daskInstanceTypes=[],
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -154,15 +225,35 @@
         availabilityZones=[nodeAz]
       ),
     ] + [
-      $.makeNotebookNodeGroup(
+      $.makeNotebookCPUNodeGroup(
         clusterName=name,
-        namePrefix='nb',
         availabilityZones=[nodeAz],
         hubName=hubName,
         instanceType=instanceType
       )
       for hubName in hubs
-      for instanceType in instanceTypes
+      for instanceType in notebookCPUInstanceTypes
+    ] + [
+      $.makeNotebookGPUNodeGroup(
+        clusterName=name,
+        availabilityZones=[nodeAz],
+        hubName=hubName,
+        instanceType=gpuConfig.instanceType,
+        gpuCount=std.get(gpuConfig, 'gpuCount', 1),
+        gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4')
+      )
+      for hubName in hubs
+      for gpuConfig in notebookGPUNodeGroups
+    ] + [
+    ] + [
+      $.makeDaskNodeGroup(
+        clusterName=name,
+        availabilityZones=[nodeAz],
+        hubName=hubName,
+        instanceType=instanceType
+      )
+      for hubName in hubs
+      for instanceType in daskInstanceTypes
     ],
   },
 }

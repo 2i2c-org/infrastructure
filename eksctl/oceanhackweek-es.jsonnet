@@ -1,9 +1,14 @@
-local cluster = import "./libsonnet/cluster.jsonnet";
+local cluster = import './libsonnet/cluster.jsonnet';
 
 cluster.makeCluster(
-    "oceanhackweek-es",
-    "us-west-2",
-    "us-west-2a",
-    "1.32",
-    ["staging", "prod"]
+  name='oceanhackweek-es',
+  region='us-west-2',
+  nodeAz='us-west-2a',
+  version='1.32',
+  hubs=['staging', 'prod'],
+  notebookGPUNodeGroups=[
+    {
+      instanceType: 'g4dn.xlarge',
+    },
+  ]
 )
