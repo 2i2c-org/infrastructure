@@ -44,8 +44,8 @@
     instanceType,
     availabilityZones,
     nameSuffix='',
-    minSize=0,
-    maxSize=0,
+    minSize=1,
+    maxSize=10,
   ):: $.makeNodeGroup(
     clusterName=clusterName,
     namePrefix='core',
@@ -66,7 +66,7 @@
     availabilityZones,
     nameSuffix='',
     minSize=0,
-    maxSize=0,
+    maxSize=100,
     extraLabels={},
     extraTaints=[],
     extraTags={}
@@ -141,7 +141,7 @@
     availabilityZones,
     nameSuffix='',
     minSize=0,
-    maxSize=0
+    maxSize=100
   ):: $.makeNodeGroup(
         clusterName,
         'dask-%s' % [hubName],
