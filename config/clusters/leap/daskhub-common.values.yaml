@@ -92,6 +92,8 @@ basehub:
             # ref: https://2i2c.freshdesk.com/a/tickets/2761
           - RobertPincus
           - SammyAgrawal
+            # ref: https://2i2c.freshdesk.com/a/tickets/3861
+          - sarika-debruyn
     singleuser:
       cloudMetadata:
         blockWithIptables: false
