@@ -206,6 +206,12 @@
     iam: {
       withOIDC: true,
     },
+    cloudWatch: {
+      clusterLogging: {
+        enableTypes: ['audit', 'api', 'controllerManager', 'scheduler'],
+        logRetentionInDays: 7,
+      },
+    },
     addons: [
       { version: 'latest', tags: {
         ManagedBy: '2i2c',
