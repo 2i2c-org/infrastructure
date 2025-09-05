@@ -16,7 +16,7 @@
       for key in std.objectFields(labels)
     },
     local makeCaTaintTags(taints) = {
-      ['k8s.io/cluster-autoscaler/node-template/taint/%s' % taint.key]: "%s:%s" % [taint.value, taint.effect]
+      ['k8s.io/cluster-autoscaler/node-template/taint/%s' % taint.key]: '%s:%s' % [taint.value, taint.effect]
       for taint in taints
     },
     _suffix:: nameSuffix,
@@ -33,7 +33,7 @@
     desiredCapacity: minSize,
     instanceType: instanceType,
     volumeSize: 80,
-    amiFamily: "AmazonLinux2023",
+    amiFamily: 'AmazonLinux2023',
     labels: {
       'node.kubernetes.io/instance-type': instanceType,
     } + extraLabels,
@@ -66,7 +66,7 @@
     maxSize=maxSize,
     nameSuffix=nameSuffix
   ) + {
-    _kind:: "core"
+    _kind:: 'core',
   },
   makeNotebookCPUNodeGroup(
     clusterName,
@@ -109,8 +109,8 @@
       '2i2c:hub-name': hubName,
     } + extraTags
   ) + {
-    _kind:: "notebook",
-    _hubName: hubName
+    _kind:: 'notebook',
+    _hubName: hubName,
   },
   makeNotebookGPUNodeGroup(
     clusterName,
@@ -183,7 +183,7 @@
         }
       ) +
       {
-        _kind:: "dask-worker",
+        _kind:: 'dask-worker',
         _hubName:: hubName,
         instancesDistribution+: {
           onDemandBaseCapacity: 0,
@@ -268,7 +268,8 @@
         nameSuffix=suffix,
         minSize=1,
         maxSize=100
-      ) for suffix in nodeGroupSuffixes
+      )
+      for suffix in nodeGroupSuffixes
     ] + [
       $.makeNotebookCPUNodeGroup(
         clusterName=name,
@@ -323,12 +324,12 @@
     suffix=null,
     instanceType=null,
     overrides={}
-  ):: clusterConfig + {
+  ):: clusterConfig {
     managedNodeGroups: [
-        if (kind == null || ng._kind == kind) && (suffix == null || ng._suffix == suffix) && (hubName == null || std.get(ng, "_hubName", "") == hubName) && (instanceType == null || ng.instanceType == instanceType)
-        then ng + overrides
-        else ng
-        for ng in clusterConfig.managedNodeGroups
-    ]
-  }
+      if (kind == null || ng._kind == kind) && (suffix == null || ng._suffix == suffix) && (hubName == null || std.get(ng, '_hubName', '') == hubName) && (instanceType == null || ng.instanceType == instanceType)
+      then ng + overrides
+      else ng
+      for ng in clusterConfig.managedNodeGroups
+    ],
+  },
 }
