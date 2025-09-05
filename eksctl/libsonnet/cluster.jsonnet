@@ -16,9 +16,11 @@
       for key in std.objectFields(labels)
     },
     local makeCaTaintTags(taints) = {
-      ['k8s.io/cluster-autoscaler/node-template/taint/%s' % key]: taints[key]
-      for key in std.objectFields(taints)
+      ['k8s.io/cluster-autoscaler/node-template/taint/%s' % taint.key]: "%s:%s" % [taint.value, taint.effect]
+      for taint in taints
     },
+    // Include name prefix, filtered instance type (because names can't have .)
+    // and name suffix (if given) in the nodegroup name
     name: std.join('-', std.filter(function(x) x != '', [
       namePrefix,
       std.strReplace(instanceType, '.', '-'),
@@ -33,8 +35,7 @@
       'node.kubernetes.io/instance-type': instanceType,
     } + extraLabels,
     taints: extraTaints,
-    // tags: makeCaLabelTags(self.labels) + makeCaTaintTags(self.taints) + {
-    tags: {
+    tags: makeCaLabelTags(self.labels) + makeCaTaintTags(self.taints) + {
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': clusterName,
     } + extraTags,
@@ -57,7 +58,10 @@
     },
     extraTags={
       '2i2c:node-purpose': 'core',
-    }
+    },
+    minSize=minSize,
+    maxSize=maxSize,
+    nameSuffix=nameSuffix
   ),
   makeNotebookCPUNodeGroup(
     clusterName,
@@ -190,6 +194,7 @@
     ],
     notebookGPUNodeGroups=[],
     daskInstanceTypes=[],
+    nodeGroupSuffixes=[]
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -252,17 +257,20 @@
       $.makeCoreNodeGroup(
         name,
         'r5.xlarge',
-        availabilityZones=[nodeAz]
-      ),
+        availabilityZones=[nodeAz],
+        nameSuffix=suffix
+      ) for suffix in nodeGroupSuffixes
     ] + [
       $.makeNotebookCPUNodeGroup(
         clusterName=name,
         availabilityZones=[nodeAz],
         hubName=hubName,
-        instanceType=instanceType
+        instanceType=instanceType,
+        nameSuffix=suffix
       )
       for hubName in hubs
       for instanceType in notebookCPUInstanceTypes
+      for suffix in nodeGroupSuffixes
     ] + [
       $.makeNotebookGPUNodeGroup(
         clusterName=name,
@@ -273,20 +281,24 @@
         hubName=hubName,
         instanceType=gpuConfig.instanceType,
         gpuCount=std.get(gpuConfig, 'gpuCount', 1),
-        gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4')
+        gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4'),
+        nameSuffix=suffix
       )
       for hubName in hubs
       for gpuConfig in notebookGPUNodeGroups
+      for suffix in nodeGroupSuffixes
     ] + [
     ] + [
       $.makeDaskNodeGroup(
         clusterName=name,
         availabilityZones=[nodeAz],
         hubName=hubName,
-        instanceType=instanceType
+        instanceType=instanceType,
+        nameSuffix=suffix
       )
       for hubName in hubs
       for instanceType in daskInstanceTypes
+      for suffix in nodeGroupSuffixes
     ],
   },
 }

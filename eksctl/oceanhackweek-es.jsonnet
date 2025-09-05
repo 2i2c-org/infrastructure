@@ -10,5 +10,6 @@ cluster.makeCluster(
     {
       instanceType: 'g4dn.xlarge',
     },
-  ]
+  ],
+  nodeGroupSuffixes=['a']
 )
