@@ -2,7 +2,7 @@
 # Manage alerts
 
 In addition to [](#uptime-checks), we also have a set of alerts that are configured in support deployments using [](#topic/jsonnet).
-More about these alerts at [](jsonnet-alerts)
+More about these alerts at [](#topic/alerting:jsonnet-alerts)
 
 ## What to do when an alert fires based on its type and severity
 When an alert fires a person should decide how to handle it based on the type of alert and its severity.
@@ -70,3 +70,27 @@ Some common causes are:
 7. A mysterious 7th option. Form a mental model of our infrastructure, and poke around.
 
 Since the metric we use here is a counter, it will *mostly* not autoresolve - once you have debugged it, you must manually resolve it. It *will* autoresolve if you delete the hub pod though - so watch for that as a false positive.
+
+## How to get useful information about an alert
+
+Each automatic alert will have a title which is formed using the alert name and various labels considered important.
+
+Example: `[FIRING:1] home-nfs has 10% of space left openscapes prod (same day action needed)`.
+
+- The `FIRING:n` part tracks how many times the alert has been triggered. But because we are not yet grouping alerts, it will always be 1, so it can be ignored.
+- `<disk name> has <limit>% of space left` this is the alert name and it has info about which disk the alert is about and how much space left it has
+- `<cluster-name> <hub-name>` these are labels that provide info about the cluster and hub for which the alert has triggered for
+- `same day action needed` the severity of the alert, which set the timeline when this alert should be handled 
+
+Also, clicking on an alert in PagerDuty, gets you all the metadata associated with it, where you can find extra info, like the summary.
+
+## How to add a new alert
+
+1. To add a new alert, you'll have to add it to `/helm-charts/support/values.jsonnet` first after checking out [](#topic/jsonnet).
+2. Then, if this is an alert that doesn't pertain to any of the existing alerting groups as defined in [](#topic/alerting:configuration), you'll have to:
+  - create a new group
+  - create a new Service in Pagerduty for this groups
+  - get the integration key of this service and store it encrypted under a new Pagerduty receiver
+  - write a matcher rule in Alert Manager that will link this group to this new receiver
+3. Test i
+4. If you know what the outage condition for this new group is, create a new Orchestration rule for it, so that outage alerts are automatically assigned P1 and shown in the status page

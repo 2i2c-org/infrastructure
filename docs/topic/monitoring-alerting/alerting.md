@@ -14,15 +14,17 @@ as the page is not firing, we are doing ok.
 
 Alerts should have a label named `page` that can be set to the pagerduty username of whoever should be paged for that alert.
 
-(jsonnet-alerts)=
-## Alerts configured with Jsonnet
-There are a set of alerts that are configured in support deployments using [](#topic/jsonnet).
+## How to manage alerts
 
 ```{important}
 [](howto:alerts) has lots of useful howto guides about how to manage this type of alerts that we have setup.
 ```
 
+(alerting:jsonnet-alerts)=
+## Alerts configured with Jsonnet
+There are a set of alerts that are configured in support deployments using [](#topic/jsonnet).
 
+(alerting:configuration)=
 ### Configuration
 We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
 
