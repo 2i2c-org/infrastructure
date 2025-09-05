@@ -28,6 +28,7 @@
     minSize: minSize,
     desiredCapacity: minSize,
     volumeSize: 80,
+    amiFamily: "AmazonLinux2023",
     labels: {
       'node.kubernetes.io/instance-type': instanceType,
     } + extraLabels,
