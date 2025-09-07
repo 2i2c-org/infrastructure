@@ -4,6 +4,15 @@ jupyterhub:
     tls:
     - hosts: [staging.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+    image:
+      name: quay.io/ccsf/jupyterhub
+      tag: fa25_1
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -34,6 +43,8 @@ jupyterhub:
             default: true
             username_derivation:
               username_claim: email
+            allowed_domains:
+            - mail.ccsf.edu
       OAuthenticator:
         # WARNING: Don't use allow_existing_users with config to allow an
         #          externally managed group of users, such as
@@ -65,6 +76,7 @@ jupyterhub:
         #
         admin_users:
         - sean.smorris@berkeley.edu
+        - shawn.wiggins@mail.ccsf.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-staging

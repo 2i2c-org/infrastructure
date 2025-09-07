@@ -52,14 +52,6 @@ hubs:
   - common.values.yaml
   - ccsf.values.yaml
   - enc-ccsf.secret.values.yaml
-- name: ccsf-test
-  display_name: City College SF Test
-  domain: ccsf-test.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - ccsf-test.values.yaml
-  - enc-ccsf-test.secret.values.yaml
 - name: chabot
   display_name: Chabot College
   domain: chabot.cloudbank.2i2c.cloud
