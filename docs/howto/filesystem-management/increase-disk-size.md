@@ -61,7 +61,7 @@ Please let the community know that we've performed an emergency resize using an 
 
 > Dear all,
 > 
-> The home directory disk capacity for the <$CLUSTER_NAME> <$HUB_NAME> was close to its maximum limit.
+> The home directory disk capacity for the <$CLUSTER_NAME> <$HUB_NAME> hub was close to its maximum limit.
 > We have increased the disk so that now there is between 10% to 15% free space remaining.
 > Recommended actions:
 > 
