@@ -3,6 +3,8 @@ prometheusIngressAuthSecret:
 
 prometheus:
   server:
+    persistentVolume:
+      size: 500Gi
     ingress:
       enabled: true
       hosts:
