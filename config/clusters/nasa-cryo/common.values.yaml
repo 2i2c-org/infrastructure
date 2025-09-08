@@ -17,6 +17,10 @@ basehub:
       baseShareName: /
   dask-gateway:
     enabled: true
+    gateway:
+      backend:
+        imagePullSecrets: [name: image-pull-secret]
+
   jupyterhub:
     custom:
       daskhubSetup:
@@ -130,6 +134,8 @@ basehub:
         profile_options:
           image:
             display_name: Environment
+            dynamic_image_building:
+              enabled: true
             unlisted_choice:
               enabled: true
               display_name: Custom image
@@ -280,6 +286,25 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
+
+  binderhub-service:
+    enabled: true
+    # Explicitly specify what nodes we want for our builds
+    # Otherwise we may scale up a larger node than needed
+    dockerApi:
+      nodeSelector:
+        node.kubernetes.io/instance-type: r5.xlarge
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          node.kubernetes.io/instance-type: r5.xlarge
+      DockerRegistry:
+        url: &url https://quay.io
+        username: &username imagebuilding-non-gcp-hubs+image_builder
+    buildPodsRegistryCredentials:
+      server: *url
+      username: *username
+
   jupyterhub-home-nfs:
     enabled: true
     eks:
