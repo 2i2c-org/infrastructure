@@ -104,7 +104,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         (
               sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"})
             -
-              (sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"} offset 10m))
+              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"} offset 10m)
         ) >= 1    
     ||| % [pod_name_substring, pod_name_substring],
     'for': '5m',
