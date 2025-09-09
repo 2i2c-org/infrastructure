@@ -51,7 +51,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
           (jupyterhub_server_spawn_duration_seconds_count{status="failure"} > 0)
         -
           ((jupyterhub_server_spawn_duration_seconds_count{status="failure"} offset 2m) > 0)
-      )
+      ) > 0
     |||,
     'for': '1m',
     labels: {
