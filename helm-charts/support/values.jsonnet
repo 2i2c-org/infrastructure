@@ -101,8 +101,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
       # Count total container restarts with pod name containing 'pod_name_substring'.
       # We sum by pod name (which resets after restart) and namespace, so we don't get all
       # the other labels of the metric in our alert.
-      sum(kube_pod_container_status_restarts_total{pod=~'.*%s.*'}) by (pod, namespace) >= 1
-    ||| % [pod_name_substring],
+        (
+              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"})
+            -
+              (sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"} offset 10m))
+        ) >= 1    
+    ||| % [pod_name_substring, pod_name_substring],
     'for': '5m',
     labels: {
       cluster: cluster_name,
