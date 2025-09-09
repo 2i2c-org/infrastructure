@@ -364,6 +364,14 @@ hubs:
   - common.values.yaml
   - skyline.values.yaml
   - enc-skyline.secret.values.yaml
+- name: spelman
+  display_name: Spelman College
+  domain: spelman.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - spelman.values.yaml
+  - enc-spelman.secret.values.yaml
 - name: srjc
   display_name: Santa Rosa Junior College
   domain: srjc.cloudbank.2i2c.cloud
