@@ -3,14 +3,6 @@ jupyterhub:
     image:
       name: quay.io/2i2c/utoronto-image
       tag: 34b2777825b1
-    extraFiles:
-      gitconfig:
-        mountPath: /etc/gitconfig
-        # app-id comes from https://github.com/organizations/utoronto-2i2c/settings/apps/utoronto-jupyterhub-private-cloner
-        stringData: |
-          [credential "https://github.com"]
-          helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 93515
-          useHttpPath = true
   hub:
     config:
       Authenticator:
