@@ -46,10 +46,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     alert: 'Server Startup Failed',
     expr: |||
       # We trigger any time there is a server startup failure, for any reason.
-      # The 'min' is to reduce the labels being passed to only the necessary ones
-      min(
-        jupyterhub_server_spawn_duration_seconds_count{status="failure"} > 0
-      ) by (namespace)
+      # The 'max' is to reduce the labels being passed to only the necessary ones
+      max by (namespace) (
+          (jupyterhub_server_spawn_duration_seconds_count{status="failure"} > 0)
+        -
+          ((jupyterhub_server_spawn_duration_seconds_count{status="failure"} offset 2m) > 0)
+      ) > 0
     |||,
     'for': '1m',
     labels: {
@@ -104,7 +106,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         (
               sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"})
             -
-              (sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"} offset 10m))
+              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"} offset 10m)
         ) >= 1    
     ||| % [pod_name_substring, pod_name_substring],
     'for': '5m',
