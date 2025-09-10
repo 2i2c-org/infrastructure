@@ -25,6 +25,25 @@ basehub:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: github
+      singleuserAdmin:
+        extraVolumeMounts:
+          # /allusers is an extra mount point for admins to access to all users'
+          # home dirs
+        - name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
+        - name: home
+          mountPath: /home/rstudio/allusers
+          readOnly: false
+          # mounts below are copied from basehub's values that we override by
+          # specifying extraVolumeMounts (lists get overridden when helm values
+          # are combined)
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
+        - name: home
+          mountPath: /home/rstudio/shared-readwrite
+          subPath: _shared
       jupyterhubConfigurator:
         enabled: false
       homepage:
