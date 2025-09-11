@@ -183,6 +183,10 @@ persistent_disks = {
     size        = 80
     name_suffix = "skyline"
   }
+  "spelman" = {
+    size        = 25
+    name_suffix = "spelman"
+  }
   "srjc" = {
     size        = 30
     name_suffix = "srjc"
