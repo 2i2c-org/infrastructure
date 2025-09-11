@@ -59,7 +59,6 @@ _This phase is only necessary for single hub clusters._
   - Run `eksctl delete cluster --config-file=$CLUSTER_NAME.eksctl.yaml --disable-nodegroup-eviction`
   - Delete the `eksctl`-related files:
     - The `jsonnet` file under the `eksctl` folder
-    - The public SSH key under the `eksctl/ssh-keys` folder
 - [ ] Remove the associated `config/clusters/<cluster_name>` directory and all its contents
 - Remove the cluster from CI:
   - [ ] [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
