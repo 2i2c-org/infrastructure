@@ -225,11 +225,7 @@
       {
         _kind:: 'dask-worker',
         _hubName:: hubName,
-        instancesDistribution+: {
-          onDemandBaseCapacity: 0,
-          onDemandPercentageAboveBaseCapacity: 0,
-          spotAllocationStrategy: 'capacity-optimized',
-        },
+        spot: true
       },
   /**
    Create a valid eksctl Cluster configuration
