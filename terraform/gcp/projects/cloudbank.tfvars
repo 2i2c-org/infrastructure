@@ -180,7 +180,7 @@ persistent_disks = {
     name_suffix = "sjsu"
   }
   "skyline" = {
-    size        = 80
+    size        = 84
     name_suffix = "skyline"
   }
   "spelman" = {
