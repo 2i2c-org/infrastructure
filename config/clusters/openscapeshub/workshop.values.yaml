@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.50.169
+      serverIP: 10.100.130.27
   jupyterhub:
     custom:
       2i2c:
@@ -52,96 +52,11 @@ basehub:
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
           readOnly: false
-      defaultUrl: /lab
       nodeSelector:
         2i2c/hub-name: workshop
       extraEnv:
         SCRATCH_BUCKET: s3://openscapeshub-scratch-workshop/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://openscapeshub-persistent-workshop/$(JUPYTERHUB_USER)
-      profileList:
-      - display_name: Choose your environment and resources
-        default: true
-        profile_options:
-          image:
-            display_name: Environment
-            unlisted_choice:
-              enabled: true
-              display_name: Custom image
-              description: Specify your own docker image (must have python and jupyterhub installed in it)
-              validation_regex: ^.+:.+$
-              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
-              kubespawner_override:
-                image: '{value}'
-            choices:
-              01-python:
-                display_name: Python
-                description: Python datascience environment
-                kubespawner_override:
-                  image: openscapes/python:8d3d96f
-              02-R:
-                display_name: R + Python Geospatial
-                description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
-                kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
-              03-Matlab:
-                display_name: Matlab
-                description: Matlab environment
-                kubespawner_override:
-                  image: openscapes/matlab:2023-11-28
-          resource_allocation:
-            display_name: Resource Allocation
-            choices:
-              mem_2_gb:
-                display_name: ~2 GB RAM, ~0.2 CPUs
-                description: Up to ~4 CPUs when available
-                kubespawner_override:
-                  mem_guarantee: 1951419879
-                  mem_limit: 1951419879
-                  cpu_guarantee: 0.22815625
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_4_gb:
-                display_name: ~4 GB RAM, ~0.5 CPUs
-                description: Up to ~4 CPUs when available
-                kubespawner_override:
-                  mem_guarantee: 3902839759
-                  mem_limit: 3902839759
-                  cpu_guarantee: 0.4563125
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_7_gb:
-                display_name: ~7 GB RAM, ~0.9 CPUs
-                description: Up to ~4 CPUs when available
-                kubespawner_override:
-                  mem_guarantee: 7805679519
-                  mem_limit: 7805679519
-                  cpu_guarantee: 0.912625
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_15_gb:
-                display_name: ~15 GB RAM, ~1.8 CPUs
-                description: Up to ~4 CPUs when available
-                default: true
-                kubespawner_override:
-                  mem_guarantee: 15611359038
-                  mem_limit: 15611359038
-                  cpu_guarantee: 1.82525
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_gb:
-                display_name: ~29 GB RAM, ~4 CPUs
-                description: ~4 CPUs always available
-                kubespawner_override:
-                  mem_guarantee: 31222718077
-                  mem_limit: 31222718077
-                  cpu_guarantee: 3.6505
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
 
   dask-gateway:
     gateway:
@@ -158,6 +73,6 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 100
+          hard_quota: 10
     eks:
       volumeId: vol-0ab191452f5c85c6b
