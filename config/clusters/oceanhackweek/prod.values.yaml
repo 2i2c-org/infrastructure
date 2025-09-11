@@ -24,4 +24,4 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   eks:
-    volumeId: vol-022e7aa7229effa58
+    volumeId: vol-0977ec2bf457215f0
