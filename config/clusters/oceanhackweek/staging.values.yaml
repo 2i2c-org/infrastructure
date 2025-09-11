@@ -1,0 +1,29 @@
+nfs:
+  pv:
+    serverIP: 10.100.126.145
+  shareCreator:
+    enabled: false
+
+# userServiceAccount:
+#   annotations:
+#     eks.amazonaws.com/role-arn: arn:aws:iam::622703418259:role/berkeley-geojupyter-staging
+
+jupyterhub:
+  ingress:
+    hosts: [staging.oceanhackweek.2i2c.cloud]
+    tls:
+    - hosts: [staging.oceanhackweek.2i2c.cloud]
+      secretName: https-auto-tls
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.oceanhackweek.2i2c.cloud/hub/oauth_callback
+  # singleuser:
+  #   extraEnv:
+  #     SCRATCH_BUCKET: s3://berkeley-geojupyter-scratch-staging/$(JUPYTERHUB_USER)
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-059030d09d8f3ddf7
