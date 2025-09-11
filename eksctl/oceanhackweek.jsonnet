@@ -1,10 +1,10 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
 local c = cluster.makeCluster(
-  name='oceanhackweek-es-5',
+  name='oceanhackweek',
   region='us-west-2',
   nodeAz='us-west-2a',
-  version='1.32',
+  version='1.33',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     'r5.xlarge',
@@ -12,27 +12,8 @@ local c = cluster.makeCluster(
     'r5.16xlarge',
   ],
   hubs=['staging', 'prod'],
-  notebookGPUNodeGroups=[
-    {
-      instanceType: 'g4dn.xlarge',
-    },
-  ],
-  nodeGroupSuffixes=['a']
-  //     {
-  //         suffix: 'a',
-  //         autoscale: false
-  //     },
-  //     {
-  //         suffix: 'b',
-  //         autoscale: true
-  //     }
-  //   ]
+  notebookGPUNodeGroups=[],
+  nodeGroupGenerations=['a']
 );
 
-cluster.withNodeGroupConfigOverride(
-  c,
-  kind='core',
-  overrides={
-    maxSize: 5,
-  }
-)
+c
