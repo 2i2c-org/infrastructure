@@ -75,37 +75,6 @@ def generate_infra_files(vars):
         f.write(tfvars_template.render(**vars))
     print_colour(f"{tfvars_file_path} created")
 
-    print_colour("Generate, encrypt and store the ssh private key...", "yellow")
-    subprocess.check_call(
-        [
-            "ssh-keygen",
-            "-f",
-            f"{REPO_ROOT_PATH}/eksctl/ssh-keys/{cluster_name}.key",
-            "-q",
-            "-N",
-            "",
-        ]
-    )
-
-    # Move the generated ssh private key file under secret/
-    os.rename(
-        f"{REPO_ROOT_PATH}/eksctl/ssh-keys/{cluster_name}.key",
-        f"{REPO_ROOT_PATH}/eksctl/ssh-keys/secret/{cluster_name}.key",
-    )
-
-    ssh_key_file = REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key"
-    # Encrypt the private key
-    subprocess.check_call(
-        [
-            "sops",
-            "--in-place",
-            "--encrypt",
-            ssh_key_file,
-        ]
-    )
-    print_colour(f"{ssh_key_file} created")
-
-
 @dedicated_cluster_app.command()
 def aws(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),

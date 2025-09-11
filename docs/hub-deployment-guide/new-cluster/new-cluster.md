@@ -125,13 +125,11 @@ We automatically generate the files required to setup a new cluster:
 ````{tab-item} AWS
 :sync: aws-key
 - A `.jsonnet` file for use with `eksctl`
-- A `sops` encrypted [ssh key](https://eksctl.io/introduction/#ssh-access) that can be used to ssh into the kubernetes nodes.
-- A ssh public key used by `eksctl` to grant access to the private key.
 - A `.tfvars` terraform variables file that will setup most of the non EKS infrastructure.
 - The cluster config directory in `./config/cluster/<new-cluster>`
 - The `cluster.yaml` config file
 - The support values file `support.values.yaml`
-- The the support credentials encrypted file `enc-support.values.yaml` 
+- The the support credentials encrypted file `enc-support.values.yaml`
 ````
 
 ````{tab-item} Google Cloud
@@ -140,7 +138,7 @@ We automatically generate the files required to setup a new cluster:
 - The cluster config directory in `./config/cluster/<new-cluster>`
 - A sample `cluster.yaml` config file
 - The support values file `support.values.yaml`
-- The the support credentials encrypted file `enc-support.values.yaml` 
+- The the support credentials encrypted file `enc-support.values.yaml`
 ````
 
 ````{tab-item} Azure
