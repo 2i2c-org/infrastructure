@@ -13,13 +13,7 @@ local emitDaskHubCompatibleConfig(basehubConfig) =
   if isDaskHub then { basehub: basehubConfig } else basehubConfig;
 
 local jupyterhubHomeNFSResources = {
-  quotaEnforcer: {
-    config: {
-      QuotaManager: {
-        paths: ['/export/%s' % hub_name],
-        hard_quota: 0,
-      },
-    },
+  quotaEnforcer+: {
     resources: {
       requests: {
         cpu: 0.2,
@@ -31,7 +25,7 @@ local jupyterhubHomeNFSResources = {
       },
     },
   },
-  nfsServer: {
+  nfsServer+: {
     resources: {
       requests: {
         cpu: 0.2,
@@ -43,7 +37,7 @@ local jupyterhubHomeNFSResources = {
       },
     },
   },
-  prometheusExporter: {
+  prometheusExporter+: {
     resources: {
       requests: {
         cpu: 0.02,
@@ -55,7 +49,29 @@ local jupyterhubHomeNFSResources = {
       },
     },
   },
+  autoResizer+: {
+    resources: {
+      requests: {
+        cpu: 0.01,
+        memory: '64Mi',
+      },
+      limits: {
+        memory: '1Gi'
+      }
+    }
+  }
 };
+
+local jupyterhubHomeNFSConfig = {
+  quotaEnforcer+: {
+    config: {
+      QuotaManager: {
+        paths: ['/export/%s' % hub_name],
+        hard_quota: 0,
+      },
+    },
+  },
+} + if is_staging then {} else jupyterhubHomeNFSResources;
 
 local jupyterhubGroupsExporterResources = {
   // Memory resources chosen by querying PromQL "max(container_memory_working_set_bytes{name!='', pod=~'.*groups-exporter.*'})" over all hubs
@@ -73,6 +89,6 @@ local jupyterhubGroupsExporterResources = {
 };
 
 emitDaskHubCompatibleConfig({
-  'jupyterhub-home-nfs': jupyterhubHomeNFSResources,
+  'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
   'jupyterhub-groups-exporter': jupyterhubGroupsExporterResources,
 })
