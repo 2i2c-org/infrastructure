@@ -550,7 +550,7 @@ To begin deploying and operating hubs on your new cluster, we need to export the
       ```
       This command will generate a file named config in the cwd with the configuration.
       The --force flag will overwrite this file if it already exists.
-    
+
       Encrypt the kubeconfig file using `sops`:
       ```bash
       sops --output ./config --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json

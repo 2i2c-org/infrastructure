@@ -7,7 +7,7 @@
    - namePrefix [string]:
    - instanceType [string]: Type of instance this nodeGroup should contain
    - availabilityZones [array[string]]: List of AZs this nodeGroup should span
-   - nameSuffix [string]:
+   - generation [string]:
    - minSize [int]: Minimum number of nodes. Also sets desiredCapacity
    - maxSize [int]: Maximum number of nodes
    - extraLabels [dict[string, string]]: Extra labels to add to nodes in this nodeGroup
@@ -20,7 +20,7 @@
     namePrefix,
     instanceType,
     availabilityZones,
-    nameSuffix,
+    generation,
     minSize,
     maxSize,
     extraLabels={},
@@ -44,20 +44,20 @@
       for taint in taints
     },
     /*
-    Private field saving the nameSuffix so withNodeGroupConfigOverride can filter on suffix
+    Private field saving the generation so withNodeGroupConfigOverride can filter on generation
     */
-    _suffix:: nameSuffix,
+    _generation:: generation,
 
     /**
     Construct the name of the nodegroup based on the *prefix*
      */
     // Include name prefix, escaped instance type (because names can't have .)
-    // and name suffix (if given) in the nodegroup name
-    name: std.join('-', std.filter(function(x) x != '', [
+    // and name generation
+    name: std.join('-', [
       namePrefix,
       std.strReplace(instanceType, '.', '-'),
-      nameSuffix,
-    ])),
+      generation,
+    ]),
     availabilityZones: availabilityZones,
     minSize: minSize,
     maxSize: maxSize,
@@ -67,6 +67,7 @@
     amiFamily: 'AmazonLinux2023',
     labels: {
       'node.kubernetes.io/instance-type': instanceType,
+      '2i2c/node-group-generation': generation,
     } + extraLabels,
     taints: extraTaints,
     tags: makeCaLabelTags(self.labels) + makeCaTaintTags(self.taints) + {
@@ -79,7 +80,7 @@
     clusterName,
     instanceType,
     availabilityZones,
-    nameSuffix,
+    generation,
     minSize,
     maxSize,
   ):: $.makeNodeGroup(
@@ -96,7 +97,7 @@
     },
     minSize=minSize,
     maxSize=maxSize,
-    nameSuffix=nameSuffix
+    generation=generation
   ) + {
     iam: {
         withAddonPolicies: {
@@ -112,7 +113,7 @@
     hubName,
     instanceType,
     availabilityZones,
-    nameSuffix,
+    generation,
     minSize,
     maxSize,
     extraLabels={},
@@ -123,7 +124,7 @@
     'nb-%s' % [hubName],
     availabilityZones=availabilityZones,
     instanceType=instanceType,
-    nameSuffix=nameSuffix,
+    generation=generation,
     minSize=minSize,
     maxSize=maxSize,
     extraLabels={
@@ -158,7 +159,7 @@
     availabilityZones,
     gpuCount,
     gpuType,
-    nameSuffix,
+    generation,
     minSize,
     maxSize
   ):: $.makeNotebookCPUNodeGroup(
@@ -166,7 +167,7 @@
     hubName=hubName,
     instanceType=instanceType,
     availabilityZones=availabilityZones,
-    nameSuffix=nameSuffix,
+    generation=generation,
     minSize=minSize,
     maxSize=maxSize,
     extraLabels={
@@ -190,7 +191,7 @@
     hubName,
     instanceType,
     availabilityZones,
-    nameSuffix,
+    generation,
     minSize,
     maxSize,
   ):: $.makeNodeGroup(
@@ -198,7 +199,7 @@
         'dask-%s' % [hubName],
         availabilityZones=availabilityZones,
         instanceType=instanceType,
-        nameSuffix=nameSuffix,
+        generation=generation,
         minSize=minSize,
         maxSize=maxSize,
         extraLabels={
@@ -251,7 +252,7 @@
     notebookCPUInstanceTypes,
     notebookGPUNodeGroups=[],
     daskInstanceTypes=[],
-    nodeGroupSuffixes=[]
+    nodeGroupGenerations=[]
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -315,24 +316,24 @@
         name,
         coreNodeInstanceType,
         availabilityZones=[nodeAz],
-        nameSuffix=suffix,
+        generation=generation,
         minSize=1,
         maxSize=100
       )
-      for suffix in nodeGroupSuffixes
+      for generation in nodeGroupGenerations
     ] + [
       $.makeNotebookCPUNodeGroup(
         clusterName=name,
         availabilityZones=[nodeAz],
         hubName=hubName,
         instanceType=instanceType,
-        nameSuffix=suffix,
+        generation=generation,
         minSize=0,
         maxSize=100
       )
       for hubName in hubs
       for instanceType in notebookCPUInstanceTypes
-      for suffix in nodeGroupSuffixes
+      for generation in nodeGroupGenerations
     ] + [
       $.makeNotebookGPUNodeGroup(
         clusterName=name,
@@ -344,13 +345,13 @@
         instanceType=gpuConfig.instanceType,
         gpuCount=std.get(gpuConfig, 'gpuCount', 1),
         gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4'),
-        nameSuffix=suffix,
+        generation=generation,
         minSize=0,
         maxSize=100
       )
       for hubName in hubs
       for gpuConfig in notebookGPUNodeGroups
-      for suffix in nodeGroupSuffixes
+      for generation in nodeGroupGenerations
     ] + [
     ] + [
       $.makeDaskNodeGroup(
@@ -358,25 +359,25 @@
         availabilityZones=[nodeAz],
         hubName=hubName,
         instanceType=instanceType,
-        nameSuffix=suffix,
+        generation=generation,
         minSize=0,
         maxSize=100
       )
       for hubName in hubs
       for instanceType in daskInstanceTypes
-      for suffix in nodeGroupSuffixes
+      for generation in nodeGroupGenerations
     ],
   },
   withNodeGroupConfigOverride(
     clusterConfig,
     kind=null,
     hubName=null,
-    suffix=null,
+    generation=null,
     instanceType=null,
     overrides={}
   ):: clusterConfig {
     managedNodeGroups: [
-      if (kind == null || ng._kind == kind) && (suffix == null || ng._suffix == suffix) && (hubName == null || std.get(ng, '_hubName', '') == hubName) && (instanceType == null || ng.instanceType == instanceType)
+      if (kind == null || ng._kind == kind) && (generation == null || ng._generation == generation) && (hubName == null || std.get(ng, '_hubName', '') == hubName) && (instanceType == null || ng.instanceType == instanceType)
       then ng + overrides
       else ng
       for ng in clusterConfig.managedNodeGroups
