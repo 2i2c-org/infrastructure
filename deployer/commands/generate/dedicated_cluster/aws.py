@@ -93,14 +93,6 @@ def aws(
         "staging",
         prompt="The list of hubs that will be deployed in the cluster separated by a comma. Example: staging, prod.",
     ),
-    dask_hubs: str = typer.Option(
-        "",
-        prompt="The list of hubs that will be have dask enabled",
-    ),
-    gpu_hubs: str = typer.Option(
-        "",
-        prompt="The list of hubs that will be have a gpu",
-    ),
     force: bool = typer.Option(
         False,
         "--force",
@@ -127,14 +119,6 @@ def aws(
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
         "hubs": hubs.replace(
-            ",", " "
-        ).split(),  # Convert the comma separated string to a list
-        "dask_nodes": True if dask_hubs else False,
-        "dask_hubs": dask_hubs.replace(
-            ",", " "
-        ).split(),  # Convert the comma separated string to a list
-        "gpu_nodes": True if gpu_hubs else False,
-        "gpu_hubs": gpu_hubs.replace(
             ",", " "
         ).split(),  # Convert the comma separated string to a list
         "sign_in_url": sign_in_url,
