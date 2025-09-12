@@ -12,7 +12,7 @@ cluster_nodes_location = "{{ cluster_region }}a"
 #
 
 ebs_volumes = {
-{% for hub in hubs %}
+{% for hub in hubs -%}
   "{{ hub }}" = {
     name_suffix = "{{ hub }}",
     type        = "gp3",
