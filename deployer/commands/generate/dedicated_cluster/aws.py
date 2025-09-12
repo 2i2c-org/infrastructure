@@ -75,6 +75,7 @@ def generate_infra_files(vars):
         f.write(tfvars_template.render(**vars))
     print_colour(f"{tfvars_file_path} created")
 
+
 @dedicated_cluster_app.command()
 def aws(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),

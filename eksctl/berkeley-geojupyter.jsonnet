@@ -12,7 +12,7 @@ local c = cluster.makeCluster(
     'r5.16xlarge',
   ],
   daskInstanceTypes=[
-    'r5.4xlarge'
+    'r5.4xlarge',
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[],

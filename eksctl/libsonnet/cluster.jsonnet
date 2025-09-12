@@ -66,7 +66,7 @@
     volumeSize: 80,
     amiFamily: 'AmazonLinux2023',
     nodeRepairConfig: {
-      enabled: true
+      enabled: true,
     },
     labels: {
       'node.kubernetes.io/instance-type': instanceType,
@@ -103,11 +103,11 @@
     generation=generation
   ) + {
     iam: {
-        withAddonPolicies: {
-            # So autoscaler can run here with regular IAM access
-            # TODO: Migrate that to IRSA
-            autoScaler: true,
-        },
+      withAddonPolicies: {
+        // So autoscaler can run here with regular IAM access
+        // TODO: Migrate that to IRSA
+        autoScaler: true,
+      },
     },
     _kind:: 'core',
   },
@@ -228,7 +228,7 @@
       {
         _kind:: 'dask-worker',
         _hubName:: hubName,
-        spot: true
+        spot: true,
       },
   /**
    Create a valid eksctl Cluster configuration

@@ -56,12 +56,12 @@ jupyterhub:
       # For OHW, we allow 8080 (for DAP) and 22 (for ssh)
       # https://github.com/2i2c-org/infrastructure/issues/549#issuecomment-892276020
       egress:
-        - ports:
-            - port: 8080
-              protocol: TCP
-        - ports:
-            - port: 22
-              protocol: TCP
+      - ports:
+        - port: 8080
+          protocol: TCP
+      - ports:
+        - port: 22
+          protocol: TCP
 
     profileList:
     - display_name: Choose your environment and resources
@@ -90,7 +90,7 @@ jupyterhub:
               display_name: R
               description: R en RStudio
               kubespawner_override:
-                default_url: "/rstudio"
+                default_url: /rstudio
                 image: ghcr.io/oceanhackweek/r:d690195
         resource_allocation:
           display_name: Resource Allocation

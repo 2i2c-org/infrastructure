@@ -56,10 +56,10 @@ local jupyterhubHomeNFSResources = {
         memory: '64Mi',
       },
       limits: {
-        memory: '1Gi'
-      }
-    }
-  }
+        memory: '1Gi',
+      },
+    },
+  },
 };
 
 local jupyterhubHomeNFSConfig = {
