@@ -4,7 +4,7 @@ local c = cluster.makeCluster(
   name='berkeley-geojupyter',
   region='us-west-2',
   nodeAz='us-west-2a',
-  version='1.32',
+  version='1.33',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     'r5.xlarge',
@@ -16,7 +16,7 @@ local c = cluster.makeCluster(
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[],
-  nodeGroupGenerations=['a']
+  nodeGroupGenerations=['c']
 );
 
 c
