@@ -1,7 +1,7 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
 local c = cluster.makeCluster(
-  name='berkeley-geojupyter',
+  name='<< cluster_name >>',
   region='<< cluster_region >>',
   nodeAz='<< cluster_region >>a',
   version='1.33',
@@ -14,7 +14,11 @@ local c = cluster.makeCluster(
   daskInstanceTypes=[
     'r5.4xlarge'
   ],
-  hubs=['staging', 'prod'],
+  hubs=[
+    <%- for hub in hubs -%>
+    '<< hub >>',
+    <%- endfor -%>
+  ],
   notebookGPUNodeGroups=[],
   nodeGroupGenerations=['a']
 );
