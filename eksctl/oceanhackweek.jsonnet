@@ -13,7 +13,7 @@ local c = cluster.makeCluster(
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[],
-  nodeGroupGenerations=['a']
+  nodeGroupGenerations=['b']
 );
 
 c
