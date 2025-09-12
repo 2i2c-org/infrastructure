@@ -4,11 +4,7 @@ Generate required files for an AWS cluster
 Generates:
 - an eksctl jsonnet file
 - a .tfvars file
-- An ssh-key (the private part is encrypted)
 """
-
-import os
-import subprocess
 
 import jinja2
 import typer
@@ -91,7 +87,7 @@ def aws(
         prompt="Is this cluster paid by 2i2c?",
     ),
     hubs: str = typer.Option(
-        "staging",
+        "staging,prod",
         prompt="The list of hubs that will be deployed in the cluster separated by a comma. Example: staging, prod.",
     ),
     force: bool = typer.Option(
