@@ -4,11 +4,7 @@ Generate required files for an AWS cluster
 Generates:
 - an eksctl jsonnet file
 - a .tfvars file
-- An ssh-key (the private part is encrypted)
 """
-
-import os
-import subprocess
 
 import jinja2
 import typer
@@ -75,36 +71,6 @@ def generate_infra_files(vars):
         f.write(tfvars_template.render(**vars))
     print_colour(f"{tfvars_file_path} created")
 
-    print_colour("Generate, encrypt and store the ssh private key...", "yellow")
-    subprocess.check_call(
-        [
-            "ssh-keygen",
-            "-f",
-            f"{REPO_ROOT_PATH}/eksctl/ssh-keys/{cluster_name}.key",
-            "-q",
-            "-N",
-            "",
-        ]
-    )
-
-    # Move the generated ssh private key file under secret/
-    os.rename(
-        f"{REPO_ROOT_PATH}/eksctl/ssh-keys/{cluster_name}.key",
-        f"{REPO_ROOT_PATH}/eksctl/ssh-keys/secret/{cluster_name}.key",
-    )
-
-    ssh_key_file = REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key"
-    # Encrypt the private key
-    subprocess.check_call(
-        [
-            "sops",
-            "--in-place",
-            "--encrypt",
-            ssh_key_file,
-        ]
-    )
-    print_colour(f"{ssh_key_file} created")
-
 
 @dedicated_cluster_app.command()
 def aws(
@@ -121,16 +87,8 @@ def aws(
         prompt="Is this cluster paid by 2i2c?",
     ),
     hubs: str = typer.Option(
-        "staging",
+        "staging,prod",
         prompt="The list of hubs that will be deployed in the cluster separated by a comma. Example: staging, prod.",
-    ),
-    dask_hubs: str = typer.Option(
-        "",
-        prompt="The list of hubs that will be have dask enabled",
-    ),
-    gpu_hubs: str = typer.Option(
-        "",
-        prompt="The list of hubs that will be have a gpu",
     ),
     force: bool = typer.Option(
         False,
@@ -158,14 +116,6 @@ def aws(
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
         "hubs": hubs.replace(
-            ",", " "
-        ).split(),  # Convert the comma separated string to a list
-        "dask_nodes": True if dask_hubs else False,
-        "dask_hubs": dask_hubs.replace(
-            ",", " "
-        ).split(),  # Convert the comma separated string to a list
-        "gpu_nodes": True if gpu_hubs else False,
-        "gpu_hubs": gpu_hubs.replace(
             ",", " "
         ).split(),  # Convert the comma separated string to a list
         "sign_in_url": sign_in_url,
