@@ -65,6 +65,9 @@
     instanceType: instanceType,
     volumeSize: 80,
     amiFamily: 'AmazonLinux2023',
+    nodeRepairConfig: {
+      enabled: true
+    },
     labels: {
       'node.kubernetes.io/instance-type': instanceType,
       '2i2c/node-group-generation': generation,
@@ -280,6 +283,8 @@
         [
           { name: 'coredns' },
           { name: 'kube-proxy' },
+          // Required for node autorepair
+          { name: 'eks-node-monitoring-agent' },
           {
             name: 'vpc-cni',
             attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
