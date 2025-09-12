@@ -12,13 +12,13 @@ cluster_nodes_location = "us-west-2a"
 #
 
 ebs_volumes = {
-"staging" = {
+  "staging" = {
     name_suffix = "staging",
     type        = "gp3",
     size        = 10,
     tags        = { "2i2c:hub-name" : "staging" },
   },
-"prod" = {
+  "prod" = {
     name_suffix = "prod",
     type        = "gp3",
     size        = 10,
