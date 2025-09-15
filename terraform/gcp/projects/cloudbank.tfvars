@@ -6,9 +6,7 @@ region           = "us-central1"
 regional_cluster = false
 
 enable_filestore_backups = true
-filestores = {
-  "filestore" : { "capacity_gb" : 1792 }
-}
+filestores               = {}
 
 persistent_disks = {
   "authoring" = {
