@@ -1,5 +1,6 @@
 name: catalystproject-latam
-provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/southamerica-east1/catalystproject-latam-cluster/details?project=catalystproject-392106
+provider: gcp
+provider_url: https://console.cloud.google.com/kubernetes/clusters/details/southamerica-east1/catalystproject-latam-cluster/details?project=catalystproject-392106
 gcp:
   key: enc-deployer-credentials.secret.json
   project: catalystproject-392106

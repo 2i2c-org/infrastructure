@@ -1,5 +1,6 @@
 name: strudel
-provider: aws # https://2i2c.awsapps.com/start#/
+provider: aws
+provider_url: https://2i2c.awsapps.com/start#/
 aws:
   account: 207567775686
   key: enc-deployer-credentials.secret.json

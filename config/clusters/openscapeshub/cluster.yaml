@@ -1,5 +1,6 @@
 name: openscapeshub
-provider: aws # https://783616723547.signin.aws.amazon.com/console
+provider: aws
+provider_url: https://783616723547.signin.aws.amazon.com/console
 aws:
   account: 783616723547
   key: enc-deployer-credentials.secret.json

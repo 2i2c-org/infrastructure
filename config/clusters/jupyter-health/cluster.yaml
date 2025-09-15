@@ -1,5 +1,6 @@
 name: jupyter-health
-provider: aws # https://2i2c.awsapps.com/start/#/
+provider: aws
+provider_url: https://2i2c.awsapps.com/start/#/
 aws:
   account: 211125465508
   key: enc-deployer-credentials.secret.json

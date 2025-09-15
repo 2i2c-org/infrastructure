@@ -1,5 +1,6 @@
 name: nasa-veda
-provider: aws # https://smce-veda.signin.aws.amazon.com/console
+provider: aws
+provider_url: https://smce-veda.signin.aws.amazon.com/console
 aws:
   account: 444055461661
   key: enc-deployer-credentials.secret.json
