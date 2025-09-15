@@ -319,7 +319,9 @@
         availabilityZones=[nodeAz],
         generation=generation,
         minSize=1,
-        maxSize=100
+        # We only want 1 core node running.
+        # For clusters where we want more, it should be a manual override
+        maxSize=1
       )
       for generation in nodeGroupGenerations
     ] + [
