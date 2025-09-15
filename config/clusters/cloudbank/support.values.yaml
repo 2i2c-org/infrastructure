@@ -5,6 +5,11 @@ prometheus:
   server:
     persistentVolume:
       size: 500Gi
+    resources:
+      requests:
+        memory: 4Gi
+      limits:
+        memory: 4Gi
     ingress:
       enabled: true
       hosts:

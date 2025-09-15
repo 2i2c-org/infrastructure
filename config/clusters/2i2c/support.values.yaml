@@ -7,6 +7,11 @@ prometheusStorageClass:
 
 prometheus:
   server:
+    resources:
+      requests:
+        memory: 4Gi
+      limits:
+        memory: 4Gi
     persistentVolume:
       # 100Gi filled up, and this is source of our billing data.
       size: 512Gi
