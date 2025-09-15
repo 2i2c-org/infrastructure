@@ -28,6 +28,9 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "prod" }
   },
 }
+
+enable_jupyterhub_cost_monitoring = true
+
 enable_nfs_backup = true
 
 disable_cluster_wide_filestore = true
