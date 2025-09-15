@@ -5,7 +5,7 @@ zone             = "us-central1-b"
 region           = "us-central1"
 regional_cluster = false
 
-enable_filestore_backups = true
+enable_filestore_backups = false
 filestores               = {}
 
 persistent_disks = {
