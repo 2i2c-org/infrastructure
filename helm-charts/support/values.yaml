@@ -189,12 +189,16 @@ prometheus:
       #   the node it runs on may run out of memory before that happens and
       #   prometheus-server or other pods exceeding their memory limit will get
       #   evicted.
+      #
+      #   To fail reliably in prometheus-server without influencing other pods,
+      #   we should put the memory request to match the limit.
+      #
       requests:
         cpu: 0.1
-        memory: 1.5Gi
+        memory: 4Gi
       limits:
-        cpu: 1
-        memory: 2Gi
+        cpu: 4
+        memory: 4Gi
     # prometheus-server may take a long time to startup when loading large
     # amounts of previously scraped data. To avoid having a livenessProbe
     # terminate the starting pod, we opt-in to a more tolerant startupProbe that
