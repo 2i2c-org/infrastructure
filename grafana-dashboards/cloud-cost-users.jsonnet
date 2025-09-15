@@ -18,11 +18,16 @@ local Hub =
     |||
   )
   + bc.queryOptions.withTargets([
-    common.queryTarget
+    common.queryUsersTarget
     {
       url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/costs-per-user?from=${__from:date}&to=${__to:date}&hub=$hub',
     },
-  ]);
+  ])
+  + bc.queryOptions.transformation.withId('filterFieldsByName')
+  + bc.queryOptions.transformation.withOptions({
+
+  })
+;
 
 
 dashboard.new('Cloud costs per user – Grafonnet')
