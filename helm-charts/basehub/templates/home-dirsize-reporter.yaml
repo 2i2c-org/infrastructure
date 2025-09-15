@@ -36,7 +36,17 @@ spec:
         - name: dirsize-exporter
           # From https://github.com/yuvipanda/prometheus-dirsize-exporter
           image: quay.io/yuvipanda/prometheus-dirsize-exporter:v3.1
-          resources: {{ .Values.nfs.dirsizeReporter.resources | toJson }}
+          resources:
+            # Provide limited resources for this collector, as it can
+            # balloon up (especially in CPU) quite easily. We are quite ok with
+            # the collection taking a while as long as we aren't costing too much
+            # CPU or RAM
+            requests:
+              memory: 128Mi
+              cpu: 0.01
+            limits:
+              cpu: 0.05
+              memory: 512Mi
           args:
             - dirsize-exporter
             - /shared-volume

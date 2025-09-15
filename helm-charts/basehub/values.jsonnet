@@ -12,143 +12,83 @@ local emitDaskHubCompatibleConfig(basehubConfig) =
 
   if isDaskHub then { basehub: basehubConfig } else basehubConfig;
 
-local nonStagingResourcesConfig = {
-  'jupyterhub-home-nfs'+: {
-    quotaEnforcer+: {
-      resources: {
-        requests: {
-          cpu: 0.2,
-          memory: '750M',
-        },
-        limits: {
-          cpu: 0.4,
-          memory: '1G',
-        },
+local jupyterhubHomeNFSResources = {
+  quotaEnforcer+: {
+    resources: {
+      requests: {
+        cpu: 0.2,
+        memory: '750M',
       },
-    },
-    nfsServer+: {
-      resources: {
-        requests: {
-          cpu: 0.2,
-          memory: '2G',
-        },
-        limits: {
-          cpu: 0.4,
-          memory: '6G',
-        },
-      },
-    },
-    prometheusExporter+: {
-      resources: {
-        requests: {
-          cpu: 0.02,
-          memory: '15M',
-        },
-        limits: {
-          cpu: 0.04,
-          memory: '20M',
-        },
-      },
-    },
-    autoResizer+: {
-      resources: {
-        requests: {
-          cpu: 0.01,
-          memory: '64Mi',
-        },
-        limits: {
-          memory: '1Gi',
-        },
+      limits: {
+        cpu: 0.4,
+        memory: '1G',
       },
     },
   },
-  jupyterhub+: {
-    scheduling+: {
-      userScheduler+: {
-        resources: {
-          requests: {
-            cpu: 0.01,
-            memory: '64Mi',
-          },
-          limits: {
-            memory: '1Gi',
-          },
-        },
+  nfsServer+: {
+    resources: {
+      requests: {
+        cpu: 0.2,
+        memory: '2G',
       },
-    },
-    proxy+: {
-      chp+: {
-        resources: {
-          requests: {
-            cpu: 0.01,
-            memory: '64Mi',
-          },
-          limits: {
-            memory: '1Gi',
-          },
-        },
-      },
-    },
-    hub+: {
-      resources+: {
-        requests: {
-          cpu: 0.01,
-          memory: '128Mi',
-        },
-        limits: {
-          memory: '2Gi',
-        },
+      limits: {
+        cpu: 0.4,
+        memory: '6G',
       },
     },
   },
-  'jupyterhub-groups-exporter'+: {
-    // Memory resources chosen by querying PromQL "max(container_memory_working_set_bytes{name!='', pod=~'.*groups-exporter.*'})" over all hubs
-    // CPU resources chosen by querying PromQL "max(irate(container_cpu_usage_seconds_total{name!='', pod=~'.*groups-exporter.*'}[5m]))" over all hubs
+  prometheusExporter+: {
+    resources: {
+      requests: {
+        cpu: 0.02,
+        memory: '15M',
+      },
+      limits: {
+        cpu: 0.04,
+        memory: '20M',
+      },
+    },
+  },
+  autoResizer+: {
     resources: {
       requests: {
         cpu: 0.01,
-        memory: '128Mi',
+        memory: '64Mi',
       },
       limits: {
-        cpu: 0.1,
-        memory: '256Mi',
+        memory: '1Gi',
       },
     },
   },
-  nfs+: {
-    dirsizeReporter+: {
-      # Provide limited resources for this collector, as it can
-      # balloon up (especially in CPU) quite easily. We are quite ok with
-      # the collection taking a while as long as we aren't costing too much
-      # CPU or RAM
-      resources+: {
-        requests: {
-          memory: '128Mi',
-          cpu: 0.01,
-        },
-        limits: {
-          cpu: 0.05,
-          memory: '512Mi'
-        }
-      }
-    }
-  }
 };
 
 local jupyterhubHomeNFSConfig = {
-  'jupyterhub-home-nfs'+: {
-    quotaEnforcer+: {
-      config: {
-        QuotaManager: {
-          paths: ['/export/%s' % hub_name],
-          hard_quota: 0,
-        },
+  quotaEnforcer+: {
+    config: {
+      QuotaManager: {
+        paths: ['/export/%s' % hub_name],
+        hard_quota: 0,
       },
+    },
+  },
+} + if is_staging then {} else jupyterhubHomeNFSResources;
+
+local jupyterhubGroupsExporterResources = {
+  // Memory resources chosen by querying PromQL "max(container_memory_working_set_bytes{name!='', pod=~'.*groups-exporter.*'})" over all hubs
+  // CPU resources chosen by querying PromQL "max(irate(container_cpu_usage_seconds_total{name!='', pod=~'.*groups-exporter.*'}[5m]))" over all hubs
+  resources: {
+    requests: {
+      cpu: 0.01,
+      memory: '128Mi',
+    },
+    limits: {
+      cpu: 0.1,
+      memory: '256Mi',
     },
   },
 };
 
-
 emitDaskHubCompatibleConfig({
   'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
-} + if is_staging then {} else nonStagingResourcesConfig)
+  'jupyterhub-groups-exporter': jupyterhubGroupsExporterResources,
+})

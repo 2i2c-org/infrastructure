@@ -167,6 +167,20 @@ prometheus:
       # one pod.
       type: Recreate
     resources:
+      # Prometheus cpu/memory requests/limits needs to be carefully considered based on:
+      #
+      # CPU:
+      #
+      #   During startup prometheus-server can compete for ~all of the node's
+      #   CPU unless its bounded by a limit. The key to avoiding this isn't to
+      #   provide a low limit as what's low is relative to the node's capacity,
+      #   which could for example be 2, 4, or 8 CPU.
+      #
+      #   The avoid starving other pods, the key is to have a sufficiently low
+      #   CPU request so that this pod doesn't get far higher priority to use
+      #   the available CPU on the node when in competition with the other pods
+      #   for CPU.
+      #
       # Memory:
       #
       #   During startup prometheus-server will use up a lot of memory, up to X
@@ -177,7 +191,7 @@ prometheus:
       #   evicted.
       requests:
         cpu: 0.1
-        memory: 1Gi
+        memory: 1.5Gi
       limits:
         cpu: 1
         memory: 2Gi

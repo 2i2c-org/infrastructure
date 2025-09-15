@@ -458,8 +458,20 @@ jupyterhub:
       replicas: 0
     userScheduler:
       enabled: false
-      # See https://github.com/2i2c-org/infrastructure/issues/3865.
+      # replicas default value is 2, but having the user-scheduler run HA is an
+      # almost never practically helpful but has been found to increase cloud
+      # costs in clusters with many hubs. For additional discussion reducing
+      # this to 1, see https://github.com/2i2c-org/infrastructure/issues/3865.
       replicas: 1
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
+      resources:
+        requests:
+          cpu: 0.01
+          memory: 64Mi
+        limits:
+          memory: 1G
   # prePuller is about pulling a one or more images identified via chart
   # configuration, including singleuser.image, singleuser.profileList entries
   # with a dedicated image, but not profileList entries with images' specified
@@ -493,6 +505,28 @@ jupyterhub:
   proxy:
     service:
       type: ClusterIP
+    chp:
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
+      resources:
+        requests:
+          cpu: 0.01
+          memory: 64Mi
+        limits:
+          memory: 1Gi
+    traefik:
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
+      #        Note if autohttps pod's aren't used anywhere by our basehub
+      #        deployments, we should simply remove this traefik configuration.
+      #
+      resources:
+        requests:
+          memory: 64Mi
+        limits:
+          memory: 1Gi
   singleuser:
     # basehub creates a k8s ServiceAccount for the hubs users that isn't granted
     # permissions to the k8s api-server or other resources by default. Cloud
@@ -1099,6 +1133,15 @@ jupyterhub:
           ports:
             - port: 10101
               protocol: TCP
+    # FIXME: We should think about these resource requests/limits, see
+    #        https://github.com/2i2c-org/infrastructure/issues/2127.
+    #
+    resources:
+      requests:
+        cpu: 0.01
+        memory: 128Mi
+      limits:
+        memory: 2Gi
     extraConfig:
       # This is copy-pasted exactly from https://github.com/jupyterhub/binderhub/blob/c6c5dc8fe73f81ca538c47b420b33f317c3aa8ae/helm-chart/binderhub/values.yaml#L87
       # Should be updated every time the upstream code changes
