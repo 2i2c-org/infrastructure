@@ -29,7 +29,24 @@ is handled for us by someone else.
 Once this is done, steps for the regular [AWS Cluster Setup](new-cluster:new-cluster) can proceed,
 until completion of [provisioning credentials for CI/CD](new-cluster:terraform:cluster-credentials).
 
-## Getting a MFA exemption for our `hub-continuous-deployer` user
+## `hub-continuous-deployer` user
+
+By default, we don't have permissions to create additional IAM users. This is a problem
+for our continuous deployer user `hub-continuous-deployer`. SMCE / SMDC is able to grant
+us exemptions though.
+
+### SMDE
+
+Right now, SMDE has to manually create the account named `hub-continuous-deployer`. This
+has to be requested through their internal systems (that are opaque to us). Once created,
+we can import that into our terraform with `terraform import -var-file=projects/${project}.tfvars aws_iam_user.continuous_deployer hub-continuous-deployer`.
+
+The rest of the process should be the same.
+
+### SMCE
+
+The process for SMCE is a bit different. We can create the user account, but there's a
+MFA requirement that must be exempted.
 
 At the completion of [provisioning credentials for CI/CD](new-cluster:terraform:cluster-credentials),
 we will have a IAM user named `hub-continuous-deployer` provisioned. This is what we use to
