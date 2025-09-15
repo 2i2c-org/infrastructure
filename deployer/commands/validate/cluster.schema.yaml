@@ -35,6 +35,11 @@ properties:
     - kubeconfig
     - aws
     - azure
+  provider_url:
+    type: string
+    format: uri
+    description: |
+      URL to cloud provider dashboard for this cluster.
   tenancy:
     type: string
     description: |
