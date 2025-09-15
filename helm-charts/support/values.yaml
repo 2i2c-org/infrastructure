@@ -233,12 +233,9 @@ grafana:
   assertNoLeakedSecrets: false
 
   persistence:
-    # A PVC is used to enable Grafana to store auth details and dashboard
-    # definitions.
     enabled: true
-    # size could probably be smaller as not much space should be required, but
-    # the chart default of 10Gi has made it a bit tricky to reduce it
-    # retroactively.
+    # The upstream default is 10Gi, and we can't resize it down for existing
+    # clusters. New clusters should have 1Gi
     size: 10Gi
   deploymentStrategy:
     # type Recreate is required since we attach a PVC that can only be used by

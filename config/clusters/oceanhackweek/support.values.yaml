@@ -21,6 +21,9 @@ grafana:
   auth.github:
     enabled: true
     allowed_organizations: 2i2c-org
+  persistence:
+    # We don't need 10Gi on the Grafana persistent directory
+    size: 1Gi
   ingress:
     hosts:
     - grafana.oceanhackweek.2i2c.cloud
