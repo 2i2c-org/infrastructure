@@ -18,9 +18,6 @@ grafana:
   grafana.ini:
     server:
       root_url: https://grafana.oceanhackweek.2i2c.cloud/
-  auth.github:
-    enabled: true
-    allowed_organizations: 2i2c-org
   persistence:
     # We don't need 10Gi on the Grafana persistent directory
     size: 1Gi
