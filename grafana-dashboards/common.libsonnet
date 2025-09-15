@@ -31,8 +31,8 @@ local bc = grafonnet.panel.barChart;
         },
       )
       + var.query.withDatasourceFromVariable(self.infinity_datasource)
-      + var.query.selectionOptions.withIncludeAll(value=true)
-      + var.query.generalOptions.showOnDashboard.withNothing()
+      + var.query.selectionOptions.withIncludeAll(value=false)
+      + var.query.selectionOptions.withMulti(value=true)
       + var.query.refresh.onTime(),
   },
 
@@ -55,6 +55,28 @@ local bc = grafonnet.panel.barChart;
       data: '',
     },
     format: 'timeseries',
+    refId: 'A',
+  },
+
+  queryUsersTarget: {
+    datasource: {
+      type: 'yesoreyeram-infinity-datasource',
+      uid: '${infinity_datasource}',
+    },
+    columns: [
+      { selector: 'date', text: 'Date', type: 'timestamp' },
+      { selector: 'cost', text: 'Cost', type: 'number' },
+      { selector: 'user', text: 'User', type: 'string' },
+      { selector: 'component', text: 'Component', type: 'string' },
+    ],
+    parser: 'backend',
+    type: 'json',
+    source: 'url',
+    url_options: {
+      method: 'GET',
+      data: '',
+    },
+    format: 'dataframe',
     refId: 'A',
   },
 
@@ -82,5 +104,6 @@ local bc = grafonnet.panel.barChart;
     }),
 
   bcOptions:
-    bc.standardOptions.withMin(0),
+    bc.standardOptions.withMin(0)
+    + bc.standardOptions.withDecimals(2),
 }
