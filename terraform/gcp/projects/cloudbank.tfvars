@@ -5,10 +5,8 @@ zone             = "us-central1-b"
 region           = "us-central1"
 regional_cluster = false
 
-enable_filestore_backups = true
-filestores = {
-  "filestore" : { "capacity_gb" : 1792 }
-}
+enable_filestore_backups = false
+filestores               = {}
 
 persistent_disks = {
   "authoring" = {
@@ -180,7 +178,7 @@ persistent_disks = {
     name_suffix = "sjsu"
   }
   "skyline" = {
-    size        = 80
+    size        = 84
     name_suffix = "skyline"
   }
   "spelman" = {

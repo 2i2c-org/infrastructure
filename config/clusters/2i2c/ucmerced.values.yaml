@@ -22,7 +22,7 @@ jupyterhub:
       default: true
       kubespawner_override:
           # From https://github.com/SaiUCM/example-inherit-from-community-image
-        image: quay.io/cirt_ucm/jupyter-scipy-xarray:ee81c09169f2
+        image: quay.io/cirt_ucm/jupyter-scipy-xarray:1e26b42ad87b
           # Launch into JupyterLab after the user logs in
         default_url: /lab
       profile_options: &profile_options
