@@ -8,35 +8,40 @@ Checkout the [topic guide](topic:billing:cost-monitoring) for more information o
 
 ## Steps
 
-### 1. Enable cost allocation tags
+### 1. Enable cost monitoring system
 
-Enabling cost allocation tags via terraform can be done for AWS
-accounts that we have billing permissions for, but not for standalone accounts that communities manage themselves.
+The cost monitoring system requires a service account with the IAM permissions to read billing data from AWS Cost Explorer API. This is unconditionally enabled with the terraform variable `enable_jupyterhub_cost_monitoring` that sets up an IAM role, IAM policy and Kubernetes service account annotation.
 
-If cost allocation tags are not activated, then you can set
+See `terraform/aws/variables.tf` and `terraform/aws/cost-monitoring.tf` for the configuration.
 
-```yaml
-jupyterhub-cost-monitoring:
-  enabled: false
-```
+### 2. Activate cost allocation tags
 
-in the `config/clusters/<cluster_name>/support.values.yaml` file to disable deployment of the cost monitoring system.
+We can activate cost allocation tags for AWS accounts that we have billing permissions for (either through the 2i2c SSO or a standalone account), but not for AWS accounts that are managed by a community where we do not have billing permissions.
+
+:::{note}
+Activating cost allocation tags is always disabled by default and must be explicitly enabled on a per-community basis.
+:::
 
 `````{tab-set}
 
-````{tab-item} Member account (2i2c SSO)
+````{tab-item} 2i2c SSO
 :sync: member-2i2c
 
-AWS accounts that can be accessed with the [2i2c SSO](cloud-access:aws-sso) have cost allocation tags already enabled.
+AWS accounts managed by the [2i2c SSO](cloud-access:aws-sso) have cost allocation tags already enabled with the overarching billing account. Cost tags only need to be activated once per AWS organization.
 
 See the [topic guide](topic:billing:cost-monitoring) for more information on which cost allocation tags are activated.
 ````
 
-````{tab-item} Standalone account with billing permissions
+````{tab-item} Standalone + billing access
 :sync: standalone
 
-The relevant tags are already present in the terraform template used to generate
-the new cluster and will be applied when creating the cluster.
+Explicitly activate the cost allocation tags by setting
+
+```bash
+enable_jupyterhub_cost_tags = true
+```
+
+in the `terraform/aws/projects/<cluster_name>.tf` file.
 
 If the apply operation fails with the following errors:
 
@@ -52,40 +57,40 @@ If the apply operation fails with the following errors:
    This means we do not have billing permissions on the AWS account and is likely managed by a community (see Community-managed account).
 ````
 
-````{tab-item} Community-managed account without billing permissions
+````{tab-item} Community + no billing access
 :sync: member-community
 
 We require a community member with the relevant billing permissions to enable the cost allocation tags on our behalf.
 
-Below is a template message you can send to the technical contact. Note that `<cluster_name>` should be updated to the community's cluster name.
+Below is a template message you can send to the technical contact. Note that `<$CLUSTER_NAME>` should be updated to the community's cluster name.
 
-```
-In order for 2i2c to enable the cloud cost monitoring feature for your community, the following changes needs to be made in the AWS organization's management account:
 
-1. Declare that linked member accounts are allowed to access Cost Explorer.
+> In order for 2i2c to enable the cloud cost monitoring feature for your community, the following changes needs to be made in the AWS organization's management account:
+> 
+> 1. Declare that linked member accounts are allowed to access Cost Explorer.
+> 
+>    This can be done via "Billing and Cost Management" -> "Cost Management Preferences", where the checkbox "Linked account access" should be checked.
+> 
+> 2. Enable a specific set of cost allocation tags.
+> 
+>    This can be done via "Billing and Cost Management" -> "Cost Allocation Tags".
+> 
+>    The tags that to be activated are:
+> 
+>    - `2i2c:hub-name`
+>    - `2i2c.org/cluster-name`
+>    - `2i2c.org/node-purpose`
+>    - `2i2c.org/volume-purpose`
+>    - `alpha.eksctl.io/cluster-name`
+>    - `kubernetes.io/cluster/<$CLUSTER_NAME>`
+>    - `kubernetes.io/created-for/pvc/name`
+>    - `kubernetes.io/created-for/pvc/namespace`
 
-   This can be done via "Billing and Cost Management" -> "Cost Management Preferences", where the checkbox "Linked account access" should be checked.
-
-2. Enable a specific set of cost allocation tags.
-
-   This can be done via "Billing and Cost Management" -> "Cost Allocation Tags".
-
-   The tags that to be activated are:
-
-   - 2i2c:hub-name
-   - 2i2c.org/cluster-name
-   - 2i2c.org/node-purpose
-   - 2i2c.org/volume-purpose
-   - alpha.eksctl.io/cluster-name
-   - kubernetes.io/cluster/<cluster_name>
-   - kubernetes.io/created-for/pvc/name
-   - kubernetes.io/created-for/pvc/namespace
-```
 ````
 
 `````
 
-### 2. (optional) Backfill billing data
+### 3. (optional) Backfill billing data
 
 You can optionally backfill billing data to tags having been around for a while
 but not enabled as cost allocation tags.
@@ -95,23 +100,42 @@ process the request. Make a request through the AWS web console by navigating to
 "Cost allocation tags" under "Billing and Cost Management", then from there
 click the "Backfill tags" button.
 
-### 3. Install `jupyterhub-cost-monitoring` Helm chart
-
-In the cluster's `terraform/aws/projects/<cluster_name>.tf` file, set
-
-```bash
-enable_jupyterhub_cost_monitoring = true
-```
+### 4. Install `jupyterhub-cost-monitoring` Helm chart
 
 The helm deployment is unconditionally enabled with jsonnet, unless explicitly overridden in the `config/clusters/<cluster_name>/support.values.yaml` file, and the configuration is automatically defined in the `helm-charts/support/values.jsonnet` file.
 
-Finally deploy the support chart:
+You can manually deploy the support chart with:
 
 ```bash
 deployer deploy-support $CLUSTER_NAME
 ```
 
+:::{note}
+AWS IAM resources for the cost monitoring system are enabled by default via terraform and the helm chart deployment is also enabled by default.
+
+Activating cost allocation tags is always *disabled* by default and must be explicitly enabled.
+
+If you would like to disable the cost monitoring system, you can set
+
+```bash
+enable_jupyterhub_cost_monitoring = false
+```
+
+in the `terraform/aws/projects/<$CLUSTER_NAME>.tfvars` file and
+
+```yaml
+jupyterhub-cost-monitoring:
+  enabled: false
+```
+
+in the `config/clusters/<$CLUSTER_NAME>/support.values.yaml` file.
+:::
+
 ## Troubleshooting
 
 If you don't see data in the cost monitoring dashboard, you may want to look to
 ensure the `jupyterhub-cost-monitoring` deployment's pod is running in the support namespace, or if it reports errors in its logs.
+
+## References
+
+[https://github.com/2i2c-org/jupyterhub-cost-monitoring/](https://github.com/2i2c-org/jupyterhub-cost-monitoring/)

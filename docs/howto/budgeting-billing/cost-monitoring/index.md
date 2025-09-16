@@ -1,5 +1,5 @@
 (howto:cost-monitoring)=
-# Enable cost monitoring systems
+# Enable cost monitoring system
 
 This documentation is about enabling automatic cost monitoring systems for
 various cloud providers. This is different from the manual accounting we've
