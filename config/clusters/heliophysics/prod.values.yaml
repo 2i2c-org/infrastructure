@@ -1,0 +1,18 @@
+nfs:
+  pv:
+    serverIP: 10.100.220.55
+
+# userServiceAccount:
+#   annotations:
+#     eks.amazonaws.com/role-arn: arn:aws:iam::622703418259:role/berkeley-geojupyter-staging
+
+jupyterhub:
+  ingress:
+    hosts: [heliophysics.2i2c.cloud]
+    tls:
+    - hosts: [heliophysics.2i2c.cloud]
+      secretName: https-auto-tls
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-08b5d4964b0347330
