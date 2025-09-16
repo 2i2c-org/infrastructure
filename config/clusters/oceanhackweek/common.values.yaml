@@ -1,0 +1,128 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    mountOptions:
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
+    baseShareName: /
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: false
+      # add_staff_user_ids_of_type: github
+    homepage:
+      gitRepoBranch: 2i2c-ohw
+      templateVars:
+        org:
+          name: OceanHackWeek en español
+          logo_url: https://intercoonecta.github.io/_static/OHWe.png
+          url: https://intercoonecta.github.io
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CSIC
+          url: https://www.csic.es/es
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: dummy
+      Authenticator:
+        admin_users: []
+        # - ocefpaf
+        # - abkfenris
+        # - cpsarason
+        # - emiliom
+
+  scheduling:
+    userScheduler:
+      enabled: true
+
+  singleuser:
+    defaultUrl: /lab
+
+    networkPolicy:
+      # For OHW, we allow 8080 (for DAP) and 22 (for ssh)
+      # https://github.com/2i2c-org/infrastructure/issues/549#issuecomment-892276020
+      egress:
+      - ports:
+        - port: 8080
+          protocol: TCP
+      - ports:
+        - port: 22
+          protocol: TCP
+
+    profileList:
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            python:
+              display_name: Python
+              slug: python
+              description: Python en JupyterLab
+              kubespawner_override:
+                image: ghcr.io/oceanhackweek/python:c881ad5
+              default: true
+            r:
+              display_name: R
+              description: R en RStudio
+              kubespawner_override:
+                default_url: /rstudio
+                image: ghcr.io/oceanhackweek/r:d690195
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_4_gb:
+              display_name: ~4 GB RAM, ~0.5 CPUs
+              description: Up to ~4 CPUs when available
+              default: true
+              kubespawner_override:
+                mem_guarantee: 3902839759
+                mem_limit: 3902839759
+                cpu_guarantee: 0.4563125
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7805679519
+                mem_limit: 7805679519
+                cpu_guarantee: 0.912625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+
+jupyterhub-home-nfs:
+  enabled: true
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10
+  eks:
+    enabled: true
+  prometheusExporter:
+    enabled: true

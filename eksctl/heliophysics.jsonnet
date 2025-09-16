@@ -1,7 +1,7 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
 local c = cluster.makeCluster(
-  name='berkeley-geojupyter',
+  name='heliophysics',
   region='us-west-2',
   nodeAz='us-west-2a',
   version='1.33',
@@ -16,7 +16,7 @@ local c = cluster.makeCluster(
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[],
-  nodeGroupGenerations=['b']
+  nodeGroupGenerations=['a']
 );
 
 c

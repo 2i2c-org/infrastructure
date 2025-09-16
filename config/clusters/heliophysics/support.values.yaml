@@ -1,0 +1,42 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+
+
+prometheus:
+  server:
+    persistentVolume:
+      size: 100Gi
+    ingress:
+      enabled: true
+      hosts:
+      - prometheus.heliophysics.2i2c.cloud
+      tls:
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.heliophysics.2i2c.cloud
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.heliophysics.2i2c.cloud/
+  persistence:
+    # We don't need 10Gi on the Grafana persistent directory
+    size: 1Gi
+  ingress:
+    hosts:
+    - grafana.heliophysics.2i2c.cloud
+    tls:
+    - secretName: grafana-tls
+      hosts:
+      - grafana.heliophysics.2i2c.cloud
+
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: heliophysics
+  awsRegion: us-west-2
+
+calico:
+  enabled: true
