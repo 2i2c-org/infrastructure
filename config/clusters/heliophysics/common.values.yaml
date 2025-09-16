@@ -106,7 +106,7 @@ jupyterhub:
               description: Some description
               kubespawner_override:
                 image: quay.io/pangeo/pangeo-notebook:2025.08.14
-                default_url: /lab/tree/pyhc/Welcome.ipynb
+                # default_url: /lab/tree/pyhc/Welcome.ipynb
                 init_containers:
                 - *volume_ownership_fix_initcontainer
                 - name: jupyterhub-gitpuller-init
@@ -176,10 +176,19 @@ jupyterhub:
         resource_allocation:
           display_name: Resource Allocation
           choices:
+            mem_2_gb:
+              display_name: ~2 GB RAM, ~0.2 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 1951419879
+                mem_limit: 1951419879
+                cpu_guarantee: 0.22815625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
             mem_4_gb:
               display_name: ~4 GB RAM, ~0.5 CPUs
               description: Up to ~4 CPUs when available
-              default: true
               kubespawner_override:
                 mem_guarantee: 3902839759
                 mem_limit: 3902839759
@@ -197,7 +206,46 @@ jupyterhub:
                 cpu_limit: 3.6505
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
-
+            mem_15_gb:
+              display_name: ~15 GB RAM, ~1.8 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 15611359038
+                mem_limit: 15611359038
+                cpu_guarantee: 1.82525
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_gb:
+              display_name: ~29 GB RAM, ~4 CPUs
+              description: ~4 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 31222718077
+                mem_limit: 31222718077
+                cpu_guarantee: 3.6505
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_60_gb:
+              display_name: ~60 GB RAM, ~8 CPUs
+              description: Up to ~15 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 64020707016
+                mem_limit: 64020707016
+                cpu_guarantee: 7.69055
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_119_gb:
+              display_name: ~119 GB RAM, ~15 CPUs
+              description: ~15 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 128041414033
+                mem_limit: 128041414033
+                cpu_guarantee: 15.3811
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
 jupyterhub-home-nfs:
   enabled: true
   quotaEnforcer:
