@@ -87,16 +87,16 @@ jupyterhub:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
                   env:
-                    - name: TARGET_PATH
-                      value: heliocloud-base-2025-update
-                    - name: SOURCE_REPO
-                      value: https://github.com/heliophysicsPy/science-platforms-coordination
-                    - name: SOURCE_BRANCH
-                      value: heliocloud-base-2025-update
+                  - name: TARGET_PATH
+                    value: heliocloud-base-2025-update
+                  - name: SOURCE_REPO
+                    value: https://github.com/heliophysicsPy/science-platforms-coordination
+                  - name: SOURCE_BRANCH
+                    value: heliocloud-base-2025-update
                   volumeMounts:
-                    - name: home
-                      mountPath: /home/jovyan
-                      subPath: "{escaped_username}"
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
                   securityContext:
                     runAsUser: 1000
                     runAsGroup: 1000
@@ -112,16 +112,16 @@ jupyterhub:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
                   env:
-                    - name: TARGET_PATH
-                      value: pyhc
-                    - name: SOURCE_REPO
-                      value: https://github.com/heliophysicsPy/science-platforms-coordination
-                    - name: SOURCE_BRANCH
-                      value: pyhc
+                  - name: TARGET_PATH
+                    value: pyhc
+                  - name: SOURCE_REPO
+                    value: https://github.com/heliophysicsPy/science-platforms-coordination
+                  - name: SOURCE_BRANCH
+                    value: pyhc
                   volumeMounts:
-                    - name: home
-                      mountPath: /home/jovyan
-                      subPath: "{escaped_username}"
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
                   securityContext:
                     runAsUser: 1000
                     runAsGroup: 1000
@@ -136,16 +136,16 @@ jupyterhub:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
                   env:
-                    - name: TARGET_PATH
-                      value: heliocloud-base-w-survey-core
-                    - name: SOURCE_REPO
-                      value: https://github.com/heliophysicsPy/science-platforms-coordination
-                    - name: SOURCE_BRANCH
-                      value: heliocloud-base-w-survey-core
+                  - name: TARGET_PATH
+                    value: heliocloud-base-w-survey-core
+                  - name: SOURCE_REPO
+                    value: https://github.com/heliophysicsPy/science-platforms-coordination
+                  - name: SOURCE_BRANCH
+                    value: heliocloud-base-w-survey-core
                   volumeMounts:
-                    - name: home
-                      mountPath: /home/jovyan
-                      subPath: "{escaped_username}"
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
                   securityContext:
                     runAsUser: 1000
                     runAsGroup: 1000
@@ -160,16 +160,16 @@ jupyterhub:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
                   env:
-                    - name: TARGET_PATH
-                      value: heliocloud-base-w-survey-extended
-                    - name: SOURCE_REPO
-                      value: https://github.com/heliophysicsPy/science-platforms-coordination
-                    - name: SOURCE_BRANCH
-                      value: heliocloud-base-w-survey-extended
+                  - name: TARGET_PATH
+                    value: heliocloud-base-w-survey-extended
+                  - name: SOURCE_REPO
+                    value: https://github.com/heliophysicsPy/science-platforms-coordination
+                  - name: SOURCE_BRANCH
+                    value: heliocloud-base-w-survey-extended
                   volumeMounts:
-                    - name: home
-                      mountPath: /home/jovyan
-                      subPath: "{escaped_username}"
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
                   securityContext:
                     runAsUser: 1000
                     runAsGroup: 1000

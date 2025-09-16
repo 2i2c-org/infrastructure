@@ -41,13 +41,13 @@ enable_nfs_backup = true
 
 
 hub_cloud_permissions = {
- "staging" : {
-   bucket_admin_access : [],
- },
+  "staging" : {
+    bucket_admin_access : [],
+  },
 
- "prod" : {
-   bucket_admin_access : [],
- }
+  "prod" : {
+    bucket_admin_access : [],
+  }
 }
 
 # Uncomment to enable cost monitoring
