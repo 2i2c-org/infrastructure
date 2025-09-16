@@ -6,7 +6,11 @@ userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::965872589083:role/heliophysics-prod
 
+
 jupyterhub:
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: prod
   ingress:
     hosts: [heliophysics.2i2c.cloud]
     tls:

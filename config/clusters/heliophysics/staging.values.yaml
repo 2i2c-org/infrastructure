@@ -6,7 +6,11 @@ userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::965872589083:role/heliophysics-staging
 
+
 jupyterhub:
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
   ingress:
     hosts: [staging.heliophysics.2i2c.cloud]
     tls:

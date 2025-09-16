@@ -8,7 +8,11 @@ nfs:
 #   annotations:
 #     eks.amazonaws.com/role-arn: arn:aws:iam::622703418259:role/berkeley-geojupyter-staging
 
+
 jupyterhub:
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
   ingress:
     hosts: [staging.oceanhackweek.2i2c.cloud]
     tls:
