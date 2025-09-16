@@ -55,9 +55,9 @@ output "jupyterhub_cost_monitoring_k8s_sa_annotation" {
   value = var.enable_jupyterhub_cost_monitoring ? "eks.amazonaws.com/role-arn: ${aws_iam_role.jupyterhub_cost_monitoring_iam_role[0].arn}" : null
 }
 
-# If enable_jupyterhub_cost_monitoring = true, then provide active cost allocation tags for the AWS Cost Explorer. Can take up to 24 hours to activate after being applied to a resource.
+# If enable_jupyterhub_cost_tags = true, then activate cost allocation tags for the AWS Cost Explorer. Can take up to 24 hours to activate after being applied to a resource.
 locals {
-  cost_allocation_tags = var.enable_jupyterhub_cost_monitoring ? [
+  cost_allocation_tags = var.enable_jupyterhub_cost_tags ? [
     "2i2c:hub-name",
     "2i2c:node-purpose",
     "2i2c:volume-purpose",

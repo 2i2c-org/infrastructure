@@ -264,9 +264,17 @@ variable "ebs_volumes" {
 
 variable "enable_jupyterhub_cost_monitoring" {
   type        = bool
+  default     = true
+  description = <<-EOT
+  Create an IAM role to read AWS Cost Explorer API.
+  EOT
+}
+
+variable "enable_jupyterhub_cost_tags" {
+  type        = bool
   default     = false
   description = <<-EOT
-  Create an IAM role to read AWS Cost Explorer API and enable cost allocation tags.
+  Activate cost allocation tags with the AWS Cost Explorer API.
   EOT
 }
 
