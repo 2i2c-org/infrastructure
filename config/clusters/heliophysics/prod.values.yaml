@@ -2,9 +2,9 @@ nfs:
   pv:
     serverIP: 10.100.220.55
 
-# userServiceAccount:
-#   annotations:
-#     eks.amazonaws.com/role-arn: arn:aws:iam::622703418259:role/berkeley-geojupyter-staging
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::965872589083:role/heliophysics-prod
 
 jupyterhub:
   ingress:

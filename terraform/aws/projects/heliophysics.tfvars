@@ -40,19 +40,15 @@ enable_nfs_backup = true
 # },
 
 
-# Tip: uncomment and verify any missing info in the lines below if you want
-#       to setup specific cloud permissions for the buckets in this cluster.
-#
-# hub_cloud_permissions = {
+hub_cloud_permissions = {
+ "staging" : {
+   bucket_admin_access : [],
+ },
 
-#  "staging" : {
-#    bucket_admin_access : ["scratch-staging"],
-#  },
-
-#  "prod" : {
-#    bucket_admin_access : ["scratch-prod"],
-#  },
-
+ "prod" : {
+   bucket_admin_access : [],
+ }
+}
 
 # Uncomment to enable cost monitoring
 # enable_jupyterhub_cost_monitoring = true
