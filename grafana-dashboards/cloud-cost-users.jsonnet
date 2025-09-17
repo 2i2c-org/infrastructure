@@ -9,7 +9,7 @@ local common = import './common.libsonnet';
 
 local Hub =
   common.bcOptions
-  + bc.new('Hub')
+  + bc.new('Hub – $hub')
   + bc.panelOptions.withDescription(
     |||
       Shows daily user costs by hub, with a total across `all` hubs shown by default.
@@ -23,10 +23,43 @@ local Hub =
       url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/costs-per-user?from=${__from:date}&to=${__to:date}&hub=$hub',
     },
   ])
-  + bc.queryOptions.transformation.withId('filterFieldsByName')
-  + bc.queryOptions.transformation.withOptions({
-
-  })
+  + bc.queryOptions.withTransformations([
+    bc.queryOptions.transformation.withId('formatTime')
+    + bc.queryOptions.transformation.withOptions({
+      outputFormat: 'MMM DD',
+      timeField: 'Date',
+      useTimezone: true,
+    }),
+    bc.queryOptions.transformation.withId('groupBy')
+    + bc.queryOptions.transformation.withOptions({
+      fields: {
+        Component: {
+          aggregations: [],
+        },
+        Cost: {
+          aggregations: [
+            'sum',
+          ],
+          operation: 'aggregate',
+        },
+        Date: {
+          aggregations: [],
+          operation: 'groupby',
+        },
+        User: {
+          aggregations: [],
+          operation: 'groupby',
+        },
+      },
+    }),
+    bc.queryOptions.transformation.withId('groupingToMatrix')
+    + bc.queryOptions.transformation.withOptions({
+      columnField: 'User',
+      emptyValue: 'zero',
+      rowField: 'Date',
+      valueField: 'Cost (sum)',
+    }),
+  ])
 ;
 
 
