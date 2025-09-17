@@ -199,9 +199,9 @@ variable "default_budget_alert" {
   EOT
 }
 
-variable budget_alert_thresholds {
-  type = list(number)
-  default = []
+variable "budget_alert_thresholds" {
+  type        = list(number)
+  default     = []
   description = <<-EOT
   List of currency units to set up budget alerts for
   EOT

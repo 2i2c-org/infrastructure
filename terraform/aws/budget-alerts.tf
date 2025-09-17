@@ -29,11 +29,11 @@ resource "aws_budgets_budget" "budgets" {
 resource "aws_budgets_budget" "threshold_budgets" {
   for_each = toset([for v in var.budget_alert_thresholds : tostring(v)])
 
-  name        = "Budget for ${var.cluster_name} at ${each.value}"
-  budget_type = "COST"
-  limit_unit  = "USD"
+  name         = "Budget for ${var.cluster_name} at ${each.value}"
+  budget_type  = "COST"
+  limit_unit   = "USD"
   limit_amount = each.value
-  time_unit   = "MONTHLY"
+  time_unit    = "MONTHLY"
 
   notification {
     comparison_operator = "GREATER_THAN"
