@@ -55,6 +55,8 @@ body:
 
       At the end of this phase, both 2i2c engineers and the admin users mentioned can login to the hub.
 
+      Notify Community Representatives that the hub is now available using FreshDesk. See [runbook documentation](https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase3/).
+
       #### Phase 3.2: Additional features
 
       | Question | Answer | Notes |
@@ -103,3 +105,4 @@ body:
       | :--- | :--- | :--- |
       | Custom image to be specified? | `Yes/No` | Specify what image here |
       | Custom image to be default? | `Yes/No` | |
+
