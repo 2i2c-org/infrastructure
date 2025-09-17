@@ -19,9 +19,9 @@ jupyterhub:
       gitRepoBranch: unify-logins-2
       templateVars:
         org:
-          name: Heliophysics
-          logo_url: https://2i2c.org/media/logo.png
-          url: https://2i2c.org
+          name: International Heliophysics Data Environment Alliance
+          logo_url: https://ihdea.net/img/about-img.png
+          url: https://ihdea.net/
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -29,8 +29,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: Heliophysics
-          url: https://2i2c.org
+          name: NASA's Science Managed Cloud Environment (SMCE)
+          url: https://smce.nasa.gov/overview/
   hub:
     allowNamedServers: true
     config:
@@ -58,7 +58,7 @@ jupyterhub:
           choices:
             heliocloud-base:
               display_name: HelioCloud Base Image
-              description: Some description
+              description: Minimal base image
               kubespawner_override:
                 image: quay.io/pangeo/pangeo-notebook:2025.08.14
                 default_url: /lab/tree/heliocloud-base-2025-update/Welcome.ipynb
@@ -103,7 +103,7 @@ jupyterhub:
               default: true
             pyhc:
               display_name: PyHC Environment
-              description: Some description
+              description: Environment containing every published Python in Heliophysics Community (PyHC) package
               kubespawner_override:
                 image: quay.io/pangeo/pangeo-notebook:2025.08.14
                 # default_url: /lab/tree/pyhc/Welcome.ipynb
@@ -127,7 +127,7 @@ jupyterhub:
                     runAsGroup: 1000
             heliophysics-core-survey:
               display_name: Heliophysics "Core" Survey Environment
-              description: Some description
+              description: Environment containing "core" heliophysics packages identified from our survey
               kubespawner_override:
                 image: quay.io/pangeo/pangeo-notebook:2025.08.14
                 default_url: /lab/tree/heliocloud-base-w-survey-core/Welcome.ipynb
@@ -151,7 +151,7 @@ jupyterhub:
                     runAsGroup: 1000
             heliophysics-extended-survey:
               display_name: Heliophysics "Extended" Survey Environment
-              description: Some description
+              description: Environment extending the "core" packages with all remaining from our survey
               kubespawner_override:
                 image: quay.io/pangeo/pangeo-notebook:2025.08.14
                 default_url: /lab/tree/heliocloud-base-w-survey-extended/Welcome.ipynb
