@@ -267,3 +267,14 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
 1. **Send a link to the hub's Community Representative(s)**
    So they can confirm that it works from their perspective as well.
+
+   **FreshDesk Usage**
+   1. Create a New Ticket and set the Requester to one of the Community Representatives Description can be 'New Hub'.
+   1. Verify that the Requester is associated a Company. Look at the right hand info screen on FreshDesk. Look for fields:
+      - Community Representatives
+      - Hub
+      - Grafana URL
+   1. If those fields are missing than this Requester is not correctly associated with a Community or the Community is missing these fields. (Yes, this will not generalize fully when a community has more than one hub... we'll get there.)
+   1. Reply to a the ticket and click the 'Canned Response' icon and choose "Your {{ticket.company.name}} hub is now available" and replace the body of the reply.
+   1. Add the required bcc: field manually and edit the response as needed to included additional information (like log on details)
+   1. Click Send
