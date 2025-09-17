@@ -29,8 +29,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: NASA's Science Managed Cloud Environment (SMCE)
-          url: https://smce.nasa.gov/overview/
+          name: NASA's Heliophysics Digital Resource Library (HDRL)
+          url: https://hdrl.gsfc.nasa.gov
   hub:
     allowNamedServers: true
     config:
