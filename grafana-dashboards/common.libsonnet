@@ -154,5 +154,42 @@ local bc = grafonnet.panel.barChart;
     + bc.options.tooltip.withSort('desc')
     + bc.options.withXTickLabelSpacing(100)
     + bc.options.withShowValue('never')
-    + bc.options.withStacking('normal'),
+    + bc.options.withStacking('normal')
+    + bc.queryOptions.withTransformations([
+      bc.queryOptions.transformation.withId('formatTime')
+      + bc.queryOptions.transformation.withOptions({
+        outputFormat: 'MMM DD',
+        timeField: 'Date',
+        useTimezone: true,
+      }),
+      bc.queryOptions.transformation.withId('groupBy')
+      + bc.queryOptions.transformation.withOptions({
+        fields: {
+          Component: {
+            aggregations: [],
+          },
+          Cost: {
+            aggregations: [
+              'sum',
+            ],
+            operation: 'aggregate',
+          },
+          Date: {
+            aggregations: [],
+            operation: 'groupby',
+          },
+          User: {
+            aggregations: [],
+            operation: 'groupby',
+          },
+        },
+      }),
+      bc.queryOptions.transformation.withId('groupingToMatrix')
+      + bc.queryOptions.transformation.withOptions({
+        columnField: 'User',
+        emptyValue: 'zero',
+        rowField: 'Date',
+        valueField: 'Cost (sum)',
+      }),
+    ]),
 }
