@@ -107,5 +107,20 @@ local bc = grafonnet.panel.barChart;
 
   bcOptions:
     bc.standardOptions.withMin(0)
-    + bc.standardOptions.withDecimals(2),
+    + bc.standardOptions.withDecimals(2)
+    + bc.standardOptions.withUnit('currencyUSD')
+    + bc.options.withBarWidth(0.9)
+    + bc.options.withFullHighlight(false)
+    + bc.options.withLegend({ calcs: ['sum'] })
+    + bc.options.legend.withDisplayMode('table')
+    + bc.options.legend.withPlacement('right')
+    + bc.options.legend.withSortBy('Total')
+    + bc.options.legend.withSortDesc(true)
+    + bc.options.tooltip.withMode('multi')
+    + bc.options.tooltip.withSort('desc')
+    + bc.options.withXTickLabelSpacing(100)
+    + bc.options.withShowValue('never')
+    + bc.options.withStacking('normal')
+    + bc.panelOptions.withRepeat('hub')
+    + bc.panelOptions.withRepeatDirection('v'),
 }
