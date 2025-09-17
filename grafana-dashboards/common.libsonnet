@@ -36,6 +36,40 @@ local bc = grafonnet.panel.barChart;
       + var.query.selectionOptions.withIncludeAll(value=false)
       + var.query.selectionOptions.withMulti(value=true)
       + var.query.refresh.onTime(),
+    component:
+      var.query.new(
+        'component',
+        {
+          query: '',
+          queryType: 'infinity',
+          infinityQuery: {
+            format: 'table',
+            parser: 'backend',
+            refId: 'variable',
+            source: 'url',
+            type: 'json',
+            url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/component-names?from=${__from:date}&to=${__to:date}',
+            url_options: {
+              data: '',
+              method: 'GET',
+            },
+          },
+        },
+      )
+      + var.query.withDatasourceFromVariable(self.infinity_datasource)
+      + var.query.generalOptions.withCurrent({
+        text: [
+          'compute',
+          'home storage',
+        ],
+        value: [
+          'compute',
+          'home storage',
+        ],
+      })
+      + var.query.selectionOptions.withIncludeAll(value=false)
+      + var.query.selectionOptions.withMulti(value=true)
+      + var.query.refresh.onTime(),
   },
 
   // grafonnet ref: https://grafana.github.io/grafonnet/API/panel/timeSeries/index.html#obj-queryoptions
@@ -120,7 +154,5 @@ local bc = grafonnet.panel.barChart;
     + bc.options.tooltip.withSort('desc')
     + bc.options.withXTickLabelSpacing(100)
     + bc.options.withShowValue('never')
-    + bc.options.withStacking('normal')
-    + bc.panelOptions.withRepeat('hub')
-    + bc.panelOptions.withRepeatDirection('v'),
+    + bc.options.withStacking('normal'),
 }
