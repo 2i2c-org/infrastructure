@@ -2,6 +2,7 @@ local grafonnet = import 'grafonnet/main.libsonnet';
 local var = grafonnet.dashboard.variable;
 local ts = grafonnet.panel.timeSeries;
 local bc = grafonnet.panel.barChart;
+local bg = grafonnet.panel.barGauge;
 
 {
   // grafonnet ref: https://grafana.github.io/grafonnet/API/dashboard/variable.html
@@ -192,4 +193,11 @@ local bc = grafonnet.panel.barChart;
         valueField: 'Cost (sum)',
       }),
     ]),
+
+  bgOptions:
+    bg.options.withDisplayMode('basic')
+    + bg.options.withOrientation('horizontal')
+    + bg.standardOptions.withMin(0)
+    + bg.standardOptions.withDecimals(2)
+    + bg.standardOptions.withUnit('currencyUSD'),
 }
