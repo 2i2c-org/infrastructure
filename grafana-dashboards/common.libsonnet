@@ -67,7 +67,7 @@ local bc = grafonnet.panel.barChart;
     },
     columns: [
       { selector: 'date', text: 'Date', type: 'timestamp' },
-      { selector: 'cost', text: 'Cost', type: 'number' },
+      { selector: 'value', text: 'Cost', type: 'number' },
       { selector: 'user', text: 'User', type: 'string' },
       { selector: 'component', text: 'Component', type: 'string' },
     ],
@@ -78,7 +78,7 @@ local bc = grafonnet.panel.barChart;
       method: 'GET',
       data: '',
     },
-    format: 'dataframe',
+    format: 'table',
     refId: 'A',
   },
 
