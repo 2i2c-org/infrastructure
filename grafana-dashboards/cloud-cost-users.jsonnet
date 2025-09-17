@@ -15,6 +15,7 @@ local Top5 =
       Shows the top 5 users by cost across all hubs and components over the selected time period.
     |||
   )
+  + bg.panelOptions.withGridPos(h=8, w=8, x=0, y=0)
   + bg.queryOptions.withTargets([
     common.queryUsersTarget
     {
@@ -81,7 +82,7 @@ local Top5 =
 local TotalHub =
   common.bgOptions
   + bg.new('Total by Hub')
-  + bc.panelOptions.withDescription(
+  + bg.panelOptions.withDescription(
     |||
       Total costs by hub are summed over the time period selected.
 
@@ -90,6 +91,7 @@ local TotalHub =
       - workshop: a hub for events such as workshops and tutorials, e.g. workshop.<your-community>.2i2c.cloud
     |||
   )
+  + bg.panelOptions.withGridPos(h=8, w=8, x=8, y=0)
   + bg.queryOptions.withTargets([
     common.queryHubTarget
     {
@@ -149,6 +151,7 @@ local TotalComponent =
       - support: compute and storage for support functions
     |||
   )
+  + bg.panelOptions.withGridPos(h=8, w=8, x=16, y=0)
   + bg.queryOptions.withTargets([
     common.queryComponentTarget
     {
@@ -200,6 +203,7 @@ local Hub =
       Try toggling the *hub* variable dropdown above to drill down per user costs by hub.
     |||
   )
+  + bg.panelOptions.withGridPos(h=12, w=24, x=0, y=8)
   + bc.queryOptions.withTargets([
     common.queryUsersTarget
     {
@@ -220,6 +224,7 @@ local Component =
       `compute` and `home storage` costs are user-dependent, whereas other components, not shown, are user-independent (find out more in the Cloud cost attribution dashboard instead). 
     |||
   )
+  + bg.panelOptions.withGridPos(h=12, w=24, x=0, y=20)
   + bc.queryOptions.withTargets([
     common.queryUsersTarget
     {
@@ -241,15 +246,11 @@ dashboard.new('Cloud costs per user – Grafonnet')
   common.variables.infinity_datasource,
 ])
 + dashboard.withPanels(
-  grafonnet.util.grid.makeGrid(
-    [
-      Top5,
-      TotalHub,
-      TotalComponent,
-      Hub,
-      Component,
-    ],
-    panelWidth=24,
-    panelHeight=12,
-  )
+  [
+    Top5,
+    TotalHub,
+    TotalComponent,
+    Hub,
+    Component,
+  ],
 )
