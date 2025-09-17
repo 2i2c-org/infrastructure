@@ -199,6 +199,14 @@ variable "default_budget_alert" {
   EOT
 }
 
+variable budget_alert_thresholds {
+  type = list(number)
+  default = []
+  description = <<-EOT
+  List of currency units to set up budget alerts for
+  EOT
+}
+
 variable "disable_cluster_wide_filestore" {
   default     = true
   type        = bool

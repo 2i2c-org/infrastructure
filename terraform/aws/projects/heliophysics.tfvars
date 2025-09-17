@@ -50,5 +50,12 @@ hub_cloud_permissions = {
   }
 }
 
+default_budget_alert = {
+  enabled: false
+}
+
+budget_alert_thresholds = [
+  500, 1000, 1500, 2000
+]
 # Uncomment to enable cost monitoring
-# enable_jupyterhub_cost_monitoring = true
+enable_jupyterhub_cost_monitoring = true
