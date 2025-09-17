@@ -135,6 +135,61 @@ local TotalHub =
   + bg.standardOptions.color.withMode('continuous-BlYlRd')
 ;
 
+local TotalComponent =
+  common.bgOptions
+  + bg.new('Total by Component')
+  + bg.panelOptions.withDescription(
+    |||
+      Total costs by component are summed over the time period selected.
+
+      - compute: CPU and memory of user nodes
+      - home storage: storage disks for user directories
+      - networking: load balancing and virtual private cloud
+      - object storage: cloud storage, e.g. AWS S3
+      - support: compute and storage for support functions
+    |||
+  )
+  + bg.queryOptions.withTargets([
+    common.queryComponentTarget
+    {
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}',
+    },
+  ])
+  + bg.queryOptions.withTransformations([
+    bg.queryOptions.transformation.withId('groupBy')
+    + bg.queryOptions.transformation.withOptions({
+      fields: {
+        Cost: {
+          aggregations: [
+            'sum',
+          ],
+          operation: 'aggregate',
+        },
+        Component: {
+          aggregations: [],
+          operation: 'groupby',
+        },
+      },
+    }),
+    bg.queryOptions.transformation.withId('transpose'),
+    bg.queryOptions.transformation.withId('organize')
+    + bg.queryOptions.transformation.withOptions({
+      indexByName: {
+        Field: 0,
+        compute: 1,
+        fixed: 5,
+        'home storage': 2,
+        networking: 4,
+        'object storage': 3,
+      },
+      renameByName: {
+        fixed: 'support',
+      },
+    }),
+  ])
+  + bg.standardOptions.color.withMode('continuous-BlYlRd')
+;
+
 local Hub =
   common.bcOptions
   + bc.new('Hub – $hub')
@@ -190,6 +245,7 @@ dashboard.new('Cloud costs per user – Grafonnet')
     [
       Top5,
       TotalHub,
+      TotalComponent,
       Hub,
       Component,
     ],

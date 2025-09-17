@@ -116,6 +116,27 @@ local bg = grafonnet.panel.barGauge;
     refId: 'A',
   },
 
+  queryComponentTarget: {
+    datasource: {
+      type: 'yesoreyeram-infinity-datasource',
+      uid: '${infinity_datasource}',
+    },
+    columns: [
+      { selector: 'date', text: 'Date', type: 'timestamp' },
+      { selector: 'cost', text: 'Cost', type: 'number' },
+      { selector: 'component', text: 'Component', type: 'string' },
+    ],
+    parser: 'backend',
+    type: 'json',
+    source: 'url',
+    url_options: {
+      method: 'GET',
+      data: '',
+    },
+    format: 'table',
+    refId: 'A',
+  },
+
   queryUsersTarget: {
     datasource: {
       type: 'yesoreyeram-infinity-datasource',
