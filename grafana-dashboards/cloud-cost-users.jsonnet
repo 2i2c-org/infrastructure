@@ -22,7 +22,6 @@ local Top5 =
     },
   ])
   + bg.options.reduceOptions.withValues(true)
-  + bg.options.withValueMode('text')
   + bg.standardOptions.color.withMode('thresholds')
   + bg.standardOptions.thresholds.withMode('percentage')
   + bg.standardOptions.thresholds.withSteps([
@@ -79,6 +78,63 @@ local Top5 =
   ])
 ;
 
+local TotalHub =
+  common.bgOptions
+  + bg.new('Total by Hub')
+  + bc.panelOptions.withDescription(
+    |||
+      Total costs by hub are summed over the time period selected.
+
+      - prod: the main production hub, e.g. <your-community>.2i2c.cloud
+      - staging: a hub for testing, e.g. staging.<your-community>.2i2c.cloud
+      - workshop: a hub for events such as workshops and tutorials, e.g. workshop.<your-community>.2i2c.cloud
+    |||
+  )
+  + bg.queryOptions.withTargets([
+    common.queryHubTarget
+    {
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}',
+    },
+  ])
+  + bg.queryOptions.withTransformations([
+    bg.queryOptions.transformation.withId('groupBy')
+    + bg.queryOptions.transformation.withOptions({
+      fields: {
+        Cost: {
+          aggregations: [
+            'sum',
+          ],
+          operation: 'aggregate',
+        },
+        Hub: {
+          aggregations: [],
+          operation: 'groupby',
+        },
+      },
+    }),
+    bg.queryOptions.transformation.withId('transpose'),
+    bg.queryOptions.transformation.withId('organize')
+    + bg.queryOptions.transformation.withOptions({
+      excludeByName: {
+        shared: true,
+        support: true,
+      },
+      includeByName: {},
+      indexByName: {
+        Field: 0,
+        prod: 1,
+        shared: 4,
+        staging: 2,
+        workshop: 3,
+      },
+      renameByName: {
+        shared: 'support',
+      },
+    }),
+  ])
+  + bg.standardOptions.color.withMode('continuous-BlYlRd')
+;
+
 local Hub =
   common.bcOptions
   + bc.new('Hub – $hub')
@@ -133,6 +189,7 @@ dashboard.new('Cloud costs per user – Grafonnet')
   grafonnet.util.grid.makeGrid(
     [
       Top5,
+      TotalHub,
       Hub,
       Component,
     ],

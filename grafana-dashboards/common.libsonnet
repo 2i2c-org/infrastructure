@@ -95,6 +95,27 @@ local bg = grafonnet.panel.barGauge;
     refId: 'A',
   },
 
+  queryHubTarget: {
+    datasource: {
+      type: 'yesoreyeram-infinity-datasource',
+      uid: '${infinity_datasource}',
+    },
+    columns: [
+      { selector: 'date', text: 'Date', type: 'timestamp' },
+      { selector: 'cost', text: 'Cost', type: 'number' },
+      { selector: 'name', text: 'Hub', type: 'string' },
+    ],
+    parser: 'backend',
+    type: 'json',
+    source: 'url',
+    url_options: {
+      method: 'GET',
+      data: '',
+    },
+    format: 'table',
+    refId: 'A',
+  },
+
   queryUsersTarget: {
     datasource: {
       type: 'yesoreyeram-infinity-datasource',
@@ -197,6 +218,7 @@ local bg = grafonnet.panel.barGauge;
   bgOptions:
     bg.options.withDisplayMode('basic')
     + bg.options.withOrientation('horizontal')
+    + bg.options.withValueMode('text')
     + bg.standardOptions.withMin(0)
     + bg.standardOptions.withDecimals(2)
     + bg.standardOptions.withUnit('currencyUSD'),
