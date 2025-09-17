@@ -24,7 +24,7 @@ hubs:
 
 - name: prod
   display_name: heliophysics - prod
-  domain: prod.heliophysics.2i2c.cloud
+  domain: heliophysics.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
