@@ -207,9 +207,9 @@ variable budget_alert_thresholds {
   EOT
 }
 
-variable budget_alert_threshold_emails {
-  type = list(string)
-  default = []
+variable "budget_alert_threshold_emails" {
+  type        = list(string)
+  default     = []
   description = <<-EOT
   List of emails to notify for budget alerts
 
