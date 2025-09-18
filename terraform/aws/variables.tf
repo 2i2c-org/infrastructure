@@ -207,6 +207,16 @@ variable budget_alert_thresholds {
   EOT
 }
 
+variable budget_alert_threshold_emails {
+  type = list(string)
+  default = []
+  description = <<-EOT
+  List of emails to notify for budget alerts
+
+  The default 2i2c support email is always included.
+  EOT
+}
+
 variable "disable_cluster_wide_filestore" {
   default     = true
   type        = bool

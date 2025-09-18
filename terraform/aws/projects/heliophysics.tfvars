@@ -21,14 +21,16 @@ ebs_volumes = {
   "prod" = {
     name_suffix = "prod",
     type        = "gp3",
-    size        = 100,
+    size        = 400,
     tags        = { "2i2c:hub-name" : "prod" },
   },
 
 }
 enable_nfs_backup = true
 
-
+budget_alert_threshold_emails = [
+  "shawn.polson@lasp.colorado.edu"
+]
 # "scratch-staging" : {
 #   "delete_after" : 7,
 #   "tags" : { "2i2c:hub-name" : "staging" },
