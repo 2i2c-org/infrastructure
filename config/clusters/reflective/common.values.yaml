@@ -90,6 +90,7 @@ jupyterhub:
             02-pangeo:
               display_name: Pangeo Notebook Image
               description: Python image with scientific, dask and geospatial tools
+              default: true
               kubespawner_override:
                 image: pangeo/pangeo-notebook:2025.01.24
             03-rocker:

@@ -51,7 +51,7 @@ hub_cloud_permissions = {
 }
 
 default_budget_alert = {
-  enabled: false
+  enabled : false
 }
 
 budget_alert_thresholds = [

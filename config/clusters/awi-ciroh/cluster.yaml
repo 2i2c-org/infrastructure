@@ -1,5 +1,6 @@
 name: awi-ciroh
-provider: gcp # https://console.cloud.google.com/home/dashboard?&project=ciroh-jupyterhub-423218
+provider: gcp
+provider_url: https://console.cloud.google.com/home/dashboard?&project=ciroh-jupyterhub-423218
 gcp:
   key: enc-deployer-credentials.secret.json
   project: ciroh-jupyterhub-423218

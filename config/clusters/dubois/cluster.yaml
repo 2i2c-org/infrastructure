@@ -1,5 +1,6 @@
 name: dubois
-provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/dubois-cluster/observability?project=dubois-436615
+provider: gcp
+provider_url: https://console.cloud.google.com/kubernetes/clusters/details/us-central1/dubois-cluster/observability?project=dubois-436615
 gcp:
   key: enc-deployer-credentials.secret.json
   project: dubois-436615

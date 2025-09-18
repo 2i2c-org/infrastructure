@@ -4,6 +4,7 @@ Helper commands for debugging active issues in a hub
 
 import string
 import subprocess
+import webbrowser
 from enum import Enum
 
 import escapism
@@ -121,7 +122,7 @@ def user_logs(
 def start_docker_proxy(
     docker_daemon_cluster: str = typer.Argument(
         "2i2c", help="Name of cluster where the docker daemon lives"
-    )
+    ),
 ):
     """
     Proxy a docker daemon from a remote cluster to local port 23760.
@@ -141,3 +142,20 @@ def start_docker_proxy(
         ]
 
         subprocess.check_call(cmd)
+
+
+@debug_app.command()
+def dashboard(
+    cluster_name: str = typer.Argument(
+        "2i2c", help="Name of cluster for which to load dashboard"
+    ),
+):
+    """
+    Open the provider dashboard for a cluster in the webbrowser
+    """
+    cluster = Cluster.from_name(cluster_name)
+    try:
+        url = cluster.spec["provider_url"]
+    except KeyError:
+        raise KeyError("Cluster {cluster_name!r} does not have a valid provider URL")
+    webbrowser.open(url)
