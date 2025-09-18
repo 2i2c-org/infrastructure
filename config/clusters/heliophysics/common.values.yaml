@@ -19,9 +19,9 @@ jupyterhub:
       gitRepoBranch: unify-logins-2
       templateVars:
         org:
-          name: International Heliophysics Data Environment Alliance
+          name: Science Platforms Coordination IHDEA Working Group
           logo_url: https://ihdea.net/img/about-img.png
-          url: https://ihdea.net/
+          url: https://ihdea.net/groups.html
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -66,7 +66,7 @@ jupyterhub:
               display_name: HelioCloud Base Image
               description: Minimal base image
               kubespawner_override:
-                image: quay.io/sapols/heliocloud-base-2025-update:43ecd43cc1ff
+                image: quay.io/sapols/heliocloud-base-2025-update:d021cf764de8
               default: true
             pyhc:
               display_name: PyHC Environment
@@ -77,12 +77,12 @@ jupyterhub:
               display_name: Heliophysics "Core" Survey Environment
               description: Environment containing "core" heliophysics packages identified from our survey
               kubespawner_override:
-                image: quay.io/sapols/heliocloud-base-w-survey-core:7f4254dcfe90
+                image: quay.io/sapols/heliocloud-base-w-survey-core:2a477ed914c5
             heliophysics-extended-survey:
               display_name: Heliophysics "Extended" Survey Environment
               description: Environment extending the "core" packages with all remaining from our survey
               kubespawner_override:
-                image: quay.io/sapols/heliocloud-base-w-survey-extended:7f4254dcfe90
+                image: quay.io/sapols/heliocloud-base-w-survey-extended:6cd3d14bd907
         resource_allocation:
           display_name: Resource Allocation
           choices:
