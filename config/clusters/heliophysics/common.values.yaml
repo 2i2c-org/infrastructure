@@ -67,22 +67,26 @@ jupyterhub:
               description: Minimal base image
               kubespawner_override:
                 image: quay.io/sapols/heliocloud-base-2025-update:43ecd43cc1ff
+                default_url: /lab/tree/heliocloud-base-2025-update/Welcome.ipynb
               default: true
             pyhc:
               display_name: PyHC Environment
               description: Environment containing every published Python in Heliophysics Community (PyHC) package
               kubespawner_override:
                 image: spolson/pyhc-environment:v2025.09.17
+                default_url: /lab/tree/pyhc/Welcome.ipynb
             heliophysics-core-survey:
               display_name: Heliophysics "Core" Survey Environment
               description: Environment containing "core" heliophysics packages identified from our survey
               kubespawner_override:
                 image: quay.io/sapols/heliocloud-base-w-survey-core:7f4254dcfe90
+                default_url: /lab/tree/heliocloud-base-w-survey-core/Welcome.ipynb
             heliophysics-extended-survey:
               display_name: Heliophysics "Extended" Survey Environment
               description: Environment extending the "core" packages with all remaining from our survey
               kubespawner_override:
                 image: quay.io/sapols/heliocloud-base-w-survey-extended:7f4254dcfe90
+                default_url: /lab/tree/heliocloud-base-w-survey-extended/Welcome.ipynb
         resource_allocation:
           display_name: Resource Allocation
           choices:
