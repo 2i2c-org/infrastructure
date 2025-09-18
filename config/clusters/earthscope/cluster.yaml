@@ -1,5 +1,6 @@
 name: earthscope
-provider: aws # https://762698921361.signin.aws.amazon.com/console
+provider: aws
+provider_url: https://762698921361.signin.aws.amazon.com/console
 aws:
   account: 762698921361
   key: enc-deployer-credentials.secret.json
