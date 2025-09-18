@@ -203,7 +203,7 @@ local Hub =
       Try toggling the *hub* variable dropdown above to drill down per user costs by hub.
     |||
   )
-  + bg.panelOptions.withGridPos(h=12, w=24, x=0, y=8)
+  + bg.panelOptions.withGridPos(h=8, w=24, x=0, y=8)
   + bc.queryOptions.withTargets([
     common.queryUsersTarget
     {
@@ -224,7 +224,7 @@ local Component =
       `compute` and `home storage` costs are user-dependent, whereas other components, not shown, are user-independent (find out more in the Cloud cost attribution dashboard instead). 
     |||
   )
-  + bg.panelOptions.withGridPos(h=12, w=24, x=0, y=20)
+  + bg.panelOptions.withGridPos(h=8, w=24, x=0, y=20)
   + bc.queryOptions.withTargets([
     common.queryUsersTarget
     {
