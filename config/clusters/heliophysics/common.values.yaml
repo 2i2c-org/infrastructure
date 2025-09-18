@@ -20,7 +20,7 @@ jupyterhub:
       templateVars:
         org:
           name: Science Platforms Coordination IHDEA Working Group
-          logo_url: https://ihdea.net/img/about-img.png
+          logo_url: https://www.cosmos.esa.int/documents/4803129/4803148/ihdea-logo.png
           url: https://ihdea.net/groups.html
         designed_by:
           name: 2i2c
