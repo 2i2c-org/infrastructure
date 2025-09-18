@@ -72,7 +72,7 @@ jupyterhub:
               display_name: PyHC Environment
               description: Environment containing every published Python in Heliophysics Community (PyHC) package
               kubespawner_override:
-                image: spolson/pyhc-environment:v2025.09.17
+                image: spolson/pyhc-environment:v2025.09.18
             heliophysics-core-survey:
               display_name: Heliophysics "Core" Survey Environment
               description: Environment containing "core" heliophysics packages identified from our survey
