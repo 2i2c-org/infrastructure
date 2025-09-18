@@ -40,9 +40,8 @@ resource "aws_budgets_budget" "threshold_budgets" {
     threshold           = each.value
     threshold_type      = "ABSOLUTE_VALUE"
     notification_type   = "ACTUAL"
-    subscriber_email_addresses = [
-      for email in var.default_budget_alert.subscriber_email_addresses :
-      replace(email, "{var_cluster_name}", var.cluster_name)
-    ]
+    subscriber_email_addresses = concat([
+      "support+${var.cluster_name}@2i2c.org"
+    ], var.budget_alert_threshold_emails)
   }
 }
