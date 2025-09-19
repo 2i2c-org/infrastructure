@@ -74,6 +74,7 @@ howto/manage-domains/index.md
 howto/manage-alerts/index.md
 howto/grafana-github-auth.md
 howto/regenerate-smce-creds.md
+howto/create-gcp-disk-home-limited-creds.md
 howto/troubleshoot/index.md
 ```
 
