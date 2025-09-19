@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -eu
+
+here=$(dirname "$0")
+cluster="${CLUSTER_NAME}"
+hub="${HUB_NAME}"
+size="${DISK_SIZE:-20}"
+tfvars="${here}/../terraform/gcp/projects/${cluster}.tfvars"
+
+test -f $tfvars
+
+# Extract project
+project=$(sed -En 's/^project_id\s*=\s*"([^"]+)"\s*$/\1/p' "${tfvars}")
+[[ -n "${project}" ]]
+
+# Extract zone
+zone=$(sed -En 's/^zone\s*=\s*"([^"]+)"\s*$/\1/p' "${tfvars}")
+[[ -n "${zone}" ]]
+
+disk_uri=$(gcloud compute disks create "hub-nfs-homedirs-${HUB_NAME}"   \
+  --size "${size}" \
+  --type "https://www.googleapis.com/compute/v1/projects/${project}/zones/${zone}/diskTypes/pd-balanced" \
+  --zone "${zone}" 2>&1 |
+  sed -En 's@^Created\s*\[https://www\.googleapis\.com/compute/v1/([^]]+)\].*$@\1@p'
+)
+[[ -n "${disk_uri}" ]]
+
+cat <<- EOF
+# Terraform config:
+"${hub}" = {
+    size = ${size}
+    name_suffix = "${hub}"
+}
+
+# NFS config:
+# https://infrastructure.2i2c.org/howto/features/storage-quota/#enabling-jupyterhub-home-nfs
+volumeId: ${disk_uri}
+EOF
