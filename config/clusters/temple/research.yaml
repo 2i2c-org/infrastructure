@@ -1,64 +1,37 @@
-nfs:
-  enabled: true
-  pv:
-    enabled: true
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
-    baseShareName: /
+# nfs:
+#   pv:
+#     serverIP: 10.100.17.128
 jupyterhub-home-nfs:
-  enabled: true
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10
   eks:
-    enabled: true
+    volumeId: vol-0b5fc915293bd5bec
 jupyterhub:
   custom:
     2i2c:
-      add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: google
-    homepage:
-      templateVars:
-        org:
-          name: Temple University JupyterHub
-          logo_url: https://www.temple.edu/modules/custom/tu_layout/images/brand/t-cherry.svg
-          url: https://www.temple.edu/
-        designed_by:
-          name: 2i2c
-          url: https://2i2c.org
-        operated_by:
-          name: 2i2c
-          url: https://2i2c.org
-        funded_by:
-          name: Temple University
-          url: https://www.temple.edu/
+      add_staff_user_ids_of_type: github
   hub:
-    allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          https://fim.temple.edu/idp/shibboleth:
-            default: true
-            username_derivation:
-              username_claim: eppn
-            allow_all: true
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: email
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://research.temple.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        scope:
+        - read:org
       Authenticator:
-        admin_users:
-        - jmsmith1@temple.edu
-        - rebecca.beadling@temple.edu
-        allowed_users:
-        - jmsmith1@temple.edu
-        - rebecca.beadling@temple.edu
-        allow_existing_users: true
+        admin_users: []
+        allowed_users: []
+        allow_existing_users: false
   singleuser:
-    defaultUrl: /lab
+    extraEnv:
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23li8mGZjoYxOom3Gv
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-research-github-push-access
+    nodeSelector:
+      2i2c/hub-name: research
     profileList:
     - display_name: Default
       description: Choose image and resource allocation
@@ -76,11 +49,30 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            datascience:
+            01-datascience:
               display_name: Data Science
-              slug: regular-profile
+              slug: data-science-profile
+              default: true
               kubespawner_override:
                 image: docker.io/laserchemist/datascience:v13
+            02-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              slug: pangeo-profile
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2025.08.14
+            03-rocker:
+              display_name: Rocker Geospatial with RStudio
+              description: R environment with many geospatial libraries pre-installed
+              slug: rocker-profile
+              kubespawner_override:
+                image: rocker/binder:4.4
+                image_pull_policy: Always
+                  # Launch RStudio after the user logs in
+                default_url: /rstudio
+                  # Ensures container working dir is homedir
+                  # https://github.com/2i2c-org/infrastructure/issues/2559
+                working_dir: /home/rstudio
         requests:
           display_name: Resource Allocation
           choices:
@@ -123,26 +115,18 @@ jupyterhub:
                 mem_limit: 31222718077
                 cpu_guarantee: 3.6505
                 cpu_limit: 3.6505
-  scheduling:
-    userScheduler:
-      enabled: true
-
+  ingress:
+    hosts: [research.temple.2i2c.cloud]
+    tls:
+    - hosts: [research.temple.2i2c.cloud]
+      secretName: https-auto-tls
 binderhub-service:
-  enabled: true
-    # Explicitly specify what nodes we want for our builds
-    # Otherwise we may scale up a larger node than needed
-  networkPolicy:
-    enabled: true
   dockerApi:
     nodeSelector:
-      node.kubernetes.io/instance-type: r5.xlarge
+      2i2c/hub-name: research
   config:
     KubernetesBuildExecutor:
       node_selector:
-        node.kubernetes.io/instance-type: r5.xlarge
-    DockerRegistry:
-      url: &url https://quay.io
-      username: &username imagebuilding-non-gcp-hubs+image_builder
-  buildPodsRegistryCredentials:
-    server: *url
-    username: *username
+        2i2c/hub-name: research
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-research-
