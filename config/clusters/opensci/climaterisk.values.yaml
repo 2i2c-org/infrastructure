@@ -37,8 +37,10 @@ jupyterhub:
       extraVolumeMounts: []
   hub:
     config:
-      jupyterHub:
+      JupyterHub:
         authenticator_class: dummy
+      Authenticator:
+        admin_users: []
   singleuser:
     defaultUrl: /lab/tree/climaterisk/book/Startup.ipynb
     image:
