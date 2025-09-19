@@ -20,8 +20,6 @@ jupyterhub:
       secretName: https-auto-tls
   hub:
     config:
-      JupyterHub:
-        authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.oceanhackweek.2i2c.cloud/hub/oauth_callback
   # singleuser:
