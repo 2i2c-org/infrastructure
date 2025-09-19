@@ -1,6 +1,6 @@
-# nfs:
-#   pv:
-#     serverIP: 10.100.17.128
+nfs:
+  pv:
+    serverIP: 10.100.55.222
 jupyterhub-home-nfs:
   quotaEnforcer:
     config:
@@ -123,7 +123,7 @@ jupyterhub:
       - 2i2c-org:hub-access-for-2i2c-staff
       profile_options:
         image:
-          display_name: Environment
+          display_name: Image
           dynamic_image_building:
             enabled: true
           unlisted_choice:
