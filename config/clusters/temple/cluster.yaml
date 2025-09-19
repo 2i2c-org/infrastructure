@@ -15,7 +15,6 @@ support:
   - enc-support.secret.values.yaml
 hubs:
 - name: staging
-      # Tip: consider changing this to something more human friendly
   display_name: temple - staging
   domain: staging.temple.2i2c.cloud
   helm_chart: basehub
@@ -24,9 +23,7 @@ hubs:
   - enc-common.secret.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-
 - name: prod
-      # Tip: consider changing this to something more human friendly
   display_name: Temple University (Advanced)
   domain: advanced.temple.2i2c.cloud
   helm_chart: basehub
@@ -35,3 +32,12 @@ hubs:
   - enc-common.secret.values.yaml
   - prod.values.yaml
   - enc-prod.secret.values.yaml
+- name: research
+  display_name: temple research
+  domain: research.temple.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - research.values.yaml
+  - enc-research.secret.values.yaml

@@ -24,7 +24,6 @@ jupyterhub:
         org:
           name: Temple University JupyterHub
           logo_url: https://www.temple.edu/modules/custom/tu_layout/images/brand/t-cherry.svg
-
           url: https://www.temple.edu/
         designed_by:
           name: 2i2c
