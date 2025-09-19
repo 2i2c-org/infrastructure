@@ -19,14 +19,12 @@ This document describes how we enable external contributors to use limited crede
    export CLUSTER_NAME=...
    # Name of new hub
    export HUB_NAME=...
-   # Size (GB) of disk
-   export DISK_SIZE=20
    ```
 
-1. Run the `extra-scripts/create-gcp-disk` shell script.
+1. Run the deployer command to create the disk
 
    ```bash
-   extra-scripts/create-gcp-home-disk
+   deployer exec gcp home-disk "${CLUSTER_NAME}" "${HUB_NAME}" --disk-size=20
 
    ```
 
