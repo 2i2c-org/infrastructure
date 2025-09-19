@@ -19,10 +19,10 @@ jupyterhub:
     tls:
     - hosts: [oceanhackweek.2i2c.cloud]
       secretName: https-auto-tls
-  # hub:
-  #   config:
-  #     GitHubOAuthenticator:
-  #       oauth_callback_url: https://staging.oceanhackweek.2i2c.cloud/hub/oauth_callback
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
   # singleuser:
   #   extraEnv:
   #     SCRATCH_BUCKET: s3://berkeley-geojupyter-scratch-staging/$(JUPYTERHUB_USER)

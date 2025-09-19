@@ -14,8 +14,8 @@ nfs:
 jupyterhub:
   custom:
     2i2c:
-      add_staff_user_ids_to_admin_users: false
-      # add_staff_user_ids_of_type: github
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
     homepage:
       gitRepoBranch: 2i2c-ohw
       templateVars:
@@ -36,13 +36,16 @@ jupyterhub:
     allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: dummy
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - Intercoonecta:ohwes25-organizers
       Authenticator:
-        admin_users: []
-        # - ocefpaf
-        # - abkfenris
-        # - cpsarason
-        # - emiliom
+        admin_users:
+        - ocefpaf
+        - abkfenris
+        - cpsarason
+        - emiliom
 
   scheduling:
     userScheduler:
