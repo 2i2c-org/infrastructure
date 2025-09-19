@@ -196,7 +196,7 @@ persistent_disks = {
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
-  }
+  } 
   "ucsc" = {
     size        = 20
     name_suffix = "ucsc"
@@ -204,6 +204,10 @@ persistent_disks = {
   "unr" = {
     size        = 40
     name_suffix = "unr"
+  }
+  "virginia" = {
+    size        = 180
+    name_suffix = "virginia"
   }
   "wlac" = {
     size        = 20
