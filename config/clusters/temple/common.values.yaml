@@ -1,11 +1,7 @@
-#If the hub is a daskhub, please indent everything under a basehub key
-#basehub:
 nfs:
   enabled: true
   pv:
     enabled: true
-
-    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
     - rsize=1048576
     - wsize=1048576
@@ -15,9 +11,9 @@ nfs:
     - noresvport
     baseShareName: /
 jupyterhub-home-nfs:
-  enabled: true # can be migrated to common values file
+  enabled: true
   eks:
-    enabled: true # can be migrated to common values file
+    enabled: true
 jupyterhub:
   custom:
     2i2c:
@@ -59,7 +55,8 @@ jupyterhub:
         - jmsmith1@temple.edu
         - rebecca.beadling@temple.edu
         allowed_users:
-        - georgianaelena@2i2c.org
+        - jmsmith1@temple.edu
+        - rebecca.beadling@temple.edu
         allow_existing_users: true
   singleuser:
     defaultUrl: /lab
