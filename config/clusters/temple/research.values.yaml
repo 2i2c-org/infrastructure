@@ -30,6 +30,7 @@ jupyterhub:
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23li8mGZjoYxOom3Gv
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-research-github-push-access
+      SCRATCH_BUCKET: s3://temple-scratch-research/$(JUPYTERHUB_USER)
     nodeSelector:
       2i2c/hub-name: research
     profileList:

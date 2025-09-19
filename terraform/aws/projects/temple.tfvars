@@ -28,3 +28,10 @@ ebs_volumes = {
 }
 
 enable_jupyterhub_cost_monitoring = true
+
+user_buckets = {
+  "scratch-research" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "research" },
+  },
+}
