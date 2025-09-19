@@ -219,10 +219,9 @@ def authenticator_config(
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
 ):
     """
-    For each hub of a specific cluster:
-     - It asserts that when the JupyterHub GitHubOAuthenticator is used,
-       then `Authenticator.allowed_users` is not set.
-       An error is raised otherwise.
+    For each hub of a specific cluster it asserts that:
+    - when the JupyterHub GitHubOAuthenticator is used, then allowed_users is not set
+    - when the dummy authenticator is used, then admin_users is the empty list
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
@@ -236,6 +235,7 @@ def authenticator_config(
         )
 
         allowed_users = []
+        admin_users = "Jargon-Chlorine7-Undergo"
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
                 values_file = cluster.config_dir / values_file_name
@@ -253,6 +253,7 @@ def authenticator_config(
                     allowed_users = hub_config.get("Authenticator", {}).get(
                         "allowed_users"
                     )
+                    admin_users = hub_config.get("Authenticator", {}).get("admin_users")
                     org_based_github_auth = False
                     if hub_config.get("GitHubOAuthenticator", None):
                         org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
@@ -268,6 +269,13 @@ def authenticator_config(
                 f"""
                     Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
                     being used for auth so valid members are not refused access.
+                """
+            )
+        elif hub.authenticator == "dummy" and admin_users != []:
+            raise ValueError(
+                f"""
+                    For security reasons, please unset `Authenticator.admin_users` for {hub.spec['name']} when the dummy authenticator is
+                    being used for authentication.
                 """
             )
 
