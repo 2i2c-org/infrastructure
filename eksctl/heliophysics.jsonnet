@@ -16,7 +16,15 @@ local c = cluster.makeCluster(
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[],
-  nodeGroupGenerations=['a']
+  nodeGroupGenerations=['b']
 );
 
-c
+# Give all notebook nodes 160G disk space rather than the default 80,
+# because there are 4 images in use with this hub and they all big!
+cluster.withNodeGroupConfigOverride(
+  c,
+  kind="notebook",
+  overrides={
+    volumeSize: 160
+  }
+)
