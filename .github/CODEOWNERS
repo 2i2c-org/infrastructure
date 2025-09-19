@@ -1,0 +1,4 @@
+/config/clusters/disasters/common.values.yaml @freitagb
+/config/clusters/maap/common.values.yaml @wildintellect @batpad
+/config/clusters/nasa-veda/common.values.yaml @wildintellect @batpad
+/config/clusters/nasa-ghg-hub/common.values.yaml @smk0033
