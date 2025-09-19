@@ -6,13 +6,7 @@ This document describes how we enable external contributors to use limited crede
 
 ## Create a home-directory disk
 
-1. Ensure that you are logged in to the appropriate GCP project:
-
-   ```bash
-   gcloud config get project
-   ```
-
-1. Set the `CLUSTER_NAME`, `HUB_NAME`, and `DISK_SIZE` (optional) environment variables:
+1. Set the `CLUSTER_NAME`, `HUB_NAME` environment variables for convenience:
 
    ```bash
    # Name of existing cluster
@@ -20,6 +14,8 @@ This document describes how we enable external contributors to use limited crede
    # Name of new hub
    export HUB_NAME=...
    ```
+
+   This hub must not yet exist.
 
 1. Run the deployer command to create the disk
 
@@ -78,11 +74,13 @@ Disks created imperatively in [](#create-a-home-disk-gcp) will not be recorded i
    ```
 
 1. Import the newly created resource
+
    ```bash
    terraform import -var-file="projects/${CLUSTER_NAME}.tfvars" $"google_compute_disk.nfs_homedirs[\"${HUB_NAME}\"]" "${VOLUME#projects/}"
    ```
 
 1. Run a plan to ensure that only snapshot policies need to be created:
+
    ```bash
    terraform plan -var-file="projects/${CLUSTER_NAME}.tfvars"
    ```
