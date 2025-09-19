@@ -196,7 +196,7 @@ persistent_disks = {
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
-  } 
+  }
   "ucsc" = {
     size        = 20
     name_suffix = "ucsc"
