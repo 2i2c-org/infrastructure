@@ -53,21 +53,15 @@ jupyterhub:
         image:
           display_name: Image
           unlisted_choice:
-            # Temporarily enabled so images can be tested
-            enabled: true
-            display_name: Custom image
-            description: Specify your own docker image (must have python and jupyterhub installed in it)
-            validation_regex: ^.+:.+$
-            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
-            kubespawner_override:
-              image: '{value}'
+            # We want to only support 4 environments
+            enabled: false
           choices:
             heliocloud-base:
               display_name: HelioCloud Base Image
               description: Minimal base image
               kubespawner_override:
-                default_url: /lab/tree/heliocloud-base-2025-update/Welcome.ipynb
-                image: quay.io/sapols/heliocloud-base-2025-update:835960da281d
+                default_url: /lab/tree/heliocloud-base/Welcome.ipynb
+                image: quay.io/sapols/heliocloud-base-2025-update:6cf475762c4a
               default: true
             pyhc:
               display_name: PyHC Environment
@@ -79,14 +73,14 @@ jupyterhub:
               display_name: Heliophysics "Core" Survey Environment
               description: Environment containing "core" heliophysics packages identified from our survey
               kubespawner_override:
-                default_url: /lab/tree/heliocloud-base-w-survey-core/Welcome.ipynb
-                image: quay.io/sapols/heliocloud-base-w-survey-core:e643c94f1dec
+                default_url: /lab/tree/survey-core/Welcome.ipynb
+                image: quay.io/sapols/heliocloud-base-w-survey-core:72039f4c459e
             heliophysics-extended-survey:
               display_name: Heliophysics "Extended" Survey Environment
               description: Environment extending the "core" packages with all remaining from our survey
               kubespawner_override:
-                default_url: /lab/tree/heliocloud-base-w-survey-extended/Welcome.ipynb
-                image: quay.io/sapols/heliocloud-base-w-survey-extended:379ca14ad88c
+                default_url: /lab/tree/survey-extended/Welcome.ipynb
+                image: quay.io/sapols/heliocloud-base-w-survey-extended:238352acb5d1
         resource_allocation:
           display_name: Resource Allocation
           choices:
