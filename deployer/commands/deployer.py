@@ -13,6 +13,9 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import app
+from deployer.commands.validate.config import (
+    authenticator_config as validate_authenticator_config,
+)
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.commands.validate.config import hub_config as validate_hub_config
 from deployer.commands.validate.config import support_config as validate_support_config
@@ -96,6 +99,7 @@ def deploy(
     """
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name, skip_refresh)
+    validate_authenticator_config(cluster_name, hub_name)
 
     cluster = Cluster.from_name(cluster_name)
 
