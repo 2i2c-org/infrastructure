@@ -14,10 +14,16 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 100 # in GB 
+    size        = 100 # in GB
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
+  },
+  "research" = {
+    size        = 100 # in GB
+    type        = "gp3"
+    name_suffix = "research"
+    tags        = { "2i2c:hub-name" : "research" }
   },
 }
 
