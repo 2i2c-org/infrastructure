@@ -21,3 +21,4 @@ ebs_volumes = {
   },
 }
 
+enable_jupyterhub_cost_monitoring = true
