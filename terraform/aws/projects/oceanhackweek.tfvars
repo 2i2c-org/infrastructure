@@ -18,3 +18,11 @@ ebs_volumes = {
 }
 
 enable_nfs_backup = true
+
+# Setup IAM creds but no buckets
+hub_cloud_permissions = {
+  "staging" : {
+  },
+  "prod" : {
+  }
+}
