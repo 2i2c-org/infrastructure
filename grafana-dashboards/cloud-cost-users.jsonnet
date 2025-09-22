@@ -109,13 +109,10 @@ local TotalComponent =
       indexByName: {
         Field: 0,
         compute: 1,
-        fixed: 5,
+        core: 5,
         'home storage': 2,
         networking: 4,
         'object storage': 3,
-      },
-      renameByName: {
-        fixed: 'support',
       },
     }),
   ])
