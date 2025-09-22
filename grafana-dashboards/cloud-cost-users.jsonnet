@@ -7,6 +7,121 @@ local var = grafonnet.dashboard.variable;
 
 local common = import './common.libsonnet';
 
+local TotalHub =
+  common.bgOptions
+  + bg.new('Total by Hub')
+  + bg.panelOptions.withDescription(
+    |||
+      Total costs by hub are summed over the time period selected.
+
+      - prod: the main production hub, e.g. <your-community>.2i2c.cloud
+      - staging: a hub for testing, e.g. staging.<your-community>.2i2c.cloud
+      - workshop: a hub for events such as workshops and tutorials, e.g. workshop.<your-community>.2i2c.cloud
+    |||
+  )
+  + bg.panelOptions.withGridPos(h=8, w=8, x=0, y=0)
+  + bg.queryOptions.withTargets([
+    common.queryHubTarget
+    {
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}',
+    },
+  ])
+  + bg.queryOptions.withTransformations([
+    bg.queryOptions.transformation.withId('groupBy')
+    + bg.queryOptions.transformation.withOptions({
+      fields: {
+        Cost: {
+          aggregations: [
+            'sum',
+          ],
+          operation: 'aggregate',
+        },
+        Hub: {
+          aggregations: [],
+          operation: 'groupby',
+        },
+      },
+    }),
+    bg.queryOptions.transformation.withId('transpose'),
+    bg.queryOptions.transformation.withId('organize')
+    + bg.queryOptions.transformation.withOptions({
+      excludeByName: {
+        shared: true,
+        support: true,
+        binder: true,
+      },
+      includeByName: {},
+      indexByName: {
+        Field: 0,
+        prod: 1,
+        shared: 4,
+        staging: 2,
+        workshop: 3,
+      },
+      renameByName: {
+        shared: 'support',
+      },
+    }),
+  ])
+  + bg.standardOptions.color.withMode('continuous-BlYlRd')
+;
+
+local TotalComponent =
+  common.bgOptions
+  + bg.new('Total by Component')
+  + bg.panelOptions.withDescription(
+    |||
+      Total costs by component are summed over the time period selected.
+
+      - compute: CPU and memory of user nodes
+      - home storage: storage disks for user directories
+      - networking: load balancing and virtual private cloud
+      - object storage: cloud storage, e.g. AWS S3
+      - support: compute and storage for support functions
+    |||
+  )
+  + bg.panelOptions.withGridPos(h=8, w=8, x=8, y=0)
+  + bg.queryOptions.withTargets([
+    common.queryComponentTarget
+    {
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}',
+    },
+  ])
+  + bg.queryOptions.withTransformations([
+    bg.queryOptions.transformation.withId('groupBy')
+    + bg.queryOptions.transformation.withOptions({
+      fields: {
+        Cost: {
+          aggregations: [
+            'sum',
+          ],
+          operation: 'aggregate',
+        },
+        Component: {
+          aggregations: [],
+          operation: 'groupby',
+        },
+      },
+    }),
+    bg.queryOptions.transformation.withId('transpose'),
+    bg.queryOptions.transformation.withId('organize')
+    + bg.queryOptions.transformation.withOptions({
+      indexByName: {
+        Field: 0,
+        compute: 1,
+        fixed: 5,
+        'home storage': 2,
+        networking: 4,
+        'object storage': 3,
+      },
+      renameByName: {
+        fixed: 'support',
+      },
+    }),
+  ])
+  + bg.standardOptions.color.withMode('continuous-BlYlRd')
+;
+
 local Top5 =
   common.bgOptions
   + bg.new('Top 5 users')
@@ -15,7 +130,7 @@ local Top5 =
       Shows the top 5 users by cost across all hubs and components over the selected time period.
     |||
   )
-  + bg.panelOptions.withGridPos(h=8, w=8, x=0, y=0)
+  + bg.panelOptions.withGridPos(h=8, w=8, x=16, y=0)
   + bg.queryOptions.withTargets([
     common.queryUsersTarget
     {
@@ -79,121 +194,6 @@ local Top5 =
   ])
 ;
 
-local TotalHub =
-  common.bgOptions
-  + bg.new('Total by Hub')
-  + bg.panelOptions.withDescription(
-    |||
-      Total costs by hub are summed over the time period selected.
-
-      - prod: the main production hub, e.g. <your-community>.2i2c.cloud
-      - staging: a hub for testing, e.g. staging.<your-community>.2i2c.cloud
-      - workshop: a hub for events such as workshops and tutorials, e.g. workshop.<your-community>.2i2c.cloud
-    |||
-  )
-  + bg.panelOptions.withGridPos(h=8, w=8, x=8, y=0)
-  + bg.queryOptions.withTargets([
-    common.queryHubTarget
-    {
-      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}',
-    },
-  ])
-  + bg.queryOptions.withTransformations([
-    bg.queryOptions.transformation.withId('groupBy')
-    + bg.queryOptions.transformation.withOptions({
-      fields: {
-        Cost: {
-          aggregations: [
-            'sum',
-          ],
-          operation: 'aggregate',
-        },
-        Hub: {
-          aggregations: [],
-          operation: 'groupby',
-        },
-      },
-    }),
-    bg.queryOptions.transformation.withId('transpose'),
-    bg.queryOptions.transformation.withId('organize')
-    + bg.queryOptions.transformation.withOptions({
-      excludeByName: {
-        shared: true,
-        support: true,
-        binder: true,
-      },
-      includeByName: {},
-      indexByName: {
-        Field: 0,
-        prod: 1,
-        shared: 4,
-        staging: 2,
-        workshop: 3,
-      },
-      renameByName: {
-        shared: 'support',
-      },
-    }),
-  ])
-  + bg.standardOptions.color.withMode('continuous-BlYlRd')
-;
-
-local TotalComponent =
-  common.bgOptions
-  + bg.new('Total by Component')
-  + bg.panelOptions.withDescription(
-    |||
-      Total costs by component are summed over the time period selected.
-
-      - compute: CPU and memory of user nodes
-      - home storage: storage disks for user directories
-      - networking: load balancing and virtual private cloud
-      - object storage: cloud storage, e.g. AWS S3
-      - support: compute and storage for support functions
-    |||
-  )
-  + bg.panelOptions.withGridPos(h=8, w=8, x=16, y=0)
-  + bg.queryOptions.withTargets([
-    common.queryComponentTarget
-    {
-      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}',
-    },
-  ])
-  + bg.queryOptions.withTransformations([
-    bg.queryOptions.transformation.withId('groupBy')
-    + bg.queryOptions.transformation.withOptions({
-      fields: {
-        Cost: {
-          aggregations: [
-            'sum',
-          ],
-          operation: 'aggregate',
-        },
-        Component: {
-          aggregations: [],
-          operation: 'groupby',
-        },
-      },
-    }),
-    bg.queryOptions.transformation.withId('transpose'),
-    bg.queryOptions.transformation.withId('organize')
-    + bg.queryOptions.transformation.withOptions({
-      indexByName: {
-        Field: 0,
-        compute: 1,
-        fixed: 5,
-        'home storage': 2,
-        networking: 4,
-        'object storage': 3,
-      },
-      renameByName: {
-        fixed: 'support',
-      },
-    }),
-  ])
-  + bg.standardOptions.color.withMode('continuous-BlYlRd')
-;
-
 local Hub =
   common.bcOptions
   + bc.new('Hub – $hub')
@@ -248,9 +248,9 @@ dashboard.new('Cloud costs per user – Grafonnet')
 ])
 + dashboard.withPanels(
   [
-    Top5,
     TotalHub,
     TotalComponent,
+    Top5,
     Hub,
     Component,
   ],
