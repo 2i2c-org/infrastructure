@@ -120,6 +120,7 @@ local TotalHub =
       excludeByName: {
         shared: true,
         support: true,
+        binder: true,
       },
       includeByName: {},
       indexByName: {
