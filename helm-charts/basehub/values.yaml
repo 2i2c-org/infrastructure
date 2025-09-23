@@ -429,7 +429,7 @@ jupyterhub:
       templateVars:
         enabled: true
     jupyterhubConfigurator:
-      enabled: true
+      enabled: false
   ingress:
     enabled: true
     ingressClassName: nginx
