@@ -59,4 +59,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.chaffey.svc.cluster.local
-    baseShareName: /

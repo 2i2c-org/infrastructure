@@ -68,4 +68,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.elcamino.svc.cluster.local
-    baseShareName: /
