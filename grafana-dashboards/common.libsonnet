@@ -74,14 +74,14 @@ local bg = grafonnet.panel.barGauge;
   },
 
   // grafonnet ref: https://grafana.github.io/grafonnet/API/panel/timeSeries/index.html#obj-queryoptions
-  queryTarget: {
+  queryDailyTarget: {
     datasource: {
       type: 'yesoreyeram-infinity-datasource',
       uid: '${infinity_datasource}',
     },
     columns: [
       { selector: 'date', text: 'Date', type: 'timestamp' },
-      { selector: 'component', text: 'Component', type: 'string' },
+      { selector: 'name', text: 'Name', type: 'string' },
       { selector: 'cost', text: 'Cost', type: 'number' },
     ],
     parser: 'backend',
