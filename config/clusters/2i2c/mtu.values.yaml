@@ -25,6 +25,8 @@ jupyterhub:
         funded_by:
           name: Michigan Technological University - College of Computing
           url: https://www.mtu.edu/computing/
+    jupyterhubConfigurator:
+      enabled: true
   singleuser:
     image:
       name: quay.io/2i2c/cloudbank-data8-image

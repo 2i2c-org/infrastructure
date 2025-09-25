@@ -57,6 +57,8 @@ jupyterhub:
       - name: home
         mountPath: /home/rstudio/shared-readwrite
         subPath: _shared
+    jupyterhubConfigurator:
+      enabled: true
   singleuser:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base

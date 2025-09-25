@@ -29,6 +29,8 @@ basehub:
           funded_by:
             name: 2i2c
             url: https://2i2c.org
+      jupyterhubConfigurator:
+        enabled: true
     singleuser:
       image:
         name: pangeo/pangeo-notebook

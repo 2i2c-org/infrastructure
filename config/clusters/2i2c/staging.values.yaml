@@ -41,6 +41,8 @@ jupyterhub:
         funded_by:
           name: 2i2c
           url: https://2i2c.org
+    jupyterhubConfigurator:
+      enabled: true
   hub:
     # FIXME: dex and oauth2-proxy is commented out to avoid error messages until
     #        its fixed to work again, it also makes jupyterhub 5.2.0 fail to

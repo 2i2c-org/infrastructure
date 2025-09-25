@@ -11,6 +11,8 @@ jupyterhub:
       templateVars:
         org:
           name: Catalyst Project, LatAm - PLNC
+    jupyterhubConfigurator:
+      enabled: true
   hub:
     config:
       JupyterHub:
