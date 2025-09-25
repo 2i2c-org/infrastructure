@@ -46,6 +46,9 @@ user_buckets = {
   "persistent-prod" : {
     "tags" : { "2i2c:hub-name" : "prod" },
   },
+  "persistent-prod-large" : {
+    "tags" : { "2i2c:hub-name" : "prod" },
+  },
   "persistent-workshop" : {
     "tags" : { "2i2c:hub-name" : "workshop" },
   },
@@ -56,7 +59,7 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
   },
   "prod" : {
-    bucket_admin_access : ["scratch-prod", "persistent-prod"],
+    bucket_admin_access : ["scratch-prod", "persistent-prod", "persistent-prod-large"],
   },
   "workshop" : {
     bucket_admin_access : ["scratch-workshop", "persistent-workshop"],
