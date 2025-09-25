@@ -51,8 +51,6 @@ jupyterhub:
               with information and we will get back to you!
             </p>
           </div>
-    jupyterhubConfigurator:
-      enabled: false
     singleuserAdmin:
       extraVolumeMounts: []
   singleuser:

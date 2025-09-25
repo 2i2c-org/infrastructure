@@ -21,8 +21,6 @@ jupyterhub:
       hosts:
       - staging.hhmi.2i2c.cloud
   custom:
-    jupyterhubConfigurator:
-      enabled: false
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
       extraVolumeMounts: []

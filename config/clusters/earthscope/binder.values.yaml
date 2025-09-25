@@ -23,8 +23,6 @@ basehub:
         enabled: false
       binderhubUI:
         enabled: true
-      jupyterhubConfigurator:
-        enabled: false
       singleuserAdmin:
         extraVolumeMounts: []
       homepage:

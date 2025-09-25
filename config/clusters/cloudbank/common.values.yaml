@@ -10,9 +10,6 @@ nfs:
     # MUST HAVE TRAILING SLASH
     baseShareName: /
 jupyterhub:
-  custom:
-    jupyterhubConfigurator:
-      enabled: false
   singleuser:
     cpu:
       # Each node has about 4 CPUs total, and if we limit users to no more than

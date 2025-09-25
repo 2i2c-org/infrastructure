@@ -14,8 +14,6 @@ jupyterhub:
           <a href="For more information about using this resource, see our Jupyter-book">
             Jupyter-book
           </a>
-    jupyterhubConfigurator:
-      enabled: false
     singleuserAdmin:
       extraVolumeMounts: []
   ingress:

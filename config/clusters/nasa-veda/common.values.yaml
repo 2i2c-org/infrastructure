@@ -44,8 +44,6 @@ basehub:
         - name: home
           mountPath: /home/rstudio/shared-readwrite
           subPath: _shared
-      jupyterhubConfigurator:
-        enabled: false
       homepage:
         templateVars:
           org:
