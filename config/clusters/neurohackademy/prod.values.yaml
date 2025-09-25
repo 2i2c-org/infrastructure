@@ -15,9 +15,6 @@ jupyterhub:
     config:
       GitHubOAuthenticator:
         oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
-  custom:
-    jupyterhubConfigurator:
-      enabled: true
 binderhub-service:
   dockerApi:
     nodeSelector:
