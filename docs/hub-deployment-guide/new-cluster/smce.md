@@ -92,4 +92,4 @@ a _user_, e.g., a member of the engineering team.
 
 ## Cost allocation tags
 
-[Cost allocation tags](/howto/budgeting-billing/cost-monitoring/aws.md#activate-cost-allocation-tags) have been enabled at the AWS organization level for SMCE. Therefore we do not need to enable them with our terraform configuration, i.e. the variable `enable_cost_allocation_tags` is set to `false` by default, so we do not need to include this in the `projects/<project>.tfvars` file.
+[Cost allocation tags](howto:cost-monitoring:activate-tags) have been enabled at the AWS organization level for SMCE. Therefore we do not need to enable them with our terraform configuration, i.e. the variable `enable_cost_allocation_tags` is set to `false` by default, so we do not need to include this in the `projects/<project>.tfvars` file.
