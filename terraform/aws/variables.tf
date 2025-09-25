@@ -200,10 +200,10 @@ variable "default_budget_alert" {
 }
 
 variable "budget_alerts" {
-  type        = map(object({
-    time_period: string,
+  type = map(object({
+    time_period : string,
     emails : list(string),
-    max_cost: number
+    max_cost : number
   }))
   default     = {}
   description = <<-EOT

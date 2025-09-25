@@ -20,7 +20,7 @@ ebs_volumes = {
 enable_nfs_backup = true
 
 budget_alerts = {
-  "monthly": {
+  "monthly" : {
     time_period = "MONTHLY",
     emails = [
       "emiliomayorga@gmail.com"

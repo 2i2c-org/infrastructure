@@ -33,7 +33,7 @@ budget_alerts = {
   # they have two major events, between Sep 22-26 and
   # Oct 19-24. We don't have custom time'd budgets yet, so let's
   # use monthly budgets of $1000 for now.
-  "monthly": {
+  "monthly" : {
     time_period = "MONTHLY",
     emails = [
       # "yuvipanda@2i2c.org",
