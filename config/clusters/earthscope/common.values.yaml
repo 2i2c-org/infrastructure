@@ -24,8 +24,6 @@ basehub:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: google
-      jupyterhubConfigurator:
-        enabled: false
     hub:
       extraConfig:
         001-username-claim: |

@@ -12,8 +12,6 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
-    jupyterhubConfigurator:
-      enabled: false
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
       extraVolumeMounts: []

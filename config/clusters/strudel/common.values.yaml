@@ -7,8 +7,6 @@ jupyterhub:
   custom:
     singleuserAdmins:
       extraVolumeMounts: []
-    jupyterhubConfigurator:
-      enabled: false
     homepage:
       # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
       # is merged

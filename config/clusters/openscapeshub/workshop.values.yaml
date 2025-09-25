@@ -6,8 +6,6 @@ basehub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: false
-      jupyterhubConfigurator:
-        enabled: false
       homepage:
         # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
         # is merged

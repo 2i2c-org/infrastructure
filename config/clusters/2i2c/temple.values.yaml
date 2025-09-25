@@ -25,6 +25,8 @@ jupyterhub:
         funded_by:
           name: Temple University
           url: https://www.temple.edu/
+    jupyterhubConfigurator:
+      enabled: true
   singleuser:
     memory:
       # Memory defaults are 256MB to 1G in basehub. These are bumped based on a

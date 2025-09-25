@@ -49,8 +49,6 @@ jupyterhub:
         funded_by:
           name: CloudBank
           url: http://cloudbank.org/
-    jupyterhubConfigurator:
-      enabled: false
   hub:
     config:
       JupyterHub:
