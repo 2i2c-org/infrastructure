@@ -199,21 +199,20 @@ variable "default_budget_alert" {
   EOT
 }
 
-variable "budget_alert_thresholds" {
-  type        = list(number)
-  default     = []
+variable "budget_alerts" {
+  type = map(object({
+    time_period : string,
+    emails : list(string),
+    max_cost : number
+  }))
+  default     = {}
   description = <<-EOT
-  List of currency units to set up budget alerts for
-  EOT
-}
+  Budget Alerts to set up
 
-variable "budget_alert_threshold_emails" {
-  type        = list(string)
-  default     = []
-  description = <<-EOT
-  List of emails to notify for budget alerts
-
-  The default 2i2c support email is always included.
+  Each value of the map can contain:
+  1. `time_period` - One of "MONTHLY", "YEARLY", "QUARTERLY" or "DAILY"
+  2. `emails` - List of emails to send the alert to
+  3. `max_cost` - Max
   EOT
 }
 

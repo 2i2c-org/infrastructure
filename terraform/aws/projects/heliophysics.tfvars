@@ -28,9 +28,23 @@ ebs_volumes = {
 }
 enable_nfs_backup = true
 
-budget_alert_threshold_emails = [
-  "shawn.polson@lasp.colorado.edu"
-]
+budget_alerts = {
+  # Per https://github.com/2i2c-org/meta/issues/2523,
+  # they have two major events, between Sep 22-26 and
+  # Oct 19-24. We don't have custom time'd budgets yet, so let's
+  # use monthly budgets of $1000 for now.
+  "monthly" : {
+    time_period = "MONTHLY",
+    emails = [
+      # "yuvipanda@2i2c.org",
+      "shawn.polson@lasp.colorado.edu"
+    ],
+    max_cost = 1000
+  },
+}
+monthly_budget_alerts = {
+
+}
 # "scratch-staging" : {
 #   "delete_after" : 7,
 #   "tags" : { "2i2c:hub-name" : "staging" },
@@ -56,8 +70,5 @@ default_budget_alert = {
   enabled : false
 }
 
-budget_alert_thresholds = [
-  500, 1000, 1500, 2000
-]
 # Uncomment to enable cost monitoring
 enable_jupyterhub_cost_monitoring = true

@@ -27,21 +27,25 @@ resource "aws_budgets_budget" "budgets" {
 }
 
 resource "aws_budgets_budget" "threshold_budgets" {
-  for_each = toset([for v in var.budget_alert_thresholds : tostring(v)])
+  for_each = var.budget_alerts
 
-  name         = "Budget for ${var.cluster_name} at ${each.value}"
+  name         = "Budget ${each.key} for ${var.cluster_name}"
   budget_type  = "COST"
   limit_unit   = "USD"
-  limit_amount = each.value
-  time_unit    = "MONTHLY"
+  limit_amount = each.value.max_cost
+  time_unit    = each.value.time_period
 
-  notification {
-    comparison_operator = "GREATER_THAN"
-    threshold           = each.value
-    threshold_type      = "ABSOLUTE_VALUE"
-    notification_type   = "ACTUAL"
-    subscriber_email_addresses = concat([
-      "support+${var.cluster_name}@2i2c.org"
-    ], var.budget_alert_threshold_emails)
+  dynamic "notification" {
+    for_each = ["20", "40", "60", "80", "90", "100", "120"]
+    iterator = threshold
+    content {
+      comparison_operator = "GREATER_THAN"
+      threshold           = threshold.value
+      threshold_type      = "PERCENTAGE"
+      notification_type   = "ACTUAL"
+      subscriber_email_addresses = concat([
+        "support+${var.cluster_name}@2i2c.org"
+      ], each.value.emails)
+    }
   }
 }
