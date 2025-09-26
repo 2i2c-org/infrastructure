@@ -32,14 +32,13 @@ budget_alerts = {
   # Per https://github.com/2i2c-org/meta/issues/2523,
   # they have two major events, between Sep 22-26 and
   # Oct 19-24. We don't have custom time'd budgets yet, so let's
-  # use monthly budgets of $1000 for now.
-  "monthly" : {
-    time_period = "MONTHLY",
+  # use a single yearly budget of $2000 for now.
+  "yearly" : {
+    time_period = "ANNUALLY",
     emails = [
-      # "yuvipanda@2i2c.org",
       "shawn.polson@lasp.colorado.edu"
     ],
-    max_cost = 1000
+    max_cost = 2000
   },
 }
 monthly_budget_alerts = {
