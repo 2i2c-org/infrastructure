@@ -35,7 +35,7 @@ local dailyCosts =
     |||
   )
   + ts.queryOptions.withTargets([
-    common.queryTarget
+    common.queryDailyTarget
     {
       url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs?from=${__from:date}&to=${__to:date}',
     },
@@ -69,7 +69,7 @@ local dailyCostsPerHub =
     |||
   )
   + ts.queryOptions.withTargets([
-    common.queryTarget
+    common.queryDailyTarget
     {
       url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}',
     },
@@ -93,11 +93,21 @@ local dailyCostsPerComponent =
     |||
   )
   + ts.queryOptions.withTargets([
-    common.queryTarget
+    common.queryComponentTarget
     {
       url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}',
     },
-  ]);
+  ])
+  + ts.queryOptions.withTransformations([
+    ts.queryOptions.transformation.withId('groupingToMatrix')
+    + ts.queryOptions.transformation.withOptions({
+      columnField: 'Component',
+      emptyValue: 'zero',
+      rowField: 'Date',
+      valueField: 'Cost',
+    }),
+  ])
+;
 
 
 local dailyCostsPerComponentAndHub =
@@ -119,11 +129,21 @@ local dailyCostsPerComponentAndHub =
   + ts.panelOptions.withRepeat('hub')
   + ts.panelOptions.withMaxPerRow(2)
   + ts.queryOptions.withTargets([
-    common.queryTarget
+    common.queryComponentTarget
     {
-      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=${hub}',
+      url: 'http://jupyterhub-cost-monitoring.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=$hub',
     },
-  ]);
+  ])
+  + ts.queryOptions.withTransformations([
+    ts.queryOptions.transformation.withId('groupingToMatrix')
+    + ts.queryOptions.transformation.withOptions({
+      columnField: 'Component',
+      emptyValue: 'zero',
+      rowField: 'Date',
+      valueField: 'Cost',
+    }),
+  ])
+;
 
 
 // grafonnet ref: https://grafana.github.io/grafonnet/API/dashboard/index.html
