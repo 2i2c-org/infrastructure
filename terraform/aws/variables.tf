@@ -210,9 +210,9 @@ variable "budget_alerts" {
   Budget Alerts to set up
 
   Each value of the map can contain:
-  1. `time_period` - One of "MONTHLY", "YEARLY", "QUARTERLY" or "DAILY"
+  1. `time_period` - One of "MONTHLY", "ANNUALLY", "QUARTERLY" or "DAILY"
   2. `emails` - List of emails to send the alert to
-  3. `max_cost` - Max
+  3. `max_cost` - Maximum cost budgeted. We will receive alerts for 20%, 40%, 60%, 80%, 90%, 100% and 110% of this amount
   EOT
 }
 
