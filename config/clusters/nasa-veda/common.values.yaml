@@ -15,7 +15,6 @@ basehub:
       - noresvport
 
       serverIP: fs-08b7410bc122c9d70.efs.us-west-2.amazonaws.com
-      baseShareName: /
   dask-gateway:
     enabled: true
   jupyterhub:

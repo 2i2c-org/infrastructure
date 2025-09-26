@@ -5,8 +5,6 @@ nfs:
     mountOptions:
     - soft
     - noatime
-    baseShareName: /
-
 jupyterhub-home-nfs:
   enabled: true
   gke:

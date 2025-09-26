@@ -15,7 +15,6 @@ nfs:
     - retrans=2
     - noresvport
     serverIP: fs-040edb72334e4ac26.efs.af-south-1.amazonaws.com
-    baseShareName: /
 jupyterhub:
   custom:
     2i2c:

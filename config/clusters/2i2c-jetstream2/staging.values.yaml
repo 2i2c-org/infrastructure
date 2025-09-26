@@ -12,7 +12,6 @@ nfs:
     - retrans=2
     - noresvport
     serverIP: 172.27.96.56
-    baseShareName: /
 
 jupyterhub:
   scheduling:

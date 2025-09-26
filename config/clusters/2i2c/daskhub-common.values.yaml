@@ -6,7 +6,6 @@ basehub:
       mountOptions:
       - soft
       - noatime
-      baseShareName: /
   dask-gateway:
     enabled: true
   jupyterhub:

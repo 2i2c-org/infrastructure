@@ -54,4 +54,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.deanza.svc.cluster.local
-    baseShareName: /

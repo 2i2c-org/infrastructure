@@ -15,13 +15,11 @@ nfs:
       - retrans=2
       - noresvport
     serverIP: {{ server_ip }}
-    baseShareName: /
     {% elif provider == "gcp" %}
     mountOptions:
       - soft
       - noatime
     serverIP: 10.55.112.74
-    baseShareName: /homes/
     {% endif %}
 jupyterhub:
   custom:

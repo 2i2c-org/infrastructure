@@ -13,8 +13,6 @@ nfs:
     - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
     - retrans=2
     - noresvport
-    baseShareName: /
-
 jupyterhub:
   custom:
     2i2c:

@@ -6,8 +6,6 @@ nfs:
     - soft
     - noatime
     serverIP: 10.53.69.162
-    baseShareName: /homes/
-
 jupyterhub:
   custom:
     2i2c:

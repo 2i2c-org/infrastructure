@@ -72,4 +72,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.elac.svc.cluster.local
-    baseShareName: /
