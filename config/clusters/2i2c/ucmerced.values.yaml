@@ -6,6 +6,20 @@ jupyterhub:
     - secretName: https-auto-tls
       hosts:
       - ucmerced.2i2c.cloud
+  scheduling:
+    userPlaceholder:
+      # Keep at least one spare node around
+      replicas: 2
+      resources:
+        requests:
+          # Each node on the shared cluster has 60045228Ki of RAM
+          # You can find this out by looking at the output of `kubectl get node <node-name> -o yaml`
+          # Look under `allocatable`, not `capacity`. Unfortunately then you have to fiddle with it to
+          # find the right number that's big enough that no user pods will schedule here, but small enough
+          # that pods in `kube-system` will still schedule.
+          # So even though this is under `userPlaceholder`, it really is operating as a `nodePlaceholder`
+          # This value was arrived at by assuming that this works for utoronto, and taking the delta between `jupyterhub.scheduling.userPlaceholder.resources.memory` and the `capacity` above (2E6Ki)
+          memory: 58045228Ki
   singleuser:
     nodeSelector:
       # Schedule on dedicated n2-highmem-8
