@@ -6,10 +6,13 @@ jupyterhub:
     - secretName: https-auto-tls
       hosts:
       - ucmerced.2i2c.cloud
+  prePuller:
+    continuous:
+      enabled: true
   scheduling:
     userPlaceholder:
       # Keep at least one spare node around
-      replicas: 2
+      replicas: 1
       resources:
         requests:
           # Each node on the shared cluster has 60045228Ki of RAM
@@ -37,7 +40,7 @@ jupyterhub:
       kubespawner_override:
           # From https://github.com/SaiUCM/example-inherit-from-community-image
         image: quay.io/cirt_ucm/jupyter-scipy-xarray:1e26b42ad87b
-          # Launch into JupyterLab after the user logs in
+            # Launch into JupyterLab after the user logs in
         default_url: /lab
       profile_options: &profile_options
         requests:
@@ -60,8 +63,8 @@ jupyterhub:
           # From https://github.com/2i2c-org/rocker-with-nbgitpuller
         image: quay.io/2i2c/rocker-with-nbgitpuller:3edc87d73e3d
         default_url: /lab
-          # Ensures container working dir is homedir
-          # https://github.com/2i2c-org/infrastructure/issues/2559
+            # Ensures container working dir is homedir
+            # https://github.com/2i2c-org/infrastructure/issues/2559
         working_dir: /home/rstudio
       profile_options: *profile_options
   hub:
