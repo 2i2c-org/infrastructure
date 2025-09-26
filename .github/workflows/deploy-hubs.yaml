@@ -73,12 +73,12 @@ jobs:
       prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       with:
         python-version: '3.13'
-    - uses: actions/setup-go@v5
+    - uses: actions/setup-go@v6
 
       # There will almost never be a cache hit on the cache key when this job is
       # run, as it is the first of all jobs in this workflow. An exception is if
@@ -96,7 +96,7 @@ jobs:
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
     - name: Get merged/open PR labels
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       id: pr-labels
       with:
           # Both pull_request and push can have triggered this job to run. A
@@ -255,7 +255,7 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
       uses: ./.github/actions/setup-deploy
@@ -492,7 +492,7 @@ jobs:
       failure_heliophysics_staging: ${{ steps.declare-failure.outputs.failure_heliophysics_staging }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
@@ -630,7 +630,7 @@ jobs:
         jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
