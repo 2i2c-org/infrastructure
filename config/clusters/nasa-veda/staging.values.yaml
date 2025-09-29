@@ -44,9 +44,9 @@ basehub:
           - access:services
       services:
         binder:
-          "oauth_client_id": "service-binderhub"
-          "oauth_no_confirm": true
-          "oauth_redirect_uri": "https://staging.hub.openveda.cloud/services/binder/oauth_callback"
+          oauth_client_id: service-binderhub
+          oauth_no_confirm: true
+          oauth_redirect_uri: https://staging.hub.openveda.cloud/services/binder/oauth_callback
     ingress:
       hosts: [staging.hub.openveda.cloud]
       tls:
