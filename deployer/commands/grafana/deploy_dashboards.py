@@ -19,7 +19,7 @@ def deploy_dashboards(
     ),
     dashboard_type: str = typer.Option(
         None,
-        help="(Optional) Choose 'jupyterhub' or 'cost' dashboards to deploy. Deploys both types if `None`.",
+        help="(Optional) Choose 'default' or 'cost' dashboards to deploy. Deploys both types if `None`.",
     ),
 ):
     """
