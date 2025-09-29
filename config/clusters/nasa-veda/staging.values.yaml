@@ -36,6 +36,17 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
+      loadRoles:
+        # grant all users access to services (TODO: we should tighten the scope of this)
+        user:
+          scopes:
+          - self
+          - access:services
+      services:
+        binder:
+          "oauth_client_id": "service-binderhub"
+          "oauth_no_confirm": true
+          "oauth_redirect_uri": "https://staging.hub.openveda.cloud/services/binder/oauth_callback"
     ingress:
       hosts: [staging.hub.openveda.cloud]
       tls:
@@ -69,6 +80,7 @@ basehub:
           2i2c/hub-name: staging
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-staging-
+        auth_enabled: true
 
   jupyterhub-home-nfs:
     eks:
