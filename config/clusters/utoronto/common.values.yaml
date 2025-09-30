@@ -53,6 +53,9 @@ jupyterhub:
     memory:
       limit: 2G
       guarantee: 1G
+    extraEnv:
+      # In case the Git binary is not under the typical prefix
+      GIT_CONFIG: /etc/gitconfig
     extraFiles:
       github-app-private-key.pem:
         mountPath: /etc/github/github-app-private-key.pem
