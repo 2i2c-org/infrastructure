@@ -6,7 +6,6 @@ nfs:
     - soft
     - noatime
     serverIP: storage-quota-home-nfs.lis.svc.cluster.local
-    baseShareName: /
 jupyterhub-home-nfs:
   enabled: true
   gke:

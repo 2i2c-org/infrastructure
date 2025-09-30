@@ -52,4 +52,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.merced.svc.cluster.local
-    baseShareName: /

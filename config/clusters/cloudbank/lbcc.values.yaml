@@ -57,4 +57,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.lbcc.svc.cluster.local
-    baseShareName: /
