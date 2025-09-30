@@ -20,12 +20,12 @@ jupyterhub:
         oauth_callback_url: https://research.temple.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - 2i2c-org:hub-access-for-2i2c-staff
+        - TempleDataCompute:administrator
         scope:
         - read:org
       Authenticator:
-        admin_users: []
-        allowed_users: []
-        allow_existing_users: false
+        admin_users:
+        - laserchemist
   singleuser:
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23li8mGZjoYxOom3Gv
