@@ -47,6 +47,8 @@ jupyterhub:
         - sean.smorris@berkeley.edu
         - srussell@elcamino.edu
         - ammartinez@elcamino.edu
+        - jacobquisumbing@berkeley.edu
+        - jedwin321@berkeley.edu
         - jonathanferrari@berkeley.edu
         - arianaghimire27@berkeley.edu
         - bdsomer@berkeley.edu
@@ -54,6 +56,7 @@ jupyterhub:
         - jegeronimo@berkeley.edu
         - mark.barranda@berkeley.edu
         - skompalli@berkeley.edu
+        - waylandla@berkeley.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-elcamino
@@ -68,4 +71,3 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.elcamino.svc.cluster.local
-    baseShareName: /

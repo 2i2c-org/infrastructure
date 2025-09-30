@@ -14,6 +14,7 @@ The cost monitoring system requires a service account with the IAM permissions t
 
 See `terraform/aws/variables.tf` and `terraform/aws/cost-monitoring.tf` for the configuration.
 
+(howto:cost-monitoring:activate-tags)=
 ### 2. Activate cost allocation tags
 
 We can activate cost allocation tags for AWS accounts that we have billing permissions for (either through the 2i2c SSO or a standalone account), but not for AWS accounts that are managed by a community where we do not have billing permissions.

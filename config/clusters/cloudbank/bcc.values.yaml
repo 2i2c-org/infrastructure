@@ -52,10 +52,10 @@ jupyterhub:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
         - jeronimoperez@peralta.edu
+        - jedwin321@berkeley.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-bcc
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.bcc.svc.cluster.local
-    baseShareName: /
