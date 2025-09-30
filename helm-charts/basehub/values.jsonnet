@@ -68,6 +68,9 @@ local jupyterhubHomeNFSConfig = {
       QuotaManager: {
         paths: ['/export/%s' % hub_name],
         hard_quota: 0,
+        projects_file: '/export/%s/.projects' % hub_name,
+        projid_file: '/export/%s/.projid' % hub_name,
+        log_level: 'INFO',
       },
     },
   },
