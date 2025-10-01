@@ -8,6 +8,8 @@ deployer.py, debug related stuff under debug.py, etc
 
 import typer
 
+CONTINUOUS_DEPLOYMENT = "Continuous Deployment"
+
 # The typer app to which all subcommands are attached
 # Disable 'pretty' exception handling
 app = typer.Typer(rich_markup_mode="markdown", pretty_exceptions_show_locals=False)
@@ -53,6 +55,7 @@ app.add_typer(
     validate_app,
     name="validate",
     help="Validate configuration files such as helm chart values and cluster.yaml files.",
+    rich_help_panel=CONTINUOUS_DEPLOYMENT,
 )
 app.add_typer(
     transform_app,

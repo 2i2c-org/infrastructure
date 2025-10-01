@@ -4,7 +4,7 @@ import os
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import app
+from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
 from deployer.utils.file_acquisition import REPO_ROOT_PATH, get_all_cluster_yaml_files
 from deployer.utils.rendering import create_markdown_comment, print_colour
 
@@ -20,7 +20,7 @@ from .decision import (
 yaml = YAML(typ="safe", pure=True)
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def plan_upgrade(
     changed_filepaths: str = typer.Argument(
         ..., help="Comma delimited list of files that have changed"
