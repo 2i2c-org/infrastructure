@@ -7,39 +7,40 @@ on:
     paths:
       # Include changes to the deployer script's folder
     - deployer/**
+    - pyproject.toml
+    - requirements.txt
+    - helm-charts/**
+    - config/clusters/**
     - '!deployer/README.md'
+      # Checking that a hub is online should not trigger a deployment
     - '!deployer/health_check_tests/**'
       # We can ignore dev commands
     - '!deployer/dev_commands/**'
-    - requirements.txt
-    - .github/actions/setup-deploy/**
-    - helm-charts/**
-    - config/clusters/**
-        # Exclude the template configuration files
+       # Exclude the template configuration files
     - '!config/clusters/templates/**'
-    - '!terraform/aws/projects/template.tfvars'
-    - '!terraform/gcp/projects/cluster.tfvars.template'
-    - '!eksctl/template.jsonnet'
-
+       ########### Additional includes ##########
+    - .github/actions/setup-deploy/**
+    - .github/workflows/deploy-hubs.yaml
   pull_request:
     branches:
     - main
     paths:
       # Include changes to the deployer script's folder
     - deployer/**
+    - pyproject.toml
+    - requirements.txt
+    - helm-charts/**
+    - config/clusters/**
     - '!deployer/README.md'
+      # Checking that a hub is online should not trigger a deployment
     - '!deployer/health_check_tests/**'
       # We can ignore dev commands
     - '!deployer/dev_commands/**'
-    - requirements.txt
-    - .github/actions/setup-deploy/**
-    - helm-charts/**
-    - config/clusters/**
-        # Exclude the template configuration files
+       # Exclude the template configuration files
     - '!config/clusters/templates/**'
-    - '!terraform/aws/projects/template.tfvars'
-    - '!terraform/gcp/projects/cluster.tfvars.template'
-    - '!eksctl/template.jsonnet'
+       ########### Additional includes ##########
+    - .github/actions/setup-deploy/**
+    # - .github/workflows/deploy-hubs.yaml — this workflow is not pull_request_target
 
 # ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
 concurrency:
