@@ -3,6 +3,7 @@
 import deployer.commands.cilogon  # noqa: F401
 import deployer.commands.config.get_clusters  # noqa: F401
 import deployer.commands.debug  # noqa: F401
+import deployer.commands.deploy_dashboards  # noqa: F401
 import deployer.commands.deployer  # noqa: F401
 import deployer.commands.develop.use_cluster_credentials  # noqa: F401
 import deployer.commands.exec.aws.aws_app  # noqa: F401
@@ -19,7 +20,6 @@ import deployer.commands.generate.resource_allocation.generate_choices  # noqa: 
 import deployer.commands.generate.resource_allocation.instance_capacities  # noqa: F401
 import deployer.commands.generate.resource_allocation.update_nodeinfo  # noqa: F401
 import deployer.commands.grafana.central_grafana  # noqa: F401
-import deployer.commands.grafana.deploy_dashboards  # noqa: F401
 import deployer.commands.grafana.tokens  # noqa: F401
 import deployer.commands.plan_upgrade.jobs  # noqa: F401
 import deployer.commands.transform.cost_table  # noqa: F401
