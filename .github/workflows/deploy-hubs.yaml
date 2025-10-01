@@ -58,7 +58,7 @@ env:
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
   # which files have been added or modified by recent GitHub activity and parses a list
-  # to the `deployer generate helm-upgrade-job` command of the deployer. This command generates
+  # to the `deployer plan-upgrade` command of the deployer. This command generates
   # three lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
   # first set of jobs describes which clusters need their support chart upgraded; the second set
   # of jobs describe which staging hubs require upgrading; and the third set of jobs describe
@@ -152,7 +152,7 @@ jobs:
     - name: Generate matrix jobs
       id: generate-jobs
       run: |
-        deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
+        deployer plan-upgrade "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
 
       # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow

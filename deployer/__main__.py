@@ -12,7 +12,6 @@ import deployer.commands.generate.billing.cost_table  # noqa: F401
 import deployer.commands.generate.cryptnono_config  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.aws  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.gcp  # noqa: F401
-import deployer.commands.generate.helm_upgrade.jobs  # noqa: F401
 import deployer.commands.generate.hub_asset.cluster_entry  # noqa: F401
 import deployer.commands.generate.hub_asset.hub_files  # noqa: F401
 import deployer.commands.generate.resource_allocation.daemonset_requests  # noqa: F401
@@ -22,6 +21,7 @@ import deployer.commands.generate.resource_allocation.update_nodeinfo  # noqa: F
 import deployer.commands.grafana.central_grafana  # noqa: F401
 import deployer.commands.grafana.deploy_dashboards  # noqa: F401
 import deployer.commands.grafana.tokens  # noqa: F401
+import deployer.commands.plan_upgrade.jobs  # noqa: F401
 import deployer.commands.transform.cost_table  # noqa: F401
 import deployer.commands.update.eksctl  # noqa: F401
 import deployer.commands.validate.config  # noqa: F401
