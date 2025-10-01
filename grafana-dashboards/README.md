@@ -5,7 +5,7 @@ Python script from https://github.com/jupyterhub/grafana-dashboards, which can b
 done via the deployer command:
 
 ```bash
-deployer grafana deploy-dashboards $CLUSTER_NAME
+deployer deploy-dashboards $CLUSTER_NAME
 ```
 
 Running this command has a pre-requisite that you have jsonnet installed,
