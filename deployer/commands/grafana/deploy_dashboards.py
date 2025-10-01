@@ -12,14 +12,23 @@ from deployer.utils.rendering import print_colour
 @grafana_app.command()
 def deploy_dashboards(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    dashboards_dir: str = typer.Option(
-        "dashboards",
-        help="""(Optional) ./deploy.py script accepts --dashboards-dir flag, and
-             this is the value we provide to that flag.""",
-    ),
     dashboard_type: str = typer.Option(
         None,
         help="(Optional) Choose 'default' or 'cost' dashboards to deploy. Deploys both types if `None`.",
+    ),
+    dashboard_dir_default: str = typer.Option(
+        "dashboards",
+        help="""(Optional) ./deploy.py script accepts manual override for where JupyterHub default dashboards are defined. Path is relative to jupyterhub-grafana-dashboards/deploy.py script.
+        
+        Warning: you should manually delete dashboards deployed this way, since they are not cleaned up in the CI/CD.        
+        """,
+    ),
+    dashboard_dir_cost: str = typer.Option(
+        "../jupyterhub-cost-monitoring/dashboards",
+        help="""(Optional) ./deploy.py script accepts manual override where cloud cost dashboards are defined. Path is relative to jupyterhub-grafana-dashboards/deploy.py script.
+        
+        Warning: you should manually delete dashboards deployed this way, since they are not cleaned up in the CI/CD.
+        """,
     ),
 ):
     """
@@ -81,7 +90,11 @@ def deploy_dashboards(
                 f"Deploying JupyterHub default dashboards to {cluster_name}..."
             )
             subprocess.check_call(
-                ["./deploy.py", grafana_url, f"--dashboards-dir={dashboards_dir}"],
+                [
+                    "./deploy.py",
+                    grafana_url,
+                    f"--dashboards-dir={dashboard_dir_default}",
+                ],
                 env=deploy_script_env,
                 cwd="jupyterhub-grafana-dashboards",
             )
@@ -89,19 +102,20 @@ def deploy_dashboards(
             print_colour(
                 f"Deploying cloud cost dashboards to AWS cluster {cluster_name}..."
             )
-            subprocess.check_call(
-                [
-                    "git",
-                    "clone",
-                    "https://github.com/2i2c-org/jupyterhub-cost-monitoring",
-                    "jupyterhub-cost-monitoring",
-                ]
-            )
+            if dashboard_dir_cost == "../jupyterhub-cost-monitoring/dashboards":
+                subprocess.check_call(
+                    [
+                        "git",
+                        "clone",
+                        "https://github.com/2i2c-org/jupyterhub-cost-monitoring",
+                        "jupyterhub-cost-monitoring",
+                    ]
+                )
             subprocess.check_call(
                 [
                     "./deploy.py",
                     grafana_url,
-                    "--dashboards-dir=../jupyterhub-cost-monitoring/dashboards",
+                    f"--dashboards-dir={dashboard_dir_cost}",
                     "--folder-name=Cloud cost dashboards",
                     "--folder-uid=cloud-cost",
                 ],
