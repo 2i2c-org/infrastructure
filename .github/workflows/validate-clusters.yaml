@@ -18,7 +18,8 @@ on:
       # triggering this workflow
     - '!config/clusters/templates/**'
     - helm-charts/**
-    - .github/workflows/validate-clusters.yaml
+    # - .github/workflows/validate-clusters.yaml — this workflow is not pull_request_target
+
       ############ Deployer-related config modified from deploy-hubs.yaml ####
       # Include changes to the deployer script's folder
     - deployer/**

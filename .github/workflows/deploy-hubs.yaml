@@ -40,6 +40,7 @@ on:
     - '!config/clusters/templates/**'
        ########### Additional includes ##########
     - .github/actions/setup-deploy/**
+    # - .github/workflows/deploy-hubs.yaml — this workflow is not pull_request_target
 
 # ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
 concurrency:
