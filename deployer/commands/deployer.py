@@ -12,7 +12,7 @@ import pytest
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import app
+from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
 from deployer.commands.validate.config import (
     authenticator_config as validate_authenticator_config,
 )
@@ -29,7 +29,7 @@ from deployer.utils.rendering import print_colour
 yaml = YAML(typ="safe", pure=True)
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy_support(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     # cert-manager versions at https://cert-manager.io/docs/release-notes/,
@@ -68,7 +68,7 @@ def deploy_support(
             )
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
@@ -112,12 +112,12 @@ def deploy(
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
-                    f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
+                    f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
                 hub.deploy(dask_gateway_version, debug, dry_run)
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def run_hub_health_check(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
@@ -167,7 +167,7 @@ def run_hub_health_check(
         hub.spec["domain"] = domain_override_config["domain"]
 
     # Retrieve hub's URL
-    hub_url = f'https://{hub.spec["domain"]}'
+    hub_url = f"https://{hub.spec['domain']}"
 
     # Read in the service api token from a k8s Secret in the k8s cluster
     with cluster.auth():

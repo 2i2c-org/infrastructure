@@ -1,7 +1,7 @@
 import typer
 
 from deployer.cli_app import update_app
-from deployer.commands.generate.dedicated_cluster.aws import generate_eksctl
+from deployer.dev_commands.generate.dedicated_cluster.aws import generate_eksctl
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.rendering import print_colour
 

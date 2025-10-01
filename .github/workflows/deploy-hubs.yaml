@@ -5,20 +5,17 @@ on:
     branches:
     - main
     paths:
-      # Include changes to the deployer script's folder, but exclude some parts
+      # Include changes to the deployer script's folder
     - deployer/**
     - '!deployer/README.md'
     - '!deployer/health_check_tests/**'
-    - '!deployer/commands/develop/**'
-    - '!deployer/commands/generate/billing/**'
-    - '!deployer/commands/generate/dedicated_cluster/**'
-    - '!deployer/commands/generate/hub_asset/**'
-    - '!deployer/commands/generate/resource_allocation/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
     - requirements.txt
     - .github/actions/setup-deploy/**
     - helm-charts/**
     - config/clusters/**
-      # Exclude the template configuration files
+        # Exclude the template configuration files
     - '!config/clusters/templates/**'
     - '!terraform/aws/projects/template.tfvars'
     - '!terraform/gcp/projects/cluster.tfvars.template'
@@ -28,19 +25,17 @@ on:
     branches:
     - main
     paths:
-      # Include changes to the deployer script's folder, but exclude some parts
+      # Include changes to the deployer script's folder
     - deployer/**
     - '!deployer/README.md'
     - '!deployer/health_check_tests/**'
-    - '!deployer/commands/generate/billing/**'
-    - '!deployer/commands/generate/dedicated_cluster/**'
-    - '!deployer/commands/generate/hub_asset/**'
-    - '!deployer/commands/generate/resource_allocation/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
     - requirements.txt
     - .github/actions/setup-deploy/**
     - helm-charts/**
     - config/clusters/**
-      # Exclude the template configuration files
+        # Exclude the template configuration files
     - '!config/clusters/templates/**'
     - '!terraform/aws/projects/template.tfvars'
     - '!terraform/gcp/projects/cluster.tfvars.template'

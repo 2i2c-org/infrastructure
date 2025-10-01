@@ -4,12 +4,12 @@ import subprocess
 
 import typer
 
-from deployer.cli_app import app
+from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.rendering import print_colour
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy_dashboards(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     dashboard_type: str = typer.Option(

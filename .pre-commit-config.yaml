@@ -28,16 +28,12 @@ repos:
   rev: 25.1.0
   hooks:
   - id: black
-        # This is a `.py` file but is encrypted with sops
-    exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Lint: Python code
 - repo: https://github.com/pycqa/flake8
   rev: 7.3.0
   hooks:
   - id: flake8
-        # This is a `.py` file but is encrypted with sops
-    exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Run `terraform fmt` on all our terraform files automatically
 - repo: https://github.com/yuvipanda/terraform-bin
@@ -52,7 +48,7 @@ repos:
   hooks:
   - id: sops-encryption
     # Add files here if they contain the word 'secret' but should not be encrypted
-    exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/common/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml|helm-charts/aws-ce-grafana-backend/templates/secret\.yaml
+    exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/common/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml|helm-charts/aws-ce-grafana-backend/templates/secret\.yaml|deployer/dev_commands/generate/cryptnono_config/enc-blocklist-generator\.secret\.py
 
   # Prevent known typos from being committed
 - repo: https://github.com/codespell-project/codespell
@@ -71,6 +67,14 @@ repos:
   hooks:
   - id: jsonnet-format
     exclude: eksctl/template.jsonnet
+
+- repo: local
+  hooks:
+  - id: disallow-dev-commands
+    name: disallow dev commands in commands
+    language: pygrep
+    entry: dev_commands
+    files: ^deployer/commands/.*$
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:

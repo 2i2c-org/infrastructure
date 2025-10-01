@@ -10,7 +10,7 @@ from contextlib import contextmanager
 
 import typer
 
-from deployer.cli_app import app
+from deployer.cli_app import DEVELOPMENT, app
 
 
 @contextmanager
@@ -40,7 +40,7 @@ def decrypt_content(encrypted_contents):
         subprocess.run(cmd, input=encrypted_contents, check=True)
 
 
-@app.command()
+@app.command(rich_help_panel=DEVELOPMENT)
 def decrypt_age(
     encrypted_file_path: str = typer.Option(
         "",
