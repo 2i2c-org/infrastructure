@@ -6,5 +6,5 @@ The `deployer` CLI contains a set of useful tools for deploying and maintaining 
 :prog: debug
 :show-nested:
 :make-sections:
-
+:markup-mode: markdown
 :::

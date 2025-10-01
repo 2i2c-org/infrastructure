@@ -10,7 +10,7 @@ import typer
 
 # The typer app to which all subcommands are attached
 # Disable 'pretty' exception handling
-app = typer.Typer(pretty_exceptions_show_locals=False)
+app = typer.Typer(rich_markup_mode="markdown", pretty_exceptions_show_locals=False)
 generate_app = typer.Typer(pretty_exceptions_show_locals=False)
 config_app = typer.Typer(pretty_exceptions_show_locals=False)
 cilogon_client_app = typer.Typer(pretty_exceptions_show_locals=False)
