@@ -35,7 +35,7 @@ def discover_modified_common_files(modified_paths):
 
     # If any of the following filepaths have changed, we should upgrade all hubs on all
     # clusters
-    # Patterns taken from CI deploy-hubs
+    # Patterns taken from CI deploy-hubs, and MODIFIED TO REMOVE CI/CD specific changes
     # Files of interest must be in `includes`, but not in `excludes`
     includes = [
         # Include changes to the deployer script's folder

@@ -18,21 +18,37 @@ on:
       # triggering this workflow
     - '!config/clusters/templates/**'
     - helm-charts/**
-    - deployer/**
-    - requirements.txt
     - .github/workflows/validate-clusters.yaml
+      ############ Deployer-related config modified from deploy-hubs.yaml ####
+      # Include changes to the deployer script's folder
+    - deployer/**
+    - pyproject.toml
+    - requirements.txt
+    - '!deployer/README.md'
+      # Checking that a hub is online should not trigger a deployment
+    - '!deployer/health_check_tests/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
   push:
     branches:
     - main
     paths:
     - config/clusters/**
-      # Exclude changes the templates directory from
+      # Exclude changes to the templates directory from
       # triggering this workflow
     - '!config/clusters/templates/**'
     - helm-charts/**
-    - deployer/**
-    - requirements.txt
     - .github/workflows/validate-clusters.yaml
+      ############ Deployer-related config modified from deploy-hubs.yaml ####
+      # Include changes to the deployer script's folder
+    - deployer/**
+    - pyproject.toml
+    - requirements.txt
+    - '!deployer/README.md'
+      # Checking that a hub is online should not trigger a deployment
+    - '!deployer/health_check_tests/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
     tags:
     - '**'
   workflow_dispatch:
