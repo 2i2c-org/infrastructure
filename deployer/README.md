@@ -60,6 +60,10 @@ Each sub-commands's functions are stored:
 
 The `deployer.py` file is the main file, that contains all of the commands registered directly on the `deployer` main typer app, that could not or were not yet categorized in sub-commands.
 
+### The `dev_commands` directory
+
+This directory has the same purpose as `commands`, except commands here are intended to be run outside of CD. As such, changes to this directory will not trigger a deployment.
+
 ### The `health_check_tests` directory
 
 This directory contains the tests and assets used by them. It is called by `deployer run-hub-health-check` command to determine whether a hub should be marked as healthy or not.
