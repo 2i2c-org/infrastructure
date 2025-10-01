@@ -38,6 +38,8 @@ jupyterhub:
       GitHubOAuthenticator:
         allowed_organizations:
         - Intercoonecta:ohwes25-organizers
+        - Intercoonecta:ohwes25-participants-tallerintermed
+        - Intercoonecta:ohwes25-participants-hackaton
       Authenticator:
         admin_users:
         - ocefpaf
@@ -64,13 +66,13 @@ jupyterhub:
           protocol: TCP
 
     profileList:
-    - display_name: Choose your environment and resources
+    - display_name: Escoge Entorno y Capacidad
       slug: only-choice
       profile_options:
         image:
-          display_name: Image
+          display_name: Entorno ("imagen")
           unlisted_choice:
-            enabled: true
+            enabled: false
             display_name: Custom image
             validation_regex: ^.+:.+$
             validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
@@ -93,11 +95,11 @@ jupyterhub:
                 default_url: /rstudio
                 image: ghcr.io/oceanhackweek/r:d690195
         resource_allocation:
-          display_name: Resource Allocation
+          display_name: Asignación de Capacidad
           choices:
             mem_4_gb:
               display_name: ~4 GB RAM, ~0.5 CPUs
-              description: Up to ~4 CPUs when available
+              description: Hasta ~4 CPUs si están disponibles
               default: true
               kubespawner_override:
                 mem_guarantee: 3902839759
@@ -106,16 +108,16 @@ jupyterhub:
                 cpu_limit: 3.6505
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
-            mem_7_gb:
-              display_name: ~7 GB RAM, ~0.9 CPUs
-              description: Up to ~4 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 7805679519
-                mem_limit: 7805679519
-                cpu_guarantee: 0.912625
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
+            # mem_7_gb:
+            #   display_name: ~7 GB RAM, ~0.9 CPUs
+            #   description: Up to ~4 CPUs when available
+            #   kubespawner_override:
+            #     mem_guarantee: 7805679519
+            #     mem_limit: 7805679519
+            #     cpu_guarantee: 0.912625
+            #     cpu_limit: 3.6505
+            #     node_selector:
+            #       node.kubernetes.io/instance-type: r5.xlarge
 
 jupyterhub-home-nfs:
   enabled: true
