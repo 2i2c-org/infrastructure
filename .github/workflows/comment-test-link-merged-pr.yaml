@@ -5,11 +5,23 @@ on:
     branches:
     - main
     paths:
+      #################### Copied from deploy-hubs workflow ###############
+      # Include changes to the deployer script's folder
     - deployer/**
+    - '!deployer/README.md'
+    - '!deployer/health_check_tests/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
     - requirements.txt
+    - .github/actions/setup-deploy/**
     - helm-charts/**
     - config/clusters/**
-    - .github/actions/setup-deploy/**
+        # Exclude the template configuration files
+    - '!config/clusters/templates/**'
+    - '!terraform/aws/projects/template.tfvars'
+    - '!terraform/gcp/projects/cluster.tfvars.template'
+    - '!eksctl/template.jsonnet'
+      #####################################################################
 
 jobs:
   comment-actions-links:
