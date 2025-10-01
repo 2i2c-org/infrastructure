@@ -376,6 +376,49 @@ def hub(
         subprocess.check_call(cmd)
 
 
+@exec_app.command()
+def home_nfs_server(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+):
+    """
+    Pop an interactive shell in the jupyterhub-home-nfs pod, under enforce-xfs-quota
+    """
+    cluster = Cluster.from_name(cluster_name)
+    with cluster.auth():
+        pod_name = (
+            subprocess.check_output(
+                [
+                    "kubectl",
+                    "-n",
+                    hub_name,
+                    "get",
+                    "pod",
+                    "-o",
+                    "name",
+                    "-l",
+                    "app.kubernetes.io/component=nfs-server",
+                ]
+            )
+            .decode()
+            .strip()
+        )
+        cmd = [
+            "kubectl",
+            "-n",
+            hub_name,
+            "exec",
+            "-it",  # Give us an interactive shell!
+            pod_name,
+            "-c",
+            "enforce-xfs-quota",
+            "--",
+            "/bin/bash",
+            "-l",
+        ]
+        subprocess.check_call(cmd)
+
+
 def create_ready_home_pod_jupyter_user(pod_name, cluster_name, hub_name):
     """
     Function that:
