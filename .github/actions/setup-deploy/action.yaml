@@ -49,7 +49,7 @@ runs:
   - uses: actions/setup-python@v5
     with:
       python-version: '3.13'
-  - uses: actions/setup-go@v5
+  - uses: actions/setup-go@v6
 
     # There will always be a cache hit on the cache key when this composite
     # action is run, as its only done after the "generate-jobs" job has been run
