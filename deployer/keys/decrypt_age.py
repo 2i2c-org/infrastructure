@@ -45,9 +45,9 @@ def decrypt_age(
     encrypted_file_path: str = typer.Option(
         "",
         help="Path to age-encrypted file sent by user. Leave empty to read from stdin.",
-    )
+    ),
 ):
-    """Decrypt secrets sent to `support@2i2c.org` via `age`"""
+    """Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content)."""
     if not encrypted_file_path:
         # No file specified
         print("Paste the encrypted file contents, hit enter and then press Ctrl+D")
