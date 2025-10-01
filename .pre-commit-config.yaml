@@ -68,6 +68,14 @@ repos:
   - id: jsonnet-format
     exclude: eksctl/template.jsonnet
 
+- repo: local
+  hooks:
+  - id: disallow-dev-commands
+    name: disallow dev commands in commands
+    language: pygrep
+    entry: dev_commands
+    files: ^deployer/commands/.*$
+
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:
   autoupdate_schedule: monthly
