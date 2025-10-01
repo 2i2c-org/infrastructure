@@ -21,6 +21,7 @@ on:
     - '!config/clusters/templates/**'
        ########### Additional includes ##########
     - .github/actions/setup-deploy/**
+    - .github/workflows/comment-test-link-merged-pr.yaml
       #####################################################################
 
 jobs:
