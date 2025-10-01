@@ -30,36 +30,49 @@ def discover_modified_common_files(modified_paths):
         upgrade_all_hubs_on_all_clusters (bool): Whether or not all hubs on all clusters
             should be upgraded since a core piece of infrastructure has changed
     """
+    # If this filepath has changes, we should upgrade the support chart on all clusters
+    support_chart_pattern = "helm-charts/support/*"
+
     # If any of the following filepaths have changed, we should upgrade all hubs on all
     # clusters
-    common_filepaths = [
-        # Filepaths related to the deployer infrastructure
+    # Patterns taken from CI deploy-hubs
+    # Files of interest must be in `includes`, but not in `excludes`
+    includes = [
+        # Include changes to the deployer script's folder
         "deployer/*",
         "pyproject.toml",
         "requirements.txt",
-        # Filepath to local GitHub Action that sets up clusters for deploy
-        ".github/actions/setup-deploy/*",
-        # Filepaths related to helm chart infrastructure
-        "helm-charts/basehub/*",
-        "helm-charts/daskhub/*",
+        "helm-charts/*",
+        "config/clusters/*",
     ]
-    # If this filepath has changes, we should upgrade the support chart on all clusters
-    support_chart_filepath = "helm-charts/support/*"
+    excludes = [
+        "deployer/README.md",
+        # Checking that a hub is online should not trigger a deployment
+        "deployer/health_check_tests/*",
+        # We can ignore dev commands
+        "deployer/dev_commands/*",
+        # Exclude the template configuration files
+        "config/clusters/templates/*",
+        # We don't want to handle support in this clause
+        support_chart_pattern,
+    ]
 
     # Discover if the support chart has been modified
     upgrade_support_on_all_clusters = bool(
-        fnmatch.filter(modified_paths, support_chart_filepath)
+        fnmatch.filter(modified_paths, support_chart_pattern)
+    )
+
+    changed_dependent_files = (
+        n
+        for n in modified_paths
+        # Do we opt-in to this change?
+        if any(fnmatch.fnmatchcase(n, p) for p in includes)
+        # And do we not opt-out
+        and not any(fnmatch.fnmatchcase(n, p) for p in excludes)
     )
 
     # Discover if any common config has been modified
-    upgrade_all_hubs_on_all_clusters = False
-    for common_filepath_pattern in common_filepaths:
-        upgrade_all_hubs_on_all_clusters = bool(
-            fnmatch.filter(modified_paths, common_filepath_pattern)
-        )
-        if upgrade_all_hubs_on_all_clusters:
-            break
-
+    upgrade_all_hubs_on_all_clusters = next(changed_dependent_files, False)
     return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
 
 
