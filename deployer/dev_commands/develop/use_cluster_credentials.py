@@ -9,7 +9,7 @@ from pathlib import Path
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import app
+from deployer.cli_app import DEVELOPMENT, app
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.infra_components.cluster import Cluster
 
@@ -34,7 +34,7 @@ def ensure_single_kubeconfig_context():
         )
 
 
-@app.command()
+@app.command(rich_help_panel=DEVELOPMENT)
 def use_cluster_credentials(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     commandline: str = typer.Argument(
