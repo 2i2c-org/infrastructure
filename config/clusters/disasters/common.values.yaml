@@ -124,23 +124,23 @@ jupyterhub:
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
                 image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.08.14-v2
-              init_containers:
-              # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-              # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
-              - name: jupyterhub-gitpuller-init
-                image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-                env:
-                - name: TARGET_PATH
-                  value: veda-docs
-                - name: SOURCE_REPO
-                  value: https://github.com/NASA-IMPACT/veda-docs
-                volumeMounts:
-                - name: home
-                  mountPath: /home/jovyan
-                  subPath: '{escaped_username}'
-                securityContext:
-                  runAsUser: 1000
-                  runAsGroup: 1000
+                init_containers:
+                # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+                # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+                - name: jupyterhub-gitpuller-init
+                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                  env:
+                  - name: TARGET_PATH
+                    value: veda-docs
+                  - name: SOURCE_REPO
+                    value: https://github.com/NASA-IMPACT/veda-docs
+                  volumeMounts:
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
+                  securityContext:
+                    runAsUser: 1000
+                    runAsGroup: 1000
             02-rocker:
               display_name: Rocker Geospatial with RStudio
               description: R environment with many geospatial libraries pre-installed
