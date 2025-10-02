@@ -43,7 +43,6 @@ def discover_modified_common_files(modified_paths):
         "pyproject.toml",
         "requirements.txt",
         "helm-charts/*",
-        "config/clusters/*",
     ]
     excludes = [
         "deployer/README.md",
@@ -51,8 +50,6 @@ def discover_modified_common_files(modified_paths):
         "deployer/health_check_tests/*",
         # We can ignore dev commands
         "deployer/dev_commands/*",
-        # Exclude the template configuration files
-        "config/clusters/templates/*",
         # We don't want to handle support in this clause
         support_chart_pattern,
     ]
