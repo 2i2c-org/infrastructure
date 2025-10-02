@@ -264,7 +264,7 @@ grafana:
   #
   # Grafana's memory use seems to increase over time but seems reasonable to
   # stay below 200Mi in general. Memory can peak when dashboards are updated,
-  # and was increased to 400Mi as its been seen getting OOMKilled. Grafana's CPU
+  # and was increased to 800Mi as its been seen getting OOMKilled. Grafana's CPU
   # use seems minuscule with peaks at up to 9m CPU from one user is browsing its
   # dashboards.
   #
@@ -275,7 +275,7 @@ grafana:
   resources:
     limits:
       cpu: 100m
-      memory: 400Mi
+      memory: 800Mi
     requests:
       cpu: 10m
       memory: 200Mi
@@ -431,6 +431,13 @@ cryptnono:
 
 jupyterhub-cost-monitoring:
   enabled: false
+  resources:
+  limits:
+    cpu: 800m
+    memory: 500Gi
+  requests:
+    cpu: 5m
+    memory: 100Mi
 
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
