@@ -534,38 +534,6 @@ jupyterhub:
     # infra permissions can be granted to all users by declaring annotations on
     # this k8s ServiceAccount via basehub config userServiceAccount.annotations.
     serviceAccountName: user-sa
-    # Need to explicitly fix ownership here, as otherwise these directories will be owned
-    # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
-    #
-    # This has to be done _once_ for each directory we mount _from_ the NFS
-    # server. We do it all the time since we don't know for sure it has been done once
-    # already.
-    #
-    # Note that we don't have to chown both the shared and shared-readwrite
-    # folder since they are both mounting the same folder on the NFS server.
-    #
-    # For details about this, see notes at:
-    # - https://github.com/2i2c-org/infrastructure/issues/2953#issuecomment-1672025545
-    # - https://github.com/2i2c-org/infrastructure/issues/2946#issuecomment-1671691248
-    #
-    initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{escaped_username}"
-          # Mounted without readonly attribute here,
-          # so we can chown it appropriately
-          - name: home
-            mountPath: /home/jovyan/shared
-            subPath: _shared
     cmd:
       # Mitigate a vulnerability in jupyter-server-proxy version <4.1.1, see
       # https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v
