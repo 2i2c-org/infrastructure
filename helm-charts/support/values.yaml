@@ -431,6 +431,13 @@ cryptnono:
 
 jupyterhub-cost-monitoring:
   enabled: false
+  resources:
+  limits:
+    cpu: 800m
+    memory: 500Gi
+  requests:
+    cpu: 5m
+    memory: 100Mi
 
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
