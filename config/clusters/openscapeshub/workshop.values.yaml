@@ -82,6 +82,7 @@ basehub:
             display_name: Resource Allocation
             choices:
               mem_2_gb:
+                default: true
                 display_name: ~2 GB RAM, ~0.2 CPUs
                 description: Up to ~4 CPUs when available
                 kubespawner_override:
