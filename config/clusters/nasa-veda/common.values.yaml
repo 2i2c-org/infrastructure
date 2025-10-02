@@ -90,7 +90,6 @@ basehub:
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: Iv23liG9LZ45xmB20syA
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/veda-hub-github-scoped-creds
-      initContainers:
       storage:
         extraVolumeMounts:
         - name: home
