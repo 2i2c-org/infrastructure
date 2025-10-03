@@ -66,7 +66,7 @@ jupyterhub:
           protocol: TCP
 
     profileList:
-    - display_name: Escoge Entorno y Capacidad
+    - display_name: Escoge Entorno R o Python
       slug: only-choice
       profile_options:
         image:
@@ -93,9 +93,9 @@ jupyterhub:
               description: R en RStudio
               kubespawner_override:
                 default_url: /rstudio
-                image: ghcr.io/oceanhackweek/r:d690195
+                image: ghcr.io/oceanhackweek/r:b36c4d5
         resource_allocation:
-          display_name: Asignación de Capacidad
+          display_name: Capacidad Asignada
           choices:
             mem_4_gb:
               display_name: ~4 GB RAM, ~0.5 CPUs
