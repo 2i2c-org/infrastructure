@@ -58,7 +58,7 @@ basehub:
                 default: true
                 slug: new
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:44784e65e9a1
+                  image: quay.io/2i2c/awi-ciroh-image:091bf802ad3d
             unlisted_choice:
               enabled: true
               display_name: Custom image
