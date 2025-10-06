@@ -64,7 +64,7 @@ def build_client_details(cluster_name, hub_name, callback_url):
     return {
         "client_name": f"{cluster_name}-{hub_name}",
         "app_type": "web",
-        "redirect_uris": [callback_url],
+        "redirect_uris": callback_url,
         "scope": "openid email org.cilogon.userinfo profile",
     }
 
@@ -180,7 +180,9 @@ def create_client(admin_id, admin_secret, cluster_name, hub_name, callback_url):
     return persist_client_credentials_in_config_file(client, config_filename)
 
 
-def update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url):
+def update_client(
+    admin_id, admin_secret, cluster_name, hub_name, callback_url, client_id=None
+):
     """Modifies a client by its id.
 
     ! The `client_secret` attribute cannot be updated.
@@ -195,19 +197,19 @@ def update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url):
 
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
     """
-    client_details = build_client_details(cluster_name, hub_name, callback_url)
-
-    cluster = Cluster.from_name(cluster_name)
-    config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
-    if not Path(config_filename).is_file():
-        print_colour("Can't update a client that doesn't exist", "red")
-        return
-
-    client_id = load_client_id_from_file(config_filename)
     if not client_id:
-        print_colour("Can't update a client that doesn't exist", "red")
-        return
+        cluster = Cluster.from_name(cluster_name)
+        config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
+        if not Path(config_filename).is_file():
+            print_colour("Can't update a client that doesn't exist", "red")
+            return
 
+        client_id = load_client_id_from_file(config_filename)
+        if not client_id:
+            print_colour("Can't update a client that doesn't exist", "red")
+            return
+
+    client_details = build_client_details(cluster_name, hub_name, callback_url)
     headers = build_request_headers(admin_id, admin_secret)
     response = requests.put(
         build_request_url(client_id), json=client_details, headers=headers, timeout=5
@@ -231,25 +233,26 @@ def get_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None):
 
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
     """
-    cluster = Cluster.from_name(cluster_name)
-    config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
-    if not Path(config_filename).is_file():
-        return
-
-    if client_id:
-        if not stored_client_id_same_with_cilogon_records(
-            admin_id, admin_secret, cluster_name, hub_name, client_id
-        ):
-            print_colour(
-                "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
-                "red",
-            )
+    if not client_id:
+        cluster = Cluster.from_name(cluster_name)
+        config_filename = cluster.config_dir / f"enc-{hub_name}.secret.values.yaml"
+        if not Path(config_filename).is_file():
             return
 
-    client_id = load_client_id_from_file(config_filename)
-    # No client has been found
-    if not client_id:
-        return
+        if client_id:
+            if not stored_client_id_same_with_cilogon_records(
+                admin_id, admin_secret, cluster_name, hub_name, client_id
+            ):
+                print_colour(
+                    "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
+                    "red",
+                )
+                return
+
+        client_id = load_client_id_from_file(config_filename)
+        # No client has been found
+        if not client_id:
+            return
 
     headers = build_request_headers(admin_id, admin_secret)
     response = requests.get(
@@ -410,15 +413,33 @@ def update(
     hub_name: str = typer.Argument(
         ..., help="Name of the hub for which we'll update a CILogon client"
     ),
-    hub_domain: str = typer.Argument(
-        ...,
+    hub_domain: str = typer.Option(
+        None,
         help="The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)",
+    ),
+    client_id: str = typer.Option(None, help="The CILogon client id"),
+    callback_urls: str = typer.Option(
+        None,
+        help="The list of callback_urls separated by a comma. Example: https://{hub_domain}/hub/oauth_callback, https://auth.cloud/broker/cilogon/endpoint.",
     ),
 ):
     """Update the CILogon client of a hub."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
-    callback_url = f"https://{hub_domain}/hub/oauth_callback"
-    update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url)
+    if not callback_urls:
+        callback_urls = [f"https://{hub_domain}/hub/oauth_callback"]
+        if not hub_domain:
+            raise ValueError(
+                "You must either provide a valid callback_urls or a hub_domain in order to build a callback url for you"
+            )
+    else:
+        callback_urls = callback_urls.replace(",", " ").split()
+
+    print(callback_urls)
+    print(type(callback_urls))
+
+    update_client(
+        admin_id, admin_secret, cluster_name, hub_name, callback_urls, client_id
+    )
 
 
 @cilogon_client_app.command()
@@ -427,10 +448,11 @@ def get(
     hub_name: str = typer.Argument(
         ..., help="Name of the hub for which we'll retrieve the CILogon client details"
     ),
+    client_id: str = typer.Option(None, help="The CILogon client id"),
 ):
     """Retrieve details about an existing CILogon client."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
-    get_client(admin_id, admin_secret, cluster_name, hub_name)
+    get_client(admin_id, admin_secret, cluster_name, hub_name, client_id)
 
 
 @cilogon_client_app.command()
