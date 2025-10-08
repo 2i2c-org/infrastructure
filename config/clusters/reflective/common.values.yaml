@@ -80,6 +80,13 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
+            00-reflective:
+              display_name: Reflective Image
+              description: Pangeo image with globus_sdk
+              default: true
+              slug: reflective
+              kubespawner_override: 
+                image: quay.io/2i2c/reflective-image:bafdf91292d2
             01-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
@@ -89,7 +96,6 @@ jupyterhub:
             02-pangeo:
               display_name: Pangeo Notebook Image
               description: Python image with scientific, dask and geospatial tools
-              default: true
               kubespawner_override:
                 image: pangeo/pangeo-notebook:2025.01.24
             03-rocker:
