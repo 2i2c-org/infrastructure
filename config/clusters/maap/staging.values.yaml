@@ -194,8 +194,6 @@ jupyterhub:
         authenticator_class: generic-oauth
       Authenticator:
         admin_users: []
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
       GenericOAuthenticator:
         oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
         token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
