@@ -1,6 +1,6 @@
-# Regenerate credentials for NASA SMCE accounts
+# Regenerate credentials for NASA SMDC accounts
 
-This document describes how we regenerate credentials for _users_ and the `deployer` when they expire in NASA SMCE accounts.
+This document describes how we regenerate credentials for _users_ and the `deployer` when they expire in NASA SMDC accounts.
 
 (nasa-smce:regenerate-deployer-creds)=
 ## Regenerate credentials for the `deployer`
@@ -11,8 +11,7 @@ This document describes how we regenerate credentials for _users_ and the `deplo
    export CLUSTER_NAME=...
    ```
 
-1. Authenticate yourself using the `deployer exec aws shell` command.
-   See [](cloud-access:aws-individual-accounts) and the `--help` information for more details.
+1. Authenticate yourself with https://aws.sciencecloud.nasa.gov/
 
 1. Navigate to the AWS terraform folder in the infrastructure repo.
 
@@ -58,7 +57,7 @@ This document describes how we regenerate credentials for _users_ and the `deplo
    You can then open a Pull Request and merge it.
 
 (nasa-smce:regenerate-user-password)=
-## Regenerate a password for a user in a NASA SMCE account
+## Regenerate a password for a user in a NASA SMDC account
 
 The AWS accounts associated with NASA's [Science Managed Cloud Environment](https://smce.nasa.gov)
 have a 60 day password expiry policy. If someone on the team misses this
