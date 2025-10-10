@@ -1,4 +1,4 @@
-name: 'Recurrent: regenerate SMCE credentials'
+name: 'Recurrent: regenerate SMDC credentials'
 on:
   workflow_dispatch:
   schedule:
@@ -25,14 +25,14 @@ jobs:
       run: |
         issue=$(gh issue create \
           --label "recurrent" \
-          --title "[${{ env.deadline }}] Regenerate SMCE credentials" \
+          --title "[${{ env.deadline }}] Regenerate SMDC credentials" \
           --body "$BODY")
         echo "issue=$issue" >> $GITHUB_ENV
       env:
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         GH_REPO: ${{ github.repository }}
         BODY: |
-          The credentials of the deployer on SMCE clusters must be renewed every ~55 days.
+          The credentials of the deployer on SMDC clusters must be renewed every ~55 days.
 
           ### Context
           AWS credentials for our hub deployer must be renewed for the following clusters:
