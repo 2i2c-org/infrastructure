@@ -429,8 +429,6 @@ jupyterhub:
       gitRepoBranch: "master"
       templateVars:
         enabled: true
-    jupyterhubConfigurator:
-      enabled: false
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -1077,31 +1075,6 @@ jupyterhub:
           ports:
             - port: 8081
               protocol: TCP
-        # The jupyterhub-configurator is a managed jupyterhub service, which
-        # means it is started by jupyterhub as a separate process in the hub
-        # pod. Users will access it via the proxy pod, and JupyterHub itself is
-        # accessing it via localhost. This rule makes receiving such request on
-        # port 10101 from these destinations accepted.
-        #
-        # Maybe the container internal rule, for jupyterhub ->
-        # jupyterhub-configurator isn't needed, as the request is directly to
-        # 127.0.0.1:10101.
-        #
-        # ref: The extraConfig.02-basehub-spawner section below
-        # ref: https://github.com/yuvipanda/jupyterhub-configurator/blob/996405d2a7017153d5abe592b8028fed7a1801bb/jupyterhub_configurator/mixins.py#L7C5-L11
-        #
-        - from:
-            - podSelector:
-                matchLabels:
-                  app: jupyterhub
-                  component: proxy
-            - podSelector:
-                matchLabels:
-                  app: jupyterhub
-                  component: hub
-          ports:
-            - port: 10101
-              protocol: TCP
     # FIXME: We should think about these resource requests/limits, see
     #        https://github.com/2i2c-org/infrastructure/issues/2127.
     #
@@ -1245,33 +1218,12 @@ jupyterhub:
         # configured via:
         #
         # jupyterhub.custom.singleuserAdmin
-        # jupyterhub.custom.jupyterhubConfigurator
         #
-        from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
         from kubernetes_asyncio.client.models import V1VolumeMount, V1Container
         from kubespawner import KubeSpawner
         from kubespawner.utils import get_k8s_model
         from z2jh import get_config
         import shlex
-
-
-        # Setup jupyterhub-configurator only if its enabled
-        spawner_base_classes = [KubeSpawner]
-        if get_config("custom.jupyterhubConfigurator.enabled"):
-            spawner_base_classes = [ConfiguratorSpawnerMixin, KubeSpawner]
-
-            jhc_service = {
-                "name": "configurator",
-                "url": "http://configurator:10101",
-                "oauth_no_confirm": True,
-                "command": [
-                    "python3",
-                    "-m",
-                    "jupyterhub_configurator.app",
-                    "--Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py",
-                ],
-            }
-            c.JupyterHub.services.append(jhc_service)
 
         if get_config("custom.binderhubUI.enabled"):
             spawner_base_classes = [BinderSpawnerMixin, KubeSpawner]
