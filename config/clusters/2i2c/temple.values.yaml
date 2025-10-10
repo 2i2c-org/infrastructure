@@ -25,9 +25,11 @@ jupyterhub:
         funded_by:
           name: Temple University
           url: https://www.temple.edu/
-    jupyterhubConfigurator:
-      enabled: true
   singleuser:
+    image:
+      name: laserchemist/datascience
+      tag: v13
+    defaultUrl: /lab
     memory:
       # Memory defaults are 256MB to 1G in basehub. These are bumped based on a
       # request to bump these (https://2i2c.freshdesk.com/a/tickets/1003) at
