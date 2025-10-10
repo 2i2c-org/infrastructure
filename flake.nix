@@ -34,6 +34,7 @@
           gcc
           pre-commit
           # Infra packages
+          age
           go-jsonnet
           kubernetes-helm
           kubectl
