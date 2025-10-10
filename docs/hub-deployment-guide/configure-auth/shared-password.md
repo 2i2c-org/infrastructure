@@ -121,14 +121,3 @@ jupyterhub:
     storage:
       extraVolumeMounts: []
 ```
-
-## Disabling the configurator
-
-For the same reason as above, we also need to disable the configurator as this is an admin-only feature.
-
-```yaml
-jupyterhub:
-  custom:
-    jupyterhubConfigurator:
-      enabled: false
-```
