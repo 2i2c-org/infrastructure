@@ -40,13 +40,13 @@ jobs:
           - [ ] nasa-ghg-hub
           - [ ] maap
           - [ ] disasters
+          - [ ] heliophysics
 
           ### Resources
           Follow [the instructions](https://infrastructure.2i2c.org/howto/regenerate-smce-creds/#regenerate-credentials-for-the-deployer) on how to do this.
 
           ### Definition of Done
-          - [ ] There is a deadline for this task
-          - [ ] The credentials of the deployer on all 3 clusters have been renewed
+          - [ ] The credentials of the deployer on all clusters have been renewed
 
     - name: Sleep a bit to allow issue to be added to the board by automation
       run: sleep 3
