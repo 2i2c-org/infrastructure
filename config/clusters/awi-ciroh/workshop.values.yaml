@@ -14,8 +14,6 @@ basehub:
           hard_quota: 250
   jupyterhub:
     custom:
-      jupyterhubConfigurator:
-        enabled: false
       singleuserAdmin:
         extraVolumeMounts: []
       homepage:

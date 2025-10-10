@@ -30,8 +30,6 @@ jupyterhub:
           name: {{ funded_by_name }}
           url: {{ funded_by_url }}
 {% endif %}
-    jupyterhubConfigurator:
-      enabled: false
     singleuserAdmin:
       extraVolumeMounts: []
   singleuser:
