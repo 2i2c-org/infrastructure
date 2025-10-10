@@ -370,8 +370,8 @@ def hub(
             "-c",
             "hub",
             "--",
-            "cat",
-            "configurator_data.json",
+            "/bin/bash",
+            "-l",
         ]
         subprocess.check_call(cmd)
 

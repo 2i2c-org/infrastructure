@@ -1225,6 +1225,7 @@ jupyterhub:
         from z2jh import get_config
         import shlex
 
+        spawner_base_classes = [KubeSpawner]
         if get_config("custom.binderhubUI.enabled"):
             spawner_base_classes = [BinderSpawnerMixin, KubeSpawner]
 
