@@ -56,13 +56,12 @@ jupyterhub:
       - name: home
         mountPath: /home/rstudio/shared-readwrite
         subPath: _shared
-    jupyterhubConfigurator:
-      enabled: true
   singleuser:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: lisacuk/lishub-base
-      tag: 364c386
+      tag: a57e973
+    defaultUrl: /lab
     profileList:
       # Setup as requested in https://2i2c.freshdesk.com/a/tickets/1348
     - display_name: Regular Instance
