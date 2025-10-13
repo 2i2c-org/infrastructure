@@ -1,4 +1,5 @@
 (howto:configure-storage-quota)=
+
 # Configure per-user storage quotas
 
 This guide explains how to enable and configure per-user storage quotas using the `jupyterhub-home-nfs` helm chart.
@@ -137,6 +138,10 @@ See [](migrate-data) for instructions on performing these steps.
 
 ## Enforcing storage quotas
 
+(global-storage-quotas)=
+
+### Global storage quotas
+
 ````{warning}
 If you attempt to enforce quotas before having performed the migration, you may see the following error:
 
@@ -146,6 +151,11 @@ FileNotFoundError: [Errno 2] No such file or directory: '/export/$HUB_NAME'
 ````
 
 Now we can set quotas for each user and configure the path to monitor for storage quota enforcement.
+
+```{tip} Deciding upon a reasonable quota
+
+We should set _reasonable_ quota limits. As of writing, that means a small limit for most users. If you're not sure, choose 10GB per user. For research hubs, this figure is likely much higher (e.g. 100GB/user). Specific users *may* have exceptions made with custom quotas.
+```
 
 This can be done by updating `basehub.jupyterhub-home-nfs.quotaEnforcer` in the hub's values file. For example, to set a quota of 10GB for all users on the `staging` hub, we would add the following to the hub's values file:
 
@@ -167,6 +177,26 @@ deployer deploy $CLUSTER_NAME $HUB_NAME
 
 Once this is deployed, the hub will automatically enforce the storage quota for each user. If a user's home directory exceeds the quota, the user's pod may not be able to start successfully.
 
+### Per-user quotas
+
+Most users may have similar storage needs and it is reasonable to impose the same storage constraints upon them. There may, however, be some users that have legitimate additional storage needs. We can accommodate such users by adding _overrides_ to the storage quota system.
+
+```{warning} User IDs are secrets!
+It is important to set per-user storage quotas as [secrets using sops](#secrets-and-private-keys). User IDs are personal identifiable information, and our infrastructure repository is publicly visible.
+
+```
+
+```yaml
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        quota_overrides:
+          "foo-bar": 100 # in GB
+```
+
+The keys under ``basehub.jupyterhub-home-nfs.quotaEnforcer.config.QuotaManager.quota_overrides` must be the names of directories under the top-level path(s) managed by `jupyterhub-home-nfs`. This configuration may be deployed using the strategy outlined in [](#global-storage-quotas)
+
 ## Increasing the size of the disk used by the NFS server
 
 If the disk used by the NFS server is close to being full, we may need to increase its size. This can be done by following the instructions in [](howto:increase-disk-size).
@@ -180,6 +210,7 @@ To check whether the NFS server is running properly, get a shell inside the the 
 ```bash
 kubectl -n <namespace> exec --stdin --tty <nfs-server-pod> -c nfs-server -- /bin/bash
 ```
+
 and run the following command:
 
 ```bash
