@@ -196,8 +196,8 @@ jupyterhub:
         admin_users: []
       GenericOAuthenticator:
         oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
-        token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
-        authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
+        token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token
+        authorize_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/auth
         # We want to get user data from the JWT that's the id token,
         # not from a separate userdata API call
         userdata_from_id_token: true
@@ -205,7 +205,7 @@ jupyterhub:
         - basic
         - profile
         - openid
-        username_claim: preferred_username
+        username_claim: username
         manage_groups: true
         auth_state_groups_key: oauth_user.roles
         admin_groups:
