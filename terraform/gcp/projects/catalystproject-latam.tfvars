@@ -30,7 +30,7 @@ persistent_disks = {
     name_suffix = "gita"
   },
   "iner" = {
-    size        = 35 # in GiB
+    size        = 75 # in GiB
     name_suffix = "iner"
   },
   "labi" = {
