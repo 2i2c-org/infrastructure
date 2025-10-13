@@ -27,3 +27,11 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-iner
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10
+        quota_overrides:
+          lamc97: 15
+          cxro-2dcc: 15
+          _shared: 15
