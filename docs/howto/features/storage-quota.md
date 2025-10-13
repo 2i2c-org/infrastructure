@@ -167,7 +167,7 @@ jupyterhub-home-nfs:
         hard_quota: 10 # in GB
 ```
 
-The `path` field is the path to the parent directory of the user's home directory in the NFS server. The `hardQuota` field is the maximum allowed size of the user's home directory in GB.
+The `path` field is the path to the parent directory of the user's home directory in the NFS server. The `hard_quota` field is the maximum allowed size of the user's home directory in GB.
 
 To deploy the changes, we need to run the following command:
 
