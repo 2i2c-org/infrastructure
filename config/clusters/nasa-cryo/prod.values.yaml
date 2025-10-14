@@ -39,7 +39,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 400 # in GB
+          hard_quota: 10 # in GB
   binderhub-service:
     dockerApi:
       nodeSelector:
