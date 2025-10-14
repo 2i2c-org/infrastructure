@@ -50,4 +50,4 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 100
+        hard_quota: 10
