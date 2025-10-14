@@ -1,4 +1,8 @@
 jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
   ingress:
     hosts: [workshop.strudel.2i2c.cloud]
     tls:
@@ -6,5 +10,12 @@ jupyterhub:
       secretName: https-auto-tls
   hub:
     config:
+      JupyterHub:
+        authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://workshop.strudel.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - strudel-science/infrastructure
+        - strudel-science/workshop
+        scope:
+        - read:org
