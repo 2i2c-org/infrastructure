@@ -30,7 +30,7 @@ jupyterhub:
         oauth_callback_url: https://workshop.strudel.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - strudel-science/infrastructure
-        - strudel-science/workshop
+        - strudel-workshops
         scope:
         - read:org
     extraConfig:
