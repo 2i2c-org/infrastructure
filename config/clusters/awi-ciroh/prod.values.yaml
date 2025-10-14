@@ -11,7 +11,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 250
+          hard_quota: 10
   jupyterhub:
     ingress:
       hosts: [ciroh.awi.2i2c.cloud]
@@ -46,7 +46,7 @@ basehub:
         profile_options: &profile_options
           image:
             display_name: Image
-              # Requested in https://2i2c.freshdesk.com/a/tickets/1387
+                # Requested in https://2i2c.freshdesk.com/a/tickets/1387
             choices:
               old:
                 display_name: Original Pangeo Notebook base image 2023.09.11
