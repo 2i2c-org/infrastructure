@@ -46,7 +46,7 @@ jupyterhub:
     #
     image:
       name: quay.io/2i2c/pkce-experiment
-      tag: 0.0.1-0.dev.git.11432.h4b995d69
+      tag: 0.0.1-0.dev.git.14004.h556ee4be8
     allowNamedServers: true
     config:
       JupyterHub:

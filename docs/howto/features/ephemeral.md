@@ -166,15 +166,10 @@ jupyterhub:
 
 ## Enable hook pre-puller & disable JupyterHub
 
-Startup time is very important in ephemeral hubs, and since the JupyterHub
-configurator can not be used (no admin users), [the hook pre-puller](https://z2jh.jupyter.org/en/stable/administrator/optimization.html#pulling-images-before-users-arrive)
-can be enabled.
+Startup time is very important in ephemeral hubs, so [the hook pre-puller](https://z2jh.jupyter.org/en/stable/administrator/optimization.html#pulling-images-before-users-arrive) can be enabled.
 
 ```yaml
 jupyterhub:
-  custom:
-    jupyterhubConfigurator:
-      enabled: false
   prePuller:
     hook:
       enabled: true
