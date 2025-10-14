@@ -205,7 +205,7 @@ jupyterhub:
         - basic
         - profile
         - openid
-        username_claim: username
+        username_claim: preferred_username
         manage_groups: true
         auth_state_groups_key: oauth_user.roles
         admin_groups:
