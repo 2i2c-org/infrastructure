@@ -36,8 +36,6 @@ jupyterhub:
     extraConfig:
       # Get GitHub identity from token
       extract_ident.py: |
-        from urllib.parse import urlparse
-
         async def auth_state_hook(spawner, auth_state):
             if not auth_state:
                 spawner.log.warning(f"Missing auth state for user {spawner.user.name}")
