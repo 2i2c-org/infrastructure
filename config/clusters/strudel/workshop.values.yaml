@@ -1,5 +1,12 @@
+nfs:
+  enabled: false
+  pv:
+    enabled: false
 jupyterhub:
   custom:
+    singleuserAdmin:
+      # Turn off trying to mount shared-readwrite folder for admins
+      extraVolumeMounts: []
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
@@ -8,6 +15,13 @@ jupyterhub:
     tls:
     - hosts: [workshop.strudel.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    initContainers: []
+    storage:
+      # No persistent storage should be kept to reduce any potential data
+      # retention & privacy issues.
+      type: none
+      extraVolumeMounts: []
   hub:
     config:
       JupyterHub:
@@ -28,12 +42,23 @@ jupyterhub:
             if not auth_state:
                 spawner.log.warning(f"Missing auth state for user {spawner.user.name}")
                 return
+            try:
+                github_user = auth_state['github_user']
+            except KeyError:
+                spawner.log.warning(f"Missing github_user model for user {spawner.user.name}")
+                return
+            try:
+                email = github_user['email']
+                name = github_user['name']
+            except KeyError:
+                spawner.log.warning(f"Missing GitHub name/email field for user {spawner.user.name}")
+                return
 
             spawner.environment['GIT_CONFIG_COUNT'] = "2"
             spawner.environment['GIT_CONFIG_KEY_0'] = "user.name"
-            spawner.environment['GIT_CONFIG_VALUE_0'] = auth_state['name']
+            spawner.environment['GIT_CONFIG_VALUE_0'] = name
 
             spawner.environment['GIT_CONFIG_KEY_1'] = "user.email"
-            spawner.environment['GIT_CONFIG_VALUE_1'] = auth_state['email']
+            spawner.environment['GIT_CONFIG_VALUE_1'] = email
             
         c.Spawner.auth_state_hook = auth_state_hook
