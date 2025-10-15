@@ -20,7 +20,6 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - enc-common.secret.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
@@ -29,7 +28,6 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - enc-common.secret.values.yaml
   - prod.values.yaml
   - enc-prod.secret.values.yaml
 - name: workshop
@@ -38,6 +36,5 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - enc-common.secret.values.yaml
   - workshop.values.yaml
   - enc-workshop.secret.values.yaml
