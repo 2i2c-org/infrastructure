@@ -23,7 +23,7 @@ The following process is similar for authorized *community representatives* and 
 
    ````{tab-item} 2i2c engineer
    Login with the admin account. The username is `admin`, and decrypt the file
-      `helm-charts/support/enc-support.secret.values.yaml` with [sops](../../reference/tools.md#sops) to find the password. Alternatively, this secret is also available in the [shared BitWarden vault](https://vault.bitwarden.com/#/vault?organizationId=11313781-4b83-41a3-9d35-afe200c8e9f1).
+      `helm-charts/support/enc-support.secret.values.yaml` with [sops](../../reference/tools.md) to find the password. Alternatively, this secret is also available in the [shared BitWarden vault](https://vault.bitwarden.com/#/vault?organizationId=11313781-4b83-41a3-9d35-afe200c8e9f1).
       ```{warning}
       This password is **shared** across all 2i2c Grafana instances! So treat it with care, and do not share it with others.
       ```
