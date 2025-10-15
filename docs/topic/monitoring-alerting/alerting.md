@@ -6,7 +6,7 @@ We have a few alerts configured to notify us when things go wrong and we use Pag
 Pagerduty creates incidents [only if it can assign them to someone](https://support.pagerduty.com/main/docs/why-incidents-fail-to-trigger#no-one-was-on-call).
 This means we need to have an on-call rotation set up that covers all 24h of the day, 7 days a week.
 
-However, because nobody is expected to respond outside working hours we have a placeholder user associated with the support email address that is used as the user in the on-call rotation when everybody else is outside working hours.
+However, because nobody is expected to respond outside working hours, we have a placeholder user associated with the support email address that is used as the user in the on-call rotation when everybody else is outside working hours.
 
 This user gets emailed when an alert is triggered and there is no human being on-call. This allows us to see the alert and respond to it during working hours.
 
