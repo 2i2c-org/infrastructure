@@ -21,8 +21,9 @@ basehub:
       daskhubSetup:
         enabled: true
       2i2c:
-        add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: google
+        # This uses custom ids from auth0, so we can't use our default
+        # emails as access
+        add_staff_user_ids_to_admin_users: false
     hub:
       extraConfig:
         001-username-claim: |
