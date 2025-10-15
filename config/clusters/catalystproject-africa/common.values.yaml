@@ -107,3 +107,7 @@ jupyterhub-home-nfs:
   enabled: true
   eks:
     enabled: true
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GB
