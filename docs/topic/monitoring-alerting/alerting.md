@@ -27,7 +27,7 @@ This user gets emailed when an alert is triggered and there is no human being on
 **TBD**
 
 Currently, the **desired** paging policy is:
-**After an incident is assigned to me:**
+**After an incident is assigned to someone:**
 - Immediately, send a Slack DM
 - 30 minutes after, send an email
 - 1 hour after, send an SMS
