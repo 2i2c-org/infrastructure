@@ -1,27 +1,14 @@
-nfs:
-  enabled: false
-  pv:
-    enabled: false
 jupyterhub:
-  custom:
-    singleuserAdmin:
-      # Turn off trying to mount shared-readwrite folder for admins
-      extraVolumeMounts: []
-    2i2c:
-      add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: github
   ingress:
     hosts: [workshop.strudel.2i2c.cloud]
     tls:
     - hosts: [workshop.strudel.2i2c.cloud]
       secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
   singleuser:
-    initContainers: []
-    storage:
-      # No persistent storage should be kept to reduce any potential data
-      # retention & privacy issues.
-      type: none
-      extraVolumeMounts: []
     extraFiles:
       gitConfig:
         mountPath: /opt/conda/etc/gitconfig
@@ -31,8 +18,9 @@ jupyterhub:
           useHttpPath = true
   hub:
     config:
-      JupyterHub:
-        authenticator_class: github
+      # IMPORTANT: we provide GitHub push access to strudel-workshops via an app
+      # This is safe-enough because we gate on people belonging to the same org (and strudel-science/infrastructure) in the config.
+      # If the authenticator is changed, we must first remove the secret for the singleuser GitHub app
       GitHubOAuthenticator:
         oauth_callback_url: https://workshop.strudel.2i2c.cloud/hub/oauth_callback
         allowed_organizations:

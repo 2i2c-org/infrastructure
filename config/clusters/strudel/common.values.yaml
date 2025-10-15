@@ -5,7 +5,8 @@ nfs:
 
 jupyterhub:
   custom:
-    singleuserAdmins:
+    singleuserAdmin:
+      # Turn off trying to mount shared-readwrite folder for admins
       extraVolumeMounts: []
     homepage:
       # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
@@ -30,11 +31,6 @@ jupyterhub:
       enabled: true
   hub:
     allowNamedServers: true
-    config:
-      JupyterHub:
-        authenticator_class: dummy
-      Authenticator:
-        admin_users: []
   scheduling:
     userScheduler:
       enabled: true
@@ -60,20 +56,21 @@ jupyterhub:
               image: '{value}'
           choices:
             vscode:
+              default: true
               display_name: VSCode
               description: VSCode with STRUDEL-kit
               kubespawner_override:
                   # Launch people directly into VSCode IDE when they start
                 default_url: /vscode
-                  # Built from https://github.com/strudel-science/strudel-infra
-                image: quay.io/strudel/infrastructure-image:6c2077c03f5b
+                    # Built from https://github.com/strudel-science/strudel-infra
+                image: quay.io/strudel/infrastructure-image:656e4804c76c
             qgis:
               display_name: QGIS
               description: QGIS environment
               kubespawner_override:
                   # Launch people directly into the Linux desktop when they start
                 default_url: /desktop
-                  # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
+                    # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
                 image: quay.io/2i2c/nasa-qgis-image:0d0765090250
         requests:
           display_name: Resource Allocation
