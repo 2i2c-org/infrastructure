@@ -182,7 +182,7 @@ Once this is deployed, the hub will automatically enforce the storage quota for 
 Most users may have similar storage needs and it is reasonable to impose the same storage constraints upon them. There may, however, be some users that have legitimate additional storage needs. We can accommodate such users by adding _overrides_ to the storage quota system.
 
 ```{warning} User IDs are secrets!
-It is important to set per-user storage quotas as [secrets using sops](secrets-and-private-keys). User IDs are personal identifiable information, and our infrastructure repository is publicly visible.
+It is important to set per-user storage quotas as [secrets using sops](/topic/access-creds/secrets.md). User IDs are personal identifiable information, and our infrastructure repository is publicly visible.
 
 ```
 
