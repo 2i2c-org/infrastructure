@@ -1,4 +1,10 @@
 jupyterhub:
+  cull:
+    # Cull after 4h of inactivity
+    every: 300
+    timeout: 14400
+    # No pods over 12h long
+    maxAge: 43200
   ingress:
     hosts: [workshop.strudel.2i2c.cloud]
     tls:
