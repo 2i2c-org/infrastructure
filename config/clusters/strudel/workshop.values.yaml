@@ -28,6 +28,8 @@ jupyterhub:
         - strudel-workshops
         scope:
         - read:org
+      JupyterHub:
+        authenticator_class: github
     extraConfig:
       # Get GitHub identity from token
       extract_ident.py: |
