@@ -108,23 +108,19 @@ jupyterhub:
                 cpu_limit: 3.6505
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
-            # mem_7_gb:
-            #   display_name: ~7 GB RAM, ~0.9 CPUs
-            #   description: Up to ~4 CPUs when available
-            #   kubespawner_override:
-            #     mem_guarantee: 7805679519
-            #     mem_limit: 7805679519
-            #     cpu_guarantee: 0.912625
-            #     cpu_limit: 3.6505
-            #     node_selector:
-            #       node.kubernetes.io/instance-type: r5.xlarge
+              # mem_7_gb:
+              #   display_name: ~7 GB RAM, ~0.9 CPUs
+              #   description: Up to ~4 CPUs when available
+              #   kubespawner_override:
+              #     mem_guarantee: 7805679519
+              #     mem_limit: 7805679519
+              #     cpu_guarantee: 0.912625
+              #     cpu_limit: 3.6505
+              #     node_selector:
+              #       node.kubernetes.io/instance-type: r5.xlarge
 
 jupyterhub-home-nfs:
   enabled: true
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 10
   eks:
     enabled: true
   prometheusExporter:
