@@ -157,7 +157,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 10
+        hard_quota: 10 # in GB
   eks:
     enabled: true
   prometheusExporter:
