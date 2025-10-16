@@ -4,11 +4,9 @@ nfs:
   shareCreator:
     enabled: false
 
-
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::221106934874:role/oceanhackweek-prod
-
 
 jupyterhub:
   singleuser:
@@ -30,6 +28,4 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        quota_overrides:
-          # Higher limit for shared than for users
-          _shared: 100
+        hard_quota: 10 # in GB
