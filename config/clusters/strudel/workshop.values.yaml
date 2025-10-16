@@ -34,6 +34,8 @@ jupyterhub:
         - strudel-workshops
         scope:
         - read:org
+        # So that we can pre-populate Git commits
+        - user:email
       JupyterHub:
         authenticator_class: github
     extraConfig:
