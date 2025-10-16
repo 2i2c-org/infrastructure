@@ -27,4 +27,4 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 0
+          hard_quota: 1 # in GB
