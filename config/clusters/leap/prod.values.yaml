@@ -52,7 +52,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 0
+          hard_quota: 20
     resources:
       requests:
         cpu: 0.2
