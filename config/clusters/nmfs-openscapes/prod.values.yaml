@@ -59,7 +59,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 64
+        hard_quota: 20 # in GiB
 binderhub-service:
   config:
     BinderHub:
