@@ -60,6 +60,7 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch-prod", "persistent-prod", "persistent-prod-large"],
+    max_session_duration : 43200 # 12h
   },
   "workshop" : {
     bucket_admin_access : ["scratch-workshop", "persistent-workshop"],
