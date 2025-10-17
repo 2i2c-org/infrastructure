@@ -11,7 +11,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 250
+          hard_quota: 250 # in GiB
   jupyterhub:
     custom:
       singleuserAdmin:
