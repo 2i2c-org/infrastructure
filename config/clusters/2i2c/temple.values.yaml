@@ -68,7 +68,7 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         paths: [/export/temple]
-        hard_quota: 10 # in GB
+        hard_quota: 10 # in GiB
     resources:
       requests:
         cpu: 0.2

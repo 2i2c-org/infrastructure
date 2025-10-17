@@ -92,7 +92,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 15 # in GB
+        hard_quota: 15 # in GiB
 
 nfs:
   pv:

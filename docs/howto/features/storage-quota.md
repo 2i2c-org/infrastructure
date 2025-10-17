@@ -20,7 +20,7 @@ For infrastructure running on AWS, we can create a disk through Terraform by add
 ```
 ebs_volumes = {
   "staging" = {
-    size        = 100  # in GB
+    size        = 100  # in GiB
     type        = "gp3"
     name_suffix = "staging"
     tags        = { "2i2c:hub-name": "staging" }
@@ -33,7 +33,7 @@ ebs_volumes = {
 ```
 persistent_disks = {
   "staging" = {
-    size        = 100  # in GB
+    size        = 100  # in GiB
     name_suffix = "staging"
   }
 }
@@ -44,7 +44,7 @@ persistent_disks = {
 ```
 persistent_disks = {
   "staging" = {
-    size        = 100  # in GB
+    size        = 100  # in GiB
     name_suffix = "staging"
     tags        = { "2i2c:hub-name": "staging" }
   }
@@ -53,7 +53,7 @@ persistent_disks = {
 ````
 `````
 
-This will create a disk with a size of 100GB for the `staging` hub that we can reference when configuring the NFS server.
+This will create a disk with a size of 100GiB for the `staging` hub that we can reference when configuring the NFS server.
 
 Apply these changes with:
 
@@ -154,20 +154,20 @@ Now we can set quotas for each user and configure the path to monitor for storag
 
 ```{tip} Deciding upon a reasonable quota
 
-We should set _reasonable_ quota limits. As of writing, that means a small limit for most users. If you're not sure, choose 10GB per user. For research hubs, this figure is likely much higher (e.g. 100GB/user). Specific users *may* have exceptions made with custom quotas.
+We should set _reasonable_ quota limits. As of writing, that means a small limit for most users. If you're not sure, choose 10GiB per user. For research hubs, this figure is likely much higher (e.g. 100GiB/user). Specific users *may* have exceptions made with custom quotas.
 ```
 
-This can be done by updating `basehub.jupyterhub-home-nfs.quotaEnforcer` in the hub's values file. For example, to set a quota of 10GB for all users on the `staging` hub, we would add the following to the hub's values file:
+This can be done by updating `basehub.jupyterhub-home-nfs.quotaEnforcer` in the hub's values file. For example, to set a quota of 10GiB for all users on the `staging` hub, we would add the following to the hub's values file:
 
 ```yaml
 jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 10 # in GB
+        hard_quota: 10 # in GiB
 ```
 
-The `path` field is the path to the parent directory of the user's home directory in the NFS server. The `hard_quota` field is the maximum allowed size of the user's home directory in GB.
+The `path` field is the path to the parent directory of the user's home directory in the NFS server. The `hard_quota` field is the maximum allowed size of the user's home directory in GiB.
 
 To deploy the changes, we need to run the following command:
 
@@ -192,7 +192,7 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         quota_overrides:
-          "foo-bar": 100 # in GB
+          "foo-bar": 100 # in GiB
 ```
 
 The keys under ``basehub.jupyterhub-home-nfs.quotaEnforcer.config.QuotaManager.quota_overrides` must be the names of directories under the top-level path(s) managed by `jupyterhub-home-nfs`. This configuration may be deployed using the strategy outlined in [](#global-storage-quotas)
