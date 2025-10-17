@@ -11,7 +11,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 1
+        hard_quota: 1 # in GiB
 jupyterhub:
   ingress:
     hosts: [staging.jupyter-health.2i2c.cloud]
