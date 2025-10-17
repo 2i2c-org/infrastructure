@@ -15,6 +15,12 @@ jupyterhub-home-nfs:
   gke:
     enabled: true
     volumeId: projects/hhmi-398911/zones/us-west2-b/disks/hub-nfs-homedirs-spyglass
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        # Explicitly disabling quotas, we only have _staging
+        # which is always exempt
+        hard_quota: 0 # in GiB
 
 jupyterhub:
   ingress:
