@@ -7,7 +7,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 2
+        hard_quota: 2 # in GiB
 jupyterhub:
   ingress:
     hosts: [projectpythia.2i2c.cloud]
