@@ -8,7 +8,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 1 # in GB
+        hard_quota: 1 # in GiB
 
 jupyterhub:
   ingress:
