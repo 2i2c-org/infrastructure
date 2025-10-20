@@ -31,7 +31,3 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 10
-        quota_overrides:
-          lamc97: 15
-          cxro-2dcc: 15
-          _shared: 15
