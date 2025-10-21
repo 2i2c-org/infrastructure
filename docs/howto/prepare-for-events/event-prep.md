@@ -211,7 +211,7 @@ A useful mechanism for reducing the likelihood of a blocking scale up is the use
 
 To illustrate this, consider a hub with a dedicated user nodepool. Each node can support 64 singleuser pods. Let's imagine that the number of user placeholder replicas is set to 32:
 
-- At $t=0$, there will be 32 user placeholder pods running on a single user node.
+- Initially, there will be 32 user placeholder pods running on a single user node.
 - For the next 32 users that join, no scaling up will occur, and once all of the users have joined, the node will be "full" with 32 users and 32 placeholders.
 - Once the 33rd user joins, one of the user placeholders will be evicted, triggering a scale up to maintain the 32 user-node replica requirement.
 
