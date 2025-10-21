@@ -271,5 +271,17 @@ def all(
     """
     cluster_config(cluster_name)
     support_config(cluster_name, debug=debug)
-    hub_config(cluster_name, hub_name, skip_refresh=skip_refresh, debug=debug)
-    authenticator_config(cluster_name, hub_name)
+
+    cluster = Cluster.from_name(cluster_name)
+    if hub_name:
+        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
+    else:
+        hubs = cluster.hubs
+    for i, hub in enumerate(hubs):
+        print_colour(
+            f"{i + 1} / {len(hubs)}: Validating hub and authenticator config for {hub.spec['name']}..."
+        )
+        hub_config(
+            cluster_name, hub.spec["name"], skip_refresh=skip_refresh, debug=debug
+        )
+        authenticator_config(cluster_name, hub.spec["name"])
