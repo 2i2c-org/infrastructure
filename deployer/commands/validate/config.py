@@ -107,7 +107,7 @@ def hub_config(
         _prepare_helm_charts_dependencies_and_schemas()
 
     cluster = Cluster.from_name(cluster_name)
-    hub = next(h for h in cluster.hubs if h.spec["name"] == hub_name)
+    hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
 
     cmd = [
         "helm",
@@ -211,7 +211,7 @@ def authenticator_config(
     _prepare_helm_charts_dependencies_and_schemas()
 
     cluster = Cluster.from_name(cluster_name)
-    hub = next(h for h in cluster.hubs if h.spec["name"] == hub_name)
+    hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
 
     allowed_users = []
     admin_users = "Jargon-Chlorine7-Undergo"
