@@ -77,8 +77,8 @@ def custom_chart(chart_dir, chart_override_path):
             chart_yaml = chart_dir / "Chart.yaml"
             temp_default_chart_copy = chart_dir / "Chart-copy.yaml"
 
-            shutil.copy2(chart_yaml, temp_default_chart_copy)
-            shutil.copy2(chart_override_path, chart_yaml)
+            shutil.copy(chart_yaml, temp_default_chart_copy)
+            shutil.copy(chart_override_path, chart_yaml)
         yield chart_dir
     finally:
         if chart_override_path:
