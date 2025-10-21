@@ -66,15 +66,6 @@ def _prepare_helm_charts_dependencies_and_schemas():
     subprocess.check_call(["helm", "dep", "up", support_dir])
 
 
-def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
-    cluster = Cluster.from_name(cluster_name)
-
-    if hub_name:
-        return [h for h in cluster.hubs if h.spec["name"] == hub_name]
-
-    return cluster.hubs
-
-
 @validate_app.command()
 def cluster_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
@@ -102,7 +93,7 @@ def cluster_config(
 @validate_app.command()
 def hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
     skip_refresh: bool = typer.Option(
         False, "--skip-refresh", help="Skip the helm dep update"
     ),
@@ -116,53 +107,47 @@ def hub_config(
         _prepare_helm_charts_dependencies_and_schemas()
 
     cluster = Cluster.from_name(cluster_name)
+    hub = next(h for h in cluster.hubs if h.spec["name"] == hub_name)
 
-    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
+    cmd = [
+        "helm",
+        "template",
+        str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"])),
+    ]
+    if debug:
+        cmd.append("--debug")
 
-    for i, hub in enumerate(hubs):
-        print_colour(
-            f"{i+1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
-        )
-
-        cmd = [
-            "helm",
-            "template",
-            str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"])),
-        ]
-        if debug:
-            cmd.append("--debug")
-
-        with ExitStack() as jsonnet_stack:
-            for values_file in hub.spec["helm_chart_values_files"]:
-                # FIXME: The logic here for figuring out non secret files is not correct
-                if values_file.endswith(".jsonnet"):
-                    rendered_file = jsonnet_stack.enter_context(
-                        render_jsonnet(
-                            cluster.config_dir / values_file,
-                            cluster_name,
-                            hub_name,
-                        )
+    with ExitStack() as jsonnet_stack:
+        for values_file in hub.spec["helm_chart_values_files"]:
+            # FIXME: The logic here for figuring out non secret files is not correct
+            if values_file.endswith(".jsonnet"):
+                rendered_file = jsonnet_stack.enter_context(
+                    render_jsonnet(
+                        cluster.config_dir / values_file,
+                        cluster_name,
+                        hub_name,
                     )
-                    cmd.append(f"--values={rendered_file}")
-                elif "secret" not in os.path.basename(values_file):
-                    values_file = cluster.config_dir / values_file
-                    cmd.append(f"--values={values_file}")
-                    config = yaml.load(values_file)
-                    # Check if there's config that enables dask-gateway
-                    dask_gateway_enabled = config.get("dask-gateway", {}).get(
-                        "enabled", False
-                    )
+                )
+                cmd.append(f"--values={rendered_file}")
+            elif "secret" not in os.path.basename(values_file):
+                values_file = cluster.config_dir / values_file
+                cmd.append(f"--values={values_file}")
+                config = yaml.load(values_file)
+                # Check if there's config that enables dask-gateway
+                dask_gateway_enabled = config.get("dask-gateway", {}).get(
+                    "enabled", False
+                )
 
-            # Workaround the current requirement for dask-gateway 0.9.0 to have a
-            # JupyterHub api-token specified, for updates if this workaround can be
-            # removed, see https://github.com/dask/dask-gateway/issues/473.
-            if dask_gateway_enabled:
-                cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
-            try:
-                subprocess.check_output(cmd, text=True)
-            except subprocess.CalledProcessError as e:
-                print(e.stdout)
-                sys.exit(1)
+        # Workaround the current requirement for dask-gateway 0.9.0 to have a
+        # JupyterHub api-token specified, for updates if this workaround can be
+        # removed, see https://github.com/dask/dask-gateway/issues/473.
+        if dask_gateway_enabled:
+            cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
+        try:
+            subprocess.check_output(cmd, text=True)
+        except subprocess.CalledProcessError as e:
+            print(e.stdout)
+            sys.exit(1)
 
 
 @validate_app.command()
@@ -216,7 +201,7 @@ def support_config(
 @validate_app.command()
 def authenticator_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
 ):
     """
     For each hub of a specific cluster it asserts that:
@@ -226,41 +211,33 @@ def authenticator_config(
     _prepare_helm_charts_dependencies_and_schemas()
 
     cluster = Cluster.from_name(cluster_name)
+    hub = next(h for h in cluster.hubs if h.spec["name"] == hub_name)
 
-    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
-
-    for i, hub in enumerate(hubs):
-        print_colour(
-            f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
-        )
-
-        allowed_users = []
-        admin_users = "Jargon-Chlorine7-Undergo"
-        for values_file_name in hub.spec["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(values_file_name):
-                values_file = cluster.config_dir / values_file_name
-                # Load the hub extra config from its specific values files
-                config = yaml.load(values_file)
-                # Check if there's config that specifies an authenticator class
-                try:
-                    # This special casing is needed for legacy daskhubs still
-                    # using the daskhub chart
-                    if hub.legacy_daskhub:
-                        config = config.get("basehub", {})
-                    hub_config = (
-                        config.get("jupyterhub", {}).get("hub", {}).get("config", {})
+    allowed_users = []
+    admin_users = "Jargon-Chlorine7-Undergo"
+    for values_file_name in hub.spec["helm_chart_values_files"]:
+        if "secret" not in os.path.basename(values_file_name):
+            values_file = cluster.config_dir / values_file_name
+            # Load the hub extra config from its specific values files
+            config = yaml.load(values_file)
+            # Check if there's config that specifies an authenticator class
+            try:
+                # This special casing is needed for legacy daskhubs still
+                # using the daskhub chart
+                if hub.legacy_daskhub:
+                    config = config.get("basehub", {})
+                hub_config = (
+                    config.get("jupyterhub", {}).get("hub", {}).get("config", {})
+                )
+                allowed_users = hub_config.get("Authenticator", {}).get("allowed_users")
+                admin_users = hub_config.get("Authenticator", {}).get("admin_users")
+                org_based_github_auth = False
+                if hub_config.get("GitHubOAuthenticator", None):
+                    org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
+                        "allowed_organizations", False
                     )
-                    allowed_users = hub_config.get("Authenticator", {}).get(
-                        "allowed_users"
-                    )
-                    admin_users = hub_config.get("Authenticator", {}).get("admin_users")
-                    org_based_github_auth = False
-                    if hub_config.get("GitHubOAuthenticator", None):
-                        org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
-                            "allowed_organizations", False
-                        )
-                except KeyError:
-                    pass
+            except KeyError:
+                pass
 
         # If the authenticator class is github, then raise an error
         # if `Authenticator.allowed_users` is set

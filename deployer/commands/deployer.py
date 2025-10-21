@@ -18,9 +18,6 @@ from deployer.commands.validate.config import (
     authenticator_config as validate_authenticator_config,
 )
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
-from deployer.commands.validate.config import (
-    get_list_of_hubs_to_operate_on,
-)
 from deployer.commands.validate.config import hub_config as validate_hub_config
 from deployer.commands.validate.config import support_config as validate_support_config
 from deployer.infra_components.cluster import Cluster
@@ -117,22 +114,36 @@ def deploy(
     """
     Deploy one or more hubs in a given cluster
     """
+
+    print_colour(f"Validating cluster configuration for {cluster_name}...")
     validate_cluster_config(cluster_name)
+    cluster = Cluster.from_name(cluster_name)
+    with cluster.auth():
+        if hub_name:
+            hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
+        else:
+            hubs = cluster.hubs
+        for i, hub in enumerate(hubs):
+            chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
+            chart_override = hub.spec.get("chart_override", None)
+            chart_override_path = (
+                hub.cluster.config_dir / chart_override if chart_override else None
+            )
 
-    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
-    for i, hub in enumerate(hubs):
-        chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
-        chart_override = hub.spec.get("chart_override", None)
-        chart_override_path = (
-            hub.cluster.config_dir / chart_override if chart_override else None
-        )
+            with custom_chart(chart_dir, chart_override_path) as chart_dir:
+                print_colour(
+                    f"{i + 1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
+                )
+                validate_hub_config(cluster_name, hub.spec["name"], skip_refresh)
+                print_colour(
+                    f"{i + 1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
+                )
+                validate_authenticator_config(cluster_name, hub.spec["name"])
 
-        with custom_chart(chart_dir, chart_override_path) as chart_dir:
-            validate_hub_config(cluster_name, hub.spec["name"], skip_refresh)
-            validate_authenticator_config(cluster_name, hub.spec["name"])
-
-            f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
-            hub.deploy(dask_gateway_version, debug, dry_run)
+                print_colour(
+                    f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
+                )
+                hub.deploy(dask_gateway_version, debug, dry_run)
 
 
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
