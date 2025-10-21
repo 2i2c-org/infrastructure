@@ -4,9 +4,10 @@ Actions available when deploying many JupyterHubs to many Kubernetes clusters
 
 import base64
 import os
+import shutil
 import subprocess
 import sys
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import contextmanager, redirect_stderr, redirect_stdout
 
 import pytest
 import typer
@@ -17,10 +18,14 @@ from deployer.commands.validate.config import (
     authenticator_config as validate_authenticator_config,
 )
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
+from deployer.commands.validate.config import (
+    get_list_of_hubs_to_operate_on,
+)
 from deployer.commands.validate.config import hub_config as validate_hub_config
 from deployer.commands.validate.config import support_config as validate_support_config
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
+    HELM_CHARTS_DIR,
     get_decrypted_file,
 )
 from deployer.utils.rendering import print_colour
@@ -68,6 +73,21 @@ def deploy_support(
             )
 
 
+@contextmanager
+def custom_chart(chart_dir, chart_override_path):
+    try:
+        if chart_override_path:
+            chart_yaml = chart_dir / "Chart.yaml"
+            temp_default_chart_copy = chart_dir / "Chart-copy.yaml"
+
+            shutil.copy2(chart_yaml, temp_default_chart_copy)
+            shutil.copy2(chart_override_path, chart_yaml)
+        yield chart_dir
+    finally:
+        if chart_override_path:
+            os.replace(temp_default_chart_copy, chart_yaml)
+
+
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
@@ -98,23 +118,21 @@ def deploy(
     Deploy one or more hubs in a given cluster
     """
     validate_cluster_config(cluster_name)
-    validate_hub_config(cluster_name, hub_name, skip_refresh)
-    validate_authenticator_config(cluster_name, hub_name)
 
-    cluster = Cluster.from_name(cluster_name)
+    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
+    for i, hub in enumerate(hubs):
+        chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
+        chart_override = hub.spec.get("chart_override", None)
+        chart_override_path = (
+            hub.cluster.config_dir / chart_override if chart_override else None
+        )
 
-    with cluster.auth():
-        hubs = cluster.hubs
-        if hub_name:
-            hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
-            print_colour(f"Deploying hub {hub.spec['name']}...")
+        with custom_chart(chart_dir, chart_override_path) as chart_dir:
+            validate_hub_config(cluster_name, hub.spec["name"], skip_refresh)
+            validate_authenticator_config(cluster_name, hub.spec["name"])
+
+            f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
             hub.deploy(dask_gateway_version, debug, dry_run)
-        else:
-            for i, hub in enumerate(hubs):
-                print_colour(
-                    f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
-                )
-                hub.deploy(dask_gateway_version, debug, dry_run)
 
 
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
