@@ -178,6 +178,7 @@
     },
     extraTags={
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': std.toString(gpuCount),
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': gpuType,
     },
 
     extraTaints=[
