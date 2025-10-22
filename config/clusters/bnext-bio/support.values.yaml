@@ -1,8 +1,6 @@
 prometheusIngressAuthSecret:
   enabled: true
 
-
-
 prometheus:
   server:
     persistentVolume:
@@ -33,7 +31,6 @@ grafana:
     - secretName: grafana-tls
       hosts:
       - grafana.bnext-bio.2i2c.cloud
-
 
 cluster-autoscaler:
   enabled: true
