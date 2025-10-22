@@ -78,9 +78,9 @@ def aws(
     cluster_region: str = typer.Option(
         ..., prompt="The region where to deploy the cluster"
     ),
-    account_id: str = typer.Option(
+    account_id: int = typer.Option(
         ...,
-        prompt="The AWS account id (12 digits) or alias. Declare 2i2c for 2i2c's SSO based accounts and paid_by_us=true",
+        prompt="The AWS account id (12 digits)",
     ),
     paid_by_us: bool = typer.Option(
         ...,

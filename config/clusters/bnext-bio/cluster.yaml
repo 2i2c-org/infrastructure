@@ -2,7 +2,7 @@ name: bnext-bio
 provider: aws
 provider_url: https://2i2c.awsapps.com/start#/
 aws:
-  account: 2i2c
+  account: 882437028641
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: bnext-bio
