@@ -1,7 +1,7 @@
 nfs:
-  enabled: false
+  enabled: true
   pv:
-    enabled: false
+    enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
     - rsize=1048576
@@ -45,7 +45,7 @@ jupyterhub:
       GitHubOAuthenticator:
         allowed_organizations:
         - 2i2c-org:hub-access-for-2i2c-staff
-        - nucleus-eng
+        - nucleus-eng:hub-access
       Authenticator:
         admin_users:
         - antonjs

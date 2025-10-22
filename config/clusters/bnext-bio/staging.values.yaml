@@ -1,6 +1,6 @@
-# nfs:
-#   pv:
-#     serverIP: 10.100.89.64
+nfs:
+  pv:
+    serverIP: 10.100.228.215
 
 userServiceAccount:
   annotations:
@@ -25,13 +25,13 @@ jupyterhub:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23lizUFFploLuj2hse
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/bnext-staging-github-push-access
 
-# jupyterhub-home-nfs:
-#   eks:
-#     volumeId: vol-018ab2eba48b7d895
-#   quotaEnforcer:
-#     config:
-#       QuotaManager:
-#         hard_quota: 1 # in GiB
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-09363d84917d28027
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 1 # in GiB
 
 binderhub-service:
   config:
