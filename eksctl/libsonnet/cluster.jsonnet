@@ -72,6 +72,7 @@ local escapeName(name) = std.strReplace(name, '.', '-');
       enabled: true,
     },
     labels: {
+      'node.kubernetes.io/instance-type': instanceType,
       '2i2c/node-group-generation': generation,
     } + extraLabels,
     taints: extraTaints,
