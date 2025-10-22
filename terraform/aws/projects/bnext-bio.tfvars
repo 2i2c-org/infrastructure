@@ -1,15 +1,6 @@
-/*
- Some of the assumptions this jinja2 template makes about the cluster:
-   - location of the nodes of the kubernetes cluster will be <region>a
-   - no default scratch buckets support
-*/
 region                 = "us-west-2"
 cluster_name           = "bnext-bio"
 cluster_nodes_location = "us-west-2a"
-
-# Tip: uncomment and verify any missing info in the lines below if you want
-#       to setup scratch buckets for the hubs on this cluster.
-#
 
 ebs_volumes = {
   "staging" = {
@@ -21,38 +12,40 @@ ebs_volumes = {
   "prod" = {
     name_suffix = "prod",
     type        = "gp3",
-    size        = 10,
+    size        = 100,
     tags        = { "2i2c:hub-name" : "prod" },
   },
 
 }
 enable_nfs_backup = true
 
+user_buckets = {
+  "scratch-staging" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" },
+  },
+  "scratch" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "prod" },
+  }
+  "persistent-staging" : {
+    "delete_after" : null,
+    "tags" : { "2i2c:hub-name" : "staging" },
 
-# "scratch-staging" : {
-#   "delete_after" : 7,
-#   "tags" : { "2i2c:hub-name" : "staging" },
-# },
+  },
+  "persistent" : {
+    "delete_after" : null,
+    "tags" : { "2i2c:hub-name" : "prod" },
+  }
+}
 
-# "scratch-prod" : {
-#   "delete_after" : 7,
-#   "tags" : { "2i2c:hub-name" : "prod" },
-# },
+hub_cloud_permissions = {
+  "staging" : {
+    bucket_admin_access : ["scratch-staging", "persistent-staging"],
+  },
+  "prod" : {
+    bucket_admin_access : ["scratch", "persistent"],
+  }
+}
 
-
-# Tip: uncomment and verify any missing info in the lines below if you want
-#       to setup specific cloud permissions for the buckets in this cluster.
-#
-# hub_cloud_permissions = {
-
-#  "staging" : {
-#    bucket_admin_access : ["scratch-staging"],
-#  },
-
-#  "prod" : {
-#    bucket_admin_access : ["scratch-prod"],
-#  },
-
-
-# Uncomment to enable cost monitoring
-# enable_jupyterhub_cost_monitoring = true
+enable_jupyterhub_cost_monitoring = true
