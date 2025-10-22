@@ -165,7 +165,7 @@ You can generate these with:
 ```bash
 export CLUSTER_NAME=<cluster-name>
 export CLUSTER_REGION=<cluster-region-like ca-central-1>
-export ACCOUNT_ID=<declare 2i2c for clusters under 2i2c SSO, otherwise an account id or alias>
+export ACCOUNT_ID=<the 12 digit aws account id>
 ```
 
 ```bash
