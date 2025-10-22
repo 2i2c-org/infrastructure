@@ -23,11 +23,12 @@ ebs_volumes = {
 }
 enable_nfs_backup = true
 
+#user_buckets = {
 {% for hub in hubs %}
-# "scratch-{{ hub }}" : {
-#   "delete_after" : 7,
-#   "tags" : { "2i2c:hub-name" : "{{ hub }}" },
-# },
+#   "scratch-{{ hub }}" : {
+#     "delete_after" : 7,
+#     "tags" : { "2i2c:hub-name" : "{{ hub }}" },
+#   },
 {% endfor %}
 
 # Tip: uncomment and verify any missing info in the lines below if you want
