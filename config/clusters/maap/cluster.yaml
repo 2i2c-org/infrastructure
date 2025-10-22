@@ -16,7 +16,7 @@ support:
 hubs:
 - name: staging
   display_name: MAAP - staging
-  domain: uat.hub.maap-project.org
+  domain: staging.hub.maap-project.org
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml

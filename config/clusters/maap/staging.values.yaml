@@ -195,7 +195,7 @@ jupyterhub:
       Authenticator:
         admin_users: []
       GenericOAuthenticator:
-        oauth_callback_url: https://uat.hub.maap-project.org/hub/oauth_callback
+        oauth_callback_url: https://staging.hub.maap-project.org/hub/oauth_callback
         token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/auth
         # We want to get user data from the JWT that's the id token,
@@ -270,9 +270,9 @@ jupyterhub:
           }
         }
   ingress:
-    hosts: [uat.hub.maap-project.org]
+    hosts: [staging.hub.maap-project.org]
     tls:
-    - hosts: [uat.hub.maap-project.org]
+    - hosts: [staging.hub.maap-project.org]
       secretName: https-auto-tls
 
 dask-gateway:

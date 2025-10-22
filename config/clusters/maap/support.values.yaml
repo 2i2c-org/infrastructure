@@ -39,6 +39,6 @@ calico:
 redirects:
   rules:
     - from: staging.hub.maap.2i2c.cloud
-      to: uat.hub.maap-project.org
+      to: staging.hub.maap-project.org
     - from: hub.maap.2i2c.cloud
       to: hub.maap-project.org
