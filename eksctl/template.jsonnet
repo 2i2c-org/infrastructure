@@ -4,7 +4,7 @@ local c = cluster.makeCluster(
   name='<< cluster_name >>',
   region='<< cluster_region >>',
   nodeAz='<< cluster_region >>a',
-  version='1.33',
+  version='1.34',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     'r5.xlarge',
