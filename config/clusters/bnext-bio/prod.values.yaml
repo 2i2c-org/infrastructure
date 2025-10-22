@@ -1,6 +1,6 @@
-# nfs:
-#   pv:
-#     serverIP: 10.100.89.64
+nfs:
+  pv:
+    serverIP: 10.100.10.116
 
 userServiceAccount:
   annotations:
