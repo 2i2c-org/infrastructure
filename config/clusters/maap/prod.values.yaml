@@ -13,11 +13,11 @@ jupyterhub:
   hub:
     config:
       GitHubOAuthenticator:
-        oauth_callback_url: https://hub.maap.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://hub.maap-project.org/hub/oauth_callback
   ingress:
-    hosts: [hub.maap.2i2c.cloud]
+    hosts: [hub.maap-project.org]
     tls:
-    - hosts: [hub.maap.2i2c.cloud]
+    - hosts: [hub.maap-project.org]
       secretName: https-auto-tls
 
 dask-gateway:
