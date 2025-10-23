@@ -222,8 +222,12 @@ Now you're ready to create the cluster!
 Make sure to run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
 ```
 
+```{note}
+The `--install-nvidia-plugin=false` flag is only required whilst https://github.com/eksctl-io/eksctl/issues/8550 remains unfixed and unreleased.
+```
+
 ```bash
-eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml --install-nvidia-plugin=false 
 ```
 
 This might take a few minutes.
