@@ -183,6 +183,7 @@ local escapeName(name) = std.strReplace(name, '.', '-');
     extraTags={
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': std.toString(gpuCount),
       'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': gpuType,
+      OPT_OUT_TRACKING: 'true',
     },
 
     extraTaints=[
@@ -392,7 +393,7 @@ local escapeName(name) = std.strReplace(name, '.', '-');
     overrides={}
   ):: clusterConfig {
     managedNodeGroups: [
-      if (kind == null || ng._kind == kind) && (generation == null || ng._generation == generation) && (hubName == null || std.get(ng, '_hubName', '') == hubName) && (instanceType == null || ng.instanceType == instanceType)
+      if (kind == null || ng._kind == kind) && (generation == null || ng._generation == generation) && (hubName == null || std.get(ng, '_hubName', '') == hubName) && (instanceType == null || (if std.objectHas(ng, 'instanceType') then ng.instanceType == instanceType else std.contains(ng.instanceTypes, instanceType)))
       then ng + overrides
       else ng
       for ng in clusterConfig.managedNodeGroups
