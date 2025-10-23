@@ -189,7 +189,7 @@ jupyterhub:
               slug: bnext-nucleus
               kubespawner_override:
                 image: quay.io/2i2c/bnext-nucleus-image:1002ebd7f334
-            
+
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
