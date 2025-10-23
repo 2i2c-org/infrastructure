@@ -86,7 +86,7 @@ jupyterhub:
               display_name: B.next Nucleus
               slug: bnext-nucleus
               kubespawner_override:
-                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329 
+                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329
             jupyter-scipy:
               display_name: Jupyter SciPy
               slug: jupyter-scipy
@@ -159,7 +159,7 @@ jupyterhub:
       - 2i2c-org:hub-access-for-2i2c-staff
       profile_options:
         image:
-          display_name: Environment
+          display_name: Image
           dynamic_image_building:
             enabled: true
           unlisted_choice:
@@ -167,6 +167,8 @@ jupyterhub:
             display_name: Custom image
             validation_regex: ^.+:.+$
             validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
             kubespawner_override:
               image: '{value}'
           choices:
@@ -182,6 +184,12 @@ jupyterhub:
               slug: tensorflow2
               kubespawner_override:
                 image: quay.io/pangeo/ml-notebook:2024.11.11
+            bnext-nucleus:
+              display_name: B.next Nucleus
+              slug: bnext-nucleus
+              kubespawner_override:
+                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329
+
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
