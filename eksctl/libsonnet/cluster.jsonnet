@@ -188,6 +188,14 @@
         effect: 'NoSchedule',
       },
     ]
+  ) + (
+    // Turn off fabric on GPU nodes, as they are not nvswitch devices
+    if gpuType == 'nvidia-tesla-t4' then {
+      preBootstrapCommands: [
+        'systemctl disable --now nvidia-fabricmanager.service || true',
+        'systemctl mask nvidia-fabricmanager.service || true',
+      ],
+    } else {}
   ),
   makeDaskNodeGroup(
     clusterName,
