@@ -80,8 +80,17 @@ properties:
     additionalProperties: false
     required:
       - azure
+      - aws
     properties:
       azure:
+        type: object
+        additionalProperties: false
+        required:
+          - enabled
+        properties:
+          enabled:
+            type: boolean
+      aws:
         type: object
         additionalProperties: false
         required:
