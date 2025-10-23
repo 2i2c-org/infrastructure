@@ -86,7 +86,7 @@ jupyterhub:
               display_name: B.next Nucleus
               slug: bnext-nucleus
               kubespawner_override:
-                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329
+                image: quay.io/2i2c/bnext-nucleus-image:1002ebd7f334
             jupyter-scipy:
               display_name: Jupyter SciPy
               slug: jupyter-scipy
@@ -180,15 +180,15 @@ jupyterhub:
                 image: quay.io/pangeo/pytorch-notebook:2024.11.11
             tensorflow2:
               display_name: Pangeo Tensorflow2 ML Notebook
-              default: true
               slug: tensorflow2
               kubespawner_override:
                 image: quay.io/pangeo/ml-notebook:2024.11.11
             bnext-nucleus:
               display_name: B.next Nucleus
+              default: true
               slug: bnext-nucleus
               kubespawner_override:
-                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329
+                image: quay.io/2i2c/bnext-nucleus-image:1002ebd7f334
 
       kubespawner_override:
         environment:
