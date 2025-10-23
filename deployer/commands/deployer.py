@@ -12,7 +12,10 @@ import pytest
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import app
+from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
+from deployer.commands.validate.config import (
+    authenticator_config as validate_authenticator_config,
+)
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.commands.validate.config import hub_config as validate_hub_config
 from deployer.commands.validate.config import support_config as validate_support_config
@@ -26,41 +29,7 @@ from deployer.utils.rendering import print_colour
 yaml = YAML(typ="safe", pure=True)
 
 
-@app.command()
-def use_cluster_credentials(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    commandline: str = typer.Argument(
-        "",
-        help="Optional shell command line to run after authenticating to this cluster",
-    ),
-):
-    """
-    Pop a new shell or execute a command after authenticating to the given cluster using the deployer's credentials
-    """
-    # This function is to be used with the `use-cluster-credentials` CLI
-    # command only - it is not used by the rest of the deployer codebase.
-    validate_cluster_config(cluster_name)
-
-    cluster = Cluster.from_name(cluster_name)
-
-    # Cluster.auth() method has the context manager decorator so cannot call
-    # it like a normal function
-    with cluster.auth():
-        # This command will spawn a new shell with all the env vars (including
-        # KUBECONFIG) inherited, and once you quit that shell the python program
-        # will resume as usual.
-        # TODO: Figure out how to change the PS1 env var of the spawned shell
-        # to change the prompt to f"cluster-{cluster.spec['name']}". This will
-        # make it visually clear that the user is now operating in a different
-        # shell.
-        args = [os.environ["SHELL"], "-l"]
-        # If a command to execute is specified, just execute that and exit.
-        if commandline:
-            args += ["-c", commandline]
-        subprocess.check_call(args)
-
-
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy_support(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     # cert-manager versions at https://cert-manager.io/docs/release-notes/,
@@ -76,6 +45,11 @@ def deploy_support(
         "--debug",
         help="When present, the `--debug` flag will be passed to the `helm upgrade` command.",
     ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="When present, the `--dry-run` flag will be passed to the `helm upgrade` command.",
+    ),
 ):
     """
     Deploy support components to a cluster
@@ -88,11 +62,13 @@ def deploy_support(
     if cluster.support:
         with cluster.auth():
             cluster.deploy_support(
-                cert_manager_version=cert_manager_version, debug=debug
+                cert_manager_version=cert_manager_version,
+                debug=debug,
+                dry_run=dry_run,
             )
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
@@ -123,6 +99,7 @@ def deploy(
     """
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name, skip_refresh)
+    validate_authenticator_config(cluster_name, hub_name)
 
     cluster = Cluster.from_name(cluster_name)
 
@@ -135,12 +112,12 @@ def deploy(
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
-                    f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
+                    f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
                 hub.deploy(dask_gateway_version, debug, dry_run)
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def run_hub_health_check(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
@@ -168,31 +145,7 @@ def run_hub_health_check(
         sys.exit(1)
 
     # Skip the regular hub health check for hubs with binderhub ui that are not authenticated
-    for values_file_name in hub.spec["helm_chart_values_files"]:
-        if not any(
-            substr in os.path.basename(values_file_name)
-            for substr in ["secret", "common"]
-        ):
-            values_file = cluster.config_dir / values_file_name
-            config = yaml.load(values_file)
-            basehub = config.get("basehub", {})
-            if basehub:
-                config = config.get("basehub", {})
-            binderhub_ui = (
-                config.get("jupyterhub", {})
-                .get("custom", {})
-                .get("binderhubUI", {})
-                .get("enabled")
-            )
-            authentication = (
-                config.get("jupyterhub", {})
-                .get("hub", {})
-                .get("config", {})
-                .get("JupyterHub", {})
-                .get("authenticator_class", "")
-            )
-
-    if binderhub_ui and authentication == "null":
+    if hub.binderhub_ui and hub.authenticator == "null":
         print_colour(
             f"Testing {hub.spec['name']} is not yet supported. Skipping ...",
             "yellow",
@@ -214,7 +167,7 @@ def run_hub_health_check(
         hub.spec["domain"] = domain_override_config["domain"]
 
     # Retrieve hub's URL
-    hub_url = f'https://{hub.spec["domain"]}'
+    hub_url = f"https://{hub.spec['domain']}"
 
     # Read in the service api token from a k8s Secret in the k8s cluster
     with cluster.auth():
@@ -250,26 +203,7 @@ def run_hub_health_check(
         f"--hub-type={hub.spec['helm_chart']}",
     ]
 
-    for values_file in hub.spec["helm_chart_values_files"]:
-        if "secret" not in os.path.basename(values_file):
-            values_file = cluster.config_dir / values_file
-            config = yaml.load(values_file)
-            # Check if there's config that enables dask-gateway
-            if config.get("basehub", {}):
-                dask_gateway_enabled = (
-                    config.get("basehub", {})
-                    .get("dask-gateway", {})
-                    .get("enabled", False)
-                )
-            else:
-                dask_gateway_enabled = config.get("dask-gateway", {}).get(
-                    "enabled", False
-                )
-
-            if dask_gateway_enabled:
-                break
-
-    if dask_gateway_enabled and check_dask_scaling:
+    if hub.type == "daskhub" and check_dask_scaling:
         pytest_args.append("--check-dask-scaling")
 
     if gh_ci == "true":

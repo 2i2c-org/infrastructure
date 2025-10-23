@@ -65,10 +65,6 @@ def _prepare_helm_charts_dependencies_and_schemas():
     _generate_values_schema_json(support_dir)
     subprocess.check_call(["helm", "dep", "up", support_dir])
 
-    aws_ce_grafana_backend = HELM_CHARTS_DIR.joinpath("aws-ce-grafana-backend")
-    _generate_values_schema_json(aws_ce_grafana_backend)
-    subprocess.check_call(["helm", "dep", "up", aws_ce_grafana_backend])
-
 
 def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
     cluster = Cluster.from_name(cluster_name)
@@ -93,8 +89,14 @@ def cluster_config(
 
     with open(cluster_schema_file) as sf:
         schema = yaml.load(sf)
-        # Raises useful exception if validation fails
-        jsonschema.validate(cluster.spec, schema)
+        try:
+            jsonschema.validate(cluster.spec, schema)
+        except jsonschema.ValidationError as e:
+            print_colour(
+                f"JSON schema validation error in cluster.yaml for {cluster_name}: {e.message}",
+                colour="red",
+            )
+            sys.exit(1)
 
 
 @validate_app.command()
@@ -217,10 +219,9 @@ def authenticator_config(
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
 ):
     """
-    For each hub of a specific cluster:
-     - It asserts that when the JupyterHub GitHubOAuthenticator is used,
-       then `Authenticator.allowed_users` is not set.
-       An error is raised otherwise.
+    For each hub of a specific cluster it asserts that:
+    - when the JupyterHub GitHubOAuthenticator is used, then allowed_users is not set
+    - when the dummy authenticator is used, then admin_users is the empty list
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
@@ -233,8 +234,8 @@ def authenticator_config(
             f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
         )
 
-        authenticator_class = ""
         allowed_users = []
+        admin_users = "Jargon-Chlorine7-Undergo"
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
                 values_file = cluster.config_dir / values_file_name
@@ -244,15 +245,15 @@ def authenticator_config(
                 try:
                     # This special casing is needed for legacy daskhubs still
                     # using the daskhub chart
-                    if hub.spec["helm_chart"] != "basehub":
-                        hub_config = config["basehub"]["jupyterhub"]["hub"]["config"]
-                    else:
-                        hub_config = config["jupyterhub"]["hub"]["config"]
-
-                    authenticator_class = hub_config["JupyterHub"][
-                        "authenticator_class"
-                    ]
-                    allowed_users = hub_config["Authenticator"]["allowed_users"]
+                    if hub.legacy_daskhub:
+                        config = config.get("basehub", {})
+                    hub_config = (
+                        config.get("jupyterhub", {}).get("hub", {}).get("config", {})
+                    )
+                    allowed_users = hub_config.get("Authenticator", {}).get(
+                        "allowed_users"
+                    )
+                    admin_users = hub_config.get("Authenticator", {}).get("admin_users")
                     org_based_github_auth = False
                     if hub_config.get("GitHubOAuthenticator", None):
                         org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
@@ -263,79 +264,18 @@ def authenticator_config(
 
         # If the authenticator class is github, then raise an error
         # if `Authenticator.allowed_users` is set
-        if authenticator_class == "github" and allowed_users and org_based_github_auth:
+        if hub.authenticator == "github" and allowed_users and org_based_github_auth:
             raise ValueError(
                 f"""
                     Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
                     being used for auth so valid members are not refused access.
                 """
             )
-
-
-@validate_app.command()
-def configurator_config(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
-):
-    """
-    For each hub of a specific cluster:
-     - It asserts that when the singleuser configuration overrides the same fields like the configurator, specifically kubespawner_override and profile_options,
-       the latter must be disabled.
-       An error is raised otherwise.
-    """
-    _prepare_helm_charts_dependencies_and_schemas()
-
-    cluster = Cluster.from_name(cluster_name)
-
-    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
-
-    for i, hub in enumerate(hubs):
-        print_colour(
-            f"{i+1} / {len(hubs)}: Validating configurator and profile lists config for {hub.spec['name']}..."
-        )
-
-        configurator_enabled = False
-        singleuser_overrides = False
-        for values_file_name in hub.spec["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(values_file_name):
-                values_file = cluster.config_dir / values_file_name
-                # Load the hub extra config from its specific values files
-                config = yaml.load(values_file)
-                try:
-                    # This special casing is needed for legacy daskhubs still
-                    # using the daskhub chart
-                    if hub.spec["helm_chart"] != "basehub":
-                        singleuser_config = config["basehub"]["jupyterhub"][
-                            "singleuser"
-                        ]
-                        custom_config = config["basehub"]["jupyterhub"]["custom"]
-                    else:
-                        singleuser_config = config["jupyterhub"]["singleuser"]
-                        custom_config = config["jupyterhub"]["custom"]
-                    configurator_enabled = custom_config.get(
-                        "jupyterhubConfigurator", {}
-                    ).get("enabled")
-                    # If it's already disabled we don't have what to check
-                    if configurator_enabled:
-                        profiles = singleuser_config.get("profileList", None)
-                        if profiles:
-                            for p in profiles:
-                                overrides = p.get("kubespawner_override", None)
-                                if overrides and overrides.get("image", None):
-                                    singleuser_overrides = True
-                                    break
-                                options = p.get("profile_options", None)
-                                if options and "image" in options:
-                                    singleuser_overrides = True
-                                    break
-                except KeyError:
-                    pass
-
-        if configurator_enabled == True and singleuser_overrides == True:
+        elif hub.authenticator == "dummy" and admin_users != []:
             raise ValueError(
                 f"""
-                    When the singleuser configuration overrides the same fields like the configurator,
-                    the later must be disabled. Please disable the configurator for {hub.spec['name']}.
+                    For security reasons, please unset `Authenticator.admin_users` for {hub.spec['name']} when the dummy authenticator is
+                    being used for authentication.
                 """
             )
 

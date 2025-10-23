@@ -1,0 +1,60 @@
+basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.130.27
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: false
+      homepage:
+        # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
+        # is merged
+        gitRepoBranch: unify-logins-2
+      singleuserAdmin:
+        extraVolumeMounts: []
+    ingress:
+      hosts: [workshop.openscapes.2i2c.cloud]
+      tls:
+      - hosts: [workshop.openscapes.2i2c.cloud]
+        secretName: https-auto-tls
+    hub:
+      allowNamedServers: true
+      config:
+        JupyterHub:
+          authenticator_class: dummy
+        Authenticator:
+          enable_auth_state: false
+          manage_groups: false
+          admin_users: []
+    singleuser:
+      storage:
+        extraVolumeMounts:
+          # A shared folder readable & writeable by everyone
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+      nodeSelector:
+        2i2c/hub-name: workshop
+      extraEnv:
+        SCRATCH_BUCKET: s3://openscapeshub-scratch-workshop/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: s3://openscapeshub-persistent-workshop/$(JUPYTERHUB_USER)
+
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: workshop
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: workshop
+  jupyterhub-home-nfs:
+    quotaEnforcer:
+      config:
+        QuotaManager:
+          hard_quota: 10 # in GiB
+    eks:
+      volumeId: vol-072fbfa88f513edb7

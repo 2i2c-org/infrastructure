@@ -1,0 +1,36 @@
+nfs:
+  pv:
+    serverIP: 10.100.17.128
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB
+  eks:
+    volumeId: vol-0b5fc915293bd5bec
+jupyterhub:
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://advanced.temple.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    extraEnv:
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23liL9VT25MVvo3RYq
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-advanced-github-push-access
+    nodeSelector:
+      2i2c/hub-name: prod
+  ingress:
+    hosts: [advanced.temple.2i2c.cloud]
+    tls:
+    - hosts: [advanced.temple.2i2c.cloud]
+      secretName: https-auto-tls
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: prod
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: prod
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-prod-

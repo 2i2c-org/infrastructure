@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.99.243.170
+      serverIP: storage-quota-home-nfs.prod.svc.cluster.local
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: awi-ciroh-prod@ciroh-jupyterhub-423218.iam.gserviceaccount.com
@@ -9,7 +9,9 @@ basehub:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
-      hardQuota: '250' # in GB
+      config:
+        QuotaManager:
+          hard_quota: 40 # in GiB
   jupyterhub:
     ingress:
       hosts: [ciroh.awi.2i2c.cloud]
@@ -56,7 +58,7 @@ basehub:
                 default: true
                 slug: new
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:44784e65e9a1
+                  image: quay.io/2i2c/awi-ciroh-image:091bf802ad3d
               rkernel:
                 display_name: Notebook with R and Python kernel
                 slug: rkernel
@@ -108,7 +110,7 @@ basehub:
                 display_name: NextGen National Water Model(NWM)
                 slug: devcon7
                 kubespawner_override:
-                  image: quay.io/fbaig25/ngiab-2i2c:v1.0.0
+                  image: quay.io/fbaig25/ngiab-2i2c:v1.1.0
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G

@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.14.113
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/victor-prod
@@ -13,6 +16,13 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: prod
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-0aa2e34864c248eb2
+    quotaEnforcer:
+      config:
+        QuotaManager:
+          hard_quota: 20 # in GiB
   jupyterhub:
     ingress:
       hosts: [hub.victorproject.org]
@@ -41,7 +51,7 @@ basehub:
                 display_name: Victor Notebook
                 default: true
                 kubespawner_override:
-                  image: quay.io/volcanocyber/victor-notebook:4a4884b1dffb
+                  image: quay.io/volcanocyber/victor-notebook:343c0be363bb
               b-pytorch-notebook:
                 display_name: Pangeo ML Notebook (Pytorch)
                 kubespawner_override:

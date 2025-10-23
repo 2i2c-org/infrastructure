@@ -52,6 +52,7 @@ variable "hub_cloud_permissions" {
       bucket_admin_access : optional(set(string), [])
       bucket_readonly_access : optional(set(string), [])
       extra_iam_policy : optional(string, "")
+      max_session_duration : optional(number, 3600)
     })
   )
   default     = {}
@@ -199,6 +200,23 @@ variable "default_budget_alert" {
   EOT
 }
 
+variable "budget_alerts" {
+  type = map(object({
+    time_period : string,
+    emails : list(string),
+    max_cost : number
+  }))
+  default     = {}
+  description = <<-EOT
+  Budget Alerts to set up
+
+  Each value of the map can contain:
+  1. `time_period` - One of "MONTHLY", "ANNUALLY", "QUARTERLY" or "DAILY"
+  2. `emails` - List of emails to send the alert to
+  3. `max_cost` - Maximum cost budgeted. We will receive alerts for 20%, 40%, 60%, 80%, 90%, 100% and 110% of this amount
+  EOT
+}
+
 variable "disable_cluster_wide_filestore" {
   default     = true
   type        = bool
@@ -245,52 +263,13 @@ variable "filestores" {
   EOT
 }
 
-variable "active_cost_allocation_tags" {
-  type    = list(string)
-  default = []
-
-  description = <<-EOT
-  Tags to be treated as active cost allocation tags.
-
-  Without permissions on the billing account, we get the following
-  error if we try to use this:
-
-      Failed to update Cost Allocation Tag:
-      Linked account doesn't have access to cost allocation tags.
-
-  Due to that, we don't provide a default value here, but if we could,
-  we would want to activate at least the following that are relevant
-  to cost attribution currently as piloted by the openscapes cluster:
-
-  - 2i2c:hub-name
-  - 2i2c.org/cluster-name
-  - alpha.eksctl.io/cluster-name
-  - kubernetes.io/cluster/{var_cluster_name}
-
-  Cost allocation tags can only be activated after sufficient amount of
-  time has passed since resources was tagged, so expect a few hours or
-  up to 24 hours in order you can activate them without running into
-  this error:
-
-      Failed to update Cost Allocation Tag:
-      Tag keys not found: 2i2c.org/cluster-name
-  EOT
-}
-
-variable "enable_aws_ce_grafana_backend_iam" {
-  type        = bool
-  default     = false
-  description = <<-EOT
-  Create an IAM role with attached policy to permit read use of AWS Cost Explorer API.
-  EOT
-}
-
 variable "ebs_volumes" {
   type = map(object({
     size        = number
     type        = string
     name_suffix = optional(string, null)
     tags        = optional(map(string), {})
+    iops        = optional(number, 3000)
   }))
   default     = {}
   description = <<-EOT
@@ -301,11 +280,19 @@ variable "ebs_volumes" {
   EOT
 }
 
-variable "enable_nfs_backup" {
+variable "enable_jupyterhub_cost_monitoring" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Create an IAM role to read AWS Cost Explorer API.
+  EOT
+}
+
+variable "enable_jupyterhub_cost_tags" {
   type        = bool
   default     = false
   description = <<-EOT
-  Enable backup of NFS home directories on EBS using Data Lifecycle Manager (DLM).
+  Activate cost allocation tags with the AWS Cost Explorer API.
   EOT
 }
 
@@ -316,4 +303,12 @@ variable "enable_efs_backup" {
   Enable backup of EFS home directories
   EOT
 
+}
+
+variable "enable_nfs_backup" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Enable backup of NFS home directories on EBS using Data Lifecycle Manager (DLM).
+  EOT
 }

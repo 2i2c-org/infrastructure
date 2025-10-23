@@ -35,7 +35,7 @@ More information on these terms can be found in [](cloud-access:aws).
 7. AWS will send an email to freshdesk about this new account, opening a new ticket. Close
    the ticket in freshdesk to keep our support queue clean.
 
-8. Once the new account is created, visit the [AWS accounts section of the IAM Identity Center](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/organization/accounts)
+8. While still logged in to the `2i2c-sandbox` management account, go to the [AWS accounts section of the IAM Identity Center](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/organization/accounts)
 
 9. To add the new account to our SSO:
    * Select the checkbox next to the new account and then click the "Assign users or groups" button

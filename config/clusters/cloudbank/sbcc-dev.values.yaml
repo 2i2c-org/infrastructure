@@ -4,6 +4,16 @@ jupyterhub:
     tls:
     - hosts: [sbcc-dev.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 2G
+    defaultUrl: /lab
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 79e7ee67211e
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -66,3 +76,9 @@ jupyterhub:
         - ericvd@gmail.com
         - sean.smorris@berkeley.edu
         - nfguebels@pipeline.sbcc.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-sbcc-dev
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.sbcc-dev.svc.cluster.local

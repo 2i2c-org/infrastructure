@@ -30,14 +30,17 @@ local notebookNodes = [
   { instanceType: 'r5.16xlarge' },
   {
     instanceType: 'g4dn.xlarge',
+    minSize: 0,
     tags+: {
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     taints+: {
       'nvidia.com/gpu': 'present:NoSchedule',
     },
-    labels: {
+    labels+: {
       '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
     },
     // Allow provisioning GPUs across all AZs, to prevent situation where all
     // GPUs in a single AZ are in use and no new nodes can be spawned
@@ -83,9 +86,6 @@ local daskNodes = [];
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -103,10 +103,16 @@ local daskNodes = [];
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs~
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
@@ -143,6 +149,9 @@ local daskNodes = [];
             'hub.jupyter.org_dedicated': 'user:NoSchedule',
             'hub.jupyter.org/dedicated': 'user:NoSchedule',
           },
+          tags+: {
+            '2i2c:node-purpose': 'user',
+          },
         } + n
         for n in notebookNodes
       ] + (
@@ -159,6 +168,9 @@ local daskNodes = [];
               taints+: {
                 'k8s.dask.org_dedicated': 'worker:NoSchedule',
                 'k8s.dask.org/dedicated': 'worker:NoSchedule',
+              },
+              tags+: {
+                '2i2c:node-purpose': 'worker',
               },
               instancesDistribution+: {
                 onDemandBaseCapacity: 0,

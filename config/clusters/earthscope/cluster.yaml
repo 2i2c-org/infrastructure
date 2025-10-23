@@ -1,6 +1,8 @@
 name: earthscope
-provider: aws # https://762698921361.signin.aws.amazon.com/console
+provider: aws
+provider_url: https://762698921361.signin.aws.amazon.com/console
 aws:
+  account: 762698921361
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: earthscope
@@ -30,7 +32,7 @@ hubs:
   - enc-prod.secret.values.yaml
 - name: binder
   display_name: EarthScope Binder
-  domain: hub.binder.earthscope.2i2c.cloud
+  domain: hub.binder.geolab.earthscope.cloud
   helm_chart: daskhub
   helm_chart_values_files:
   - common.values.yaml

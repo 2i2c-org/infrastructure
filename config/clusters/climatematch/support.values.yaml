@@ -17,6 +17,11 @@ prometheus:
       - secretName: prometheus-tls
         hosts:
         - prometheus.climatematch.2i2c.cloud
+    resources:
+      requests:
+        memory: 6Gi
+      limits:
+        memory: 6Gi
 
 grafana:
   grafana.ini:

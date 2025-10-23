@@ -25,7 +25,7 @@ local nodeAz = 'af-south-1a';
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-  // staging hub
+  // staging
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -50,7 +50,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'staging' },
     tags+: { '2i2c:hub-name': 'staging' },
   },
-  // nm-aist hub
+  // nm-aist
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -75,7 +75,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'nm-aist' },
     tags+: { '2i2c:hub-name': 'nm-aist' },
   },
-  // must hub
+  // must
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -100,7 +100,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'must' },
     tags+: { '2i2c:hub-name': 'must' },
   },
-  // uvri hub
+  // uvri
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -125,7 +125,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'uvri' },
     tags+: { '2i2c:hub-name': 'uvri' },
   },
-  // wits hub
+  // wits
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -150,7 +150,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'wits' },
     tags+: { '2i2c:hub-name': 'wits' },
   },
-  // kush hub
+  // kush
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -175,7 +175,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'kush' },
     tags+: { '2i2c:hub-name': 'kush' },
   },
-  // molerhealth hub
+  // molerhealth
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -200,7 +200,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'molerhealth' },
     tags+: { '2i2c:hub-name': 'molerhealth' },
   },
-  // aibst hub
+  // aibst
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -225,7 +225,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'aibst' },
     tags+: { '2i2c:hub-name': 'aibst' },
   },
-  // bhki hub
+  // bhki
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -250,7 +250,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'bhki' },
     tags+: { '2i2c:hub-name': 'bhki' },
   },
-  // bon hub
+  // bon
   {
     instanceType: 'r5.xlarge',
     volumeSize: 400,
@@ -276,6 +276,7 @@ local notebookNodes = [
     tags+: { '2i2c:hub-name': 'bon' },
   },
 ];
+
 local daskNodes = [];
 
 
@@ -315,9 +316,6 @@ local daskNodes = [];
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -335,10 +333,16 @@ local daskNodes = [];
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
@@ -359,7 +363,9 @@ local daskNodes = [];
             'hub.jupyter.org/node-purpose': 'core',
             'k8s.dask.org/node-purpose': 'core',
           },
-          tags+: { '2i2c:node-purpose': 'core' },
+          tags+: {
+            '2i2c:node-purpose': 'core',
+          },
         },
       ] + [
         ng {
@@ -372,10 +378,12 @@ local daskNodes = [];
             'hub.jupyter.org/node-purpose': 'user',
             'k8s.dask.org/node-purpose': 'scheduler',
           },
-          tags+: { '2i2c:node-purpose': 'user' },
           taints+: {
             'hub.jupyter.org_dedicated': 'user:NoSchedule',
             'hub.jupyter.org/dedicated': 'user:NoSchedule',
+          },
+          tags+: {
+            '2i2c:node-purpose': 'user',
           },
         } + n
         for n in notebookNodes
@@ -393,6 +401,9 @@ local daskNodes = [];
               taints+: {
                 'k8s.dask.org_dedicated': 'worker:NoSchedule',
                 'k8s.dask.org/dedicated': 'worker:NoSchedule',
+              },
+              tags+: {
+                '2i2c:node-purpose': 'worker',
               },
               instancesDistribution+: {
                 onDemandBaseCapacity: 0,

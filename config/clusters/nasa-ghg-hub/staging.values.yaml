@@ -1,0 +1,55 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::597746869805:role/nasa-ghg-hub-staging
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: staging
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: staging
+
+  jupyterhub:
+    ingress:
+      hosts: [staging.ghg.2i2c.cloud]
+      tls:
+      - hosts: [staging.ghg.2i2c.cloud]
+        secretName: https-auto-tls
+    custom:
+      homepage:
+        gitRepoBranch: staging
+        gitRepoUrl: https://github.com/US-GHG-Center/ghgc-hub-homepage
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://staging.ghg.2i2c.cloud/hub/oauth_callback
+    singleuser:
+      nodeSelector:
+        2i2c/hub-name: staging
+
+  binderhub-service:
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: staging
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          2i2c/hub-name: staging
+      BinderHub:
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-staging-
+
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-01889854859d8768d
+    quotaEnforcer:
+      config:
+        QuotaManager:
+          hard_quota: 1 # in GiB
+  nfs:
+    pv:
+      serverIP: 10.100.52.143

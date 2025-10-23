@@ -1,5 +1,6 @@
 name: 2i2c-uk
-provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/europe-west2/two-eye-two-see-uk-cluster/nodes?project=two-eye-two-see-uk
+provider: gcp
+provider_url: https://console.cloud.google.com/kubernetes/clusters/details/europe-west2/two-eye-two-see-uk-cluster/nodes?project=two-eye-two-see-uk
 gcp:
   key: enc-deployer-credentials.secret.json
   project: two-eye-two-see-uk

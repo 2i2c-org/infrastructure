@@ -25,7 +25,7 @@ local nodeAz = 'us-west-2a';
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-  // staging hub
+  // staging
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-staging',
@@ -44,7 +44,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'staging' },
     tags+: { '2i2c:hub-name': 'staging' },
   },
-  // sciencecore hub
+  // sciencecore
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-sciencecore',
@@ -63,7 +63,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'sciencecore' },
     tags+: { '2i2c:hub-name': 'sciencecore' },
   },
-  // climaterisk hub
+  // climaterisk
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-climaterisk',
@@ -82,7 +82,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'climaterisk' },
     tags+: { '2i2c:hub-name': 'climaterisk' },
   },
-  // small-binder hub
+  // small-binder
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-small-binder',
@@ -101,7 +101,7 @@ local notebookNodes = [
     labels+: { '2i2c/hub-name': 'small-binder' },
     tags+: { '2i2c:hub-name': 'small-binder' },
   },
-  // big-binder hub
+  // big-binder
   {
     instanceType: 'r5.xlarge',
     namePrefix: 'nb-big-binder',
@@ -121,6 +121,7 @@ local notebookNodes = [
     tags+: { '2i2c:hub-name': 'big-binder' },
   },
 ];
+
 local daskNodes = [
   // Node definitions for dask worker nodes. Config here is merged
   // with our dask worker node definition, which uses spot instances.
@@ -132,30 +133,6 @@ local daskNodes = [
   // A not yet fully established policy is being developed about using a single
   // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
   //
-  {
-    namePrefix: 'dask-staging',
-    labels+: { '2i2c/hub-name': 'staging' },
-    tags+: { '2i2c:hub-name': 'staging' },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
-  },
-  {
-    namePrefix: 'dask-sciencecore',
-    labels+: { '2i2c/hub-name': 'sciencecore' },
-    tags+: { '2i2c:hub-name': 'sciencecore' },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
-  },
-  {
-    namePrefix: 'dask-climaterisk',
-    labels+: { '2i2c/hub-name': 'climaterisk' },
-    tags+: { '2i2c:hub-name': 'climaterisk' },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
-  },
-  {
-    namePrefix: 'dask-small-binder',
-    labels+: { '2i2c/hub-name': 'small-binder' },
-    tags+: { '2i2c:hub-name': 'small-binder' },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
-  },
   {
     namePrefix: 'dask-big-binder',
     labels+: { '2i2c/hub-name': 'big-binder' },
@@ -201,9 +178,6 @@ local daskNodes = [
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -221,10 +195,16 @@ local daskNodes = [
           wellKnownPolicies: {
             ebsCSIController: true,
           },
+          // We enable detailed metrics collection to watch for issues with
+          // jupyterhub-home-nfs
           // configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]
@@ -245,7 +225,9 @@ local daskNodes = [
             'hub.jupyter.org/node-purpose': 'core',
             'k8s.dask.org/node-purpose': 'core',
           },
-          tags+: { '2i2c:node-purpose': 'core' },
+          tags+: {
+            '2i2c:node-purpose': 'core',
+          },
         },
       ] + [
         ng {
@@ -258,10 +240,12 @@ local daskNodes = [
             'hub.jupyter.org/node-purpose': 'user',
             'k8s.dask.org/node-purpose': 'scheduler',
           },
-          tags+: { '2i2c:node-purpose': 'user' },
           taints+: {
             'hub.jupyter.org_dedicated': 'user:NoSchedule',
             'hub.jupyter.org/dedicated': 'user:NoSchedule',
+          },
+          tags+: {
+            '2i2c:node-purpose': 'user',
           },
         } + n
         for n in notebookNodes
@@ -276,12 +260,12 @@ local daskNodes = [
               labels+: {
                 'k8s.dask.org/node-purpose': 'worker',
               },
-              tags+: {
-                '2i2c:node-purpose': 'worker',
-              },
               taints+: {
                 'k8s.dask.org_dedicated': 'worker:NoSchedule',
                 'k8s.dask.org/dedicated': 'worker:NoSchedule',
+              },
+              tags+: {
+                '2i2c:node-purpose': 'worker',
               },
               instancesDistribution+: {
                 onDemandBaseCapacity: 0,

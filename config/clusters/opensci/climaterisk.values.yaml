@@ -1,12 +1,13 @@
 nfs:
   pv:
-    serverIP: 10.100.112.193
-
+    serverIP: 10.100.26.155
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-03d03c8c473d83e5d
   quotaEnforcer:
-    hardQuota: '10' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB
 jupyterhub:
   ingress:
     hosts: [climaterisk.opensci.2i2c.cloud]
@@ -36,14 +37,17 @@ jupyterhub:
       extraVolumeMounts: []
   hub:
     config:
-      jupyterHub:
+      JupyterHub:
         authenticator_class: dummy
+      Authenticator:
+        admin_users: []
   singleuser:
-    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FScienceCore%2Fclimaterisk&urlpath=lab%2Ftree%2Fclimaterisk%2Fbook%2F00_Introduction_Setup%2F00_Getting_NASA_EarthData_Credentials.ipynb&branch=notebooks
+    defaultUrl: /lab/tree/climaterisk/book/Startup.ipynb
     image:
       name: quay.io/2i2c/sciencecore-climaterisk-image
-      tag: 09c3a11f1698
+      tag: 08ac55553c5e
     extraEnv:
+      R2D_ENTRYPOINT: /home/jovyan/climaterisk/start
       GH_SCOPED_CREDS_CLIENT_ID: Iv23lijUItbe0FgDL5Dr
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/climaterisk-gh-scoped-creds
     nodeSelector:
@@ -56,18 +60,22 @@ jupyterhub:
       guarantee: 1.8625
       limit: 3.725
     initContainers:
-    - name: volume-mount-ownership-fix
-      image: busybox:1.36.1
-      command:
-      - sh
-      - -c
-      - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
-      securityContext:
-        runAsUser: 0
+    - name: jupyterhub-gitpuller-init
+      image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+      env:
+      - name: TARGET_PATH
+        value: climaterisk
+      - name: SOURCE_REPO
+        value: https://github.com/ScienceCore/climaterisk
+      - name: SOURCE_BRANCH
+        value: notebooks
       volumeMounts:
       - name: home
         mountPath: /home/jovyan
         subPath: '{escaped_username}'
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
     storage:
       extraVolumeMounts: []
 dask-gateway:

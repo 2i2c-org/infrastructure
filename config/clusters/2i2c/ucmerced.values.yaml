@@ -6,15 +6,34 @@ jupyterhub:
     - secretName: https-auto-tls
       hosts:
       - ucmerced.2i2c.cloud
+  prePuller:
+    continuous:
+      enabled: true
+  scheduling:
+    userPlaceholder:
+      # Keep at least half of a spare node around
+      replicas: 1
+      resources:
+        requests:
+          memory: 32Gi
   singleuser:
+    nodeSelector:
+      # Schedule on dedicated n2-highmem-8
+      node.kubernetes.io/instance-type: n2-highmem-8
+      2i2c.org/hub-name: ucmerced
+    extraTolerations:
+    - key: 2i2c.org/hub-name
+      operator: Equal
+      value: ucmerced
+      effect: NoSchedule
     profileList:
     - display_name: Python
       description: Start a Python server with JupyterLab and scientific Python stack
       default: true
       kubespawner_override:
           # From https://github.com/SaiUCM/example-inherit-from-community-image
-        image: quay.io/cirt_ucm/jupyter-scipy-xarray:ee81c09169f2
-          # Launch into JupyterLab after the user logs in
+        image: quay.io/cirt_ucm/jupyter-scipy-xarray:1e26b42ad87b
+            # Launch into JupyterLab after the user logs in
         default_url: /lab
       profile_options: &profile_options
         requests:
@@ -37,8 +56,8 @@ jupyterhub:
           # From https://github.com/2i2c-org/rocker-with-nbgitpuller
         image: quay.io/2i2c/rocker-with-nbgitpuller:3edc87d73e3d
         default_url: /lab
-          # Ensures container working dir is homedir
-          # https://github.com/2i2c-org/infrastructure/issues/2559
+            # Ensures container working dir is homedir
+            # https://github.com/2i2c-org/infrastructure/issues/2559
         working_dir: /home/rstudio
       profile_options: *profile_options
   hub:
@@ -49,7 +68,9 @@ jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-ucmerced
   quotaEnforcer:
-    hardQuota: '20' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB
 nfs:
   pv:
-    serverIP: 10.3.252.119
+    serverIP: storage-quota-home-nfs.ucmerced.svc.cluster.local

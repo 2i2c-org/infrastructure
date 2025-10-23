@@ -44,6 +44,18 @@ basehub:
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0eb31cae0bd3ee261
+    quotaEnforcer:
+      config:
+        QuotaManager:
+          hard_quota: 1 # in GiB
   nfs:
     pv:
-      serverIP: 10.100.217.166
+      serverIP: 10.100.240.119
+  binderhub-service:
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: staging
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          2i2c/hub-name: staging

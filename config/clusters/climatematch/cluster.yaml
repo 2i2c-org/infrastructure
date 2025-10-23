@@ -1,5 +1,6 @@
 name: climatematch
-provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/climatematch-cluster/observability?project=climatematch
+provider: gcp
+provider_url: https://console.cloud.google.com/kubernetes/clusters/details/us-central1/climatematch-cluster/observability?project=climatematch
 gcp:
   key: enc-deployer-credentials.secret.json
   project: climatematch

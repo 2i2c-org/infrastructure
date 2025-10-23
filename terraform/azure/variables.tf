@@ -63,7 +63,7 @@ variable "kubernetes_version" {
 
 variable "k8s_version_prefixes" {
   type        = set(string)
-  default     = ["1.29", "1.30", "1."]
+  default     = ["1.30", "1.31", "1.32", "1.33", "1."]
   description = <<-EOT
   A list of k8s version prefixes that can be evaluated to their latest version by
   the output defined in cluster.tf called latest_supported_k8s_versions.
@@ -181,14 +181,6 @@ variable "storage_size" {
   Size (in GB) of the storage to provision.
 
   Minimum is 100
-  EOT
-}
-
-variable "fileshare_alert_available_fraction" {
-  type        = number
-  default     = 0.9
-  description = <<-EOT
-  Decimal fraction (between 0 and 1) of total space available in fileshare. If used space is over this, we fire an alert to pagerduty.
   EOT
 }
 

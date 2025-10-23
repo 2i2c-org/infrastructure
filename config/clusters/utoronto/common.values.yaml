@@ -43,6 +43,20 @@ jupyterhub:
           name: University of Toronto
           url: https://www.utoronto.ca/
   singleuser:
+    initContainers:
+      # We still need it here in utoronto, because they are on Azure and not using home-nfs
+    - name: volume-mount-ownership-fix
+      image: busybox:1.36.1
+      command:
+      - sh
+      - -c
+      - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
     cpu:
       # Each node has about 8 CPUs total, and if we limit users to no more than
       # 4, no single user can take down a full node by themselves. We have to
@@ -53,6 +67,9 @@ jupyterhub:
     memory:
       limit: 2G
       guarantee: 1G
+    extraEnv:
+      # In case the Git binary is not under the typical prefix
+      GIT_CONFIG: /etc/gitconfig
     extraFiles:
       github-app-private-key.pem:
         mountPath: /etc/github/github-app-private-key.pem

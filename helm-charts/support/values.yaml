@@ -233,12 +233,9 @@ grafana:
   assertNoLeakedSecrets: false
 
   persistence:
-    # A PVC is used to enable Grafana to store auth details and dashboard
-    # definitions.
     enabled: true
-    # size could probably be smaller as not much space should be required, but
-    # the chart default of 10Gi has made it a bit tricky to reduce it
-    # retroactively.
+    # The upstream default is 10Gi, and we can't resize it down for existing
+    # clusters. New clusters should have 1Gi
     size: 10Gi
   deploymentStrategy:
     # type Recreate is required since we attach a PVC that can only be used by
@@ -267,7 +264,7 @@ grafana:
   #
   # Grafana's memory use seems to increase over time but seems reasonable to
   # stay below 200Mi in general. Memory can peak when dashboards are updated,
-  # and was increased to 400Mi as its been seen getting OOMKilled. Grafana's CPU
+  # and was increased to 800Mi as its been seen getting OOMKilled. Grafana's CPU
   # use seems minuscule with peaks at up to 9m CPU from one user is browsing its
   # dashboards.
   #
@@ -278,7 +275,7 @@ grafana:
   resources:
     limits:
       cpu: 100m
-      memory: 400Mi
+      memory: 800Mi
     requests:
       cpu: 10m
       memory: 200Mi
@@ -426,12 +423,21 @@ cryptnono:
           memory: 16Mi
           cpu: 1m
 
-# aws-ce-grafana-backend exposes AWS Cost Explorer API info to Grafana
+# jupyterhub-cost-monitoring, cost reporting for Grafana
+# https://github.com/2i2c-org/jupyterhub-cost-monitoring
+
+# values ref: https://github.com/2i2c-org/jupyterhub-cost-monitoring/blob/main/helm/jupyterhub-cost-monitoring/values.yaml
 #
-# values ref: https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/aws-ce-grafana-backend/values.yaml
-#
-aws-ce-grafana-backend:
+
+jupyterhub-cost-monitoring:
   enabled: false
+  resources:
+  limits:
+    cpu: 800m
+    memory: 500Gi
+  requests:
+    cpu: 5m
+    memory: 100Mi
 
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------

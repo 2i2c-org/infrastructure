@@ -6,7 +6,7 @@ jupyterhub:
       secretName: https-auto-tls
   scheduling:
     userPlaceholder:
-      # Keep at least one spare node around
+      # Keep at least two spare nodes around
       replicas: 2
       resources:
         requests:

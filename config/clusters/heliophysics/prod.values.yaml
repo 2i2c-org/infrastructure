@@ -1,0 +1,25 @@
+nfs:
+  pv:
+    serverIP: 10.100.220.55
+
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::965872589083:role/heliophysics-prod
+
+jupyterhub:
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: prod
+  ingress:
+    hosts: [heliophysics.2i2c.cloud]
+    tls:
+    - hosts: [heliophysics.2i2c.cloud]
+      secretName: https-auto-tls
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-08b5d4964b0347330
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

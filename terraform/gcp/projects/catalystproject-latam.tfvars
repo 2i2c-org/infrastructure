@@ -12,13 +12,59 @@ k8s_versions = {
   notebook_nodes_version : "1.32.1-gke.1357001",
 }
 
-enable_filestore_backups = true
-filestores = {
-  "filestore_b" = {
-    name_suffix = "b",
-    capacity_gb = 2304 # 2.25TiB
+persistent_disks = {
+  "areciboc3" = {
+    size        = 1 # in GiB
+    name_suffix = "areciboc3"
+  },
+  "cabana" = {
+    size        = 2 # in GiB
+    name_suffix = "cabana"
+  },
+  "cicada" = {
+    size        = 90 # in GiB
+    name_suffix = "cicada"
+  },
+  "gita" = {
+    size        = 1 # in GiB
+    name_suffix = "gita"
+  },
+  "iner" = {
+    size        = 75 # in GiB
+    name_suffix = "iner"
+  },
+  "labi" = {
+    size        = 200 # in GiB
+    name_suffix = "labi"
+  },
+  "nnb-ccg" = {
+    size        = 1 # in GiB
+    name_suffix = "nnb-ccg"
+  },
+  "plnc" = {
+    size        = 1 # in GiB
+    name_suffix = "plnc"
+  },
+  "staging" = {
+    size        = 10 # in GiB
+    name_suffix = "staging"
+  },
+  "unam" = {
+    size        = 950 # in GiB
+    name_suffix = "unam"
   }
+  "unitefa-conicet" = {
+    size        = 28 # in GiB
+    name_suffix = "unitefa-conicet"
+  },
+  "valledellili" = {
+    size        = 1 # in GiB
+    name_suffix = "valledellili"
+  },
 }
+
+enable_filestore_backups = true
+filestores               = {}
 
 core_node_machine_type = "n2-highmem-2"
 
@@ -40,7 +86,7 @@ notebook_nodes = {
   },
   "gpu-t4-highmem-4" : {
     min : 0,
-    max : 20,
+    max : 50,
     machine_type : "n1-highmem-4",
     gpu : {
       enabled : true,

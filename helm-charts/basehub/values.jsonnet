@@ -1,4 +1,4 @@
-local hub_name = std.extVar('2I2C_VARS.HUB_NAME');
+local hub_name = std.extVar('VARS_2I2C_HUB_NAME');
 
 // Assume we are a staging hub if the word 'staging' is in the
 // name of the hub.
@@ -13,20 +13,19 @@ local emitDaskHubCompatibleConfig(basehubConfig) =
   if isDaskHub then { basehub: basehubConfig } else basehubConfig;
 
 local jupyterhubHomeNFSResources = {
-  quotaEnforcer: {
-    path: '/export/%s' % hub_name,
+  quotaEnforcer+: {
     resources: {
       requests: {
-        cpu: 0.02,
-        memory: '20M',
+        cpu: 0.2,
+        memory: '750M',
       },
       limits: {
-        cpu: 0.04,
-        memory: '30M',
+        cpu: 0.4,
+        memory: '1G',
       },
     },
   },
-  nfsServer: {
+  nfsServer+: {
     resources: {
       requests: {
         cpu: 0.2,
@@ -38,7 +37,7 @@ local jupyterhubHomeNFSResources = {
       },
     },
   },
-  prometheusExporter: {
+  prometheusExporter+: {
     resources: {
       requests: {
         cpu: 0.02,
@@ -50,8 +49,49 @@ local jupyterhubHomeNFSResources = {
       },
     },
   },
+  autoResizer+: {
+    resources: {
+      requests: {
+        cpu: 0.01,
+        memory: '64Mi',
+      },
+      limits: {
+        memory: '1Gi',
+      },
+    },
+  },
+};
+
+local jupyterhubHomeNFSConfig = {
+  quotaEnforcer+: {
+    config: {
+      QuotaManager: {
+        paths: ['/export/%s' % hub_name],
+        hard_quota: 0,
+        projects_file: '/export/%s/.projects' % hub_name,
+        projid_file: '/export/%s/.projid' % hub_name,
+        log_level: 'INFO',
+      },
+    },
+  },
+} + if is_staging then {} else jupyterhubHomeNFSResources;
+
+local jupyterhubGroupsExporterResources = {
+  // Memory resources chosen by querying PromQL "max(container_memory_working_set_bytes{name!='', pod=~'.*groups-exporter.*'})" over all hubs
+  // CPU resources chosen by querying PromQL "max(irate(container_cpu_usage_seconds_total{name!='', pod=~'.*groups-exporter.*'}[5m]))" over all hubs
+  resources: {
+    requests: {
+      cpu: 0.01,
+      memory: '128Mi',
+    },
+    limits: {
+      cpu: 0.1,
+      memory: '256Mi',
+    },
+  },
 };
 
 emitDaskHubCompatibleConfig({
-  'jupyterhub-home-nfs': if is_staging then {} else jupyterhubHomeNFSResources,
+  'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
+  'jupyterhub-groups-exporter': jupyterhubGroupsExporterResources,
 })

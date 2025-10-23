@@ -1,0 +1,34 @@
+nfs:
+  pv:
+    serverIP: 10.100.221.209
+jupyterhub:
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
+  ingress:
+    hosts: [staging.neurohackademy.2i2c.cloud]
+    tls:
+    - hosts: [staging.neurohackademy.2i2c.cloud]
+      secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.neurohackademy.2i2c.cloud/hub/oauth_callback
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: staging
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: staging
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/neurohackademy-staging-
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0971ad91e7e4e270f
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 1 # in GiB

@@ -1,0 +1,172 @@
+nfs:
+  pv:
+    serverIP: 10.100.55.222
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB
+  eks:
+    volumeId: vol-0b5fc915293bd5bec
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: github
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://research.temple.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - TempleDataCompute:administrator
+        scope:
+        - read:org
+      Authenticator:
+        admin_users:
+        - laserchemist
+  singleuser:
+    extraEnv:
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23li8mGZjoYxOom3Gv
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-research-github-push-access
+      SCRATCH_BUCKET: s3://temple-scratch-research/$(JUPYTERHUB_USER)
+    nodeSelector:
+      2i2c/hub-name: research
+    profileList:
+    - display_name: Default
+      description: Choose image and resource allocation
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            01-datascience:
+              display_name: Data Science
+              slug: data-science-profile
+              default: true
+              kubespawner_override:
+                image: docker.io/laserchemist/datascience:v13
+            02-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              slug: pangeo-profile
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2025.08.14
+            03-rocker:
+              display_name: Rocker Geospatial with RStudio
+              description: R environment with many geospatial libraries pre-installed
+              slug: rocker-profile
+              kubespawner_override:
+                image: rocker/binder:4.4
+                image_pull_policy: Always
+                  # Launch RStudio after the user logs in
+                default_url: /rstudio
+                  # Ensures container working dir is homedir
+                  # https://github.com/2i2c-org/infrastructure/issues/2559
+                working_dir: /home/rstudio
+        requests:
+          display_name: Resource Allocation
+          choices:
+            mem_4_gb:
+              display_name: ~4 GB RAM, ~0.5 CPUs
+              description: Up to ~4 CPUs when available
+              default: true
+              kubespawner_override:
+                mem_guarantee: 3902839759
+                mem_limit: 3902839759
+                cpu_guarantee: 0.4563125
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7805679519
+                mem_limit: 7805679519
+                cpu_guarantee: 0.912625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_15_gb:
+              display_name: ~15 GB RAM, ~1.8 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 15611359038
+                mem_limit: 15611359038
+                cpu_guarantee: 1.82525
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_gb:
+              display_name: ~29 GB RAM, ~4 CPUs
+              description: ~4 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 31222718077
+                mem_limit: 31222718077
+                cpu_guarantee: 3.6505
+                cpu_limit: 3.6505
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a container on a dedicated node with a GPU
+      slug: gpu
+      allowed_groups:
+      - 2i2c-org:hub-access-for-2i2c-staff
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pytorch:
+              display_name: Pangeo PyTorch ML Notebook
+              default: false
+              slug: pytorch
+              kubespawner_override:
+                image: quay.io/pangeo/pytorch-notebook:2025.08.14
+            tensorflow2:
+              display_name: Pangeo Tensorflow2 ML Notebook
+              default: true
+              slug: tensorflow2
+              kubespawner_override:
+                image: quay.io/pangeo/ml-notebook:2025.08.14
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
+  ingress:
+    hosts: [research.temple.2i2c.cloud]
+    tls:
+    - hosts: [research.temple.2i2c.cloud]
+      secretName: https-auto-tls
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: research
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: research
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-research-

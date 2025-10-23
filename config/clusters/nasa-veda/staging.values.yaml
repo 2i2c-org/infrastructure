@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.88.130
+      serverIP: 10.100.63.222
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
@@ -9,28 +9,9 @@ basehub:
     singleuser:
       nodeSelector:
         2i2c/hub-name: staging
-      initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-        - sh
-        - -c
-        - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-        - name: home
-          mountPath: /home/jovyan
-          subPath: '{escaped_username}'
-            # Mounted without readonly attribute here,
-            # so we can chown it appropriately
-        - name: home
-          mountPath: /home/jovyan/shared
-          subPath: _shared
-        - name: home
-          mountPath: /home/jovyan/shared-public
-          subPath: _shared-public
     hub:
+      image:
+        tag: 0.0.1-0.dev.git.13134.hb8ed00131
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
@@ -72,4 +53,6 @@ basehub:
     eks:
       volumeId: vol-0a1246ee2e07372d0
     quotaEnforcer:
-      hardQuota: '10' # in GB
+      config:
+        QuotaManager:
+          hard_quota: 10 # in GiB

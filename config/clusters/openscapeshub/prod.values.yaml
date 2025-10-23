@@ -1,0 +1,44 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-prod
+  jupyterhub:
+    ingress:
+      hosts: [openscapes.2i2c.cloud]
+      tls:
+      - hosts: [openscapes.2i2c.cloud]
+        secretName: https-auto-tls
+    singleuser:
+      nodeSelector:
+        2i2c/hub-name: prod
+      extraEnv:
+        SCRATCH_BUCKET: s3://openscapeshub-scratch/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: s3://openscapeshub-persistent/$(JUPYTERHUB_USER)
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://openscapes.2i2c.cloud/hub/oauth_callback
+        CILogonOAuthenticator:
+          oauth_callback_url: https://openscapes.2i2c.cloud/hub/oauth_callback
+
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: prod
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: prod
+  jupyterhub-home-nfs:
+    quotaEnforcer:
+      config:
+        QuotaManager:
+          hard_quota: 30 # in GiB
+    eks:
+      volumeId: vol-0cddd71981a7ff6ba
+  nfs:
+    pv:
+      serverIP: 10.100.200.56

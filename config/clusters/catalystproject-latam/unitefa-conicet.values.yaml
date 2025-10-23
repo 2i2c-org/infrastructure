@@ -4,6 +4,11 @@ jupyterhub:
     tls:
     - hosts: [unitefa-conicet.latam.catalystproject.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    image:
+      name: quay.io/alfredoquevedo/hub-environment
+      tag: latest
+    defaultUrl: /lab
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -36,5 +41,13 @@ jupyterhub:
         admin_users:
         - aquevedo@unc.edu.ar
         - nicolasw@famaf.unc.edu.ar
-jupyterhub-groups-exporter:
-  enabled: false
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-unitefa-conicet
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.unitefa-conicet.svc.cluster.local

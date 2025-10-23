@@ -96,6 +96,48 @@ local notebookNodes = [
       'earthscope:application:owner': 'research-onramp-to-the-cloud',
     },
   },
+  {
+    instanceType: 'g4dn.xlarge',
+    namePrefix: 'gpu-staging',
+    minSize: 0,
+    labels+: {
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+      '2i2c/hub-name': 'staging',
+      '2i2c/has-gpu': 'true',
+    },
+    tags+: {
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      '2i2c:hub-name': 'staging',
+    },
+    taints+: {
+      'nvidia.com/gpu': 'present:NoSchedule',
+    },
+    // Allow provisioning GPUs across all AZs, to prevent situation where all
+    // GPUs in a single AZ are in use and no new nodes can be spawned
+    availabilityZones: masterAzs,
+  },
+  {
+    instanceType: 'g4dn.xlarge',
+    namePrefix: 'gpu-prod',
+    minSize: 0,
+    labels+: {
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+      '2i2c/hub-name': 'prod',
+      '2i2c/has-gpu': 'true',
+    },
+    tags+: {
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      '2i2c:hub-name': 'prod',
+    },
+    taints+: {
+      'nvidia.com/gpu': 'present:NoSchedule',
+    },
+    // Allow provisioning GPUs across all AZs, to prevent situation where all
+    // GPUs in a single AZ are in use and no new nodes can be spawned
+    availabilityZones: masterAzs,
+  },
 ];
 local daskNodes = [
   // Node definitions for dask worker nodes. Config here is merged
@@ -116,7 +158,7 @@ local daskNodes = [
       'earthscope:application:name': 'geolab',
       'earthscope:application:owner': 'research-onramp-to-the-cloud',
     },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
+    instancesDistribution+: { instanceTypes: ['r5.4xlarge', 'r6i.4xlarge', 'r7i.4xlarge'] },
   },
   {
     namePrefix: 'dask-prod',
@@ -126,7 +168,7 @@ local daskNodes = [
       'earthscope:application:name': 'geolab',
       'earthscope:application:owner': 'research-onramp-to-the-cloud',
     },
-    instancesDistribution+: { instanceTypes: ['r5.4xlarge'] },
+    instancesDistribution+: { instanceTypes: ['r5.4xlarge', 'r6i.4xlarge', 'r7i.4xlarge'] },
   },
 ];
 
@@ -169,9 +211,7 @@ local daskNodes = [
           //
           name: 'vpc-cni',
           attachPolicyARNs: ['arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy'],
-          // FIXME: enabling network policy enforcement didn't work as of
-          //        August 2024, what's wrong isn't clear.
-          //
+          // We use tigera for networkpolicy enforcement
           // configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
           configurationValues: |||
             enableNetworkPolicy: "false"
@@ -193,6 +233,10 @@ local daskNodes = [
           configurationValues: |||
             defaultStorageClass:
                 enabled: true
+            controller:
+                enableMetrics: true
+            node:
+                enableMetrics: true
           |||,
         },
       ]

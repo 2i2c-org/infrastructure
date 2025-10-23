@@ -52,4 +52,4 @@ basehub:
       volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-dask-staging
   nfs:
     pv:
-      serverIP: 10.3.241.233
+      serverIP: storage-quota-home-nfs.dask-staging.svc.cluster.local

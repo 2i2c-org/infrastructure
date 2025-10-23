@@ -1,6 +1,8 @@
 name: nasa-cryo
-provider: aws # https://2i2c.awsapps.com/start#/
+provider: aws
+provider_url: https://2i2c.awsapps.com/start#/
 aws:
+  account: 574251165169
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: nasa-cryo
@@ -18,6 +20,7 @@ hubs:
   helm_chart: daskhub
   helm_chart_values_files:
   - common.values.yaml
+  - enc-common.secret.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
@@ -26,5 +29,6 @@ hubs:
   helm_chart: daskhub
   helm_chart_values_files:
   - common.values.yaml
+  - enc-common.secret.values.yaml
   - prod.values.yaml
   - enc-prod.secret.values.yaml

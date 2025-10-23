@@ -5,8 +5,7 @@ nfs:
     mountOptions:
     - soft
     - noatime
-    serverIP: 10.103.254.0
-    baseShareName: /
+    serverIP: storage-quota-home-nfs.staging.svc.cluster.local
 jupyterhub-home-nfs:
   enabled: true
   prometheusExporter:
@@ -15,17 +14,24 @@ jupyterhub-home-nfs:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-staging
   quotaEnforcer:
-    hardQuota: '1' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 1 # in GiB
 jupyterhub:
   ingress:
     hosts: [staging.uk.2i2c.cloud]
     tls:
     - hosts: [staging.uk.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    image:
+      name: pangeo/pangeo-notebook
+      tag: 2023.02.27
+    defaultUrl: /lab
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: github
+      add_staff_user_ids_of_type: google
     homepage:
       templateVars:
         org:

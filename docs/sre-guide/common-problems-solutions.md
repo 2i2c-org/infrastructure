@@ -64,7 +64,7 @@ prometheus:
         memory: {{RAM_LIMIT}}
 ```
 
-The [default for this value is 2GB](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/support/values.yaml#L38).
+The [default for this value is 4GB](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/support/values.yaml#L38).
 Try increasing this value in small increments and deploying using `deployer deploy-support {{CLUSTER_NAME}}` until the server successfully starts up.
 Then make a Pull Request with your updated config.
 

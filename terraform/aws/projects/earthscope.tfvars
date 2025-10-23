@@ -22,16 +22,18 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 1843 # 1.8TiB (rounded from 1843.2)
+    size        = 4096 # 4TiB 
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
   },
 }
+
+enable_jupyterhub_cost_monitoring = true
+
 enable_nfs_backup = true
 
-enable_aws_ce_grafana_backend_iam = true
-disable_cluster_wide_filestore    = true
+disable_cluster_wide_filestore = true
 
 user_buckets = {
   "scratch-staging" : {

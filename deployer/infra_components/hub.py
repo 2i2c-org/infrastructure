@@ -34,6 +34,64 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
+        self.type = "basehub"
+        self.legacy_daskhub = False
+        self.binderhub_ui = False
+        self.imagebuilding = False
+        self.authenticator = False
+        dask_gateway = False
+        daskhub_setup = False
+        binderhub_ui = False
+        binderhub_service = False
+
+        # Check if the hub is using the legacy daskhub helm chart
+        if self.spec["helm_chart"] == "daskhub":
+            self.type = "daskhub"
+            self.legacy_daskhub = True
+        # Go through the values files and check for other characteristics
+        for values_file in self.spec["helm_chart_values_files"]:
+            if "secret" not in values_file:
+                config_filename = self.cluster.config_dir / values_file
+                with open(config_filename) as f:
+                    config = yaml.load(f)
+                    # If its a legacy daskhub, the config will be nested under the "basehub" key
+                    if "daskhub" in self.type:
+                        config = config.get("basehub", {})
+                    else:
+                        if config.get("dask-gateway", {}).get("enabled", False):
+                            dask_gateway = True
+                        if (
+                            config.get("jupyterhub", {})
+                            .get("custom", {})
+                            .get("daskhubSetup", {})
+                            .get("enabled", False)
+                        ):
+                            daskhub_setup = True
+                    if (
+                        config.get("jupyterhub", {})
+                        .get("custom", {})
+                        .get("binderhubUI", {})
+                        .get("enabled", False)
+                    ):
+                        binderhub_ui = True
+                    if config.get("binderhub-service", {}).get("enabled", False):
+                        binderhub_service = True
+                    self.authenticator = (
+                        config.get("jupyterhub", {})
+                        .get("hub", {})
+                        .get("config", {})
+                        .get("JupyterHub", {})
+                        .get("authenticator_class", "")
+                    )
+        if dask_gateway and daskhub_setup:
+            self.type = "daskhub"
+        if binderhub_ui and binderhub_service:
+            self.binderhub_ui = True
+        # If it just has the binderhub-service enabled, but not the binderhub-ui,
+        # then we consider it an imagebuilding hub
+        elif binderhub_service:
+            self.imagebuilding = True
+
     def deploy(self, dask_gateway_version, debug, dry_run):
         """
         Deploy this hub

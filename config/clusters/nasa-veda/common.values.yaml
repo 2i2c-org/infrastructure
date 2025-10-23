@@ -15,7 +15,6 @@ basehub:
       - noresvport
 
       serverIP: fs-08b7410bc122c9d70.efs.us-west-2.amazonaws.com
-      baseShareName: /
   dask-gateway:
     enabled: true
   jupyterhub:
@@ -25,8 +24,25 @@ basehub:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: github
-      jupyterhubConfigurator:
-        enabled: false
+      singleuserAdmin:
+        extraVolumeMounts:
+          # /allusers is an extra mount point for admins to access to all users'
+          # home dirs
+        - name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
+        - name: home
+          mountPath: /home/rstudio/allusers
+          readOnly: false
+          # mounts below are copied from basehub's values that we override by
+          # specifying extraVolumeMounts (lists get overridden when helm values
+          # are combined)
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
+        - name: home
+          mountPath: /home/rstudio/shared-readwrite
+          subPath: _shared
       homepage:
         templateVars:
           org:
@@ -48,9 +64,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
           allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
           - CASI-LIS-Dashboard:dev-veda-jupyterhub
           - veda-analytics-access:all-users
           - veda-analytics-access:collaborator-access
@@ -59,11 +73,7 @@ basehub:
           - Earth-Information-System:eis-fire
           - Earth-Information-System:swot
           - veda-analytics-access:harvard-data-team
-          scope:
-          - read:org
         Authenticator:
-          enable_auth_state: true
-          manage_groups: true
           admin_users:
           - abarciauskas-bgse
           - freitagb
@@ -73,31 +83,6 @@ basehub:
           - slesaad
           - wildintellect
           - amarouane-ABDELHAK
-      services:
-        jupyterhub-groups-exporter: {}
-      loadRoles:
-        jupyterhub-groups-exporter:
-          services:
-          - jupyterhub-groups-exporter
-          scopes:
-          - users
-          - groups
-      extraConfig:
-        custom-github-oauthenticator: |
-          class CustomGitHubOAuthenticator(GitHubOAuthenticator):
-            async def authenticate(self, *args, **kwargs):
-                resp = await super().authenticate(*args, **kwargs)
-                if resp["auth_state"]["teams"] is None:
-                  return resp
-                groups = []
-                for team in resp["auth_state"]["teams"]:
-                  if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
-                    continue
-                  else:
-                    groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
-                resp["groups"] = groups
-                return resp
-          c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
     singleuser:
       cloudMetadata:
         blockWithIptables: false
@@ -105,30 +90,11 @@ basehub:
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: Iv23liG9LZ45xmB20syA
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/veda-hub-github-scoped-creds
-      initContainers:
-      - &volume_ownership_fix_initcontainer
-        name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-        - sh
-        - -c
-        - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-        - name: home
-          mountPath: /home/jovyan
-          subPath: '{escaped_username}'
-            # Mounted without readonly attribute here,
-            # so we can chown it appropriately
-        - name: home
-          mountPath: /home/jovyan/shared
-          subPath: _shared
-        - name: home
-          mountPath: /home/jovyan/shared-public
-          subPath: _shared-public
       storage:
         extraVolumeMounts:
+        - name: home
+          mountPath: /home/rstudio
+          subPath: '{escaped_username}'
         - name: home
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
@@ -139,6 +105,10 @@ basehub:
           readOnly: false
         - name: home
           mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+        - name: home
+          mountPath: /home/rstudio/shared
           subPath: _shared
           readOnly: true
         - name: dev-shm
@@ -164,13 +134,10 @@ basehub:
                 display_name: Modified Pangeo Notebook
                 description: Pangeo based notebook with a Python environment
                 kubespawner_override:
-                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2024.11.11-v1
+                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.08.14-v2
                   init_containers:
-                      # Need to explicitly fix ownership here, as otherwise these directories will be owned
-                      # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
-                  - *volume_ownership_fix_initcontainer
-                      # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-                      # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+                  # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+                  # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
                   - name: jupyterhub-gitpuller-init
                     image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
                     env:
@@ -341,9 +308,3 @@ basehub:
       enabled: true
     prometheusExporter:
       enabled: true
-
-  jupyterhub-groups-exporter:
-    enabled: true
-    config:
-      groupsExporter:
-        update_exporter_interval: 3600

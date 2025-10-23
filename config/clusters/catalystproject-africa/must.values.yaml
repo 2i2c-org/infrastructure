@@ -35,14 +35,12 @@ jupyterhub:
       2i2c/hub-name: must
 jupyterhub-home-nfs:
   quotaEnforcer:
-    # one user has 343G
-    hardQuota: '350' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB
   eks:
     volumeId: vol-0e86b4abbf3083190
 
-jupyterhub-groups-exporter:
-  enabled: false
-
 nfs:
   pv:
-    serverIP: 10.100.179.246
+    serverIP: 10.100.98.165

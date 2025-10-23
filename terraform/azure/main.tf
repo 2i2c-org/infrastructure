@@ -96,7 +96,6 @@ locals {
       "registry" : "https://${azurerm_container_registry.container_registry[0].login_server}"
     }, null)
   }
-  storage_threshold = var.storage_size * var.fileshare_alert_available_fraction
 }
 
 output "registry_creds_config" {

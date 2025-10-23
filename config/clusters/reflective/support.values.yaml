@@ -34,11 +34,3 @@ cluster-autoscaler:
 
 calico:
   enabled: true
-
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: reflective
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/aws_ce_grafana_backend_iam_role

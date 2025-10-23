@@ -2,7 +2,7 @@ region                 = "us-west-2"
 cluster_name           = "reflective"
 cluster_nodes_location = "us-west-2a"
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring = true
 
 enable_efs_backup = false
 enable_nfs_backup = true
@@ -14,7 +14,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 100 # in GB
+    size        = 115 # in GB
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
@@ -46,6 +46,9 @@ user_buckets = {
   "persistent-prod" : {
     "tags" : { "2i2c:hub-name" : "prod" },
   },
+  "persistent-prod-large" : {
+    "tags" : { "2i2c:hub-name" : "prod" },
+  },
   "persistent-workshop" : {
     "tags" : { "2i2c:hub-name" : "workshop" },
   },
@@ -56,7 +59,8 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
   },
   "prod" : {
-    bucket_admin_access : ["scratch-prod", "persistent-prod"],
+    bucket_admin_access : ["scratch-prod", "persistent-prod", "persistent-prod-large"],
+    max_session_duration : 43200 # 12h
   },
   "workshop" : {
     bucket_admin_access : ["scratch-workshop", "persistent-workshop"],

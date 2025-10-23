@@ -2,7 +2,7 @@ region                 = "us-west-2"
 cluster_name           = "nasa-cryo"
 cluster_nodes_location = "us-west-2a"
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring = true
 
 ebs_volumes = {
   "staging" = {
@@ -12,7 +12,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 4750
+    size        = 5300
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }

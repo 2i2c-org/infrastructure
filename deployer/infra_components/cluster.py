@@ -48,19 +48,19 @@ class Cluster:
         self.support = self.spec.get("support", {})
 
     @contextmanager
-    def auth(self):
+    def auth(self, silent=False):
         if self.spec["provider"] == "gcp":
-            yield from self.auth_gcp()
+            yield from self.auth_gcp(silent)
         elif self.spec["provider"] == "aws":
-            yield from self.auth_aws()
+            yield from self.auth_aws(silent)
         elif self.spec["provider"] == "azure":
-            yield from self.auth_azure()
+            yield from self.auth_azure(silent)
         elif self.spec["provider"] == "kubeconfig":
-            yield from self.auth_kubeconfig()
+            yield from self.auth_kubeconfig(silent)
         else:
-            raise ValueError(f'Provider {self.spec["provider"]} not supported')
+            raise ValueError(f"Provider {self.spec['provider']} not supported")
 
-    def deploy_support(self, cert_manager_version, debug):
+    def deploy_support(self, cert_manager_version, debug, dry_run):
         cert_manager_url = "https://charts.jetstack.io"
 
         print_colour("Provisioning cert-manager...")
@@ -171,8 +171,21 @@ class Cluster:
             for values_file in values_files:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
+                    render_args = {
+                        "jsonnet_file": Path(values_file),
+                        "provider": self.spec["provider"],
+                        "cluster_name": (
+                            self.spec["aws"]["clusterName"]
+                            if self.spec["provider"] == "aws"
+                            else self.spec["name"]
+                        ),
+                    }
+                    if self.spec["provider"] == "aws":
+                        render_args["aws_account_id"] = self.spec["aws"]["account"]
+                    else:
+                        render_args["aws_account_id"] = None
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(Path(values_file), self.spec["name"], None)
+                        render_jsonnet(**render_args)
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:
@@ -181,13 +194,16 @@ class Cluster:
             if debug:
                 cmd.append("--debug")
 
+            if dry_run:
+                cmd.append("--dry-run")
+
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             subprocess.check_call(cmd)
 
         wait_for_deployments_daemonsets("support")
         print_colour("Done!")
 
-    def auth_kubeconfig(self):
+    def auth_kubeconfig(self, silent: bool):
         """
         Context manager for authenticating with just a kubeconfig file
 
@@ -206,7 +222,7 @@ class Cluster:
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
 
-    def auth_aws(self):
+    def auth_aws(self, silent: bool):
         """
         Reads `aws` nested config and temporarily sets environment variables
         like `KUBECONFIG`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`
@@ -246,12 +262,14 @@ class Cluster:
                     "update-kubeconfig",
                     f"--name={cluster_name}",
                     f"--region={region}",
-                ]
+                ],
+                stdout=subprocess.DEVNULL if silent else None,
+                stderr=subprocess.DEVNULL if silent else None,
             )
 
             yield
 
-    def auth_azure(self):
+    def auth_azure(self, silent: bool):
         """
         Read `azure` nested config, login to Azure with a Service Principal,
         activate the appropriate subscription, then authenticate against the
@@ -285,7 +303,9 @@ class Cluster:
                     f"--username={service_principal['service_principal_id']}",
                     f"--password={service_principal['service_principal_password']}",
                     f"--tenant={service_principal['tenant_id']}",
-                ]
+                ],
+                stdout=subprocess.DEVNULL if silent else None,
+                stderr=subprocess.DEVNULL if silent else None,
             )
 
             # Set the Azure subscription
@@ -295,7 +315,9 @@ class Cluster:
                     "account",
                     "set",
                     f"--subscription={service_principal['subscription_id']}",
-                ]
+                ],
+                stdout=subprocess.DEVNULL if silent else None,
+                stderr=subprocess.DEVNULL if silent else None,
             )
 
             # Get cluster creds
@@ -306,12 +328,14 @@ class Cluster:
                     "get-credentials",
                     f"--name={cluster}",
                     f"--resource-group={resource_group}",
-                ]
+                ],
+                stdout=subprocess.DEVNULL if silent else None,
+                stderr=subprocess.DEVNULL if silent else None,
             )
 
             yield
 
-    def auth_gcp(self):
+    def auth_gcp(self, silent: bool):
         config = self.spec["gcp"]
         key_path = self.config_dir / config["key"]
         project = config["project"]
@@ -340,7 +364,9 @@ class Cluster:
                         f"--project={project}",
                         "get-credentials",
                         cluster,
-                    ]
+                    ],
+                    stdout=subprocess.DEVNULL if silent else None,
+                    stderr=subprocess.DEVNULL if silent else None,
                 )
 
                 yield
@@ -370,7 +396,7 @@ class Cluster:
         )
         if not grafana_tls_config:
             raise ValueError(
-                f"grafana.ingress.tls config for {self.spec["name"]} missing!"
+                f"grafana.ingress.tls config for {self.spec['name']} missing!"
             )
 
         # We only have one tls host right now. Modify this when things change.
@@ -389,7 +415,7 @@ class Cluster:
 
         if "grafana_token" not in config.keys():
             raise ValueError(
-                f"Grafana service account token not found, use `deployer new-grafana-token {self.spec["cluster_name"]}`"
+                f"Grafana service account token not found, use `deployer new-grafana-token {self.spec['cluster_name']}`"
             )
 
         return config["grafana_token"]
@@ -410,7 +436,7 @@ class Cluster:
             "enabled", False
         ):
             raise ValueError(
-                f"`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"
+                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
             )
 
         tls_config = (
@@ -422,11 +448,11 @@ class Cluster:
 
         if not tls_config:
             raise ValueError(
-                f"No tls config was found for the prometheus instance of {self.spec["name"]}"
+                f"No tls config was found for the prometheus instance of {self.spec['name']}"
             )
 
         # We only have one tls host right now. Modify this when things change.
-        return f"https://{tls_config[0]["hosts"][0]}"
+        return f"https://{tls_config[0]['hosts'][0]}"
 
     def get_cluster_prometheus_creds(self) -> tuple[str, str]:
         """
@@ -443,7 +469,7 @@ class Cluster:
         # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
         if "prometheusIngressAuthSecret" not in support_config:
             raise ValueError(
-                f"`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"
+                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
             )
 
         return (

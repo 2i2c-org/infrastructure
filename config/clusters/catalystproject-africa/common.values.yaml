@@ -15,14 +15,11 @@ nfs:
     - retrans=2
     - noresvport
     serverIP: fs-040edb72334e4ac26.efs.af-south-1.amazonaws.com
-    baseShareName: /
 jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
-    jupyterhubConfigurator:
-      enabled: false
     homepage:
       templateVars:
         designed_by:
@@ -110,8 +107,7 @@ jupyterhub-home-nfs:
   enabled: true
   eks:
     enabled: true
-jupyterhub-groups-exporter:
-  enabled: true
-  config:
-    groupsExporter:
-      update_exporter_interval: 3600
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

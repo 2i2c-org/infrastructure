@@ -1,13 +1,13 @@
 nfs:
   enabled: true
+  shareCreator:
+    enabled: false
   pv:
     enabled: true
     mountOptions:
     - soft
     - noatime
-    serverIP: 10.80.94.178
     # MUST HAVE TRAILING SLASH
-    baseShareName: /homes/homes/
 jupyterhub:
   singleuser:
     cpu:
@@ -18,8 +18,16 @@ jupyterhub:
       # a guarantee of 0.05 set in basehub/values.yaml
       limit: 2
     image:
-      name: quay.io/2i2c/cloudbank-data8-image
-      tag: e0390051a2d9
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 79e7ee67211e
     nodeSelector:
       # Put everything on the most appropriate instance type for these users
       node.kubernetes.io/instance-type: n2-highmem-4
+jupyterhub-home-nfs:
+  enabled: true
+  gke:
+    enabled: true
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 5 # in GiB

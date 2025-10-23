@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.unam.svc.cluster.local
+
 userServiceAccount:
   annotations:
     # singleuser.networkPolicy.egressAllowRules.cloudMetadataServer=true and
@@ -23,9 +27,9 @@ jupyterhub:
       - name: home
         mountPath: /home/jovyan/allusers
         readOnly: false
-        # mounts below are copied from basehub's values that we override by
-        # specifying extraVolumeMounts (lists get overridden when helm values
-        # are combined)
+          # mounts below are copied from basehub's values that we override by
+          # specifying extraVolumeMounts (lists get overridden when helm values
+          # are combined)
       - name: home
         mountPath: /home/jovyan/shared-readwrite
         subPath: _shared
@@ -38,43 +42,12 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://unam.latam.catalystproject.2i2c.cloud/hub/oauth_callback
-        populate_teams_in_auth_state: true
         allowed_organizations:
-        - 2i2c-org:hub-access-for-2i2c-staff
         - CatalystProject-Hubs:unam
-        scope:
-        - read:org
       Authenticator:
-        enable_auth_state: true
-        manage_groups: true
         admin_users:
         - nselem
         - miguel-mx
-    services:
-      jupyterhub-groups-exporter: {}
-    loadRoles:
-      jupyterhub-groups-exporter:
-        services:
-        - jupyterhub-groups-exporter
-        scopes:
-        - users
-        - groups
-    extraConfig:
-      custom-github-oauthenticator: |
-        class CustomGitHubOAuthenticator(GitHubOAuthenticator):
-          async def authenticate(self, *args, **kwargs):
-              resp = await super().authenticate(*args, **kwargs)
-              if resp["auth_state"]["teams"] is None:
-                return resp
-              groups = []
-              for team in resp["auth_state"]["teams"]:
-                if f'{team["organization"]["login"]}:{team["slug"]}' not in self.allowed_organizations:
-                  continue
-                else:
-                  groups.append(f'{team["organization"]["login"]}:{team["slug"]}')
-              resp["groups"] = groups
-              return resp
-        c.JupyterHub.authenticator_class = CustomGitHubOAuthenticator
   singleuser:
     networkPolicy:
       egressAllowRules:
@@ -117,7 +90,7 @@ jupyterhub:
                 mem_limit: 24G
                 cpu_guarantee: 1.5
                 cpu_limit: 3
-              # guarantee = limit because we are requesting a complete node, no space for other user
+                # guarantee = limit because we are requesting a complete node, no space for other user
             mem_116_0:
               display_name: Up to 115G RAM and 15 CPUs
               kubespawner_override:
@@ -127,7 +100,7 @@ jupyterhub:
                 cpu_limit: 15
                 node_selector:
                   node.kubernetes.io/instance-type: n2-highmem-16
-              # guarantee = limit because we are requesting a complete node, no space for other user
+                # guarantee = limit because we are requesting a complete node, no space for other user
             mem_486_4:
               display_name: Up to 486G RAM and 63 CPUs
               kubespawner_override:
@@ -162,3 +135,12 @@ jupyterhub:
               image: '{value}'
           choices: {}
         resource_allocation: *resource_allocation
+jupyterhub-home-nfs:
+  enabled: true
+  gke:
+    enabled: true
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-unam
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

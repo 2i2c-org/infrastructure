@@ -1,0 +1,55 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::597746869805:role/nasa-ghg-hub-prod
+  jupyterhub:
+    ingress:
+      hosts: [hub.ghg.center]
+      tls:
+      - hosts: [hub.ghg.center]
+        secretName: https-auto-tls
+    custom:
+      homepage:
+        gitRepoBranch: bootstrap5-nasa-ghg-prod
+        # FIXME: use this repository again, once the changes in the bootstrap5-nasa-ghg-staging branch of 2i2c-org/default-hub-homepage have been ported to it
+        # gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://hub.ghg.center/hub/oauth_callback
+    singleuser:
+      nodeSelector:
+        2i2c/hub-name: prod
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: prod
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: prod
+
+  binderhub-service:
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: prod
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          2i2c/hub-name: prod
+      BinderHub:
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-prod-
+
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-050b22932c5cf210e
+    quotaEnforcer:
+      config:
+        QuotaManager:
+          hard_quota: 50 # in GiB
+  nfs:
+    pv:
+      serverIP: 10.100.172.188

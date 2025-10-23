@@ -14,6 +14,6 @@ can be used to check scrape targets and the metrics explorer to examine
 available metrics.
 
 ```
-deployer use-cluster-credentials $CLUSTER
+deployer use-cluster-credentials $CLUSTER_NAME
 kubectl port-forward -n support deploy/support-prometheus-server 9090:9090
 ```

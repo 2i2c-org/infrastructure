@@ -14,7 +14,6 @@ basehub:
       - retrans=2
       - noresvport
       serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
-      baseShareName: /
   dask-gateway:
     enabled: true
   jupyterhub:
@@ -22,13 +21,13 @@ basehub:
       daskhubSetup:
         enabled: true
       2i2c:
-        add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: google
-      jupyterhubConfigurator:
-        enabled: false
+        # This uses custom ids from auth0, so we can't use our default
+        # emails as access
+        add_staff_user_ids_to_admin_users: false
     hub:
       extraConfig:
         001-username-claim: |
+          import json
           from oauthenticator.generic import GenericOAuthenticator
           from traitlets import List, Unicode
           from urllib.parse import urlparse
@@ -85,16 +84,26 @@ basehub:
               base_url = f"{url_parts.scheme}://{url_parts.netloc}"
               scope_str = " ".join(spawner.authenticator.scope)
 
-              token_env = {
-                'ES_OAUTH2__AUDIENCE': spawner.authenticator.extra_authorize_params.get("audience", ""),
-                'ES_OAUTH2__CLIENT_ID': spawner.authenticator.client_id,
-                'ES_OAUTH2__DOMAIN': base_url,
-                'ES_OAUTH2__SCOPE': scope_str,
-                'ES_OAUTH2__ACCESS_TOKEN': auth_state.get("access_token", ""),
-                'ES_OAUTH2__ID_TOKEN': auth_state.get("id_token", ""),
-                'ES_OAUTH2__REFRESH_TOKEN': auth_state.get('refresh_token', '')
+              # Bootstrap EarthScope SDK settings
+              settings = {
+                "oauth2": {
+                  "audience": spawner.authenticator.extra_authorize_params.get("audience", ""),
+                  "client_id": spawner.authenticator.client_id,
+                  "domain": base_url,
+                  "scope": scope_str,
+                  "access_token": auth_state.get("access_token", ""),
+                  "id_token": auth_state.get("id_token", ""),
+                  "refresh_token": auth_state.get("refresh_token", "")
+                }
               }
-              spawner.environment.update(token_env)
+
+              # The spawner expands environment variables using string.format, so we need to escape braces.
+              settings_str = json.dumps(settings)
+              escaped_settings_str = settings_str.replace("{", "{{").replace("}", "}}")
+
+              spawner.environment.update({
+                "ES_BOOTSTRAP_SETTINGS": escaped_settings_str
+              })
 
           c.Spawner.auth_state_hook = populate_token
 
@@ -141,150 +150,188 @@ basehub:
           - google-oauth2|108516754518362587599   # Yuvi
           - google-oauth2|117859169473992122769   # Georgiana
           - google-oauth2|117322480787655244438   # Jenny
-      services:
-        jupyterhub-groups-exporter: {}
-      loadRoles:
-        jupyterhub-groups-exporter:
-          services:
-          - jupyterhub-groups-exporter
-          scopes:
-          - users
-          - groups
     singleuser:
       cloudMetadata:
         blockWithIptables: false
       profileList:
-      - display_name: 'Shared Small: 1-4 CPU, 7.2 GB'
-        description: A shared machine, the recommended option until you experience a limitation.
+      - display_name: Choose your environment and resources
+        default: true
+        profile_options:
+          image:
+            display_name: Environment
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            dynamic_image_building:
+              enabled: true
+            choices:
+              geolab-general:
+                display_name: GeoLab
+                slug: geolab-general
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope/geolab/geolab-default:latest
+              mspass-shortcourse:
+                display_name: MsPASS ShortCourse
+                slug: mspass-shortcourse
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope-dev/mspass_image:mspass_img_test-6db62782
+              jupyter-scipy:
+                display_name: Jupyter
+                slug: jupyter-scipy
+                kubespawner_override:
+                    # FIXME: use quay.io/ for tags after 2023-10-20
+                  image: jupyter/scipy-notebook:2023-06-27
+              rocker-geospatial:
+                display_name: RStudio
+                slug: rocker-geospatial
+                kubespawner_override:
+                  image: rocker/binder:4.3
+                  image_pull_policy: Always
+                    # Launch into RStudio after the user logs in
+                  default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                  working_dir: /home/rstudio
+          resource_allocation:
+            display_name: Resource Allocation
+            choices:
+              mem_4_gb:
+                display_name: 4 GB RAM, ~0.5 CPUs
+                description: Upto ~4 CPUs when available
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 3902839759
+                  mem_limit: 3902839759
+                  cpu_guarantee: 0.4563125
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_gb:
+                display_name: 7 GB RAM, ~0.9 CPUs
+                description: Upto ~4 CPUs when available
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 7805679519
+                  mem_limit: 7805679519
+                  cpu_guarantee: 0.912625
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_15_gb:
+                display_name: 15 GB RAM, ~1.8 CPUs
+                description: Upto ~4 CPUs when available
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 15611359038
+                  mem_limit: 15611359038
+                  cpu_guarantee: 1.82525
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_gb:
+                display_name: 29 GB RAM, ~4 CPUs
+                description: ~4 CPUs always available
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 31222718077
+                  mem_limit: 31222718077
+                  cpu_guarantee: 3.6505
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_gb:
+                display_name: 60 GB RAM, ~8 CPUs
+                description: Upto ~15 CPUs when available
+                allowed_groups:
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 64020707016
+                  mem_limit: 64020707016
+                  cpu_guarantee: 7.69055
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_119_gb:
+                display_name: 119 GB RAM, ~15 CPUs
+                description: ~15 CPUs always available
+                allowed_groups:
+                - geolab:dev
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 128041414033
+                  mem_limit: 128041414033
+                  cpu_guarantee: 15.3811
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_488_gb:
+                display_name: 488 GB RAM, ~63 CPUs
+                description: ~63 CPUs always available
+                allowed_groups:
+                - geolab:power
+                kubespawner_override:
+                  mem_guarantee: 523839830228
+                  mem_limit: 523839830228
+                  cpu_guarantee: 62.575
+                  cpu_limit: 62.575
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.16xlarge
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: Start a container on a dedicated node with a GPU
+        slug: gpu
         allowed_groups:
-        - geolab
         - geolab:dev
         - geolab:power
         profile_options:
           image:
             display_name: Image
+            dynamic_image_building:
+              enabled: true
             unlisted_choice:
               enabled: true
               display_name: Custom image
               validation_regex: ^.+:.+$
-              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              validation_message: Must be a publicly available docker image of form <image-name>:<tag>
               kubespawner_override:
                 image: '{value}'
             choices:
-              geolab-general:
-                display_name: GeoLab
-                slug: geolab-general
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook
+                slug: tensorflow
                 kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/geolab_default:extensions-c1c714c1
-              jupyter-scipy:
-                display_name: Jupyter
-                slug: jupyter-scipy
+                  image: quay.io/pangeo/ml-notebook:2025.07.09
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                default: true
+                slug: pytorch
                 kubespawner_override:
-                    # FIXME: use quay.io/ for tags after 2023-10-20
-                  image: jupyter/scipy-notebook:2023-06-27
-              rocker-geospatial:
-                display_name: RStudio
-                slug: rocker-geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
-                    # Launch into RStudio after the user logs in
-                  default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
+                  image: quay.io/pangeo/pytorch-notebook:2025.05.22
         kubespawner_override:
-          mem_guarantee: 7.234G
-          cpu_guarantee: 0.1
-          mem_limit: 7.234G
-          node_selector:
-            node.kubernetes.io/instance-type: r5.xlarge
-      - display_name: 'Shared Small: 1-4 CPU, 14 GB'
-        description: A shared machine, the recommended option until you experience a limitation.
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
-        profile_options: &profile_options
-          image:
-            display_name: Image
-            unlisted_choice:
-              enabled: true
-              display_name: Custom image
-              validation_regex: ^.+:.+$
-              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
-              kubespawner_override:
-                image: '{value}'
-            choices:
-              geolab-general:
-                display_name: GeoLab
-                slug: geolab-general
-                kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/geolab:td-dev-dd5851e6
-              mt-shortcourse:
-                display_name: MT-ShortCourse
-                slug: mt-shortcourse
-                kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/geolab_default:mt_shortcourse-1a6a2fbd
-              jupyter-scipy:
-                display_name: Jupyter
-                slug: jupyter-scipy
-                kubespawner_override:
-                    # FIXME: use quay.io/ for tags after 2023-10-20
-                  image: jupyter/scipy-notebook:2023-06-27
-              rocker-geospatial:
-                display_name: RStudio
-                slug: rocker-geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
-                    # Launch into RStudio after the user logs in
-                  default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
-        kubespawner_override:
-          mem_guarantee: 14.468G
-          cpu_guarantee: 0.1
-          mem_limit: 14.468G
-          node_selector:
-            node.kubernetes.io/instance-type: r5.xlarge
-      - display_name: 'Small: 4 CPU, 32 GB'
-        description: A dedicated machine for you.
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
-        profile_options: *profile_options
-        kubespawner_override:
-          mem_guarantee: 28.937G
-          cpu_guarantee: 0.4
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
           mem_limit:
+          mem_guarantee: 14G
           node_selector:
-            node.kubernetes.io/instance-type: r5.xlarge
-      - display_name: 'Medium: 16 CPU, 128 GB'
-        description: A dedicated machine for you.
-        profile_options: *profile_options
-        allowed_groups:
-        - geolab:dev
-        - geolab:power
-        kubespawner_override:
-          mem_guarantee: 120.513G
-          cpu_guarantee: 1.6
-          mem_limit:
-          node_selector:
-            node.kubernetes.io/instance-type: r5.4xlarge
-      - display_name: 'Large: 64 CPU, 512 GB'
-        description: A dedicated machine for you
-        profile_options: *profile_options
-        allowed_groups:
-        - geolab:power
-        kubespawner_override:
-          mem_guarantee: 489.13G
-          cpu_guarantee: 6.4
-          mem_limit:
-          node_selector:
-            node.kubernetes.io/instance-type: r5.16xlarge
+            node.kubernetes.io/instance-type: g4dn.xlarge
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
 
     scheduling:
       userScheduler:
@@ -294,11 +341,28 @@ basehub:
     eks:
       enabled: true
   jupyterhub-groups-exporter:
-    enabled: true
     config:
       groupsExporter:
-        update_exporter_interval: 3600
         allowed_groups:
         - geolab
         - geolab:dev
         - geolab:power
+  binderhub-service:
+    enabled: true
+    networkPolicy:
+      enabled: true
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: binder
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          node.kubernetes.io/instance-type: r5.xlarge
+      BinderHub:
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
+      DockerRegistry:
+        url: &url https://quay.io
+        username: &username imagebuilding-non-gcp-hubs+image_builder
+    buildPodsRegistryCredentials:
+      server: *url
+      username: *username

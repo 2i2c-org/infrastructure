@@ -6,8 +6,6 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_aws_ce_grafana_backend_iam = true
-
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
@@ -43,7 +41,9 @@ hub_cloud_permissions = {
               "s3:ListBucket",
               "s3:DeleteObject",
               "s3:GetBucketLocation",
-              "s3:ListMultipartUploadParts"
+              "s3:ListMultipartUploadParts",
+              "s3:PutObjectTagging",
+              "s3:GetObjectTagging"
             ],
             "Resource": [
               "arn:aws:s3:::veda-data-store",
@@ -72,6 +72,8 @@ hub_cloud_permissions = {
               "arn:aws:s3:::maap-ops-workspace/*",
               "arn:aws:s3:::nasa-maap-data-store",
               "arn:aws:s3:::nasa-maap-data-store/*",
+              "arn:aws:s3:::nasa-waterinsight",
+              "arn:aws:s3:::nasa-waterinsight/*",
               "arn:aws:s3:::sdap-dev-zarr",
               "arn:aws:s3:::sdap-dev-zarr/*",
               "arn:aws:s3:::usgs-landsat",
@@ -83,7 +85,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters",
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::nasa-eodc-scratch",
-              "arn:aws:s3:::nasa-eodc-scratch/*"
+              "arn:aws:s3:::nasa-eodc-scratch/*",
+              "arn:aws:s3:::gesdisc-cumulus-uat-protected",
+              "arn:aws:s3:::gesdisc-cumulus-uat-protected/*"
             ]
           },
           {
@@ -113,7 +117,9 @@ hub_cloud_permissions = {
               "s3:ListBucket",
               "s3:DeleteObject",
               "s3:GetBucketLocation",
-              "s3:ListMultipartUploadParts"
+              "s3:ListMultipartUploadParts",
+              "s3:PutObjectTagging",
+              "s3:GetObjectTagging"
             ],
             "Resource": [
               "arn:aws:s3:::veda-data-store",
@@ -142,6 +148,8 @@ hub_cloud_permissions = {
               "arn:aws:s3:::maap-ops-workspace/*",
               "arn:aws:s3:::nasa-maap-data-store",
               "arn:aws:s3:::nasa-maap-data-store/*",
+              "arn:aws:s3:::nasa-waterinsight",
+              "arn:aws:s3:::nasa-waterinsight/*",
               "arn:aws:s3:::sdap-dev-zarr",
               "arn:aws:s3:::sdap-dev-zarr/*",
               "arn:aws:s3:::usgs-landsat",
@@ -149,7 +157,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::sport-lis",
               "arn:aws:s3:::sport-lis/*",
               "arn:aws:s3:::nasa-disasters",
-              "arn:aws:s3:::nasa-disasters/*"
+              "arn:aws:s3:::nasa-disasters/*",
+              "arn:aws:s3:::gesdisc-cumulus-uat-protected",
+              "arn:aws:s3:::gesdisc-cumulus-uat-protected/*"
             ]
           },
           {
@@ -202,6 +212,8 @@ hub_cloud_permissions = {
               "arn:aws:s3:::maap-ops-workspace/*",
               "arn:aws:s3:::nasa-maap-data-store",
               "arn:aws:s3:::nasa-maap-data-store/*",
+              "arn:aws:s3:::nasa-waterinsight",
+              "arn:aws:s3:::nasa-waterinsight/*",
               "arn:aws:s3:::sdap-dev-zarr",
               "arn:aws:s3:::sdap-dev-zarr/*",
               "arn:aws:s3:::usgs-landsat",
@@ -211,7 +223,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::sport-lis",
               "arn:aws:s3:::sport-lis/*",
               "arn:aws:s3:::nasa-disasters",
-              "arn:aws:s3:::nasa-disasters/*"
+              "arn:aws:s3:::nasa-disasters/*",
+              "arn:aws:s3:::gesdisc-cumulus-uat-protected",
+              "arn:aws:s3:::gesdisc-cumulus-uat-protected/*"
             ]
           },
           {
@@ -233,7 +247,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 2500 # 2.5TB
+    size        = 2815 # 2.815TB
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }

@@ -5,9 +5,214 @@ zone             = "us-central1-b"
 region           = "us-central1"
 regional_cluster = false
 
-enable_filestore_backups = true
-filestores = {
-  "filestore" : { "capacity_gb" : 1792 }
+enable_filestore_backups = false
+filestores               = {}
+
+persistent_disks = {
+  "authoring" = {
+    size        = 25
+    name_suffix = "authoring"
+  }
+  "bcc" = {
+    size        = 60
+    name_suffix = "bcc"
+  }
+  "ccsf" = {
+    size        = 450
+    name_suffix = "ccsf"
+  }
+  "chabot" = {
+    size        = 60
+    name_suffix = "chabot"
+  }
+  "chaffey" = {
+    size        = 25
+    name_suffix = "chaffey"
+  }
+  "csm" = {
+    size        = 150
+    name_suffix = "csm"
+  }
+  "csum" = {
+    size        = 25
+    name_suffix = "csum"
+  }
+  "deanza" = {
+    size        = 60
+    name_suffix = "deanza"
+  }
+  "demo" = {
+    size        = 35
+    name_suffix = "demo"
+  }
+  "dvc" = {
+    size        = 90
+    name_suffix = "dvc"
+  }
+  "elac" = {
+    size        = 40
+    name_suffix = "elac"
+  }
+  "elcamino" = {
+    size        = 350
+    name_suffix = "elcamino"
+  }
+  "evc" = {
+    size        = 200
+    name_suffix = "evc"
+  }
+  "foothill" = {
+    size        = 200
+    name_suffix = "foothill"
+  }
+  "fresno" = {
+    size        = 60
+    name_suffix = "fresno"
+  }
+  "glendale" = {
+    size        = 60
+    name_suffix = "glendale"
+  }
+  "golden" = {
+    size        = 25
+    name_suffix = "golden"
+  }
+  "high" = {
+    size        = 120
+    name_suffix = "high"
+  }
+  "humboldt" = {
+    size        = 200
+    name_suffix = "humboldt"
+  }
+  "lacc" = {
+    size        = 140
+    name_suffix = "lacc"
+  }
+  "lahc" = {
+    size        = 25
+    name_suffix = "lahc"
+  }
+  "laney" = {
+    size        = 200
+    name_suffix = "laney"
+  }
+  "lavc" = {
+    size        = 25
+    name_suffix = "lavc"
+  }
+  "lbcc" = {
+    size        = 25
+    name_suffix = "lbcc"
+  }
+  "mendocino" = {
+    size        = 40
+    name_suffix = "mendocino"
+  }
+  "merced" = {
+    size        = 60
+    name_suffix = "merced"
+  }
+  "merritt" = {
+    size        = 25
+    name_suffix = "merritt"
+  }
+  "miracosta" = {
+    size        = 60
+    name_suffix = "miracosta"
+  }
+  "mission" = {
+    size        = 25
+    name_suffix = "mission"
+  }
+  "moreno" = {
+    size        = 60
+    name_suffix = "moreno"
+  }
+  "norco" = {
+    size        = 40
+    name_suffix = "norco"
+  }
+  "palomar" = {
+    size        = 40
+    name_suffix = "palomar"
+  }
+  "pasadena" = {
+    size        = 140
+    name_suffix = "pasadena"
+  }
+  "redwoods" = {
+    size        = 40
+    name_suffix = "redwoods"
+  }
+  "reedley" = {
+    size        = 40
+    name_suffix = "reedley"
+  }
+  "riohondo" = {
+    size        = 20
+    name_suffix = "riohondo"
+  }
+  "saddleback" = {
+    size        = 60
+    name_suffix = "saddleback"
+  }
+  "sbcc" = {
+    size        = 100
+    name_suffix = "sbcc"
+  }
+  "sbcc-dev" = {
+    size        = 20
+    name_suffix = "sbcc-dev"
+  }
+  "sierra" = {
+    size        = 20
+    name_suffix = "sierra"
+  }
+  "sjcc" = {
+    size        = 30
+    name_suffix = "sjcc"
+  }
+  "sjsu" = {
+    size        = 20
+    name_suffix = "sjsu"
+  }
+  "skyline" = {
+    size        = 84
+    name_suffix = "skyline"
+  }
+  "spelman" = {
+    size        = 25
+    name_suffix = "spelman"
+  }
+  "srjc" = {
+    size        = 30
+    name_suffix = "srjc"
+  }
+  "staging" = {
+    size        = 2
+    name_suffix = "staging"
+  }
+  "tuskegee" = {
+    size        = 20
+    name_suffix = "tuskegee"
+  }
+  "ucsc" = {
+    size        = 20
+    name_suffix = "ucsc"
+  }
+  "unr" = {
+    size        = 40
+    name_suffix = "unr"
+  }
+  "virginia" = {
+    size        = 180
+    name_suffix = "virginia"
+  }
+  "wlac" = {
+    size        = 20
+    name_suffix = "wlac"
+  }
 }
 
 # Cloud costs for this project are not passed through by 2i2c
@@ -25,6 +230,7 @@ k8s_versions = {
 }
 
 core_node_machine_type = "n2-highmem-2"
+core_node_max_count    = 20
 enable_network_policy  = true
 
 notebook_nodes = {

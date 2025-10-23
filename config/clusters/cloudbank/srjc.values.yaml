@@ -57,3 +57,9 @@ jupyterhub:
         - ylin@santarosa.edu
         - hwong@santarosa.edu
         - dharden@santarosa.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-srjc
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.srjc.svc.cluster.local

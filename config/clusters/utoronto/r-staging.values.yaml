@@ -1,4 +1,9 @@
 jupyterhub:
+  singleuser:
+    image:
+      name: quay.io/2i2c/utoronto-r-image
+      tag: 56d60b40210a
+
   ingress:
     hosts: [r-staging.datatools.utoronto.ca]
     tls:

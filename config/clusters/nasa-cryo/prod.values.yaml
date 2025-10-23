@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.217.176
+      serverIP: 10.100.102.109
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-prod
@@ -37,4 +37,16 @@ basehub:
     eks:
       volumeId: vol-00b9cf4a258bce8ef
     quotaEnforcer:
-      hardQuota: '350' # in GB
+      config:
+        QuotaManager:
+          hard_quota: 35 # in GiB
+  binderhub-service:
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: prod
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          2i2c/hub-name: prod
+      BinderHub:
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-cryo-prod-

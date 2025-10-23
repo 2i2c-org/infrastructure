@@ -22,12 +22,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - uses: actions/setup-python@v5
       with:
         python-version: '3.13'
 
     - name: Install deps
-      run: pip install -r docs/requirements.txt
+      run: pip install . -r docs/requirements.txt
 
       # linkcheck is done separately from this in doc-links.yml, scheduled to
       # run every day and open/update an issue

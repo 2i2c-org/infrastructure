@@ -24,6 +24,4 @@ USER root
 
 RUN pip install -r /tmp/${REQUIREMENTS_FILE}
 
-RUN mkdir -p /usr/local/etc/jupyterhub-configurator
-COPY jupyterhub_configurator_config.py /usr/local/etc/jupyterhub-configurator/
 USER $NB_USER

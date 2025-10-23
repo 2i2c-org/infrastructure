@@ -125,13 +125,11 @@ We automatically generate the files required to setup a new cluster:
 ````{tab-item} AWS
 :sync: aws-key
 - A `.jsonnet` file for use with `eksctl`
-- A `sops` encrypted [ssh key](https://eksctl.io/introduction/#ssh-access) that can be used to ssh into the kubernetes nodes.
-- A ssh public key used by `eksctl` to grant access to the private key.
 - A `.tfvars` terraform variables file that will setup most of the non EKS infrastructure.
 - The cluster config directory in `./config/cluster/<new-cluster>`
 - The `cluster.yaml` config file
 - The support values file `support.values.yaml`
-- The the support credentials encrypted file `enc-support.values.yaml` 
+- The the support credentials encrypted file `enc-support.values.yaml`
 ````
 
 ````{tab-item} Google Cloud
@@ -140,7 +138,7 @@ We automatically generate the files required to setup a new cluster:
 - The cluster config directory in `./config/cluster/<new-cluster>`
 - A sample `cluster.yaml` config file
 - The support values file `support.values.yaml`
-- The the support credentials encrypted file `enc-support.values.yaml` 
+- The the support credentials encrypted file `enc-support.values.yaml`
 ````
 
 ````{tab-item} Azure
@@ -167,7 +165,7 @@ You can generate these with:
 ```bash
 export CLUSTER_NAME=<cluster-name>
 export CLUSTER_REGION=<cluster-region-like ca-central-1>
-export ACCOUNT_ID=<declare 2i2c for clusters under 2i2c SSO, otherwise an account id or alias>
+export ACCOUNT_ID=<the 12 digit aws account id>
 ```
 
 ```bash
@@ -373,7 +371,7 @@ Then you can change into the terraform subdirectory for the appropriate cloud pr
 Our AWS *terraform* code is now used to deploy supporting infrastructure for the EKS cluster, including:
 
 - An IAM identity account for use with our CI/CD system
-- Appropriately networked EFS storage to serve as an NFS server for hub home directories
+- EBS volumes for use with `jupyterhub-home-nfs`
 - Optionally, setup a [shared database](features:shared-db:aws)
 - Optionally, setup [user buckets](howto:features:storage-buckets)
 
@@ -552,7 +550,7 @@ To begin deploying and operating hubs on your new cluster, we need to export the
       ```
       This command will generate a file named config in the cwd with the configuration.
       The --force flag will overwrite this file if it already exists.
-    
+
       Encrypt the kubeconfig file using `sops`:
       ```bash
       sops --output ./config --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json

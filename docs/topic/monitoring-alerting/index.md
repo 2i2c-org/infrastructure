@@ -7,5 +7,5 @@ and the alerting mechanisms we implement for when something goes wrong.
 :maxdepth: 2
 grafana.md
 prometheus.md
-uptime-checks.md
+alerting.md
 ```

@@ -16,13 +16,7 @@ need to recreate them, only update them if required.
 
 In the `infrastructure` repo, the full filepath should be: `config/clusters/<cluster_name>/support.values.yaml`.
 
-If the cluster is running on GCP or AWS, the deployer should have been generated this file already.
-
-1. If you are deploying the support chart on an AWS cluster, you **must** also manually update the `aws-ce-grafana-backend` service account annotation in the `support.values.yaml` with the output of thew following command:
-
-```bash
-terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation
-```
+1. If the cluster is running on GCP or AWS, the deployer should have been generated this file already.
 
 2. If you are deploying the support chart on an Azure cluster, you **must** manually create such a file using the template at `config/clusters/templates/common/support.values.yaml`. Also, you must set an annotation for `ingress-nginx`'s k8s Service resource by including the following in your `support.values.yaml` file:
 
@@ -73,7 +67,7 @@ deployer use-cluster-credentials $CLUSTER_NAME
 ```
 
 ```bash
-kubectl --namespace=support get service support-ingress-nginx-controller
+kubectl --namespace=support get service support-ingress-nginx-controller  --template="{{(index .status.loadBalancer.ingress 0).hostname}}"
 ```
 
 Add DNS records for the `2i2c.cloud` domain [under "Advanced DNS" in
