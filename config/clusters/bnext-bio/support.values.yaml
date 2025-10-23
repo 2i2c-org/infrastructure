@@ -40,3 +40,7 @@ cluster-autoscaler:
 
 calico:
   enabled: true
+
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
