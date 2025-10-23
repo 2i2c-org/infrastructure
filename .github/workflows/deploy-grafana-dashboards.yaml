@@ -23,6 +23,7 @@ jobs:
         - cluster_name: 2i2c-aws-us
         - cluster_name: 2i2c-jetstream2
         - cluster_name: 2i2c-uk
+        - cluster_name: aimatx-2i2c-hub
         - cluster_name: awi-ciroh
         - cluster_name: berkeley-geojupyter
         - cluster_name: bnext-bio
