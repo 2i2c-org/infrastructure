@@ -52,7 +52,9 @@ spec:
         # Copy version from https://github.com/eksctl-io/eksctl/blob/main/pkg/addons/assets/nvidia-device-plugin.yaml
       - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.4
         name: nvidia-device-plugin-ctr
-        env: []
+        env:
+          - name: FAIL_ON_INIT_ERROR
+            value: "false"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
