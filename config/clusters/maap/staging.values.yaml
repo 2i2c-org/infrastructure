@@ -9,6 +9,25 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: false
   singleuser:
+    storage:
+      extraVolumes:
+        # Volume mounts for shared group directories are nested
+        # under /home/jovyan/shared-group/. When group membership changes and a mount is 
+        # removed, Kubernetes unmounts the volume but leaves behind an empty directory at the
+        # mount point. This creates confusing leftover empty directories that don't reflect current
+        # group membership.
+        # To avoid this, we mount an emptyDir volume on /home/jovyan/shared-group. Group-specific
+        # directories are then mounted on top. When a group mount is removed,
+        # it reveals the empty base layer underneath - no leftover directories.
+        00-shared-group-placeholder:
+          name: shared-group-placeholder
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Mi
+      extraVolumeMounts:
+        00-shared-group-placeholder:
+          name: shared-group-placeholder
+          mountPath: /home/jovyan/shared-group
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
     nodeSelector:
@@ -193,73 +212,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: generic-oauth
       KubeSpawner:
-        volumes:
-          00-home-nfs:
-            name: home
-            persistentVolumeClaim:
-              claimName: home-nfs
-          01-dev-shm:
-            name: dev-shm
-            emptyDir:
-              medium: Memory
-          02-extra-files:
-            name: files
-            secret:
-              secretName: singleuser
-              items:
-              - key: ghsa-w3vc-fx9p-wp4v-check-patch-run
-                mode: 493
-                path: ghsa-w3vc-fx9p-wp4v-check-patch-run
-              - key: ipython_kernel_config.json
-                path: ipython_kernel_config.json
-              - key: jupyter_notebook_config.json
-                path: jupyter_notebook_config.json
-              - key: jupyter_server_config.json
-                path: jupyter_server_config.json
-          03-shared-group:
-            name: shared-group-placeholder
-            emptyDir:
-              medium: Memory
-              sizeLimit: 1Mi
-        volume_mounts:
-          00-home-nfs:
-            name: home
-            mountPath: /home/jovyan
-            subPath: '{escaped_username}'
-          01-home-shared:
-            name: home
-            mountPath: /home/jovyan/shared
-            subPath: _shared
-            readOnly: true
-          02-home-shared-group:
-            # overrides the root of the shared-group folder with an empty dir
-            # so that the user can't see the contents of other groups' folders
-            # that the user is not a member of
-            name: shared-group-placeholder
-            mountPath: /home/jovyan/shared-group
-          03-home-shared-public:
-            name: home
-            mountPath: /home/jovyan/shared-public
-            subPath: _shared-public
-          04-dev-shm:
-            name: dev-shm
-            mountPath: /dev/shm
-          05-mount-ghsa-patch:
-            name: files
-            mountPath: /mnt/ghsa-w3vc-fx9p-wp4v/check-patch-run
-            subPath: ghsa-w3vc-fx9p-wp4v-check-patch-run
-          06-mount-ipython-config:
-            name: files
-            mountPath: /usr/local/etc/ipython/ipython_kernel_config.json
-            subPath: ipython_kernel_config.json
-          07-mount-jupyter-notebook-config:
-            name: files
-            mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
-            subPath: jupyter_notebook_config.json
-          08-mount-jupyter-server-config:
-            name: files
-            mountPath: /usr/local/etc/jupyter/jupyter_server_config.json
-            subPath: jupyter_server_config.json
         group_overrides:
           # Explicitly mount the shared group folders based on group membership
           00-group-CPU-L-extra-volume-mounts:
