@@ -86,7 +86,7 @@ jupyterhub:
               display_name: B.next Nucleus
               slug: bnext-nucleus
               kubespawner_override:
-                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329 
+                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329
             jupyter-scipy:
               display_name: Jupyter SciPy
               slug: jupyter-scipy
@@ -188,8 +188,8 @@ jupyterhub:
               display_name: B.next Nucleus
               slug: bnext-nucleus
               kubespawner_override:
-                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329 
-            
+                image: quay.io/2i2c/bnext-nucleus-image:4ea63e0d6329
+
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
