@@ -6,9 +6,11 @@ cluster.yaml files
 import functools
 import json
 import os
+import shutil
 import subprocess
 import sys
-from contextlib import ExitStack
+import tempfile
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 
 import jsonschema
@@ -48,24 +50,18 @@ def _generate_values_schema_json(helm_chart_dir):
 
 
 @functools.lru_cache
-def _prepare_helm_charts_dependencies_and_schemas(hub_chart_dir=None):
-    """
-    Ensures that the helm charts we deploy, basehub and daskhub, have got their
-    dependencies updated and .json schema files generated so that they can be
-    """
+def _prepare_support_helm_charts_dependencies_and_schema():
+    support_dir = HELM_CHARTS_DIR.joinpath("support")
+    subprocess.check_call(["helm", "dep", "up", support_dir])
+
+
+@functools.lru_cache
+def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir=""):
     if not hub_chart_dir:
-        hub_chart_dir = HELM_CHARTS_DIR.joinpath("basehub")
-    dirs = [
-        hub_chart_dir,
-        HELM_CHARTS_DIR.joinpath("support"),
-        HELM_CHARTS_DIR.joinpath("daskhub"),
-    ]
-    for chart_dir in dirs:
-        print(chart_dir)
-        if "daskhub" not in str(chart_dir):
-            # Not generating schema for daskhub, as it is dead
-            _generate_values_schema_json(chart_dir)
-        subprocess.check_call(["helm", "dep", "up", chart_dir])
+        hub_chart_dir = HELM_CHARTS_DIR / "basehub"
+
+    _generate_values_schema_json(hub_chart_dir)
+    subprocess.check_call(["helm", "dep", "up", hub_chart_dir])
 
 
 @validate_app.command()
@@ -115,7 +111,7 @@ def hub_config(
         helm_chart_dir = str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"]))
 
     if not skip_refresh:
-        _prepare_helm_charts_dependencies_and_schemas(helm_chart_dir)
+        _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir)
 
     cmd = [
         "helm",
@@ -158,19 +154,35 @@ def hub_config(
             sys.exit(1)
 
 
+@contextmanager
+def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
+    chart_dir = default_chart_dir
+    if chart_override:
+        temp_chart_dir = tempfile.TemporaryDirectory()
+        temp_chart_dir_name = temp_chart_dir.name
+        # copy the chart directory into the temporary location
+        shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)
+        # copy the chart override file into the temporary chart directory
+        shutil.copy(chart_override_path, temp_chart_dir_name)
+        # rename the override file so that it overrides "Chart.yaml"
+        default_chart_yaml = Path(temp_chart_dir_name) / "Chart.yaml"
+        os.rename(Path(temp_chart_dir_name) / chart_override, default_chart_yaml)
+        chart_dir = Path(temp_chart_dir_name)
+    yield chart_dir
+    if chart_override:
+        temp_chart_dir.cleanup()
+
+
 @validate_app.command()
 def support_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    helm_chart_dir: str = typer.Argument(
-        None, help="Path to a custom helm chart directory"
-    ),
     debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
     Validates the provided non-encrypted helm chart values files for the support chart
     of a specific cluster.
     """
-    _prepare_helm_charts_dependencies_and_schemas(helm_chart_dir)
+    _prepare_support_helm_charts_dependencies_and_schema()
 
     cluster = Cluster.from_name(cluster_name)
 
@@ -222,7 +234,7 @@ def authenticator_config(
     - when the JupyterHub GitHubOAuthenticator is used, then allowed_users is not set
     - when the dummy authenticator is used, then admin_users is the empty list
     """
-    _prepare_helm_charts_dependencies_and_schemas(helm_chart_dir)
+    _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir)
 
     cluster = Cluster.from_name(cluster_name)
     hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
@@ -291,10 +303,22 @@ def all(
     else:
         hubs = cluster.hubs
     for i, hub in enumerate(hubs):
-        print_colour(
-            f"{i + 1} / {len(hubs)}: Validating hub and authenticator config for {hub.spec['name']}..."
+        default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
+        chart_override = hub.spec.get("chart_override", None)
+        chart_override_path = (
+            hub.cluster.config_dir / chart_override if chart_override else None
         )
-        hub_config(
-            cluster_name, hub.spec["name"], skip_refresh=skip_refresh, debug=debug
-        )
-        authenticator_config(cluster_name, hub.spec["name"])
+        with get_chart_dir(
+            default_chart_dir, chart_override, chart_override_path
+        ) as chart_dir:
+            print_colour(
+                f"{i + 1} / {len(hubs)}: Validating hub and authenticator config for {hub.spec['name']}..."
+            )
+            hub_config(
+                cluster_name,
+                hub.spec["name"],
+                helm_chart_dir=chart_dir,
+                skip_refresh=skip_refresh,
+                debug=debug,
+            )
+            authenticator_config(cluster_name, hub.spec["name"], chart_dir)
