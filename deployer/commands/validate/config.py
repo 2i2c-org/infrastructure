@@ -238,23 +238,22 @@ def authenticator_config(
                     )
             except KeyError:
                 pass
-
-        # If the authenticator class is github, then raise an error
-        # if `Authenticator.allowed_users` is set
-        if hub.authenticator == "github" and allowed_users and org_based_github_auth:
-            raise ValueError(
-                f"""
-                    Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
-                    being used for auth so valid members are not refused access.
-                """
-            )
-        elif hub.authenticator == "dummy" and admin_users != []:
-            raise ValueError(
-                f"""
-                    For security reasons, please unset `Authenticator.admin_users` for {hub.spec['name']} when the dummy authenticator is
-                    being used for authentication.
-                """
-            )
+    # If the authenticator class is github, then raise an error
+    # if `Authenticator.allowed_users` is set
+    if hub.authenticator == "github" and allowed_users and org_based_github_auth:
+        raise ValueError(
+            f"""
+                Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
+                being used for auth so valid members are not refused access.
+            """
+        )
+    elif hub.authenticator == "dummy" and admin_users != []:
+        raise ValueError(
+            f"""
+                For security reasons, please unset `Authenticator.admin_users` for {hub.spec['name']} when the dummy authenticator is
+                being used for authentication.
+            """
+        )
 
 
 @validate_app.command()
