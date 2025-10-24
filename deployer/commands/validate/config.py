@@ -48,22 +48,24 @@ def _generate_values_schema_json(helm_chart_dir):
 
 
 @functools.lru_cache
-def _prepare_helm_charts_dependencies_and_schemas():
+def _prepare_helm_charts_dependencies_and_schemas(hub_chart_dir=None):
     """
     Ensures that the helm charts we deploy, basehub and daskhub, have got their
     dependencies updated and .json schema files generated so that they can be
     """
-    basehub_dir = HELM_CHARTS_DIR.joinpath("basehub")
-    _generate_values_schema_json(basehub_dir)
-    subprocess.check_call(["helm", "dep", "up", basehub_dir])
-
-    daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
-    # Not generating schema for daskhub, as it is dead
-    subprocess.check_call(["helm", "dep", "up", daskhub_dir])
-
-    support_dir = HELM_CHARTS_DIR.joinpath("support")
-    _generate_values_schema_json(support_dir)
-    subprocess.check_call(["helm", "dep", "up", support_dir])
+    if not hub_chart_dir:
+        hub_chart_dir = HELM_CHARTS_DIR.joinpath("basehub")
+    dirs = [
+        hub_chart_dir,
+        HELM_CHARTS_DIR.joinpath("support"),
+        HELM_CHARTS_DIR.joinpath("daskhub"),
+    ]
+    for chart_dir in dirs:
+        print(chart_dir)
+        if "daskhub" not in str(chart_dir):
+            # Not generating schema for daskhub, as it is dead
+            _generate_values_schema_json(chart_dir)
+        subprocess.check_call(["helm", "dep", "up", chart_dir])
 
 
 @validate_app.command()
@@ -94,6 +96,9 @@ def cluster_config(
 def hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+    helm_chart_dir: str = typer.Argument(
+        None, help="Path to a  custom helm chart directory"
+    ),
     skip_refresh: bool = typer.Option(
         False, "--skip-refresh", help="Skip the helm dep update"
     ),
@@ -103,16 +108,19 @@ def hub_config(
     Validates the provided non-encrypted helm chart values files for each hub of
     a specific cluster.
     """
-    if not skip_refresh:
-        _prepare_helm_charts_dependencies_and_schemas()
-
     cluster = Cluster.from_name(cluster_name)
     hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
+
+    if not helm_chart_dir:
+        helm_chart_dir = str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"]))
+
+    if not skip_refresh:
+        _prepare_helm_charts_dependencies_and_schemas(helm_chart_dir)
 
     cmd = [
         "helm",
         "template",
-        str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"])),
+        helm_chart_dir,
     ]
     if debug:
         cmd.append("--debug")
@@ -153,13 +161,16 @@ def hub_config(
 @validate_app.command()
 def support_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    helm_chart_dir: str = typer.Argument(
+        None, help="Path to a custom helm chart directory"
+    ),
     debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
     Validates the provided non-encrypted helm chart values files for the support chart
     of a specific cluster.
     """
-    _prepare_helm_charts_dependencies_and_schemas()
+    _prepare_helm_charts_dependencies_and_schemas(helm_chart_dir)
 
     cluster = Cluster.from_name(cluster_name)
 
@@ -202,13 +213,16 @@ def support_config(
 def authenticator_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+    helm_chart_dir: str = typer.Argument(
+        None, help="Path to a  custom helm chart directory"
+    ),
 ):
     """
     For each hub of a specific cluster it asserts that:
     - when the JupyterHub GitHubOAuthenticator is used, then allowed_users is not set
     - when the dummy authenticator is used, then admin_users is the empty list
     """
-    _prepare_helm_charts_dependencies_and_schemas()
+    _prepare_helm_charts_dependencies_and_schemas(helm_chart_dir)
 
     cluster = Cluster.from_name(cluster_name)
     hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)

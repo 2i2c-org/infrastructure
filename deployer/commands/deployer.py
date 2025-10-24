@@ -7,7 +7,9 @@ import os
 import shutil
 import subprocess
 import sys
-from contextlib import contextmanager, redirect_stderr, redirect_stdout
+import tempfile
+from contextlib import redirect_stderr, redirect_stdout
+from pathlib import Path
 
 import pytest
 import typer
@@ -70,21 +72,6 @@ def deploy_support(
             )
 
 
-@contextmanager
-def custom_chart(chart_dir, chart_override_path):
-    try:
-        if chart_override_path:
-            chart_yaml = chart_dir / "Chart.yaml"
-            temp_default_chart_copy = chart_dir / "Chart-copy.yaml"
-
-            shutil.copy(chart_yaml, temp_default_chart_copy)
-            shutil.copy(chart_override_path, chart_yaml)
-        yield chart_dir
-    finally:
-        if chart_override_path:
-            os.replace(temp_default_chart_copy, chart_yaml)
-
-
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
@@ -124,26 +111,47 @@ def deploy(
         else:
             hubs = cluster.hubs
         for i, hub in enumerate(hubs):
-            chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
+            default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
             chart_override = hub.spec.get("chart_override", None)
             chart_override_path = (
                 hub.cluster.config_dir / chart_override if chart_override else None
             )
+            if chart_override:
+                try:
+                    temp_chart_dir = tempfile.TemporaryDirectory()
+                    temp_chart_dir_name = temp_chart_dir.name
+                    # copy the chart directory into the temporary location
+                    shutil.copytree(
+                        default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True
+                    )
+                    # copy the chart override file into the temporary chart directory
+                    shutil.copy(chart_override_path, temp_chart_dir_name)
+                    # rename the override file so that it overrides "Chart.yaml"
+                    default_chart_yaml = Path(temp_chart_dir_name) / "Chart.yaml"
+                    os.rename(
+                        Path(temp_chart_dir_name) / chart_override, default_chart_yaml
+                    )
+                except Exception as e:
+                    temp_chart_dir.cleanup()
+                    raise (e)
 
-            with custom_chart(chart_dir, chart_override_path) as chart_dir:
-                print_colour(
-                    f"{i + 1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
-                )
-                validate_hub_config(cluster_name, hub.spec["name"], skip_refresh)
-                print_colour(
-                    f"{i + 1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
-                )
-                validate_authenticator_config(cluster_name, hub.spec["name"])
+            print_colour(
+                f"{i + 1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
+            )
+            validate_hub_config(
+                cluster_name, hub.spec["name"], temp_chart_dir_name, skip_refresh
+            )
+            print_colour(
+                f"{i + 1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
+            )
+            validate_authenticator_config(
+                cluster_name, hub.spec["name"], temp_chart_dir_name
+            )
 
-                print_colour(
-                    f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
-                )
-                hub.deploy(dask_gateway_version, debug, dry_run)
+            print_colour(f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}...")
+            hub.deploy(dask_gateway_version, debug, dry_run)
+            if chart_override:
+                temp_chart_dir.cleanup()
 
 
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
