@@ -1,3 +1,4 @@
+local escapeName(name) = std.strReplace(name, '.', '-');
 {
   /**
    Create a managed nodegroup config that can autoscale from 0.
@@ -5,7 +6,7 @@
    Parameters:
    - clusterName [string]: Name of the EKS cluster this nodeGroup is for
    - namePrefix [string]:
-   - instanceType [string]: Type of instance this nodeGroup should contain
+   - instanceType [string, array[string]]: Type of instance(s) this nodeGroup should contain
    - availabilityZones [array[string]]: List of AZs this nodeGroup should span
    - generation [string]:
    - minSize [int]: Minimum number of nodes. Also sets desiredCapacity
@@ -53,23 +54,25 @@
      */
     // Include name prefix, escaped instance type (because names can't have .)
     // and name generation
+    local instanceTypes = if std.isString(instanceType) then [instanceType] else instanceType,
     name: std.join('-', [
       namePrefix,
-      std.strReplace(instanceType, '.', '-'),
+    ] + std.map(escapeName, instanceTypes) + [
       generation,
     ]),
     availabilityZones: availabilityZones,
     minSize: minSize,
     maxSize: maxSize,
     desiredCapacity: minSize,
-    instanceType: instanceType,
+    // For multiple instance types, we need to set the instanceTypes key
+    [if std.isString(instanceType) then 'instanceType' else 'instanceTypes']: instanceType,
     volumeSize: 80,
     amiFamily: 'AmazonLinux2023',
     nodeRepairConfig: {
       enabled: true,
     },
     labels: {
-      'node.kubernetes.io/instance-type': instanceType,
+      'node.kubernetes.io/instance-type': instanceTypes[0],
       '2i2c/node-group-generation': generation,
     } + extraLabels,
     taints: extraTaints,
@@ -388,7 +391,7 @@
     overrides={}
   ):: clusterConfig {
     managedNodeGroups: [
-      if (kind == null || ng._kind == kind) && (generation == null || ng._generation == generation) && (hubName == null || std.get(ng, '_hubName', '') == hubName) && (instanceType == null || ng.instanceType == instanceType)
+      if (kind == null || ng._kind == kind) && (generation == null || ng._generation == generation) && (hubName == null || std.get(ng, '_hubName', '') == hubName) && (instanceType == null || (if std.objectHas(ng, 'instanceType') then ng.instanceType == instanceType else std.contains(ng.instanceTypes, instanceType)))
       then ng + overrides
       else ng
       for ng in clusterConfig.managedNodeGroups
