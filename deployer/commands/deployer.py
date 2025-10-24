@@ -132,7 +132,7 @@ def deploy(
                     os.rename(
                         Path(temp_chart_dir_name) / chart_override, default_chart_yaml
                     )
-                    chart_dir = temp_chart_dir_name
+                    chart_dir = Path(temp_chart_dir_name)
                 except Exception as e:
                     temp_chart_dir.cleanup()
                     raise (e)
