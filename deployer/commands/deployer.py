@@ -116,6 +116,7 @@ def deploy(
             chart_override_path = (
                 hub.cluster.config_dir / chart_override if chart_override else None
             )
+            chart_dir = default_chart_dir
             if chart_override:
                 try:
                     temp_chart_dir = tempfile.TemporaryDirectory()
@@ -131,6 +132,7 @@ def deploy(
                     os.rename(
                         Path(temp_chart_dir_name) / chart_override, default_chart_yaml
                     )
+                    chart_dir = temp_chart_dir_name
                 except Exception as e:
                     temp_chart_dir.cleanup()
                     raise (e)
@@ -138,18 +140,15 @@ def deploy(
             print_colour(
                 f"{i + 1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
             )
-            validate_hub_config(
-                cluster_name, hub.spec["name"], temp_chart_dir_name, skip_refresh
-            )
+            validate_hub_config(cluster_name, hub.spec["name"], chart_dir, skip_refresh)
             print_colour(
                 f"{i + 1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
             )
-            validate_authenticator_config(
-                cluster_name, hub.spec["name"], temp_chart_dir_name
-            )
+            validate_authenticator_config(cluster_name, hub.spec["name"], chart_dir)
 
             print_colour(f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}...")
-            hub.deploy(dask_gateway_version, debug, dry_run)
+            hub.deploy(chart_dir, dask_gateway_version, debug, dry_run)
+
             if chart_override:
                 temp_chart_dir.cleanup()
 
