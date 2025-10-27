@@ -148,7 +148,7 @@ local daskNodes = [
   metadata+: {
     name: 'opensci',
     region: clusterRegion,
-    version: '1.33',
+    version: '1.34',
     tags+: {
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': $.metadata.name,
