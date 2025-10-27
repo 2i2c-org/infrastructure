@@ -1,0 +1,47 @@
+basehub:
+  nfs:
+    enabled: true
+    pv:
+      enabled: false
+
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+      #serverIP:
+
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: github
+      homepage:
+        templateVars:
+          org:
+            name: aimatx-2i2c-hub
+            logo_url: https://aimatx.ai/aimatx_logo_name_4darkBG_transparent.svg
+            url: https://aimatx.ai/
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: AIMATX
+            url: https://aimatx.ai/
+    hub:
+      allowNamedServers: true
+      config:
+        JupyterHub:
+          authenticator_class: github
+        Authenticator:
+          admin_users: []
+
+    scheduling:
+      userScheduler:
+        enabled: true
