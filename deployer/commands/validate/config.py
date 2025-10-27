@@ -289,9 +289,6 @@ def all_hub_config(
     """
     Validate cluster.yaml and non-encrypted helm config for given hub
     """
-    cluster_config(cluster_name)
-    support_config(cluster_name, debug=debug)
-
     cluster = Cluster.from_name(cluster_name)
     if hub_name:
         hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
