@@ -56,11 +56,10 @@ def _prepare_support_helm_charts_dependencies_and_schema():
 
 
 @functools.lru_cache
-def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir=""):
+def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
     if not hub_chart_dir:
         hub_chart_dir = HELM_CHARTS_DIR / "basehub"
-
-    if "daskhub" not in str(hub_chart_dir):
+    if not legacy_daskub:
         _generate_values_schema_json(hub_chart_dir)
     subprocess.check_call(["helm", "dep", "up", hub_chart_dir])
 
@@ -100,6 +99,9 @@ def hub_config(
         False, "--skip-refresh", help="Skip the helm dep update"
     ),
     debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
+    legacy_daskhub: str = typer.Argument(
+        False, help="Whether or not the hub is a legacy daskhub or not"
+    ),
 ):
     """
     Validates the provided non-encrypted helm chart values files for each hub of
@@ -109,10 +111,10 @@ def hub_config(
     hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
 
     if not helm_chart_dir:
-        helm_chart_dir = HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"])
+        helm_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
 
     if not skip_refresh:
-        _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir)
+        _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir, legacy_daskhub)
 
     cmd = [
         "helm",
@@ -159,6 +161,10 @@ def hub_config(
 def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
     chart_dir = default_chart_dir
     if chart_override:
+        # if we're overriding the Chart.yaml file, then we need to make sure
+        # that we're copying the contents for helm-charts/basehub and not the
+        # deprecated daskhub chart
+        default_chart_dir = HELM_CHARTS_DIR / "basehub"
         temp_chart_dir = tempfile.TemporaryDirectory()
         temp_chart_dir_name = temp_chart_dir.name
         # copy the chart directory into the temporary location
@@ -229,13 +235,16 @@ def authenticator_config(
     helm_chart_dir: str = typer.Argument(
         None, help="Path to a  custom helm chart directory"
     ),
+    legacy_daskhub: str = typer.Argument(
+        False, help="Whether or not the hub is a legacy daskhub or not"
+    ),
 ):
     """
     For each hub of a specific cluster it asserts that:
     - when the JupyterHub GitHubOAuthenticator is used, then allowed_users is not set
     - when the dummy authenticator is used, then admin_users is the empty list
     """
-    _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir)
+    _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir, legacy_daskhub)
 
     cluster = Cluster.from_name(cluster_name)
     hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
@@ -309,6 +318,7 @@ def all(
         chart_override_path = (
             hub.cluster.config_dir / chart_override if chart_override else None
         )
+        legacy_daskhub = hub.spec["helm_chart"] == "daskhub"
         with get_chart_dir(
             default_chart_dir, chart_override, chart_override_path
         ) as chart_dir:
@@ -321,5 +331,8 @@ def all(
                 helm_chart_dir=chart_dir,
                 skip_refresh=skip_refresh,
                 debug=debug,
+                legacy_daskhub=legacy_daskhub,
             )
-            authenticator_config(cluster_name, hub.spec["name"], chart_dir)
+            authenticator_config(
+                cluster_name, hub.spec["name"], chart_dir, legacy_daskhub=legacy_daskhub
+            )
