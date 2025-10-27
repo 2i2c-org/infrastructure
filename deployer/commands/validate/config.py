@@ -64,44 +64,13 @@ def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_dasku
     subprocess.check_call(["helm", "dep", "up", hub_chart_dir])
 
 
-@validate_app.command()
-def cluster_config(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-):
-    """
-    Validates cluster.yaml configuration against a JSONSchema.
-    """
-    cur_dir = Path(__file__).parent
-    cluster_schema_file = cur_dir.joinpath("cluster.schema.yaml")
-
-    cluster = Cluster.from_name(cluster_name)
-
-    with open(cluster_schema_file) as sf:
-        schema = yaml.load(sf)
-        try:
-            jsonschema.validate(cluster.spec, schema)
-        except jsonschema.ValidationError as e:
-            print_colour(
-                f"JSON schema validation error in cluster.yaml for {cluster_name}: {e.message}",
-                colour="red",
-            )
-            sys.exit(1)
-
-
-@validate_app.command()
-def hub_config(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    helm_chart_dir: str = typer.Argument(
-        None, help="Path to a  custom helm chart directory"
-    ),
-    skip_refresh: bool = typer.Option(
-        False, "--skip-refresh", help="Skip the helm dep update"
-    ),
-    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
-    legacy_daskhub: str = typer.Argument(
-        False, help="Whether or not the hub is a legacy daskhub or not"
-    ),
+def validate_hub_config(
+    cluster_name,
+    hub_name,
+    helm_chart_dir="",
+    skip_refresh=False,
+    debug=False,
+    legacy_daskhub=False,
 ):
     """
     Validates the provided non-encrypted helm chart values files for each hub of
@@ -180,64 +149,8 @@ def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
         temp_chart_dir.cleanup()
 
 
-@validate_app.command()
-def support_config(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
-):
-    """
-    Validates the provided non-encrypted helm chart values files for the support chart
-    of a specific cluster.
-    """
-    _prepare_support_helm_charts_dependencies_and_schema()
-
-    cluster = Cluster.from_name(cluster_name)
-
-    if cluster.support:
-        print_colour(
-            f"Validating non-encrypted support values files for {cluster_name}..."
-        )
-
-        cmd = [
-            "helm",
-            "template",
-            str(HELM_CHARTS_DIR.joinpath("support")),
-        ]
-        if debug:
-            cmd.append("--debug")
-
-        with ExitStack() as jsonnet_stack:
-            for values_file in cluster.support["helm_chart_values_files"]:
-                if values_file.endswith(".jsonnet"):
-                    rendered_file = jsonnet_stack.enter_context(
-                        render_jsonnet(
-                            cluster.config_dir / values_file, cluster_name, None
-                        )
-                    )
-                    cmd.append(f"--values={rendered_file}")
-                # FIXME: The logic here for figuring out non secret files is not correct
-                elif "secret" not in os.path.basename(values_file):
-                    cmd.append(f"--values={cluster.config_dir / values_file}")
-
-                try:
-                    subprocess.check_output(cmd, text=True)
-                except subprocess.CalledProcessError as e:
-                    print(e.stdout)
-                    sys.exit(1)
-    else:
-        print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
-
-
-@validate_app.command()
-def authenticator_config(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    helm_chart_dir: str = typer.Argument(
-        None, help="Path to a  custom helm chart directory"
-    ),
-    legacy_daskhub: str = typer.Argument(
-        False, help="Whether or not the hub is a legacy daskhub or not"
-    ),
+def validate_authenticator_config(
+    cluster_name, hub_name, helm_chart_dir, legacy_daskhub
 ):
     """
     For each hub of a specific cluster it asserts that:
@@ -293,7 +206,79 @@ def authenticator_config(
 
 
 @validate_app.command()
-def all(
+def support_config(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
+):
+    """
+    Validates the provided non-encrypted helm chart values files for the support chart
+    of a specific cluster.
+    """
+    _prepare_support_helm_charts_dependencies_and_schema()
+
+    cluster = Cluster.from_name(cluster_name)
+
+    if cluster.support:
+        print_colour(
+            f"Validating non-encrypted support values files for {cluster_name}..."
+        )
+
+        cmd = [
+            "helm",
+            "template",
+            str(HELM_CHARTS_DIR.joinpath("support")),
+        ]
+        if debug:
+            cmd.append("--debug")
+
+        with ExitStack() as jsonnet_stack:
+            for values_file in cluster.support["helm_chart_values_files"]:
+                if values_file.endswith(".jsonnet"):
+                    rendered_file = jsonnet_stack.enter_context(
+                        render_jsonnet(
+                            cluster.config_dir / values_file, cluster_name, None
+                        )
+                    )
+                    cmd.append(f"--values={rendered_file}")
+                # FIXME: The logic here for figuring out non secret files is not correct
+                elif "secret" not in os.path.basename(values_file):
+                    cmd.append(f"--values={cluster.config_dir / values_file}")
+
+                try:
+                    subprocess.check_output(cmd, text=True)
+                except subprocess.CalledProcessError as e:
+                    print(e.stdout)
+                    sys.exit(1)
+    else:
+        print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
+
+
+@validate_app.command()
+def cluster_config(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+):
+    """
+    Validates cluster.yaml configuration against a JSONSchema.
+    """
+    cur_dir = Path(__file__).parent
+    cluster_schema_file = cur_dir.joinpath("cluster.schema.yaml")
+
+    cluster = Cluster.from_name(cluster_name)
+
+    with open(cluster_schema_file) as sf:
+        schema = yaml.load(sf)
+        try:
+            jsonschema.validate(cluster.spec, schema)
+        except jsonschema.ValidationError as e:
+            print_colour(
+                f"JSON schema validation error in cluster.yaml for {cluster_name}: {e.message}",
+                colour="red",
+            )
+            sys.exit(1)
+
+
+@validate_app.command()
+def all_hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
     skip_refresh: bool = typer.Option(
@@ -325,7 +310,7 @@ def all(
             print_colour(
                 f"{i + 1} / {len(hubs)}: Validating hub and authenticator config for {hub.spec['name']}..."
             )
-            hub_config(
+            validate_hub_config(
                 cluster_name,
                 hub.spec["name"],
                 helm_chart_dir=chart_dir,
@@ -333,6 +318,6 @@ def all(
                 debug=debug,
                 legacy_daskhub=legacy_daskhub,
             )
-            authenticator_config(
+            validate_authenticator_config(
                 cluster_name, hub.spec["name"], chart_dir, legacy_daskhub=legacy_daskhub
             )

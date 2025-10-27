@@ -13,15 +13,15 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
-from deployer.commands.validate.config import (
-    authenticator_config as validate_authenticator_config,
-)
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.commands.validate.config import (
     get_chart_dir,
 )
-from deployer.commands.validate.config import hub_config as validate_hub_config
 from deployer.commands.validate.config import support_config as validate_support_config
+from deployer.commands.validate.config import (
+    validate_authenticator_config,
+    validate_hub_config,
+)
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
