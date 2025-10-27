@@ -128,6 +128,14 @@ def validate_hub_config(
 
 @contextmanager
 def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
+    """
+    Returns the default chart directory (basehub or daskhub)
+    or a temporary directory.
+
+    The temporary directory is holding a copy of the contents of the
+    helm-charts/basehub dir where Chart.yaml is overridden by whichever yaml
+    file was passed in the cluster's `cluster.yaml` file under `chart_override`
+    """
     chart_dir = default_chart_dir
     if chart_override:
         # if we're overriding the Chart.yaml file, then we need to make sure
