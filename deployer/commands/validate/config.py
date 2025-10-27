@@ -60,7 +60,8 @@ def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir=""):
     if not hub_chart_dir:
         hub_chart_dir = HELM_CHARTS_DIR / "basehub"
 
-    _generate_values_schema_json(hub_chart_dir)
+    if "daskhub" not in str(hub_chart_dir):
+        _generate_values_schema_json(hub_chart_dir)
     subprocess.check_call(["helm", "dep", "up", hub_chart_dir])
 
 
@@ -108,7 +109,7 @@ def hub_config(
     hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
 
     if not helm_chart_dir:
-        helm_chart_dir = str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"]))
+        helm_chart_dir = HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"])
 
     if not skip_refresh:
         _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir)
