@@ -154,15 +154,15 @@ jupyterhub:
               kubespawner_override:
                 image: quay.io/pangeo/ml-notebook:2025.08.14
 
-    kubespawner_override:
-      environment:
-        NVIDIA_DRIVER_CAPABILITIES: compute,utility
-      mem_limit:
-      mem_guarantee: 14G
-      node_selector:
-        node.kubernetes.io/instance-type: g4dn.xlarge
-      extra_resource_limits:
-        nvidia.com/gpu: '1'
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
 
   custom:
     daskhubSetup:
@@ -190,15 +190,15 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
-    GitHubOAuthenticator:
-      allowed_organizations:
-      - 2i2c-org:hub-access-for-2i2c-staff
-      - aimatx-ai:developers
-      scope:
-      - read:org
-      Authenticator:
-        admin_users:
-        - philrodoni
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - aimatx-ai:developers
+        scope:
+        - read:org
+        Authenticator:
+          admin_users:
+          - philrodoni
 
   scheduling:
     userScheduler:
