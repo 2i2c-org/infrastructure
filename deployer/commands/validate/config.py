@@ -49,6 +49,12 @@ def _generate_values_schema_json(helm_chart_dir):
         json.dump(schema, f)
 
 
+def cleanup_values_schema_json(helm_chart_dir):
+    values_schema_json = os.path.join(helm_chart_dir, "values.schema.json")
+    if os.path.exists(values_schema_json):
+        os.remove(values_schema_json)
+
+
 @functools.lru_cache
 def _prepare_support_helm_charts_dependencies_and_schema():
     support_dir = HELM_CHARTS_DIR.joinpath("support")
@@ -57,7 +63,6 @@ def _prepare_support_helm_charts_dependencies_and_schema():
 
 @functools.lru_cache
 def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
-    print(legacy_daskub)
     if not hub_chart_dir:
         hub_chart_dir = HELM_CHARTS_DIR / "basehub"
     if not legacy_daskub:
@@ -331,4 +336,7 @@ def all_hub_config(
                 skip_refresh=skip_refresh,
                 debug=debug,
             )
-            validate_authenticator_config(cluster_name, hub.spec["name"], chart_dir)
+            validate_authenticator_config(
+                cluster_name, hub.spec["name"], chart_dir, skip_refresh
+            )
+            cleanup_values_schema_json(chart_dir)

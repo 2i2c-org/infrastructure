@@ -13,6 +13,9 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
+from deployer.commands.validate.config import (
+    cleanup_values_schema_json,
+)
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.commands.validate.config import (
     get_chart_dir,
@@ -136,6 +139,7 @@ def deploy(
                     f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
                 hub.deploy(chart_dir, dask_gateway_version, debug, dry_run)
+                cleanup_values_schema_json(chart_dir)
 
 
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
