@@ -1,34 +1,33 @@
-basehub:
-  jupyterhub:
-    ingress:
-      hosts: [aimatx.2i2c.cloud]
-      tls:
-      - hosts: [aimatx.2i2c.cloud]
-        secretName: https-auto-tls
-    singleuser:
-      extraEnv:
-        SCRATCH_BUCKET: s3://aimatx-2i2c-hub-scratch/$(JUPYTERHUB_USER)
-        PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent/$(JUPYTERHUB_USER)
-        GH_SCOPED_CREDS_CLIENT_ID: Iv23liT6RbWppY8dPBPu
-        GH_SCOPED_CREDS_APP_URL: https://github.com/apps/aimatx-2i2c-hub-github-push-access
+jupyterhub:
+  ingress:
+    hosts: [aimatx.2i2c.cloud]
+    tls:
+    - hosts: [aimatx.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://aimatx-2i2c-hub-scratch/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent/$(JUPYTERHUB_USER)
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23liT6RbWppY8dPBPu
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/aimatx-2i2c-hub-github
 
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://aimatx.2i2c.cloud/hub/oauth_callback
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-
-  binderhub-service:
+  hub:
     config:
-      BinderHub:
-        image_prefix: quay.io/imagebuilding-non-gcp-hubs/aimatx-2i2c-hub-prod-
+      GitHubOAuthenticator:
+        oauth_callback_url: https://aimatx.2i2c.cloud/hub/oauth_callback
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/aimatx-2i2c-hub-prod-
