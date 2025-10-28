@@ -137,24 +137,26 @@ def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
     file was passed in the cluster's `cluster.yaml` file under `chart_override`
     """
     chart_dir = default_chart_dir
-    if chart_override:
-        # if we're overriding the Chart.yaml file, then we need to make sure
-        # that we're copying the contents for helm-charts/basehub and not the
-        # deprecated daskhub chart
-        default_chart_dir = HELM_CHARTS_DIR / "basehub"
-        temp_chart_dir = tempfile.TemporaryDirectory()
-        temp_chart_dir_name = temp_chart_dir.name
-        # copy the chart directory into the temporary location
-        shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)
-        # copy the chart override file into the temporary chart directory
-        shutil.copy(chart_override_path, temp_chart_dir_name)
-        # rename the override file so that it overrides "Chart.yaml"
-        default_chart_yaml = Path(temp_chart_dir_name) / "Chart.yaml"
-        os.rename(Path(temp_chart_dir_name) / chart_override, default_chart_yaml)
-        chart_dir = Path(temp_chart_dir_name)
-    yield chart_dir
-    if chart_override:
-        temp_chart_dir.cleanup()
+    try:
+        if chart_override:
+            # if we're overriding the Chart.yaml file, then we need to make sure
+            # that we're copying the contents for helm-charts/basehub and not the
+            # deprecated daskhub chart
+            default_chart_dir = HELM_CHARTS_DIR / "basehub"
+            temp_chart_dir = tempfile.TemporaryDirectory()
+            temp_chart_dir_name = temp_chart_dir.name
+            # copy the chart directory into the temporary location
+            shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)
+            # copy the chart override file into the temporary chart directory
+            shutil.copy(chart_override_path, temp_chart_dir_name)
+            # rename the override file so that it overrides "Chart.yaml"
+            default_chart_yaml = Path(temp_chart_dir_name) / "Chart.yaml"
+            os.rename(Path(temp_chart_dir_name) / chart_override, default_chart_yaml)
+            chart_dir = Path(temp_chart_dir_name)
+        yield chart_dir
+    finally:
+        if chart_override:
+            temp_chart_dir.cleanup()
 
 
 def validate_authenticator_config(
