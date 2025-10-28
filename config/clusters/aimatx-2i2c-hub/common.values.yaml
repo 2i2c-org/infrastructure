@@ -23,7 +23,7 @@ basehub:
         templateVars:
           org:
             name: aimatx-2i2c-hub
-            logo_url: https://aimatx.ai/aimatx_logo_name_4darkBG_transparent.svg
+            logo_url: https://github.com/user-attachments/assets/41f0fb7c-889f-4804-9a2e-5cc48aba040c
             url: https://aimatx.ai/
           designed_by:
             name: 2i2c
