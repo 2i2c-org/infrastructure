@@ -457,7 +457,7 @@ jobs:
       failure_2i2c-aws-us_dask-staging: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us_dask-staging }}
       failure_2i2c-uk_staging: ${{ steps.declare-failure.outputs.failure_2i2c-uk_staging }}
       failure_awi-ciroh_staging: ${{ steps.declare-failure.outputs.failure_awi-ciroh_staging }}
-      failure_bnext-bio: ${{ steps.declare-failure.outputs.failure_bnext-bio }}
+      failure_bnext-bio_staging: ${{ steps.declare-failure.outputs.failure_bnext-bio_staging }}
       failure_catalystproject-africa_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-africa_staging }}
       failure_catalystproject-latam_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-latam_staging }}
       failure_climatematch_staging: ${{ steps.declare-failure.outputs.failure_climatematch_staging }}
