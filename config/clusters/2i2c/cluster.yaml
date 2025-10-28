@@ -34,6 +34,7 @@ hubs:
   - daskhub-common.values.yaml
   - dask-staging.values.yaml
   - enc-dask-staging.secret.values.yaml
+  chart_override: dask-staging-chart.yaml
 - name: temple
   display_name: Temple University
   domain: temple.2i2c.cloud

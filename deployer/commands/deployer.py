@@ -128,7 +128,9 @@ def deploy(
                 print_colour(
                     f"{i + 1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
                 )
-                validate_authenticator_config(cluster_name, hub.spec["name"], chart_dir)
+                validate_authenticator_config(
+                    cluster_name, hub.spec["name"], chart_dir, skip_refresh
+                )
 
                 print_colour(
                     f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."

@@ -57,6 +57,7 @@ def _prepare_support_helm_charts_dependencies_and_schema():
 
 @functools.lru_cache
 def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
+    print(legacy_daskub)
     if not hub_chart_dir:
         hub_chart_dir = HELM_CHARTS_DIR / "basehub"
     if not legacy_daskub:
@@ -70,7 +71,6 @@ def validate_hub_config(
     helm_chart_dir="",
     skip_refresh=False,
     debug=False,
-    legacy_daskhub=False,
 ):
     """
     Validates the provided non-encrypted helm chart values files for each hub of
@@ -81,9 +81,10 @@ def validate_hub_config(
 
     if not helm_chart_dir:
         helm_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
-
     if not skip_refresh:
-        _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir, legacy_daskhub)
+        _prepare_hub_helm_charts_dependencies_and_schema(
+            helm_chart_dir, hub.legacy_daskhub
+        )
 
     cmd = [
         "helm",
@@ -160,17 +161,24 @@ def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
 
 
 def validate_authenticator_config(
-    cluster_name, hub_name, helm_chart_dir, legacy_daskhub
+    cluster_name,
+    hub_name,
+    helm_chart_dir,
+    skip_refresh=False,
 ):
     """
     For each hub of a specific cluster it asserts that:
     - when the JupyterHub GitHubOAuthenticator is used, then allowed_users is not set
     - when the dummy authenticator is used, then admin_users is the empty list
     """
-    _prepare_hub_helm_charts_dependencies_and_schema(helm_chart_dir, legacy_daskhub)
 
     cluster = Cluster.from_name(cluster_name)
     hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
+
+    if not skip_refresh:
+        _prepare_hub_helm_charts_dependencies_and_schema(
+            helm_chart_dir, hub.legacy_daskhub
+        )
 
     allowed_users = []
     admin_users = "Jargon-Chlorine7-Undergo"
@@ -310,7 +318,6 @@ def all_hub_config(
         chart_override_path = (
             hub.cluster.config_dir / chart_override if chart_override else None
         )
-        legacy_daskhub = hub.spec["helm_chart"] == "daskhub"
         with get_chart_dir(
             default_chart_dir, chart_override, chart_override_path
         ) as chart_dir:
@@ -323,8 +330,5 @@ def all_hub_config(
                 helm_chart_dir=chart_dir,
                 skip_refresh=skip_refresh,
                 debug=debug,
-                legacy_daskhub=legacy_daskhub,
             )
-            validate_authenticator_config(
-                cluster_name, hub.spec["name"], chart_dir, legacy_daskhub=legacy_daskhub
-            )
+            validate_authenticator_config(cluster_name, hub.spec["name"], chart_dir)
