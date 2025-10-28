@@ -195,10 +195,12 @@ basehub:
       GitHubOAuthenticator:
         allowed_organizations:
         - 2i2c-org:hub-access-for-2i2c-staff
+        - aimatx-ai:developers
         scope:
         - read:org
         Authenticator:
-          admin_users: []
+          admin_users:
+          - philrodoni
 
     scheduling:
       userScheduler:
