@@ -4,9 +4,9 @@ nfs:
 
 jupyterhub:
   ingress:
-    hosts: [aimatx.2i2c.cloud]
+    hosts: [staging.aimatx.2i2c.cloud]
     tls:
-    - hosts: [aimatx.2i2c.cloud]
+    - hosts: [staging.aimatx.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
     extraEnv:
