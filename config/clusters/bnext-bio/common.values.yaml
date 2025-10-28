@@ -81,8 +81,13 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            jupyter-scipy:
+            bnext-nucleus:
               default: true
+              display_name: B.next Nucleus
+              slug: bnext-nucleus
+              kubespawner_override:
+                image: quay.io/2i2c/bnext-nucleus-image:1002ebd7f334
+            jupyter-scipy:
               display_name: Jupyter SciPy
               slug: jupyter-scipy
               kubespawner_override:
@@ -147,6 +152,53 @@ jupyterhub:
                 cpu_limit: 3.6505
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a container on a dedicated node with a GPU
+      slug: gpu
+      allowed_groups:
+      - 2i2c-org:hub-access-for-2i2c-staff
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pytorch:
+              display_name: Pangeo PyTorch ML Notebook
+              default: false
+              slug: pytorch
+              kubespawner_override:
+                image: quay.io/pangeo/pytorch-notebook:2024.11.11
+            tensorflow2:
+              display_name: Pangeo Tensorflow2 ML Notebook
+              slug: tensorflow2
+              kubespawner_override:
+                image: quay.io/pangeo/ml-notebook:2024.11.11
+            bnext-nucleus:
+              display_name: B.next Nucleus
+              default: true
+              slug: bnext-nucleus
+              kubespawner_override:
+                image: quay.io/2i2c/bnext-nucleus-image:1002ebd7f334
+
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
 binderhub-service:
   enabled: true
     # Explicitly specify what nodes we want for our builds
