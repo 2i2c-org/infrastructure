@@ -27,7 +27,7 @@ user_buckets = {
   "scratch" : {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "prod" },
-  }
+  },
   "persistent-staging" : {
     "delete_after" : null,
     "tags" : { "2i2c:hub-name" : "staging" },
