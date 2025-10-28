@@ -27,6 +27,8 @@ jupyterhub:
       extraVolumeMounts: []
   singleuser:
     nodeSelector:
+      # Only use small instances
+      node.kubernetes.io/instance-type: r5.xlarge
       2i2c/hub-name: binder
     memory:
       guarantee: 1G
