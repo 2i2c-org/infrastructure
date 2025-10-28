@@ -2,6 +2,10 @@ nfs:
   pv:
     serverIP: 10.100.221.238
 
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::426578051359:role/aimatx-2i2c-hub-prod
+
 jupyterhub:
   ingress:
     hosts: [aimatx.2i2c.cloud]
