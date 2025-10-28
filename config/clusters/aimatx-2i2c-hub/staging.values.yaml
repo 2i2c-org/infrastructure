@@ -15,3 +15,8 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: staging
+
+  binderhub-service:
+    config:
+      BinderHub:
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/aimatx-2i2c-hub-staging-
