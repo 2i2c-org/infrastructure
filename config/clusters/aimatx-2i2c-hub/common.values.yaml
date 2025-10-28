@@ -192,6 +192,11 @@ basehub:
       config:
         JupyterHub:
           authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        scope:
+        - read:org
         Authenticator:
           admin_users: []
 

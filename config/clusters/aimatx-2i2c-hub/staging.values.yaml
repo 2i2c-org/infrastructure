@@ -1,9 +1,18 @@
 basehub:
   jupyterhub:
+    ingress:
+      hosts: [aimatx.2i2c.cloud]
+      tls:
+      - hosts: [aimatx.2i2c.cloud]
+        secretName: https-auto-tls
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://aimatx-2i2c-hub-scratch-staging/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent-staging/$(JUPYTERHUB_USER)
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://staging.aimatx.2i2c.cloud/hub/oauth_callback
   dask-gateway:
     gateway:
       backend:
