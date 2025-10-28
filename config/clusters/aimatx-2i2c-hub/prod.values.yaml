@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.100.221.238
+
 jupyterhub:
   ingress:
     hosts: [aimatx.2i2c.cloud]
@@ -5,6 +9,8 @@ jupyterhub:
     - hosts: [aimatx.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
+    nodeSelector:
+      2i2c/hub-name: prod
     extraEnv:
       SCRATCH_BUCKET: s3://aimatx-2i2c-hub-scratch/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent/$(JUPYTERHUB_USER)
