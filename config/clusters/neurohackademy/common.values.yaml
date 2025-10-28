@@ -53,6 +53,7 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
+        - NeuroHackademy2025:escience-hackathon
         - NeuroHackademy2025:hubbers
         - 2i2c-org:hub-access-for-2i2c-staff
         scope:
