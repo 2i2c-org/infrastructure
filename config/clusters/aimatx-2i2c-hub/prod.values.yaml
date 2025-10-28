@@ -1,4 +1,9 @@
 basehub:
+  jupyterhub:
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://aimatx-2i2c-hub-scratch/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent/$(JUPYTERHUB_USER)
   dask-gateway:
     gateway:
       backend:

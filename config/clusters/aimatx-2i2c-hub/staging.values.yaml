@@ -1,0 +1,17 @@
+basehub:
+  jupyterhub:
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://aimatx-2i2c-hub-scratch-staging/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent-staging/$(JUPYTERHUB_USER)
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: staging
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: staging
