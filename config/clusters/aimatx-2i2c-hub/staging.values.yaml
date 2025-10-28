@@ -12,6 +12,10 @@ jupyterhub:
     tls:
     - hosts: [staging.aimatx.2i2c.cloud]
       secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.aimatx.2i2c.cloud/hub/oauth_callback
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
@@ -20,11 +24,6 @@ jupyterhub:
       PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent-staging/$(JUPYTERHUB_USER)
       GH_SCOPED_CREDS_CLIENT_ID: Iv23li6CZDS64R3UA1km
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/aimatx-2i2c-hub-staging-github
-
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.aimatx.2i2c.cloud/hub/oauth_callback
 dask-gateway:
   gateway:
     backend:
@@ -40,6 +39,10 @@ dask-gateway:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0ce12464be041a176
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 1 # in GiB
 
 binderhub-service:
   config:
