@@ -23,7 +23,7 @@ jupyterhub:
       2i2c/hub-name: prod
     extraEnv:
       SCRATCH_BUCKET: s3://bnext-bio-scratch/$(JUPYTERHUB_USER)
-      PERSISTENT_BUCKET: s3://bnext-bio-persistent$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://bnext-bio-persistent/$(JUPYTERHUB_USER)
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liocJ0YYNRVKqmxr
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/bnext-prod-github-push-access
 
