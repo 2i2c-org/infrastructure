@@ -1,9 +1,9 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
 local c = cluster.makeCluster(
-  name='nasa-cryo',
+  name='openscapeshub',
   region='us-west-2',
-  nodeAz='us-west-2a',
+  nodeAz='us-west-2b',
   version='1.34',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
@@ -15,12 +15,12 @@ local c = cluster.makeCluster(
     // Allow for a range of spot instance types
     ['r5.4xlarge', 'r7i.4xlarge', 'r6i.4xlarge'],
   ],
-  hubs=['staging', 'prod'],
-  notebookGPUNodeGroups=[
-    {
-      instanceType: 'g4dn.xlarge',
-    },
+  hubs=[
+    'staging',
+    'prod',
+    'workshop',
   ],
-  nodeGroupGenerations=['e']
+  notebookGPUNodeGroups=[],
+  nodeGroupGenerations=['b', 'c']
 );
 c
