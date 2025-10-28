@@ -1,6 +1,6 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
-local _c = cluster.makeCluster(
+local c = cluster.makeCluster(
   name='nasa-veda',
   region='us-west-2',
   nodeAz='us-west-2a',
@@ -23,8 +23,5 @@ local _c = cluster.makeCluster(
   ],
   nodeGroupGenerations=['c'],
 );
-// Turn up maxSize
-local c = cluster.withNodeGroupConfigOverride(
-  _c, kind='core', overrides={ maxSize: 2 }
-);
+
 c
