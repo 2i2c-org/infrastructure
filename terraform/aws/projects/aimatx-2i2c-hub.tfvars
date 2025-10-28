@@ -34,7 +34,7 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "staging" },
   },
-  "scratch-prod" : {
+  "scratch" : {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "prod" },
   },
@@ -58,7 +58,7 @@ hub_cloud_permissions = {
   },
 
   "prod" : {
-    bucket_admin_access : ["scratch-prod", "persistent"],
+    bucket_admin_access : ["scratch", "persistent"],
   },
 }
 
