@@ -12,7 +12,8 @@ local c = cluster.makeCluster(
     'r5.16xlarge',
   ],
   daskInstanceTypes=[
-    'r5.4xlarge',
+    // Allow for a range of spot instance types
+    ['r5.4xlarge', 'r7i.4xlarge', 'r6i.4xlarge'],
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[
@@ -20,7 +21,7 @@ local c = cluster.makeCluster(
       instanceType: 'g4dn.xlarge',
     },
   ],
-  nodeGroupGenerations=['a']
+  nodeGroupGenerations=['c'],
 );
 
 c

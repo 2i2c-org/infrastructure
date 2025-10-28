@@ -218,6 +218,7 @@ local escapeName(name) = std.strReplace(name, '.', '-');
         maxSize=maxSize,
         extraLabels={
           'k8s.dask.org/node-purpose': 'worker',
+          '2i2c/hub-name': hubName,
         },
 
         extraTaints=[
