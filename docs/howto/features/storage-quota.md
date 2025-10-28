@@ -127,7 +127,7 @@ Once these changes are deployed, we should have a new NFS server running in our 
 deployer use-cluster-credentials $CLUSTER_NAME
 
 # Retrieve the service IP
-kubectl -n $HUB_NAME get svc ${HUB_NAME}-nfs-service
+kubectl -n $HUB_NAME get svc storage-quota-home-nfs
 ```
 
 To check whether the NFS server is running properly, see the [Troubleshooting](#troubleshooting) section.

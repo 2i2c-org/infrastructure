@@ -1,7 +1,7 @@
 nfs:
   enabled: true
   pv:
-    enabled: false
+    enabled: true
 
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
@@ -11,7 +11,6 @@ nfs:
     - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
     - retrans=2
     - noresvport
-    #serverIP:
 
 jupyterhub:
   singleuser:
@@ -204,6 +203,11 @@ jupyterhub:
   scheduling:
     userScheduler:
       enabled: true
+
+jupyterhub-home-nfs:
+  enabled: true # can be migrated to common values file
+  eks:
+    enabled: true # can be migrated to common values file
 
 dask-gateway:
   enabled: true

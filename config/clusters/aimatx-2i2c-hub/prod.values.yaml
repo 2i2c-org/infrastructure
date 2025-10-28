@@ -27,6 +27,10 @@ dask-gateway:
           nodeSelector:
             2i2c/hub-name: prod
 
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-01b6abdb23764a9a5
+
 binderhub-service:
   config:
     BinderHub:

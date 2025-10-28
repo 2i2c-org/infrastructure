@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.100.133.67
+
 jupyterhub:
   ingress:
     hosts: [aimatx.2i2c.cloud]
@@ -26,6 +30,10 @@ dask-gateway:
         extraPodConfig:
           nodeSelector:
             2i2c/hub-name: staging
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0ce12464be041a176
 
 binderhub-service:
   config:
