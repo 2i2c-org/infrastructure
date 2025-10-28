@@ -1,6 +1,6 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
-local c = cluster.makeCluster(
+local _c = cluster.makeCluster(
   name='openscapeshub',
   region='us-west-2',
   nodeAz='us-west-2b',
@@ -23,4 +23,9 @@ local c = cluster.makeCluster(
   notebookGPUNodeGroups=[],
   nodeGroupGenerations=['b', 'c']
 );
+// Turn up maxSize
+local c = cluster.withNodeGroupConfigOverride(
+  _c, kind='core', overrides={ maxSize: 2 }
+);
+
 c
