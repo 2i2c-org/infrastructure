@@ -65,7 +65,6 @@ def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_dasku
 
     if legacy_daskub:
         if not hub_chart_dir.name.startswith(HUB_CHART_PREFIX):
-            print("not a custom hub")
             _generate_values_schema_json(HELM_CHARTS_DIR / "basehub")
             subprocess.check_call(["helm", "dep", "up", HELM_CHARTS_DIR / "basehub"])
     else:
