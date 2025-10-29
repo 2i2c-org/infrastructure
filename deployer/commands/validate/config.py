@@ -58,10 +58,16 @@ def _prepare_support_helm_charts_dependencies_and_schema():
 
 @functools.lru_cache
 def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
-    if not hub_chart_dir:
-        hub_chart_dir = HELM_CHARTS_DIR / "basehub"
-    if not legacy_daskub:
+    if legacy_daskub:
+        print("legacy_daskhub")
+        if "tmp" not in str(hub_chart_dir):
+            print("not a custom hub")
+            _generate_values_schema_json(HELM_CHARTS_DIR / "basehub")
+            subprocess.check_call(["helm", "dep", "up", HELM_CHARTS_DIR / "basehub"])
+    else:
+        print("not a legacy daskhub")
         _generate_values_schema_json(hub_chart_dir)
+
     subprocess.check_call(["helm", "dep", "up", hub_chart_dir])
 
 
