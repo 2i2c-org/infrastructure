@@ -1,6 +1,6 @@
 basehub:
-  enabled: false
   nfs:
+    enabled: false
     pv:
       enabled: false
       # serverIP: 10.100.63.222
