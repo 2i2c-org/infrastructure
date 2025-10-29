@@ -1,4 +1,4 @@
-(upgrade-cluster:aws)=
+(upgrade-k8s-cluster:aws)=
 
 # Upgrade Kubernetes cluster on AWS
 
@@ -122,12 +122,12 @@ without involving EKS.
 If you need to upgrade multiple minor versions, repeat the previous steps
 starting with the minor version upgrade.
 
-(upgrade-cluster:aws:node-groups)=
+(upgrade-k8s-cluster:aws:node-groups)=
 
 #### 5. Upgrade node groups
 
 All of the cluster's node groups should be upgraded. Strategies to upgrade nodes
-are introduced in [](upgrade-cluster:node-upgrade-strategies).
+are introduced in [](upgrade-k8s-cluster:node-upgrade-strategies).
 
 1. First upgrade *the core node group* with a rolling upgrade using `drain`.
 2. Then upgrade *user node group(s)* with rolling upgrades without using
@@ -272,7 +272,7 @@ been changed. Make sure you commit this changes after the upgrade is finished.
 
 ### References
 
-[^1]: About Kubernetes' version skew policy: <upgrade-cluster:k8s-version-skew>
+[^1]: About Kubernetes' version skew policy: <upgrade-k8s-cluster:k8s-version-skew>
 [^2]: `eksctl`'s cluster upgrade documentation: <https://eksctl.io/usage/cluster-upgrade/>
 
 ## Update ekctl configuration

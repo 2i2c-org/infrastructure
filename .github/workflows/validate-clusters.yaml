@@ -242,4 +242,6 @@ jobs:
       env:
         TERM: xterm
       run: |
-        deployer validate all ${{ matrix.jobs.cluster_name }}
+        deployer validate cluster-config ${{ matrix.jobs.cluster_name }}
+        deployer validate support-config ${{ matrix.jobs.cluster_name }}
+        deployer validate all-hub-config ${{ matrix.jobs.cluster_name }}

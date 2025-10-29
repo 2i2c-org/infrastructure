@@ -295,3 +295,5 @@ properties:
             helm chart values for a single hub deployment. These filepaths are defined
             RELATIVE to the location of the cluster.yaml file and have the naming
             convention '{{ hub name }}.values.yaml'.
+        chart_override:
+          type: string

@@ -1,4 +1,4 @@
-(upgrade-cluster:k8s-version-skew)=
+(upgrade-k8s-cluster:k8s-version-skew)=
 # About Kubernetes' version skew policy
 
 Kubernetes clusters' software running on various machines is designed to work

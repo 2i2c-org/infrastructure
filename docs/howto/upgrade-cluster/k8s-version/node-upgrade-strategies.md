@@ -1,4 +1,4 @@
-(upgrade-cluster:node-upgrade-strategies)=
+(upgrade-k8s-cluster:node-upgrade-strategies)=
 
 # About strategies to upgrade nodes
 

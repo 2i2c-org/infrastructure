@@ -1,15 +1,10 @@
-(upgrade-cluster)=
-# Upgrade Kubernetes clusters
+(upgrade-k8s-cluster)=
+# Upgrade Kubernetes version of clusters
 
 How we upgrade a Kubernetes cluster is specific to the cloud provider. This
 section covers topics in upgrading an existing Kubernetes cluster.
 
-```{warning}
-As of now, we are lacking written documentation for how to upgrade Kubernetes
-clusters on GCP.
-```
-
-(upgrade-cluster:planning)=
+(upgrade-k8s-cluster:planning)=
 ## Upgrade planning
 
 ```{warning}
@@ -22,7 +17,7 @@ periods. Other cluster upgrades have been scheduled with community champions, an
 some in shared clusters have been announced ahead of time.
 ```
 
-(upgrade-cluster:ambition)=
+(upgrade-k8s-cluster:ambition)=
 ## Upgrade ambition
 
 1. To keep our k8s cluster's control plane and node pools upgraded to the latest
@@ -48,7 +43,7 @@ some in shared clusters have been announced ahead of time.
 
 ```{toctree}
 :maxdepth: 1
-:caption: Upgrading Kubernetes clusters
+:caption: Upgrading K8s version of clusters
 upgrade-disruptions.md
 node-upgrade-strategies.md
 k8s-version-skew.md
