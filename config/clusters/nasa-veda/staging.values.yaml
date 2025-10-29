@@ -11,10 +11,23 @@ basehub:
         2i2c/hub-name: staging
     hub:
       image:
-        tag: 0.0.1-0.dev.git.13134.hb8ed00131
+        # custom image built to install jupyterhub-fancy-profiles version from
+        # https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/122 for testing
+        tag: 0.0.1-0.dev.git.14111.h9010443c8
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
+      loadRoles:
+        # grant all users access to services (TODO: we should tighten the scope of this)
+        user:
+          scopes:
+          - self
+          - access:services
+      services:
+        binder:
+          oauth_client_id: service-binderhub
+          oauth_no_confirm: true
+          oauth_redirect_uri: https://staging.hub.openveda.cloud/services/binder/oauth_callback
     ingress:
       hosts: [staging.hub.openveda.cloud]
       tls:
@@ -48,6 +61,7 @@ basehub:
           2i2c/hub-name: staging
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-staging-
+        auth_enabled: true
 
   jupyterhub-home-nfs:
     eks:
