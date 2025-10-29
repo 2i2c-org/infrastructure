@@ -131,7 +131,7 @@ def deploy(
                     print_colour(
                         f"Deploying a {hub.spec['helm_chart']} from {chart_dir}"
                     )
-                if len(hubs > 1):
+                if len(hubs) > 1:
                     progress_str = f"{i + 1} / {len(hubs)}: "
                 print_colour(
                     f"{progress_str}Validating non-encrypted hub values files for {hub.spec['name']}..."
@@ -146,9 +146,7 @@ def deploy(
                     cluster_name, hub.spec["name"], chart_dir, skip_refresh
                 )
 
-                print_colour(
-                    f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
-                )
+                print_colour(f"{progress_str}Deploying hub {hub.spec['name']}...")
                 hub.deploy(chart_dir, dask_gateway_version, debug, dry_run)
                 cleanup_values_schema_json(chart_dir)
 

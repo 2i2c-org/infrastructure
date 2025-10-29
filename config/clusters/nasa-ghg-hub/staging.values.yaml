@@ -52,4 +52,4 @@ basehub:
           hard_quota: 1 # in GiB
   nfs:
     pv:
-      serverIP: 10.100.52.143
+      serverIP: 10.100.155.30
