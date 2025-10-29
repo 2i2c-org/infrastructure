@@ -76,7 +76,17 @@ local jupyterhubHomeNFSConfig = {
   },
 } + if is_staging then {} else jupyterhubHomeNFSResources;
 
-local jupyterhubGroupsExporterResources = {
+local jupyterhubGroupsExporterConfig = {
+  // Config values
+  config: {
+    groupsExporter: {
+      update_info_interval: 3600,
+      update_metrics_interval: 300,
+      update_dirsize_interval: 3600,
+      prometheus_host: 'support-prometheus-server.support.svc.cluster.local',
+      prometheus_port: 80,
+    },
+  },
   // Memory resources chosen by querying PromQL "max(container_memory_working_set_bytes{name!='', pod=~'.*groups-exporter.*'})" over all hubs
   // CPU resources chosen by querying PromQL "max(irate(container_cpu_usage_seconds_total{name!='', pod=~'.*groups-exporter.*'}[5m]))" over all hubs
   resources: {
@@ -93,5 +103,5 @@ local jupyterhubGroupsExporterResources = {
 
 emitDaskHubCompatibleConfig({
   'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
-  'jupyterhub-groups-exporter': jupyterhubGroupsExporterResources,
+  'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
 })
