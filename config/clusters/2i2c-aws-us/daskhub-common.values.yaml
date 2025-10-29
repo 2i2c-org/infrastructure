@@ -39,3 +39,11 @@ basehub:
       config:
         JupyterHub:
           authenticator_class: github
+  jupyterhub-groups-exporter:
+    config:
+      groupsExporter:
+        update_info_interval: 3600
+        update_metrics_interval: 300
+        update_dirsize_interval: 3600
+        prometheus_host: support-prometheus-server.support.svc.cluster.local
+        prometheus_port: 80
