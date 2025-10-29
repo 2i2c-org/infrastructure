@@ -31,14 +31,9 @@ yaml = YAML(typ="safe", pure=True)
 @functools.lru_cache
 def _generate_values_schema_json(helm_chart_dir):
     """
-    This script reads the values.schema.yaml files part of our Helm charts and
+    This function reads the values.schema.yaml files part of our Helm charts and
     generates a values.schema.json that can allowing helm the CLI to perform
     validation of passed values before rendering templates or making changes in k8s.
-
-    FIXME: Currently we have a hard coupling between the deployer script and the
-           Helm charts part of this repo. Managing the this logic here is a
-           compromise but it should really be managed as part of packaging it
-           and uploading it to a helm chart registry instead.
     """
     values_schema_yaml = os.path.join(helm_chart_dir, "values.schema.yaml")
     values_schema_json = os.path.join(helm_chart_dir, "values.schema.json")
@@ -310,7 +305,8 @@ def all_hub_config(
     debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
-    Validate cluster.yaml and non-encrypted helm config for given hub
+    Validates the provided non-encrypted helm chart values files and the
+    authenticator configuration for each hub of a specific cluster.
     """
     cluster = Cluster.from_name(cluster_name)
     if hub_name:

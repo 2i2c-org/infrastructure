@@ -67,7 +67,7 @@ deployed occasionally as a specific addition.
 :maxdepth: 1
 :caption: How-to guides
 howto/features/index.md
-howto/upgrade-cluster/index.md
+howto/upgrade-cluster/k8s-version/index.md
 howto/budgeting-billing/index
 howto/image-management/index
 howto/filesystem-management/index

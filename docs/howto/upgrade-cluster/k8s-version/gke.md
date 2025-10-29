@@ -1,4 +1,4 @@
-(upgrade-cluster:gke)=
+(upgrade-k8s-cluster:gke)=
 # Upgrade Kubernetes cluster on GKE
 
 ## GKE's default upgrade policy
@@ -41,7 +41,7 @@ terraform output regular_channel_latest_k8s_versions
 
 You may wish to edit the prefixes checked in the [`variables.tf` file](https://github.com/2i2c-org/infrastructure/blob/44c94332ba8d40681d2f40c0860e99d6b6ca5e96/terraform/gcp/variables.tf#L43-L64).
 
-(upgrade-cluster:gke:control-plane)=
+(upgrade-k8s-cluster:gke:control-plane)=
 ### Upgrading the control plane
 
 Within the `k8s_versions` block of the cluster's `.tfvars` file, increment the `min_master_version` variable according to the `regular_channel_latest_k8s_versions` output.
@@ -65,7 +65,7 @@ When upgrading the control plane, it is best to upgrade one minor version at a t
 
 ### Upgrading node pools
 
-The process for upgrading the worker node pools is very similar to that for [upgrading the control plane](upgrade-cluster:gke:control-plane).
+The process for upgrading the worker node pools is very similar to that for [upgrading the control plane](upgrade-k8s-cluster:gke:control-plane).
 
 First, upgrade the core node pool by updating the `core_nodes_version` variable in the `k8s_versions` block of the cluster's `.tfvars` file, and plan and apply the changes.
 
