@@ -113,6 +113,7 @@ def deploy(
             hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
         else:
             hubs = cluster.hubs
+        progress_str = ""
         for i, hub in enumerate(hubs):
             default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
             chart_override = hub.spec.get("chart_override", None)
@@ -122,22 +123,30 @@ def deploy(
             with get_chart_dir(
                 default_chart_dir, chart_override, chart_override_path
             ) as chart_dir:
+                if chart_override_path:
+                    print_colour(
+                        f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}"
+                    )
+                else:
+                    print_colour(
+                        f"Deploying a {hub.spec['helm_chart']} from {chart_dir}"
+                    )
+                if len(hubs) > 1:
+                    progress_str = f"{i + 1} / {len(hubs)}: "
                 print_colour(
-                    f"{i + 1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
+                    f"{progress_str}Validating non-encrypted hub values files for {hub.spec['name']}..."
                 )
                 validate_hub_config(
                     cluster_name, hub.spec["name"], chart_dir, skip_refresh
                 )
                 print_colour(
-                    f"{i + 1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
+                    f"{progress_str}Validating authenticator config for {hub.spec['name']}..."
                 )
                 validate_authenticator_config(
                     cluster_name, hub.spec["name"], chart_dir, skip_refresh
                 )
 
-                print_colour(
-                    f"{i + 1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
-                )
+                print_colour(f"{progress_str}Deploying hub {hub.spec['name']}...")
                 hub.deploy(chart_dir, dask_gateway_version, debug, dry_run)
                 cleanup_values_schema_json(chart_dir)
 

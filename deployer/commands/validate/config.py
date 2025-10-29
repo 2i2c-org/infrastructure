@@ -27,6 +27,8 @@ from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
+HUB_CHART_PREFIX = "2i2c-custom-hub-chart"
+
 
 @functools.lru_cache
 def _generate_values_schema_json(helm_chart_dir):
@@ -58,10 +60,17 @@ def _prepare_support_helm_charts_dependencies_and_schema():
 
 @functools.lru_cache
 def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
-    if not hub_chart_dir:
-        hub_chart_dir = HELM_CHARTS_DIR / "basehub"
-    if not legacy_daskub:
+    # FIXME: replace all string paths with Path objects
+    hub_chart_dir = Path(hub_chart_dir)
+
+    if legacy_daskub:
+        if not hub_chart_dir.name.startswith(HUB_CHART_PREFIX):
+            print("not a custom hub")
+            _generate_values_schema_json(HELM_CHARTS_DIR / "basehub")
+            subprocess.check_call(["helm", "dep", "up", HELM_CHARTS_DIR / "basehub"])
+    else:
         _generate_values_schema_json(hub_chart_dir)
+
     subprocess.check_call(["helm", "dep", "up", hub_chart_dir])
 
 
@@ -144,7 +153,7 @@ def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
             # that we're copying the contents for helm-charts/basehub and not the
             # deprecated daskhub chart
             default_chart_dir = HELM_CHARTS_DIR / "basehub"
-            temp_chart_dir = tempfile.TemporaryDirectory()
+            temp_chart_dir = tempfile.TemporaryDirectory(prefix=HUB_CHART_PREFIX)
             temp_chart_dir_name = temp_chart_dir.name
             # copy the chart directory into the temporary location
             shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)
@@ -210,14 +219,14 @@ def validate_authenticator_config(
     if hub.authenticator == "github" and allowed_users and org_based_github_auth:
         raise ValueError(
             f"""
-                Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
+                Please unset `Authenticator.allowed_users` for {hub.spec["name"]} when GitHub Orgs/Teams is
                 being used for auth so valid members are not refused access.
             """
         )
     elif hub.authenticator == "dummy" and admin_users != []:
         raise ValueError(
             f"""
-                For security reasons, please unset `Authenticator.admin_users` for {hub.spec['name']} when the dummy authenticator is
+                For security reasons, please unset `Authenticator.admin_users` for {hub.spec["name"]} when the dummy authenticator is
                 being used for authentication.
             """
         )
