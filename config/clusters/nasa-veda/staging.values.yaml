@@ -1,9 +1,7 @@
 basehub:
   nfs:
-    enabled: false
     pv:
-      enabled: false
-      # serverIP: 10.100.63.222
+      serverIP: 10.100.29.199
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
