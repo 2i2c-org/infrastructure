@@ -16,19 +16,21 @@ This will bump the version of the sub-chart for all hubs that use the `basehub` 
 
 ## Bumping the version of a helm sub-chart for a specific hub
 
-### 1. Create a custom `Chart.yaml` file, e.g. `staging-chart.yaml`
-  a. **Override a basehub**
-    - copy the contents of the original `charts/basehub/Chart.yaml` file into `staging-chart.yaml`
-    - update the version of the sub-chart you want to bump.
+### 1. Create a custom `Chart.yaml` file
+Example `staging-chart.yaml`
 
-  b. **Override a legacy daskhub**
-    - copy the contents of the original `charts/basehub/Chart.yaml` file into `staging-chart.yaml`
-    - override the description and name fields with:
-      ```yaml
-      description: Deployment Chart for a dask-enabled JupyterHub
-      name: daskhub
-      ```
-    - update the version of the sub-chart you want to bump.
+a. **Override a basehub**
+  - copy the contents of the original `charts/basehub/Chart.yaml` file into `staging-chart.yaml`
+  - update the version of the sub-chart you want to bump.
+
+b. **Override a legacy daskhub**
+  - copy the contents of the original `charts/basehub/Chart.yaml` file into `staging-chart.yaml`
+  - override the description and name fields with:
+    ```yaml
+    description: Deployment Chart for a dask-enabled JupyterHub
+    name: daskhub
+    ```
+  - update the version of the sub-chart you want to bump.
 
 ### 2. Configure the hub to use the custom `Chart.yaml` file
 
