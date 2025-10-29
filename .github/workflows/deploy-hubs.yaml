@@ -210,7 +210,9 @@ jobs:
       failure_2i2c-jetstream2: ${{ steps.declare-failure.outputs.failure_2i2c-jetstream2 }}
       failure_2i2c-uk: ${{ steps.declare-failure.outputs.failure_2i2c-uk }}
       failure_2i2c: ${{ steps.declare-failure.outputs.failure_2i2c }}
+      failure_aimatx-2i2c-hub: ${{ steps.declare-failure.outputs.failure_aimatx-2i2c-hub }}
       failure_awi-ciroh: ${{ steps.declare-failure.outputs.failure_awi-ciroh }}
+      failure_bnext-bio: ${{ steps.declare-failure.outputs.failure_bnext-bio }}
       failure_catalystproject-africa: ${{ steps.declare-failure.outputs.failure_catalystproject-africa }}
       failure_catalystproject-latam: ${{ steps.declare-failure.outputs.failure_catalystproject-latam }}
       failure_climatematch: ${{ steps.declare-failure.outputs.failure_climatematch }}
@@ -455,7 +457,9 @@ jobs:
       failure_2i2c-aws-us_staging: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us_staging }}
       failure_2i2c-aws-us_dask-staging: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us_dask-staging }}
       failure_2i2c-uk_staging: ${{ steps.declare-failure.outputs.failure_2i2c-uk_staging }}
+      failure_aimatx-2i2c-hub_staging: ${{ steps.declare-failure.outputs.failure_aimatx-2i2c-hub_staging }}
       failure_awi-ciroh_staging: ${{ steps.declare-failure.outputs.failure_awi-ciroh_staging }}
+      failure_bnext-bio_staging: ${{ steps.declare-failure.outputs.failure_bnext-bio_staging }}
       failure_catalystproject-africa_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-africa_staging }}
       failure_catalystproject-latam_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-latam_staging }}
       failure_climatematch_staging: ${{ steps.declare-failure.outputs.failure_climatematch_staging }}

@@ -1,0 +1,236 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
+
+jupyterhub:
+  singleuser:
+    cloudMetadata:
+      blockWithIptables: false
+    defaultUrl: /lab
+    profileList:
+    - display_name: Choose your environment and resources
+      slug: only-choice
+      profile_options:
+        image:
+          display_name: Image
+              # Enables dynamic image building for this profile
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            jupyter-scipy:
+              default: true
+              display_name: Jupyter SciPy
+              slug: jupyter-scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2025-10-27
+            rocker-geospatial:
+              display_name: Rocker Geospatial
+              slug: rocker-geospatial
+              kubespawner_override:
+                image: rocker/binder:4.4
+                image_pull_policy: Always
+                    # Launch into RStudio after the user logs in
+                default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                working_dir: /home/rstudio
+            pangeo:
+              display_name: Pangeo Notebook Image
+              slug: pangeo
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: quay.io/pangeo/pangeo-notebook:2025.08.14
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_15_gb:
+              display_name: ~15 GB RAM, ~1.8 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 15611359038
+                mem_limit: 15611359038
+                cpu_guarantee: 1.82525
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_gb:
+              display_name: ~29 GB RAM, ~4 CPUs
+              description: ~4 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 31222718077
+                mem_limit: 31222718077
+                cpu_guarantee: 3.6505
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_60_gb:
+              display_name: ~60 GB RAM, ~8 CPUs
+              description: Up to ~15 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 64020707016
+                mem_limit: 64020707016
+                cpu_guarantee: 7.69055
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_119_gb:
+              display_name: ~119 GB RAM, ~15 CPUs
+              description: ~15 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 128041414033
+                mem_limit: 128041414033
+                cpu_guarantee: 15.3811
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_244_gb:
+              display_name: ~244 GB RAM, ~31 CPUs
+              description: Up to ~63 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 261919915114
+                mem_limit: 261919915114
+                cpu_guarantee: 31.2875
+                cpu_limit: 62.575
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.16xlarge
+            mem_488_gb:
+              display_name: ~488 GB RAM, ~63 CPUs
+              description: ~63 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 523839830228
+                mem_limit: 523839830228
+                cpu_guarantee: 62.575
+                cpu_limit: 62.575
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.16xlarge
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a container on a dedicated node with a GPU
+      slug: gpu
+      allowed_groups:
+      - 2i2c-org:hub-access-for-2i2c-staff
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            display_name_in_choices: Specify an existing docker image
+            description_in_choices: Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pytorch:
+              display_name: Pangeo PyTorch ML Notebook
+              default: true
+              slug: pytorch
+              kubespawner_override:
+                image: quay.io/pangeo/pytorch-notebook:2025.08.14
+            tensorflow2:
+              display_name: Pangeo Tensorflow2 ML Notebook
+              slug: tensorflow2
+              kubespawner_override:
+                image: quay.io/pangeo/ml-notebook:2025.08.14
+
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
+
+  custom:
+    daskhubSetup:
+      enabled: true
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: aimatx-2i2c-hub
+          logo_url: https://github.com/user-attachments/assets/41f0fb7c-889f-4804-9a2e-5cc48aba040c
+          url: https://aimatx.ai/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: AIMATX
+          url: https://aimatx.ai/
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - aimatx-ai:developers
+        scope:
+        - read:org
+        Authenticator:
+          admin_users:
+          - philrodoni
+
+  scheduling:
+    userScheduler:
+      enabled: true
+
+jupyterhub-home-nfs:
+  enabled: true # can be migrated to common values file
+  eks:
+    enabled: true # can be migrated to common values file
+
+dask-gateway:
+  enabled: true
+  gateway:
+    backend:
+      imagePullSecrets: [name: image-pull-secret]
+
+binderhub-service:
+  enabled: true
+  networkPolicy:
+    enabled: true
+  # Explicitly specify what nodes we want for our builds
+  # Otherwise we may scale up a larger node than needed
+  dockerApi:
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        node.kubernetes.io/instance-type: r5.xlarge
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username

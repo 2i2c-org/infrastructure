@@ -454,8 +454,11 @@ redirects:
 # Enable a daemonset to install nvidia device plugin to GPU nodes
 # Not necessary on GCP & AWS don't need this, as it is handled automatically by terraform or eksctl
 # respectively
+# TODO: remove this on AWS once eksctl fixes their toleration support
 nvidiaDevicePlugin:
   azure:
+    enabled: false
+  aws:
     enabled: false
 
 # Setup a separate storageClass specifically for prometheus data

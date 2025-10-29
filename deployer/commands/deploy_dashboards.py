@@ -58,9 +58,9 @@ def deploy_dashboards(
             f"Only values {', '.join([str(v) for v in allowed_types])} are allowed."
         )
 
-    if dashboard_type == None or dashboard_type == "cost":
+    if dashboard_type == "cost":
         if cluster_provider != "aws":
-            raise Exception(
+            print_colour(
                 f"Cost dashboards are currently available on AWS only. {cluster_name.capitalize()} is deployed on {cluster_provider.upper()}."
             )
 

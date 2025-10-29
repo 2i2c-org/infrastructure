@@ -57,4 +57,4 @@ basehub:
         QuotaManager:
           hard_quota: 10 # in GiB
     eks:
-      volumeId: vol-0ab191452f5c85c6b
+      volumeId: vol-072fbfa88f513edb7

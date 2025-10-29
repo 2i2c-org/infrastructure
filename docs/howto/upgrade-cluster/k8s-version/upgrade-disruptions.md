@@ -1,4 +1,4 @@
-(upgrade-cluster:disruptions)=
+(upgrade-k8s-cluster:disruptions)=
 
 # About upgrade disruptions
 

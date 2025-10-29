@@ -136,6 +136,10 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-plnc
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.plnc.svc.cluster.local

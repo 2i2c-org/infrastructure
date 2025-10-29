@@ -154,10 +154,6 @@ jupyterhub:
                   node.kubernetes.io/instance-type: r5.4xlarge
 jupyterhub-home-nfs:
   enabled: true
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 10 # in GiB
   eks:
     enabled: true
   prometheusExporter:

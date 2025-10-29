@@ -181,6 +181,10 @@ persistent_disks = {
     size        = 84
     name_suffix = "skyline"
   }
+  "sou" = {
+    size        = 25
+    name_suffix = "sou"
+  }
   "spelman" = {
     size        = 25
     name_suffix = "spelman"
@@ -230,8 +234,10 @@ k8s_versions = {
 }
 
 core_node_machine_type = "n2-highmem-2"
-core_node_max_count    = 20
-enable_network_policy  = true
+# FIXME: this number should be updated, it was bumped to 30
+#        in order to reflect an imperative change made to the infra
+core_node_max_count   = 30
+enable_network_policy = true
 
 notebook_nodes = {
   "n2-highmem-4-b" : {
