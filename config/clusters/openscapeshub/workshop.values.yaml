@@ -27,22 +27,6 @@ basehub:
           manage_groups: false
           admin_users: []
     singleuser:
-      initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-        - sh
-        - -c
-        - id && chown 1000:1000 /home/jovyan /home/jovyan/shared-public && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-        - name: home
-          mountPath: /home/jovyan
-          subPath: '{escaped_username}'
-        - name: home
-          mountPath: /home/jovyan/shared-public
-          subPath: _shared-public
       storage:
         extraVolumeMounts:
           # A shared folder readable & writeable by everyone
@@ -68,9 +52,5 @@ basehub:
             nodeSelector:
               2i2c/hub-name: workshop
   jupyterhub-home-nfs:
-    quotaEnforcer:
-      config:
-        QuotaManager:
-          hard_quota: 10
     eks:
-      volumeId: vol-0ab191452f5c85c6b
+      volumeId: vol-072fbfa88f513edb7

@@ -34,11 +34,6 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: must
 jupyterhub-home-nfs:
-  quotaEnforcer:
-    # one user has 343G
-    config:
-      QuotaManager:
-        hard_quota: 350
   eks:
     volumeId: vol-0e86b4abbf3083190
 

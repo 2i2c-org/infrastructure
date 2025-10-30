@@ -6,9 +6,11 @@ cluster.yaml files
 import functools
 import json
 import os
+import shutil
 import subprocess
 import sys
-from contextlib import ExitStack
+import tempfile
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 
 import jsonschema
@@ -25,18 +27,15 @@ from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
+HUB_CHART_PREFIX = "2i2c-custom-hub-chart"
+
 
 @functools.lru_cache
 def _generate_values_schema_json(helm_chart_dir):
     """
-    This script reads the values.schema.yaml files part of our Helm charts and
+    This function reads the values.schema.yaml files part of our Helm charts and
     generates a values.schema.json that can allowing helm the CLI to perform
     validation of passed values before rendering templates or making changes in k8s.
-
-    FIXME: Currently we have a hard coupling between the deployer script and the
-           Helm charts part of this repo. Managing the this logic here is a
-           compromise but it should really be managed as part of packaging it
-           and uploading it to a helm chart registry instead.
     """
     values_schema_yaml = os.path.join(helm_chart_dir, "values.schema.yaml")
     values_schema_json = os.path.join(helm_chart_dir, "values.schema.json")
@@ -47,122 +46,189 @@ def _generate_values_schema_json(helm_chart_dir):
         json.dump(schema, f)
 
 
+def cleanup_values_schema_json(helm_chart_dir):
+    values_schema_json = os.path.join(helm_chart_dir, "values.schema.json")
+    if os.path.exists(values_schema_json):
+        os.remove(values_schema_json)
+
+
 @functools.lru_cache
-def _prepare_helm_charts_dependencies_and_schemas():
-    """
-    Ensures that the helm charts we deploy, basehub and daskhub, have got their
-    dependencies updated and .json schema files generated so that they can be
-    """
-    basehub_dir = HELM_CHARTS_DIR.joinpath("basehub")
-    _generate_values_schema_json(basehub_dir)
-    subprocess.check_call(["helm", "dep", "up", basehub_dir])
-
-    daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
-    # Not generating schema for daskhub, as it is dead
-    subprocess.check_call(["helm", "dep", "up", daskhub_dir])
-
+def _prepare_support_helm_charts_dependencies_and_schema():
     support_dir = HELM_CHARTS_DIR.joinpath("support")
-    _generate_values_schema_json(support_dir)
     subprocess.check_call(["helm", "dep", "up", support_dir])
 
 
-def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
-    cluster = Cluster.from_name(cluster_name)
+@functools.lru_cache
+def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
+    # FIXME: replace all string paths with Path objects
+    hub_chart_dir = Path(hub_chart_dir)
 
-    if hub_name:
-        return [h for h in cluster.hubs if h.spec["name"] == hub_name]
+    if legacy_daskub:
+        if not hub_chart_dir.name.startswith(HUB_CHART_PREFIX):
+            _generate_values_schema_json(HELM_CHARTS_DIR / "basehub")
+            subprocess.check_call(["helm", "dep", "up", HELM_CHARTS_DIR / "basehub"])
+    else:
+        _generate_values_schema_json(hub_chart_dir)
 
-    return cluster.hubs
-
-
-@validate_app.command()
-def cluster_config(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-):
-    """
-    Validates cluster.yaml configuration against a JSONSchema.
-    """
-    cur_dir = Path(__file__).parent
-    cluster_schema_file = cur_dir.joinpath("cluster.schema.yaml")
-
-    cluster = Cluster.from_name(cluster_name)
-
-    with open(cluster_schema_file) as sf:
-        schema = yaml.load(sf)
-        try:
-            jsonschema.validate(cluster.spec, schema)
-        except jsonschema.ValidationError as e:
-            print_colour(
-                f"JSON schema validation error in cluster.yaml for {cluster_name}: {e.message}",
-                colour="red",
-            )
-            sys.exit(1)
+    subprocess.check_call(["helm", "dep", "up", hub_chart_dir])
 
 
-@validate_app.command()
-def hub_config(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
-    skip_refresh: bool = typer.Option(
-        False, "--skip-refresh", help="Skip the helm dep update"
-    ),
-    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
+def validate_hub_config(
+    cluster_name,
+    hub_name,
+    helm_chart_dir="",
+    skip_refresh=False,
+    debug=False,
 ):
     """
     Validates the provided non-encrypted helm chart values files for each hub of
     a specific cluster.
     """
-    if not skip_refresh:
-        _prepare_helm_charts_dependencies_and_schemas()
-
     cluster = Cluster.from_name(cluster_name)
+    hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
 
-    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
-
-    for i, hub in enumerate(hubs):
-        print_colour(
-            f"{i+1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
+    if not helm_chart_dir:
+        helm_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
+    if not skip_refresh:
+        _prepare_hub_helm_charts_dependencies_and_schema(
+            helm_chart_dir, hub.legacy_daskhub
         )
 
-        cmd = [
-            "helm",
-            "template",
-            str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"])),
-        ]
-        if debug:
-            cmd.append("--debug")
+    cmd = [
+        "helm",
+        "template",
+        helm_chart_dir,
+    ]
+    if debug:
+        cmd.append("--debug")
 
-        with ExitStack() as jsonnet_stack:
-            for values_file in hub.spec["helm_chart_values_files"]:
-                # FIXME: The logic here for figuring out non secret files is not correct
-                if values_file.endswith(".jsonnet"):
-                    rendered_file = jsonnet_stack.enter_context(
-                        render_jsonnet(
-                            cluster.config_dir / values_file,
-                            cluster_name,
-                            hub_name,
-                        )
+    with ExitStack() as jsonnet_stack:
+        for values_file in hub.spec["helm_chart_values_files"]:
+            # FIXME: The logic here for figuring out non secret files is not correct
+            if values_file.endswith(".jsonnet"):
+                rendered_file = jsonnet_stack.enter_context(
+                    render_jsonnet(
+                        cluster.config_dir / values_file,
+                        cluster_name,
+                        hub_name,
                     )
-                    cmd.append(f"--values={rendered_file}")
-                elif "secret" not in os.path.basename(values_file):
-                    values_file = cluster.config_dir / values_file
-                    cmd.append(f"--values={values_file}")
-                    config = yaml.load(values_file)
-                    # Check if there's config that enables dask-gateway
-                    dask_gateway_enabled = config.get("dask-gateway", {}).get(
-                        "enabled", False
-                    )
+                )
+                cmd.append(f"--values={rendered_file}")
+            elif "secret" not in os.path.basename(values_file):
+                values_file = cluster.config_dir / values_file
+                cmd.append(f"--values={values_file}")
+                config = yaml.load(values_file)
+                # Check if there's config that enables dask-gateway
+                dask_gateway_enabled = config.get("dask-gateway", {}).get(
+                    "enabled", False
+                )
 
-            # Workaround the current requirement for dask-gateway 0.9.0 to have a
-            # JupyterHub api-token specified, for updates if this workaround can be
-            # removed, see https://github.com/dask/dask-gateway/issues/473.
-            if dask_gateway_enabled:
-                cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
+        # Workaround the current requirement for dask-gateway 0.9.0 to have a
+        # JupyterHub api-token specified, for updates if this workaround can be
+        # removed, see https://github.com/dask/dask-gateway/issues/473.
+        if dask_gateway_enabled:
+            cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
+        try:
+            subprocess.check_output(cmd, text=True)
+        except subprocess.CalledProcessError as e:
+            print(e.stdout)
+            sys.exit(1)
+
+
+@contextmanager
+def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
+    """
+    Returns the default chart directory (basehub or daskhub)
+    or a temporary directory.
+
+    The temporary directory is holding a copy of the contents of the
+    helm-charts/basehub dir where Chart.yaml is overridden by whichever yaml
+    file was passed in the cluster's `cluster.yaml` file under `chart_override`
+    """
+    chart_dir = default_chart_dir
+    try:
+        if chart_override:
+            # if we're overriding the Chart.yaml file, then we need to make sure
+            # that we're copying the contents for helm-charts/basehub and not the
+            # deprecated daskhub chart
+            default_chart_dir = HELM_CHARTS_DIR / "basehub"
+            temp_chart_dir = tempfile.TemporaryDirectory(prefix=HUB_CHART_PREFIX)
+            temp_chart_dir_name = temp_chart_dir.name
+            # copy the chart directory into the temporary location
+            shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)
+            # copy the chart override file into the temporary chart directory
+            shutil.copy(chart_override_path, temp_chart_dir_name)
+            # rename the override file so that it overrides "Chart.yaml"
+            default_chart_yaml = Path(temp_chart_dir_name) / "Chart.yaml"
+            os.rename(Path(temp_chart_dir_name) / chart_override, default_chart_yaml)
+            chart_dir = Path(temp_chart_dir_name)
+        yield chart_dir
+    finally:
+        if chart_override:
+            temp_chart_dir.cleanup()
+
+
+def validate_authenticator_config(
+    cluster_name,
+    hub_name,
+    helm_chart_dir,
+    skip_refresh=False,
+):
+    """
+    For each hub of a specific cluster it asserts that:
+    - when the JupyterHub GitHubOAuthenticator is used, then allowed_users is not set
+    - when the dummy authenticator is used, then admin_users is the empty list
+    """
+
+    cluster = Cluster.from_name(cluster_name)
+    hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
+
+    if not skip_refresh:
+        _prepare_hub_helm_charts_dependencies_and_schema(
+            helm_chart_dir, hub.legacy_daskhub
+        )
+
+    allowed_users = []
+    admin_users = "Jargon-Chlorine7-Undergo"
+    for values_file_name in hub.spec["helm_chart_values_files"]:
+        if "secret" not in os.path.basename(values_file_name):
+            values_file = cluster.config_dir / values_file_name
+            # Load the hub extra config from its specific values files
+            config = yaml.load(values_file)
+            # Check if there's config that specifies an authenticator class
             try:
-                subprocess.check_output(cmd, text=True)
-            except subprocess.CalledProcessError as e:
-                print(e.stdout)
-                sys.exit(1)
+                # This special casing is needed for legacy daskhubs still
+                # using the daskhub chart
+                if hub.legacy_daskhub:
+                    config = config.get("basehub", {})
+                hub_config = (
+                    config.get("jupyterhub", {}).get("hub", {}).get("config", {})
+                )
+                allowed_users = hub_config.get("Authenticator", {}).get("allowed_users")
+                admin_users = hub_config.get("Authenticator", {}).get("admin_users")
+                org_based_github_auth = False
+                if hub_config.get("GitHubOAuthenticator", None):
+                    org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
+                        "allowed_organizations", False
+                    )
+            except KeyError:
+                pass
+    # If the authenticator class is github, then raise an error
+    # if `Authenticator.allowed_users` is set
+    if hub.authenticator == "github" and allowed_users and org_based_github_auth:
+        raise ValueError(
+            f"""
+                Please unset `Authenticator.allowed_users` for {hub.spec["name"]} when GitHub Orgs/Teams is
+                being used for auth so valid members are not refused access.
+            """
+        )
+    elif hub.authenticator == "dummy" and admin_users != []:
+        raise ValueError(
+            f"""
+                For security reasons, please unset `Authenticator.admin_users` for {hub.spec["name"]} when the dummy authenticator is
+                being used for authentication.
+            """
+        )
 
 
 @validate_app.command()
@@ -174,7 +240,7 @@ def support_config(
     Validates the provided non-encrypted helm chart values files for the support chart
     of a specific cluster.
     """
-    _prepare_helm_charts_dependencies_and_schemas()
+    _prepare_support_helm_charts_dependencies_and_schema()
 
     cluster = Cluster.from_name(cluster_name)
 
@@ -214,138 +280,31 @@ def support_config(
 
 
 @validate_app.command()
-def authenticator_config(
+def cluster_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
 ):
     """
-    For each hub of a specific cluster it asserts that:
-    - when the JupyterHub GitHubOAuthenticator is used, then allowed_users is not set
-    - when the dummy authenticator is used, then admin_users is the empty list
+    Validates cluster.yaml configuration against a JSONSchema.
     """
-    _prepare_helm_charts_dependencies_and_schemas()
+    cur_dir = Path(__file__).parent
+    cluster_schema_file = cur_dir.joinpath("cluster.schema.yaml")
 
     cluster = Cluster.from_name(cluster_name)
 
-    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
-
-    for i, hub in enumerate(hubs):
-        print_colour(
-            f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
-        )
-
-        allowed_users = []
-        admin_users = "Jargon-Chlorine7-Undergo"
-        for values_file_name in hub.spec["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(values_file_name):
-                values_file = cluster.config_dir / values_file_name
-                # Load the hub extra config from its specific values files
-                config = yaml.load(values_file)
-                # Check if there's config that specifies an authenticator class
-                try:
-                    # This special casing is needed for legacy daskhubs still
-                    # using the daskhub chart
-                    if hub.legacy_daskhub:
-                        config = config.get("basehub", {})
-                    hub_config = (
-                        config.get("jupyterhub", {}).get("hub", {}).get("config", {})
-                    )
-                    allowed_users = hub_config.get("Authenticator", {}).get(
-                        "allowed_users"
-                    )
-                    admin_users = hub_config.get("Authenticator", {}).get("admin_users")
-                    org_based_github_auth = False
-                    if hub_config.get("GitHubOAuthenticator", None):
-                        org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
-                            "allowed_organizations", False
-                        )
-                except KeyError:
-                    pass
-
-        # If the authenticator class is github, then raise an error
-        # if `Authenticator.allowed_users` is set
-        if hub.authenticator == "github" and allowed_users and org_based_github_auth:
-            raise ValueError(
-                f"""
-                    Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
-                    being used for auth so valid members are not refused access.
-                """
+    with open(cluster_schema_file) as sf:
+        schema = yaml.load(sf)
+        try:
+            jsonschema.validate(cluster.spec, schema)
+        except jsonschema.ValidationError as e:
+            print_colour(
+                f"JSON schema validation error in cluster.yaml for {cluster_name}: {e.message}",
+                colour="red",
             )
-        elif hub.authenticator == "dummy" and admin_users != []:
-            raise ValueError(
-                f"""
-                    For security reasons, please unset `Authenticator.admin_users` for {hub.spec['name']} when the dummy authenticator is
-                    being used for authentication.
-                """
-            )
+            sys.exit(1)
 
 
 @validate_app.command()
-def configurator_config(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
-):
-    """
-    For each hub of a specific cluster:
-     - It asserts that when the singleuser configuration overrides the same fields like the configurator, specifically kubespawner_override and profile_options,
-       the latter must be disabled.
-       An error is raised otherwise.
-    """
-    _prepare_helm_charts_dependencies_and_schemas()
-
-    cluster = Cluster.from_name(cluster_name)
-
-    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
-
-    for i, hub in enumerate(hubs):
-        print_colour(
-            f"{i+1} / {len(hubs)}: Validating configurator and profile lists config for {hub.spec['name']}..."
-        )
-
-        configurator_enabled = False
-        singleuser_overrides = False
-        for values_file_name in hub.spec["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(values_file_name):
-                values_file = cluster.config_dir / values_file_name
-                # Load the hub extra config from its specific values files
-                config = yaml.load(values_file)
-                try:
-                    # This special casing is needed for legacy daskhubs still
-                    # using the daskhub chart
-                    if hub.legacy_daskhub:
-                        config = config.get("basehub", {})
-                    singleuser_config = config.get("jupyterhub", {}).get("singleuser")
-                    custom_config = config.get("jupyterhub", {}).get("custom")
-                    configurator_enabled = custom_config.get(
-                        "jupyterhubConfigurator", {}
-                    ).get("enabled")
-                    # If it's already disabled we don't have what to check
-                    if configurator_enabled:
-                        profiles = singleuser_config.get("profileList", None)
-                        if profiles:
-                            for p in profiles:
-                                overrides = p.get("kubespawner_override", None)
-                                if overrides and overrides.get("image", None):
-                                    singleuser_overrides = True
-                                    break
-                                options = p.get("profile_options", None)
-                                if options and "image" in options:
-                                    singleuser_overrides = True
-                                    break
-                except KeyError:
-                    pass
-
-        if configurator_enabled == True and singleuser_overrides == True:
-            raise ValueError(
-                f"""
-                    When the singleuser configuration overrides the same fields like the configurator,
-                    the later must be disabled. Please disable the configurator for {hub.spec['name']}.
-                """
-            )
-
-
-@validate_app.command()
-def all(
+def all_hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
     skip_refresh: bool = typer.Option(
@@ -354,9 +313,34 @@ def all(
     debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
-    Validate cluster.yaml and non-encrypted helm config for given hub
+    Validates the provided non-encrypted helm chart values files and the
+    authenticator configuration for each hub of a specific cluster.
     """
-    cluster_config(cluster_name)
-    support_config(cluster_name, debug=debug)
-    hub_config(cluster_name, hub_name, skip_refresh=skip_refresh, debug=debug)
-    authenticator_config(cluster_name, hub_name)
+    cluster = Cluster.from_name(cluster_name)
+    if hub_name:
+        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
+    else:
+        hubs = cluster.hubs
+    for i, hub in enumerate(hubs):
+        default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
+        chart_override = hub.spec.get("chart_override", None)
+        chart_override_path = (
+            hub.cluster.config_dir / chart_override if chart_override else None
+        )
+        with get_chart_dir(
+            default_chart_dir, chart_override, chart_override_path
+        ) as chart_dir:
+            print_colour(
+                f"{i + 1} / {len(hubs)}: Validating hub and authenticator config for {hub.spec['name']}..."
+            )
+            validate_hub_config(
+                cluster_name,
+                hub.spec["name"],
+                helm_chart_dir=chart_dir,
+                skip_refresh=skip_refresh,
+                debug=debug,
+            )
+            validate_authenticator_config(
+                cluster_name, hub.spec["name"], chart_dir, skip_refresh
+            )
+            cleanup_values_schema_json(chart_dir)

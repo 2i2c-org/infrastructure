@@ -17,8 +17,6 @@ jupyterhub:
         funded_by:
           name: Chan Zuckerberg Initiative - Open Science
           url: https://chanzuckerberg.com/science/programs-resources/open-science/
-    jupyterhubConfigurator:
-      enabled: true
   hub:
     config:
       JupyterHub:
@@ -113,4 +111,4 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 20
+        hard_quota: 20 # in GiB

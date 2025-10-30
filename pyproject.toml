@@ -36,3 +36,8 @@ testpaths = [
 [tool.codespell]
 skip = '.git,*.pdf,*.svg,*.secret.*,*.key'
 ignore-words-list = 'aks'
+
+[tool.black]
+force-exclude = '''
+deployer/dev_commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
+'''

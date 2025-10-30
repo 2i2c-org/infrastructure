@@ -24,7 +24,4 @@ basehub:
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-staging
-    quotaEnforcer:
-      config:
-        QuotaManager:
-          hard_quota: 0
+

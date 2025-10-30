@@ -1,0 +1,47 @@
+nfs:
+  pv:
+    serverIP: 10.100.133.67
+
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::426578051359:role/aimatx-2i2c-hub-staging
+
+jupyterhub:
+  ingress:
+    hosts: [staging.aimatx.2i2c.cloud]
+    tls:
+    - hosts: [staging.aimatx.2i2c.cloud]
+      secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.aimatx.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
+    extraEnv:
+      SCRATCH_BUCKET: s3://aimatx-2i2c-hub-scratch-staging/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent-staging/$(JUPYTERHUB_USER)
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23li6CZDS64R3UA1km
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/aimatx-2i2c-hub-staging-github
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: staging
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: staging
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0ce12464be041a176
+
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/aimatx-2i2c-hub-staging-

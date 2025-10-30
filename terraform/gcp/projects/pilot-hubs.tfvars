@@ -56,11 +56,6 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  "n2-highmem-8" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-8",
-  },
   "n2-highmem-8-ucmerced" : {
     min : 0,
     max : 100,

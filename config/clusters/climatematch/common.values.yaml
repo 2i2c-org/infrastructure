@@ -17,6 +17,9 @@ jupyterhub:
     memory:
       limit: 16G
       guarantee: 10G
+    image:
+      name: iamzoltan/climatematch-notebook
+      tag: latest
     defaultUrl: /lab
     # shared-public for collaboration
     # See https://github.com/2i2c-org/infrastructure/issues/2785
@@ -32,27 +35,6 @@ jupyterhub:
         readOnly: true
       - name: dev-shm
         mountPath: /dev/shm
-    initContainers:
-    - name: volume-mount-ownership-fix
-      image: busybox:1.36.1
-      command:
-      - sh
-      - -c
-      - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
-      securityContext:
-        runAsUser: 0
-      volumeMounts:
-      - name: home
-        mountPath: /home/jovyan
-        subPath: '{escaped_username}'
-          # Mounted without readonly attribute here,
-          # so we can chown it appropriately
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
   custom:
     # Extra mount point for admins to access to all users' home dirs
     # Ref https://2i2c.freshdesk.com/a/tickets/849

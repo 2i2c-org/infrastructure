@@ -4,11 +4,9 @@ nfs:
   shareCreator:
     enabled: false
 
-
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::221106934874:role/oceanhackweek-prod
-
 
 jupyterhub:
   singleuser:
@@ -27,3 +25,4 @@ jupyterhub:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0977ec2bf457215f0
+

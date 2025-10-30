@@ -23,8 +23,9 @@ data "aws_partition" "current" {}
 # }
 
 resource "aws_iam_role" "irsa_role" {
-  for_each = var.hub_cloud_permissions
-  name     = "${var.cluster_name}-${each.key}"
+  for_each             = var.hub_cloud_permissions
+  name                 = "${var.cluster_name}-${each.key}"
+  max_session_duration = each.value.max_session_duration
 
   assume_role_policy = data.aws_iam_policy_document.irsa_role_assume[each.key].json
 }

@@ -4,6 +4,11 @@ jupyterhub:
     tls:
     - hosts: [unitefa-conicet.latam.catalystproject.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    image:
+      name: quay.io/alfredoquevedo/hub-environment
+      tag: latest
+    defaultUrl: /lab
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -17,8 +22,6 @@ jupyterhub:
         funded_by:
           name: Chan Zuckerberg Initiative - Open Science
           url: https://chanzuckerberg.com/science/programs-resources/open-science/
-    jupyterhubConfigurator:
-      enabled: true
   hub:
     config:
       JupyterHub:
@@ -41,6 +44,7 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-unitefa-conicet
+
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.unitefa-conicet.svc.cluster.local

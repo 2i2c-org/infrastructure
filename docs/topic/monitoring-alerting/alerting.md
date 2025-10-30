@@ -1,18 +1,44 @@
 # Alerting
 We have a few alerts configured to notify us when things go wrong and we use PagerDuty to manage them.
 
-## Paging
-We don't have an on-call rotation currently, and nobody is expected to
-respond outside working hours. Hence, we don't really currently have paging
-alerts.
+## Escalation policies and on-call
 
-However, we may temporarily mark some alerts to page specific people during
-ongoing incidents that have not been resolved yet. This is usually done
-to monitor a temporary fix that may or may not have solved the issue. By
-adding a paging alert, we buy ourselves a little peace of mind - as long
-as the page is not firing, we are doing ok.
+Pagerduty creates incidents [only if it can assign them to someone](https://support.pagerduty.com/main/docs/why-incidents-fail-to-trigger#no-one-was-on-call).
+This means we need to have an on-call rotation set up that covers all 24h of the day, 7 days a week.
 
-Alerts should have a label named `page` that can be set to the pagerduty username of whoever should be paged for that alert.
+However, because nobody is expected to respond outside working hours, we have a placeholder user associated with the support email address that is used as the user in the on-call rotation when everybody else is outside working hours.
+
+This user gets emailed when an alert is triggered and there is no human being on-call. This allows us to see the alert and respond to it during working hours.
+
+### Escalation policies
+
+1. **Default**
+- This escalation policy is connected to all of the services in our Service Directory.
+- It makes use of the **all** users' schedules, including the placeholder user
+- It assigns incidents to the on-call user in a Round Robin fashion (choosing from the users that are on-call, in the moment the incident is triggered), escalating to the next user if the incident is not acknowledged within 1:30h.
+
+2. **P2 - P5 alerts**
+- **Currently not used** because the PagerDuty plan we have does not support choosing between escalation policies based on priority.
+  Instead a policy connects to a service and a service connects to Alert Manager through a receiver channel that doesn't distinguish between priorities, but instead is tied to a group of alerts.
+- It doesn't include the Technical Lead's schedule
+- This policy assigns incidents to the on-call users in a Round Robin fashion, escalating to the next user if the incident is not acknowledged within 6h.
+
+### Paging
+**TBD**
+
+Currently, the **desired** paging policy is:
+**After an incident is assigned to someone:**
+- Immediately, send a Slack DM
+- 30 minutes after, send an email
+- 1 hour after, send an SMS
+
+```{note}
+The placeholder user will only get an email immediately after the incident is assigned to them.
+This email will go to the support email address.
+```
+
+The `#pagerduty-notifications` channel on Slack will get notified of when an incident is escalated, i.e. it wasn't acknowledged by the person assigned to it by the escalation policy. This way we reduce the number of interruptions the team is exposed to.
+
 
 ## How to manage alerts
 

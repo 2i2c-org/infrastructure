@@ -12,15 +12,22 @@ import pytest
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import app
+from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
 from deployer.commands.validate.config import (
-    authenticator_config as validate_authenticator_config,
+    cleanup_values_schema_json,
 )
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
-from deployer.commands.validate.config import hub_config as validate_hub_config
+from deployer.commands.validate.config import (
+    get_chart_dir,
+)
 from deployer.commands.validate.config import support_config as validate_support_config
+from deployer.commands.validate.config import (
+    validate_authenticator_config,
+    validate_hub_config,
+)
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
+    HELM_CHARTS_DIR,
     get_decrypted_file,
 )
 from deployer.utils.rendering import print_colour
@@ -29,7 +36,7 @@ from deployer.utils.rendering import print_colour
 yaml = YAML(typ="safe", pure=True)
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy_support(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     # cert-manager versions at https://cert-manager.io/docs/release-notes/,
@@ -68,7 +75,7 @@ def deploy_support(
             )
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
@@ -97,27 +104,54 @@ def deploy(
     """
     Deploy one or more hubs in a given cluster
     """
+
+    print_colour(f"Validating cluster configuration for {cluster_name}...")
     validate_cluster_config(cluster_name)
-    validate_hub_config(cluster_name, hub_name, skip_refresh)
-    validate_authenticator_config(cluster_name, hub_name)
-
     cluster = Cluster.from_name(cluster_name)
-
     with cluster.auth():
-        hubs = cluster.hubs
         if hub_name:
-            hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
-            print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(dask_gateway_version, debug, dry_run)
+            hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
         else:
-            for i, hub in enumerate(hubs):
+            hubs = cluster.hubs
+        progress_str = ""
+        for i, hub in enumerate(hubs):
+            default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
+            chart_override = hub.spec.get("chart_override", None)
+            chart_override_path = (
+                hub.cluster.config_dir / chart_override if chart_override else None
+            )
+            with get_chart_dir(
+                default_chart_dir, chart_override, chart_override_path
+            ) as chart_dir:
+                if chart_override_path:
+                    print_colour(
+                        f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}"
+                    )
+                else:
+                    print_colour(
+                        f"Deploying a {hub.spec['helm_chart']} from {chart_dir}"
+                    )
+                if len(hubs) > 1:
+                    progress_str = f"{i + 1} / {len(hubs)}: "
                 print_colour(
-                    f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
+                    f"{progress_str}Validating non-encrypted hub values files for {hub.spec['name']}..."
                 )
-                hub.deploy(dask_gateway_version, debug, dry_run)
+                validate_hub_config(
+                    cluster_name, hub.spec["name"], chart_dir, skip_refresh
+                )
+                print_colour(
+                    f"{progress_str}Validating authenticator config for {hub.spec['name']}..."
+                )
+                validate_authenticator_config(
+                    cluster_name, hub.spec["name"], chart_dir, skip_refresh
+                )
+
+                print_colour(f"{progress_str}Deploying hub {hub.spec['name']}...")
+                hub.deploy(chart_dir, dask_gateway_version, debug, dry_run)
+                cleanup_values_schema_json(chart_dir)
 
 
-@app.command()
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def run_hub_health_check(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
@@ -167,7 +201,7 @@ def run_hub_health_check(
         hub.spec["domain"] = domain_override_config["domain"]
 
     # Retrieve hub's URL
-    hub_url = f'https://{hub.spec["domain"]}'
+    hub_url = f"https://{hub.spec['domain']}"
 
     # Read in the service api token from a k8s Secret in the k8s cluster
     with cluster.auth():

@@ -52,6 +52,7 @@ variable "hub_cloud_permissions" {
       bucket_admin_access : optional(set(string), [])
       bucket_readonly_access : optional(set(string), [])
       extra_iam_policy : optional(string, "")
+      max_session_duration : optional(number, 3600)
     })
   )
   default     = {}

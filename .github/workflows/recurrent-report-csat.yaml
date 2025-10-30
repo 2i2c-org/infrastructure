@@ -1,8 +1,6 @@
-name: 'Recurrent: Generate CSAT report'
+name: 'Manual workflow dispatch: Generate CSAT report'
 on:
   workflow_dispatch:
-  schedule:
-  - cron: 0 0 1 * *
 
 jobs:
   create_issue:

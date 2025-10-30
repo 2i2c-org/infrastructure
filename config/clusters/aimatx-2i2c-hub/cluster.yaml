@@ -1,0 +1,35 @@
+name: aimatx-2i2c-hub
+provider: aws
+provider_url: https://426578051359.signin.aws.amazon.com/console
+aws:
+  account: 426578051359
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: aimatx-2i2c-hub
+  region: us-west-2
+  billing:
+    paid_by_us: false
+support:
+  helm_chart_values_files:
+  - support.values.yaml
+  - enc-support.secret.values.yaml
+hubs:
+- name: staging
+  display_name: AIMATX staging
+  domain: staging.aimatx.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: prod
+  display_name: AIMATX
+  domain: aimatx.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - prod.values.yaml
+  - enc-prod.secret.values.yaml
+

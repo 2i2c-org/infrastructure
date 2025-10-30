@@ -62,7 +62,5 @@ basehub:
           - NOAA-OWP
         Authenticator:
           admin_users:
-          - jameshalgren
           - arpita0911patel
-          - dan1831
           - benlee0423

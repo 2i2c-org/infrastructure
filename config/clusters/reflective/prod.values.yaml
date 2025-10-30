@@ -36,3 +36,7 @@ dask-gateway:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0ac31776780207b43
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 20 # in GiB

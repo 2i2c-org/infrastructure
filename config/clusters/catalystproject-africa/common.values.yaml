@@ -107,3 +107,4 @@ jupyterhub-home-nfs:
   enabled: true
   eks:
     enabled: true
+

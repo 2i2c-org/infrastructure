@@ -10,35 +10,44 @@ jupyterhub:
       SCRATCH_BUCKET: s3://maap-scratch-prod/$(JUPYTERHUB_USER)
     nodeSelector:
       2i2c/hub-name: prod
-    initContainers:
-    - name: volume-mount-ownership-fix
-      image: busybox:1.36.1
-      command:
-      - sh
-      - -c
-      - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
-      securityContext:
-        runAsUser: 0
-      volumeMounts:
-      - name: home
-        mountPath: /home/jovyan
-        subPath: '{escaped_username}'
-          # Mounted without readonly attribute here,
-          # so we can chown it appropriately
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
   hub:
     config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://hub.maap.2i2c.cloud/hub/oauth_callback
+      JupyterHub:
+        authenticator_class: generic-oauth
+      Authenticator:
+        admin_users: []
+      GenericOAuthenticator:
+        oauth_callback_url: https://hub.maap-project.org/hub/oauth_callback
+        token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token
+        authorize_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/auth
+        # We want to get user data from the JWT that's the id token,
+        # not from a separate userdata API call
+        userdata_from_id_token: true
+        scope:
+        - basic
+        - profile
+        - openid
+        username_claim: preferred_username
+        manage_groups: true
+        auth_state_groups_key: oauth_user.roles
+        admin_groups:
+        - Admin
+        # Being granted *any* jupyterhub related role should allow you
+        # to login
+        allowed_groups:
+        - Admin
+        - CPU:XS
+        - CPU:S
+        - CPU:M
+        - CPU:L
+        - CPU:XL
+        - CPU:XXL
+        - CPU:XXXL
+        - GPU:T4
   ingress:
-    hosts: [hub.maap.2i2c.cloud]
+    hosts: [hub.maap-project.org]
     tls:
-    - hosts: [hub.maap.2i2c.cloud]
+    - hosts: [hub.maap-project.org]
       secretName: https-auto-tls
 
 dask-gateway:
@@ -68,7 +77,4 @@ binderhub-service:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0cb9118aa95971a6a
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 100
+

@@ -144,7 +144,4 @@ jupyterhub-home-nfs:
   openstack:
     enabled: true
     volumeId: 694b2c04-6b08-4ebe-8cb9-74f7d42c1b1c
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 1
+

@@ -13,38 +13,6 @@ jupyterhub:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
     nodeSelector:
       2i2c/hub-name: staging
-    initContainers:
-    - &volume_ownership_fix_initcontainer
-      name: volume-mount-ownership-fix
-      image: busybox:1.36.1
-      command:
-      - sh
-      - -c
-      - >
-        id &&
-        chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public /home/jovyan/shared-group &&
-        if [ -d "/home/jovyan/shared-group" ] && [ "$(ls -A /home/jovyan/shared-group)" ]; then
-          chown 1000:1000 /home/jovyan/shared-group/* || true;
-        fi &&
-        ls -lhd /home/jovyan
-      securityContext:
-        runAsUser: 0
-      volumeMounts:
-      - name: home
-        mountPath: /home/jovyan
-        subPath: '{escaped_username}'
-          # Mounted without readonly attribute here,
-          # so we can chown it appropriately
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
-      - name: home
-        mountPath: /home/jovyan/shared-group
-        subPath: _shared-group
-
     profileList:
     - display_name: Choose your environment and resources
       default: true
@@ -67,11 +35,6 @@ jupyterhub:
               kubespawner_override:
                 image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.08.14-v2
                 init_containers:
-                    # Need to explicitly fix ownership here, as otherwise these directories will be owned
-                    # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
-                - *volume_ownership_fix_initcontainer
-                    # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-                    # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
                   env:
@@ -231,12 +194,10 @@ jupyterhub:
         authenticator_class: generic-oauth
       Authenticator:
         admin_users: []
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
       GenericOAuthenticator:
-        oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
-        token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
-        authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
+        oauth_callback_url: https://staging.hub.maap-project.org/hub/oauth_callback
+        token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token
+        authorize_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/auth
         # We want to get user data from the JWT that's the id token,
         # not from a separate userdata API call
         userdata_from_id_token: true
@@ -309,9 +270,9 @@ jupyterhub:
           }
         }
   ingress:
-    hosts: [staging.hub.maap.2i2c.cloud]
+    hosts: [staging.hub.maap-project.org]
     tls:
-    - hosts: [staging.hub.maap.2i2c.cloud]
+    - hosts: [staging.hub.maap-project.org]
       secretName: https-auto-tls
 
 dask-gateway:
@@ -341,7 +302,4 @@ binderhub-service:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-043cd887a98827319
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 1
+

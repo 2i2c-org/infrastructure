@@ -17,6 +17,7 @@ extensions = [
     "sphinx_design",
     "sphinxcontrib.mermaid",
     "sphinxcontrib.jquery",
+    "sphinxcontrib.typer",
     "sphinx_togglebutton",
     "sphinx_last_updated_by_git",
 ]

@@ -15,7 +15,7 @@ There are also some filtering/optimisation jobs which are not discussed here.
 (cicd/hub/generate-jobs)=
 ### 1. `generate-jobs`: Generate Helm upgrade jobs
 
-The first job takes a list of files that have been added/modified as part of a Pull Request and pipes them into the [`generate-helm-upgrade-jobs` sub-command](https://github.com/2i2c-org/infrastructure/blob/main/deployer/helm_upgrade_decision.py) of the [deployer module](https://github.com/2i2c-org/infrastructure/tree/main/deployer).
+The first job takes a list of files that have been added/modified as part of a Pull Request and pipes them into the [`plan-upgrade` command](https://github.com/2i2c-org/infrastructure/blob/main/deployer/plan_upgrade/jobs.py) of the [deployer module](https://github.com/2i2c-org/infrastructure/tree/main/deployer).
 This sub-command uses a set of functions to calculate which hubs on which clusters require a helm upgrade, alongside whether the support chart and staging hub(s) on that cluster should also be upgraded.
 If any production hubs require an upgrade, the upgrade of the staging hub(s) is a requirement.
 

@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from deployer.infra_components.cluster import Cluster
 
 from deployer.utils.file_acquisition import (
-    HELM_CHARTS_DIR,
     get_decrypted_file,
     get_decrypted_files,
 )
@@ -92,7 +91,7 @@ class Hub:
         elif binderhub_service:
             self.imagebuilding = True
 
-    def deploy(self, dask_gateway_version, debug, dry_run):
+    def deploy(self, chart_dir, dask_gateway_version, debug, dry_run):
         """
         Deploy this hub
         """
@@ -149,7 +148,6 @@ class Hub:
             ExitStack() as jsonnet_stack,
         ):
 
-            chart_dir = HELM_CHARTS_DIR / self.spec["helm_chart"]
             cmd = [
                 "helm",
                 "upgrade",

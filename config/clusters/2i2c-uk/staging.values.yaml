@@ -13,16 +13,18 @@ jupyterhub-home-nfs:
   gke:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-staging
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 1
+
 jupyterhub:
   ingress:
     hosts: [staging.uk.2i2c.cloud]
     tls:
     - hosts: [staging.uk.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    image:
+      name: pangeo/pangeo-notebook
+      tag: 2023.02.27
+    defaultUrl: /lab
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -42,8 +44,6 @@ jupyterhub:
         funded_by:
           name: 2i2c
           url: https://2i2c.org
-    jupyterhubConfigurator:
-      enabled: true
   hub:
     config:
       JupyterHub:

@@ -14,7 +14,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 100 # in GB
+    size        = 115 # in GB
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
@@ -60,6 +60,7 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch-prod", "persistent-prod", "persistent-prod-large"],
+    max_session_duration : 43200 # 12h
   },
   "workshop" : {
     bucket_admin_access : ["scratch-workshop", "persistent-workshop"],

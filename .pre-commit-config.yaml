@@ -19,25 +19,21 @@ repos:
 
   # Autoformat: Python code
 - repo: https://github.com/pycqa/isort
-  rev: 6.0.1
+  rev: 6.1.0
   hooks:
   - id: isort
 
   # Autoformat: Python code
-- repo: https://github.com/psf/black
-  rev: 25.1.0
+- repo: https://github.com/psf/black-pre-commit-mirror
+  rev: 25.9.0
   hooks:
   - id: black
-        # This is a `.py` file but is encrypted with sops
-    exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Lint: Python code
 - repo: https://github.com/pycqa/flake8
   rev: 7.3.0
   hooks:
   - id: flake8
-        # This is a `.py` file but is encrypted with sops
-    exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Run `terraform fmt` on all our terraform files automatically
 - repo: https://github.com/yuvipanda/terraform-bin
@@ -71,6 +67,14 @@ repos:
   hooks:
   - id: jsonnet-format
     exclude: eksctl/template.jsonnet
+
+- repo: local
+  hooks:
+  - id: disallow-dev-commands
+    name: disallow dev commands in commands
+    language: pygrep
+    entry: \b(from|import)\b.*dev_commands
+    files: ^deployer/commands/.*$
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:

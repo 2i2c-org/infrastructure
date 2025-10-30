@@ -10,7 +10,7 @@ filestores = {}
 
 ebs_volumes = {
   "staging" = {
-    size        = 1 # in GB
+    size        = 5 # in GB
     type        = "gp3"
     name_suffix = "staging"
     tags        = { "2i2c:hub-name" : "staging" }

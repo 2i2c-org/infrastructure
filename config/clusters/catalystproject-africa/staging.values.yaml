@@ -24,10 +24,6 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: staging
 jupyterhub-home-nfs:
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 1
   eks:
     volumeId: vol-0b6a28a6eec8fdb3f
 nfs:

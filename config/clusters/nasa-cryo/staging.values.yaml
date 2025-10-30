@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.29.186
+      serverIP: 10.100.95.149
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-staging
@@ -36,10 +36,7 @@ basehub:
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-02e09b4fdbf07100a
-    quotaEnforcer:
-      config:
-        QuotaManager:
-          hard_quota: 1 # in GB
+
   binderhub-service:
     dockerApi:
       nodeSelector:

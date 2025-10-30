@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.63.222
+      serverIP: 10.100.29.199
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
@@ -9,33 +9,30 @@ basehub:
     singleuser:
       nodeSelector:
         2i2c/hub-name: staging
-      initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-        - sh
-        - -c
-        - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-        - name: home
-          mountPath: /home/jovyan
-          subPath: '{escaped_username}'
-            # Mounted without readonly attribute here,
-            # so we can chown it appropriately
-        - name: home
-          mountPath: /home/jovyan/shared
-          subPath: _shared
-        - name: home
-          mountPath: /home/jovyan/shared-public
-          subPath: _shared-public
     hub:
       image:
-        tag: 0.0.1-0.dev.git.13134.hb8ed00131
+        # custom image built to install jupyterhub-fancy-profiles version from
+        # https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/122 for testing
+        tag: 0.0.1-0.dev.git.14111.h9010443c8
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
+      loadRoles:
+        binder:
+          services:
+          - binder
+          scopes:
+          - servers
+          - read:users
+        user:
+          scopes:
+          - self
+          - access:services!service=binder
+      services:
+        binder:
+          oauth_client_id: service-binderhub
+          oauth_no_confirm: true
+          oauth_redirect_uri: https://staging.hub.openveda.cloud/services/binder/oauth_callback
     ingress:
       hosts: [staging.hub.openveda.cloud]
       tls:
@@ -69,11 +66,15 @@ basehub:
           2i2c/hub-name: staging
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-staging-
-
+        auth_enabled: true
+        hub_url: https://staging.hub.openveda.cloud
+    extraEnv:
+    - name: JUPYTERHUB_API_URL
+      value: https://staging.hub.openveda.cloud/hub/api
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0a1246ee2e07372d0
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 10
+          hard_quota: 10 # in GiB

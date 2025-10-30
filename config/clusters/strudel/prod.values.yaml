@@ -7,3 +7,10 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: dummy
+      Authenticator:
+        # No admins for dummy authenticator
+        admin_users: []

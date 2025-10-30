@@ -5,46 +5,42 @@ on:
     branches:
     - main
     paths:
-      # Include changes to the deployer script's folder, but exclude some parts
+      # Include changes to the deployer script's folder
     - deployer/**
-    - '!deployer/README.md'
-    - '!deployer/health_check_tests/**'
-    - '!deployer/commands/develop/**'
-    - '!deployer/commands/generate/billing/**'
-    - '!deployer/commands/generate/dedicated_cluster/**'
-    - '!deployer/commands/generate/hub_asset/**'
-    - '!deployer/commands/generate/resource_allocation/**'
+    - pyproject.toml
     - requirements.txt
-    - .github/actions/setup-deploy/**
     - helm-charts/**
     - config/clusters/**
-      # Exclude the template configuration files
+    - '!deployer/README.md'
+      # Checking that a hub is online should not trigger a deployment
+    - '!deployer/health_check_tests/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
+       # Exclude the template configuration files
     - '!config/clusters/templates/**'
-    - '!terraform/aws/projects/template.tfvars'
-    - '!terraform/gcp/projects/cluster.tfvars.template'
-    - '!eksctl/template.jsonnet'
-
+       ########### Additional includes ##########
+    - .github/actions/setup-deploy/**
+    - .github/workflows/deploy-hubs.yaml
   pull_request:
     branches:
     - main
     paths:
-      # Include changes to the deployer script's folder, but exclude some parts
+      # Include changes to the deployer script's folder
     - deployer/**
-    - '!deployer/README.md'
-    - '!deployer/health_check_tests/**'
-    - '!deployer/commands/generate/billing/**'
-    - '!deployer/commands/generate/dedicated_cluster/**'
-    - '!deployer/commands/generate/hub_asset/**'
-    - '!deployer/commands/generate/resource_allocation/**'
+    - pyproject.toml
     - requirements.txt
-    - .github/actions/setup-deploy/**
     - helm-charts/**
     - config/clusters/**
-      # Exclude the template configuration files
+    - '!deployer/README.md'
+      # Checking that a hub is online should not trigger a deployment
+    - '!deployer/health_check_tests/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
+       # Exclude the template configuration files
     - '!config/clusters/templates/**'
-    - '!terraform/aws/projects/template.tfvars'
-    - '!terraform/gcp/projects/cluster.tfvars.template'
-    - '!eksctl/template.jsonnet'
+       ########### Additional includes ##########
+    - .github/actions/setup-deploy/**
+    # - .github/workflows/deploy-hubs.yaml — this workflow is not pull_request_target
 
 # ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
 concurrency:
@@ -58,7 +54,7 @@ env:
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
   # which files have been added or modified by recent GitHub activity and parses a list
-  # to the `deployer generate helm-upgrade-job` command of the deployer. This command generates
+  # to the `deployer plan-upgrade` command of the deployer. This command generates
   # three lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
   # first set of jobs describes which clusters need their support chart upgraded; the second set
   # of jobs describe which staging hubs require upgrading; and the third set of jobs describe
@@ -152,7 +148,7 @@ jobs:
     - name: Generate matrix jobs
       id: generate-jobs
       run: |
-        deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
+        deployer plan-upgrade "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
 
       # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow
@@ -214,7 +210,9 @@ jobs:
       failure_2i2c-jetstream2: ${{ steps.declare-failure.outputs.failure_2i2c-jetstream2 }}
       failure_2i2c-uk: ${{ steps.declare-failure.outputs.failure_2i2c-uk }}
       failure_2i2c: ${{ steps.declare-failure.outputs.failure_2i2c }}
+      failure_aimatx-2i2c-hub: ${{ steps.declare-failure.outputs.failure_aimatx-2i2c-hub }}
       failure_awi-ciroh: ${{ steps.declare-failure.outputs.failure_awi-ciroh }}
+      failure_bnext-bio: ${{ steps.declare-failure.outputs.failure_bnext-bio }}
       failure_catalystproject-africa: ${{ steps.declare-failure.outputs.failure_catalystproject-africa }}
       failure_catalystproject-latam: ${{ steps.declare-failure.outputs.failure_catalystproject-latam }}
       failure_climatematch: ${{ steps.declare-failure.outputs.failure_climatematch }}
@@ -459,7 +457,9 @@ jobs:
       failure_2i2c-aws-us_staging: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us_staging }}
       failure_2i2c-aws-us_dask-staging: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us_dask-staging }}
       failure_2i2c-uk_staging: ${{ steps.declare-failure.outputs.failure_2i2c-uk_staging }}
+      failure_aimatx-2i2c-hub_staging: ${{ steps.declare-failure.outputs.failure_aimatx-2i2c-hub_staging }}
       failure_awi-ciroh_staging: ${{ steps.declare-failure.outputs.failure_awi-ciroh_staging }}
+      failure_bnext-bio_staging: ${{ steps.declare-failure.outputs.failure_bnext-bio_staging }}
       failure_catalystproject-africa_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-africa_staging }}
       failure_catalystproject-latam_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-latam_staging }}
       failure_climatematch_staging: ${{ steps.declare-failure.outputs.failure_climatematch_staging }}

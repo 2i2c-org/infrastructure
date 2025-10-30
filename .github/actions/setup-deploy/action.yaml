@@ -46,10 +46,10 @@ inputs:
 runs:
   using: composite
   steps:
-  - uses: actions/setup-python@v5
+  - uses: actions/setup-python@v6
     with:
       python-version: '3.13'
-  - uses: actions/setup-go@v5
+  - uses: actions/setup-go@v6
 
     # There will always be a cache hit on the cache key when this composite
     # action is run, as its only done after the "generate-jobs" job has been run
@@ -130,6 +130,6 @@ runs:
     shell: bash
 
   - name: Setup sops credentials to decrypt repo secrets
-    uses: google-github-actions/auth@v2
+    uses: google-github-actions/auth@v3
     with:
       credentials_json: ${{ inputs.GCP_KMS_DECRYPTOR_KEY }}

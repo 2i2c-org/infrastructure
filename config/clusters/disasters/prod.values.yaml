@@ -47,7 +47,4 @@ binderhub-service:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-00174260142d50e1b
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 200
+

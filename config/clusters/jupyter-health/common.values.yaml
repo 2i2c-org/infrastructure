@@ -46,7 +46,7 @@ jupyterhub:
     #
     image:
       name: quay.io/2i2c/pkce-experiment
-      tag: 0.0.1-0.dev.git.11432.h4b995d69
+      tag: 0.0.1-0.dev.git.14004.h556ee4be8
     allowNamedServers: true
     config:
       JupyterHub:
@@ -129,6 +129,49 @@ jupyterhub:
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/jupyter-health-demostration-hub
       JHE_URL: https://jhe.fly.dev
       JHE_CLIENT_ID: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
+    extraFiles:
+      extra_server_config_py:
+        mountPath: /opt/conda/etc/jupyter/jupyter_server_config.py
+        stringData: |
+          from tornado import web
+
+          async def smart_launch_hook(launch, url, smart_config, handler):
+              client_id = handler.get_argument("client_id", None)
+              if client_id:
+                  handler.log.info("Setting client_id=%s", client_id)
+                  handler.settings["smart_client_id"] = client_id
+              else:
+                  raise web.HTTPError(400, "client_id missing")
+
+          # smart config
+          c.SMARTExtensionApp.scopes = ["openid", "profile", "fhirUser", "launch/patient"]
+          c.SMARTExtensionApp.smart_launch_hook = smart_launch_hook
+
+          # jupyter-ai config
+          import os
+
+          api_key = os.environ["OPENAI_API_KEY"]
+          api_base = os.environ["OPENAI_BASE_URL"]
+          # ref: https://nrp.ai/documentation/userdocs/ai/llm-managed/#available-models
+          model_name = "qwen3"
+          model_id = f"openai-custom:{model_name}"
+          chat_model_id = f"openai-chat-custom:{model_name}"
+          per_model_parameters = {"openai_api_base": api_base}
+
+          c.AiExtension.allowed_providers = ["openai-chat-custom", "openai-custom"]
+          c.AiExtension.default_api_keys = {
+              'OPENAI_API_KEY': api_key,
+          }
+
+          c.AiExtension.default_language_model = chat_model_id
+          c.AiExtension.default_completions_model = chat_model_id
+          c.AiExtension.default_embeddings_model = model_id
+
+          c.AiExtension.model_parameters = {
+              model_id: per_model_parameters,
+              chat_model_id: per_model_parameters,
+          }
+
     image:
       name: quay.io/jupyterhealth/singleuser-premvp
       tag: latest

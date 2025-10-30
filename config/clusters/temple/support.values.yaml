@@ -31,9 +31,6 @@ grafana:
       hosts:
       - grafana.temple.2i2c.cloud
 
-jupyterhub-cost-monitoring:
-  enabled: false
-
 cluster-autoscaler:
   enabled: true
   autoDiscovery:

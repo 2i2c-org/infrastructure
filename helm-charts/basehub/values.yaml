@@ -352,7 +352,7 @@ nfs:
   volumeReporter:
     enabled: true
   shareCreator:
-    enabled: true
+    enabled: false
     tolerations: []
   pv:
     enabled: false
@@ -429,8 +429,6 @@ jupyterhub:
       gitRepoBranch: "master"
       templateVars:
         enabled: true
-    jupyterhubConfigurator:
-      enabled: false
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -534,38 +532,6 @@ jupyterhub:
     # infra permissions can be granted to all users by declaring annotations on
     # this k8s ServiceAccount via basehub config userServiceAccount.annotations.
     serviceAccountName: user-sa
-    # Need to explicitly fix ownership here, as otherwise these directories will be owned
-    # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
-    #
-    # This has to be done _once_ for each directory we mount _from_ the NFS
-    # server. We do it all the time since we don't know for sure it has been done once
-    # already.
-    #
-    # Note that we don't have to chown both the shared and shared-readwrite
-    # folder since they are both mounting the same folder on the NFS server.
-    #
-    # For details about this, see notes at:
-    # - https://github.com/2i2c-org/infrastructure/issues/2953#issuecomment-1672025545
-    # - https://github.com/2i2c-org/infrastructure/issues/2946#issuecomment-1671691248
-    #
-    initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{escaped_username}"
-          # Mounted without readonly attribute here,
-          # so we can chown it appropriately
-          - name: home
-            mountPath: /home/jovyan/shared
-            subPath: _shared
     cmd:
       # Mitigate a vulnerability in jupyter-server-proxy version <4.1.1, see
       # https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v
@@ -1090,7 +1056,7 @@ jupyterhub:
         - groups
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.12172.hf6a94ef2"
+      tag: "0.0.1-0.dev.git.14004.h556ee4be8"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -1108,31 +1074,6 @@ jupyterhub:
                   component: hub
           ports:
             - port: 8081
-              protocol: TCP
-        # The jupyterhub-configurator is a managed jupyterhub service, which
-        # means it is started by jupyterhub as a separate process in the hub
-        # pod. Users will access it via the proxy pod, and JupyterHub itself is
-        # accessing it via localhost. This rule makes receiving such request on
-        # port 10101 from these destinations accepted.
-        #
-        # Maybe the container internal rule, for jupyterhub ->
-        # jupyterhub-configurator isn't needed, as the request is directly to
-        # 127.0.0.1:10101.
-        #
-        # ref: The extraConfig.02-basehub-spawner section below
-        # ref: https://github.com/yuvipanda/jupyterhub-configurator/blob/996405d2a7017153d5abe592b8028fed7a1801bb/jupyterhub_configurator/mixins.py#L7C5-L11
-        #
-        - from:
-            - podSelector:
-                matchLabels:
-                  app: jupyterhub
-                  component: proxy
-            - podSelector:
-                matchLabels:
-                  app: jupyterhub
-                  component: hub
-          ports:
-            - port: 10101
               protocol: TCP
     # FIXME: We should think about these resource requests/limits, see
     #        https://github.com/2i2c-org/infrastructure/issues/2127.
@@ -1277,34 +1218,14 @@ jupyterhub:
         # configured via:
         #
         # jupyterhub.custom.singleuserAdmin
-        # jupyterhub.custom.jupyterhubConfigurator
         #
-        from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
         from kubernetes_asyncio.client.models import V1VolumeMount, V1Container
         from kubespawner import KubeSpawner
         from kubespawner.utils import get_k8s_model
         from z2jh import get_config
         import shlex
 
-
-        # Setup jupyterhub-configurator only if its enabled
         spawner_base_classes = [KubeSpawner]
-        if get_config("custom.jupyterhubConfigurator.enabled"):
-            spawner_base_classes = [ConfiguratorSpawnerMixin, KubeSpawner]
-
-            jhc_service = {
-                "name": "configurator",
-                "url": "http://configurator:10101",
-                "oauth_no_confirm": True,
-                "command": [
-                    "python3",
-                    "-m",
-                    "jupyterhub_configurator.app",
-                    "--Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py",
-                ],
-            }
-            c.JupyterHub.services.append(jhc_service)
-
         if get_config("custom.binderhubUI.enabled"):
             spawner_base_classes = [BinderSpawnerMixin, KubeSpawner]
 

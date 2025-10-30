@@ -63,6 +63,10 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-ucmerced-staging
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 5 # in GiB
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.ucmerced-staging.svc.cluster.local

@@ -11,7 +11,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 20 # in GB
+          hard_quota: 20 # in GiB
   jupyterhub:
     ingress:
       hosts: [staging.ciroh.awi.2i2c.cloud]
@@ -58,7 +58,7 @@ basehub:
                 default: true
                 slug: new
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:44784e65e9a1
+                  image: quay.io/2i2c/awi-ciroh-image:091bf802ad3d
             unlisted_choice:
               enabled: true
               display_name: Custom image

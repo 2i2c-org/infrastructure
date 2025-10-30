@@ -11,8 +11,6 @@ jupyterhub:
       templateVars:
         org:
           name: Catalyst Project, LatAm - PLNC
-    jupyterhubConfigurator:
-      enabled: true
   hub:
     config:
       JupyterHub:
@@ -138,6 +136,7 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-plnc
+
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.plnc.svc.cluster.local

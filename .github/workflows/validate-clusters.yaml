@@ -18,21 +18,38 @@ on:
       # triggering this workflow
     - '!config/clusters/templates/**'
     - helm-charts/**
+    # - .github/workflows/validate-clusters.yaml — this workflow is not pull_request_target
+
+      ############ Deployer-related config modified from deploy-hubs.yaml ####
+      # Include changes to the deployer script's folder
     - deployer/**
+    - pyproject.toml
     - requirements.txt
-    - .github/workflows/validate-clusters.yaml
+    - '!deployer/README.md'
+      # Checking that a hub is online should not trigger a deployment
+    - '!deployer/health_check_tests/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
   push:
     branches:
     - main
     paths:
     - config/clusters/**
-      # Exclude changes the templates directory from
+      # Exclude changes to the templates directory from
       # triggering this workflow
     - '!config/clusters/templates/**'
     - helm-charts/**
-    - deployer/**
-    - requirements.txt
     - .github/workflows/validate-clusters.yaml
+      ############ Deployer-related config modified from deploy-hubs.yaml ####
+      # Include changes to the deployer script's folder
+    - deployer/**
+    - pyproject.toml
+    - requirements.txt
+    - '!deployer/README.md'
+      # Checking that a hub is online should not trigger a deployment
+    - '!deployer/health_check_tests/**'
+      # We can ignore dev commands
+    - '!deployer/dev_commands/**'
     tags:
     - '**'
   workflow_dispatch:
@@ -225,4 +242,6 @@ jobs:
       env:
         TERM: xterm
       run: |
-        deployer validate all ${{ matrix.jobs.cluster_name }}
+        deployer validate cluster-config ${{ matrix.jobs.cluster_name }}
+        deployer validate support-config ${{ matrix.jobs.cluster_name }}
+        deployer validate all-hub-config ${{ matrix.jobs.cluster_name }}

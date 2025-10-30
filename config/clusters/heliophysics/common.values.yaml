@@ -72,13 +72,13 @@ jupyterhub:
               description: Environment containing "core" heliophysics packages identified from our survey
               kubespawner_override:
                 default_url: /lab/tree/survey-core/Welcome.ipynb
-                image: quay.io/sapols/heliocloud-base-w-survey-core:72039f4c459e
+                image: quay.io/sapols/heliocloud-base-w-survey-core:e2a9d76f93b5
             heliophysics-extended-survey:
               display_name: Heliophysics "Extended" Survey Environment
               description: Environment extending the "core" packages with all remaining from our survey
               kubespawner_override:
                 default_url: /lab/tree/survey-extended/Welcome.ipynb
-                image: quay.io/sapols/heliocloud-base-w-survey-extended:238352acb5d1
+                image: quay.io/sapols/heliocloud-base-w-survey-extended:f1f212c13015
         resource_allocation:
           display_name: Resource Allocation
           choices:
@@ -154,10 +154,6 @@ jupyterhub:
                   node.kubernetes.io/instance-type: r5.4xlarge
 jupyterhub-home-nfs:
   enabled: true
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 10
   eks:
     enabled: true
   prometheusExporter:

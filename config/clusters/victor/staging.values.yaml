@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.119.105
+      serverIP: 10.100.237.53
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/victor-staging
@@ -22,7 +22,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 5
+          hard_quota: 5 # in GiB
   jupyterhub:
     ingress:
       hosts: [staging.hub.victorproject.org]

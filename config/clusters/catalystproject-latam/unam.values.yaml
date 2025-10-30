@@ -27,9 +27,9 @@ jupyterhub:
       - name: home
         mountPath: /home/jovyan/allusers
         readOnly: false
-        # mounts below are copied from basehub's values that we override by
-        # specifying extraVolumeMounts (lists get overridden when helm values
-        # are combined)
+          # mounts below are copied from basehub's values that we override by
+          # specifying extraVolumeMounts (lists get overridden when helm values
+          # are combined)
       - name: home
         mountPath: /home/jovyan/shared-readwrite
         subPath: _shared
@@ -90,7 +90,7 @@ jupyterhub:
                 mem_limit: 24G
                 cpu_guarantee: 1.5
                 cpu_limit: 3
-              # guarantee = limit because we are requesting a complete node, no space for other user
+                # guarantee = limit because we are requesting a complete node, no space for other user
             mem_116_0:
               display_name: Up to 115G RAM and 15 CPUs
               kubespawner_override:
@@ -100,7 +100,7 @@ jupyterhub:
                 cpu_limit: 15
                 node_selector:
                   node.kubernetes.io/instance-type: n2-highmem-16
-              # guarantee = limit because we are requesting a complete node, no space for other user
+                # guarantee = limit because we are requesting a complete node, no space for other user
             mem_486_4:
               display_name: Up to 486G RAM and 63 CPUs
               kubespawner_override:
@@ -140,9 +140,4 @@ jupyterhub-home-nfs:
   gke:
     enabled: true
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-unam
-  quotaEnforcer:
-    # the shared dir has 509 GB in July 2025, so we set the quota to match the disk capacity
-    # i.e. no quota
-    config:
-      QuotaManager:
-        hard_quota: 950
+
