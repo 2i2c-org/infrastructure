@@ -50,6 +50,10 @@ basehub:
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-dask-staging
+    quotaEnforcer:
+      config:
+        QuotaManager:
+          hard_quota: 1 # in GiB
   nfs:
     pv:
       serverIP: storage-quota-home-nfs.dask-staging.svc.cluster.local
