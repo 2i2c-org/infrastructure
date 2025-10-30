@@ -39,10 +39,7 @@ dask-gateway:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-01b6abdb23764a9a5
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 10 # in GiB
+
 
 binderhub-service:
   config:

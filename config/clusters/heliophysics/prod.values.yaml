@@ -19,7 +19,4 @@ jupyterhub:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-08b5d4964b0347330
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 10 # in GiB
+

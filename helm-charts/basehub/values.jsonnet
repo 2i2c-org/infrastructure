@@ -67,7 +67,7 @@ local jupyterhubHomeNFSConfig = {
     config: {
       QuotaManager: {
         paths: ['/export/%s' % hub_name],
-        hard_quota: 0,
+        hard_quota: if is_staging then 1 else 10,
         projects_file: '/export/%s/.projects' % hub_name,
         projid_file: '/export/%s/.projid' % hub_name,
         log_level: 'INFO',

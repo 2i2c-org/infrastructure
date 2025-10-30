@@ -46,10 +46,7 @@ basehub:
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-01889854859d8768d
-    quotaEnforcer:
-      config:
-        QuotaManager:
-          hard_quota: 1 # in GiB
+
   nfs:
     pv:
       serverIP: 10.100.155.30

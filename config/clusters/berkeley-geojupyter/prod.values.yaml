@@ -27,10 +27,7 @@ jupyterhub-home-nfs:
   eks:
     enabled: true # can be migrated to common values file
     volumeId: vol-03eed37ae04a744e2
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 10 # in GiB
+
 
 binderhub-service:
   config:

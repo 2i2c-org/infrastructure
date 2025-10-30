@@ -18,9 +18,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        # Explicitly disabling quotas, we only have _staging
-        # which is always exempt
-        hard_quota: 0 # in GiB
+        hard_quota: 100 # in GiB
 
 jupyterhub:
   ingress:
