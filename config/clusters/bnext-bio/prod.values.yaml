@@ -30,10 +30,7 @@ jupyterhub:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-05cb0def7452bcedf
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 10 # in GiB
+
 
 binderhub-service:
   config:

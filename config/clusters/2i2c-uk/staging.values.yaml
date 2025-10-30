@@ -13,10 +13,7 @@ jupyterhub-home-nfs:
   gke:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-staging
-  quotaEnforcer:
-    config:
-      QuotaManager:
-        hard_quota: 1 # in GiB
+
 jupyterhub:
   ingress:
     hosts: [staging.uk.2i2c.cloud]
