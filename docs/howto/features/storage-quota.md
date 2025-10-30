@@ -144,6 +144,10 @@ See [](migrate-data) for instructions on performing these steps.
 
 Storage quotas serve several purposes. Foremostly, storage quotas exist as a response to the understanding that storage is a finite, expensive resource. By enforcing global and per-user storage quotas, 2i2c can protect communities from excessive storage costs, and avoid outages caused by excessive resource consumption of particular users. To minimise the amount of manual work involved in rolling out new clusters, and administering our existing community deployments, the following policy for _reasonable storage quotas_ should be used (and retroactively applied).
 
+```{note}
+By default, staging hubs are given 1GiB and production hubs given 10GiB by the base chart.
+```
+
 For each hub:
 
 1. The default "reasonable" user storage quota should be 10GiB.
