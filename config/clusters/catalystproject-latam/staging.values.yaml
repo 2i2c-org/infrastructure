@@ -21,6 +21,10 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-staging
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 1 # in GiB
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.staging.svc.cluster.local
