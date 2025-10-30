@@ -33,7 +33,7 @@ jobs:
       actions: read
       pull-requests: write
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - run: pip install requests
     - run: python extra-scripts/comment-test-link-merged-pr.py
       env:
