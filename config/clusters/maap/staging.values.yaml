@@ -82,7 +82,6 @@ jupyterhub:
                 cpu_limit: 3.725
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
-              default: true
             mem_3_7:
               display_name: 3.7 GB RAM, upto 3.7 CPUs
               allowed_groups:
@@ -116,6 +115,7 @@ jupyterhub:
                 cpu_limit: 3.725
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
+              default: true
             mem_29_7:
               display_name: 29.7 GB RAM, upto 3.7 CPUs
               allowed_groups:
