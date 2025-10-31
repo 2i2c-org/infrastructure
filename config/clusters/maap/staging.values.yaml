@@ -39,32 +39,32 @@ jupyterhub:
         mountPropagation: HostToContainer
         readOnly: true
     extraContainers:
-      - name: s3fs
-        image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
-        securityContext:
-          privileged: true
-        resources:
-          limits:
+    - name: s3fs
+      image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
+      securityContext:
+        privileged: true
+      resources:
+        limits:
             # Best effort only. No more than 1 CPU, and if postgres uses more than 512M, restart it
-            memory: 512Mi
-            cpu: 1.0
-        volumeMounts:
-            - name: s3fs-volume
-              mountPath: /my-public-bucket
-              subPath: my-public-bucket
-              mountPropagation: Bidirectional
-            - name: s3fs-volume
-              mountPath: /my-private-bucket
-              subPath: my-private-bucket
-              mountPropagation: Bidirectional
-            - name: s3fs-volume
-              mountPath: /shared-buckets
-              subPath: shared-buckets
-              mountPropagation: Bidirectional
-            - name: s3fs-volume
-              mountPath: /triaged-jobs
-              subPath: triaged-jobs
-              mountPropagation: Bidirectional         
+          memory: 512Mi
+          cpu: 1.0
+      volumeMounts:
+      - name: s3fs-volume
+        mountPath: /my-public-bucket
+        subPath: my-public-bucket
+        mountPropagation: Bidirectional
+      - name: s3fs-volume
+        mountPath: /my-private-bucket
+        subPath: my-private-bucket
+        mountPropagation: Bidirectional
+      - name: s3fs-volume
+        mountPath: /shared-buckets
+        subPath: shared-buckets
+        mountPropagation: Bidirectional
+      - name: s3fs-volume
+        mountPath: /triaged-jobs
+        subPath: triaged-jobs
+        mountPropagation: Bidirectional
     profileList:
     - display_name: Choose your environment and resources
       default: true
