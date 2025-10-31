@@ -199,6 +199,7 @@ jupyterhub:
         Authenticator:
           admin_users:
           - philrodoni
+          - fperez
 
   scheduling:
     userScheduler:
