@@ -8,11 +8,63 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: false
+    homepage:
+      gitRepoBranch: staging
+      gitRepoUrl: https://github.com/MAAP-Project/maap-hub-homepage
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
     nodeSelector:
       2i2c/hub-name: staging
+    storage:
+      extraVolumeMounts:
+      - name: s3fs-volume
+        mountPath: /home/jovyan/my-private-bucket
+        subPath: my-private-bucket
+        mountPropagation: HostToContainer
+        readOnly: false
+      - name: s3fs-volume
+        mountPath: /home/jovyan/my-public-bucket
+        subPath: my-public-bucket
+        mountPropagation: HostToContainer
+        readOnly: false
+      - name: s3fs-volume
+        mountPath: /home/jovyan/shared-buckets
+        subPath: shared-buckets
+        mountPropagation: HostToContainer
+        readOnly: true
+      - name: s3fs-volume
+        mountPath: /home/jovyan/triaged-jobs
+        subPath: triaged-jobs
+        mountPropagation: HostToContainer
+        readOnly: true
+    extraContainers:
+    - name: s3fs
+      image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
+      securityContext:
+        privileged: true
+      resources:
+        limits:
+            # Best effort only. No more than 1 CPU, and if postgres uses more than 512M, restart it
+          memory: 512Mi
+          cpu: 1.0
+      volumeMounts:
+      - name: s3fs-volume
+        mountPath: /my-public-bucket
+        subPath: my-public-bucket
+        mountPropagation: Bidirectional
+      - name: s3fs-volume
+        mountPath: /my-private-bucket
+        subPath: my-private-bucket
+        mountPropagation: Bidirectional
+      - name: s3fs-volume
+        mountPath: /shared-buckets
+        subPath: shared-buckets
+        mountPropagation: Bidirectional
+      - name: s3fs-volume
+        mountPath: /triaged-jobs
+        subPath: triaged-jobs
+        mountPropagation: Bidirectional
     profileList:
     - display_name: Choose your environment and resources
       default: true
