@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v5
     - uses: hashicorp/setup-terraform@v3
-    - uses: terraform-linters/setup-tflint@v5
+    - uses: terraform-linters/setup-tflint@v6
     - name: Run terraform linter
       run: |
         cd terraform
