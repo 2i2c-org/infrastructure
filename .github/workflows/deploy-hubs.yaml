@@ -165,7 +165,7 @@ jobs:
         (steps.generate-jobs.outputs.support-jobs != '[]' ||
         steps.generate-jobs.outputs.staging-jobs != '[]' ||
         steps.generate-jobs.outputs.prod-jobs != '[]')
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: pr
         path: |
