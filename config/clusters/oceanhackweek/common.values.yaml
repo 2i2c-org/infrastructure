@@ -67,12 +67,12 @@ jupyterhub:
 
     profileList:
     - display_name: Escoge Entorno R o Python
-      slug: only-choice
+      # slug: only-choice
       profile_options:
         image:
           display_name: Entorno ("imagen")
           unlisted_choice:
-            enabled: false
+            enabled: true
             display_name: Custom image
             validation_regex: ^.+:.+$
             validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
@@ -86,14 +86,19 @@ jupyterhub:
               slug: python
               description: Python en JupyterLab
               kubespawner_override:
-                image: ghcr.io/oceanhackweek/python:c881ad5
+                image: ghcr.io/oceanhackweek/python:latest
               default: true
             r:
               display_name: R
               description: R en RStudio
               kubespawner_override:
                 default_url: /rstudio
-                image: ghcr.io/oceanhackweek/r:293f282
+                image: ghcr.io/oceanhackweek/r:latest
+            pyrgeo2:
+              display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
+              slug: pyrgeo2
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
         resource_allocation:
           display_name: Capacidad Asignada
           choices:
