@@ -67,7 +67,7 @@ jupyterhub:
 
     profileList:
     - display_name: Escoge Entorno R o Python
-      # slug: only-choice
+      slug: only-choice
       profile_options:
         image:
           display_name: Entorno ("imagen")
