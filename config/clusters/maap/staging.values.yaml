@@ -48,6 +48,11 @@ jupyterhub:
             # Best effort only. No more than 1 CPU, and if postgres uses more than 512M, restart it
           memory: 512Mi
           cpu: 1.0
+        requests:
+          # If we don't set requests, k8s sets requests == limits!
+          # So we set something tiny
+          memory: 64Mi
+          cpu: 0.01
       volumeMounts:
       - name: s3fs-volume
         mountPath: /my-public-bucket
