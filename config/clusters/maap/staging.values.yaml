@@ -292,6 +292,8 @@ jupyterhub:
           c.KubeSpawner.volume_mounts = {}
           for idx, volume_mount in enumerate(existing_volume_mounts):
             c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
+
+        c.KubeSpawner.volumes["s3fs-volume"] = {"name": "s3fs-volume", "emptyDir": {}}
       01-group-shared-directories: |
         c.KubeSpawner.group_overrides = {
           "00-group-CPU-L-extra-volume-mounts": {
@@ -354,4 +356,3 @@ binderhub-service:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-043cd887a98827319
-
