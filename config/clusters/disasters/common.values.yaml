@@ -72,7 +72,7 @@ jupyterhub:
       GitHubOAuthenticator:
         populate_teams_in_auth_state: true
         allowed_organizations:
-          - Disasters-Learning-Portal:disasters
+        - Disasters-Learning-Portal:disasters
         scope:
         - read:org
   singleuser:
