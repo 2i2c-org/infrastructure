@@ -280,6 +280,20 @@ jupyterhub:
         - CPU:XXXL
         - GPU:T4
     extraConfig:
+      001-username-claim: |
+        def populate_token(spawner, auth_state):
+          # For our deployment-service-check health check user, there is no auth_state.
+          # So these env variables need not be set.
+          if auth_state:
+
+            spawner.environment.update({
+              "MAAP_PGT": f"jwt:{auth_state.get("id_token", "")}",
+              "KC_ACCESS_TOKEN": auth_state.get("access_token", ""),
+              "KC_ID_TOKEN": auth_state.get("id_token", ""),
+              "KC_REFRESH_TOKEN": auth_state.get("refresh_token", "")
+            })
+
+        c.Spawner.auth_state_hook = populate_token
       00-volumes-and-volume-mounts-as-dict: |
         # The base jupyterhub config in zero-to-jupyterhub defines
         # volumes and volume_mounts as lists.
