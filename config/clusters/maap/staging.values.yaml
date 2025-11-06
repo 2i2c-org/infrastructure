@@ -281,8 +281,6 @@ jupyterhub:
         - GPU:T4
     extraConfig:
       001-username-claim: |
-        from oauthenticator.generic import GenericOAuthenticator
-
         def populate_token(spawner, auth_state):
           # For our deployment-service-check health check user, there is no auth_state.
           # So these env variables need not be set.
@@ -296,8 +294,6 @@ jupyterhub:
             })
 
         c.Spawner.auth_state_hook = populate_token
-
-        c.JupyterHub.authenticator_class = GenericOAuthenticator
       00-volumes-and-volume-mounts-as-dict: |
         # The base jupyterhub config in zero-to-jupyterhub defines
         # volumes and volume_mounts as lists.
