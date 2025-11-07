@@ -251,6 +251,7 @@ jupyterhub:
         authenticator_class: generic-oauth
       Authenticator:
         admin_users: []
+        enable_auth_state: true
       GenericOAuthenticator:
         oauth_callback_url: https://staging.hub.maap-project.org/hub/oauth_callback
         token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token
