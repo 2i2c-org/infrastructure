@@ -12,31 +12,31 @@ cluster_nodes_location = "us-west-2a"
 #
 
 ebs_volumes = {
-"[staging" = {
-    name_suffix = "[staging",
+"staging" = {
+    name_suffix = "staging",
     type        = "gp3",
     size        = 10,
-    tags        = { "2i2c:hub-name" : "[staging" },
+    tags        = { "2i2c:hub-name" : "staging" },
   },
-"prod]" = {
-    name_suffix = "prod]",
+"prod" = {
+    name_suffix = "prod",
     type        = "gp3",
     size        = 10,
-    tags        = { "2i2c:hub-name" : "prod]" },
+    tags        = { "2i2c:hub-name" : "prod" },
   },
 
 }
 enable_nfs_backup = true
 
 
-# "scratch-[staging" : {
+# "scratch-staging" : {
 #   "delete_after" : 7,
-#   "tags" : { "2i2c:hub-name" : "[staging" },
+#   "tags" : { "2i2c:hub-name" : "staging" },
 # },
 
-# "scratch-prod]" : {
+# "scratch-prod" : {
 #   "delete_after" : 7,
-#   "tags" : { "2i2c:hub-name" : "prod]" },
+#   "tags" : { "2i2c:hub-name" : "prod" },
 # },
 
 
@@ -45,12 +45,12 @@ enable_nfs_backup = true
 #
 # hub_cloud_permissions = {
 
-#  "[staging" : {
-#    bucket_admin_access : ["scratch-[staging"],
+#  "staging" : {
+#    bucket_admin_access : ["scratch-staging"],
 #  },
 
-#  "prod]" : {
-#    bucket_admin_access : ["scratch-prod]"],
+#  "prod" : {
+#    bucket_admin_access : ["scratch-prod"],
 #  },
 
 

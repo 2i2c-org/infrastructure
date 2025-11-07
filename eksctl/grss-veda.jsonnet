@@ -14,7 +14,7 @@ local c = cluster.makeCluster(
   daskInstanceTypes=[
     'r5.4xlarge'
   ],
-  hubs=['[staging','prod]',],
+  hubs=['staging','prod',],
   notebookGPUNodeGroups=[],
   nodeGroupGenerations=['a']
 );

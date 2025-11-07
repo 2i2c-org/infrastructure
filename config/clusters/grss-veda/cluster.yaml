@@ -18,22 +18,22 @@ hubs: []
   # you are ready to add the first cluster
 
 
-  # - name: [staging
+  # - name: staging
   #   # Tip: consider changing this to something more human friendly
-  #   display_name: "grss-veda - [staging"
-  #   domain: [staging.grss-veda.2i2c.cloud
+  #   display_name: "grss-veda - staging"
+  #   domain: staging.grss-veda.2i2c.cloud
   #   helm_chart: basehub
   #   helm_chart_values_files:
   #     - common.values.yaml
-  #     - [staging.values.yaml
-  #     - enc-[staging.secret.values.yaml
+  #     - staging.values.yaml
+  #     - enc-staging.secret.values.yaml
 
-  # - name: prod]
+  # - name: prod
   #   # Tip: consider changing this to something more human friendly
-  #   display_name: "grss-veda - prod]"
-  #   domain: prod].grss-veda.2i2c.cloud
+  #   display_name: "grss-veda - prod"
+  #   domain: prod.grss-veda.2i2c.cloud
   #   helm_chart: basehub
   #   helm_chart_values_files:
   #     - common.values.yaml
-  #     - prod].values.yaml
-  #     - enc-prod].secret.values.yaml
+  #     - prod.values.yaml
+  #     - enc-prod.secret.values.yaml
