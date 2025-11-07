@@ -20,9 +20,11 @@ terraform {
       version = "~> 3.6"
     }
   }
-  backend "gcs" {
-    bucket = "two-eye-two-see-org-terraform-state"
-    prefix = "terraform/state/pilot-hubs"
+  backend "s3" {
+    bucket = "grss-veda-tf-state-hub"
+    key = "hub/terraform.tfstate"
+    region = "us-west-2"
+    dynamodb_table = "terraform-locks"
   }
 }
 
