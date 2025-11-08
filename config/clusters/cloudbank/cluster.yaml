@@ -157,6 +157,14 @@ hubs:
   - common.values.yaml
   - golden.values.yaml
   - enc-golden.secret.values.yaml
+- name: gwu
+  display_name: George Washington University
+  domain: gwu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - gwu.values.yaml
+  - enc-gwu.secret.values.yaml
 - name: high
   display_name: High School Experimental Hub
   domain: high.cloudbank.2i2c.cloud
