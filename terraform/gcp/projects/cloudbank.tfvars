@@ -153,6 +153,10 @@ persistent_disks = {
     size        = 20
     name_suffix = "riohondo"
   }
+  "santiago" = {
+    size        = 20
+    name_suffix = "santiago"
+  }
   "saddleback" = {
     size        = 60
     name_suffix = "saddleback"
