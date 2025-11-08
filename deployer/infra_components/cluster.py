@@ -240,18 +240,20 @@ class Cluster:
         # commandline we call. This could make some weird error messages.
         unset_envs = ["KUBECONFIG"] + [k for k in os.environ if k.startswith("AWS_")]
 
-        with tempfile.NamedTemporaryFile() as kubeconfig, unset_env_vars(unset_envs):
+        with tempfile.NamedTemporaryFile() as kubeconfig:
             with get_decrypted_file(key_path) as decrypted_key_path:
-                decrypted_key_abspath = os.path.abspath(decrypted_key_path)
-                if not os.path.isfile(decrypted_key_abspath):
-                    raise FileNotFoundError("The decrypted key file does not exist")
-                with open(decrypted_key_abspath) as f:
-                    creds = json.load(f)
+                # Moving this down since we use AWS KMS and unsetting the vars will make the kms key unaccesible
+                with unset_env_vars(unset_envs):
+                    decrypted_key_abspath = os.path.abspath(decrypted_key_path)
+                    if not os.path.isfile(decrypted_key_abspath):
+                        raise FileNotFoundError("The decrypted key file does not exist")
+                    with open(decrypted_key_abspath) as f:
+                        creds = json.load(f)
 
-                os.environ["AWS_ACCESS_KEY_ID"] = creds["AccessKey"]["AccessKeyId"]
-                os.environ["AWS_SECRET_ACCESS_KEY"] = creds["AccessKey"][
-                    "SecretAccessKey"
-                ]
+                    os.environ["AWS_ACCESS_KEY_ID"] = creds["AccessKey"]["AccessKeyId"]
+                    os.environ["AWS_SECRET_ACCESS_KEY"] = creds["AccessKey"][
+                        "SecretAccessKey"
+                    ]
 
             os.environ["KUBECONFIG"] = kubeconfig.name
 
