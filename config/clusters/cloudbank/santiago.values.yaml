@@ -1,0 +1,60 @@
+jupyterhub:
+  ingress:
+    hosts: [santiago.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [santiago.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.sccollege.edu/sites/AppCatalog/ClientSideAssets/4a5d1929-e968-4323-ae87-79fe98b60585/scc-logo-horizontal_b4a8edf11cfb85c43888f6d2827e8f4c.jpg
+          name: Santiago Canyon College
+          url: https://www.sccollege.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://santiago.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - sccollege.edu
+            - student.sccollege.edu
+            - student.sac.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - Kramer_Jessica@sccollege.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-santiago
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.santiago.svc.cluster.local

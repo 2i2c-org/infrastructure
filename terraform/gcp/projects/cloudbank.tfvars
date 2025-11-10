@@ -77,6 +77,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "golden"
   }
+  "gwu" = {
+    size        = 300
+    name_suffix = "gwu"
+  }
   "high" = {
     size        = 120
     name_suffix = "high"
@@ -152,6 +156,10 @@ persistent_disks = {
   "riohondo" = {
     size        = 20
     name_suffix = "riohondo"
+  }
+  "santiago" = {
+    size        = 20
+    name_suffix = "santiago"
   }
   "saddleback" = {
     size        = 60

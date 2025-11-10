@@ -157,6 +157,14 @@ hubs:
   - common.values.yaml
   - golden.values.yaml
   - enc-golden.secret.values.yaml
+- name: gwu
+  display_name: George Washington University
+  domain: gwu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - gwu.values.yaml
+  - enc-gwu.secret.values.yaml
 - name: high
   display_name: High School Experimental Hub
   domain: high.cloudbank.2i2c.cloud
@@ -317,6 +325,14 @@ hubs:
   - common.values.yaml
   - saddleback.values.yaml
   - enc-saddleback.secret.values.yaml
+- name: santiago
+  display_name: Santiago Canyon College
+  domain: santiago.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - santiago.values.yaml
+  - enc-santiago.secret.values.yaml
 - name: sbcc
   display_name: Santa Barbara City College
   domain: sbcc.cloudbank.2i2c.cloud
