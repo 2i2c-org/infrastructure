@@ -23,7 +23,7 @@ pytest-asyncio
 jinja2==3.*
 
 # Used for the debug CLI
-typer==0.19.*
+typer==0.20.*
 escapism==1.*
 
 # Used for GCP billing management
