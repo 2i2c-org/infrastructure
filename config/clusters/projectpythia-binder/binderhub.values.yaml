@@ -120,6 +120,9 @@ binderhub-service:
     nodeSelector:
       hub.jupyter.org/node-purpose:
       capi.stackhpc.com/node-group: user-m3-large
+    storage:
+      emptyDir:
+        sizeLimit: 15Gi
   config:
     GitHubRepoProvider:
       allowed_specs:
