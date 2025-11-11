@@ -127,6 +127,7 @@ jupyterhub:
       slug: gpu
       allowed_groups:
       - 2i2c-org:hub-access-for-2i2c-staff
+      - aimatx-ai:developers
       profile_options:
         image:
           display_name: Image
