@@ -41,6 +41,7 @@ jupyterhub:
     extraContainers:
     - name: s3fs
       image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
+      image_pull_policy: Always
       securityContext:
         privileged: true
       resources:
