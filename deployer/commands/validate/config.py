@@ -55,6 +55,7 @@ def cleanup_values_schema_json(helm_chart_dir):
 @functools.lru_cache
 def _prepare_support_helm_charts_dependencies_and_schema():
     support_dir = HELM_CHARTS_DIR.joinpath("support")
+    _generate_values_schema_json(support_dir)
     subprocess.check_call(["helm", "dep", "up", support_dir])
 
 
