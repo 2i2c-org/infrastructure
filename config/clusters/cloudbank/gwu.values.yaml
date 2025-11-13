@@ -43,6 +43,7 @@ jupyterhub:
               username_claim: email
             allowed_domains:
             - gwu.edu
+            - gwmail.gwu.edu 
             - email.gwu.edu
           http://google.com/accounts/o8/id:
             username_derivation:
