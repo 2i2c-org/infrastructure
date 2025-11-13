@@ -66,7 +66,7 @@ jupyterhub:
           protocol: TCP
 
     profileList:
-    - display_name: Escoge Entorno R o Python
+    - display_name: Escoge Entorno
       slug: only-choice
       profile_options:
         image:
@@ -81,24 +81,24 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
+            pyrgeo2:
+              display_name: Python + R, OHW en Español. JupyterLab, RStudio, y Desktop
+              slug: pyrgeo2
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/py-rocket-oceanhw-esp:latest
+              default: true
             python:
-              display_name: Python
+              display_name: Python (*Viejo*)
               slug: python
               description: Python en JupyterLab
               kubespawner_override:
                 image: ghcr.io/oceanhackweek/python:latest
-              default: true
             r:
-              display_name: R
+              display_name: R (*Viejo*)
               description: R en RStudio
               kubespawner_override:
                 default_url: /rstudio
                 image: ghcr.io/oceanhackweek/r:latest
-            pyrgeo2:
-              display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
-              slug: pyrgeo2
-              kubespawner_override:
-                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
         resource_allocation:
           display_name: Capacidad Asignada
           choices:
