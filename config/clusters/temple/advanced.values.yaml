@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.17.128
+    serverIP: 10.100.225.18
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0b5fc915293bd5bec
@@ -14,7 +14,7 @@ jupyterhub:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liL9VT25MVvo3RYq
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-advanced-github-push-access
     nodeSelector:
-      2i2c/hub-name: prod
+      2i2c/hub-name: advanced
   ingress:
     hosts: [advanced.temple.2i2c.cloud]
     tls:
@@ -23,10 +23,10 @@ jupyterhub:
 binderhub-service:
   dockerApi:
     nodeSelector:
-      2i2c/hub-name: prod
+      2i2c/hub-name: advanced
   config:
     KubernetesBuildExecutor:
       node_selector:
-        2i2c/hub-name: prod
+        2i2c/hub-name: advanced
     BinderHub:
-      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-prod-
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-advanced-
