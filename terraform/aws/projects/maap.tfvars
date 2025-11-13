@@ -152,6 +152,16 @@ hub_cloud_permissions = {
           },
           {
             "Effect": "Allow",
+            "Action": [
+              "s3:PutObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::maap-ops-workspace",
+              "arn:aws:s3:::maap-ops-workspace/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
             "Action": "s3:ListAllMyBuckets",
             "Resource": "*"
           }
