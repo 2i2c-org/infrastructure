@@ -34,7 +34,7 @@ persistent_disks = {
     name_suffix = "iner"
   },
   "labi" = {
-    size        = 200 # in GiB
+    size        = 225 # in GiB
     name_suffix = "labi"
   },
   "nnb-ccg" = {
