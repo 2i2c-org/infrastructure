@@ -1,0 +1,21 @@
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.temple.svc.cluster.local
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-temple
+jupyterhub:
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
+  ingress:
+    hosts:
+    - temple.2i2c.cloud
+    tls:
+    - secretName: https-auto-tls
+      hosts:
+      - temple.2i2c.cloud
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: advanced
