@@ -58,6 +58,8 @@ jupyterhub:
       Authenticator:
         admin_users:
         - alistairduffey
+        - emilykuhn
+        - aliakherati
   scheduling:
     userScheduler:
       enabled: true
