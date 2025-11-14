@@ -64,6 +64,33 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     },
   };
 
+  local makeTwoServersStartupFailureAlert = function(
+    summary,
+    severity,
+    labels={},
+                                            ) {
+    alert: 'At least two servers have failed to start',
+    expr: |||
+      round(
+        increase(
+          (
+            max by (namespace) (
+              jupyterhub_server_spawn_duration_seconds_count{status="failure"}
+            )
+          )[1h:1m]
+        )
+      ) >= 2
+    |||,
+    'for': '0m',
+    labels: {
+      cluster: cluster_name,
+      severity: severity,
+    } + labels,
+    annotations: {
+      summary: summary,
+    },
+  };
+
   local diskIOApproachingSaturation = function(
     name,
     severity,
@@ -173,7 +200,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 receiver: 'server-startup-pager',
                 matchers: [
                   'cluster =~ .*',
-                  'alertname = "Server Startup Failed"',
+                  'alertname =~ ".*failed to start.*"',
                 ],
               },
             ],
@@ -217,7 +244,16 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               name: 'Server Startup Failure',
               rules: [
                 makeServerStartupFailureAlert(
-                  'Outage alert: Server Startup failed: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
+                  'A server failed to start: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
+                  'same day action needed'
+                ),
+              ],
+            },
+            {
+              name: 'Two servers failed to start',
+              rules: [
+                makeTwoServersStartupFailureAlert(
+                  'At least two servers have failed to start in the last hour: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
                   'same day action needed'
                 ),
               ],
