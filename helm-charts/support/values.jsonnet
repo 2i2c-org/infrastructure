@@ -44,7 +44,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     labels={},
                                         ) {
     // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
-    alert: 'Server Startup Failed',
+    alert: 'One Server Startup Failure',
     expr: |||
       # We trigger any time there is a server startup failure, for any reason.
       # The 'max' is to reduce the labels being passed to only the necessary ones
@@ -69,7 +69,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     severity,
     labels={},
                                             ) {
-    alert: 'At least two servers have failed to start',
+    alert: 'Two Servers Startup Failure',
     expr: |||
       round(
         increase(
@@ -200,7 +200,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 receiver: 'server-startup-pager',
                 matchers: [
                   'cluster =~ .*',
-                  'alertname =~ ".*failed to start.*"',
+                  'alertname =~ ".*failed to start"',
                 ],
               },
             ],
@@ -241,7 +241,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               ],
             },
             {
-              name: 'Server Startup Failure',
+              name: 'A server failed to start',
               rules: [
                 makeServerStartupFailureAlert(
                   'A server failed to start: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
