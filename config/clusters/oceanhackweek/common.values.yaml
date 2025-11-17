@@ -92,13 +92,13 @@ jupyterhub:
               slug: python
               description: Python en JupyterLab
               kubespawner_override:
-                image: ghcr.io/oceanhackweek/python:latest
+                image: ghcr.io/oceanhackweek/python:c881ad5
             r:
               display_name: R (*Viejo*)
               description: R en RStudio
               kubespawner_override:
                 default_url: /rstudio
-                image: ghcr.io/oceanhackweek/r:latest
+                image: ghcr.io/oceanhackweek/r:293f282
         resource_allocation:
           display_name: Capacidad Asignada
           choices:
