@@ -69,7 +69,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     severity,
     labels={},
                                             ) {
-    alert: 'Two servers failed to start in the last hour',
+    alert: 'Two servers failed to start in the last 30m',
     expr: |||
       round(
         abs(
@@ -78,7 +78,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               max by (namespace) (
                 jupyterhub_server_spawn_duration_seconds_count{status="failure"}
               )
-            )[1h:1m]
+            )[30m:1m]
           )
         )
       ) >= 2
