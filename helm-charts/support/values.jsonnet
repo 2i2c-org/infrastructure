@@ -71,14 +71,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                                             ) {
     alert: 'Two servers failed to start in the last 30m',
     expr: |||
-      round(
-        increase(
-          (
-            max by (namespace) (
-              jupyterhub_server_spawn_duration_seconds_count{status="failure"}
-            )
-          )[30m:1m]
-        )
+      changes(
+        (
+          max by (namespace) (
+            jupyterhub_server_spawn_duration_seconds_count{status="failure"}
+          )
+        )[30m:1m]
       ) >= 2
     |||,
     'for': '0m',
