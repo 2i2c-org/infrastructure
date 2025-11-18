@@ -1,15 +1,15 @@
 jupyterhub:
   ingress:
     hosts:
-    - next-temple.2i2c.cloud
+    - next.temple.2i2c.cloud
     tls:
     - secretName: https-auto-tls
       hosts:
-      - next-temple.2i2c.cloud
+      - next.temple.2i2c.cloud
   hub:
     config:
       CILogonOAuthenticator:
-        oauth_callback_url: https://next-temple.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://next.temple.2i2c.cloud/hub/oauth_callback
 nfs:
   pv:
     serverIP: 10.100.192.99

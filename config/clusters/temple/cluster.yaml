@@ -25,7 +25,7 @@ hubs:
   - enc-staging.secret.values.yaml
 - name: prod
   display_name: Temple University
-  domain: next-temple.2i2c.cloud
+  domain: next.temple.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
