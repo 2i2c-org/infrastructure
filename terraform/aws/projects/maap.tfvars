@@ -29,6 +29,7 @@ hub_cloud_permissions = {
             "Effect": "Allow",
             "Action": [
               "s3:PutObject",
+              "s3:PutObjectAcl",
               "s3:GetObject",
               "s3:ListBucketMultipartUploads",
               "s3:AbortMultipartUpload",
@@ -153,7 +154,8 @@ hub_cloud_permissions = {
           {
             "Effect": "Allow",
             "Action": [
-              "s3:PutObject"
+              "s3:PutObject",
+              "s3:PutObjectAcl"
             ],
             "Resource": [
               "arn:aws:s3:::maap-ops-workspace",
