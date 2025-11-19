@@ -19,7 +19,18 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://bnext-bio.2i2c.cloud/hub/oauth_callback
   singleuser:
+    image:
+      name: quay.io/nucleus/nucleus-hub
+      tag: 2i2c
+      pullPolicy: Always
+    memory:
+      guarantee: 3902839759
+      limit: 3902839759
+    cpu:
+      guarantee: 0.4563125
+      limit: 3.6505
     nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge
       2i2c/hub-name: prod
     extraEnv:
       SCRATCH_BUCKET: s3://bnext-bio-scratch/$(JUPYTERHUB_USER)
