@@ -110,7 +110,7 @@ basehub:
                 display_name: CIROH Community NextGen Hub
                 slug: devcon7
                 kubespawner_override:
-                  image: quay.io/fbaig25/ngiab-2i2c:v1.1.0
+                  image: quay.io/awiciroh/ngiab-2i2c:v1.1.1
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
