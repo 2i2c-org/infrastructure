@@ -126,9 +126,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::ghg-ssim",
               "arn:aws:s3:::ghg-ssim/*",
               "arn:aws:s3:::ghg-retrieval-algorithm",
-              "arn:aws:s3:::ghg-retrieval-algorithm/*"
+              "arn:aws:s3:::ghg-retrieval-algorithm/*",
               "arn:aws:s3:::sdap-dev-zarr",
-              "arn:aws:s3:::sdap-dev-zarr/*"              
+              "arn:aws:s3:::sdap-dev-zarr/*"
             ]
           },
           {
