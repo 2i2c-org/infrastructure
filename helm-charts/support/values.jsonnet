@@ -44,7 +44,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     labels={},
                                         ) {
     // Structure is documented in https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
-    alert: 'Server Startup Failed',
+    alert: 'One server failed to start',
     expr: |||
       # We trigger any time there is a server startup failure, for any reason.
       # The 'max' is to reduce the labels being passed to only the necessary ones
@@ -55,6 +55,31 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
       ) > 0
     |||,
     'for': '1m',
+    labels: {
+      cluster: cluster_name,
+      severity: severity,
+    } + labels,
+    annotations: {
+      summary: summary,
+    },
+  };
+
+  local makeTwoServersStartupFailureAlert = function(
+    summary,
+    severity,
+    labels={},
+                                            ) {
+    alert: 'Two servers failed to start in the last 30m',
+    expr: |||
+      changes(
+        (
+          max by (namespace) (
+            jupyterhub_server_spawn_duration_seconds_count{status="failure"}
+          )
+        )[30m:1m]
+      ) >= 2
+    |||,
+    'for': '0m',
     labels: {
       cluster: cluster_name,
       severity: severity,
@@ -173,7 +198,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 receiver: 'server-startup-pager',
                 matchers: [
                   'cluster =~ .*',
-                  'alertname = "Server Startup Failed"',
+                  'alertname =~ ".*failed to start.*"',
                 ],
               },
             ],
@@ -217,8 +242,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               name: 'Server Startup Failure',
               rules: [
                 makeServerStartupFailureAlert(
-                  'Outage alert: Server Startup failed: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
+                  'A server failed to start: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
                   'same day action needed'
+                ),
+                makeTwoServersStartupFailureAlert(
+                  'At least two servers have failed to start in the last hour: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
+                  'immediate action needed'
                 ),
               ],
             },
