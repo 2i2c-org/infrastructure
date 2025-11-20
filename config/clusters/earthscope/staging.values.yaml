@@ -30,6 +30,21 @@ basehub:
         2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
+      initContainers:
+      - name: jupyterhub-gitpuller-init
+        image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+        env:
+        - name: TARGET_PATH
+          value: geolab-docs
+        - name: SOURCE_REPO
+          value: https://github.com/EarthScope/GeoLab
+        volumeMounts:
+        - name: home
+          mountPath: /home/jovyan
+          subPath: '{escaped_username}'
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
   dask-gateway:
     gateway:
       backend:
