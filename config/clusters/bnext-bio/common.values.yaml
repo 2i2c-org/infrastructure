@@ -160,31 +160,6 @@ jupyterhub:
       enabled: true
   singleuser:
     defaultUrl: /lab
-    storage:
-      extraVolumes:
-      - name: dev-shm
-        emptyDir:
-          medium: Memory
-      - name: shared-group-placeholder
-        emptyDir:
-          medium: Memory
-          sizeLimit: 1Mi
-      extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
-      - name: dev-shm
-        mountPath: /dev/shm
-      - name: home
-        mountPath: /home/rstudio
-        subPath: '{escaped_username}'
-      - name: home
-        mountPath: /home/rstudio/shared
-        subPath: _shared
-        readOnly: true
-      - name: shared-group-placeholder
-        mountPath: /home/jovyan/shared-group-projects
 binderhub-service:
   enabled: true
     # Explicitly specify what nodes we want for our builds
