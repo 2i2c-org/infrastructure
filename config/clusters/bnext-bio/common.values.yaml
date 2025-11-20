@@ -86,9 +86,6 @@ jupyterhub:
           "00-group-hub-access-for-2i2c-staff": {
             "groups": ["2i2c-org:hub-access-for-2i2c-staff"],
             "spawner_override": {
-              "environment": {
-                "AM_I_GROUP_2i2c": "yes"
-              },
               "volume_mounts": {
                 "00-group-hub-access-for-2i2c-staff": {
                   "name": "home",
@@ -102,9 +99,6 @@ jupyterhub:
           "01-group-nucleus-hub-access": {
             "groups": ["nucleus-eng:nucleus-eng-hub-access"],
             "spawner_override": {
-              "environment": {
-                "AM_I_GROUP_nucleus": "yes"
-              },
               "volume_mounts": {
                 "00-group-hub-access-for-nucleus-eng-hub-access": {
                   "name": "home",
