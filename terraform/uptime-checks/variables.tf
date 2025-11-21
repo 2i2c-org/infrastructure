@@ -8,13 +8,13 @@ variable "project_id" {
 
 variable "federated_metrics_allowlist" {
   type = set(object({
-    name = string
+    name         = string
     metric_regex = string
     labels_regex = string
   }))
   default = [
     {
-      name = "active-users"
+      name         = "active-users"
       metric_regex = "jupyterhub_active_users"
       labels_regex = "period|namespace"
     }
