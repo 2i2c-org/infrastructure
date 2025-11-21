@@ -42,3 +42,11 @@ We only pick up an allow listed set of metrics from each prometheus, with an all
 of labels as well to prevent potential PII leaking and reduce [cardinality explosions](https://grafana.com/blog/2022/02/15/what-are-cardinality-spikes-and-why-do-they-matter/).
 In the future, we could also use [recording rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)
 to collect other information that we want in an aggregated fashion.
+
+```{caution}
+It's tempting to collect all the metrics, because we think we may need them in the
+future. That comes with many risks (confirmation bias and overfitting by finding
+metrics that satisfy our desires), so we should instead collect metrics where we
+know what we want to collect them for. This does mean we may not be able to
+backfill metrics, but often that's an acceptable tradeoff.
+```
