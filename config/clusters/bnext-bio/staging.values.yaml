@@ -13,6 +13,66 @@ jupyterhub:
     - hosts: [staging.beta-hub.nucleus.engineering]
       secretName: https-auto-tls
   hub:
+    image:
+      name: quay.io/2i2c/z2jh-431
+      tag: 0.0.1-0.dev.git.14004.h556ee4be8
+    extraConfig:
+      skip_refresh_for_test_user.py: |
+        def refresh_user_hook(authenticator, user, auth_state):
+          skip_user_list = [
+            "deployment-service-check",
+            "2i2c-org:hub-access-for-2i2c-staff-collab",
+            "nucleus-eng:hub-access-collab",
+            "nucleus-eng:devcells-london-node-collab",
+            "nucleus-eng:devcells-chicago-node-collab",
+            "nucleus-eng:devcells-all-nodes-collab"
+            ]
+          if user.name in skip_user_list:
+              # if this is the user,
+              # refresh_user doesn't make sense
+              # consider it always fresh
+              return True
+          # for all other users, refresh as usual
+          return None
+
+        c.OAuthenticator.refresh_user_hook = refresh_user_hook
+    loadRoles:
+      hub-access-for-2i2c-staff-collab-access:
+        scopes:
+        - access:servers!user=2i2c-org:hub-access-for-2i2c-staff-collab
+        - admin:servers!user=2i2c-org:hub-access-for-2i2c-staff-collab
+        - list:users!user=2i2c-org:hub-access-for-2i2c-staff-collab
+        groups:
+        - 2i2c-org:hub-access-for-2i2c-staff
+      hub-access-collab-access:
+        scopes:
+        - access:servers!user=nucleus-eng:hub-access-collab
+        - admin:servers!user=nucleus-eng:hub-access-collab
+        - list:users!user=nucleus-eng:hub-access-collab
+        groups:
+        - nucleus-eng:hub-access
+      devcells-london-node-collab-access:
+        scopes:
+        - access:servers!user=nucleus-eng:devcells-london-node-collab
+        - admin:servers!user=nucleus-eng:devcells-london-node-collab
+        - list:users!user=nucleus-eng:devcells-london-node-collab
+        groups:
+        - nucleus-eng:hub-access
+      devcells-chicago-node-collab-access:
+        scopes:
+        - access:servers!user=nucleus-eng:devcells-chicago-node-collab
+        - admin:servers!user=nucleus-eng:devcells-chicago-node-collab
+        - list:users!user=nucleus-eng:devcells-chicago-node-collab
+        groups:
+        - nucleus-eng:devcells-chicago-node
+      devcells-all-nodes-collab-access:
+        scopes:
+        - access:servers!user=nucleus-eng:devcells-all-nodes-collab
+        - admin:servers!user=nucleus-eng:devcells-all-nodes-collab
+        - list:users!user=nucleus-eng:devcells-all-nodes-collab
+        groups:
+        - nucleus-eng:devcells-all-nodes
+
     config:
       JupyterHub:
         authenticator_class: github

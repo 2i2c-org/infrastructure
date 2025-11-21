@@ -22,3 +22,9 @@ charts:
           REQUIREMENTS_FILE: pkce-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
+      z2jh-431:
+        imageName: quay.io/2i2c/z2jh-431
+        buildArgs:
+          REQUIREMENTS_FILE: requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile-z2jh-431
