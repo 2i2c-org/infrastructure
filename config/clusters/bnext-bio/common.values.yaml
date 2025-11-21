@@ -89,21 +89,21 @@ jupyterhub:
               "volume_mounts": {
                 "00-group-hub-access-for-2i2c-staff": {
                   "name": "home",
-                  "mountPath": "/home/jovyan/shared-group-projects/hub-access-for-2i2c-staff",
-                  "subPath": "_shared-group-projects/hub-access-for-2i2c-staff",
+                  "mountPath": "/home/jovyan/projects/hub-access-for-2i2c-staff",
+                  "subPath": "_projects/hub-access-for-2i2c-staff",
                   "readOnly": False
                 },
               }
             },
           },
           "01-group-nucleus-hub-access": {
-            "groups": ["nucleus-eng:nucleus-eng-hub-access"],
+            "groups": ["nucleus-eng:hub-access"],
             "spawner_override": {
               "volume_mounts": {
-                "00-group-hub-access-for-nucleus-eng-hub-access": {
+                "00-group-nucleus-hub-access": {
                   "name": "home",
-                  "mountPath": "/home/jovyan/shared-group-projects/nucleus-eng-hub-access",
-                  "subPath": "_shared-group-projects/nucleus-eng-hub-access",
+                  "mountPath": "/home/jovyan/projects/nucleus-eng-hub-access",
+                  "subPath": "_projects/nucleus-eng-hub-access",
                   "readOnly": False
                 },
               }
@@ -113,10 +113,10 @@ jupyterhub:
             "groups": ["nucleus-eng:devcells-london-node"],
             "spawner_override": {
               "volume_mounts": {
-                "00-group-hub-access-for-devcells-london-node": {
+                "00-group-nucleus-devcells-london-node": {
                   "name": "home",
-                  "mountPath": "/home/jovyan/shared-group-projects/devcells-london-node",
-                  "subPath": "_shared-group-projects/devcells-london-node",
+                  "mountPath": "/home/jovyan/projects/devcells-london-node",
+                  "subPath": "_projects/devcells-london-node",
                   "readOnly": False
                 },
               }
@@ -126,10 +126,10 @@ jupyterhub:
             "groups": ["nucleus-eng:devcells-chicago-node"],
             "spawner_override": {
               "volume_mounts": {
-                "00-group-hub-access-for-devcells-chicago-node": {
+                "00-group-nucleus-devcells-chicago-node": {
                   "name": "home",
-                  "mountPath": "/home/jovyan/shared-group-projects/devcells-chicago-node",
-                  "subPath": "_shared-group-projects/devcells-chicago-node",
+                  "mountPath": "/home/jovyan/projects/devcells-chicago-node",
+                  "subPath": "_projects/devcells-chicago-node",
                   "readOnly": False
                 },
               }
@@ -139,10 +139,10 @@ jupyterhub:
             "groups": ["nucleus-eng:devcells-all-nodes"],
             "spawner_override": {
               "volume_mounts": {
-                "00-group-hub-access-for-devcells-all-nodes": {
+                "00-group-nucleus-devcells-all-nodes": {
                   "name": "home",
-                  "mountPath": "/home/jovyan/shared-group-projects/devcells-all-nodes",
-                  "subPath": "_shared-group-projects/devcells-all-nodes",
+                  "mountPath": "/home/jovyan/projects/devcells-all-nodes",
+                  "subPath": "_projects/devcells-all-nodes",
                   "readOnly": False
                 },
               }
