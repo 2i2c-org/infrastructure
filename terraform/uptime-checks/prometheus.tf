@@ -29,6 +29,18 @@ resource "helm_release" "prometheus" {
     file("${path.module}/prometheus.yaml"),
     yamlencode({
       server : {
+        ingress: {
+          enabled: true,
+          ingressClassName: "nginx",
+          annotations: {
+            "cert-manager.io/cluster-issuer": "letsencrypt-prod"
+          },
+          hosts: ["federated-prometheus.internaltools.2i2c.org"],
+          tls: [{
+            secretName: "prometheus-tls",
+            hosts: ["federated-prometheus.internaltools.2i2c.org"]
+          }]
+        }
         # See https://github.com/prometheus-community/helm-charts/issues/1255 for
         # how and why this is configured this way
         extraArgs : {
@@ -37,10 +49,10 @@ resource "helm_release" "prometheus" {
         probeHeaders : [
           {
             name : "Authorization",
-            value : format("Basic %s", base64encode(format("%s:%s",
+            value : sensitive(format("Basic %s", base64encode(format("%s:%s",
               data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"],
               data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]
-            )))
+            ))))
           }
         ]
       },
@@ -52,7 +64,7 @@ resource "helm_release" "prometheus" {
           # See https://github.com/prometheus-community/helm-charts/issues/1255 for
           # how and why this is configured this way
           basic_auth_users : {
-            (data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"]) : bcrypt(data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"])
+            sensitive((data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"])) : sensitive(bcrypt(data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]))
           }
         }
       }
@@ -118,8 +130,8 @@ locals {
 
           scheme = "https"
           basic_auth = {
-            username : data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.username"],
-            password : data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.password"]
+            username : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.username"]),
+            password : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.password"])
           }
         }
       ]
