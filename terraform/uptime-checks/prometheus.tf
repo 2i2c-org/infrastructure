@@ -65,7 +65,7 @@ locals {
               # prometheus uses internal labels as well here when it's matching against labelkeep
               # so we must explicitly specify them, or they'll also be dropped and prometheus will
               # complain. We also mention cluster here, as that's a label we add explicitly.
-              regex  = "__name__|__address__|__scrape_interval__|__scrape_timeout__|__scheme__|__metrics_path__|cluster|${m.labels_regex}"
+              regex = "__name__|__address__|__scrape_interval__|__scrape_timeout__|__scheme__|__metrics_path__|cluster|${m.labels_regex}"
             }
           ]
 
