@@ -40,3 +40,5 @@ decommission a community's infrastructure.
 
 We only pick up an allow listed set of metrics from each prometheus, with an allowlist
 of labels as well to prevent potential PII leaking and reduce [cardinality explosions](https://grafana.com/blog/2022/02/15/what-are-cardinality-spikes-and-why-do-they-matter/).
+In the future, we could also use [recording rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)
+to collect other information that we want in an aggregated fashion.
