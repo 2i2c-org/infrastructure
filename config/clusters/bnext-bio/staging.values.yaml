@@ -21,11 +21,11 @@ jupyterhub:
         def refresh_user_hook(authenticator, user, auth_state):
           skip_user_list = [
             "deployment-service-check",
-            "2i2c-org:hub-access-for-2i2c-staff-collab",
-            "nucleus-eng:hub-access-collab",
-            "nucleus-eng:devcells-london-node-collab",
-            "nucleus-eng:devcells-chicago-node-collab",
-            "nucleus-eng:devcells-all-nodes-collab"
+            "hub-access-for-2i2c-staff-collab",
+            "hub-access-collab",
+            "devcells-london-node-collab",
+            "devcells-chicago-node-collab",
+            "devcells-all-nodes-collab"
             ]
           if user.name in skip_user_list:
               # if this is the user,
@@ -39,37 +39,37 @@ jupyterhub:
     loadRoles:
       hub-access-for-2i2c-staff-collab-access:
         scopes:
-        - access:servers!user=2i2c-org:hub-access-for-2i2c-staff-collab
-        - admin:servers!user=2i2c-org:hub-access-for-2i2c-staff-collab
-        - list:users!user=2i2c-org:hub-access-for-2i2c-staff-collab
+        - access:servers!user=hub-access-for-2i2c-staff-collab
+        - admin:servers!user=hub-access-for-2i2c-staff-collab
+        - list:users!user=hub-access-for-2i2c-staff-collab
         groups:
         - 2i2c-org:hub-access-for-2i2c-staff
       hub-access-collab-access:
         scopes:
-        - access:servers!user=nucleus-eng:hub-access-collab
-        - admin:servers!user=nucleus-eng:hub-access-collab
-        - list:users!user=nucleus-eng:hub-access-collab
+        - access:servers!user=hub-access-collab
+        - admin:servers!user=hub-access-collab
+        - list:users!user=hub-access-collab
         groups:
         - nucleus-eng:hub-access
       devcells-london-node-collab-access:
         scopes:
-        - access:servers!user=nucleus-eng:devcells-london-node-collab
-        - admin:servers!user=nucleus-eng:devcells-london-node-collab
-        - list:users!user=nucleus-eng:devcells-london-node-collab
+        - access:servers!user=devcells-london-node-collab
+        - admin:servers!user=devcells-london-node-collab
+        - list:users!user=devcells-london-node-collab
         groups:
-        - nucleus-eng:hub-access
+        - nucleus-eng:devcells-london-node
       devcells-chicago-node-collab-access:
         scopes:
-        - access:servers!user=nucleus-eng:devcells-chicago-node-collab
-        - admin:servers!user=nucleus-eng:devcells-chicago-node-collab
-        - list:users!user=nucleus-eng:devcells-chicago-node-collab
+        - access:servers!user=devcells-chicago-node-collab
+        - admin:servers!user=devcells-chicago-node-collab
+        - list:users!user=devcells-chicago-node-collab
         groups:
         - nucleus-eng:devcells-chicago-node
       devcells-all-nodes-collab-access:
         scopes:
-        - access:servers!user=nucleus-eng:devcells-all-nodes-collab
-        - admin:servers!user=nucleus-eng:devcells-all-nodes-collab
-        - list:users!user=nucleus-eng:devcells-all-nodes-collab
+        - access:servers!user=devcells-all-nodes-collab
+        - admin:servers!user=devcells-all-nodes-collab
+        - list:users!user=devcells-all-nodes-collab
         groups:
         - nucleus-eng:devcells-all-nodes
 
