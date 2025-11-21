@@ -58,7 +58,7 @@ basehub:
                 default: true
                 slug: new
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:091bf802ad3d
+                  image: quay.io/2i2c/awi-ciroh-image:15292ed7f573
               rkernel:
                 display_name: Notebook with R and Python kernel
                 slug: rkernel
