@@ -3,6 +3,22 @@ data "sops_file" "encrypted_prometheus_configs" {
   source_file = each.value.encrypted_file
 }
 
+# We create the disk for the federated prometheus instance separately, so we
+# can have reliable backups and it doesn't get lost due to any issues with
+# the cluster.
+resource "google_compute_disk" "prometheus_disk" {
+  name    = "federated-prometheus-disk"
+  type    = "pd-balanced"
+  zone    = "us-central1-b"
+  size    = 100
+  project = var.project_id
+}
+
+data "sops_file" "encrypted_prometheus_creds" {
+  source_file = "secret/enc-prometheus-creds.secret.yaml"
+}
+
+
 resource "helm_release" "prometheus" {
   name       = "prometheus"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -12,9 +28,32 @@ resource "helm_release" "prometheus" {
   values = [
     file("${path.module}/prometheus.yaml"),
     yamlencode({
+      server : {
+        # See https://github.com/prometheus-community/helm-charts/issues/1255 for
+        # how and why this is configured this way
+        extraArgs : {
+          "web.config.file" : "/etc/config/web.yml"
+        },
+        probeHeaders : [
+          {
+            name : "Authorization",
+            value : format("Basic %s", base64encode(format("%s:%s",
+              data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"],
+              data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]
+            )))
+          }
+        ]
+      },
       serverFiles : {
         "prometheus.yml" : {
           scrape_configs : local.scrape_configs
+        },
+        "web.yml" : {
+          # See https://github.com/prometheus-community/helm-charts/issues/1255 for
+          # how and why this is configured this way
+          basic_auth_users : {
+            (data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"]) : bcrypt(data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"])
+          }
         }
       }
     })
