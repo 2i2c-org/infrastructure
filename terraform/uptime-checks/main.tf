@@ -14,9 +14,7 @@ terraform {
       version = "~> 5.43"
     }
 
-    # Used to decrypt sops encrypted secrets containing PagerDuty keys
     sops = {
-      # ref: https://registry.terraform.io/providers/carlpett/sops/latest
       source  = "carlpett/sops"
       version = "~> 1.1"
     }
@@ -24,6 +22,11 @@ terraform {
     helm = {
       source  = "hashicorp/helm"
       version = "3.1.1"
+    }
+
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = "2.38.0"
     }
   }
 }
