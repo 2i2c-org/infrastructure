@@ -22,6 +22,7 @@ hubs:
   - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
+  chart_override: staging-chart.yaml
 - name: prod
   display_name: bnext-bio - prod
   domain: beta-hub.nucleus.engineering
