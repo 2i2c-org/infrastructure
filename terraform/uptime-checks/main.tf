@@ -20,5 +20,26 @@ terraform {
       source  = "carlpett/sops"
       version = "~> 1.1"
     }
+
+    helm = {
+      source = "hashicorp/helm"
+      version = "3.1.1"
+    }
   }
+}
+
+data "google_client_config" "current" { }
+
+provider "helm" {
+    kubernetes = {
+        host  = "https://${google_container_cluster.sharedservices.endpoint}"
+        token = data.google_client_config.current.access_token
+        cluster_ca_certificate = base64decode(
+          google_container_cluster.sharedservices.master_auth[0].cluster_ca_certificate,
+        )
+        exec = {
+            api_version = "client.authentication.k8s.io/v1beta1"
+            command     = "gke-gcloud-auth-plugin"
+        }
+    }
 }

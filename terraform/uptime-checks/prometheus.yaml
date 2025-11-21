@@ -1,0 +1,23 @@
+alertmanager:
+  enabled: false
+
+prometheus-pushgateway:
+  enabled: false
+
+kube-state-metrics:
+  enabled: false
+
+prometheus-node-exporter:
+  enabled: false
+
+server:
+  retention: 1098d # 3 years
+
+  strategy:
+    type: Recreate
+
+  persistentVolume:
+    size: 100Gi
+
+  service:
+    type: ClusterIP

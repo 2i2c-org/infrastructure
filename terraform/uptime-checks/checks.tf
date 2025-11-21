@@ -15,7 +15,9 @@ locals {
       } if !startswith(f, "enc-")
     ]
   ])
+
 }
+
 
 resource "google_monitoring_uptime_check_config" "hub_simple_uptime_check" {
   for_each = { for h in local.hubs : h.domain => h }
