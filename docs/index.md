@@ -95,6 +95,7 @@ topic/monitoring-alerting/index.md
 topic/features.md
 topic/resource-allocation.md
 topic/jsonnet.md
+topic/internal-tooling.md
 ```
 
 ## Reference
