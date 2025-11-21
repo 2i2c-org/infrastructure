@@ -27,52 +27,26 @@ resource "helm_release" "prometheus" {
 
   values = [
     file("${path.module}/prometheus.yaml"),
-    yamlencode({
-      server : {
-        ingress: {
-          enabled: true,
-          ingressClassName: "nginx",
-          annotations: {
-            "cert-manager.io/cluster-issuer": "letsencrypt-prod"
-          },
-          hosts: ["federated-prometheus.internaltools.2i2c.org"],
-          tls: [{
-            secretName: "prometheus-tls",
-            hosts: ["federated-prometheus.internaltools.2i2c.org"]
-          }]
-        }
-        # See https://github.com/prometheus-community/helm-charts/issues/1255 for
-        # how and why this is configured this way
-        extraArgs : {
-          "web.config.file" : "/etc/config/web.yml"
-        },
-        probeHeaders : [
-          {
-            name : "Authorization",
-            value : sensitive(format("Basic %s", base64encode(format("%s:%s",
-              data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"],
-              data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]
-            ))))
-          }
-        ]
-      },
-      serverFiles : {
-        "prometheus.yml" : {
-          scrape_configs : local.scrape_configs
-        },
-        "web.yml" : {
-          # See https://github.com/prometheus-community/helm-charts/issues/1255 for
-          # how and why this is configured this way
-          basic_auth_users : {
-            sensitive((data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"])) : sensitive(bcrypt(data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]))
-          }
-        }
-      }
-    })
+    yamlencode(local.prometheus_config)
   ]
 }
 
 locals {
+  cluster_yamls = [for f in fileset(path.module, "../../config/clusters/*/cluster.yaml") : yamldecode(file(f))]
+  hubs = flatten([for cy in local.cluster_yamls : [for h in cy["hubs"] : merge(h, tomap({
+    cluster  = cy["name"],
+    provider = cy["provider"]
+  }))]])
+  # A list of all prometheus servers
+  prometheuses = flatten([
+    for cy in local.cluster_yamls : [
+      for f in cy["support"]["helm_chart_values_files"] : {
+        # Requires the directory of the cluster file matches the cluster name
+        "domain" : yamldecode(file("../../config/clusters/${cy.name}/${f}"))["prometheus"]["server"]["ingress"]["hosts"][0],
+        "cluster" : cy["name"]
+      } if !startswith(f, "enc-")
+    ]
+  ])
   prometheus_domain_maps = { for p in local.prometheuses : p.cluster => p.domain }
   encrypted_prometheus_files = flatten([
     for cy in local.cluster_yamls : [
@@ -137,4 +111,47 @@ locals {
       ]
     ]
   ])
+
+  prometheus_config = sensitive({
+      server : {
+        ingress: {
+          enabled: true,
+          ingressClassName: "nginx",
+          annotations: {
+            "cert-manager.io/cluster-issuer": "letsencrypt-prod"
+          },
+          hosts: ["federated-prometheus.internaltools.2i2c.org"],
+          tls: [{
+            secretName: "prometheus-tls",
+            hosts: ["federated-prometheus.internaltools.2i2c.org"]
+          }]
+        }
+        # See https://github.com/prometheus-community/helm-charts/issues/1255 for
+        # how and why this is configured this way
+        extraArgs : {
+          "web.config.file" : "/etc/config/web.yml"
+        },
+        probeHeaders : [
+          {
+            name : "Authorization",
+            value : sensitive(format("Basic %s", base64encode(format("%s:%s",
+              data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"],
+              data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]
+            ))))
+          }
+        ]
+      },
+      serverFiles : {
+        "prometheus.yml" : {
+          scrape_configs : local.scrape_configs
+        },
+        "web.yml" : {
+          # See https://github.com/prometheus-community/helm-charts/issues/1255 for
+          # how and why this is configured this way
+          basic_auth_users : {
+            sensitive((data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"])) : sensitive(bcrypt(data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]))
+          }
+        }
+      }
+    })
 }
