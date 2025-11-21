@@ -1,3 +1,19 @@
+
+
+# This is deprecated, but I also currently hate everything else I have checked on.
+resource "helm_release" "ingress-nginx" {
+  name       = "ingress-nginx"
+  namespace  = "ingress-nginx"
+  create_namespace = true
+  repository = "https://kubernetes.github.io/ingress-nginx"
+  chart      = "ingress-nginx"
+  version    = "4.13.0"
+  set = [{
+    name = "controller.admissionWebhooks.enabled"
+    value = false
+  }]
+}
+
 resource "helm_release" "cert-manager" {
   name       = "cert-manager"
   namespace  = "cert-manager"
