@@ -14,11 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # The grafana for 2i2c cluster holds also info about all other
-          # clusters and gets an additional dashboard deployed for that
-        - cluster_name: 2i2c
-          deploy_flags: --dashboards-dir=global-dashboards
-
         - cluster_name: 2i2c
         - cluster_name: 2i2c-aws-us
         - cluster_name: 2i2c-jetstream2
