@@ -12,6 +12,10 @@ resource "google_compute_disk" "prometheus_disk" {
   zone    = "us-central1-b"
   size    = var.prometheus_disk_size
   project = var.project_id
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "kubernetes_namespace" "prometheus_namespace" {

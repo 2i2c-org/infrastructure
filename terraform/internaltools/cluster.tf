@@ -8,7 +8,13 @@ resource "google_container_cluster" "internaltools" {
   # node pool and immediately delete it.
   remove_default_node_pool = true
   initial_node_count       = 1
+
+  # This is annoyingly implemented, let's use the `lifecycle` hook below instead
   deletion_protection      = false
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_container_node_pool" "main" {
@@ -20,6 +26,10 @@ resource "google_container_node_pool" "main" {
 
   node_config {
     machine_type = "e2-medium"
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
