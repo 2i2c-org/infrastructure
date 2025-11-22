@@ -50,3 +50,11 @@ metrics that satisfy our desires), so we should instead collect metrics where we
 know what we want to collect them for. This does mean we may not be able to
 backfill metrics, but often that's an acceptable tradeoff.
 ```
+
+#### Accessing Federated Prometheus
+
+You can access the federated prometheus instance at https://federated-prometheus.internaltools.2i2c.org/. You'll need to authenticate with basic HTTP auth. Credentials
+can be found in one of two places:
+
+1. 2i2c Team Bitwarden, under the name "Federated Prometheus" for convenience. This isn't the source of truth.
+2. Under `terraform/internaltools/secret/enc-prometheus-creds.secret.yaml`, encrypted with sops. This is the source of truth.
