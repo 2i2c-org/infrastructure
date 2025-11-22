@@ -34,7 +34,7 @@ resource "kubernetes_persistent_volume" "prometheus_disk" {
 
     persistent_volume_source {
       csi {
-        driver = "pd.csi.storage.gke.io"
+        driver        = "pd.csi.storage.gke.io"
         volume_handle = google_compute_disk.prometheus_disk.id
       }
 
@@ -44,12 +44,12 @@ resource "kubernetes_persistent_volume" "prometheus_disk" {
 
 # Can't use the resource directly because of https://github.com/hashicorp/terraform-provider-kubernetes/issues/872
 resource "kubernetes_manifest" "prometheus_disk" {
-  depends_on = [ kubernetes_namespace.prometheus_namespace ]
+  depends_on = [kubernetes_namespace.prometheus_namespace]
   manifest = {
     apiVersion = "v1"
-    kind = "PersistentVolumeClaim"
+    kind       = "PersistentVolumeClaim"
     metadata = {
-      name = "federated-prometheus-disk"
+      name      = "federated-prometheus-disk"
       namespace = var.prometheus_namespace
     }
     spec = {
@@ -58,9 +58,9 @@ resource "kubernetes_manifest" "prometheus_disk" {
           storage = format("%sGi", var.prometheus_disk_size)
         }
       }
-      accessModes = ["ReadWriteMany"]
+      accessModes      = ["ReadWriteMany"]
       storageClassName = ""
-      volumeName = kubernetes_persistent_volume.prometheus_disk.metadata.0.name
+      volumeName       = kubernetes_persistent_volume.prometheus_disk.metadata.0.name
     }
 
   }
@@ -73,9 +73,9 @@ data "sops_file" "encrypted_prometheus_creds" {
 
 
 resource "helm_release" "prometheus" {
-  depends_on = [ kubernetes_namespace.prometheus_namespace ]
+  depends_on = [kubernetes_namespace.prometheus_namespace]
   name       = "prometheus"
-  namespace = var.prometheus_namespace
+  namespace  = var.prometheus_namespace
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "prometheus"
   version    = "27.29.0"
@@ -168,45 +168,45 @@ locals {
   ])
 
   prometheus_config = sensitive({
-      server : {
-        ingress: {
-          enabled: true,
-          ingressClassName: "nginx",
-          annotations: {
-            "cert-manager.io/cluster-issuer": "letsencrypt-prod"
-          },
-          hosts: ["federated-prometheus.internaltools.2i2c.org"],
-          tls: [{
-            secretName: "prometheus-tls",
-            hosts: ["federated-prometheus.internaltools.2i2c.org"]
-          }]
+    server : {
+      ingress : {
+        enabled : true,
+        ingressClassName : "nginx",
+        annotations : {
+          "cert-manager.io/cluster-issuer" : "letsencrypt-prod"
+        },
+        hosts : ["federated-prometheus.internaltools.2i2c.org"],
+        tls : [{
+          secretName : "prometheus-tls",
+          hosts : ["federated-prometheus.internaltools.2i2c.org"]
+        }]
+      }
+      # See https://github.com/prometheus-community/helm-charts/issues/1255 for
+      # how and why this is configured this way
+      extraArgs : {
+        "web.config.file" : "/etc/config/web.yml"
+      },
+      probeHeaders : [
+        {
+          name : "Authorization",
+          value : sensitive(format("Basic %s", base64encode(format("%s:%s",
+            data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"],
+            data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]
+          ))))
         }
+      ]
+    },
+    serverFiles : {
+      "prometheus.yml" : {
+        scrape_configs : local.scrape_configs
+      },
+      "web.yml" : {
         # See https://github.com/prometheus-community/helm-charts/issues/1255 for
         # how and why this is configured this way
-        extraArgs : {
-          "web.config.file" : "/etc/config/web.yml"
-        },
-        probeHeaders : [
-          {
-            name : "Authorization",
-            value : sensitive(format("Basic %s", base64encode(format("%s:%s",
-              data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"],
-              data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]
-            ))))
-          }
-        ]
-      },
-      serverFiles : {
-        "prometheus.yml" : {
-          scrape_configs : local.scrape_configs
-        },
-        "web.yml" : {
-          # See https://github.com/prometheus-community/helm-charts/issues/1255 for
-          # how and why this is configured this way
-          basic_auth_users : {
-            sensitive((data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"])) : sensitive(bcrypt(data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]))
-          }
+        basic_auth_users : {
+          sensitive((data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.username"])) : sensitive(bcrypt(data.sops_file.encrypted_prometheus_creds.data["prometheusCreds.password"]))
         }
       }
-    })
+    }
+  })
 }
