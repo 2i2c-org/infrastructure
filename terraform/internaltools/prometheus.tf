@@ -10,8 +10,61 @@ resource "google_compute_disk" "prometheus_disk" {
   name    = "federated-prometheus-disk"
   type    = "pd-balanced"
   zone    = "us-central1-b"
-  size    = 100
+  size    = var.prometheus_disk_size
   project = var.project_id
+}
+
+resource "kubernetes_namespace" "prometheus_namespace" {
+  metadata {
+    name = var.prometheus_namespace
+  }
+}
+
+resource "kubernetes_persistent_volume" "prometheus_disk" {
+  metadata {
+    name = "federated-prometheus-disk"
+  }
+
+  spec {
+    capacity = {
+      storage = format("%sGi", var.prometheus_disk_size)
+    }
+
+    access_modes = ["ReadWriteMany"]
+
+    persistent_volume_source {
+      csi {
+        driver = "pd.csi.storage.gke.io"
+        volume_handle = google_compute_disk.prometheus_disk.id
+      }
+
+    }
+  }
+}
+
+# Can't use the resource directly because of https://github.com/hashicorp/terraform-provider-kubernetes/issues/872
+resource "kubernetes_manifest" "prometheus_disk" {
+  depends_on = [ kubernetes_namespace.prometheus_namespace ]
+  manifest = {
+    apiVersion = "v1"
+    kind = "PersistentVolumeClaim"
+    metadata = {
+      name = "federated-prometheus-disk"
+      namespace = var.prometheus_namespace
+    }
+    spec = {
+      resources = {
+        requests = {
+          storage = format("%sGi", var.prometheus_disk_size)
+        }
+      }
+      accessModes = ["ReadWriteMany"]
+      storageClassName = ""
+      volumeName = kubernetes_persistent_volume.prometheus_disk.metadata.0.name
+    }
+
+  }
+
 }
 
 data "sops_file" "encrypted_prometheus_creds" {
@@ -20,7 +73,9 @@ data "sops_file" "encrypted_prometheus_creds" {
 
 
 resource "helm_release" "prometheus" {
+  depends_on = [ kubernetes_namespace.prometheus_namespace ]
   name       = "prometheus"
+  namespace = var.prometheus_namespace
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "prometheus"
   version    = "27.29.0"

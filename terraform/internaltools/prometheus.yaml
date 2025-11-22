@@ -17,7 +17,7 @@ server:
     type: Recreate
 
   persistentVolume:
-    size: 100Gi
+    existingClaim: federated-prometheus-disk
 
   service:
     type: ClusterIP
