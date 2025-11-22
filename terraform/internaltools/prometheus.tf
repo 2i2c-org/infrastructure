@@ -30,12 +30,14 @@ resource "kubernetes_persistent_volume" "prometheus_disk" {
       storage = format("%sGi", var.prometheus_disk_size)
     }
 
-    access_modes = ["ReadWriteMany"]
+    access_modes = ["ReadWriteOnce"]
 
     persistent_volume_source {
       csi {
         driver        = "pd.csi.storage.gke.io"
         volume_handle = google_compute_disk.prometheus_disk.id
+        # Explicitly needs to be set so it's formatted and permissions are set right
+        fs_type = "ext4"
       }
 
     }
@@ -58,7 +60,7 @@ resource "kubernetes_manifest" "prometheus_disk" {
           storage = format("%sGi", var.prometheus_disk_size)
         }
       }
-      accessModes      = ["ReadWriteMany"]
+      accessModes      = ["ReadWriteOnce"]
       storageClassName = ""
       volumeName       = kubernetes_persistent_volume.prometheus_disk.metadata[0].name
     }
