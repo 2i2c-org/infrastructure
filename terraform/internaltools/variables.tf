@@ -39,7 +39,7 @@ variable "prometheus_namespace" {
 }
 
 variable "prometheus_disk_size" {
-  type = number
-  default = 100
+  type        = number
+  default     = 100
   description = "Size of the federated prometheus disk (in GiB)"
 }
