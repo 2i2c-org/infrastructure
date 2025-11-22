@@ -60,7 +60,7 @@ resource "kubernetes_manifest" "prometheus_disk" {
       }
       accessModes      = ["ReadWriteMany"]
       storageClassName = ""
-      volumeName       = kubernetes_persistent_volume.prometheus_disk.metadata.0.name
+      volumeName       = kubernetes_persistent_volume.prometheus_disk.metadata[0].name
     }
 
   }
@@ -88,10 +88,6 @@ resource "helm_release" "prometheus" {
 
 locals {
   cluster_yamls = [for f in fileset(path.module, "../../config/clusters/*/cluster.yaml") : yamldecode(file(f))]
-  hubs = flatten([for cy in local.cluster_yamls : [for h in cy["hubs"] : merge(h, tomap({
-    cluster  = cy["name"],
-    provider = cy["provider"]
-  }))]])
   # A list of all prometheus servers
   prometheuses = flatten([
     for cy in local.cluster_yamls : [
