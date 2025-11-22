@@ -58,3 +58,12 @@ can be found in one of two places:
 
 1. 2i2c Team Bitwarden, under the name "Federated Prometheus" for convenience. This isn't the source of truth.
 2. Under `terraform/internaltools/secret/enc-prometheus-creds.secret.yaml`, encrypted with sops. This is the source of truth.
+
+The prometheus [HTTP API documentation](https://prometheus.io/docs/prometheus/latest/querying/api/#expression-queries) may also be of help. You probably want to make
+[query http calls](https://prometheus.io/docs/prometheus/latest/querying/api/#expression-queries).
+Automations should directly call the prometheus API, rather than go through any
+intermediary (like Grafana).
+
+For convenience, there's also a "Federated Prometheus" datasource configured in the
+Grafana instance at https://grafana.pilot.2i2c.cloud. There's also [dashboard folder](https://grafana.pilot.2i2c.cloud/dashboards/f/ef4ubamxnfnk0c/federated-prometheus)
+with some potentially useful existing dashboards
