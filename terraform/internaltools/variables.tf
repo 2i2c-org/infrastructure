@@ -29,3 +29,17 @@ variable "federated_metrics_allowlist" {
   Everything else will be discarded.
   EOT
 }
+
+variable "prometheus_namespace" {
+  type        = string
+  default     = "federated-prometheus"
+  description = <<-EOT
+  Namespace containing our federated prometheus install
+  EOT
+}
+
+variable "prometheus_disk_size" {
+  type = number
+  default = 100
+  description = "Size of the federated prometheus disk (in GiB)"
+}
