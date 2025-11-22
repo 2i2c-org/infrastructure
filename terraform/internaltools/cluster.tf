@@ -10,7 +10,7 @@ resource "google_container_cluster" "internaltools" {
   initial_node_count       = 1
 
   # This is annoyingly implemented, let's use the `lifecycle` hook below instead
-  deletion_protection      = false
+  deletion_protection = false
 
   lifecycle {
     prevent_destroy = true
