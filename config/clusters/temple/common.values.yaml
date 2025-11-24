@@ -83,10 +83,20 @@ jupyterhub:
         requests:
           display_name: Resource Allocation
           choices:
+            mem_2_gb:
+              display_name: ~2 GB RAM, ~0.2 CPUs
+              description: Up to ~4 CPUs when available
+              default: true
+              kubespawner_override:
+                mem_guarantee: 1951419879
+                mem_limit: 1951419879
+                cpu_guarantee: 0.22815625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
             mem_4_gb:
               display_name: ~4 GB RAM, ~0.5 CPUs
               description: Up to ~4 CPUs when available
-              default: true
               kubespawner_override:
                 mem_guarantee: 3902839759
                 mem_limit: 3902839759
