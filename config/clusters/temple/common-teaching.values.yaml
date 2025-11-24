@@ -1,0 +1,14 @@
+jupyterhub:
+  singleuser:
+    image:
+      name: laserchemist/datascience
+      tag: v13
+    # Taken from `deployer generate resource-allocation choices r5.xlarge:5`
+    memory:
+      guarantee: 1951419879
+      limit: 1951419879
+    cpu:
+      guarantee: 0.22815625
+      limit: 3.6505
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge

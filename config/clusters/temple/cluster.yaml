@@ -20,7 +20,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - enc-common.secret.values.yaml
+  - common-teaching.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
@@ -29,7 +29,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - enc-common.secret.values.yaml
+  - common-teaching.values.yaml
   - prod.values.yaml
   - enc-prod.secret.values.yaml
 - name: advanced
@@ -38,7 +38,8 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - enc-common.secret.values.yaml
+  - common-non-teaching.values.yaml
+  - enc-common-non-teaching.secret.values.yaml
   - advanced.values.yaml
   - enc-advanced.secret.values.yaml
 - name: research
@@ -47,6 +48,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - enc-common.secret.values.yaml
+  - common-non-teaching.values.yaml
+  - enc-common-non-teaching.secret.values.yaml
   - research.values.yaml
   - enc-research.secret.values.yaml
