@@ -1,10 +1,9 @@
 (migrate-data-external)=
-
 # Transfer data between NFS servers on separate clusters
 
 This documentation covers how to transfer data between NFS servers running on different clusters in a cloud-agnostic way. For simplicity and reliability, this guide focuses on using `rsync` over SSH to securely and reliably copy a filesystem between distinct NFS servers.
 
-```{important} This guide requires `jupyterhub-home-nfs`
+```{important} 
 
 This guide leverages features in the `jupyterhub-home-nfs` Helm chart, although the underlying tools do not have this dependence.
 
@@ -20,7 +19,6 @@ ssh-keygen -N "" -t ed25519 -f key
 This will create two files in the working directory, `key` and `key.pub`. From here on, we'll refer to the _contents_ of `key.pub` as `<PUBLIC-KEY-CONTENTS>`
 
 (migrate-external:deploy-container)=
-
 ## Deploy a file-transfer container
 
 ``````{note} Rsync direction
@@ -96,7 +94,6 @@ jupyterhub-home-nfs:
 These configurations can then be deployed by running the `deployer deploy <CLUSTER_NAME> <HUB_NAME>` **for both hubs**.
 
 (migrate-external:ingress)=
-
 ## Establish an ingress
 
 ```{important}
@@ -117,7 +114,6 @@ kubectl -n <DEST-HUB> get service/openssh-service
 ```
 
 (migrate-external:provision-rsync)=
-
 ## Install `rsync` on each container
 
 ```{important}
@@ -139,7 +135,6 @@ apk add rsync
 This step must be performed on _both_ containers.
 
 (migrate-external:provision-key)=
-
 ## Configure source SSH configuration
 
 ```{important}
