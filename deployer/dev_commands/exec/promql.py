@@ -74,6 +74,7 @@ def promql(
 def prom_openmetrics_dump(
     metric_name: str = typer.Argument(help="Prometheus metric to execute"),
     output_path: str = typer.Argument(help="Path to output gzip compressed openmetrics file to"),
+    cluster_name: str = typer.Argument("Cluster to dump metrics from"),
     keep_label: list[str] = typer.Option()
 ):
 
@@ -101,43 +102,42 @@ def prom_openmetrics_dump(
     ]
 
     with gzip.open(output_path, "wt", encoding="utf-8") as f:
-        for cluster in Cluster.get_all():
-            print(f"Processing {cluster.spec['name']}")
-            with cluster.auth():
-                pod_name = (
-                    subprocess.check_output(
-                        [
-                            "kubectl",
-                            "-n",
-                            "support",
-                            "get",
-                            "pod",
-                            "-o",
-                            "name",
-                            "-l",
-                            "app.kubernetes.io/name=prometheus,app.kubernetes.io/component=server",
-                        ]
-                    )
-                    .decode()
-                    .strip()
+        cluster = Cluster.from_name(cluster_name)
+        print(f"Processing {cluster.spec['name']}")
+        with cluster.auth():
+            pod_name = (
+                subprocess.check_output(
+                    [
+                        "kubectl",
+                        "-n",
+                        "support",
+                        "get",
+                        "pod",
+                        "-o",
+                        "name",
+                        "-l",
+                        "app.kubernetes.io/name=prometheus,app.kubernetes.io/component=server",
+                    ]
                 )
-                cmd = [
-                    "kubectl",
-                    "-n",
-                    "support",
-                    "exec",
-                    pod_name,
-                    "-c",
-                    "prometheus-server",
-                    "--",
-                ] + tsdb_dump_cmd
-                proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-                for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
-                    if line.startswith("#"):
-                        # A comment, or EOF marker. We skip both, as we don't want multiple EOF markers
-                        # in our output file. If comments become important we can deal with that later
-                        continue
-                    f.write(process_metric_line(line, keep_label, {"cluster": cluster.spec["name"]}))
-                proc.wait()
-            break
-        f.write("#EOF")
+                .decode()
+                .strip()
+            )
+            cmd = [
+                "kubectl",
+                "-n",
+                "support",
+                "exec",
+                pod_name,
+                "-c",
+                "prometheus-server",
+                "--",
+            ] + tsdb_dump_cmd
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+            for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+                if line.startswith("#"):
+                    # A comment, or EOF marker. We skip both, as we don't want multiple EOF markers
+                    # in our output file. If comments become important we can deal with that later
+                    continue
+                f.write(process_metric_line(line, keep_label, {"cluster": cluster.spec["name"]}))
+            proc.wait()
+            f.write("#EOF")
