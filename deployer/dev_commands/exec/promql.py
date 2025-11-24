@@ -1,4 +1,8 @@
+import re
+import io
+import subprocess
 import json
+import gzip
 
 import requests
 import typer
@@ -65,3 +69,75 @@ def promql(
             table.add_row(*row)
 
         Console().print(table)
+
+@exec_app.command()
+def prom_openmetrics_dump(
+    metric_name: str = typer.Argument(help="Prometheus metric to execute"),
+    output_path: str = typer.Argument(help="Path to output gzip compressed openmetrics file to"),
+    keep_label: list[str] = typer.Option()
+):
+
+    def process_metric_line(openmetrics_line: str, keep_labels: list[str], add_labels: dict[str, str]) -> str:
+        # Small enough parser for just the stuff we need
+        # https://github.com/prometheus/OpenMetrics/blob/main/specification/OpenMetrics.md#abnf
+        # has useful parser definition we can refer to
+        metric, value, ts = openmetrics_line.rsplit(" ", 3)
+        # FIXME: This doesn't handle it fine when there are quotes or newlines in label values!
+        labels = dict(re.findall(r'(\w+)=\"(.*?)\",?', metric))
+        metric_name = metric.split("{")[0]
+
+        kept_labels = {k: v for k, v in labels.items() if k in keep_labels}
+        kept_labels.update(add_labels)
+
+        # FIXME: This doesn't handle it fine when there are quotes or newlines in label values!
+        constructed_labels = ",".join(f'{k}="{v}"' for k, v in kept_labels.items())
+        constructed_metric = f'{metric_name}{{{constructed_labels}}}'
+
+        return f"{constructed_metric} {value} {ts}"
+
+    tsdb_dump_cmd = [
+        "promtool", "tsdb", "dump-openmetrics", "/data",
+        f'--match={{__name__="{metric_name}"}}'
+    ]
+
+    with gzip.open(output_path, "wt", encoding="utf-8") as f:
+        for cluster in Cluster.get_all():
+            print(f"Processing {cluster.spec['name']}")
+            with cluster.auth():
+                pod_name = (
+                    subprocess.check_output(
+                        [
+                            "kubectl",
+                            "-n",
+                            "support",
+                            "get",
+                            "pod",
+                            "-o",
+                            "name",
+                            "-l",
+                            "app.kubernetes.io/name=prometheus,app.kubernetes.io/component=server",
+                        ]
+                    )
+                    .decode()
+                    .strip()
+                )
+                cmd = [
+                    "kubectl",
+                    "-n",
+                    "support",
+                    "exec",
+                    pod_name,
+                    "-c",
+                    "prometheus-server",
+                    "--",
+                ] + tsdb_dump_cmd
+                proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+                for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+                    if line.startswith("#"):
+                        # A comment, or EOF marker. We skip both, as we don't want multiple EOF markers
+                        # in our output file. If comments become important we can deal with that later
+                        continue
+                    f.write(process_metric_line(line, keep_label, {"cluster": cluster.spec["name"]}))
+                proc.wait()
+            break
+        f.write("#EOF")

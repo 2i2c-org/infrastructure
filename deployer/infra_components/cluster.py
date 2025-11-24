@@ -29,6 +29,19 @@ class Cluster:
     A single k8s cluster we can deploy to
     """
 
+
+    @classmethod
+    def get_all(cls):
+        """
+        Returns a list of all the clusters currently listed under config/clusters
+        """
+        return [
+            cls.from_name(d.name)
+            for d in CONFIG_CLUSTERS_PATH.iterdir()
+            if d.is_dir() and d.name != "templates"
+        ]
+
+
     @classmethod
     def from_name(cls, cluster_name: str) -> Cluster:
         cluster_config_path = CONFIG_CLUSTERS_PATH / cluster_name / "cluster.yaml"
