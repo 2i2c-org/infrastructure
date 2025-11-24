@@ -8,17 +8,17 @@ jupyterhub:
   hub:
     config:
       CILogonOAuthenticator:
-        oauth_callback_url: https://next.temple.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod
   ingress:
     hosts:
-    - next.temple.2i2c.cloud
+    - temple.2i2c.cloud
     tls:
     - secretName: https-auto-tls
       hosts:
-      - next.temple.2i2c.cloud
+      - temple.2i2c.cloud
 binderhub-service:
   dockerApi:
     nodeSelector:
