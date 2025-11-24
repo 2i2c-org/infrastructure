@@ -92,6 +92,11 @@ jupyterhub:
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.0.0
+                environment: 
+                  MAAP_API: 'api.dit.maap-project.org'
+                  WORKSPACE_BUCKET: 'maap-staging-bucket'
+                  DOCKERIMAGE_PATH_DEFAULT: 'mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop'
+                  DOCKERIMAGE_PATH_BASE_IMAGE: 'mas.dit.maap-project.org/root/maap-workspaces/base_images/pangeo:develop'
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -115,6 +120,11 @@ jupyterhub:
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                  environment: 
+                    MAAP_API: 'api.dit.maap-project.org'
+                    WORKSPACE_BUCKET: 'maap-staging-bucket'
+                    DOCKERIMAGE_PATH_DEFAULT: 'mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop'
+                    DOCKERIMAGE_PATH_BASE_IMAGE: 'mas.dit.maap-project.org/root/maap-workspaces/base_images/r:develop'
                   env:
                   - name: TARGET_PATH
                     value: veda-docs
@@ -135,6 +145,11 @@ jupyterhub:
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                  environment: 
+                    MAAP_API: 'api.dit.maap-project.org'
+                    WORKSPACE_BUCKET: 'maap-staging-bucket'
+                    DOCKERIMAGE_PATH_DEFAULT: 'mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop'
+                    DOCKERIMAGE_PATH_BASE_IMAGE: 'mas.dit.maap-project.org/root/maap-workspaces/base_images/isce3:develop'
                   env:
                   - name: TARGET_PATH
                     value: veda-docs
