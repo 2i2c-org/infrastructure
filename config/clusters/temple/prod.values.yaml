@@ -1,0 +1,31 @@
+nfs:
+  pv:
+    serverIP: 10.100.192.99
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0e89a2ab60575e25a
+jupyterhub:
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: prod
+  ingress:
+    hosts:
+    - temple.2i2c.cloud
+    tls:
+    - secretName: https-auto-tls
+      hosts:
+      - temple.2i2c.cloud
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: prod
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: prod
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-prod-

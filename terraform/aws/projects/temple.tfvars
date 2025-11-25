@@ -19,6 +19,12 @@ ebs_volumes = {
     name_suffix = "advanced"
     tags        = { "2i2c:hub-name" : "advanced" }
   },
+  "prod" = {
+    size        = 1950 # in GB
+    type        = "gp3"
+    name_suffix = "prod"
+    tags        = { "2i2c:hub-name" : "prod" }
+  },
   "research" = {
     size        = 100 # in GB
     type        = "gp3"

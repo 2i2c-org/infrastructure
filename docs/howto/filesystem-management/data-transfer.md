@@ -1,7 +1,8 @@
 (migrate-data)=
-# Migrate data across NFS servers
 
-This documentation covers how to transfer data between NFS servers in a cloud-agnostic way.
+# Migrate data across NFS servers within the same cluster
+
+This documentation covers how to transfer data between NFS servers running in the same cluster in a cloud-agnostic way.
 
 This process should be repeated for as many hubs as there are on the cluster, remembering to update the value of `$HUB_NAME`.
 
@@ -78,6 +79,7 @@ export SERVER_IP=<nfs_service_ip>
    Once you have detached from `screen`, can now `exit` the pod and let the copy run.
 
 (migrate-data:reattach-pod)=
+
 ## Reattaching to the data transfer pod
 
 You can regain access to the pod created for the data transfer using:

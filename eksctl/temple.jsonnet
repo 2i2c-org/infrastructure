@@ -65,6 +65,46 @@ local notebookNodes = [
     // GPUs in a single AZ are in use and no new nodes can be spawned
     availabilityZones: masterAzs,
   },
+  // prod
+  {
+    instanceType: 'r5.xlarge',
+    namePrefix: 'nb-prod',
+    labels+: { '2i2c/hub-name': 'prod' },
+    tags+: { '2i2c:hub-name': 'prod' },
+  },
+  {
+    instanceType: 'r5.4xlarge',
+    namePrefix: 'nb-prod',
+    labels+: { '2i2c/hub-name': 'prod' },
+    tags+: { '2i2c:hub-name': 'prod' },
+  },
+  {
+    instanceType: 'r5.16xlarge',
+    namePrefix: 'nb-prod',
+    labels+: { '2i2c/hub-name': 'prod' },
+    tags+: { '2i2c:hub-name': 'prod' },
+  },
+  {
+    instanceType: 'g4dn.xlarge',
+    namePrefix: 'gpu-prod',
+    minSize: 0,
+    labels+: {
+      '2i2c/hub-name': 'prod',
+      '2i2c/has-gpu': 'true',
+      'k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+    },
+    tags+: {
+      '2i2c:hub-name': 'prod',
+      'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': '1',
+      'k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator': 'nvidia-tesla-t4',
+    },
+    taints+: {
+      'nvidia.com/gpu': 'present:NoSchedule',
+    },
+    // Allow provisioning GPUs across all AZs, to prevent situation where all
+    // GPUs in a single AZ are in use and no new nodes can be spawned
+    availabilityZones: masterAzs,
+  },
   // advanced
   {
     instanceType: 'r5.xlarge',
