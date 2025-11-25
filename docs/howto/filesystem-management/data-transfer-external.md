@@ -108,7 +108,9 @@ Run this section on the destination cluster.
    ```bash
    kubectl -n <DEST-HUB> get service/openssh-service
    ```
-(migrate-external:setup-src)=
+
+   (migrate-external:setup-src)=
+
 ## Setting up the source server
 
 ```{important}
@@ -215,7 +217,7 @@ Now that we've cordoned off the storage, we can repeat the step performed in [](
 
 After copying the files between disks, we now can tear down the migration deployments.
 
-1. First, delete the service created in [](migrate-external:create-ingress) by running the following in the destination hub context:
+1. First, delete the service created in [an earlier step](migrate-external:create-ingress) by running the following in the destination hub context:
    ```shell
    kubectl -n <DST-HUB> delete service/openssh-service
    ```
