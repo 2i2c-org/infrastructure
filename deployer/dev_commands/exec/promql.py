@@ -3,6 +3,7 @@ import io
 import subprocess
 import json
 import gzip
+from datetime import datetime, timezone, timedelta
 
 import requests
 import typer
@@ -79,20 +80,23 @@ def prom_openmetrics_dump(
 ):
 
     def process_metric_line(openmetrics_line: str, keep_labels: list[str], add_labels: dict[str, str]) -> str:
-        # Small enough parser for just the stuff we need
-        # https://github.com/prometheus/OpenMetrics/blob/main/specification/OpenMetrics.md#abnf
-        # has useful parser definition we can refer to
-        metric, value, ts = openmetrics_line.rsplit(" ", 3)
-        # FIXME: This doesn't handle it fine when there are quotes or newlines in label values!
-        labels = dict(re.findall(r'(\w+)=\"(.*?)\",?', metric))
-        metric_name = metric.split("{")[0]
+        try:
+            # Small enough parser for just the stuff we need
+            # https://github.com/prometheus/OpenMetrics/blob/main/specification/OpenMetrics.md#abnf
+            # has useful parser definition we can refer to
+            metric, value, ts = openmetrics_line.rsplit(" ", 3)
+            # FIXME: This doesn't handle it fine when there are quotes or newlines in label values!
+            labels = dict(re.findall(r'(\w+)=\"(.*?)\",?', metric))
+            metric_name = metric.split("{")[0]
 
-        kept_labels = {k: v for k, v in labels.items() if k in keep_labels}
-        kept_labels.update(add_labels)
+            kept_labels = {k: v for k, v in labels.items() if k in keep_labels}
+            kept_labels.update(add_labels)
 
-        # FIXME: This doesn't handle it fine when there are quotes or newlines in label values!
-        constructed_labels = ",".join(f'{k}="{v}"' for k, v in kept_labels.items())
-        constructed_metric = f'{metric_name}{{{constructed_labels}}}'
+            # FIXME: This doesn't handle it fine when there are quotes or newlines in label values!
+            constructed_labels = ",".join(f'{k}="{v}"' for k, v in kept_labels.items())
+            constructed_metric = f'{metric_name}{{{constructed_labels}}}'
+        except Exception as e:
+            print(openmetrics_line)
 
         return f"{constructed_metric} {value} {ts}"
 
@@ -103,7 +107,6 @@ def prom_openmetrics_dump(
 
     with gzip.open(output_path, "wt", encoding="utf-8") as f:
         cluster = Cluster.from_name(cluster_name)
-        print(f"Processing {cluster.spec['name']}")
         with cluster.auth():
             pod_name = (
                 subprocess.check_output(
@@ -122,22 +125,40 @@ def prom_openmetrics_dump(
                 .decode()
                 .strip()
             )
-            cmd = [
-                "kubectl",
-                "-n",
-                "support",
-                "exec",
-                pod_name,
-                "-c",
-                "prometheus-server",
-                "--",
-            ] + tsdb_dump_cmd
-            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-            for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
-                if line.startswith("#"):
-                    # A comment, or EOF marker. We skip both, as we don't want multiple EOF markers
-                    # in our output file. If comments become important we can deal with that later
-                    continue
-                f.write(process_metric_line(line, keep_label, {"cluster": cluster.spec["name"]}))
-            proc.wait()
+            # We want to dump out metrics roughly a month at a time, to reduce the
+            # load on the prometheus server, and to make sure we actually get all our
+            # metrics
+            now = datetime.now(timezone.utc)
+            time_ranges: list[tuple[datetime, datetime]] = []
+            for i in range(36):
+                time_ranges.append((now - timedelta(days=30 * (i + 1)), now - timedelta(days=30 * i)))
+
+            lines_processed = 0
+            for start_time, end_time in time_ranges:
+                print(f"Processing {cluster.spec['name']} from {start_time.isoformat()} to {end_time.isoformat()}")
+                cmd = [
+                    "kubectl",
+                    "-n",
+                    "support",
+                    "exec",
+                    pod_name,
+                    "-c",
+                    "prometheus-server",
+                    "--",
+                ] + tsdb_dump_cmd + [
+                    '--min-time', str(int(start_time.timestamp() * 1000)),
+                    '--max-time', str(int(end_time.timestamp() * 1000))
+                ]
+                import shlex
+                print(shlex.join(cmd))
+                proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+                for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+                    if line.startswith("#"):
+                        # A comment, or EOF marker. We skip both, as we don't want multiple EOF markers
+                        # in our output file. If comments become important we can deal with that later
+                        continue
+                    f.write(process_metric_line(line, keep_label, {"cluster": cluster.spec["name"]}))
+                    lines_processed += 1
+                proc.wait()
+                print(f'Processed {lines_processed} lines')
             f.write("#EOF")
