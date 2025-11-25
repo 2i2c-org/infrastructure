@@ -29,7 +29,6 @@ class Cluster:
     A single k8s cluster we can deploy to
     """
 
-
     @classmethod
     def get_all(cls):
         """
@@ -40,7 +39,6 @@ class Cluster:
             for d in CONFIG_CLUSTERS_PATH.iterdir()
             if d.is_dir() and d.name != "templates"
         ]
-
 
     @classmethod
     def from_name(cls, cluster_name: str) -> Cluster:
