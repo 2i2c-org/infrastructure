@@ -41,7 +41,8 @@ Run this section on the destination cluster.
 1. **Create a public-private key pair**  
    To securely communicate between the two file-servers, we must create a keypair:
 
-   ```bash
+   ```{code-block} bash
+   :name: migrate-external:create-key
    ssh-keygen -N "" -t ed25519 -f key
    ```
 
@@ -96,7 +97,8 @@ Run this section on the destination cluster.
 
    To make the SSH server visible outside the cluster, we'll need to expose the container via a service:
 
-   ```bash
+   ```{code-block} bash
+   :name: migrate-external:create-ingress
    # Assume deployment is called storage-quota-home-nfs
    kubectl -n <DEST-HUB> expose --type LoadBalancer deploy storage-quota-home-nfs --port=2222 --name openssh-service
    ```
@@ -106,7 +108,7 @@ Run this section on the destination cluster.
    ```bash
    kubectl -n <DEST-HUB> get service/openssh-service
    ```
-
+(migrate-external:setup-src)=
 ## Setting up the source server
 
 ```{important}
@@ -138,7 +140,7 @@ Run this section on the source cluster.
 
 2. **Provision the SSH private key**
 
-   In order for the sender to be able to authorise with the receiver, we'll need to provision the environment with the private counterpart to the [public key that we created earlier](migrate-external:keypair). We can easily do this by writing it to a temporary file from the clipboard. In the source container, open a shell by running the following command:
+   In order for the sender to be able to authorise with the receiver, we'll need to provision the environment with the private counterpart to the [public key that we created earlier](migrate-external:create-key). We can easily do this by writing it to a temporary file from the clipboard. In the source container, open a shell by running the following command:
 
    ```shell
    kubectl -n <SRC-HUB> exec -it deploy/storage-quota-home-nfs -c openssh-server -- /bin/sh
@@ -213,7 +215,7 @@ Now that we've cordoned off the storage, we can repeat the step performed in [](
 
 After copying the files between disks, we now can tear down the migration deployments.
 
-1. First, delete the service created in [](migrate-external:setup-dst) by running the following in the destination hub context:
+1. First, delete the service created in [](migrate-external:create-ingress) by running the following in the destination hub context:
    ```shell
    kubectl -n <DST-HUB> delete service/openssh-service
    ```
