@@ -1,3 +1,5 @@
+import shlex
+import tenacity
 import re
 import io
 import subprocess
@@ -78,6 +80,9 @@ def prom_openmetrics_dump(
     cluster_name: str = typer.Argument("Cluster to dump metrics from"),
     keep_label: list[str] = typer.Option()
 ):
+    """
+    Dump a prometheus metric from a cluster in openmetrics format
+    """
 
     def process_metric_line(openmetrics_line: str, keep_labels: list[str], add_labels: dict[str, str]) -> str:
         try:
@@ -99,6 +104,49 @@ def prom_openmetrics_dump(
             print(openmetrics_line)
 
         return f"{constructed_metric} {value} {ts}"
+
+    @tenacity.retry(stop=tenacity.stop_after_attempt(5), wait=tenacity.wait_random(1, 60))
+    def dump_metrics(pod_name: str, start_time: datetime, end_time: datetime)  -> list[str]:
+        """
+        Dump required metrics from the given prometheus pod, from start_time to end_time
+
+        This is a function so we can have automatic retries easily, as we do run into network
+        related breakage often. Retrying is the right call in almost all cases.
+        """
+        print(f"Processing {cluster.spec['name']} from {start_time.isoformat()} to {end_time.isoformat()}...", end="")
+        cmd = [
+            "kubectl",
+            "-n",
+            "support",
+            "exec",
+            pod_name,
+            "-c",
+            "prometheus-server",
+            "--",
+        ] + tsdb_dump_cmd + [
+            '--min-time', str(int(start_time.timestamp() * 1000)),
+            '--max-time', str(int(end_time.timestamp() * 1000))
+        ]
+        # import shlex
+        # print(shlex.join(cmd))
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+
+        lines = []
+        eof_reached = False
+        for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+            if line.startswith("# EOF"):
+                # We skip EOF markers but note them as present so we know if we got everything
+                eof_reached = True
+                continue
+            # This may raise exceptions if we get a partial line, which will trigger retries
+            lines.append(process_metric_line(line, keep_label, {"cluster": cluster.spec["name"]}))
+        proc.wait()
+        if not eof_reached:
+            # Raising this as an exception triggers our retry behavior, which is what we want
+            print("Failed due to missing EOF")
+            raise Exception(f"Didn't find EOF for {cluster.spec['name']} from {start_time} to {end_time}, with command {shlex.join(cmd)}")
+        print(f' Processed {len(lines)} lines')
+        return lines
 
     tsdb_dump_cmd = [
         "promtool", "tsdb", "dump-openmetrics", "/data",
@@ -133,32 +181,8 @@ def prom_openmetrics_dump(
             for i in range(36):
                 time_ranges.append((now - timedelta(days=30 * (i + 1)), now - timedelta(days=30 * i)))
 
-            lines_processed = 0
             for start_time, end_time in time_ranges:
-                print(f"Processing {cluster.spec['name']} from {start_time.isoformat()} to {end_time.isoformat()}")
-                cmd = [
-                    "kubectl",
-                    "-n",
-                    "support",
-                    "exec",
-                    pod_name,
-                    "-c",
-                    "prometheus-server",
-                    "--",
-                ] + tsdb_dump_cmd + [
-                    '--min-time', str(int(start_time.timestamp() * 1000)),
-                    '--max-time', str(int(end_time.timestamp() * 1000))
-                ]
-                import shlex
-                print(shlex.join(cmd))
-                proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-                for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
-                    if line.startswith("#"):
-                        # A comment, or EOF marker. We skip both, as we don't want multiple EOF markers
-                        # in our output file. If comments become important we can deal with that later
-                        continue
-                    f.write(process_metric_line(line, keep_label, {"cluster": cluster.spec["name"]}))
-                    lines_processed += 1
-                proc.wait()
-                print(f'Processed {lines_processed} lines')
+                lines = dump_metrics(pod_name, start_time, end_time)
+                for line in lines:
+                    f.write(line)
             f.write("#EOF")
