@@ -87,11 +87,16 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            01-modify-pangeo:
+            01-pangeo:
               display_name: Modified Pangeo Notebook
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
-                image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.08.14-v2
+                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.0.0
+                environment:
+                  MAAP_API: api.dit.maap-project.org
+                  WORKSPACE_BUCKET: maap-staging-bucket
+                  DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
+                  DOCKERIMAGE_PATH_BASE_IMAGE: mas.dit.maap-project.org/root/maap-workspaces/base_images/pangeo:develop
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -108,24 +113,55 @@ jupyterhub:
                     runAsUser: 1000
                     runAsGroup: 1000
             02-rocker:
-              display_name: Rocker Geospatial with RStudio
-              description: R environment with many geospatial libraries pre-installed
+              display_name: Rocker Geospatial
+              description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
-                image: rocker/binder:4.4
-                image_pull_policy: Always
-                  # Launch RStudio after the user logs in
-                default_url: /rstudio
-                  # Ensures container working dir is homedir
-                  # https://github.com/2i2c-org/infrastructure/issues/2559
-                working_dir: /home/rstudio
-            03-qgis:
-              display_name: QGIS on Linux Desktop
-              description: Linux desktop in the browser, with qgis installed
+                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/r:v5.0.0
+                environment:
+                  MAAP_API: api.dit.maap-project.org
+                  WORKSPACE_BUCKET: maap-staging-bucket
+                  DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
+                  DOCKERIMAGE_PATH_BASE_IMAGE: mas.dit.maap-project.org/root/maap-workspaces/base_images/r:develop
+                init_containers:
+                - name: jupyterhub-gitpuller-init
+                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                  env:
+                  - name: TARGET_PATH
+                    value: veda-docs
+                  - name: SOURCE_REPO
+                    value: https://github.com/NASA-IMPACT/veda-docs
+                  volumeMounts:
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
+                  securityContext:
+                    runAsUser: 1000
+                    runAsGroup: 1000
+            03-isce3:
+              display_name: isce3
+              description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
-                  # Launch people directly into the Linux desktop when they start
-                default_url: /desktop
-                  # Built from https://github.com/2i2c-org/nasa-qgis-image
-                image: quay.io/2i2c/nasa-qgis-image:d76118ea0c15
+                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.0.0
+                environment:
+                  MAAP_API: api.dit.maap-project.org
+                  WORKSPACE_BUCKET: maap-staging-bucket
+                  DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
+                  DOCKERIMAGE_PATH_BASE_IMAGE: mas.dit.maap-project.org/root/maap-workspaces/base_images/isce3:develop
+                init_containers:
+                - name: jupyterhub-gitpuller-init
+                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                  env:
+                  - name: TARGET_PATH
+                    value: veda-docs
+                  - name: SOURCE_REPO
+                    value: https://github.com/NASA-IMPACT/veda-docs
+                  volumeMounts:
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: '{escaped_username}'
+                  securityContext:
+                    runAsUser: 1000
+                    runAsGroup: 1000
         resource_allocation:
           display_name: Resource Allocation
           choices:
