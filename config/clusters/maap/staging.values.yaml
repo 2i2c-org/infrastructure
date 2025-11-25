@@ -93,7 +93,7 @@ jupyterhub:
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.0.0
                 environment:
-                  MAAP_API: api.dit.maap-project.org
+                  MAAP_API_HOST: api.dit.maap-project.org
                   WORKSPACE_BUCKET: maap-staging-bucket
                   DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
                   DOCKERIMAGE_PATH_BASE_IMAGE: mas.dit.maap-project.org/root/maap-workspaces/base_images/pangeo:develop
@@ -118,7 +118,7 @@ jupyterhub:
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/r:v5.0.0
                 environment:
-                  MAAP_API: api.dit.maap-project.org
+                  MAAP_API_HOST: api.dit.maap-project.org
                   WORKSPACE_BUCKET: maap-staging-bucket
                   DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
                   DOCKERIMAGE_PATH_BASE_IMAGE: mas.dit.maap-project.org/root/maap-workspaces/base_images/r:develop
@@ -143,7 +143,7 @@ jupyterhub:
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.0.0
                 environment:
-                  MAAP_API: api.dit.maap-project.org
+                  MAAP_API_HOST: api.dit.maap-project.org
                   WORKSPACE_BUCKET: maap-staging-bucket
                   DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
                   DOCKERIMAGE_PATH_BASE_IMAGE: mas.dit.maap-project.org/root/maap-workspaces/base_images/isce3:develop
