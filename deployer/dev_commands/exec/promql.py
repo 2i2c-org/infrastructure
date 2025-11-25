@@ -215,4 +215,4 @@ def prom_openmetrics_dump(
                 lines = dump_metrics(pod_name, start_time, end_time)
                 for line in lines:
                     f.write(line)
-            f.write("#EOF")
+            f.write("# EOF")
