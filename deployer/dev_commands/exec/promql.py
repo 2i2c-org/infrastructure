@@ -1,3 +1,4 @@
+import time
 import gzip
 import io
 import json
@@ -111,7 +112,7 @@ def prom_openmetrics_dump(
         return f"{constructed_metric} {value} {ts}"
 
     @tenacity.retry(
-        stop=tenacity.stop_after_attempt(5), wait=tenacity.wait_random(1, 60)
+        stop=tenacity.stop_after_attempt(6), wait=tenacity.wait_random(1, 60)
     )
     def dump_metrics(
         pod_name: str, start_time: datetime, end_time: datetime
@@ -122,6 +123,7 @@ def prom_openmetrics_dump(
         This is a function so we can have automatic retries easily, as we do run into network
         related breakage often. Retrying is the right call in almost all cases.
         """
+        process_start_time = time.perf_counter()
         print(
             f"Processing {cluster.spec['name']} from {start_time.isoformat()} to {end_time.isoformat()}...",
             end="",
@@ -161,13 +163,14 @@ def prom_openmetrics_dump(
                 process_metric_line(line, keep_label, {"cluster": cluster.spec["name"]})
             )
         proc.wait()
+        duration = time.perf_counter() - process_start_time
         if not eof_reached:
             # Raising this as an exception triggers our retry behavior, which is what we want
-            print("Failed due to missing EOF")
+            print(f"Failed due to missing EOF in {duration:0.2f}s")
             raise Exception(
                 f"Didn't find EOF for {cluster.spec['name']} from {start_time} to {end_time}, with command {shlex.join(cmd)}"
             )
-        print(f" Processed {len(lines)} lines")
+        print(f" Processed {len(lines)} lines in {duration:0.2f}s")
         return lines
 
     tsdb_dump_cmd = [
@@ -203,9 +206,9 @@ def prom_openmetrics_dump(
             # metrics
             now = datetime.now(timezone.utc)
             time_ranges: list[tuple[datetime, datetime]] = []
-            for i in range(36):
+            for i in range(3 * 52):
                 time_ranges.append(
-                    (now - timedelta(days=30 * (i + 1)), now - timedelta(days=30 * i))
+                    (now - timedelta(days=7 * (i + 1)), now - timedelta(days=7 * i))
                 )
 
             for start_time, end_time in time_ranges:
