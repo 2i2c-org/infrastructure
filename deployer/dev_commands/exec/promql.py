@@ -1,10 +1,10 @@
-import time
 import gzip
 import io
 import json
 import re
 import shlex
 import subprocess
+import time
 from datetime import datetime, timedelta, timezone
 
 import requests
@@ -209,7 +209,10 @@ def prom_openmetrics_dump(
             for i in range(3 * 52):
                 time_ranges.append(
                     # Leave a 2 minute gap at the end of each block to try to avoid duplicates
-                    (now - timedelta(days=7 * (i + 1)), now - timedelta(days=7 * i, minutes=2))
+                    (
+                        now - timedelta(days=7 * (i + 1)),
+                        now - timedelta(days=7 * i, minutes=2),
+                    )
                 )
 
             for start_time, end_time in time_ranges:
