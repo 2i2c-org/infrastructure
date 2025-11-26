@@ -10,10 +10,6 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "staging" },
   },
-  "scratch-dask-staging" : {
-    "delete_after" : 7,
-    "tags" : { "2i2c:hub-name" : "dask-staging" },
-  },
   "scratch-showcase" : {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "showcase" },
@@ -27,9 +23,6 @@ user_buckets = {
 hub_cloud_permissions = {
   "staging" : {
     bucket_admin_access : ["scratch-staging"],
-  },
-  "dask-staging" : {
-    bucket_admin_access : ["scratch-dask-staging"],
   },
   "showcase" : {
     bucket_admin_access : [
@@ -45,12 +38,6 @@ ebs_volumes = {
     type        = "gp3"
     name_suffix = "staging"
     tags        = { "2i2c:hub-name" : "staging" }
-  }
-  "dask-staging" = {
-    size        = 100 # in GB
-    type        = "gp3"
-    name_suffix = "dask-staging"
-    tags        = { "2i2c:hub-name" : "dask-staging" }
   }
   "showcase" = {
     size        = 500 # in GB
