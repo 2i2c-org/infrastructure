@@ -208,7 +208,8 @@ def prom_openmetrics_dump(
             time_ranges: list[tuple[datetime, datetime]] = []
             for i in range(3 * 52):
                 time_ranges.append(
-                    (now - timedelta(days=7 * (i + 1)), now - timedelta(days=7 * i))
+                    # Leave a 2 minute gap at the end of each block to try to avoid duplicates
+                    (now - timedelta(days=7 * (i + 1)), now - timedelta(days=7 * i, minutes=2))
                 )
 
             for start_time, end_time in time_ranges:
