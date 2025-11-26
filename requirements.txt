@@ -46,3 +46,6 @@ kubernetes
 
 # Used to perform regex searches on JSON objects
 jmespath
+
+# Used for retry logic
+tenacity
