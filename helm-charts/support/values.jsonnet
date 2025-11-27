@@ -158,7 +158,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 receiver: 'known-storage-outage-pager',
                 matchers: [
                   'cluster =~ .*',
-                  'alertname =~ ".*0% space left.*"',
+                  'alertname =~ ".*0% of space left.*"',
                 ],
                 // if this one matches, don't check sub-sequent routes
                 continue: false,
