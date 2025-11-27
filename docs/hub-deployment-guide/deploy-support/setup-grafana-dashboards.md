@@ -65,7 +65,6 @@ deployer deploy-dashboards $CLUSTER_NAME
 
 Once you've pushed the encrypted `grafana_token` to the GitHub repository, it will be possible to manually trigger the `deploy-grafana-dashboards` workflow using the ["Run workflow" button](https://github.com/2i2c-org/infrastructure/actions/workflows/deploy-grafana-dashboards.yaml) to deploy the dashboards.
 
-You will first need to add the name of the cluster as a matrix entry in the [`deploy-grafana-dashboards.yaml` workflow file](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-grafana-dashboards.yaml#L12) and commit the change to the repo.
 
 ```{note}
 The workflow only runs when manually triggered.
