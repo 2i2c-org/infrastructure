@@ -155,10 +155,10 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
             repeat_interval: '3h',
             routes: [
               {
-                receiver: 'known-outage-pager',
+                receiver: 'known-storage-outage-pager',
                 matchers: [
                   'cluster =~ .*',
-                  'alertname =~ ".0% space left.*"',
+                  'alertname =~ ".*0% space left.*"',
                 ],
                 // if this one matches, don't check sub-sequent routes
                 continue: false,
