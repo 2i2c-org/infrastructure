@@ -49,7 +49,6 @@ jobs:
         - cluster_name: utoronto
         - cluster_name: victor
         - cluster_name: oceanhackweek
-        - cluster_name: heliophysics
 
     steps:
     - uses: actions/checkout@v5

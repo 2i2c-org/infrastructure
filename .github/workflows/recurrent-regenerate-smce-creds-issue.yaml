@@ -40,7 +40,6 @@ jobs:
           - [ ] nasa-ghg-hub
           - [ ] maap
           - [ ] disasters
-          - [ ] heliophysics
 
           ### Resources
           Follow [the instructions](https://infrastructure.2i2c.org/howto/regenerate-smce-creds/#regenerate-credentials-for-the-deployer) on how to do this.
