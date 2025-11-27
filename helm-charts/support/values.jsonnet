@@ -155,6 +155,15 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
             repeat_interval: '3h',
             routes: [
               {
+                receiver: 'known-outage-pager',
+                matchers: [
+                  'cluster =~ .*',
+                  'alertname =~ ".0% space left.*"',
+                ],
+                // if this one matches, don't check sub-sequent routes
+                continue: false,
+              },
+              {
                 receiver: 'persistent-storage-pager',
                 matchers: [
                   'cluster =~ .*',
@@ -186,13 +195,13 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               name: 'PVC available capacity',
               rules: [
                 makePVCApproachingFullAlert(
-                  'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
+                  'Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
                   'home-nfs',
                   10,
                   'same day action needed',
                 ),
                 makePVCApproachingFullAlert(
-                  'Take action! Home Directory Disk very close to full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
+                  'Home Directory Disk is full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
                   'home-nfs',
                   0,
                   'take immediate action',
@@ -205,10 +214,22 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                   'same day action needed'
                 ),
                 makePVCApproachingFullAlert(
+                  'Hub Database Disk is full: cluster:%s hub:{{ $labels.namespace }}' % [cluster_name],
+                  'hub-db-dir',
+                  0,
+                  'take immediate action'
+                ),
+                makePVCApproachingFullAlert(
                   'Prometheus Disk about to be full: cluster:%s' % [cluster_name],
                   'support-prometheus-server',
                   10,
                   'same day action needed'
+                ),
+                makePVCApproachingFullAlert(
+                  'Prometheus Disk is full: cluster:%s' % [cluster_name],
+                  'support-prometheus-server',
+                  0,
+                  'take immediate action'
                 ),
               ],
             },
