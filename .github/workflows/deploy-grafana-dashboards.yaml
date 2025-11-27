@@ -10,15 +10,14 @@ jobs:
   identify_clusters:
     runs-on: ubuntu-22.04
     outputs:
-      matrix: ${{ steps.matrix.outputs.matrix }}
+      matrix: ${{ steps.matrix.outputs.result }}
     steps:
     - uses: actions/checkout@v5
     - name: Build matrix
       id: matrix
-      run: |
-        # Find names of clusters from `cluster.yaml` entries
-        matrix=$(yq -I=0 -o json eval-all '[.name]' config/clusters/*/cluster.yaml)
-        echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq -I=0 -o json eval-all '[.name]' config/clusters/*/cluster.yaml
 
   deploy_grafana_dashboards:
     runs-on: ubuntu-22.04
