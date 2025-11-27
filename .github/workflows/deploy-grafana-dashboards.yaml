@@ -17,7 +17,7 @@ jobs:
       id: matrix
       run: |
         # Find names of clusters from `cluster.yaml` entries
-        matrix=$(yq '[.[].name]' config/clusters/*/cluster.yaml -s -r -c)
+        matrix=$(yq -I=0 -o json eval-all '[.name]' config/clusters/*/cluster.yaml)
         echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
 
   deploy_grafana_dashboards:
