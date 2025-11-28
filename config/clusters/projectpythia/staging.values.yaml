@@ -17,6 +17,9 @@ jupyterhub:
       templateVars:
         org:
           name: projectpythia staging
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
   hub:
     config:
       GitHubOAuthenticator:
