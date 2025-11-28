@@ -42,3 +42,8 @@ redirects:
     to: staging.hub.maap-project.org
   - from: hub.maap.2i2c.cloud
     to: hub.maap-project.org
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
