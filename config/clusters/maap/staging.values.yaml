@@ -162,6 +162,14 @@ jupyterhub:
                   securityContext:
                     runAsUser: 1000
                     runAsGroup: 1000
+            04-qgis:
+              display_name: QGIS on Linux Desktop
+              description: Linux desktop in the browser, with qgis installed
+              kubespawner_override:
+                # Launch people directly into the Linux desktop when they start
+                default_url: /desktop
+                  # Built from https://github.com/2i2c-org/nasa-qgis-image
+                image: quay.io/2i2c/nasa-qgis-image:d76118ea0c15
         resource_allocation:
           display_name: Resource Allocation
           choices:
