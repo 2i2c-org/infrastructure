@@ -69,7 +69,7 @@ jobs:
       prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - uses: actions/setup-python@v6
       with:
@@ -251,7 +251,7 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
       uses: ./.github/actions/setup-deploy
@@ -488,7 +488,7 @@ jobs:
       failure_oceanhackweek_staging: ${{ steps.declare-failure.outputs.failure_oceanhackweek_staging }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
@@ -626,7 +626,7 @@ jobs:
         jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
