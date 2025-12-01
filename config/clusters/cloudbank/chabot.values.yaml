@@ -53,3 +53,8 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.chabot.svc.cluster.local
+  resources:
+    requests:
+      memory: 500M
+    limits:
+      memory: 1.5G
