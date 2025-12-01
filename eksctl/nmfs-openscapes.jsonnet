@@ -1,6 +1,6 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
-local c = cluster.makeCluster(
+local _c = cluster.makeCluster(
   name='nmfs-openscapes',
   region='us-west-2',
   nodeAz='us-west-2b',
@@ -21,7 +21,11 @@ local c = cluster.makeCluster(
       instanceType: 'g4dn.xlarge',
     },
   ],
-  nodeGroupGenerations=['a'],
+  nodeGroupGenerations=['a', 'b'],
+);
+// Turn up maxSize
+local c = cluster.withNodeGroupConfigOverride(
+  _c, kind='core', overrides={ maxSize: 2 }
 );
 
 c
