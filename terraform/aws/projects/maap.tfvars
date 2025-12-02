@@ -184,7 +184,8 @@ ebs_volumes = {
     size        = 2000 # 2TB
     type        = "gp3"
     name_suffix = "prod"
-    tags        = { "2i2c:hub-name" : "prod" }
+    tags        = { "2i2c:hub-name" : "prod" },
+    iops        = 5000
   }
 }
 
