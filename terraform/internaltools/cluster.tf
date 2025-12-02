@@ -25,7 +25,7 @@ resource "google_container_node_pool" "main" {
   project    = var.project_id
 
   node_config {
-    machine_type = "e2-medium"
+    machine_type = "n2-standard-2"
   }
 
   lifecycle {
