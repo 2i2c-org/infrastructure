@@ -57,7 +57,7 @@ jupyterhub:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: lisacuk/lishub-base
-      tag: 059efdb
+      tag: 5addc51
     defaultUrl: /lab
     profileList:
       # Setup as requested in https://2i2c.freshdesk.com/a/tickets/1348
