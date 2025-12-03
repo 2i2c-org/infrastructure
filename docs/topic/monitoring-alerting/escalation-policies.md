@@ -12,7 +12,7 @@ This user gets emailed when an alert is triggered and there is no human being on
 The following escalation policies are defined [in PagerDuty](https://2i2c-org.pagerduty.com/escalation_policies?).
 
 1. **Outages or possible outages**
-- This escalation policy is connected to the following services in our Service Directory:
+- This escalation policy is connected to the following services in our [Service Directory][1]:
    - JupyterHub URL availability
    - Prometheus URL availability
    - Persistent Storage Outage
@@ -22,7 +22,7 @@ The following escalation policies are defined [in PagerDuty](https://2i2c-org.pa
 - It assigns incidents to the on-call user in a Round Robin fashion (choosing from the users that are on-call, in the moment the incident is triggered), escalating to the next user if the incident is not acknowledged within 4h.
 
 2. **Shouldn't be an outage**
-- This escalation policy is connected to the following services in our Service Directory:
+- This escalation policy is connected to the following services in our [Service Directory][1]:
    - Misc alerts from Prometheus Alert Manager
    - Persistent Storage
    - Pod Restarts
@@ -45,3 +45,5 @@ This email will go to the support email address.
 ```
 
 The `#pagerduty-notifications` channel on Slack will get notified of when an incident is escalated, i.e. it wasn't acknowledged by the person assigned to it by the escalation policy. This way we reduce the number of interruptions the team is exposed to.
+
+[1]: https://2i2c-org.pagerduty.com/service-directory
