@@ -12,16 +12,26 @@ This user gets emailed when an alert is triggered and there is no human being on
 
 ### Escalation policies
 
-1. **Default**
-- This escalation policy is connected to all of the services in our Service Directory.
-- It makes use of the **all** users' schedules, including the placeholder user
-- It assigns incidents to the on-call user in a Round Robin fashion (choosing from the users that are on-call, in the moment the incident is triggered), escalating to the next user if the incident is not acknowledged within 1:30h.
+The following escalation policies are defined [in PagerDuty](https://2i2c-org.pagerduty.com/escalation_policies?).
 
-2. **P2 - P5 alerts**
-- **Currently not used** because the PagerDuty plan we have does not support choosing between escalation policies based on priority.
-  Instead a policy connects to a service and a service connects to Alert Manager through a receiver channel that doesn't distinguish between priorities, but instead is tied to a group of alerts.
-- It doesn't include the Technical Lead's schedule
-- This policy assigns incidents to the on-call users in a Round Robin fashion, escalating to the next user if the incident is not acknowledged within 6h.
+1. **Outages or possible outages**
+- This escalation policy is connected to the following services in our Service Directory:
+   - JupyterHub URL availability
+   - Prometheus URL availability
+   - Persistent Storage Outage
+   - Server Startup Failure
+- The alerts triggered under these services, are either 100% a P1 incident or an alert that could signal an undergoing incident.
+- It makes use of the **all** users' schedules, including the placeholder user
+- It assigns incidents to the on-call user in a Round Robin fashion (choosing from the users that are on-call, in the moment the incident is triggered), escalating to the next user if the incident is not acknowledged within 4h.
+
+2. **Shouldn't be an outage**
+- This escalation policy is connected to the following services in our Service Directory:
+   - Misc alerts from Prometheus Alert Manager
+   - Persistent Storage
+   - Pod Restarts
+- The alerts triggered under these services are alerts that signal that something is wrong with a hub, and if left unaddressed, it might cause an outage in the future. But they do not usually signal an ongoing outage.
+- This policy doesn't include the Technical Lead's schedule
+- This policy assigns incidents to the on-call users in a Round Robin fashion, escalating to the next user if the incident is not acknowledged within 12h.
 
 ### Paging
 **TBD**
