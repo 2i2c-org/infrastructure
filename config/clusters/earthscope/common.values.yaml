@@ -174,6 +174,11 @@ basehub:
                 slug: geolab-general
                 kubespawner_override:
                   image: public.ecr.aws/earthscope/geolab/geolab-default:latest
+              geolab-sfg:
+                display_name: SeaFloor Geodesy
+                slug: geolab-sfg
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope/sfg-geolab:latest
               mspass-shortcourse:
                 display_name: MsPASS ShortCourse
                 slug: mspass-shortcourse
@@ -312,6 +317,11 @@ basehub:
               kubespawner_override:
                 image: '{value}'
             choices:
+              geolab-gpu:
+                display_name: GeoLab-GPU
+                slug: geolab-gpu
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope/geolab/geolab-gpu:latest
               tensorflow:
                 display_name: Pangeo Tensorflow ML Notebook
                 slug: tensorflow
