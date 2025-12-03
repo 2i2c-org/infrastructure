@@ -37,6 +37,7 @@ This make sure there are at least 2 failed checks before we alert.
 We are optimizing for *actionable alerts* that we can completely *trust*,
 and prevent any kind of alert fatigue for our engineers.
 
+(alerting:hub-health-checks)=
 ### JupyterHub health checks
 
 The JupyterHub *does* get restarted during deployment, and this can cause a few

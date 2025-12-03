@@ -7,6 +7,52 @@ We have a few alerts configured to notify us when things go wrong and we use Pag
 [](howto:alerts) has lots of useful howto guides about how to manage this type of alerts that we have setup.
 ```
 
+## Severity levels
+When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
+
+Each [alert setup with Jsonnet](alerting:jsonnet-alerts) has a severity level set through the *.jsonnet configuration file. The severity levels are:
+
+- `take immediate action`
+- `same day action needed`
+- `action needed this week`
+- `to be planned in sprint planning`
+
+This level is what determines how quickly you should respond to the alert and translates into the priority of the incident created in PagerDuty. It does this by running an [Event Orchestration](https://support.pagerduty.com/main/docs/event-orchestration) after an incident is created. This Event Orchestration is what sets a priority based on the severity label.
+
+## Priority levels
+The PagerDuty alerts can have a priority between P1 and P4 or have no priority set at all.
+
+### P1 alerts
+- These alerts signal an ongoing community outage! [An outage](https://docs.2i2c.org/admin/reliability/outages/#types-of-outages) is a period of time when a hub is unavailable or its critical services are not functioning as expected and impacting two or more of hub users’ activity
+- The priority is set by:
+   - PagerDuty's Event Orchestration if the alert has a `take immediate action` severity or based on the Service it pertains. (E.g. all [](alerting:hub-health-checks) are P1s)
+   - Manually by the engineer
+
+````{important}
+All of the P1 PagerDuty alerts will show up in the 2i2c [status page](https://2i2c-hubs.trust.pagerduty.com/posts/dashboard) and subscribed users will receive updated related to it.
+```{figure} ../../images/status-page-pagerduty.png
+```
+````
+
+````{warning}
+If an Alert goes from P1 to another priority number or no number at all, Pagerduty's status page will loose track of it and will forever show up on the status page unless it is manually removed.
+```{figure} ../../images/manually-delete-outage.png
+```
+````
+
+### P2 alerts
+- These alerts signal that the community is about to be affected if we don't do something asap. E.g. bumping a hub's home directory when it has less than 10% available.
+- The priority is set by PagerDuty's Event Orchestration if the alert has a `same day action needed` severity or based on the Service it pertains. (E.g. all [](alerting:hub-health-checks) are P1s)
+
+### P3 alerts
+- Correlate with the `action needed this week` severity level
+- Community about to be affected if we don't do something soon, but not immediately
+
+### P4 alerts
+- Correlate `to be planned in sprint planning` severity level
+- Community not necessarily affected on a specific timeline, but we must take some action into the committed column of next sprint
+
+
 (alerting:jsonnet-alerts)=
 ## Alerts configured with Jsonnet
 There are a set of alerts that are configured in support deployments using [](#topic/jsonnet).
@@ -37,39 +83,6 @@ Each of these alerts is integrated with a **Pagerduty Service**. And these servi
 ```{important}
 You can find the existing Services under [Service Directory](https://2i2c-org.pagerduty.com/service-directory) and the existing [Business Services](https://2i2c-org.pagerduty.com/business-services) on [2i2c's Pagerduty page](https://2i2c-org.pagerduty.com).
 ```
-
-### Severity levels and Priority
-
-When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
-
-Also, each  alert setup with Jsonnet has a severity level that is setup through the *.jsonnet configuration file and can be one of:
-
-- `take immediate action`
-- `same day action needed`
-- `action needed this week`
-- `to be planned in sprint planning`
-
-This severity level is what determines how quickly you should respond to the alert and translates into the priority of the incident created in PagerDuty. Also, the level is included in the title of the alert.
-
-It does this by running an [Event Orchestration](https://support.pagerduty.com/main/docs/event-orchestration) after an incident is created.
-The Event Orchestration sets a priority based on the severity label of the alert that triggered it.
-
-- `P1`:`take immediate action` (a community currently affected and experiencing an outage)
-- `P2`:`same day action needed` (community about to be affected if we don't do something immediately)
-- `P3`:`action needed this week` (community about to be affected if we don't do something soon, but not immediately)
-- `P4`:`to be planned in sprint planning` (community not necessarily affected on a specific timeline, but we must take some action into the committed column of next sprint)
-
-````{important}
-All of the P1 PagerDuty alerts will show up in the 2i2c [status page](https://2i2c-hubs.trust.pagerduty.com/posts/dashboard) and subscribed users will receive updated related to it.
-```{figure} ../../images/status-page-pagerduty.png
-```
-````
-
-````{warning}
-If an Alert goes from P1 to another priority number or no number at all, Pagerduty's status page will loose track of it and will forever show up on the status page unless it is manually removed.
-```{figure} ../../images/manually-delete-outage.png
-```
-````
 
 ### Important Pagerduty pages to know about
 All of the alerts we have configured are managed by [Pagerduty](https://www.pagerduty.com/)
