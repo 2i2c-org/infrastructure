@@ -16,61 +16,6 @@ jupyterhub:
       SCRATCH_BUCKET: s3://maap-scratch-prod/$(JUPYTERHUB_USER)
     nodeSelector:
       2i2c/hub-name: prod
-    storage:
-      extraVolumeMounts:
-      - name: s3fs-volume
-        mountPath: /home/jovyan/my-private-bucket
-        subPath: my-private-bucket
-        mountPropagation: HostToContainer
-        readOnly: false
-      - name: s3fs-volume
-        mountPath: /home/jovyan/my-public-bucket
-        subPath: my-public-bucket
-        mountPropagation: HostToContainer
-        readOnly: false
-      - name: s3fs-volume
-        mountPath: /home/jovyan/shared-buckets
-        subPath: shared-buckets
-        mountPropagation: HostToContainer
-        readOnly: true
-      - name: s3fs-volume
-        mountPath: /home/jovyan/triaged-jobs
-        subPath: triaged-jobs
-        mountPropagation: HostToContainer
-        readOnly: true
-    extraContainers:
-    - name: s3fs
-      image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c-ops
-      image_pull_policy: Always
-      securityContext:
-        privileged: true
-      resources:
-        limits:
-            # Best effort only. No more than 1 CPU, and if postgres uses more than 512M, restart it
-          memory: 512Mi
-          cpu: 1.0
-        requests:
-          # If we don't set requests, k8s sets requests == limits!
-          # So we set something tiny
-          memory: 64Mi
-          cpu: 0.01
-      volumeMounts:
-      - name: s3fs-volume
-        mountPath: /my-public-bucket
-        subPath: my-public-bucket
-        mountPropagation: Bidirectional
-      - name: s3fs-volume
-        mountPath: /my-private-bucket
-        subPath: my-private-bucket
-        mountPropagation: Bidirectional
-      - name: s3fs-volume
-        mountPath: /shared-buckets
-        subPath: shared-buckets
-        mountPropagation: Bidirectional
-      - name: s3fs-volume
-        mountPath: /triaged-jobs
-        subPath: triaged-jobs
-        mountPropagation: Bidirectional
     profileList:
     - display_name: Choose your environment and resources
       default: true
@@ -292,102 +237,10 @@ jupyterhub:
           nvidia.com/gpu: '1'
   hub:
     config:
-      JupyterHub:
-        authenticator_class: generic-oauth
-      Authenticator:
-        admin_users: []
-        enable_auth_state: true
       GenericOAuthenticator:
         oauth_callback_url: https://hub.maap-project.org/hub/oauth_callback
         token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token
         authorize_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/auth
-        # We want to get user data from the JWT that's the id token,
-        # not from a separate userdata API call
-        userdata_from_id_token: true
-        scope:
-        - basic
-        - profile
-        - openid
-        username_claim: preferred_username
-        manage_groups: true
-        auth_state_groups_key: oauth_user.roles
-        admin_groups:
-        - Admin
-        # Being granted *any* jupyterhub related role should allow you
-        # to login
-        allowed_groups:
-        - Admin
-        - CPU:XS
-        - CPU:S
-        - CPU:M
-        - CPU:L
-        - CPU:XL
-        - CPU:XXL
-        - CPU:XXXL
-        - GPU:T4
-    extraConfig:
-      001-username-claim: |
-        def populate_token(spawner, auth_state):
-          # For our deployment-service-check health check user, there is no auth_state.
-          # So these env variables need not be set.
-          if auth_state:
-
-            spawner.environment.update({
-              "MAAP_PGT": f"jwt:{auth_state.get("id_token", "")}",
-              "KC_ACCESS_TOKEN": auth_state.get("access_token", ""),
-              "KC_ID_TOKEN": auth_state.get("id_token", ""),
-              "KC_REFRESH_TOKEN": auth_state.get("refresh_token", "")
-            })
-
-        c.Spawner.auth_state_hook = populate_token
-      00-volumes-and-volume-mounts-as-dict: |
-        # The base jupyterhub config in zero-to-jupyterhub defines
-        # volumes and volume_mounts as lists.
-        # But we can't add new volumes or volume_mounts to the list
-        # as that replaces the entire list.
-        # So we convert them to dictionaries, which allows us to
-        # add new volumes and volume_mounts as needed.
-        if isinstance(c.KubeSpawner.volumes, list):
-          existing_volumes = c.KubeSpawner.volumes
-          c.KubeSpawner.volumes = {}
-          for volume in existing_volumes:
-            c.KubeSpawner.volumes[volume["name"]] = volume
-        if isinstance(c.KubeSpawner.volume_mounts, list):
-          existing_volume_mounts = c.KubeSpawner.volume_mounts
-          c.KubeSpawner.volume_mounts = {}
-          for idx, volume_mount in enumerate(existing_volume_mounts):
-            c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
-
-        c.KubeSpawner.volumes["s3fs-volume"] = {"name": "s3fs-volume", "emptyDir": {}}
-      01-group-shared-directories: |
-        c.KubeSpawner.group_overrides = {
-          "00-group-CPU-L-extra-volume-mounts": {
-            "groups": ["CPU:L"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-CPU-L-shared-dir": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/shared-group/CPU_L",
-                  "subPath": "_shared-group/CPU_L",
-                  "readOnly": False
-                },
-              }
-            },
-          },
-          "01-group-GPU-T4-extra-volume-mounts": {
-            "groups": ["GPU:T4"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-GPU-T4-shared-dir": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/shared-group/GPU_T4",
-                  "subPath": "_shared-group/GPU_T4",
-                  "readOnly": False
-                },
-              }
-            },
-          }
-        }
   ingress:
     hosts: [hub.maap-project.org]
     tls:
