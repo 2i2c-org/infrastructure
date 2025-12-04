@@ -16,6 +16,7 @@ jupyterhub:
       SCRATCH_BUCKET: s3://maap-scratch-prod/$(JUPYTERHUB_USER)
       MAAP_API_HOST: api.maap-project.org
       DOCKERIMAGE_PATH_DEFAULT: mas.maap-project.org/root/maap-workspaces/custom_images/maap_base:v5.0.0
+      DOCKERIMAGE_PATH_BASE_IMAGE: $(JUPYTER_IMAGE)
       WORKSPACE_BUCKET: maap-ops-workspace
     nodeSelector:
       2i2c/hub-name: prod
@@ -40,8 +41,6 @@ jupyterhub:
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.0.0
-                environment:
-                  DOCKERIMAGE_PATH_BASE_IMAGE: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.0.0
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -62,8 +61,6 @@ jupyterhub:
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.0.0
-                environment:
-                  DOCKERIMAGE_PATH_BASE_IMAGE: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.0.0
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -84,8 +81,6 @@ jupyterhub:
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.0.0
-                environment:
-                  DOCKERIMAGE_PATH_BASE_IMAGE: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.0.0
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
