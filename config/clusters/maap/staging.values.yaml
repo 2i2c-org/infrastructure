@@ -44,6 +44,7 @@ jupyterhub:
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/pangeo:develop
+                image_pull_policy: Always
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -64,6 +65,7 @@ jupyterhub:
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/r:develop
+                image_pull_policy: Always
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -84,6 +86,7 @@ jupyterhub:
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/isce3:develop
+                image_pull_policy: Always
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
