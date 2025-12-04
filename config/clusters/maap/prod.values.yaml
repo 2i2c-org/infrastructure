@@ -20,6 +20,9 @@ jupyterhub:
       WORKSPACE_BUCKET: maap-ops-workspace
     nodeSelector:
       2i2c/hub-name: prod
+    # NOTE the only difference between profileList for staging and prod is the image tags
+    # prod should always have the latest official release and staging has develop unless we are 
+    # actively doing a release in which case staging images point to our release tag 
     profileList:
     - display_name: Choose your environment and resources
       default: true

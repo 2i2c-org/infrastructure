@@ -20,6 +20,9 @@ jupyterhub:
       DOCKERIMAGE_PATH_BASE_IMAGE: $(JUPYTER_IMAGE)
     nodeSelector:
       2i2c/hub-name: staging
+    # NOTE the only difference between profileList for staging and prod is the image tags
+    # prod should always have the latest official release and staging has develop unless we are 
+    # actively doing a release in which case staging images point to our release tag 
     profileList:
     - display_name: Choose your environment and resources
       default: true
@@ -100,7 +103,7 @@ jupyterhub:
               display_name: QGIS on Linux Desktop
               description: Linux desktop in the browser, with qgis installed
               kubespawner_override:
-                # Launch people directly into the Linux desktop when they start
+                  # Launch people directly into the Linux desktop when they start
                 default_url: /desktop
                   # Built from https://github.com/2i2c-org/nasa-qgis-image
                 image: quay.io/2i2c/nasa-qgis-image:d76118ea0c15
