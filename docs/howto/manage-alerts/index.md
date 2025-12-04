@@ -25,6 +25,7 @@ This severity level, together with the priority levels described in [](alerting:
 These alerts are outages and have a P1 priority set by default.
 To resolve this alert:
 - check if another engineer is doing any work/testing/decommissioning of the hub
+- if they are, then resolve the alert in PD and remove its P1 priority (in this order)
 - if they're not, then
   - validate if the hub is indeed not available
   - follow the incident response process
