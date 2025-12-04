@@ -19,6 +19,7 @@ Each [alert setup with Jsonnet](alerting:jsonnet-alerts) has a severity level se
 
 This level is what determines how quickly you should respond to the alert and translates into the priority of the incident created in PagerDuty. It does this by running an [Event Orchestration](https://support.pagerduty.com/main/docs/event-orchestration) after an incident is created. This Event Orchestration is what sets a priority based on the severity label.
 
+(alerting:priority-levels)=
 ## Priority levels
 The PagerDuty alerts can have a priority between P1 and P4 or have no priority set at all.
 
