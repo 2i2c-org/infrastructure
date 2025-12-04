@@ -54,28 +54,45 @@ jupyterhub:
         mountPath: /home/rstudio/shared-readwrite
         subPath: _shared
   singleuser:
-    image:
-      # https://hub.docker.com/r/lisacuk/lishub-base
-      name: lisacuk/lishub-base
-      tag: 059efdb
     defaultUrl: /lab
+
     profileList:
-      # Setup as requested in https://2i2c.freshdesk.com/a/tickets/1348
-    - display_name: Regular Instance
-      description: Provides 512M - 2G of RAM
+    - display_name: Choose your environment and resources
       default: true
-      kubespawner_override:
-        mem_limit: 2G
-        mem_guarantee: 512M
-    - display_name: Large Instance
-        # Requested in https://2i2c.freshdesk.com/a/tickets/1348
-        # FIXME: The </p><p> is a hack for kubespawner to render a new line, maybe there are better ways to do this?
-      description: |
-        Provides 1G - 4G of RAM.
-        ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
-      kubespawner_override:
-        mem_limit: 4G
-        mem_guarantee: 1G
+      profile_options:
+        image:
+          display_name: Environment
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            description: Specify your own docker image (must have Python and JupyterHub installed).
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available Docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            01-default:
+              display_name: Default Image
+              description: Image maintained by LIS
+              default: true
+              kubespawner_override:
+                image: lisacuk/lishub-base:a57e973
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_2_gb:
+              default: true
+              display_name: Regular Instance
+              description: Provides 512M - 2G of RAM.
+              kubespawner_override:
+                mem_limit: 2G
+                mem_guarantee: 512M
+            mem_4_gb:
+              display_name: Large Instance
+              description: Provides 1G - 4G of RAM.
+              kubespawner_override:
+                mem_limit: 4G
+                mem_guarantee: 1G
   hub:
     config:
       JupyterHub:

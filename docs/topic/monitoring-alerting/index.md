@@ -8,4 +8,6 @@ and the alerting mechanisms we implement for when something goes wrong.
 grafana.md
 prometheus.md
 alerting.md
+escalation-policies.md
+uptime-checks-alerts.md
 ```

@@ -79,11 +79,11 @@ The k8s control plane can only be upgraded one minor version at the time,[^1] so
 increment the version field in the `.jsonnet` file.
 
 ```yaml
-{
-   name: "openscapeshub",
-   region: clusterRegion,
-   version: "1.29", # increment this
-}
+local c = cluster.makeCluster(
+  name='2i2c-aws-us',
+  region='us-central-1',
+  nodeAz='us-central-1a',
+  version='1.34', # increment this
 ```
 
 Re-generate the `.yaml` file, and then perform the upgrade which typically takes
