@@ -54,10 +54,6 @@ jupyterhub:
         mountPath: /home/rstudio/shared-readwrite
         subPath: _shared
   singleuser:
-    image:
-      # https://hub.docker.com/r/lisacuk/lishub-base
-      name: lisacuk/lishub-base
-      tag: 5addc51
     defaultUrl: /lab
 
     profileList:
