@@ -9,4 +9,5 @@ grafana.md
 prometheus.md
 alerting.md
 escalation-policies.md
+uptime-checks-alerts.md
 ```
