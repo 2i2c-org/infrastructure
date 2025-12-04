@@ -174,7 +174,6 @@ jupyterhub:
         privileged: true
       resources:
         limits:
-            # Best effort only. No more than 1 CPU, and if postgres uses more than 512M, restart it
           memory: 512Mi
           cpu: 1.0
         requests:
