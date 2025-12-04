@@ -76,7 +76,7 @@ jupyterhub:
               description: Image maintained by LIS
               default: true
               kubespawner_override:
-                image: lisacuk/lishub-base:5addc51
+                image: lisacuk/lishub-base:a57e973
         resource_allocation:
           display_name: Resource Allocation
           choices:
