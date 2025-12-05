@@ -47,13 +47,7 @@ jupyterhub:
     allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: github
-      GitHubOAuthenticator:
-        allowed_organizations:
-        - MAAP-Project:data
-        - MAAP-Project:maap-all
-        - MAAP-Project:platform
-        - MAAP-Project:gpu
+        authenticator_class: generic-oauth
       Authenticator:
         admin_users:
         - freitagb
