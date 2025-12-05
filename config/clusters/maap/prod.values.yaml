@@ -40,7 +40,7 @@ jupyterhub:
               image: '{value}'
           choices:
             01-pangeo:
-              display_name: Modified Pangeo Notebook
+              display_name: Modified Pangeo Notebook v5.0.0
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.0.0
@@ -60,7 +60,7 @@ jupyterhub:
                     runAsUser: 1000
                     runAsGroup: 1000
             02-rocker:
-              display_name: Rocker Geospatial
+              display_name: Rocker Geospatial v5.0.0
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.0.0
@@ -80,7 +80,7 @@ jupyterhub:
                     runAsUser: 1000
                     runAsGroup: 1000
             03-isce3:
-              display_name: isce3
+              display_name: isce3 v5.0.0
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.0.0
