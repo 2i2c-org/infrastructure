@@ -12,7 +12,7 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Build matrix
       id: matrix
       run: |
@@ -30,7 +30,7 @@ jobs:
         include: ${{fromJson(needs.identify_clusters.outputs.matrix)}}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - uses: actions/setup-python@v6
       with:
