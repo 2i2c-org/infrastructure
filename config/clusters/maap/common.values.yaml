@@ -47,7 +47,7 @@ jupyterhub:
     allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: github
+        authenticator_class: generic-oauth
       Authenticator:
         admin_users:
         - freitagb
