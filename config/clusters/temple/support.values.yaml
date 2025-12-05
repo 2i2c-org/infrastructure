@@ -39,3 +39,8 @@ cluster-autoscaler:
 
 calico:
   enabled: true
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
