@@ -49,3 +49,8 @@ calico:
 
 jupyterhub-cost-monitoring:
   enabled: true
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
