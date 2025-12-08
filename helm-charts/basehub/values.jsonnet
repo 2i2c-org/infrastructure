@@ -1,4 +1,5 @@
 local hub_name = std.extVar('VARS_2I2C_HUB_NAME');
+local provider = std.extVar('VARS_2I2C_PROVIDER');
 
 // Assume we are a staging hub if the word 'staging' is in the
 // name of the hub.
@@ -101,7 +102,17 @@ local jupyterhubGroupsExporterConfig = {
   },
 };
 
+local nfsConfig = {
+  'dirsizeReporter': {
+    'reportTotalSize': provider == 'kubeconfig',
+  },
+  'volumeReporter': {
+    'enabled': provider == 'kubeconfig'
+  }
+};
+
 emitDaskHubCompatibleConfig({
+  'nfs': nfsConfig,
   'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
   'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
 })

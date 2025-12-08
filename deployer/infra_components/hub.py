@@ -164,6 +164,7 @@ class Hub:
                     chart_dir / "values.jsonnet",
                     self.cluster.spec["name"],
                     self.spec["name"],
+                    self.cluster.spec["provider"]
                 )
             )
 
@@ -184,6 +185,7 @@ class Hub:
                             Path(values_file),
                             self.cluster.spec["name"],
                             self.spec["name"],
+                            self.cluster.spec["provider"]
                         )
                     )
                     cmd.append(f"--values={rendered_path}")

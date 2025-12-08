@@ -1,8 +1,6 @@
 basehub:
   nfs:
     enabled: true
-    volumeReporter:
-      enabled: false
     pv:
       # pv.serverIP is set in each individual staging and prod config file
       enabled: true
