@@ -53,6 +53,9 @@ spec:
             - "250" # Use only 250 io operations per second at most
             - "120" # Wait 2h between runs
             - --port=8000
+            {{ if not .Values.nfs.dirsizeReporter.reportTotalSize }}
+            - --disable-total-size
+            {{- end }}
           ports:
             - containerPort: 8000
               name: dirsize-metrics

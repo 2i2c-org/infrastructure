@@ -169,8 +169,11 @@ properties:
         additionalProperties: false
         required:
           - enabled
+          - reportTotalSize
         properties:
           enabled:
+            type: boolean
+          reportTotalSize:
             type: boolean
       volumeReporter:
         type: object
