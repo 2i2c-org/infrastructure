@@ -1,5 +1,10 @@
 nfs:
   enabled: true
+  dirsizeReporter:
+    enabled: true
+    # jupyterhub-home-nfs reports this value now, we don't have to elsewhere
+    # except on Azure, where we don't use jupyterhub-home-nfs
+    reportTotalSize: true
   pv:
     enabled: true
     # Recommended options from the Azure Portal UI for mounting the share
