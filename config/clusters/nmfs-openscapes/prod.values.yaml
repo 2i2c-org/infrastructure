@@ -52,6 +52,7 @@ jupyterhub:
         - nmfs-openscapes:2024-science-teams
         - nmfs-openscapes:2024-CoastWatch
         - nmfs-openscapes:2024-nmfs-champions-cohort
+        - nmfs-openscapes:2025-nmfs-champions-cohort
 
 jupyterhub-home-nfs:
   eks:
