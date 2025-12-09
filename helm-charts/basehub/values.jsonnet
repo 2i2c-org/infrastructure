@@ -103,16 +103,16 @@ local jupyterhubGroupsExporterConfig = {
 };
 
 local nfsConfig = {
-  'dirsizeReporter': {
-    'reportTotalSize': provider == 'kubeconfig',
+  dirsizeReporter: {
+    reportTotalSize: provider == 'kubeconfig',
   },
-  'volumeReporter': {
-    'enabled': provider == 'kubeconfig'
-  }
+  volumeReporter: {
+    enabled: provider == 'kubeconfig',
+  },
 };
 
 emitDaskHubCompatibleConfig({
-  'nfs': nfsConfig,
+  nfs: nfsConfig,
   'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
   'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
 })
