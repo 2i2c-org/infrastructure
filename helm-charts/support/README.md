@@ -1,11 +1,4 @@
-## FIXME: Describe this Helm chart
+## Per-Cluster Support Chart
 
-Describe more about this Helm chart. What are the assumptions made within it for
-example, and what are the assumptions on basehub and daskhub with regards to
-what is available within the k8s cluster. Do they rely on ingress-nginx and
-cert-manager for example?
-
-### Observations
-- This Helm chart contains config specific to 2i2c k8s cluster, as noted by a
-  domain name configured for grafana.
-- This Helm chart contain a template creating a GCP specific k8s StorageClass
+This Chart deploys *almost* everything we deploy once per cluster. There are a few exceptions
+that don't like being subcharts, which are deployed directly by the `deployer` script.
