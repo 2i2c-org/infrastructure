@@ -56,6 +56,9 @@ nfs:
   pv:
     enabled: false
 
+jupyterhub-home-nfs:
+  enabled: false
+
 jupyterhub:
   custom:
     singleuserAdmin:

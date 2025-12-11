@@ -6,6 +6,8 @@ basehub:
     enabled: false
     pv:
       enabled: false
+  jupyterhub-home-nfs:
+    enabled: false
   jupyterhub:
     ingress:
       hosts: [hub.binder.geolab.earthscope.cloud]
@@ -68,10 +70,6 @@ basehub:
           scopes:
           - self
           - access:services!service=binder
-  jupyterhub-home-nfs:
-    enabled: false
-    eks:
-      enabled: false
   binderhub-service:
     enabled: true
     networkPolicy:

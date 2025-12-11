@@ -1,3 +1,5 @@
+jupyterhub-home-nfs:
+  enabled: false
 jupyterhub:
   ingress:
     hosts: [hub.binder.pythia.2i2c.cloud]

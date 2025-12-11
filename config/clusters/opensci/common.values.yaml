@@ -10,12 +10,6 @@ nfs:
     - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
     - retrans=2
     - noresvport
-jupyterhub-home-nfs:
-  enabled: true
-  eks:
-    enabled: true
-  prometheusExporter:
-    enabled: true
 
 jupyterhub:
   scheduling:
