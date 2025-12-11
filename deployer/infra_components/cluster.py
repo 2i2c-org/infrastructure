@@ -190,6 +190,7 @@ class Cluster:
                             if self.spec["provider"] == "aws"
                             else self.spec["name"]
                         ),
+                        "hub_name": None,
                     }
                     if self.spec["provider"] == "aws":
                         render_args["aws_account_id"] = self.spec["aws"]["account"]
