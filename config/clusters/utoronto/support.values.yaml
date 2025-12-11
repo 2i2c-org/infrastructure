@@ -16,6 +16,8 @@ redirects:
 
 prometheus:
   server:
+    persistentVolume:
+      size: 600
     ingress:
       enabled: true
       hosts:
