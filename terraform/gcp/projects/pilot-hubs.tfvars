@@ -36,10 +36,6 @@ persistent_disks = {
     size        = 75 # in GB
     name_suffix = "mtu"
   },
-  "temple" = {
-    size        = 2100 # in GB
-    name_suffix = "temple"
-  },
   "ucmerced-staging" = {
     size        = 10 # in GB
     name_suffix = "ucmerced-staging"
