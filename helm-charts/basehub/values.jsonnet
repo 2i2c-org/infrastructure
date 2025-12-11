@@ -65,10 +65,10 @@ local jupyterhubHomeNFSResources = {
 
 local jupyterhubHomeNFSConfig = {
   eks: {
-    enabled: provider == "aws"
+    enabled: provider == 'aws',
   },
   gke: {
-    enabled: provider == "gcp"
+    enabled: provider == 'gcp',
   },
   quotaEnforcer+: {
     config: {
