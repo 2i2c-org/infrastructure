@@ -1687,7 +1687,7 @@ jupyterhub:
               print("dask-gateway service not found, this should not happen!")
 
 jupyterhub-home-nfs:
-  enabled: false
+  enabled: true
   fullnameOverride: storage-quota
   autoResizer:
     enabled: true

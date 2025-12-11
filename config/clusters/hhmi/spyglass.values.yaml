@@ -11,9 +11,7 @@ nfs:
     - noatime
     serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
 jupyterhub-home-nfs:
-  enabled: true
   gke:
-    enabled: true
     volumeId: projects/hhmi-398911/zones/us-west2-b/disks/hub-nfs-homedirs-spyglass
   quotaEnforcer:
     config:

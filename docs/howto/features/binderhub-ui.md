@@ -37,6 +37,14 @@ The following configuration applies to both authenticated and not-authenticated 
 
 Some of the configuration that gets inherited either from the `basehub` defaults or from the cluster's common value file (if that exists) needs to be clear out as not relevant for a binderhub style hub.
 
+- disable `jupyterhub-home-nfs` (no persistent storage)
+
+  ```yaml
+
+  jupyterhub-home-nfs:
+    enabled: false
+  ```
+
 - disable `jupyterhub.custom.singleuserAdmin.extraVolumeMounts` (no persistent storage so these don't make sense)
 
     ```yaml

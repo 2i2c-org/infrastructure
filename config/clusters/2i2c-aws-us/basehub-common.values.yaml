@@ -19,11 +19,3 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
-
-jupyterhub-home-nfs:
-  enabled: true
-  eks:
-    enabled: true
-  prometheusExporter:
-    enabled: true
-

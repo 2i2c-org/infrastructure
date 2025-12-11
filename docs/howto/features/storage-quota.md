@@ -84,9 +84,7 @@ Here's an example of how to connect the volume to `jupyterhub-home-nfs` on AWS a
 :sync: aws-key
 ```yaml
 jupyterhub-home-nfs:
-  enabled: true  # can be migrated to common values file
   eks:
-    enabled: true  # can be migrated to common values file
     volumeId: vol-0a1246ee2e07372d0
 ```
 ````
@@ -95,9 +93,7 @@ jupyterhub-home-nfs:
 :sync: gcp-key
 ```yaml
 jupyterhub-home-nfs:
-  enabled: true  # can be migrated to common values file
   gke:
-    enabled: true  # can be migrated to common values file
     volumeId: projects/jupyter-nfs/zones/us-central1-f/disks/jupyter-nfs-home-directories
 ```
 ````
@@ -106,9 +102,9 @@ jupyterhub-home-nfs:
 :sync: jetstream2-key
 ```yaml
 jupyterhub-home-nfs:
-  enabled: true  # can be migrated to common values file
+  enabled: true
   openstack:
-    enabled: true  # can be migrated to common values file
+    enabled: true
     volumeId: 694b2c04-6b08-4ebe-8cb9-74f7d42c1b1c
 ```
 ````

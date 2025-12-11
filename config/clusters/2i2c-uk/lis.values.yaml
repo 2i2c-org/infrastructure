@@ -7,9 +7,7 @@ nfs:
     - noatime
     serverIP: storage-quota-home-nfs.lis.svc.cluster.local
 jupyterhub-home-nfs:
-  enabled: true
   gke:
-    enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
 
 jupyterhub:

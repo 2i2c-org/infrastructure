@@ -1,6 +1,9 @@
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-binder
+
+jupyterhub-home-nfs:
+  enabled: false
 jupyterhub:
   ingress:
     hosts:

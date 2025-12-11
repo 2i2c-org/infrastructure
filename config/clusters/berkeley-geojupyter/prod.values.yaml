@@ -23,9 +23,7 @@ jupyterhub:
       SCRATCH_BUCKET: s3://berkeley-geojupyter-scratch/$(JUPYTERHUB_USER)
 
 jupyterhub-home-nfs:
-  enabled: true # can be migrated to common values file
   eks:
-    enabled: true # can be migrated to common values file
     volumeId: vol-03eed37ae04a744e2
 
 

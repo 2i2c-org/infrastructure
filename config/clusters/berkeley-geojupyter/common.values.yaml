@@ -165,10 +165,3 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: *url
     username: *username
-
-jupyterhub-home-nfs:
-  enabled: true
-  eks:
-    enabled: true
-  prometheusExporter:
-    enabled: true

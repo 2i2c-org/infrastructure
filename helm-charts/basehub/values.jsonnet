@@ -64,6 +64,12 @@ local jupyterhubHomeNFSResources = {
 };
 
 local jupyterhubHomeNFSConfig = {
+  eks: {
+    enabled: provider == 'aws',
+  },
+  gke: {
+    enabled: provider == 'gcp',
+  },
   quotaEnforcer+: {
     config: {
       QuotaManager: {

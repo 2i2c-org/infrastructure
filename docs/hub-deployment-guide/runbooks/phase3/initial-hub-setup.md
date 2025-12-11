@@ -159,17 +159,12 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
           Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
 
-          For persistent disks, run:
+          Run:
 
           ```bash
           terraform output ebs_volume_id_map
           ```
 
-          For EFS instances, run:
-
-          ```bash
-          terraform output nfs_server_dns_map
-          ```
           ````
 
           ````{tab-item} Google Cloud
@@ -178,13 +173,12 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
           Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
 
-          For persistent disks, run:
+          Run:
 
           ```bash
           terraform output persistent_disk_id_map
           ```
-          
-          For Google FileStore instances, get the IP address from the GCP UI.
+
           ````
 
           ````{tab-item} Azure
