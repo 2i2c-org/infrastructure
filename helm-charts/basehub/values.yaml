@@ -349,11 +349,11 @@ nfs:
   enabled: false
   dirsizeReporter:
     enabled: true
-    # jupyterhub-home-nfs reports this value now, we don't have to
-    # except on Azure, where we don't use jupyterhub-home-nfs
+    # Is enabled just for Azure with jsonnet config
     reportTotalSize: false
   volumeReporter:
-    enabled: true
+    # Is enabled just for Azure with jsonnet config
+    enabled: false
   shareCreator:
     enabled: false
     tolerations: []

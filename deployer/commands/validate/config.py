@@ -112,6 +112,7 @@ def validate_hub_config(
                         cluster.config_dir / values_file,
                         cluster_name,
                         hub_name,
+                        cluster.spec["provider"],
                     )
                 )
                 cmd.append(f"--values={rendered_file}")
@@ -263,7 +264,10 @@ def support_config(
                 if values_file.endswith(".jsonnet"):
                     rendered_file = jsonnet_stack.enter_context(
                         render_jsonnet(
-                            cluster.config_dir / values_file, cluster_name, None
+                            cluster.config_dir / values_file,
+                            cluster_name,
+                            None,
+                            cluster.spec["provider"],
                         )
                     )
                     cmd.append(f"--values={rendered_file}")

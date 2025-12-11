@@ -1,7 +1,5 @@
 nfs:
   enabled: true
-  volumeReporter:
-    enabled: false
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html

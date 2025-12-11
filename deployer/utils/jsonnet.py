@@ -31,9 +31,9 @@ def validate_jsonnet_version():
 def render_jsonnet(
     jsonnet_file: Path,
     cluster_name: str,
-    hub_name: str = None,
-    provider: str = None,
-    aws_account_id: str = None,
+    hub_name: str | None,
+    provider: str,
+    aws_account_id: str | None = None,
 ):
     """
     Provide path to rendered json file for given jsonnet file

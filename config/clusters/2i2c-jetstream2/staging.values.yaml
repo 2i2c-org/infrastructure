@@ -1,7 +1,5 @@
 nfs:
   enabled: true
-  volumeReporter:
-    enabled: false
   pv:
     enabled: true
     mountOptions:
