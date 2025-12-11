@@ -25,7 +25,6 @@ exec_app = typer.Typer(pretty_exceptions_show_locals=False)
 grafana_app = typer.Typer(pretty_exceptions_show_locals=False)
 validate_app = typer.Typer(pretty_exceptions_show_locals=False)
 transform_app = typer.Typer(pretty_exceptions_show_locals=False)
-verify_backups_app = typer.Typer(pretty_exceptions_show_locals=False)
 update_app = typer.Typer(pretty_exceptions_show_locals=False)
 
 app.add_typer(
@@ -82,11 +81,5 @@ app.add_typer(
     update_app,
     name="update",
     help="Update existing resources, such as clusters or configurations.",
-    rich_help_panel=DEVELOPMENT,
-)
-app.add_typer(
-    verify_backups_app,
-    name="verify-backups",
-    help="Verify backups of home directories have been successfully created, and old backups have been cleared out.",
     rich_help_panel=DEVELOPMENT,
 )

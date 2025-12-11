@@ -52,10 +52,3 @@ dependencies:
     version: "v1.1.1"
     repository: https://2i2c.org/jupyterhub-cost-monitoring/
     condition: jupyterhub-cost-monitoring.enabled
-
-  # gcpFilestoreBackups runs regular backups of GCP Filestore Instances hosting
-  # home directories within the cloud project.
-  - name: gcpFilestoreBackups
-    version: "0.0.1"
-    repository: https://2i2c.org/gcp-filestore-backups
-    condition: gcpFilestoreBackups.enabled

@@ -21,4 +21,3 @@ import deployer.dev_commands.grafana.tokens  # noqa: F401
 import deployer.dev_commands.keys.decrypt_age  # noqa: F401
 import deployer.dev_commands.transform.cost_table  # noqa: F401
 import deployer.dev_commands.update.eksctl  # noqa: F401
-import deployer.dev_commands.verify_backups  # noqa: F401
