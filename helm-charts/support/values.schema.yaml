@@ -13,7 +13,6 @@ required:
   - prometheusIngressAuthSecret
   - cryptnono
   - redirects
-  - gcpFilestoreBackups
   - jupyterhub-cost-monitoring
   - global
 properties:
@@ -34,9 +33,6 @@ properties:
     type: object
     additionalProperties: true
   cryptnono:
-    type: object
-    additionalProperties: true
-  gcpFilestoreBackups:
     type: object
     additionalProperties: true
   global:

@@ -470,10 +470,6 @@ prometheusStorageClass:
     parameters:
       type: pd-balanced
 
-# Setup a deployment that will periodically backup the Filestore contents
-gcpFilestoreBackups:
-  enabled: false
-
 calico:
   enabled: false
 

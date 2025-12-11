@@ -47,13 +47,3 @@ resource "google_service_account_iam_binding" "filestore_backups_binding" {
     "serviceAccount:${var.project_id}.svc.id.goog[support/gcp-filestore-backups-sa]"
   ]
 }
-
-output "gcp_filestore_backups_k8s_sa_annotations" {
-  value       = var.enable_filestore_backups ? "iam.gke.io/gcp-service-account: ${google_service_account.filestore_backup_sa[0].email}" : ""
-  description = <<-EOT
-  Annotations to apply to gcpFilestoreBackups in the support chart to enable cloud permissions for its pods.
-
-  This should be specified under gcpFilestoreBackups.annotations in a support
-  values file created for the cluster.
-  EOT
-}
