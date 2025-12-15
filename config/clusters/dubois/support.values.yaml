@@ -26,6 +26,3 @@ grafana:
     - secretName: grafana-tls
       hosts:
       - grafana.dubois.2i2c.cloud
-
-gcpFilestoreBackups:
-  enabled: false
