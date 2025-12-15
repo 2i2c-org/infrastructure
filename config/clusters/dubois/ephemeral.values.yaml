@@ -21,3 +21,6 @@ jupyterhub:
       # retention & privacy issues.
       type: none
       extraVolumeMounts: []
+
+jupyterhub-home-nfs:
+  enabled: false
