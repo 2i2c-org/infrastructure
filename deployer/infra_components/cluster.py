@@ -116,7 +116,7 @@ class Cluster:
                 [
                     "kubectl",
                     "apply",
-                    "--force-conflicts",  # Remove after https://github.com/2i2c-org/infrastructure/issues/5961
+                    "--force-conflicts",  # This gives ownership to the resource, back to kubectl https://kubernetes.io/docs/reference/using-api/server-side-apply/#conflicts
                     "--server-side",  # https://github.com/projectcalico/calico/issues/7826
                     "-f",
                     f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml",
