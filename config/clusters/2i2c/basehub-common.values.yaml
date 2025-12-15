@@ -5,9 +5,3 @@ nfs:
     mountOptions:
     - soft
     - noatime
-jupyterhub-home-nfs:
-  enabled: true
-  gke:
-    enabled: true
-  prometheusExporter:
-    enabled: true

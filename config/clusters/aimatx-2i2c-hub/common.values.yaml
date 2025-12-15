@@ -176,11 +176,6 @@ jupyterhub:
     userScheduler:
       enabled: true
 
-jupyterhub-home-nfs:
-  enabled: true # can be migrated to common values file
-  eks:
-    enabled: true # can be migrated to common values file
-
 dask-gateway:
   enabled: true
   gateway:

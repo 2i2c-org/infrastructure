@@ -1,3 +1,5 @@
+jupyterhub-home-nfs:
+  enabled: false
 jupyterhub:
   scheduling:
     corePods:

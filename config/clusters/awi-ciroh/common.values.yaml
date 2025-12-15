@@ -7,11 +7,6 @@ basehub:
       - soft
       - noatime
   jupyterhub-home-nfs:
-    enabled: true
-    prometheusExporter:
-      enabled: true
-    gke:
-      enabled: true
     config:
       groupsExporter:
         update_exporter_interval: 3600
