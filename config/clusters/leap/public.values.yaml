@@ -2,6 +2,10 @@ nfs:
   enabled: false
   pv:
     enabled: false
+
+jupyterhub-home-nfs:
+  enabled: false
+
 jupyterhub:
   ingress:
     hosts: [public.leap.2i2c.cloud]
