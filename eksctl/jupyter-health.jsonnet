@@ -12,6 +12,6 @@ local c = cluster.makeCluster(
     'r5.16xlarge',
   ],
   hubs=['staging', 'prod'],
-  nodeGroupGenerations=['b']
+  nodeGroupGenerations=['c']
 );
 c
