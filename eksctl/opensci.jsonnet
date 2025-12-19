@@ -23,7 +23,7 @@ local c = cluster.makeCluster(
     'big-binder',
   ],
   notebookGPUNodeGroups=[],
-  nodeGroupGenerations=['b']
+  nodeGroupGenerations=['c']
 );
 
 c
