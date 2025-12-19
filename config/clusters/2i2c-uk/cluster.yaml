@@ -31,3 +31,4 @@ hubs:
   helm_chart_values_files:
   - lis.values.yaml
   - enc-lis.secret.values.yaml
+  chart_override: lis-chart.yaml
