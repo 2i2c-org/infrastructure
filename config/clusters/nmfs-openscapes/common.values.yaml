@@ -71,10 +71,10 @@ jupyterhub:
             enabled: true
           choices:
             python:
-              display_name: Py - NASA Openscapes Python, Dask Gateway 65d6916
+              display_name: Py - NASA Openscapes, Dask Gateway + GCS 65d6916
               slug: python
               kubespawner_override:
-                image: openscapes/python:65d6916
+                image: ghcr.io/nmfs-opensci/container-images/openscapes:89655e1
             pyrbase:
               display_name: Py-R - py-rocket-base image 4.4-3.10
               slug: pyrbase
@@ -145,6 +145,11 @@ jupyterhub:
               slug: ohw
               kubespawner_override:
                 image: ghcr.io/oceanhackweek/python:latest
+            ohw-spanish:
+              display_name: OceanHackWeek Spanish latest
+              slug: ohw-spanish
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/py-rocket-oceanhw-esp:latest
           unlisted_choice:
             enabled: true
             display_name: Custom image
