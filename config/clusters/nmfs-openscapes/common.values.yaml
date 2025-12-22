@@ -76,17 +76,17 @@ jupyterhub:
               kubespawner_override:
                 image: ghcr.io/nmfs-opensci/container-images/openscapes:89655e1
             pyrbase:
-              display_name: Py-R - py-rocket-base image 4.4-3.10
+              display_name: Py-R - py-rocket-base image 4.4-3.10 2025.04.26
               slug: pyrbase
               kubespawner_override:
-                image: ghcr.io/nmfs-opensci/py-rocket-base:latest
+                image: ghcr.io/nmfs-opensci/py-rocket-base:2025.04.26
             cryo:
               display_name: Py - Cryointhecloud base image latest
               slug: cryo
               kubespawner_override:
                 image: quay.io/cryointhecloud/cryo-hub-image:latest
             asar:
-              display_name: R - ASAR Stock Assessment
+              display_name: R - ASAR Stock Assessment latest
               slug: asar
               kubespawner_override:
                 image: ghcr.io/nmfs-opensci/container-images/asar:latest
@@ -96,11 +96,11 @@ jupyterhub:
               kubespawner_override:
                 image: ghcr.io/nmfs-opensci/cefi-image:latest
             pyrgeo2:
-              display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
+              display_name: Py-R - Geospatial + QGIS, Panoply - py-rocket-geospatial-2 2025.04.26
               slug: pyrgeo2
               default: true
               kubespawner_override:
-                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
+                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:2025.04.26
             coastwatch:
               display_name: Py-R - CoastWatch - coastwatch latest
               slug: coastwatch
@@ -122,7 +122,7 @@ jupyterhub:
               kubespawner_override:
                 image: ghcr.io/nmfs-opensci/image-acoustics:latest
             arcgis:
-              display_name: Py - ArcGIS Python 3.9
+              display_name: Py - ArcGIS Python 3.9 latest
               slug: arcgis
               kubespawner_override:
                 image: ghcr.io/nmfs-opensci/container-images/arcgis:latest
@@ -136,10 +136,10 @@ jupyterhub:
               kubespawner_override:
                 image: ghcr.io/nasa/oceandata-notebooks:latest
             pangeoml:
-              display_name: Pangeo ML with TensorFlow
+              display_name: Pangeo ML with TensorFlow 2025.12.09
               slug: pangeoml
               kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2025.05.22
+                image: quay.io/pangeo/ml-notebook:2025.12.09
             ohw:
               display_name: OceanHackWeek latest
               slug: ohw
