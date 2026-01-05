@@ -1,6 +1,10 @@
 nfs:
   pv:
     serverIP: 10.100.200.179
+
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::515966502221:role/disasters-staging
 jupyterhub:
   singleuser:
     nodeSelector:
