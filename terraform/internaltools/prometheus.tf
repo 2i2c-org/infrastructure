@@ -84,7 +84,7 @@ resource "helm_release" "prometheus" {
   namespace  = var.prometheus_namespace
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "prometheus"
-  version    = "27.29.0"
+  version    = "28.0.0"
 
   values = [
     file("${path.module}/prometheus.yaml"),
