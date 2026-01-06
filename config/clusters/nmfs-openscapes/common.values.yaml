@@ -86,15 +86,15 @@ jupyterhub:
               kubespawner_override:
                 image: quay.io/cryointhecloud/cryo-hub-image:latest
             asar:
-              display_name: R - ASAR Stock Assessment latest
+              display_name: R - ASAR Stock Assessment - latest
               slug: asar
               kubespawner_override:
                 image: ghcr.io/nmfs-opensci/container-images/asar:latest
-            cefi:
-              display_name: Py-R - CEFI image latest
-              slug: cefi
+            echosm:
+              display_name: Py-R - echoSMs hackathon - latest
+              slug: echosm
               kubespawner_override:
-                image: ghcr.io/nmfs-opensci/cefi-image:latest
+                image: ghcr.io/nmfs-opensci/container-images/acoustics:latest
             pyrgeo2:
               display_name: Py-R - Geospatial + QGIS, Panoply - py-rocket-geospatial-2 2025.04.26
               slug: pyrgeo2
