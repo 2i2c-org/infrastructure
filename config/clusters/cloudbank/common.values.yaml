@@ -19,7 +19,7 @@ jupyterhub:
       limit: 2
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: 79e7ee67211e
+      tag: 074910e92a4a
     nodeSelector:
       # Put everything on the most appropriate instance type for these users
       node.kubernetes.io/instance-type: n2-highmem-4
