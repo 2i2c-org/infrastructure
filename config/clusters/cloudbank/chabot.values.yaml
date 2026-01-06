@@ -50,11 +50,14 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-chabot
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 500M
+      limits:
+        cpu: 0.4
+        memory: 1.5G
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.chabot.svc.cluster.local
-  resources:
-    requests:
-      memory: 500M
-    limits:
-      memory: 1.5G
