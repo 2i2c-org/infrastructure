@@ -5,24 +5,21 @@
 We use completely different terraform code for each cloud provider, under `terraform/<cloud-provider>`.
 This is much simpler than trying to abstract them away into a 'lowest common denominator' set of modules.
 
-The source files for each provider we currently deploy with terraform are under the following directories in our [`infrastructure` repo](https://github.com/2i2c-org/infrastructure):
-
-- [`terraform/gcp`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp)
-- [`terraform/azure`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/azure)
-- [`terraform/aws`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/aws)
+The source files for each provider we currently deploy with terraform are under a specific
+directory under `terraform/` in our [`infrastructure` repo](https://github.com/2i2c-org/infrastructure).
 
 Each provider directory also has a `projects` subdirectory where variables defining each cluster are stored.
 
-## Backends
+## State and Backends
+Terraform stores [state](https://developer.hashicorp.com/terraform/language/state) to
+reflect the *current state* of the infrastructure managed, so it can figure out what
+changes need to happen and how to make them happen. This state has to be stored somewhere,
+and we store it in a [Google Cloud Storage Bucket](https://developer.hashicorp.com/terraform/language/backend/gcs)
+by default. The configuration is specified directly in `main.tf` for each cloud provider.
 
-A [backend](https://www.terraform.io/language/settings/backends/configuration) defines where Terraform stores its state data files in cloud storage (we use a GCP bucket for the majority of our deployments).
-Normally, we are using Terraform when logged in with our 2i2c accounts and there's no need to explicitly define a backend.
-
-But for some projects where we don't have access to using our 2i2c accounts, e.g. universities that require us to have specific university-affiliated identities, we can configure different backends to access the terraform state stored in those projects.
-Working this way saves us the pain of trying to work with terraform using two different authentications.
-
-These backend configs are stored in [`terraform/gcp/backends`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/backends).
-Currently, we only implement a choice of backend for GCP deployments.
+In some cases, we may want to store the state in a different place, primarily so that
+communities can run `terraform apply` themselves without being given access to *every*
+community's terraform state. See [the documentation for community partners](contributing:community-partner:terraform) for more details.
 
 ### Backend Initialization
 
@@ -39,6 +36,8 @@ terraform init
 If prior backend data exists in a `terraform.lock.hcl`, you might see an `Error: Backend configuration changed` when trying to initialize that backend. To reconfigure this backend, ignoring any saved configuration, add the `-reconfigure` flag to the init command.
 ```
 
+If you're trying to work on a project that has state stored elsewhere, [follow the docs here](contributing:community-partner:terraform)
+
 (topic:terraform:workspaces)=
 ## Workspaces
 
@@ -49,12 +48,8 @@ file with variable definitions for that cluster.
 
 ```{note}
 Workspaces are defined **per backend**.
-If you can't find the workspace you're looking for, double check you've enabled the correct backend.
+If you can't find the workspace you're looking for, double check you've initialized the correct backend.
 ```
-
-Workspaces are stored centrally in the `two-eye-two-see` GCP project, even
-when we use Terraform for projects running on AWS / Azure. You must have
-access to this project before you can use terraform for our infrastructure.
 
 ## How to change Terraform workspaces
 
