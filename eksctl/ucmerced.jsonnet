@@ -9,6 +9,8 @@ local c = cluster.makeCluster(
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     'r5.xlarge',
+    // Add r5.2xlarge to mirror prior n2-highmem-8 on GCP
+    'r5.2xlarge',
     'r5.4xlarge',
     'r5.16xlarge',
   ],
