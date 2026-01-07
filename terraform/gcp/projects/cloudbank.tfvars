@@ -1,3 +1,4 @@
+# The state for this is stored in backend configured via backends/cloudbank.hcl
 prefix     = "cb"
 project_id = "cb-1003-1696"
 
