@@ -59,10 +59,9 @@ jupyterhub:
         oauth_callback_url: https://next.ucmerced.2i2c.cloud/hub/oauth_callback
 
 jupyterhub-home-nfs:
-  gke:
+  eks:
     volumeId: vol-0d9447f7288f66d1d
 
 nfs:
-  enabled: false
   pv:
-    serverIP: 192.168.1.1
+    serverIP: 10.100.113.161

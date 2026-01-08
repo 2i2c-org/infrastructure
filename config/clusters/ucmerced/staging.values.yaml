@@ -61,13 +61,12 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://staging.ucmerced.2i2c.cloud/hub/oauth_callback
 jupyterhub-home-nfs:
-  gke:
+  eks:
     volumeId: vol-09923c5867cea492a
   quotaEnforcer:
     config:
       QuotaManager:
         hard_quota: 5 # in GiB
 nfs:
-  enabled: false
   pv:
-    serverIP: 192.168.68.1
+    serverIP: 10.100.235.215
