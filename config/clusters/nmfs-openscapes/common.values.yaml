@@ -70,37 +70,42 @@ jupyterhub:
           dynamic_image_building:
             enabled: true
           choices:
+            pyrgeo2:
+              display_name: Py-R - Geospatial + QGIS, Panoply - py-rocket-geospatial-2 2025.12.23
+              slug: pyrgeo2
+              default: true
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:2025.12.23
+            echosm:
+              display_name: Py-R - echoSMs hackathon - latest
+              slug: echosm
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/acoustics:latest
+            asar:
+              display_name: R - ASAR Stock Assessment - latest
+              slug: asar
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/asar:latest
+            positron:
+              display_name: R - Positron - latest
+              slug: positron
+              kubespawner_override:
+                image: ghcr.io/nmfs-opensci/container-images/psaw-workshop:latest                
             python:
               display_name: Py - NASA Openscapes, Dask Gateway + GCS 65d6916
               slug: python
               kubespawner_override:
                 image: ghcr.io/nmfs-opensci/container-images/openscapes:89655e1
             pyrbase:
-              display_name: Py-R - py-rocket-base image 4.4-3.10 2025.04.26
+              display_name: Py-R - py-rocket-base image 4.5.1-3.12 2025.12.22
               slug: pyrbase
               kubespawner_override:
-                image: ghcr.io/nmfs-opensci/py-rocket-base:2025.04.26
+                image: ghcr.io/nmfs-opensci/py-rocket-base:2025.12.22
             cryo:
               display_name: Py - Cryointhecloud base image latest
               slug: cryo
               kubespawner_override:
                 image: quay.io/cryointhecloud/cryo-hub-image:latest
-            asar:
-              display_name: R - ASAR Stock Assessment - latest
-              slug: asar
-              kubespawner_override:
-                image: ghcr.io/nmfs-opensci/container-images/asar:latest
-            echosm:
-              display_name: Py-R - echoSMs hackathon - latest
-              slug: echosm
-              kubespawner_override:
-                image: ghcr.io/nmfs-opensci/container-images/acoustics:latest
-            pyrgeo2:
-              display_name: Py-R - Geospatial + QGIS, Panoply - py-rocket-geospatial-2 2025.04.26
-              slug: pyrgeo2
-              default: true
-              kubespawner_override:
-                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:2025.04.26
             coastwatch:
               display_name: Py-R - CoastWatch - coastwatch latest
               slug: coastwatch
@@ -258,13 +263,13 @@ jupyterhub:
               default: false
               slug: pytorch
               kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2024.11.11
+                image: quay.io/pangeo/pytorch-notebook:2025.12.30
             tensorflow2:
               display_name: Pangeo Tensorflow2 ML Notebook
               default: true
               slug: tensorflow2
               kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2024.11.11
+                image: quay.io/pangeo/ml-notebook:2025.12.30
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
