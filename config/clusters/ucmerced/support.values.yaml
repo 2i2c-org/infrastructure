@@ -39,7 +39,7 @@ cluster-autoscaler:
   enabled: true
   autoDiscovery:
     clusterName: ucmerced
-  awsRegion: us-west-1
+  awsRegion: us-west-2
 
 calico:
   enabled: true

@@ -6,7 +6,7 @@ aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: ucmerced
-  region: us-west-1
+  region: us-west-2
   billing:
     paid_by_us: true
 support:

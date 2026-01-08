@@ -3,9 +3,9 @@
    - location of the nodes of the kubernetes cluster will be <region>a
    - no default scratch buckets support
 */
-region                 = "us-west-1"
+region                 = "us-west-2"
 cluster_name           = "ucmerced"
-cluster_nodes_location = "us-west-1a"
+cluster_nodes_location = "us-west-2a"
 
 # Tip: uncomment and verify any missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
