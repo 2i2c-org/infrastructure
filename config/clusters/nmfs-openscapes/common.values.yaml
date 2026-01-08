@@ -90,7 +90,7 @@ jupyterhub:
               display_name: R - Positron - latest
               slug: positron
               kubespawner_override:
-                image: ghcr.io/nmfs-opensci/container-images/psaw-workshop:latest                
+                image: ghcr.io/nmfs-opensci/container-images/psaw-workshop:latest
             python:
               display_name: Py - NASA Openscapes, Dask Gateway + GCS 65d6916
               slug: python
