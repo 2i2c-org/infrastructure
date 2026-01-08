@@ -48,6 +48,6 @@ nvidiaDevicePlugin:
 redirects:
   rules:
   - from: staging.bnext-bio.2i2c.cloud
-    to: staging.beta-hub.nucleus.engineering
+    to: staging.hub.nucleus.engineering
   - from: bnext-bio.2i2c.cloud
-    to: beta-hub.nucleus.engineering
+    to: hub.nucleus.engineering
