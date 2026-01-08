@@ -106,6 +106,13 @@ jupyterhub:
 
         c.KubeSpawner.volumes["s3fs-volume"] = {"name": "s3fs-volume", "emptyDir": {}}
   singleuser:
+    extraFiles:
+      jupyter_server_config.json:
+        data:
+          FileContentsManager:
+            # Allow deleting full directories
+            always_delete_dir: True
+            delete_to_trash: True
     cloudMetadata:
       blockWithIptables: false
     defaultUrl: /lab
