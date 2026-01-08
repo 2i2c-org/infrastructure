@@ -111,8 +111,8 @@ jupyterhub:
         data:
           FileContentsManager:
             # Allow deleting full directories
-            always_delete_dir: True
-            delete_to_trash: True
+            always_delete_dir: true
+            delete_to_trash: true
     cloudMetadata:
       blockWithIptables: false
     defaultUrl: /lab
