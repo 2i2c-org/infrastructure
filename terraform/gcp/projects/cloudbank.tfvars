@@ -10,6 +10,10 @@ enable_filestore_backups = false
 filestores               = {}
 
 persistent_disks = {
+  "ahs" = {
+    size        = 25
+    name_suffix = "ahs"
+  }
   "authoring" = {
     size        = 25
     name_suffix = "authoring"

@@ -1,0 +1,73 @@
+jupyterhub:
+  ingress:
+    hosts: [ahs.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [ahs.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 1.5G
+      limit: 2G
+    cpu:
+      guarantee: 1
+      limit: 2
+    storage:
+      extraVolumeMounts: []
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
+    homepage:
+      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
+      # is merged
+      gitRepoBranch: unify-logins-2
+      templateVars:
+        org:
+          name: Albany High School
+          logo_url: https://cdss.berkeley.edu/sites/all/themes/cdss/images/DESKTOP_SECTIONS/HEADER-FOOTER/CDSS_LOGO_NEW_HEADER.svg
+          url: https://cdss.berkeley.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://ahs.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - basisindependent.com
+            - basisinds.com
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - ausdk12.org
+            - blakeschool.org
+            - scusd.net
+            - peddie.org
+            - boiseschools.org
+            - boiseschools.net
+      Authenticator:
+        admin_users:
+        - smorris@ausdk12.org
+        - sean.smorris@berkeley.edu
+        - mburton@blakeschool.org
+        enable_auth_state: false
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ahs
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.ahs.svc.cluster.local
