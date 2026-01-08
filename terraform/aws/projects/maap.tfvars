@@ -21,6 +21,7 @@ user_buckets = {
 hub_cloud_permissions = {
   "staging" : {
     bucket_admin_access : ["scratch-staging"],
+    max_session_duration : 12 * 60 * 60, # 12 hr max
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
@@ -96,6 +97,7 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch-prod"],
+    max_session_duration : 12 * 60 * 60, # 12 hr max
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
