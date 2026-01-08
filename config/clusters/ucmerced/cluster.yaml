@@ -13,27 +13,23 @@ support:
   helm_chart_values_files:
   - support.values.yaml
   - enc-support.secret.values.yaml
-hubs: []
-  # Uncomment the lines below once the support infrastructure was deployed and
-  # you are ready to add the first cluster
+hubs:
+- name: staging
+    # Tip: consider changing this to something more human friendly
+  display_name: UC Merced staging
+  domain: staging.ucmerced.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
 
-
-  # - name: staging
-  #   # Tip: consider changing this to something more human friendly
-  #   display_name: "ucmerced - staging"
-  #   domain: staging.ucmerced.2i2c.cloud
-  #   helm_chart: basehub
-  #   helm_chart_values_files:
-  #     - common.values.yaml
-  #     - staging.values.yaml
-  #     - enc-staging.secret.values.yaml
-
-  # - name: prod
-  #   # Tip: consider changing this to something more human friendly
-  #   display_name: "ucmerced - prod"
-  #   domain: prod.ucmerced.2i2c.cloud
-  #   helm_chart: basehub
-  #   helm_chart_values_files:
-  #     - common.values.yaml
-  #     - prod.values.yaml
-  #     - enc-prod.secret.values.yaml
+- name: prod
+    # Tip: consider changing this to something more human friendly
+  display_name: UC Merced
+  domain: next.ucmerced.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - prod.values.yaml
+  - enc-prod.secret.values.yaml
