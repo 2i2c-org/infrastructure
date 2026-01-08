@@ -72,6 +72,8 @@ variable "hub_cloud_permissions" {
      permissions to.
   3. extra_iam_policy: An AWS IAM Policy document that grants additional rights
      to this Kubernetes Service Account.
+  4. max_session_duration: Duration (in seconds) after which AWS session tokens expire.
+     Maximum of 12 hours.
 
   EOT
 }
