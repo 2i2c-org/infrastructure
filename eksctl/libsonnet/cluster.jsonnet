@@ -1,4 +1,5 @@
 local escapeName(name) = std.strReplace(name, '.', '-');
+local lowerCaseLetter(i) = std.char(97 + i);
 {
   /**
    Create a managed nodegroup config that can autoscale from 0.
@@ -263,7 +264,8 @@ local escapeName(name) = std.strReplace(name, '.', '-');
     notebookCPUInstanceTypes,
     notebookGPUNodeGroups=[],
     daskInstanceTypes=[],
-    nodeGroupGenerations=[]
+    nodeGroupGenerations=[],
+    regionSize=3
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -276,7 +278,7 @@ local escapeName(name) = std.strReplace(name, '.', '-');
         '2i2c.org/cluster-name': name,
       },
     },
-    availabilityZones: ['%s%s' % [region, i] for i in ['a', 'b', 'c']],
+    availabilityZones: ['%s%s' % [region, lowerCaseLetter(i)] for i in std.range(0, regionSize - 1)],
     iam: {
       withOIDC: true,
     },
