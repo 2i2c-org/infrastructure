@@ -12,7 +12,7 @@ jupyterhub:
   scheduling:
     userPlaceholder:
       # Keep at least half of a spare node around
-      replicas: 0 # TODO: 1
+      replicas: 1
       resources:
         requests:
           memory: 32Gi
