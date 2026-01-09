@@ -13,6 +13,7 @@ decrypt-age
 build-image-remotely
 credits
 grafana-account
+prometheus-credentials
 admin-users
 community-domains
 reset-shared-password
