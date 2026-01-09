@@ -154,7 +154,13 @@ Run this section on the source cluster.
    cat > /tmp/key
    ```
 
-   We must now define an SSH configuration entry and configure it with the appropriate IP address, port, and username. If you're using the image defined in this how-to guide, you'll only need to change the `HostName`:
+   We must now define an SSH configuration entry and configure it with the appropriate IP address, port, and username. If you're using the image defined in this how-to guide, you'll only need to change the `HostName`. First, switch to the linuxserver.io user.
+
+   ```{code-block} shell
+   su linuxserver.io
+   ```
+
+   Then we can set the SSH config:
 
    ```{code-block} shell
    :emphasize-lines: 3
