@@ -7,6 +7,8 @@ jupyterhub:
       hosts:
       - staging.ucmerced.2i2c.cloud
   singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
     profileList:
     - display_name: Python
       description: Start a Python server with JupyterLab and scientific Python stack
@@ -25,12 +27,16 @@ jupyterhub:
               kubespawner_override:
                 mem_guarantee: 995622387
                 mem_limit: 995622387
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.2xlarge
               default: true
             mem_2:
               display_name: 2 GB RAM
               kubespawner_override:
                 mem_guarantee: 1991244775
                 mem_limit: 1991244775
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.2xlarge
     - display_name: R
       description: Start a R server with tidyverse & Geospatial tools
       kubespawner_override:
