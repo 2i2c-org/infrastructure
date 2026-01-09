@@ -35,7 +35,7 @@ jupyterhub:
         org:
           name: University of California, Merced
           url: http://www.ucmerced.edu/
-          logo_url: https://brand.ucmerced.edu/sites/brand.ucmerced.edu/files/images/ucm-logo-text.png
+          logo_url: https://github.com/user-attachments/assets/122471f8-2915-4868-ae8b-ac54faea8e70
         designed_by:
           name: 2i2c
           url: https://2i2c.org
