@@ -30,6 +30,18 @@ basehub:
           limits:
             cpu: 1
             memory: 512Mi
+    scheduling:
+      userPlaceholder:
+        # Keep 5 full nodes around
+        replicas: 5
+        resources:
+          requests:
+            # A=122203068Ki allocatable (memory available for pods)
+            # A running node in-practice was using 687865856 (~688Mi) that we'll reserve as R
+            # So given that no profile < 1GiB, let's round to R=1GiB to give some room
+            # Memory of placeholder = A - R = (see below)
+            memory: 124062199808
+
     hub:
       resources:
         requests:
