@@ -140,15 +140,23 @@ Run this section on the source cluster.
 
    This configuration can then be deployed by running `deployer deploy <SRC-CLUSTER> <SRC-HUB>`.
 
-2. **Provision the SSH private key**
+2. **Install `rsync`**
 
-   In order for the sender to be able to authorise with the receiver, we'll need to provision the environment with the private counterpart to the [public key that we created earlier](migrate-external:create-key). We can easily do this by writing it to a temporary file from the clipboard. In the source container, open a shell by running the following command:
+   As we saw earlier, the container image described in [the `extraContainers` configuration](migrate-external:values-src) does not natively include the `rsync` utility. We can remedy this by opening a shell with the following command:
 
    ```shell
    kubectl -n <SRC-HUB> exec -it deploy/storage-quota-home-nfs -c openssh-server -- /bin/sh
    ```
 
-   Run the following, paste the key with {kbd}`Ctrl+V`, and then enter an EOF with {kbd}`Ctrl+D`
+   As this image is based upon Alpine Linux, we can easily install `rsync` with
+
+   ```bash
+   apk add rsync
+   ```
+
+3. **Provision the SSH private key**
+
+   In order for the sender to be able to authorise with the receiver, we'll need to provision the environment with the private counterpart to the [public key that we created earlier](migrate-external:create-key). We can easily do this by writing it to a temporary file from the clipboard. In the existing shell in the source container, run the following command and paste the key with {kbd}`Ctrl+V`. Once the key has been pasted, enter an EOF with {kbd}`Ctrl+D`
 
    ```bash
    cat > /tmp/key
@@ -172,20 +180,6 @@ Run this section on the source cluster.
        User linuxserver.io
        IdentitiesOnly yes
    '
-   ```
-
-3. **Install `rsync`**
-
-   As we saw earlier, the container image described in [the `extraContainers` configuration](migrate-external:values-src) does not natively include the `rsync` utility. We can remedy this by opening a shell with the following command:
-
-   ```shell
-   kubectl -n <SRC-HUB> exec -it deploy/storage-quota-home-nfs -c openssh-server -- /bin/sh
-   ```
-
-   As this image is based upon Alpine Linux, we can easily install `rsync` with
-
-   ```bash
-   apk add rsync
    ```
 
 (migrate-external:initial-sync)=
