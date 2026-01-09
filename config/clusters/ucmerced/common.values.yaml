@@ -1,3 +1,14 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    mountOptions:
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
 jupyterhub:
   custom:
     2i2c:
@@ -10,9 +21,9 @@ jupyterhub:
       - name: home
         mountPath: /home/jovyan/allusers
         readOnly: false
-        # mounts below are copied from basehub's values that we override by
-        # specifying extraVolumeMounts (lists get overridden when helm values
-        # are combined)
+            # mounts below are copied from basehub's values that we override by
+            # specifying extraVolumeMounts (lists get overridden when helm values
+            # are combined)
       - name: home
         mountPath: /home/jovyan/shared-readwrite
         subPath: _shared
@@ -24,7 +35,7 @@ jupyterhub:
         org:
           name: University of California, Merced
           url: http://www.ucmerced.edu/
-          logo_url: https://brand.ucmerced.edu/sites/brand.ucmerced.edu/files/images/ucm-logo-text.png
+          logo_url: https://github.com/user-attachments/assets/122471f8-2915-4868-ae8b-ac54faea8e70
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -70,3 +81,6 @@ jupyterhub:
       Authenticator:
         admin_users:
         - schadalapaka@ucmerced.edu
+  scheduling:
+    userScheduler:
+      enabled: true
