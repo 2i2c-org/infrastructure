@@ -23,7 +23,7 @@ We can provision an extra set of credentials to the ingress-nginx [basic auth](h
 
 1. Securely send the user credentials to the community
 
-   - Instruct the community to send you a **public** key with [`age`](https://github.com/FiloSottile/age) by running `age-keygen -o key.txt`
+   - Instruct the community to send you a **public** key with [`age`](https://github.com/FiloSottile/age) by running `age-keygen -o key.txt` and link the corresponding [user-facing docs](https://docs.2i2c.org/admin/monitoring/prometheus-api-access/).
    - After they have sent you a public key, place the username and password in a `credentials.txt` file and encrypt it with
 
       ```bash
