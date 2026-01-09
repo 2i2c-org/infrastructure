@@ -130,7 +130,7 @@ Run this section on the source cluster.
          volumeMounts:
            - mountPath: /export
              name: home-directories
-             readonly: true
+             readOnly: true
          env:
            - name: PUID
              value: "1000"
