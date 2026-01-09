@@ -1,11 +1,11 @@
 jupyterhub:
   ingress:
     hosts:
-    - next.ucmerced.2i2c.cloud
+    - ucmerced.2i2c.cloud
     tls:
     - secretName: https-auto-tls
       hosts:
-      - next.ucmerced.2i2c.cloud
+      - ucmerced.2i2c.cloud
   prePuller:
     continuous:
       enabled: true
@@ -60,7 +60,7 @@ jupyterhub:
   hub:
     config:
       CILogonOAuthenticator:
-        oauth_callback_url: https://next.ucmerced.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://ucmerced.2i2c.cloud/hub/oauth_callback
 
 jupyterhub-home-nfs:
   eks:
