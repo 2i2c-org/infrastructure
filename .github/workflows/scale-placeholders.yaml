@@ -37,7 +37,7 @@ jobs:
         python-version: '3.13'
     - name: Install deployer
       run: |
-        python3 -m pip install .
+        python3 -m pip install -e .
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
     - name: Switch to scale branch
       run: |
