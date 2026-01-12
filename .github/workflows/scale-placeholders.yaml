@@ -57,10 +57,18 @@ jobs:
 
         # Push upstream
         git push --set-upstream origin "${branch_name}"
+
+    - name: Generate a token
+      id: generate-token
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: ${{ vars.PLACEHOLDERS_APP_ID }}
+        private-key: ${{ secrets.PLACEHOLDERS_APP_PRIVATE_KEY }}
     - name: Create PR
       run: |
-        gh pr create \
+        pr_id=$(gh pr create \
           --title "[${{ github.event.inputs.cluster }}, ${{github.event.inputs.hub }}] Scale placeholders to ${{ github.event.inputs.replicas }}" \
-          --body "This change was performed by a GitHub workflow."
+          --body "This change was performed by a GitHub workflow.")
+        gh pr merge --auto --squash "${pr_id}"
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ steps.generate-token.outputs.token }}
