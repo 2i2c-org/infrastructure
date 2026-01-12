@@ -47,6 +47,8 @@ jobs:
         deployer generate replicas ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
     - name: Commit change
       run: |
+        # Add changes in config/clusters of existing tracked files
+        git add -u config/clusters
         git commit -m "Scale placeholders to ${{ github.event.inputs.replicas }} for ${{ github.event.inputs.cluster }}/${{ github.event.inputs.hub }}"
         git push
     - name: Create PR
