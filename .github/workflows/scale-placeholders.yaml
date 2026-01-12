@@ -21,10 +21,10 @@ jobs:
     - uses: actions/checkout@v6
     - uses: actions/setup-go@v6
 
-        # There will almost never be a cache hit on the cache key when this job is
-        # run, as it is the first of all jobs in this workflow. An exception is if
-        # this job is re-attempted as part of the same workflow run after
-        # succeeding previously.
+          # There will almost never be a cache hit on the cache key when this job is
+          # run, as it is the first of all jobs in this workflow. An exception is if
+          # this job is re-attempted as part of the same workflow run after
+          # succeeding previously.
     - name: Setup Git
       run: |
         git config --local user.email "actions@github.com"
@@ -39,18 +39,23 @@ jobs:
       run: |
         python3 -m pip install -e .
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
-    - name: Switch to scale branch
-      run: |
-        git switch -c "placeholders/scale-${{github.event.inputs.cluster}}-${{github.event.inputs.hub}}-${{github.event.inputs.replicas}}-${GITHUB_SHA}"
     - name: Apply scale-change
       run: |
         deployer generate replicas ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
     - name: Commit change
       run: |
+        # Store branch name
+        branch_name="placeholders/scale-${{github.event.inputs.cluster}}-${{github.event.inputs.hub}}-${{github.event.inputs.replicas}}-${GITHUB_SHA}"
+
+        # Switch to branch
+        git switch -c "${branch_name}"
+
         # Add changes in config/clusters of existing tracked files
         git add -u config/clusters
         git commit -m "Scale placeholders to ${{ github.event.inputs.replicas }} for ${{ github.event.inputs.cluster }}/${{ github.event.inputs.hub }}"
-        git push
+
+        # Push upstream
+        git push --set-upstream origin "${branch_name}"
     - name: Create PR
       run: |
         pr=$(
