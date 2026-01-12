@@ -1,0 +1,54 @@
+on:
+  workflow_dispatch:
+    inputs:
+      cluster:
+        description: Name of cluster
+        required: true
+      hub:
+        description: Name of cluster
+        required: true
+      replicas:
+        description: Number of placeholders
+        required: true
+
+jobs:
+  create-scale-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup Git
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '22'
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+    - name: Install deployer
+      run: |
+        python3 -m pip install .
+    - name: Switch to scale branch
+      run: |
+        git switch -c "placeholders/scale-${{github.event.inputs.cluster}}-${{github.event.inputs.hub}}-${{github.event.inputs.replicas}}-${GITHUB_SHA}"
+    - name: Apply scale-change
+      run: |
+        deployer placeholders reserve ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
+    - name: Commit change
+      run: |
+        git commit -m "Scale placeholders to ${{ github.event.inputs.replicas }} for ${{ github.event.inputs.cluster }}/${{ github.event.inputs.hub }}"
+        git push
+    - name: Create PR
+      run: |
+        pr=$(
+          gh pr create \ 
+          --title "[${{ github.event.inputs.cluster }}, ${{github.event.inputs.hub }}] Scale placeholders to ${{ github.event.inputs.replicas }}" \
+          --body "This change was performed by a GitHub workflow."
+        )
+        gh pr merge --auto ${pr}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
