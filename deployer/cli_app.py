@@ -25,7 +25,6 @@ exec_app = typer.Typer(pretty_exceptions_show_locals=False)
 grafana_app = typer.Typer(pretty_exceptions_show_locals=False)
 validate_app = typer.Typer(pretty_exceptions_show_locals=False)
 transform_app = typer.Typer(pretty_exceptions_show_locals=False)
-placeholders_app = typer.Typer(pretty_exceptions_show_locals=False)
 update_app = typer.Typer(pretty_exceptions_show_locals=False)
 
 app.add_typer(
@@ -70,12 +69,6 @@ app.add_typer(
     grafana_app,
     name="grafana",
     help="Manages Grafana related workflows.",
-    rich_help_panel=DEVELOPMENT,
-)
-app.add_typer(
-    placeholders_app,
-    name="placeholders",
-    help="Programmatically modify placeholders configuration.",
     rich_help_panel=DEVELOPMENT,
 )
 app.add_typer(

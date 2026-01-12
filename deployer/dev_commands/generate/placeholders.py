@@ -5,14 +5,14 @@ Commands for reserving placeholders
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import placeholders_app
+from deployer.cli_app import generate_app
 from deployer.infra_components.cluster import Cluster
 
 yaml = YAML(typ="rt", pure=True)
 
 
-@placeholders_app.command()
-def reserve(
+@generate_app.command()
+def replicas(
     cluster_name: str = typer.Argument(
         "2i2c",
         help="Name of cluster for which to reserve capacity",
