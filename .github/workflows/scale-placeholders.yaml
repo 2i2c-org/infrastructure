@@ -61,6 +61,6 @@ jobs:
         pr=$(gh pr create \
           --title "[${{ github.event.inputs.cluster }}, ${{github.event.inputs.hub }}] Scale placeholders to ${{ github.event.inputs.replicas }}" \
           --body "This change was performed by a GitHub workflow.")
-        gh pr merge --auto ${pr}
+        gh pr merge --squash --auto ${pr}
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
