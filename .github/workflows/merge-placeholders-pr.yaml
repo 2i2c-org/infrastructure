@@ -1,0 +1,21 @@
+name: Auto-merge user placeholders change
+on:
+  workflow_run:
+    workflows:
+    - Deploy and test hubs
+    types:
+    - completed
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+    - name: Debug info
+      run: |
+        echo ${{github.event.workflow_run.head_branch}} and ${{github.event.workflow_run.head_repository.fork}}
