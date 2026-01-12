@@ -1,3 +1,4 @@
+name: Scale user placeholders
 on:
   workflow_dispatch:
     inputs:
