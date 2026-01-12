@@ -16,7 +16,7 @@ jobs:
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success' &&
       ( !github.event.workflow_run.head_repository.fork ) &&
-      startsWith(github.event.workflow_run.head_branch, "placeholders/")
+      startsWith(github.event.workflow_run.head_branch, 'placeholders/')
     steps:
     - name: Merge placeholders PR
       run: |
