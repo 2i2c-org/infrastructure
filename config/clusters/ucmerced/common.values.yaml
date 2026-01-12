@@ -81,6 +81,7 @@ jupyterhub:
       Authenticator:
         admin_users:
         - schadalapaka@ucmerced.edu
+        - sannapragada@ucmerced.edu
   scheduling:
     userScheduler:
       enabled: true
