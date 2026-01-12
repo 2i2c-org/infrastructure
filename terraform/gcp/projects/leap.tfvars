@@ -142,6 +142,18 @@ notebook_nodes = {
       "us-central1-f"
     ]
   },
+  "gpu-l4-a" : {
+    min : 0,
+    max : 100,
+    machine_type : "g2-standard-4",
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+    ]
+  },
 }
 
 # Setup a single node pool for dask workers.
