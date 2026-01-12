@@ -15,6 +15,13 @@ staticWebsite:
     enabled: false
 
 jupyterhub:
+  scheduling:
+    userPlaceholder:
+      # Keep at least half of a spare node around
+      replicas: 0
+      resources:
+        requests:
+          memory: 16Gi
   ingress:
     hosts:
     - staging.2i2c.cloud
