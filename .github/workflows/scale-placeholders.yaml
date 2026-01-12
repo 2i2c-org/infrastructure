@@ -19,6 +19,12 @@ jobs:
       pull-requests: write
     steps:
     - uses: actions/checkout@v6
+    - uses: actions/setup-go@v6
+
+        # There will almost never be a cache hit on the cache key when this job is
+        # run, as it is the first of all jobs in this workflow. An exception is if
+        # this job is re-attempted as part of the same workflow run after
+        # succeeding previously.
     - name: Setup Git
       run: |
         git config --local user.email "actions@github.com"
@@ -32,6 +38,7 @@ jobs:
     - name: Install deployer
       run: |
         python3 -m pip install .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
     - name: Switch to scale branch
       run: |
         git switch -c "placeholders/scale-${{github.event.inputs.cluster}}-${{github.event.inputs.hub}}-${{github.event.inputs.replicas}}-${GITHUB_SHA}"
