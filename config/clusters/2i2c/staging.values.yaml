@@ -18,7 +18,7 @@ jupyterhub:
   scheduling:
     userPlaceholder:
       # Keep at least half of a spare node around
-      replicas: 1
+      replicas: 0
       resources:
         requests:
           memory: 16Gi
@@ -61,7 +61,8 @@ jupyterhub:
               username_claim: email
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-staging
+    volumeId: 
+      projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-staging
   quotaEnforcer:
     config:
       QuotaManager:
