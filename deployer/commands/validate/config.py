@@ -237,12 +237,16 @@ def validate_authenticator_config(
 def support_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
+    skip_refresh: bool = typer.Option(
+        False, "--skip-refresh", help="Skip the helm dep update"
+    ),
 ):
     """
     Validates the provided non-encrypted helm chart values files for the support chart
     of a specific cluster.
     """
-    _prepare_support_helm_charts_dependencies_and_schema()
+    if not skip_refresh:
+        _prepare_support_helm_charts_dependencies_and_schema()
 
     cluster = Cluster.from_name(cluster_name)
 
@@ -274,12 +278,11 @@ def support_config(
                 # FIXME: The logic here for figuring out non secret files is not correct
                 elif "secret" not in os.path.basename(values_file):
                     cmd.append(f"--values={cluster.config_dir / values_file}")
-
-                try:
-                    subprocess.check_output(cmd, text=True)
-                except subprocess.CalledProcessError as e:
-                    print(e.stdout)
-                    sys.exit(1)
+            try:
+                subprocess.check_output(cmd, text=True)
+            except subprocess.CalledProcessError as e:
+                print(e.stdout)
+                sys.exit(1)
     else:
         print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
 
