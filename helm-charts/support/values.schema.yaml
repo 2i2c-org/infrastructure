@@ -106,7 +106,7 @@ properties:
 
   prometheusIngressAuthSecret:
     type: object
-    additionalProperties: true
+    additionalProperties: false
     required:
       - enabled
     properties:
