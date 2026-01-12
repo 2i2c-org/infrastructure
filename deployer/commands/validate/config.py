@@ -236,9 +236,10 @@ def validate_authenticator_config(
 @validate_app.command()
 def support_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
+    debug: bool = typer.Option(False, help="Enable verbose output"),
     skip_refresh: bool = typer.Option(
-        False, "--skip-refresh", help="Skip the helm dep update"
+        False,
+        help="Skip the helm dep update",
     ),
 ):
     """
@@ -315,10 +316,8 @@ def cluster_config(
 def all_hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
-    skip_refresh: bool = typer.Option(
-        False, "--skip-refresh", help="Skip the helm dep update"
-    ),
-    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
+    skip_refresh: bool = typer.Option(False, help="Skip the helm dep update"),
+    debug: bool = typer.Option(False, help="Enable verbose output"),
 ):
     """
     Validates the provided non-encrypted helm chart values files and the

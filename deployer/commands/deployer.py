@@ -62,7 +62,7 @@ def deploy_support(
     Deploy support components to a cluster
     """
     validate_cluster_config(cluster_name)
-    validate_support_config(cluster_name)
+    validate_support_config(cluster_name, False, False)
 
     cluster = Cluster.from_name(cluster_name)
 
