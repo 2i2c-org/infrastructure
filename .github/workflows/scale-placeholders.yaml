@@ -44,7 +44,7 @@ jobs:
         git switch -c "placeholders/scale-${{github.event.inputs.cluster}}-${{github.event.inputs.hub}}-${{github.event.inputs.replicas}}-${GITHUB_SHA}"
     - name: Apply scale-change
       run: |
-        deployer placeholders reserve ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
+        deployer generate replicas ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
     - name: Commit change
       run: |
         git commit -m "Scale placeholders to ${{ github.event.inputs.replicas }} for ${{ github.event.inputs.cluster }}/${{ github.event.inputs.hub }}"
