@@ -485,6 +485,6 @@ class Cluster:
             )
 
         return (
-            support_config["prometheusIngressAuthSecret"]["username"],
-            support_config["prometheusIngressAuthSecret"]["password"],
+            support_config["prometheusIngressAuthSecret"]["users"][0]["username"],
+            support_config["prometheusIngressAuthSecret"]["users"][0]["password"],
         )

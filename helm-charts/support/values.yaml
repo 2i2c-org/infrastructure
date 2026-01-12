@@ -441,8 +441,7 @@ jupyterhub-cost-monitoring:
 
 prometheusIngressAuthSecret:
   enabled: false
-  username: ""
-  password: ""
+  users: []
 
 redirects:
   rules: []
