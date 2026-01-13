@@ -146,6 +146,11 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "g2-standard-4",
+    gpu : {
+      enabled : true,
+      type : "nvidia-l4",
+      count : 1
+    },
     zones : [
       # Get GPUs wherever they are available, as sometimes a single
       # zone might be out of GPUs.
