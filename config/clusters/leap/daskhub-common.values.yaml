@@ -27,9 +27,9 @@ basehub:
         extraVolumeMounts:
         - name: home
           mountPath: /home/jovyan/allusers
-              # mounts below are copied from basehub's values that we override by
-              # specifying extraVolumeMounts (lists get overridden when helm values
-              # are combined)
+          # mounts below are copied from basehub's values that we override by
+          # specifying extraVolumeMounts (lists get overridden when helm values
+          # are combined)
         - name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
@@ -91,7 +91,7 @@ basehub:
             # ref: https://2i2c.freshdesk.com/a/tickets/2761
           - RobertPincus
           - SammyAgrawal
-              # ref: https://2i2c.freshdesk.com/a/tickets/3861
+            # ref: https://2i2c.freshdesk.com/a/tickets/3861
           - sarika-debruyn
       extraConfig:
         000-volumes-and-volume-mounts-as-dict: |
@@ -340,10 +340,10 @@ basehub:
           node_selector:
             node.kubernetes.io/instance-type: n2-highmem-16
 
-            # NOTE: This is the second medium profile list entry, with less node
-            #       share options for a different subset of users via the basehub
-            #       specific allowed_groups configuration.
-            #
+        # NOTE: This is the second medium profile list entry, with less node
+        #       share options for a different subset of users via the basehub
+        #       specific allowed_groups configuration.
+        #
       - display_name: CPU only
         description: *profile_list_description
         slug: medium-base
