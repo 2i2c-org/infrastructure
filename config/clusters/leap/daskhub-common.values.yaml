@@ -403,6 +403,19 @@ basehub:
                   extra_resource_limits:
                     nvidia.com/gpu: '1'
 
+              nvidia_a100:
+                display_name: NVIDIA A100 [40GB VRAM], ~85GB RAM, 12 CPUs
+                kubespawner_override:
+                  node_selector:
+                    node.kubernetes.io/instance-type: a2-highgpu-1g
+                    cloud.google.com/gke-accelerator: nvidia-tesla-a100
+                  environment:
+                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                  mem_guarantee: 70G
+                  mem_limit: 82G
+                  extra_resource_limits:
+                    nvidia.com/gpu: '1'
+
           image:
             display_name: Image
             unlisted_choice: *profile_list_unlisted_choice
