@@ -430,7 +430,7 @@ jupyterhub-cost-monitoring:
   resources:
   limits:
     cpu: 800m
-    memory: 500Gi
+    memory: 500Mi
   requests:
     cpu: 5m
     memory: 100Mi
