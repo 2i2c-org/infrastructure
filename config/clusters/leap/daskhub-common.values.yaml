@@ -385,8 +385,8 @@ basehub:
                     cloud.google.com/gke-accelerator: nvidia-tesla-t4
                   environment:
                     NVIDIA_DRIVER_CAPABILITIES: compute,utility
-                  mem_limit: 27G
-                  mem_guarantee: 30G
+                  mem_guarantee: 27G
+                  mem_limit: 30G
                   extra_resource_limits:
                     nvidia.com/gpu: '1'
 
