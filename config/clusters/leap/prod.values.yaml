@@ -29,7 +29,7 @@ basehub:
             memory: 256Mi
           limits:
             cpu: 1
-            memory: 512Mi
+            memory: 1Gi
     scheduling:
       userPlaceholder:
         # Keep 5 full nodes around
