@@ -14,7 +14,8 @@ basehub:
       serverIP: storage-quota-home-nfs.prod.svc.cluster.local
   userServiceAccount:
     annotations:
-      iam.gke.io/gcp-service-account: leap-prod@leap-pangeo.iam.gserviceaccount.com
+      iam.gke.io/gcp-service-account: 
+        leap-prod@leap-pangeo.iam.gserviceaccount.com
   jupyterhub:
     ingress:
       hosts: [leap.2i2c.cloud]
@@ -33,7 +34,7 @@ basehub:
     scheduling:
       userPlaceholder:
         # Keep 5 full nodes around
-        replicas: 8
+        replicas: 0
         resources:
           requests:
             # A=122203068Ki allocatable (memory available for pods)
@@ -60,7 +61,8 @@ basehub:
         PANGEO_SCRATCH: gs://leap-scratch/$(JUPYTERHUB_USER)
   jupyterhub-home-nfs:
     gke:
-      volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-prod
+      volumeId: 
+        projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
       config:
         QuotaManager:
