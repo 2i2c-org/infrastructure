@@ -133,7 +133,7 @@ def choices(
             help="Strategy to use for generating resource allocation choices choices"
         ),
     ] = ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY,
-    default: Annotated[bool, typer.Option(help="Set a default option")] = True,
+    default: Annotated[bool, typer.Option(help="Set a default option")] = False,
 ):
     """
     Generate a custom number of resource allocation choices for a certain instance type,
