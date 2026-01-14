@@ -33,7 +33,7 @@ basehub:
     scheduling:
       userPlaceholder:
         # Keep 5 full nodes around
-        replicas: 5
+        replicas: 8
         resources:
           requests:
             # A=122203068Ki allocatable (memory available for pods)
