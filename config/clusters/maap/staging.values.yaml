@@ -14,7 +14,7 @@ jupyterhub:
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
-      MAAP_API_HOST: api.dit.maap-project.org
+      MAAP_API_HOST: api.uat.maap-project.org
       WORKSPACE_BUCKET: maap-staging-workspace
       DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
       DOCKERIMAGE_PATH_BASE_IMAGE: $(JUPYTER_IMAGE)
