@@ -24,6 +24,7 @@ jupyterhub:
     - hosts: [{hub_name}.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
+    defaultUrl: /lab
     memory:
       guarantee: 512M
       limit: 1G
@@ -81,6 +82,7 @@ nfs:
 - `{LOGO_URL}`: Direct link to institution logo (typically SVG or WebP)
 - `{IDP_URN}`: InCommon federation identity provider URN (e.g., `urn:mace:incommon:uchicago.edu`)
 - `{ADMIN_EMAIL}`: Hub administrator email address
+ - `defaultUrl`: Set to `/lab` to default users to JupyterLab
 
 ---
 
