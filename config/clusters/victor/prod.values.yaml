@@ -68,6 +68,47 @@ basehub:
                 # from deployer.dev_commands.generate.resource_allocation.generate_choices import choices
                 # choices(["r5.xlarge:4"], "proportional-memory-strategy", default=True)
                 # ]]]
+              mem_4_gb:
+                display_name: ~4 GB RAM, ~0.5 CPUs
+                description: Up to ~4 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 3902839759
+                  mem_limit: 3902839759
+                  cpu_guarantee: 0.4563125
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_7_gb:
+                display_name: ~7 GB RAM, ~0.9 CPUs
+                description: Up to ~4 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 7805679519
+                  mem_limit: 7805679519
+                  cpu_guarantee: 0.912625
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_15_gb:
+                display_name: ~15 GB RAM, ~1.8 CPUs
+                description: Up to ~4 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 15611359038
+                  mem_limit: 15611359038
+                  cpu_guarantee: 1.82525
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_gb:
+                display_name: ~29 GB RAM, ~4 CPUs
+                description: ~4 CPUs always available
+                kubespawner_override:
+                  mem_guarantee: 31222718077
+                  mem_limit: 31222718077
+                  cpu_guarantee: 3.6505
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
                 # [[[end]]]
 
                 # r5.4xlarge
@@ -75,6 +116,26 @@ basehub:
                 # from deployer.dev_commands.generate.resource_allocation.generate_choices import choices
                 # choices(["r5.4xlarge:2"], "proportional-memory-strategy")
                 # ]]]
+              mem_60_gb:
+                display_name: ~60 GB RAM, ~8 CPUs
+                description: Up to ~15 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 64020707016
+                  mem_limit: 64020707016
+                  cpu_guarantee: 7.69055
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_119_gb:
+                display_name: ~119 GB RAM, ~15 CPUs
+                description: ~15 CPUs always available
+                kubespawner_override:
+                  mem_guarantee: 128041414033
+                  mem_limit: 128041414033
+                  cpu_guarantee: 15.3811
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
                 # [[[end]]]
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
         description: Start a container on a dedicated node with a GPU
