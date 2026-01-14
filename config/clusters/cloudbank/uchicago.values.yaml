@@ -1,0 +1,55 @@
+jupyterhub:
+  ingress:
+    hosts: [uchicago.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [uchicago.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://mc-1b49d921-43a2-4264-88fd-647979-cdn-endpoint.azureedge.net/-/jssmedia/images/logo-background.svg?iar=0&rev=b968dab0e0ea49fc9b0aa0c58ff8b152&extension=webp&hash=44493A89388C6D73090CDEF7ED528ACB
+          name: University of Chicago
+          url: https://www.uchicago.edu/en
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://uchicago.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          urn:mace:incommon:uchicago.edu:
+            default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - mayyash@csu.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-uchicago
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.uchicago.svc.cluster.local

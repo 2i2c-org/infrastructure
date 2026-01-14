@@ -429,6 +429,14 @@ hubs:
   - common.values.yaml
   - ucsc.values.yaml
   - enc-ucsc.secret.values.yaml
+- name: uchicago
+  display_name: University of Chicago
+  domain: uchicago.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - uchicago.values.yaml
+  - enc-uchicago.secret.values.yaml
 - name: virginia
   display_name: University of Virginia
   domain: virginia.cloudbank.2i2c.cloud
