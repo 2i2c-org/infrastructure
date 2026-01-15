@@ -70,6 +70,13 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     }
   }
 
+  # Add this because utoronto brought it in from infra changes
+  # The block itself is sticky, but the contents are not.
+  # However, force_upgrade_enabled=false feels like a reasonable setting
+  upgrade_override {
+    force_upgrade_enabled = false
+  }
+
   # default_node_pool must be set, and it must be a node pool of system type
   # that can't scale to zero. Due to that we are forced to use it, and have
   # decided to use it as our core node pool.
@@ -98,6 +105,14 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     orchestrator_version = coalesce(var.node_pools["core"][0].kubernetes_version, var.kubernetes_version)
 
     vnet_subnet_id = azurerm_subnet.node_subnet.id
+
+    upgrade_settings {
+      # If this is unset, it will force a new resource to be created
+      # This is set to the current value on utoronto
+      drain_timeout_in_minutes = 0
+      # One of max_surge or max_unavailable mst be specified
+      max_surge = "10%"
+    }
   }
 }
 
@@ -125,6 +140,14 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
 
   kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
+
+  upgrade_settings {
+    # If this is unset, it will force a new resource to be created
+    # This is set to the current value on utoronto
+    drain_timeout_in_minutes = 0
+    # One of max_surge or max_unavailable mst be specified
+    max_surge = "10%"
+  }
 }
 
 
