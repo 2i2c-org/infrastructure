@@ -109,6 +109,36 @@ basehub:
                   cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
+              mem_30_gb:
+                display_name: ~30 GB RAM, ~4 CPUs
+                description: Up to ~15 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 32010353508
+                  mem_limit: 32010353508
+                  cpu_guarantee: 3.845275
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_60_gb:
+                display_name: ~60 GB RAM, ~8 CPUs
+                description: Up to ~15 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 64020707016
+                  mem_limit: 64020707016
+                  cpu_guarantee: 7.69055
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_119_gb:
+                display_name: ~119 GB RAM, ~15 CPUs
+                description: ~15 CPUs always available
+                kubespawner_override:
+                  mem_guarantee: 128041414033
+                  mem_limit: 128041414033
+                  cpu_guarantee: 15.3811
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
               # [[[end]]]
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
         description: Start a container on a dedicated node with a GPU
