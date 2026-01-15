@@ -19,6 +19,10 @@ output "latest_supported_k8s_versions" {
   }
 }
 
+locals {
+  core_node_pool = var.node_pools["core"][0]
+}
+
 # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
 resource "azurerm_kubernetes_cluster" "jupyterhub" {
   name                = "hub-cluster"
@@ -89,20 +93,20 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#temporary_name_for_rotation.
   #
   default_node_pool {
-    name                 = var.node_pools["core"][0].name
-    vm_size              = var.node_pools["core"][0].vm_size
-    os_disk_size_gb      = var.node_pools["core"][0].os_disk_size_gb
-    kubelet_disk_type    = var.node_pools["core"][0].kubelet_disk_type
+    name                 = local.core_node_pool.name
+    vm_size              = local.core_node_pool.vm_size
+    os_disk_size_gb      = local.core_node_pool.os_disk_size_gb
+    kubelet_disk_type    = local.core_node_pool.kubelet_disk_type
+    min_count            = local.core_node_pool.min
+    max_count            = local.core_node_pool.max
     auto_scaling_enabled = true
-    min_count            = var.node_pools["core"][0].min
-    max_count            = var.node_pools["core"][0].max
 
     node_labels = merge({
       "hub.jupyter.org/node-purpose" = "core",
       "k8s.dask.org/node-purpose"    = "core"
     }, var.node_pools["core"][0].labels)
 
-    orchestrator_version = coalesce(var.node_pools["core"][0].kubernetes_version, var.kubernetes_version)
+    orchestrator_version = coalesce(local.core_node_pool.kubernetes_version, var.kubernetes_version)
 
     vnet_subnet_id = azurerm_subnet.node_subnet.id
 
