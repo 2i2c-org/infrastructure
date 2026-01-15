@@ -6,7 +6,29 @@ This guide provides step-by-step instructions for setting up a new JupyterHub in
 
 - Clone of the 2i2c infrastructure repository
 - Access to encrypted secrets (sops and PGP keys configured)
+- Google Cloud SDK installed (`brew install --cask google-cloud-sdk`)
+- Authenticated with Google Cloud
 - Environment setup: `conda activate infrastructure && pip install -e .`
+
+### Authenticate with Google Cloud
+
+Before creating hubs, authenticate with Google Cloud and set the correct project:
+
+```bash
+# Authenticate for gcloud commands
+gcloud auth login
+
+# Authenticate for application-default (required for sops encryption)
+gcloud auth application-default login
+
+# Set the project to cloudbank
+gcloud config set project cb-1003-1696
+
+# Set the quota project for application-default credentials
+gcloud auth application-default set-quota-project cb-1003-1696
+```
+
+**Note**: You must authenticate with your `@2i2c.org` or `@berkeley.edu` Google account that has access to the `cb-1003-1696` project.
 
 ## Hub Setup Steps
 
@@ -81,8 +103,12 @@ nfs:
 - `{INSTITUTION_WEBSITE}`: Institution home URL
 - `{LOGO_URL}`: Direct link to institution logo (typically SVG or WebP)
 - `{IDP_URN}`: InCommon federation identity provider URN (e.g., `urn:mace:incommon:uchicago.edu`)
-- `{ADMIN_EMAIL}`: Hub administrator email address
- - `defaultUrl`: Set to `/lab` to default users to JupyterLab
+- `{ADMIN_EMAIL}`: Hub administrator email address (ask the user if there are any admins to include)
+- `defaultUrl`: Set to `/lab` to default users to JupyterLab
+
+**Important Authentication Notes:**
+- **Always include the Google IDP** (`http://google.com/accounts/o8/id`) in addition to the institution's primary IDP. This allows 2i2c staff and admins with Google accounts to access the hub.
+- **Always ask the user** if there are any hub administrators from the institution that should be included in the `admin_users` list.
 
 ---
 
