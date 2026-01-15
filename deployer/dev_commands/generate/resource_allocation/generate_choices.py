@@ -1,3 +1,4 @@
+import itertools
 import json
 import sys
 from enum import Enum
@@ -119,6 +120,18 @@ def proportional_memory_strategy(
     return choices
 
 
+def update_without_conflicts(dst, src, suffix_template="_{}"):
+    for key, value in src.items():
+        # Find unique key
+        conflict_it = itertools.count(1)
+        original_key = key
+        while key in dst:
+            suffix = suffix_template.format(next(conflict_it))
+            key = f"{original_key}{suffix}"
+
+        dst[key] = src[original_key]
+
+
 @resource_allocation_app.command()
 def choices(
     instance_specification: Annotated[
@@ -155,10 +168,11 @@ def choices(
 
         # Call appropriate function based on what strategy we want to use
         if strategy == ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY:
-            choices.update(
+            update_without_conflicts(
+                choices,
                 proportional_memory_strategy(
                     instance_type, nodeinfo[instance_type], int(num_allocations)
-                )
+                ),
             )
         else:
             raise ValueError(f"Strategy {strategy} is not currently supported")
