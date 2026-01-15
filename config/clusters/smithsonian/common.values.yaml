@@ -89,7 +89,7 @@ basehub:
                 # r5.xlarge
                 # [[[cog
                 # from deployer.dev_commands.generate.resource_allocation.generate_choices import choices
-                # choices(["r5.xlarge:5"], "proportional-memory-strategy", default=True)
+                # choices(["r5.xlarge:5", "r5.4xlarge:2"], "proportional-memory-strategy", default=True)
                 # ]]]
               mem_2_gb:
                 display_name: ~2 GB RAM, ~0.2 CPUs
@@ -142,13 +142,6 @@ basehub:
                   cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
-                # [[[end]]]
-
-                # r5.4xlarge
-                # [[[cog
-                # from deployer.dev_commands.generate.resource_allocation.generate_choices import choices
-                # choices(["r5.4xlarge:2"], "proportional-memory-strategy")
-                # ]]]
               mem_60_gb:
                 display_name: ~60 GB RAM, ~8 CPUs
                 description: Up to ~15 CPUs when available
