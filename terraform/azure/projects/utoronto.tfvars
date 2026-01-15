@@ -14,11 +14,11 @@ global_container_registry_name = "2i2cutorontohubregistry"
 global_storage_account_name    = "2i2cutorontohubstorage"
 location                       = "canadacentral"
 budget_alert_amount            = null
-storage_size                   = 17000
+storage_size                   = 19500
 ssh_pub_key                    = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJ4h39UYNi1wybxAH+jCFkNK2aqRcuhDkQSMx0Hak5xkbt3KnT3cOwAgUP1Vt/SjhltSTuxpOHxiAKCRnjwRk60SxKhUNzPHih2nkfYTmBBjmLfdepDPSke/E0VWvTDIEXz/L8vW8aI0QGPXnXyqzEDO9+U1buheBlxB0diFAD3vEp2SqBOw+z7UgrGxXPdP+2b3AV+X6sOtd6uSzpV8Qvdh+QAkd4r7h9JrkFvkrUzNFAGMjlTb0Lz7qAlo4ynjEwzVN2I1i7cVDKgsGz9ZG/8yZfXXx+INr9jYtYogNZ63ajKR/dfjNPovydhuz5zQvQyxpokJNsTqt1CiWEUNj georgiana@georgiana"
 
 # List available versions via: tf output latest_supported_k8s_versions
-kubernetes_version = "1.33.2"
+kubernetes_version = "1.34.1"
 
 # Ref https://github.com/2i2c-org/meta/issues/539
 kubernetes_rbac_enabled = false
@@ -46,6 +46,7 @@ node_pools = {
 
       min : 1,
       max : 10,
+      kubernetes_version = "1.33.2"
     },
   ],
 
@@ -55,8 +56,9 @@ node_pools = {
       vm_size : "Standard_E8s_v5",
       os_disk_size_gb : 200,
       kubelet_disk_type : "OS",
-      min : 0,
-      max : 100,
+      min : 1,
+      max : 20,
+      kubernetes_version = "1.33.2"
     },
   ],
 
