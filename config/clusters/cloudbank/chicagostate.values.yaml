@@ -4,6 +4,11 @@ jupyterhub:
     tls:
     - hosts: [chicagostate.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 512M
+      limit: 1G
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -37,7 +42,7 @@ jupyterhub:
             allowed_domains:
             - csu.edu
           http://google.com/accounts/o8/id:
-            default: true
+            default: false
             username_derivation:
               username_claim: email
       Authenticator:
