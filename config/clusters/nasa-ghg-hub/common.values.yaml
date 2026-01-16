@@ -131,7 +131,6 @@ basehub:
           resource_allocation:
             display_name: Resource Allocation
             choices:
-              # r5.xlarge
               # [[[cog
               # from deployer.dev_commands.generate.resource_allocation.generate_choices import choices
               # choices(["r5.xlarge:5", "r5.4xlarge:2"], "proportional-memory-strategy", default=True)
