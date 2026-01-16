@@ -207,7 +207,7 @@ persistent_disks = {
     name_suffix = "spelman"
   }
   "srjc" = {
-    size        = 30
+    size        = 50
     name_suffix = "srjc"
   }
   "staging" = {
