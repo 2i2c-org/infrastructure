@@ -172,6 +172,11 @@ basehub:
           resource_allocation:
             display_name: Resource Allocation
             choices:
+              # r5.xlarge
+              # [[[cog
+              # from deployer.dev_commands.generate.resource_allocation.generate_choices import choices
+              # choices(["r5.xlarge:5", "r5.4xlarge:2"], "proportional-memory-strategy", default=True)
+              # ]]]
               mem_1_9:
                 display_name: 1.9 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
@@ -236,6 +241,7 @@ basehub:
                   cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
+              # [[[end]]]
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
         description: Start a container on a dedicated node with a GPU
         slug: gpu
