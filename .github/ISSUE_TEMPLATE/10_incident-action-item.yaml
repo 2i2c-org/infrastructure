@@ -1,4 +1,4 @@
-name: Incident Action Item
+name: 🩹 Incident Action Item
 description: File an incident report action item.
 title: '[Incident Action]: '
 labels: [incident-action-item]
@@ -26,6 +26,8 @@ body:
     label: What is definition of done for this item?
     description: Include any context required.
     placeholder: |
+      - [ ] Fix the broken things 
+    value: |
       - [ ] 
   validations:
     required: true
