@@ -161,8 +161,8 @@ locals {
 
           scheme = "https"
           basic_auth = {
-            username : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.username"]),
-            password : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.password"])
+            username : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.users.0.username"]),
+            password : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.users.0.password"])
           }
         }
       ]
