@@ -1,7 +1,6 @@
 name: PagerDuty Extension Action
 on:
   repository_dispatch:
-    types: [pagerduty-action]
 jobs:
   handle:
     runs-on: ubuntu-latest
