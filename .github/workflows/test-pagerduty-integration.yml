@@ -1,0 +1,12 @@
+name: PagerDuty Extension Action
+on:
+  repository_dispatch:
+    types: [pagerduty-action]
+jobs:
+  handle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Testing PD Ad-on
+        run: |
+          echo "PagerDuty payload: ${{ github.event.client_payload.summary }}"
