@@ -48,11 +48,11 @@ jupyterhub:
         allowed_organizations:
         - 2i2c-org:hub-access-for-2i2c-staff
         - nucleus-eng:hub-access
-        - nucleus-eng:nucleus-eng-hub-access
         - nucleus-eng:devcells-all-nodes
         - nucleus-eng:devcells-chicago-node
         - nucleus-eng:devcells-london-node
         - nucleus-eng:bnext
+        - nucleus-eng:curvenote
         - nucleus-eng:metapure
       Authenticator:
         admin_users:
@@ -84,23 +84,31 @@ jupyterhub:
           for idx, volume_mount in enumerate(existing_volume_mounts):
             c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
       001-group-shared-directories: |
-        groups = [
-            "2i2c-org:hub-access-for-2i2c-staff",
-            ("nucleus-eng:hub-access", "nucleus-eng-hub-access"),
-            "nucleus-eng:devcells-london-node",
-            "nucleus-eng:devcells-chicago-node",
-            "nucleus-eng:devcells-all-nodes",
-            "nucleus-eng:curvenote",
-            "nucleus-eng:metapure",
+        # Allow all <ORG>:<TEAM> entries to have their own shared folders
+
+        # Some overrides for names of directories
+        group_to_path_overrides = {"nucleus-eng:hub-access": "nucleus-eng-hub-access"}
+
+        # Find organization entries that are <ORG>:<TEAM> pairs, and parse them into (group, org, team)
+        assert isinstance(
+            c.GitHubOAuthenticator.allowed_organizations, list
+        ), "Expected list of organizations"
+        group_org_team_entries = [
+            p
+            for p in (
+                (g, *g.split(":", 1)) for g in set(c.GitHubOAuthenticator.allowed_organizations)
+            )
+            # Only take (group, org, team) entries
+            if len(p) == 3
         ]
 
         c.KubeSpawner.group_overrides = {
             # Don't worry about escaping — the only requirement is these keys are unique
-            f"{i:0>2}-group-{group}": {
+            f"{i:0>2}-group-{org}-{team}": {
                 "groups": [group],
                 "spawner_override": {
                     "volume_mounts": {
-                        f"{i:0>2}-group-{group}": {
+                        f"{i:0>2}-group-{org}-{team}": {
                             "name": "home",
                             "mountPath": f"/home/jovyan/projects/{name}",
                             "subPath": f"_projects/{name}",
@@ -109,13 +117,13 @@ jupyterhub:
                     }
                 },
             }
-            for i, (group, name) in enumerate(
-                # 1. Map "foo:bar" shorthand onto ("foo:bar", "bar")
-                # 2. Support hard-coded exception for path if defined as a tuple ("foo:bar", "bar")
-                (p, p.split(":", 1)[1]) if isinstance(p, str) else p
-                for p in (groups)
+            for i, (group, org, team, name) in enumerate(
+                # Allow renaming of the final path
+                (group, org, team, group_to_path_overrides.get(group, team))
+                for group, org, team in group_org_team_entries
             )
         }
+
 
   scheduling:
     userScheduler:
