@@ -150,6 +150,19 @@ jupyterhub:
               }
             },
           },
+          "05-group-nucleus-eng:curvenote": {
+            "groups": ["nucleus-eng:curvenote"],
+            "spawner_override": {
+              "volume_mounts": {
+                "05-group-nucleus-eng:curvenote": {
+                  "name": "home",
+                  "mountPath": "/home/jovyan/projects/curvenote",
+                  "subPath": "_projects/curvenote",
+                  "readOnly": False
+                },
+              }
+            },
+          },
         }
   scheduling:
     userScheduler:
