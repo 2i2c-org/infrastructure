@@ -5,7 +5,6 @@ jobs:
   handle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Testing PD Ad-on
-        run: |
-          echo "PagerDuty payload: ${{ github.event.client_payload.message }}"
+    - env:
+        MESSAGE: ${{ github.event.client_payload.message }}
+      run: echo $MESSAGE
