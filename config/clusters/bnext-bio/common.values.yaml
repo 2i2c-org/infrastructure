@@ -123,8 +123,6 @@ jupyterhub:
                 for group, org, team in group_org_team_entries
             )
         }
-
-
   scheduling:
     userScheduler:
       enabled: true
