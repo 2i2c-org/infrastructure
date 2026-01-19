@@ -46,11 +46,11 @@ node_pools = {
 
       min : 1,
       max : 10,
-      kubernetes_version = "1.33.2"
     },
   ],
 
   user : [
+    # FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
     {
       name : "usere8sv5c",
       vm_size : "Standard_E8s_v5",
@@ -59,6 +59,14 @@ node_pools = {
       min : 1,
       max : 20,
       kubernetes_version = "1.33.2"
+    },
+    {
+      name : "usere8sv5d",
+      vm_size : "Standard_E8s_v5",
+      os_disk_size_gb : 200,
+      kubelet_disk_type : "OS",
+      min : 1,
+      max : 20,
     },
   ],
 
