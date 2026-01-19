@@ -91,6 +91,7 @@ jupyterhub:
             "nucleus-eng:devcells-chicago-node",
             "nucleus-eng:devcells-all-nodes",
             "nucleus-eng:curvenote",
+            "nucleus-eng:metapure",
         ]
 
         c.KubeSpawner.group_overrides = {
