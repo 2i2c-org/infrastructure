@@ -8,4 +8,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Testing PD Ad-on
         run: |
-          echo "PagerDuty payload: ${{ github.event.client_payload.summary }}"
+          echo "PagerDuty payload: ${{ github.event.client_payload.message }}"
