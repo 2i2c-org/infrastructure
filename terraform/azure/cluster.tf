@@ -110,6 +110,7 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
 
     vnet_subnet_id = azurerm_subnet.node_subnet.id
 
+    temporary_name_for_rotation = "coretemppool"
     upgrade_settings {
       # If this is unset, it will force a new resource to be created
       # This is set to the current value on utoronto
