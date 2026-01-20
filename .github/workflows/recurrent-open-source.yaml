@@ -34,11 +34,18 @@ jobs:
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         GH_REPO: ${{ github.repository }}
         BODY: |
+          ### Context
+
+          See this 2i2c blog post on [Foundational Contributions](https://2i2c.org/blog/foundational-contributions/)
+
+          ### What we need to do
+
           Gather ideas for upstream OSS upstream in this issue to play for the next iteration. Cap or split the work into 2 or 3 points for effort.
 
           Take a look at [JupyterHub PR triage board](https://github.com/orgs/jupyterhub/projects/4/views/9) for inspiration 🌈
 
           ### Definition of Done
+
           - [ ] We agree on a contribution to work on for next iteration.
 
     - name: Sleep a bit to allow issue to be added to the board by automation
