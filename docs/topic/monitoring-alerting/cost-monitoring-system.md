@@ -1,4 +1,4 @@
-(topic:billing:cost-monitoring)=
+(topic:monitoring-alerting:cost-monitoring)=
 # Cost Monitoring System
 
 The Cost Monitoring System is designed to monitor and attribute cloud
