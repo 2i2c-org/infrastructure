@@ -59,8 +59,8 @@ user_buckets = {
     "tags" : { "2i2c:hub-name" : "noaa-only" },
   },
   "prod-homedirs-archive" : {
-  "archival_storageclass_after" : 3,
-  "delete_after" : 185,
+    "archival_storageclass_after" : 3,
+    "delete_after" : 185,
   }
 }
 
