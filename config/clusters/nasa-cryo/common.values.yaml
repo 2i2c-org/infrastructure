@@ -121,13 +121,13 @@ basehub:
                   image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
               02-pythonpace:
                 display_name: Ocean Biology Python Image
-                description: Ocean Biology environment used by the PACE mission 
+                description: Ocean Biology environment used by the PACE mission
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
                   image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
               03-pythonml:
                 display_name: Machine Learning Python Image
-                description: ML environment with TensorFlow, Keras, Scikit from Pangeo 
+                description: ML environment with TensorFlow, Keras, Scikit from Pangeo
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
                   image: pangeo/ml-notebook:2025.12.30
