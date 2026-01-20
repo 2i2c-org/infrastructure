@@ -58,6 +58,10 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "noaa-only" },
   },
+  "prod-homedirs-archive" : {
+  "archival_storageclass_after" : 3,
+  "delete_after" : 185,
+  }
 }
 
 hub_cloud_permissions = {
