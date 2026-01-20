@@ -27,6 +27,7 @@ jobs:
       run: |
         issue=$(gh issue create \
         --label "recurrent" \
+        --label "good-community-citizen" \
         --title "[${{ env.deadline }}] Upstream OSS Contributions" \
         --body "$BODY")
         echo "issue=$issue" >> $GITHUB_ENV
