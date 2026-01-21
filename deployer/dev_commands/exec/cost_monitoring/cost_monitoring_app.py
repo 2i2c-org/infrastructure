@@ -72,9 +72,6 @@ def list_active_tags(
             f"'{cluster_name}' is not on AWS, therefore the cost monitoring service is unavailable for this cluster at this time."
         )
     env = setup_aws_env(cluster_name, mfa_device_id, auth_token)
-    try:
-        subprocess.check_call(
-            ["aws", "ce", "list-cost-allocation-tags", "--status=Active"], env=env
-        )
-    except subprocess.CalledProcessError as error:
-        raise (error.output)
+    subprocess.run(
+        ["aws", "ce", "list-cost-allocation-tags", "--status=Active"], env=env
+    )
