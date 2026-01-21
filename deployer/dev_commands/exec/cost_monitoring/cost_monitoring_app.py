@@ -9,7 +9,7 @@ import typer
 
 from deployer.cli_app import exec_app
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
-from deployer.dev_commands.exec.aws.aws_app import setup_aws_env
+from deployer.dev_commands.exec.aws.aws_app import setup_aws_sts_env
 from deployer.infra_components.cluster import Cluster
 
 cost_monitoring = typer.Typer(pretty_exceptions_show_locals=False)
@@ -71,7 +71,7 @@ def list_active_tags(
         raise ValueError(
             f"'{cluster_name}' is not on AWS, therefore the cost monitoring service is unavailable for this cluster at this time."
         )
-    env = setup_aws_env(cluster_name, mfa_device_id, auth_token)
+    env = setup_aws_sts_env(cluster_name, mfa_device_id, auth_token)
     subprocess.run(
         ["aws", "ce", "list-cost-allocation-tags", "--status=Active"], env=env
     )
