@@ -20,6 +20,7 @@ from datetime import datetime
 from pathlib import Path
 
 import typer
+from rich.prompt import Prompt
 
 from deployer.cli_app import exec_app
 from deployer.utils.rendering import print_colour
@@ -61,6 +62,79 @@ def setup_aws_sts_env(profile, mfa_device_id, auth_token) -> dict[str, str]:
     return env
 
 
+def list_sso_accounts(profile, access_token):
+    accounts_list_json = subprocess.check_output(
+        [
+            "aws",
+            "sso",
+            "list-accounts",
+            "--access-token",
+            access_token,
+            "--profile",
+            profile,
+            "--output",
+            "json",
+        ]
+    )
+
+    accounts_list = json.loads(accounts_list_json).get("accountList", "")
+    if not accounts_list:
+        print_colour("No accountList in aws response. Aborting...", "red")
+    return {acc["accountName"]: acc["accountId"] for acc in accounts_list}
+
+
+def list_account_roles(profile, account_id, access_token):
+    roles = json.loads(
+        subprocess.check_output(
+            [
+                "aws",
+                "sso",
+                "list-account-roles",
+                "--access-token",
+                access_token,
+                "--account-id",
+                account_id,
+                "--profile",
+                profile,
+                "--output",
+                "json",
+            ]
+        )
+    ).get("roleList", "")
+    return {role["roleName"] for role in roles}
+
+
+def get_role_creds_as_env(profile, account_id, role, access_token):
+    creds_json = subprocess.check_output(
+        [
+            "aws",
+            "sso",
+            "get-role-credentials",
+            "--account-id",
+            account_id,
+            "--role-name",
+            role,
+            "--access-token",
+            access_token,
+            "--profile",
+            profile,
+            "--output",
+            "json",
+        ]
+    )
+
+    creds = json.loads(creds_json).get("roleCredentials", "")
+    if not creds:
+        print_colour("No role credentials in aws response. Aborting...", "red")
+        return
+
+    return os.environ | {
+        "AWS_ACCESS_KEY_ID": creds["accessKeyId"],
+        "AWS_SECRET_ACCESS_KEY": creds["secretAccessKey"],
+        "AWS_SESSION_TOKEN": creds["sessionToken"],
+    }
+
+
 @aws.command()
 def shell(
     profile: str = typer.Argument(..., help="Name of AWS profile to operate on"),
@@ -87,10 +161,10 @@ def shell(
 def sso_shell(
     profile: str = typer.Argument(..., help="Name of AWS SSO profile to login into"),
     account_name: str = typer.Argument(
-        "two-eye-two-see",
+        "",
         help="The name of the account under SSO that you want to login into",
     ),
-    role: str = typer.Argument("AdministratorAccess", help="What role to assume"),
+    role: str = typer.Argument("", help="What role to assume"),
 ):
     """
     Exec into a shell with appropriate AWS credentials for an account under SSO
@@ -98,15 +172,27 @@ def sso_shell(
 
     cache_dir = Path.home() / ".aws" / "sso" / "cache"
     cache_files = list(cache_dir.glob("*.json"))
-    latest_cache_file = max(cache_files, key=os.path.getctime)
+
+    # Get the start_url of the profile
+    start_url = (
+        subprocess.check_output(
+            ["aws", "configure", "get", "sso_start_url", "--profile", profile]
+        )
+        .decode()
+        .strip()
+    )
 
     def needs_sso_login():
         if not cache_files:
             return True
+        latest_cache_file = max(cache_files, key=os.path.getctime)
         try:
             with open(latest_cache_file) as f:
                 data = json.load(f)
             expires_at_str = data.get("expiresAt")
+            url = data.get("startUrl")
+            if url != start_url:
+                return True
             if not expires_at_str:
                 return True
 
@@ -128,6 +214,7 @@ def sso_shell(
         print_colour("No SSO cache after login. Check SSO config.", "red")
         return
 
+    latest_cache_file = max(cache_files, key=os.path.getctime)
     with open(latest_cache_file) as f:
         data = json.load(f)
 
@@ -136,70 +223,42 @@ def sso_shell(
         print_colour("Token is missing from the cache file. Aborting...", "red")
 
     # Resolve account name to ID
-    accounts_list_json = subprocess.check_output(
-        [
-            "aws",
-            "sso",
-            "list-accounts",
-            "--access-token",
-            access_token,
-            "--profile",
-            profile,
-            "--output",
-            "json",
-        ]
-    )
+    accounts = list_sso_accounts(profile, access_token)
+    if not account_name:
+        account_name = Prompt.ask(
+            ":point_right: What account name do you want to access?",
+            choices=accounts.keys(),
+        )
 
-    accounts_list = json.loads(accounts_list_json).get("accountList", "")
-    if not accounts_list:
-        print_colour("No accountList in aws response. Aborting...", "red")
-    accounts = {acc["accountName"].lower(): acc["accountId"] for acc in accounts_list}
-
-    if account_name.lower() not in accounts:
+    if account_name not in accounts:
         print_colour(
             f"Account '{account_name}' not found. Available: {list(accounts.keys())}",
             "yellow",
         )
         return
 
-    account_id = accounts[account_name.lower()]
+    account_id = accounts[account_name]
     print_colour(f"Resolved '{account_name}' to account ID {account_id}")
+
+    roles = list_account_roles(profile, account_id, access_token)
+    if not role:
+        role = Prompt.ask(
+            f":point_right: What role do you want to assume in {account_name}",
+            choices=roles,
+        )
 
     # Get role credentials
     print_colour(
         f"Fetching credentials for account {account_id}, role {role}...", "yellow"
     )
-    creds_json = subprocess.check_output(
-        [
-            "aws",
-            "sso",
-            "get-role-credentials",
-            "--account-id",
-            account_id,
-            "--role-name",
-            role,
-            "--access-token",
-            access_token,
-            "--profile",
-            profile,
-            "--output",
-            "json",
-        ]
+    env = get_role_creds_as_env(profile, account_id, role, access_token)
+
+    print_colour(
+        f"✅ New shell ready for account {account_name}:{account_id}, role {role}"
     )
-
-    creds = json.loads(creds_json).get("roleCredentials", "")
-    if not creds:
-        print_colour("No role credentials in aws response. Aborting...", "red")
-        return
-
-    env = os.environ | {
-        "AWS_ACCESS_KEY_ID": creds["accessKeyId"],
-        "AWS_SECRET_ACCESS_KEY": creds["secretAccessKey"],
-        "AWS_SESSION_TOKEN": creds["sessionToken"],
-    }
-
-    print(f"✅ New shell ready for account {account_name}:{account_id}, role {role}")
-    print("💡 Run 'eksctl get cluster --region=<cluster_region>' to verify")
+    print_colour(
+        "💡 Run 'eksctl get cluster --region=<cluster_region>' to verify", "yellow"
+    )
 
     subprocess.check_call([os.environ["SHELL"], "-l"], env=env)
 
