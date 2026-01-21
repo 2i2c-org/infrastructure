@@ -16,6 +16,8 @@ import string
 import subprocess
 import tempfile
 import textwrap
+from datetime import datetime
+from pathlib import Path
 
 import typer
 
@@ -30,7 +32,7 @@ exec_app.add_typer(
 )
 
 
-def setup_aws_env(profile, mfa_device_id, auth_token) -> dict[str, str]:
+def setup_aws_sts_env(profile, mfa_device_id, auth_token) -> dict[str, str]:
     env = os.environ | {
         "AWS_ACCESS_KEY_ID": "",
         "AWS_SECRET_ACCESS_KEY": "",
@@ -77,8 +79,129 @@ def shell(
 
     subprocess.check_call(
         [os.environ["SHELL"], "-l"],
-        env=setup_aws_env(profile, mfa_device_id, auth_token),
+        env=setup_aws_sts_env(profile, mfa_device_id, auth_token),
     )
+
+
+@aws.command()
+def sso_shell(
+    profile: str = typer.Argument(..., help="Name of AWS SSO profile to login into"),
+    account_name: str = typer.Argument(
+        "two-eye-two-see",
+        help="The name of the account under SSO that you want to login into",
+    ),
+    role: str = typer.Argument("AdministratorAccess", help="What role to assume"),
+):
+    """
+    Exec into a shell with appropriate AWS credentials for an account under SSO
+    """
+
+    cache_dir = Path.home() / ".aws" / "sso" / "cache"
+    cache_files = list(cache_dir.glob("*.json"))
+    latest_cache_file = max(cache_files, key=os.path.getctime)
+
+    def needs_sso_login():
+        if not cache_files:
+            return True
+        try:
+            with open(latest_cache_file) as f:
+                data = json.load(f)
+            expires_at_str = data.get("expiresAt")
+            if not expires_at_str:
+                return True
+
+            # Verify if the cached token has expired
+            expires_at = datetime.fromisoformat(expires_at_str)
+            return datetime.now(expires_at.tzinfo) >= expires_at
+        except:
+            return True
+
+    # Get the access token from th cached file
+    if needs_sso_login():
+        print_colour(
+            "SSO token expired or missing. Running 'aws sso login'...", "yellow"
+        )
+        subprocess.check_call(["aws", "sso", "login", "--profile", profile])
+        print_colour("Login complete")
+
+    if not cache_files:
+        print_colour("No SSO cache after login. Check SSO config.", "red")
+        return
+
+    with open(latest_cache_file) as f:
+        data = json.load(f)
+
+    access_token = data.get("accessToken", "")
+    if not access_token:
+        print_colour("Token is missing from the cache file. Aborting...", "red")
+
+    # Resolve account name to ID
+    accounts_list_json = subprocess.check_output(
+        [
+            "aws",
+            "sso",
+            "list-accounts",
+            "--access-token",
+            access_token,
+            "--profile",
+            profile,
+            "--output",
+            "json",
+        ]
+    )
+
+    accounts_list = json.loads(accounts_list_json).get("accountList", "")
+    if not accounts_list:
+        print_colour("No accountList in aws response. Aborting...", "red")
+    accounts = {acc["accountName"].lower(): acc["accountId"] for acc in accounts_list}
+
+    if account_name.lower() not in accounts:
+        print_colour(
+            f"Account '{account_name}' not found. Available: {list(accounts.keys())}",
+            "yellow",
+        )
+        return
+
+    account_id = accounts[account_name.lower()]
+    print_colour(f"Resolved '{account_name}' to account ID {account_id}")
+
+    # Get role credentials
+    print_colour(
+        f"Fetching credentials for account {account_id}, role {role}...", "yellow"
+    )
+    creds_json = subprocess.check_output(
+        [
+            "aws",
+            "sso",
+            "get-role-credentials",
+            "--account-id",
+            account_id,
+            "--role-name",
+            role,
+            "--access-token",
+            access_token,
+            "--profile",
+            profile,
+            "--output",
+            "json",
+        ]
+    )
+
+    creds = json.loads(creds_json).get("roleCredentials", "")
+    if not creds:
+        print_colour("No role credentials in aws response. Aborting...", "red")
+        return
+
+    env = os.environ | {
+        "AWS_ACCESS_KEY_ID": creds["accessKeyId"],
+        "AWS_SECRET_ACCESS_KEY": creds["secretAccessKey"],
+        "AWS_SESSION_TOKEN": creds["sessionToken"],
+    }
+
+    print(f"✅ New shell ready for account {account_name}:{account_id}, role {role}")
+    print("💡 Run 'eksctl get cluster --region=<cluster_region>' to verify")
+
+    subprocess.check_call([os.environ["SHELL"], "-l"], env=env)
 
 
 @aws.command()
@@ -94,7 +217,7 @@ def offboard(
         help="6 digit 2 factor authentication code from the MFA device (leave empty if not using MFA)",
     ),
 ):
-    env = setup_aws_env(profile, mfa_device_id, auth_token)
+    env = setup_aws_sts_env(profile, mfa_device_id, auth_token)
     print(f"Offboarding {username} from AWS account {profile}")
     access_keys = json.loads(
         subprocess.check_output(
@@ -219,7 +342,7 @@ def onboard(
         help="6 digit 2 factor authentication code from the MFA device (leave empty if not using MFA)",
     ),
 ):
-    env = setup_aws_env(profile, mfa_device_id, auth_token)
+    env = setup_aws_sts_env(profile, mfa_device_id, auth_token)
     print(f"Onboarding {new_username} to AWS account {profile}")
 
     # Check if the existing user actually exists
