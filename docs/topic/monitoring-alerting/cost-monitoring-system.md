@@ -10,7 +10,7 @@ to provide detailed cost insights from a hub's Grafana dashboard.
 For details on how to enable the cost monitoring system, see the [how-to guide](howto:cost-monitoring:enable-aws).
 
 :::{note}
-See [Cost Monitoring Availability](cost-monitoring-availability.md) for an explicit description of which clusters the Cost Monitoring System is available.
+See [Cost Monitoring Availability](cost-monitoring-availability.md) for a description of which clusters the Cost Monitoring System is available.
 :::
 
 ## Components
