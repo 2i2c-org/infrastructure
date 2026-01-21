@@ -83,9 +83,39 @@ check out [Firefox Multi-Account Containers](https://addons.mozilla.org/en-US/fi
 #### Access AWS from your terminal
 
 To use programs like `eksctl`, or `terraform`, you need to get AWS credentials that
-can be accessed from the terminal on your computer. When set up with AWS SSO, the portal
-easily provides access with _time limited_ credentials. These are valid only for **60 minutes**,
-and will need to be refreshed with new sets whenever that time is up.
+can be accessed from the terminal on your computer.
+
+##### Programmatically
+
+1. Configure a SSO profile, named 2i2c for example
+   ```bash
+   aws configure sso --profile 2i2c
+   ```
+   1. You will be presented with a prompt asking you info about this SSO profile.
+      The info that **must** be introduced is:
+      - **SSO start URL**: https://2i2c.awsapps.com/start#/
+      - **SSO region:** us-east-1 (this is where global SSO infra is located)
+   2. You will then be presented with a list of accounts available under this SSO.
+      Choose any of them (it is not relevant for this workflow)
+   3. You will then be presented with the roles options.
+      Choose the one appropriate (*not convinced it's relevant for this workflow)
+   4. Some CLI related info:
+      - **CLI default client Region**: us-east-1
+      - **CLI default output format**: json
+2. Get your creds using the deployer:
+   ```bash
+   deployer exec aws sso-shell 2i2c
+   ```
+   And then you'll be prompted to choose from a list of account names and a list of roles which one to authenticate against.
+3. Optionally, you can also run the deployer passing it all the info and an initial command to be run inside the shell
+   ```bash
+   deployer exec aws sso-shell 2i2c two-eye-two-see AdministratorAccess "eksctl get cluster --region=us-west-2"
+   ```
+
+
+##### From the Web console
+When set up with AWS SSO, the portal easily provides access with _time limited_ credentials.
+These are valid only for **60 minutes**, and will need to be refreshed with new sets whenever that time is up.
 
 1. Log-in at [2i2c.awsapps.com/start#/](https://2i2c.awsapps.com/start#/).
 2. Select an account from the list of displayed options.
