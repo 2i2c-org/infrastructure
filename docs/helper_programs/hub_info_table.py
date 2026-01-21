@@ -7,8 +7,9 @@ This is used in two places:
 """
 
 import pandas as pd
-from utils import get_cluster_provider, get_clusters_list, write_to_json_and_csv_files
 from yaml import safe_load
+
+from .utils import get_cluster_provider, get_clusters_list, write_to_json_and_csv_files
 
 
 def get_cluster_grafana_url(cluster, cluster_path):
