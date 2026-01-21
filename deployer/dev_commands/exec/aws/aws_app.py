@@ -165,6 +165,7 @@ def sso_shell(
         help="The name of the account under SSO that you want to login into",
     ),
     role: str = typer.Argument("", help="What role to assume"),
+    cmd: str = typer.Argument("", help="Command to execute inside the shell"),
 ):
     """
     Exec into a shell with appropriate AWS credentials for an account under SSO
@@ -260,7 +261,7 @@ def sso_shell(
         "💡 Run 'eksctl get cluster --region=<cluster_region>' to verify", "yellow"
     )
 
-    subprocess.check_call([os.environ["SHELL"], "-l"], env=env)
+    subprocess.check_call([os.environ["SHELL"], "-l", "-c", cmd], env=env)
 
 
 @aws.command()
