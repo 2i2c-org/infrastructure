@@ -141,10 +141,15 @@ jupyterhub:
               kubespawner_override:
                 image: ghcr.io/nasa/oceandata-notebooks:latest
             pangeoml:
-              display_name: Pangeo ML with TensorFlow 2025.12.09
+              display_name: Pangeo TensorFlow2 ML Notebook 2025.12.30
               slug: pangeoml
               kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2025.12.09
+                image: quay.io/pangeo/ml-notebook:2025.12.30
+            pangeopytorch:
+              display_name: Pangeo PyTorch ML Notebook 2025.12.30
+              slug: pangeopytorch
+              kubespawner_override:
+                image: quay.io/pangeo/pytorch-notebook:2025.12.30
             ohw:
               display_name: OceanHackWeek latest
               slug: ohw
