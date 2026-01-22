@@ -1,4 +1,4 @@
-(topic:billing:cost-monitoring)=
+(topic:monitoring-alerting:cost-monitoring)=
 # Cost Monitoring System
 
 The Cost Monitoring System is designed to monitor and attribute cloud
@@ -10,9 +10,7 @@ to provide detailed cost insights from a hub's Grafana dashboard.
 For details on how to enable the cost monitoring system, see the [how-to guide](howto:cost-monitoring:enable-aws).
 
 :::{note}
-This feature is currently available to AWS
-hosted hubs only and will be rolled out to other cloud providers in the
-future.
+See [Cost Monitoring Availability](cost-monitoring-availability.md) for a description of which clusters the Cost Monitoring System is available.
 :::
 
 ## Components

@@ -4,6 +4,7 @@ import deployer.dev_commands.debug  # noqa: F401
 import deployer.dev_commands.develop.use_cluster_credentials  # noqa: F401
 import deployer.dev_commands.exec.aws.aws_app  # noqa: F401
 import deployer.dev_commands.exec.azure  # noqa: F401
+import deployer.dev_commands.exec.cost_monitoring.cost_monitoring_app  # noqa: F401
 import deployer.dev_commands.exec.get_quota_usage  # noqa: F401
 import deployer.dev_commands.exec.infra_components  # noqa: F401
 import deployer.dev_commands.exec.promql  # noqa: F401

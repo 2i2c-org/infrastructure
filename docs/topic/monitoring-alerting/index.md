@@ -7,6 +7,8 @@ and the alerting mechanisms we implement for when something goes wrong.
 :maxdepth: 2
 grafana.md
 prometheus.md
+cost-monitoring-system.md
+cost-monitoring-availability.md
 alerting.md
 escalation-policies.md
 uptime-checks-alerts.md

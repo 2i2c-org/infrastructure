@@ -1,0 +1,57 @@
+jupyterhub:
+  ingress:
+    hosts: [umd.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [umd.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://umd-main.files.svdcdn.com/production/umd/logos/default/primary-logo-dark.svg?dm=1722455539
+          name: University of Maryland
+          url: https://umd.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://umd.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          urn:mace:incommon:umd.edu:
+            default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - tsnow03@umd.edu
+        - myoungs@umd.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-umd
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.umd.svc.cluster.local

@@ -47,10 +47,11 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://nmfs-openscapes.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
+        - fish-pace:2026-hackweek-jupyterhub
         - nmfs-openscapes:longterm-access-2i2c
         - nmfs-openscapes:2024-mentors
         - nmfs-openscapes:2024-science-teams
-        - nmfs-openscapes:2024-CoastWatch
+        - nmfs-openscapes:2026-jupyterhub
         - nmfs-openscapes:2024-nmfs-champions-cohort
         - nmfs-openscapes:2025-nmfs-champions-cohort
 
