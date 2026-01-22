@@ -114,20 +114,32 @@ basehub:
             choices:
               01-python:
                 display_name: CryoCloud Python Image
-                description: Python image maintained by the CryoCloud team
+                description: Cryo-geo-ocean environment maintained by the CryoCloud team
                 default: true
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
                   image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
-              02-r:
-                display_name: CryoCloud R Image
-                description: R environment with many geospatial libraries pre-installed
+              02-pythonpace:
+                display_name: Ocean Biology Python Image
+                description: Ocean Biology environment used by the PACE mission
+                kubespawner_override:
+                  # Image repo: https://github.com/CryoInTheCloud/hub-image
+                  image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
+              03-pythonml:
+                display_name: Machine Learning Python Image
+                description: ML environment with TensorFlow, Keras, Scikit from Pangeo
+                kubespawner_override:
+                  # Image repo: https://github.com/CryoInTheCloud/hub-image
+                  image: pangeo/ml-notebook:2025.12.30
+              04-r:
+                display_name: Py-Rocket R Image
+                description: RStudio and Python environment with many geospatial libraries
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-Rstudio-image
-                  image: quay.io/cryointhecloud/cryo-hub-r-image:c2ee1f933030
-              03-matlab:
+                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
+              05-matlab:
                 display_name: Matlab
-                description: Matlab Environment (bring your own license)
+                description: Matlab Environment (bring your own license) from Openscapes
                 kubespawner_override:
                   # From https://2i2c.freshdesk.com/a/tickets/1537
                   image: openscapes/matlab:latest
@@ -160,6 +172,7 @@ basehub:
                   cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
+                default: true
               mem_7_gb:
                 display_name: ~7 GB RAM, ~0.9 CPUs
                 allowed_groups: *regular_allowed_groups
@@ -219,7 +232,7 @@ basehub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-        description: Start a container on a dedicated node with a GPU
+        description: Start a GPU
         slug: gpu
         allowed_groups:
         - 2i2c-org:hub-access-for-2i2c-staff
@@ -236,11 +249,18 @@ basehub:
                 image: '{value}'
             choices:
               pytorch:
-                display_name: Pangeo PyTorch ML Notebook
+                display_name: PyTorch ML Image
+                description: ML environment with PyTorch from Pangeo
                 default: true
                 slug: pytorch
                 kubespawner_override:
-                  image: quay.io/pangeo/pytorch-notebook:2025.05.22
+                  image: quay.io/pangeo/pytorch-notebook:2025.12.30
+              tensorflow:
+                display_name: Machine Learning Image
+                description: ML environment with TensorFlow, Keras, Scikit from Pangeo
+                slug: tensorflow
+                kubespawner_override:
+                  image: quay.io/pangeo/ml-notebook:2025.12.30
         kubespawner_override:
           environment:
             NVIDIA_DRIVER_CAPABILITIES: compute,utility
