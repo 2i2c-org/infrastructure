@@ -15,7 +15,7 @@ The [Cost Monitoring System](./cost-monitoring-system.md) is available on select
 
 ```{csv-table}
 :header-rows: 1
-:file: cost-monitoring.csv
+:file: ../../tmp/cost-monitoring.csv
 ```
 
 % DataTables config to make the table above look nice
