@@ -19,7 +19,7 @@ Update `docs/csv/cost-monitoring.csv` used to generate this table by running `ex
 
 ```{csv-table}
 :header-rows: 1
-:file: ../../tmp/cost-monitoring.csv
+:file: ../../csv/cost-monitoring.csv
 ```
 
 % DataTables config to make the table above look nice
