@@ -3,6 +3,7 @@ Script to update data used in `docs/topic/monitoring-alerting/cost-monitoring-av
 """
 
 import asyncio
+from pathlib import Path
 
 import pandas as pd
 from ruamel.yaml import YAML
@@ -48,7 +49,11 @@ async def main():
             }
         )
     df = pd.json_normalize(avail_list)
-    df.to_csv("../docs/tmp/cost-monitoring.csv", index=False)
+    filename = Path(__file__).parent.parent.joinpath(
+        "docs", "tmp", "cost-monitoring.csv"
+    )
+    df.to_csv(filename, index=False)
+    print(f"Saved CSV to {filename}")
 
 
 if __name__ == "__main__":
