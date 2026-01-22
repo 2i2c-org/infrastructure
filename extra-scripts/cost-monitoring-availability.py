@@ -50,7 +50,7 @@ async def main():
         )
     df = pd.json_normalize(avail_list)
     filename = Path(__file__).parent.parent.joinpath(
-        "docs", "tmp", "cost-monitoring.csv"
+        "docs", "csv", "cost-monitoring.csv"
     )
     df.to_csv(filename, index=False)
     print(f"Saved CSV to {filename}")
