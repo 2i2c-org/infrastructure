@@ -13,6 +13,10 @@ The [Cost Monitoring System](./cost-monitoring-system.md) is available on select
 
 ## Reference table
 
+```{note}
+Update `docs/csv/cost-monitoring.csv` used to generate this table by running `extra-scripts/cost-monitoring-availability.py` in your local dev environment.
+```
+
 ```{csv-table}
 :header-rows: 1
 :file: ../../tmp/cost-monitoring.csv
