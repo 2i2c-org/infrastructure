@@ -258,7 +258,7 @@ basehub:
               tensorflow:
                 display_name: Machine Learning Image
                 description: ML environment with TensorFlow, Keras, Scikit from Pangeo
-                slug: pytorch
+                slug: tensorflow
                 kubespawner_override:
                   image: quay.io/pangeo/ml-notebook:2025.12.30
         kubespawner_override:
