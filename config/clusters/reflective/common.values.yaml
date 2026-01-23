@@ -60,6 +60,7 @@ jupyterhub:
         - alistairduffey
         - emilykuhn
         - aliakherati
+        - johnorcutt
   scheduling:
     userScheduler:
       enabled: true
