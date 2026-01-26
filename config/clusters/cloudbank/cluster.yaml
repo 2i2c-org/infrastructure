@@ -21,6 +21,7 @@ hubs:
   - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
+  chart_override: Z2jh-430-chart.yaml
 - name: ahs
   display_name: Albany High School
   domain: ahs.cloudbank.2i2c.cloud
