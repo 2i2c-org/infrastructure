@@ -74,7 +74,7 @@ jupyterhub:
               - /tree
               - /lab
               - /retro
-              default: /retro
+              default: /tree
               enumMetadata:
                 interfaces:
                 - value: /tree
