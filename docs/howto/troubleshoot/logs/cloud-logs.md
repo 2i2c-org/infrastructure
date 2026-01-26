@@ -187,9 +187,9 @@ Currently only control plane logs (audit, api, controllerManager, scheduler) are
 
 ### Control plane logs
 
-After going to the `Logs Insight` section, to access scheduler logs for example, you would have to select the `Log group name` to the one matching your cluster, then select the desired time window and write a query like the one below:
+After going to the `Logs Insight` section, to access scheduler logs for example, you would have to select the `Log group name` to the one matching your cluster (this will be the `source`), then select the desired time window and write a query like the one below:
 
-```sql
+```
 SELECT `@timestamp`, `@message` FROM $source
 WHERE `@aws.region` = "us-west-2"
     AND `@data_source_name` = "amazon_eks"
