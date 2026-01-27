@@ -61,8 +61,9 @@ basehub:
 
           c.Spawner.auth_state_hook = populate_token
 
-          c.JupyterHub.authenticator_class = GenericOAuthenticator
       config:
+        JupyterHub:
+          authenticator_class: generic-oauth
         GenericOAuthenticator:
           allowed_scopes:
             # This allows EarthScope to control who can login to the hub
