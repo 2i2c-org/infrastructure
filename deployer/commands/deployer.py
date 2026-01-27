@@ -7,6 +7,7 @@ import os
 import subprocess
 import sys
 from contextlib import redirect_stderr, redirect_stdout
+from pathlib import Path
 
 import pytest
 import typer
@@ -117,11 +118,15 @@ def deploy(
         for i, hub in enumerate(hubs):
             default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
             chart_override = hub.spec.get("chart_override", None)
-            chart_override_path = (
-                hub.cluster.config_dir / chart_override if chart_override else None
-            )
+            if "/" in chart_override:
+                chart_override_path = Path(chart_override).resolve()
+            else:
+                chart_override_path = (
+                    hub.cluster.config_dir / chart_override if chart_override else None
+                )
+            print(chart_override_path)
             with get_chart_dir(
-                default_chart_dir, chart_override, chart_override_path
+                default_chart_dir, chart_override.split("/")[-1], chart_override_path
             ) as chart_dir:
                 if chart_override_path:
                     print_colour(
