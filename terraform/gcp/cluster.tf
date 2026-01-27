@@ -14,9 +14,12 @@ data "google_container_engine_versions" "k8s_version_prefixes" {
   for_each       = var.k8s_version_prefixes
   version_prefix = each.value
 }
+
 output "regular_channel_latest_k8s_versions" {
   value = {
-    for k, v in data.google_container_engine_versions.k8s_version_prefixes : k => v.release_channel_latest_version["REGULAR"]
+    for k, v in data.google_container_engine_versions.k8s_version_prefixes :
+    k => try(v.release_channel_latest_version["REGULAR"], null)
+    if contains(keys(v.release_channel_latest_version), "REGULAR")
   }
 }
 
