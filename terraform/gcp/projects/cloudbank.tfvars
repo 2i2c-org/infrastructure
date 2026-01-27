@@ -130,6 +130,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "merritt"
   }
+  "mmc" = {
+    size        = 25
+    name_suffix = "mmc"
+  }
   "miracosta" = {
     size        = 60
     name_suffix = "miracosta"

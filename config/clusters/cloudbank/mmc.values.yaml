@@ -1,0 +1,59 @@
+jupyterhub:
+  ingress:
+    hosts: [mmc.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [mmc.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
+    homepage:
+      templateVars:
+        org:
+          name: Meharry Medical College
+          logo_url: https://meharry.edu/wp-content/compressx-nextgen/uploads/2025/02/Screenshot-2025-02-27-at-10.30.23%E2%80%AFPM-1030x299.png.webp
+          url: https://meharry.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://mmc.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            default: true
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - mmc.edu
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - abdullah.mamun@mmc.edu
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-mmc
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.mmc.svc.cluster.local

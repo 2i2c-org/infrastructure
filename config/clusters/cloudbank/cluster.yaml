@@ -261,6 +261,14 @@ hubs:
   - common.values.yaml
   - merritt.values.yaml
   - enc-merritt.secret.values.yaml
+- name: mmc
+  display_name: Meharry Medical College
+  domain: mmc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - mmc.values.yaml
+  - enc-mmc.secret.values.yaml
 - name: miracosta
   display_name: MiraCosta College
   domain: miracosta.cloudbank.2i2c.cloud
