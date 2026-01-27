@@ -1622,6 +1622,17 @@ jupyterhub:
         elif c.JupyterHub.authenticator_class == "github":
           print("No GitHubOAuthenticator.allowed_organizations found, setting to ['2i2c-org:hub-access-for-2i2c-staff']")
           c.GitHubOAuthenticator.allowed_organizations = ["2i2c-org:hub-access-for-2i2c-staff"]
+      10-skip_refresh_for_test_user.py: |
+        def refresh_user_hook(authenticator, user, auth_state):
+            if user.name == "deployment-service-check":
+                # if this is the user,
+                # refresh_user doesn't make sense
+                # consider it always fresh
+                return True
+            # for all other users, refresh as usual
+            return None
+
+        c.OAuthenticator.refresh_user_hook = refresh_user_hook
 
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
