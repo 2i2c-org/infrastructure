@@ -21,6 +21,7 @@ from deployer.cli_app import validate_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
+    REPO_ROOT_PATH,
 )
 from deployer.utils.jsonnet import render_jsonnet
 from deployer.utils.rendering import print_colour
@@ -331,11 +332,14 @@ def all_hub_config(
     for i, hub in enumerate(hubs):
         default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
         chart_override = hub.spec.get("chart_override", None)
-        chart_override_path = (
-            hub.cluster.config_dir / chart_override if chart_override else None
-        )
+        if "/" in chart_override:
+            chart_override_path = REPO_ROOT_PATH / chart_override
+        else:
+            chart_override_path = (
+                hub.cluster.config_dir / chart_override if chart_override else None
+            )
         with get_chart_dir(
-            default_chart_dir, chart_override, chart_override_path
+            default_chart_dir, chart_override.split("/")[-1], chart_override_path
         ) as chart_dir:
             print_colour(
                 f"{i + 1} / {len(hubs)}: Validating hub and authenticator config for {hub.spec['name']}..."
