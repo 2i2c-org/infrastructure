@@ -31,41 +31,6 @@ basehub:
           from urllib.parse import urlparse
 
           class CustomGenericOAuthenticator(GenericOAuthenticator):
-            # required_scopes functionality comes in from https://github.com/jupyterhub/oauthenticator/pull/719
-            # Can be removed from here once that PR is merged
-            required_scopes = List(
-                Unicode(),
-                config=True,
-                help="""
-                List of scopes that must be granted to allow login.
-
-                All the scopes listed in this config must be present in the OAuth2 grant
-                from the authorizing server to allow the user to login. We request all
-                the scopes listed in the 'scope' config, but only a subset of these may
-                be granted by the authorization server. This may happen if the user does not
-                have permissions to access a requested scope, or has chosen to not give consent
-                for a particular scope. If the scopes listed in this config are not granted,
-                the user will not be allowed to log in.
-
-                See the OAuth documentation of your OAuth provider for various options.
-                """,
-            )
-
-            async def check_allowed(self, username, auth_model):
-              if await super().check_allowed(username, auth_model):
-                  return True
-
-              if self.required_scopes:
-                  granted_scopes = auth_model.get('auth_state', {}).get('scope', [])
-                  missing_scopes = set(self.required_scopes) - set(granted_scopes)
-                  if missing_scopes:
-                      self.log.info(f"Denying access to user {username} - scopes {missing_scopes} were not granted, only {granted_scopes} were granted")
-                      return False
-                  else:
-                      return True
-
-              return False
-
             async def authenticate(self, *args, **kwargs):
               resp = await super().authenticate(*args, **kwargs)
               # Setup groups to be same as list of scopes granted
@@ -108,7 +73,7 @@ basehub:
           c.JupyterHub.authenticator_class = CustomGenericOAuthenticator
       config:
         CustomGenericOAuthenticator:
-          required_scopes:
+          allowed_scopes:
             # This allows EarthScope to control who can login to the hub
           - geolab
         GenericOAuthenticator:
