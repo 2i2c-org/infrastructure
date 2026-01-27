@@ -30,15 +30,6 @@ basehub:
           from traitlets import List, Unicode
           from urllib.parse import urlparse
 
-          class CustomGenericOAuthenticator(GenericOAuthenticator):
-            async def authenticate(self, *args, **kwargs):
-              resp = await super().authenticate(*args, **kwargs)
-              # Setup groups to be same as list of scopes granted
-              # This can go away after https://github.com/jupyterhub/oauthenticator/pull/735 is
-              # merged
-              resp["groups"] = resp["auth_state"]["scope"]
-              return resp
-
           def populate_token(spawner, auth_state):
             # For our deployment-service-check health check user, there is no auth_state.
             # So these env variables need not be set.
@@ -70,13 +61,13 @@ basehub:
 
           c.Spawner.auth_state_hook = populate_token
 
-          c.JupyterHub.authenticator_class = CustomGenericOAuthenticator
+          c.JupyterHub.authenticator_class = GenericOAuthenticator
       config:
-        CustomGenericOAuthenticator:
+        GenericOAuthenticator:
           allowed_scopes:
             # This allows EarthScope to control who can login to the hub
           - geolab
-        GenericOAuthenticator:
+          auth_state_groups_key: scope
           scope:
           - openid
             # This gives us refresh token
@@ -94,16 +85,6 @@ basehub:
           username_claim: sub
           # Convert 'scope' from the OAuth2 response into JupyterHub groups
           manage_groups: true
-        CILogonOAuthenticator:
-          allowed_idps:
-            http://github.com/login/oauth/authorize:
-              default: true
-              username_derivation:
-                username_claim: preferred_username
-            http://google.com/accounts/o8/id:
-              username_derivation:
-                username_claim: email
-        Authenticator:
           enable_auth_state: true
           admin_users:
           - google-oauth2|117718799995701713253   #Chad Trabant, https://2i2c.freshdesk.com/a/tickets/1279
