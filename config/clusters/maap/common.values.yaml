@@ -36,6 +36,9 @@ jupyterhub:
           name: NASA
           url: https://www.earthdata.nasa.gov/esds
   hub:
+    image:
+      name: quay.io/2i2c/z2jh-433
+      tag: 0.0.1-0.dev.git.14004.h556ee4be8
     allowNamedServers: true
     config:
       JupyterHub:

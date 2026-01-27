@@ -7,7 +7,6 @@ import os
 import subprocess
 import sys
 from contextlib import redirect_stderr, redirect_stdout
-from pathlib import Path
 
 import pytest
 import typer
@@ -29,6 +28,7 @@ from deployer.commands.validate.config import (
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
+    REPO_ROOT_PATH,
     get_decrypted_file,
 )
 from deployer.utils.rendering import print_colour
@@ -119,18 +119,18 @@ def deploy(
             default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
             chart_override = hub.spec.get("chart_override", None)
             if "/" in chart_override:
-                chart_override_path = Path(chart_override).resolve()
+                chart_override_path = REPO_ROOT_PATH / chart_override
             else:
                 chart_override_path = (
                     hub.cluster.config_dir / chart_override if chart_override else None
                 )
-            print(chart_override_path)
             with get_chart_dir(
                 default_chart_dir, chart_override.split("/")[-1], chart_override_path
             ) as chart_dir:
                 if chart_override_path:
                     print_colour(
-                        f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}"
+                        f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}, for {chart_override_path}",
+                        "yellow",
                     )
                 else:
                     print_colour(
