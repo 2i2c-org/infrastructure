@@ -98,6 +98,10 @@ persistent_disks = {
     size        = 200
     name_suffix = "humboldt"
   }
+  "kean" = {
+    size        = 25
+    name_suffix = "kean"
+  }
   "lacc" = {
     size        = 140
     name_suffix = "lacc"
