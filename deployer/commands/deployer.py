@@ -125,7 +125,9 @@ def deploy(
                 chart_override_path = (
                     hub.cluster.config_dir / chart_override if chart_override else None
                 )
-            with get_chart_dir(default_chart_dir, chart_override_path) as chart_dir:
+            with get_chart_dir(
+                default_chart_dir, chart_override, chart_override_path
+            ) as chart_dir:
                 if chart_override_path:
                     print_colour(
                         f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}, for {chart_override_path}",
