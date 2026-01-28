@@ -206,3 +206,8 @@ cython_debug/
 
 # osx
 .DS_Store
+
+cloudbank_hub_setup_guide.md
+
+# A documentation file with 'secrets' is hard
+!send-secrets.md
