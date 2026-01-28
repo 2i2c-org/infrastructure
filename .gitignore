@@ -42,6 +42,10 @@ docs/_static/hub-options-table.json
 # Don't version control any terraform state
 **.terraform.lock.hcl
 
+# Ignore GitHub skills directory only, keep the rest of .github/
+!.github/
+.github/skills/
+
 ##############################################################################
 # Python.gitignore below - Add exceptions above for easier maintenance
 # https://github.com/github/gitignore/blob/main/Python.gitignore
@@ -202,5 +206,3 @@ cython_debug/
 
 # osx
 .DS_Store
-
-cloudbank_hub_setup_guide.md
