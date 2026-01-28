@@ -43,17 +43,13 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: generic-oauth
-      KubeSpawner:
-        volumes:
-          s3fs-volume:
-            name: s3fs-volume
-            emptyDir: {}
       Authenticator:
         admin_users:
         - freitagb
         - wildintellect
         authenticator_class: generic-oauth
         enable_auth_state: true
+        auth_refresh_age: 0
       GenericOAuthenticator:
         # We want to get user data from the JWT that's the id token,
         # not from a separate userdata API call
@@ -105,6 +101,12 @@ jupyterhub:
       blockWithIptables: false
     defaultUrl: /lab
     storage:
+      extraVolumes:
+      - name: dev-shm
+        emptyDir:
+          medium: Memory
+      - name: s3fs-volume
+        emptyDir: {}
       extraVolumeMounts:
       - name: home
         mountPath: /home/jovyan/shared-public
