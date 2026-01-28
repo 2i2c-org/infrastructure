@@ -78,6 +78,7 @@ howto/manage-alerts/index.md
 howto/grafana-github-auth.md
 howto/regenerate-smce-creds.md
 howto/troubleshoot/index.md
+howto/send-secrets.md
 ```
 
 ## Topic guides
