@@ -141,6 +141,14 @@ hubs:
   - common.values.yaml
   - evc.values.yaml
   - enc-evc.secret.values.yaml
+- name: etsu
+  display_name: East Tennessee State University
+  domain: etsu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - etsu.values.yaml
+  - enc-etsu.secret.values.yaml
 - name: fresno
   display_name: Fresno City College
   domain: fresno.cloudbank.2i2c.cloud
