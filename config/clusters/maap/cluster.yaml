@@ -33,4 +33,3 @@ hubs:
   - prod.values.yaml
   - enc-common.secret.values.yaml
   - enc-prod.secret.values.yaml
-  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml

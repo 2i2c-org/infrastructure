@@ -255,8 +255,8 @@ jupyterhub:
       name: quay.io/2i2c/z2jh-433
       tag: 0.0.1-0.dev.git.14741.h1ea063d04
     extraConfig:
-      00-volumes-and-volume-mounts-as-dict:
-      03-volumes-and-volume-mounts-as-dict: |
+      # Undo unnecessary common config
+      00-volumes-and-volume-mounts-as-dict: ''
 
     config:
       GenericOAuthenticator:
