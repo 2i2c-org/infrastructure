@@ -317,6 +317,14 @@ hubs:
   - common.values.yaml
   - norco.values.yaml
   - enc-norco.secret.values.yaml
+- name: ocu
+  display_name: Oakland City University
+  domain: ocu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ocu.values.yaml
+  - enc-ocu.secret.values.yaml
 - name: palomar
   display_name: Palomar Community College
   domain: palomar.cloudbank.2i2c.cloud
