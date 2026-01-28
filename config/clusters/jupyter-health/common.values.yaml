@@ -37,8 +37,8 @@ jupyterhub:
     #        https://github.com/2i2c-org/infrastructure/pull/4968
     #
     image:
-      name: quay.io/2i2c/pkce-experiment
-      tag: 0.0.1-0.dev.git.14004.h556ee4be8
+      name: quay.io/2i2c/z2jh-433
+      tag: 0.0.1-0.dev.git.14741.h1ea063d04
     allowNamedServers: true
     config:
       JupyterHub:
