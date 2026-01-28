@@ -24,6 +24,7 @@ hubs:
   - staging.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-staging.secret.values.yaml
+  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: prod
   display_name: NASA VEDA (prod)
   domain: hub.openveda.cloud
@@ -34,6 +35,7 @@ hubs:
   - prod.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-prod.secret.values.yaml
+  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: binder
   display_name: NASA VEDA (binder)
   domain: hub.binder.openveda.cloud
@@ -41,3 +43,4 @@ hubs:
   helm_chart_values_files:
   - binder.values.yaml
   - enc-binder.secret.values.yaml
+  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml

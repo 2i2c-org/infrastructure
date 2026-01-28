@@ -10,9 +10,6 @@ basehub:
       nodeSelector:
         2i2c/hub-name: staging
     hub:
-      image:
-        # custom image built to install jupyterhub-fancy-profiles version 0.6.0 for testing
-        tag: 0.0.1-0.dev.git.14502.hff14253da
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
