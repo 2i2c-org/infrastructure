@@ -44,6 +44,8 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
+            allowed_domains:
+            - myocu.oak.edu
       Authenticator:
         admin_users:
         - sean.smorris@berkeley.edu
