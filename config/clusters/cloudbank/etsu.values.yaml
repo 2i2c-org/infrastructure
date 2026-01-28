@@ -17,7 +17,7 @@ jupyterhub:
       templateVars:
         org:
           name: East Tennessee State University
-          logo_url: https://toppng.com/uploads/preview/east-tennessee-state-buccaneers-logo-11563328430yudnb8fbu4.png
+          logo_url: https://images.sidearmdev.com/convert?url=https%3a%2f%2fdbukjj6eu5tsf.cloudfront.net%2fsidearm.sites%2fetsu.sidearmsports.com%2fimages%2f2023%2f7%2f26%2fE_gold-blue.jpg&type=webp
           url: https://www.etsu.edu/ehome/
         designed_by:
           name: 2i2c
