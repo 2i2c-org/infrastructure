@@ -28,7 +28,7 @@ from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
-HUB_CHART_PREFIX = "2i2c-custom-hub-chart"
+CUSTOM_HUB_CHART_PREFIX = "2i2c-custom-hub-chart"
 
 
 @functools.lru_cache
@@ -64,9 +64,10 @@ def _prepare_support_helm_charts_dependencies_and_schema():
 def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
     # FIXME: replace all string paths with Path objects
     hub_chart_dir = Path(hub_chart_dir)
+    cleanup_values_schema_json(hub_chart_dir)
 
     if legacy_daskub:
-        if not hub_chart_dir.name.startswith(HUB_CHART_PREFIX):
+        if not hub_chart_dir.name.startswith(CUSTOM_HUB_CHART_PREFIX):
             _generate_values_schema_json(HELM_CHARTS_DIR / "basehub")
             subprocess.check_call(["helm", "dep", "up", HELM_CHARTS_DIR / "basehub"])
     else:
@@ -155,7 +156,7 @@ def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
             # that we're copying the contents for helm-charts/basehub and not the
             # deprecated daskhub chart
             default_chart_dir = HELM_CHARTS_DIR / "basehub"
-            temp_chart_dir = tempfile.TemporaryDirectory(prefix=HUB_CHART_PREFIX)
+            temp_chart_dir = tempfile.TemporaryDirectory(prefix=CUSTOM_HUB_CHART_PREFIX)
             temp_chart_dir_name = temp_chart_dir.name
             # copy the chart directory into the temporary location
             shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)

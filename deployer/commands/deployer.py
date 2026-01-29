@@ -151,6 +151,7 @@ def deploy(
                 validate_authenticator_config(
                     cluster_name, hub.spec["name"], chart_dir, skip_refresh
                 )
+                cleanup_values_schema_json(chart_dir)
 
                 print_colour(f"{progress_str}Deploying hub {hub.spec['name']}...")
                 hub.deploy(chart_dir, dask_gateway_version, debug, dry_run)
