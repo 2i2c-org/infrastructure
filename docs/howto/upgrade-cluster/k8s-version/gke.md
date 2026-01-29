@@ -23,7 +23,7 @@ Setup your environment:
 export CLUSTER_NAME=<cluster-name>
 cd terraform/gcp
 terraform init
-terraforam workspace select $CLUSTER_NAME
+terraform workspace select $CLUSTER_NAME
 ```
 
 ### Zonal vs. regional clusters
