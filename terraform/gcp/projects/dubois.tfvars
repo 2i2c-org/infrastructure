@@ -11,9 +11,9 @@ filestores               = {}
 billing_account_id = "0157F7-E3EA8C-25AC3C"
 
 k8s_versions = {
-  min_master_version : "1.32.1-gke.1200003",
-  core_nodes_version : "1.32.1-gke.1200003",
-  notebook_nodes_version : "1.32.1-gke.1200003",
+  min_master_version : "1.34.1-gke.3971001",
+  core_nodes_version : "1.34.1-gke.3971001",
+  notebook_nodes_version : "1.34.1-gke.3971001",
 }
 
 notebook_nodes = {
