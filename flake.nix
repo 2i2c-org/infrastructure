@@ -7,16 +7,21 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs-helm.url = "github:NixOS/nixpkgs/9b100cfb67ccb2ff6e723b78d4ae2f9c88654a1c";
   };
   outputs = {
     self,
     nixpkgs,
+    nixpkgs-helm,
     flake-utils,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+      };
+      pkgs-helm = import nixpkgs-helm {
+        inherit system;
       };
       inherit (pkgs) lib;
 
@@ -44,7 +49,7 @@
           # Infra packages
           age
           go-jsonnet
-          kubernetes-helm
+          pkgs-helm.kubernetes-helm
           kubectl
           sops
           gdk
