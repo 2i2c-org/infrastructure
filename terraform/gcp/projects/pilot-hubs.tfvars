@@ -47,10 +47,20 @@ persistent_disks = {
 }
 
 notebook_nodes = {
-  "n2-highmem-4" : {
+  "n2-highmem-4-b" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
+  },
+  "n2-highmem-16" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
+  },
+  "n2-highmem-64" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
   },
   "n2-highmem-8-ucmerced" : {
     min : 0,
@@ -68,15 +78,12 @@ notebook_nodes = {
       "hub-name" : "ucmerced",
     },
   },
-  "n2-highmem-16" : {
+  # Delete the below once it's not in use
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
-    machine_type : "n2-highmem-16",
-  },
-  "n2-highmem-64" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-64",
+    machine_type : "n2-highmem-4",
+    node_version : "1.32.1-gke.1357001",
   },
 }
 
