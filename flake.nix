@@ -34,6 +34,7 @@
       packages =
         [
           python
+          python.pkgs.venvShellHook
         ]
         ++ (with pkgs; [
           cmake
@@ -53,36 +54,6 @@
           openstack
           eksctl
         ]);
-      shellHook = ''
-        # Unset leaky PYTHONPATH
-        unset PYTHONPATH
-
-        __hash=$(echo ${python.interpreter} | sha256sum)
-
-        # Setup if not defined ####
-        if [[ ! -f ".venv/$__hash" ]]; then
-            __setup_env() {
-                # Remove existing venv
-                if [[ -d .venv ]]; then
-                    rm -r .venv
-                fi
-
-                # Stand up new venv
-                ${python.interpreter} -m venv .venv
-
-                ".venv/bin/python" -m pip install -e ".[dev]"
-
-                # Add a marker that marks this venv as "ready"
-                touch ".venv/$__hash"
-            }
-
-            __setup_env
-        fi
-        ###########################
-
-        # Activate venv
-        source .venv/bin/activate
-      '';
       env = lib.optionalAttrs pkgs.stdenv.isLinux {
         # Python uses dynamic loading for certain libraries.
         # We'll set the linker path instead of patching RPATH
@@ -90,7 +61,16 @@
       };
     in {
       devShell = pkgs.mkShell {
-        inherit env packages shellHook;
+        inherit env packages;
+
+        venvDir = "./.venv";
+        postShellHook = ''
+          unset SOURCE_DATE_EPOCH PYTHONPATH
+        '';
+        postVenvCreation = ''
+          unset SOURCE_DATE_EPOCH PYTHONPATH
+          pip install -e ".[dev]"
+        '';
       };
     });
 }
