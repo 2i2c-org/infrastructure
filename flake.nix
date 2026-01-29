@@ -23,6 +23,13 @@
       gdk = pkgs.google-cloud-sdk.withExtraComponents (with pkgs.google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
       ]);
+      openstack = python.pkgs.toPythonApplication (
+        python.pkgs.python-openstackclient.overridePythonAttrs (oldAttrs: {
+          dependencies =
+            (oldAttrs.dependencies or [])
+            ++ [python.pkgs.python-magnumclient];
+        })
+      );
       python = pkgs.python313;
       packages =
         [
@@ -43,6 +50,7 @@
           awscli2
           azure-cli
           terraform
+          openstack
           eksctl
         ]);
       shellHook = ''
