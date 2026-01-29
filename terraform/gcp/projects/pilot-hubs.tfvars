@@ -12,7 +12,7 @@ k8s_versions = {
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
   min_master_version : "1.34.1-gke.3971001",
-  core_nodes_version : "1.32.1-gke.1357001",
+  core_nodes_version : "1.34.1-gke.3971001",
   notebook_nodes_version : "1.32.1-gke.1357001",
   dask_nodes_version : "1.32.1-gke.1357001",
 }
