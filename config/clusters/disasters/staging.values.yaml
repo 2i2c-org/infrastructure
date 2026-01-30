@@ -10,6 +10,9 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: staging
   hub:
+    image:
+      name: quay.io/2i2c/z2jh-433
+      tag: 0.0.1-0.dev.git.14741.h1ea063d04
     config:
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
@@ -17,6 +20,8 @@ jupyterhub:
         oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
         token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
+      Authenticator:
+        auth_refresh_age: 0
   ingress:
     hosts: [staging.hub.disasters.2i2c.cloud]
     tls:

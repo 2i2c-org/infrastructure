@@ -1,8 +1,0 @@
-# Image lives at quay.io/2i2c/pkce-experiment
-# install oauthenticator 17.3,
-# which adds PKCE and refresh_token support
-# experiment no longer needed when base chart is updated to z2jh 4.1.0
-oauthenticator>=17.3,<18
-
-# Brings in https://github.com/yuvipanda/jupyterhub-fancy-profiles
-jupyterhub-fancy-profiles==0.3.10

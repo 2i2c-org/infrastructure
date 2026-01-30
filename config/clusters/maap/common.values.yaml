@@ -103,7 +103,6 @@ jupyterhub:
           c.KubeSpawner.volume_mounts = {}
           for idx, volume_mount in enumerate(existing_volume_mounts):
             c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
-
         c.KubeSpawner.volumes["s3fs-volume"] = {"name": "s3fs-volume", "emptyDir": {}}
   singleuser:
     extraFiles:

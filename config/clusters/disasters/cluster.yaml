@@ -23,6 +23,7 @@ hubs:
   - staging.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-staging.secret.values.yaml
+  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: prod
   display_name: Disasters
   domain: hub.disasters.2i2c.cloud

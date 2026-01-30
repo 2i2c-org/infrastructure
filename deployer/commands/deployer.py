@@ -28,6 +28,7 @@ from deployer.commands.validate.config import (
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
+    REPO_ROOT_PATH,
     get_decrypted_file,
 )
 from deployer.utils.rendering import print_colour
@@ -117,15 +118,20 @@ def deploy(
         for i, hub in enumerate(hubs):
             default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
             chart_override = hub.spec.get("chart_override", None)
-            chart_override_path = (
-                hub.cluster.config_dir / chart_override if chart_override else None
-            )
+            if chart_override and "/" in chart_override:
+                chart_override_path = REPO_ROOT_PATH / chart_override
+                chart_override = chart_override.split("/")[-1]
+            else:
+                chart_override_path = (
+                    hub.cluster.config_dir / chart_override if chart_override else None
+                )
             with get_chart_dir(
                 default_chart_dir, chart_override, chart_override_path
             ) as chart_dir:
                 if chart_override_path:
                     print_colour(
-                        f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}"
+                        f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}, for {chart_override_path}",
+                        "yellow",
                     )
                 else:
                     print_colour(
@@ -145,6 +151,7 @@ def deploy(
                 validate_authenticator_config(
                     cluster_name, hub.spec["name"], chart_dir, skip_refresh
                 )
+                cleanup_values_schema_json(chart_dir)
 
                 print_colour(f"{progress_str}Deploying hub {hub.spec['name']}...")
                 hub.deploy(chart_dir, dask_gateway_version, debug, dry_run)
