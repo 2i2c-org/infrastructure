@@ -89,7 +89,7 @@ Normally we don't want to drain user nodes. As such, the best strategy _for now_
     ],
   },
 ```
-
+In future, we might want to look at using the autoscaled blue-green strategy to handle this process automatically: https://docs.cloud.google.com/kubernetes-engine/docs/concepts/node-pool-upgrade-strategies#autoscaled-blue-green-upgrade-strategy
 ````
 
 Unlike with the control plane, you can jump straight from the current version to the desired version.
