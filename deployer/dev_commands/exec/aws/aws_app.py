@@ -9,6 +9,7 @@ Google Cloud's `gcloud` is more user friendly than AWS's `aws`,
 so we have some augmented methods here primarily for AWS use.
 """
 
+import configparser
 import json
 import os
 import secrets
@@ -175,13 +176,16 @@ def sso_shell(
     cache_files = list(cache_dir.glob("*.json"))
 
     # Get the start_url of the profile
-    start_url = (
-        subprocess.check_output(
-            ["aws", "configure", "get", "sso_start_url", "--profile", profile]
-        )
-        .decode()
-        .strip()
-    )
+    config_path = Path(os.environ.get("AWS_CONFIG_FILE", "~/.aws/config")).expanduser()
+    parser = configparser.ConfigParser()
+    parser.read(config_path)
+    profile_config = parser[f"profile {profile}"]
+    try:
+        sso_start_url = profile_config["sso_start_url"]
+    except KeyError:
+        sso_session_name = profile_config["sso_session"]
+        sso_session_config = parser[f"sso-session {sso_session_name}"]
+        sso_start_url = sso_session_config["sso_start_url"]
 
     def needs_sso_login():
         if not cache_files:
@@ -192,7 +196,7 @@ def sso_shell(
                 data = json.load(f)
             expires_at_str = data.get("expiresAt")
             url = data.get("startUrl")
-            if url != start_url:
+            if url != sso_start_url:
                 return True
             if not expires_at_str:
                 return True
