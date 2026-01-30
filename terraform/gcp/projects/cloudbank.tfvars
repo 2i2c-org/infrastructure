@@ -286,6 +286,7 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
+  # TODO: remove this if it's empty in future.
   "n2-highmem-4-b" : {
     min : 0,
     max : 100,
