@@ -58,9 +58,6 @@ basehub:
             url: https://www.earthdata.nasa.gov/esds
     hub:
       allowNamedServers: true
-      image:
-        name: quay.io/2i2c/z2jh-433
-        tag: 0.0.1-0.dev.git.14741.h1ea063d04
       config:
         JupyterHub:
           authenticator_class: github
