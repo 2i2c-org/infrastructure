@@ -71,4 +71,25 @@ First, upgrade the core node pool by updating the `core_nodes_version` variable 
 
 Then upgrade the server node pools by updating the `notebook_node_version` variable, and the `dask_nodes_version` variable if present, and plan and apply the changes.
 
+````{note}
+Normally we don't want to drain user nodes. As such, the best strategy _for now_ is to create a new node pool that will run the new k8s version. The existing nodepool should have the following changes:
+```{code} terraform
+  "my-existing-nodepool-name" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+    node_version : "<OLD-GKE-VERSION>",
+    taints : [
+      # Prevent new pods from scheduling here.
+      {
+        key : "manual-phaseout"
+        value : "noop"
+        effect : "NO_SCHEDULE"
+      }
+    ],
+  },
+```
+
+````
+
 Unlike with the control plane, you can jump straight from the current version to the desired version.
