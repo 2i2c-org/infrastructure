@@ -268,10 +268,10 @@ k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
-  min_master_version : "1.32.1-gke.1357001",
-  core_nodes_version : "1.32.1-gke.1357001",
-  notebook_nodes_version : "1.32.1-gke.1357001",
-  dask_nodes_version : "1.32.1-gke.1357001",
+  min_master_version : "1.34.1-gke.3971001",
+  core_nodes_version : "1.34.1-gke.3971001",
+  notebook_nodes_version : "1.34.1-gke.3971001",
+  dask_nodes_version : "1.34.1-gke.3971001",
 }
 
 core_node_machine_type = "n2-highmem-2"
@@ -281,10 +281,24 @@ core_node_max_count   = 30
 enable_network_policy = true
 
 notebook_nodes = {
+  "n2-highmem-4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+  },
+  # TODO: remove this if it's empty in future.
   "n2-highmem-4-b" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
+    node_version : "1.32.1-gke.1357001",
+    taints : [
+      {
+        key : "manual-phaseout"
+        value : "noop"
+        effect : "NO_SCHEDULE"
+      }
+    ],
   },
   "n2-highmem-16" : {
     min : 0,
