@@ -73,8 +73,9 @@ Then upgrade the server node pools by updating the `notebook_node_version` varia
 
 ````{note}
 Normally we don't want to drain user nodes. As such, the best strategy _for now_ is to create a new node pool that will run the new k8s version. The existing nodepool should have the following changes:
-```{code} terraform
+```
 notebook_nodes = {
+  # ...
   "my-existing-nodepool-name" : {
     min : 0,
     max : 100,
