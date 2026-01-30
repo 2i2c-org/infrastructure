@@ -47,7 +47,7 @@ persistent_disks = {
 }
 
 notebook_nodes = {
-  "n2-highmem-4-b" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
@@ -77,14 +77,7 @@ notebook_nodes = {
     resource_labels : {
       "hub-name" : "ucmerced",
     },
-  },
-  # Delete the below once it's not in use
-  "n2-highmem-4" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-4",
-    node_version : "1.32.1-gke.1357001",
-  },
+  }
 }
 
 # Setup a single node pool for dask workers.
