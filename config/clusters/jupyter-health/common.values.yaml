@@ -32,10 +32,6 @@ jupyterhub:
           name: Jupyter Health
           url: https://github.com/jupyterhealth/
   hub:
-    # FIXME: Experiment to use oauthenticator 17.1, should be transitioned away
-    #        as part of upgrading to z2jh 4, see
-    #        https://github.com/2i2c-org/infrastructure/pull/4968
-    #
     image:
       name: quay.io/2i2c/z2jh-433
       tag: 0.0.1-0.dev.git.14741.h1ea063d04
