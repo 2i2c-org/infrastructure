@@ -265,7 +265,11 @@ def sso_shell(
         "💡 Run 'eksctl get cluster --region=<cluster_region>' to verify", "yellow"
     )
 
-    subprocess.check_call([os.environ["SHELL"], "-l", "-c", cmd], env=env)
+    args = [os.environ["SHELL"], "-l"]
+    if cmd:
+        args.extend(["-c", "cmd"])
+
+    subprocess.check_call(args, env=env)
 
 
 @aws.command()
