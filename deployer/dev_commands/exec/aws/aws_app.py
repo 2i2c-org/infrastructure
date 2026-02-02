@@ -583,15 +583,13 @@ def onboard(
     )
     if password:
         print_colour(
-            textwrap.dedent(
-                f"""
+            textwrap.dedent(f"""
                 Hey {new_username}! I have created an account for you in {profile}.
                 The password was randomly generated and you must change it on first login.
 
                 Use the following link to log in: https://{account_id}.signin.aws.amazon.com/console
                 The password is: {password}
-                """
-            ),
+                """),
             "yellow",
         )
     else:
