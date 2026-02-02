@@ -10,7 +10,7 @@ jupyterhub:
       guarantee: 1G
       limit: 2G
     image:
-      name: cal-icor-hubs/user-images/cloudbank-etsu-image
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/cloudbank-etsu-image
       tag: ab29550edcd8
   custom:
     2i2c:
