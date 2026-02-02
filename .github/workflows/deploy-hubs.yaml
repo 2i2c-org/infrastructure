@@ -81,7 +81,7 @@ jobs:
         # this job is re-attempted as part of the same workflow run after
         # succeeding previously.
     - name: Save pip's install cache on job completion
-      uses: actions/cache@v5
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ github.run_id }}
@@ -165,7 +165,7 @@ jobs:
         (steps.generate-jobs.outputs.support-jobs != '[]' ||
         steps.generate-jobs.outputs.staging-jobs != '[]' ||
         steps.generate-jobs.outputs.prod-jobs != '[]')
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v5
       with:
         name: pr
         path: |
@@ -233,12 +233,10 @@ jobs:
       failure_reflective: ${{ steps.declare-failure.outputs.failure_reflective }}
       failure_smithsonian: ${{ steps.declare-failure.outputs.failure_smithsonian }}
       failure_strudel: ${{ steps.declare-failure.outputs.failure_strudel }}
-      failure_ubc-eoas: ${{ steps.declare-failure.outputs.failure_ubc-eoas }}
       failure_utoronto: ${{ steps.declare-failure.outputs.failure_utoronto }}
       failure_victor: ${{ steps.declare-failure.outputs.failure_victor }}
       failure_berkeley_geojupyter: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter }}
       failure_temple: ${{ steps.declare-failure.outputs.failure_temple }}
-      failure_ucmerced: ${{ steps.declare-failure.outputs.failure_ucmerced }}
 
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -476,13 +474,11 @@ jobs:
       failure_reflective_staging: ${{ steps.declare-failure.outputs.failure_reflective_staging }}
       failure_smithsonian_staging: ${{ steps.declare-failure.outputs.failure_smithsonian_staging }}
       failure_strudel_staging: ${{ steps.declare-failure.outputs.failure_strudel_staging }}
-      failure_ubc-eoas_staging: ${{ steps.declare-failure.outputs.failure_ubc-eoas_staging }}
       failure_utoronto_staging: ${{ steps.declare-failure.outputs.failure_utoronto_staging }}
       failure_utoronto_r-staging: ${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
       failure_berkeley_geojupyter_staging: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter_staging }}
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
-      failure_ucmerced_staging: ${{ steps.declare-failure.outputs.failure_ucmerced_staging }}
 
     steps:
     - uses: actions/checkout@v6
