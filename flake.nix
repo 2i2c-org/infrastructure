@@ -25,6 +25,7 @@
       };
       inherit (pkgs) lib;
 
+      # Configure packages that need additional deps
       gdk = pkgs.google-cloud-sdk.withExtraComponents (with pkgs.google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
       ]);
@@ -35,7 +36,11 @@
             ++ [python.pkgs.python-magnumclient];
         })
       );
+      # Define our interpreter
       python = pkgs.python313;
+      manyLinux = pkgs.pythonManylinuxPackages.manylinux2014;
+
+      # Define our env packages (including the above)
       packages =
         [
           python
@@ -59,23 +64,45 @@
           openstack
           eksctl
         ]);
-      env = lib.optionalAttrs pkgs.stdenv.isLinux {
-        # Python uses dynamic loading for certain libraries.
-        # We'll set the linker path instead of patching RPATH
-        LD_LIBRARY_PATH = lib.makeLibraryPath pkgs.pythonManylinuxPackages.manylinux2014;
-      };
     in {
-      devShell = pkgs.mkShell {
-        inherit env packages;
+      devShell = let
+        # Unset these unwanted env vars
+        # PYTHONPATH bleeds from Nix Python packages
+        unwantedEnvPreamble = ''
+          unset SOURCE_DATE_EPOCH PYTHONPATH
+        '';
+      in
+        pkgs.mkShell rec {
+          inherit packages;
+          # Define additional input for patching interpreter
+          nativeBuildInputs = [pkgs.makeWrapper];
 
-        venvDir = "./.venv";
-        postShellHook = ''
-          unset SOURCE_DATE_EPOCH PYTHONPATH
-        '';
-        postVenvCreation = ''
-          unset SOURCE_DATE_EPOCH PYTHONPATH
-          pip install -e ".[dev]"
-        '';
-      };
+          venvDir = "./.venv";
+
+          # Drop bad env vars on activation
+          postShellHook = unwantedEnvPreamble;
+
+          # Setup venv by patching interpreter with LD_LIBRARY_PATH
+          # This is required because ld does not exist on Nix systems
+          postVenvCreation = let
+            # Prepare to wrap venv with LD_LIBRARY_PATH
+            libraryEnvVar =
+              if (!pkgs.stdenv.isDarwin)
+              then "LD_LIBRARY_PATH"
+              else "DYLD_LIBRARY_PATH";
+            # Find the interpreter of the venv
+            interpreterPath = lib.path.subpath.join [venvDir "bin" (baseNameOf python.interpreter)];
+          in
+            unwantedEnvPreamble
+            # Patch the venv to find the dynamic libs
+            + ''
+              wrapProgram "${interpreterPath}" --prefix "${libraryEnvVar}" : "${lib.makeLibraryPath manyLinux}"
+            ''
+            +
+            # Install package
+            ''
+              pip install -e ".[dev]"
+            '';
+        };
     });
 }
