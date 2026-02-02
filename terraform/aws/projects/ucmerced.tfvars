@@ -21,7 +21,7 @@ ebs_volumes = {
   "prod" = {
     name_suffix = "prod",
     type        = "gp3",
-    size        = 265,
+    size        = 280,
     tags        = { "2i2c:hub-name" : "prod" },
   },
 
