@@ -77,7 +77,7 @@
           # Define additional input for patching interpreter
           nativeBuildInputs = [pkgs.makeWrapper];
 
-          venvDir = "./.venv";
+          venvDir = ".venv";
 
           # Drop bad env vars on activation
           postShellHook = unwantedEnvPreamble;
@@ -91,12 +91,12 @@
               then "LD_LIBRARY_PATH"
               else "DYLD_LIBRARY_PATH";
             # Find the interpreter of the venv
-            interpreterPath = lib.path.subpath.join [venvDir "bin" (baseNameOf python.interpreter)];
+            interpreterSubPath = lib.path.subpath.join ["bin" (baseNameOf python.interpreter)];
           in
             unwantedEnvPreamble
             # Patch the venv to find the dynamic libs
             + ''
-              wrapProgram "${interpreterPath}" --prefix "${libraryEnvVar}" : "${lib.makeLibraryPath manyLinux}"
+              wrapProgram "$VIRTUAL_ENV/${interpreterSubPath}" --prefix "${libraryEnvVar}" : "${lib.makeLibraryPath manyLinux}"
             ''
             +
             # Install package
