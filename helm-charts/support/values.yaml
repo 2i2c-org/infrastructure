@@ -393,14 +393,15 @@ cryptnono:
         cpu: 5m
         memory: 100Mi
 
+  metrics:
+    enabled: true
+
   detectors:
     execwhacker:
       enabled: true
       # Cryptnono can get information about what container the kill was in, so we can identify which
       # user was cryptomining
       containerdHostPath: /run/containerd/containerd.sock
-      metrics:
-        enabled: true
       configs:
         unencrypted-test-01:
           bannedCommandStrings:
