@@ -96,7 +96,8 @@ local lowerCaseLetter(i) = std.char(97 + i);
                 config: extraKubeletConfig,
               },
             },
-          }
+          },
+          quote_keys=false
         ),
       }
   ),
