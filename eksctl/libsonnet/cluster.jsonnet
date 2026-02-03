@@ -16,6 +16,7 @@ local lowerCaseLetter(i) = std.char(97 + i);
    - extraTaints [array[dict[string, string]]]: Extra taints to add to nodes in this nodeGroup.
                                                 List of dicts with keys 'key', 'value', 'effect'
    - extraTags [dict[string, string]]: Extra resource tags to add to EC2 instances spawned by this nodeGroup
+   - extraKubeletConfig [dict[string, any]]: Extra kubelet configuration
    */
   makeNodeGroup(
     clusterName,
@@ -27,7 +28,8 @@ local lowerCaseLetter(i) = std.char(97 + i);
     maxSize,
     extraLabels={},
     extraTaints=[],
-    extraTags={}
+    extraTags={},
+    extraKubeletConfig=null,
   ):: {
     /**
      Generate EC2 resource tags representing node labels that cluster autoscaler's autodiscovery understands
@@ -81,7 +83,24 @@ local lowerCaseLetter(i) = std.char(97 + i);
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': clusterName,
     } + extraTags,
-  },
+  } + (
+    // Allow custom kubelet config
+    if std.type(extraKubeletConfig) == 'null' then {} else
+      {
+        overrideBootstrapCommand: std.manifestYamlDoc(
+          {
+            apiVersion: 'node.eks.aws/v1alpha1',
+            kind: 'NodeConfig',
+            spec: {
+              kubelet: {
+                config: extraKubeletConfig,
+              },
+            },
+          },
+          quote_keys=false
+        ),
+      }
+  ),
 
   makeCoreNodeGroup(
     clusterName,
@@ -154,7 +173,10 @@ local lowerCaseLetter(i) = std.char(97 + i);
     extraTags={
       '2i2c:node-purpose': 'user',
       '2i2c:hub-name': hubName,
-    } + extraTags
+    } + extraTags,
+    extraKubeletConfig={
+      singleProcessOOMKill: true,
+    },
   ) + {
     _kind:: 'notebook',
     _hubName:: hubName,
@@ -236,7 +258,10 @@ local lowerCaseLetter(i) = std.char(97 + i);
         ],
         extraTags={
           '2i2c:node-purpose': 'worker',
-        }
+        },
+        extraKubeletConfig={
+          singleProcessOOMKill: true,
+        },
       ) +
       {
         _kind:: 'dask-worker',
