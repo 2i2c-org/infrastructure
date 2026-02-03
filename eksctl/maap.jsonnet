@@ -17,7 +17,7 @@ local c = cluster.makeCluster(
     'r7i.4xlarge',
     'r6i.4xlarge',
   ],
-  hubs=['staging', 'prod'],
+  hubs=['staging', 'prod', 'uat'],
   notebookGPUNodeGroups=[
     {
       instanceType: 'g4dn.xlarge',

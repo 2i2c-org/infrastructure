@@ -24,6 +24,16 @@ hubs:
   - enc-common.secret.values.yaml
   - enc-staging.secret.values.yaml
   chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
+- name: uat
+  display_name: MAAP - UAT
+  domain: hub.uat.maap-project.org
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - uat.values.yaml
+  - enc-common.secret.values.yaml
+  - enc-uat.secret.values.yaml
+  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: prod
   display_name: MAAP - prod
   domain: hub.maap-project.org
