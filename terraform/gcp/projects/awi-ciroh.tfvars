@@ -11,7 +11,7 @@ filestores               = {}
 
 persistent_disks = {
   "staging" = {
-    size        = 150 # in GiB
+    size        = 165 # in GiB
     name_suffix = "staging"
   }
   "prod" = {
