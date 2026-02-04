@@ -112,6 +112,12 @@ basehub:
                 kubespawner_override:
                   image: quay.io/awiciroh/ngiab-2i2c:v1.2.1
                   image_pull_policy: Always
+              devcon8:
+                display_name: Community Assets Computation Hub
+                slug: devcon8
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon25:symfluence
+                  image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
           mem_guarantee: 5G
