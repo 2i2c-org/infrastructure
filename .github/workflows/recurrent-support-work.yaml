@@ -12,17 +12,18 @@ jobs:
       issues: write
     steps:
     - name: Check if valid week
+      continue-on-error: false
       run: |
         WEEK=$(date +%V)
         if [ $((WEEK % 2)) -ne 0 ]; then
             echo "Skipping this week"
-            exit 0
+            exit 1
         fi
     - name: Get Deadline
       id: get_deadline
       run: |
-        echo "deadline=$(date -d '+14 days' +'%B %d')" >> $GITHUB_ENV
-        echo "deadline_as_iso_date=$(date -d '+14 days' +"%Y-%m-%d")" >> $GITHUB_ENV
+        echo "deadline=$(date -d '+28 days' +'%B %d')" >> $GITHUB_ENV
+        echo "deadline_as_iso_date=$(date -d '+28 days' +"%Y-%m-%d")" >> $GITHUB_ENV
     - name: Create issue
       run: |
         issue=$(gh issue create \
