@@ -14,19 +14,13 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      # Mark this pod as a critical add-on; when enabled, the critical add-on scheduler
-      # reserves resources for critical add-on pods so that they can be rescheduled after
-      # a failure.  This annotation works in tandem with the toleration below.
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ""
       labels:
         app.kubernetes.io/name: disable-coredumps
         app.kubernetes.io/component: disable-coredumps
     spec:
       hostPID: true # Access the host's PID namespace for sysctl commands
       tolerations:
-      # Allow this pod to be rescheduled while the node is in "critical add-ons only" mode.
-      # This, along with the annotation above marks this pod as a critical add-on.
+      # This, along with the priorityClassName below marks this pod as a critical add-on.
       - key: CriticalAddonsOnly
         operator: Exists
       - key: nvidia.com/gpu
