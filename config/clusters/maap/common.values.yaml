@@ -209,7 +209,7 @@ jupyterhub:
               display_name: Modified Pangeo Notebook
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
-                image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.08.14-v2
+                image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.12.30-v1
                 init_containers:
                 # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                 # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
