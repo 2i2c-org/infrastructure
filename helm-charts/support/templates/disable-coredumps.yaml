@@ -71,4 +71,14 @@ spec:
             drop: ["ALL"]
         resources:
           {{- toYaml .Values.disableCoredumps.resources.pauseContainer | nindent 10 }}
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - test "$(cat /proc/sys/kernel/core_pattern)" = "|/bin/false"
+          initialDelaySeconds: 5
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 1
 {{- end }}
