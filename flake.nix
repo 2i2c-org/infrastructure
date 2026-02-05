@@ -85,18 +85,13 @@
           # Setup venv by patching interpreter with LD_LIBRARY_PATH
           # This is required because ld does not exist on Nix systems
           postVenvCreation = let
-            # Prepare to wrap venv with LD_LIBRARY_PATH
-            libraryEnvVar =
-              if (!pkgs.stdenv.isDarwin)
-              then "LD_LIBRARY_PATH"
-              else "DYLD_LIBRARY_PATH";
             # Find the interpreter of the venv
             interpreterSubPath = lib.path.subpath.join ["bin" (baseNameOf python.interpreter)];
           in
             unwantedEnvPreamble
             # Patch the venv to find the dynamic libs
             + ''
-              wrapProgram "$VIRTUAL_ENV/${interpreterSubPath}" --prefix "${libraryEnvVar}" : "${lib.makeLibraryPath manyLinux}"
+              wrapProgram "$VIRTUAL_ENV/${interpreterSubPath}" --prefix "LD_LIBRARY_PATH" : "${lib.makeLibraryPath manyLinux}"
             ''
             +
             # Install package
