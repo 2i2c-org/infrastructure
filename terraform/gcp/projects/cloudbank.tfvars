@@ -90,6 +90,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "golden"
   }
+  "gpu-demo" = {
+    size        = 25
+    name_suffix = "gpu-demo"
+  }
   "gwu" = {
     size        = 300
     name_suffix = "gwu"
@@ -299,6 +303,16 @@ notebook_nodes = {
         effect : "NO_SCHEDULE"
       }
     ],
+  },
+  "gpu-t4": {
+    min: 0,
+    max: 16,
+    machine_type: "n1-highmem-8",
+    gpu: {
+      enabled: true,
+      type: "nvidia-tesla-t4",
+      count: 1,
+    },
   },
   "n2-highmem-16" : {
     min : 0,
