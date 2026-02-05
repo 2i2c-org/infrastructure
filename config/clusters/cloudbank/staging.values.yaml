@@ -5,6 +5,7 @@ jupyterhub:
     - hosts: [staging.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
+    defaultUrl: /lab
     memory:
       # Increased to help deal with possible kernel restarts
       # https://2i2c.freshdesk.com/a/tickets/567
@@ -13,6 +14,11 @@ jupyterhub:
     image:
       name: quay.io/ccsf/jupyterhub
       tag: sp26.4
+    storage:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/submit
+          subPath: _shared-private/{escaped_username}
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -32,6 +38,11 @@ jupyterhub:
         funded_by:
           name: 2i2c
           url: https://2i2c.org
+    singleuserAdmin:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/collect
+          subPath: _shared-private
   hub:
     config:
       JupyterHub:
@@ -45,6 +56,7 @@ jupyterhub:
               username_claim: email
             allowed_domains:
             - mail.ccsf.edu
+            - ausdk12.org
       OAuthenticator:
         # WARNING: Don't use allow_existing_users with config to allow an
         #          externally managed group of users, such as
