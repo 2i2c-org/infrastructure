@@ -23,7 +23,6 @@ local c = cluster.makeCluster(
       instanceType: 'g4dn.xlarge',
     },
   ],
-  // TODO: remove `f` once user nodes are empty
-  nodeGroupGenerations=['f', 'g']
+  nodeGroupGenerations=['g']
 );
 c
