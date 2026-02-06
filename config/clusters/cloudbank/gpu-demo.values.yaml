@@ -7,14 +7,28 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     memory:
-      guarantee: 512M
-      limit: 1G
+      guarantee: 4G
+      limit: 4G
     profileList:
     - display_name: "NVIDIA Tesla T4, ~16 GB, ~4 CPUs"
       description: "Start a container on a dedicated node with a GPU"
       allowed_groups:
         - 2i2c-org:hub-access-for-2i2c-staff
         - ucb-ds:gpu-permitted
+      profile_options:
+        image:
+          display_name: Image
+          choices:
+            tensorflow:
+              display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
+              slug: tensorflow
+              kubespawner_override:
+                image: pangeo/ml-notebook:2026.01.30
+            pytorch:
+              display_name: Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: pytorch
+              kubespawner_override:
+                image: pangeo/pytorch-notebook:2026.01.30
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
@@ -57,6 +71,7 @@ jupyterhub:
         admin_users:
         - sean-morris
         - ericvd-ucb
+        - yuvipanda
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gpu-demo
