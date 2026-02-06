@@ -168,7 +168,7 @@ jupyterhub:
           command:
           - sh
           - -c
-          - [ -f /tmp/active ]
+          - [-f /tmp/active]
         initialDelaySeconds: 60
         periodSeconds: 5
         failureThreshold: 1
