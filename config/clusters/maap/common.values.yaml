@@ -163,20 +163,6 @@ jupyterhub:
       image_pull_policy: Always
       securityContext:
         privileged: true
-      livenessProbe:
-        # This automatically restarts just this container every 45 minutes
-        # This is a *temporary* workaround, with a present expiry date of Feb 23, 2026
-        # The date must be extended, or a different workaround must be found, or something
-        # else must be agreed to by that date.
-        # See https://github.com/2i2c-org/infrastructure/pull/7601 for more information
-        exec:
-          command:
-          - sh
-          - -c
-          - [-f /tmp/active]
-        initialDelaySeconds: 60
-        periodSeconds: 5
-        failureThreshold: 1
       resources:
         limits:
           memory: 512Mi
