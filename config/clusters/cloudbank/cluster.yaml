@@ -211,6 +211,15 @@ hubs:
   - gwu.values.yaml
   - enc-gwu.secret.values.yaml
   chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
+- name: gpu-demo
+  display_name: CloudBank Classroom - GPU Demo
+  domain: gpu-demo.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - gpu-demo.values.yaml
+  - enc-gpu-demo.secret.values.yaml
+  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: high
   display_name: High School Experimental Hub
   domain: high.cloudbank.2i2c.cloud

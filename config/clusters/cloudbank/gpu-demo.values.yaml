@@ -1,0 +1,80 @@
+jupyterhub:
+  ingress:
+    hosts: [gpu-demo.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [gpu-demo.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 4G
+      limit: 4G
+    profileList:
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a container on a dedicated node with a GPU
+      allowed_groups:
+      - 2i2c-org:hub-access-for-2i2c-staff
+      - ucb-ds:gpu-permitted
+      profile_options:
+        image:
+          display_name: Image
+          choices:
+            tensorflow:
+              display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
+              slug: tensorflow
+              kubespawner_override:
+                image: pangeo/ml-notebook:2026.01.30
+            pytorch:
+              display_name: Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: pytorch
+              kubespawner_override:
+                image: pangeo/pytorch-notebook:2026.01.30
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: n1-highmem-8
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: github
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.cloudbank.org/sites/default/files/file_fields/logo.png
+          name: CloudBank Classroom - GPU Demo
+          url: https://www.cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://gpu-demo.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - ucb-ds
+        scope:
+        - read:org
+      Authenticator:
+        admin_users:
+        - sean-morris
+        - ericvd-ucb
+        - yuvipanda
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gpu-demo
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.gpu-demo.svc.cluster.local
