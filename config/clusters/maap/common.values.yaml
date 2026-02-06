@@ -163,6 +163,15 @@ jupyterhub:
       image_pull_policy: Always
       securityContext:
         privileged: true
+      livenessProbe:
+        exec:
+          command:
+          - sh
+          - -c
+          - [ -f /tmp/active ]
+        initialDelaySeconds: 60
+        periodSeconds: 5
+        failureThreshold: 1
       resources:
         limits:
           memory: 512Mi
