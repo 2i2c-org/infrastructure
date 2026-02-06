@@ -304,14 +304,14 @@ notebook_nodes = {
       }
     ],
   },
-  "gpu-t4": {
-    min: 0,
-    max: 16,
-    machine_type: "n1-highmem-8",
-    gpu: {
-      enabled: true,
-      type: "nvidia-tesla-t4",
-      count: 1,
+  "gpu-t4" : {
+    min : 0,
+    max : 16,
+    machine_type : "n1-highmem-8",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 1,
     },
   },
   "n2-highmem-16" : {
