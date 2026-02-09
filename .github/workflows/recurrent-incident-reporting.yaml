@@ -26,8 +26,7 @@ jobs:
     - name: Create issue
       run: |
         issue=$(gh issue create \
-        --assignee @agoose77 \
-        --assignee @GeorgianaElena \
+        --assignee agoose77,GeorgianaElena \
         --label "recurrent" \
         --title "Pay out past incident reporting debt" \
         --body "$BODY")
