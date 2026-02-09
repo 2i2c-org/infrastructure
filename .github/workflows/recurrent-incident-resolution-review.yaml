@@ -46,7 +46,7 @@ jobs:
             - review the resolution and the action items of an incident posted in https://github.com/2i2c-org/incident-reports in the specified period
             - let the team know in the #post-outage-actions Slack channel and ask any clarifying questions
 
-          2. Publish incidents
+          2. Publish incident reports
             - open a PR in https://github.com/2i2c-org/incident-reports for all [PD postmortems marked as `Closed`](https://2i2c-org.pagerduty.com/postmortems)
             - let the team know in the #post-outage-actions Slack channel and ask any clarifying questions
 
