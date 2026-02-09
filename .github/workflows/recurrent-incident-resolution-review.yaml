@@ -39,20 +39,22 @@ jobs:
 
           Each sprint, the Team Lead and the Engineering Manager are scheduled to review the resolution and action items of the outages that have happened **between September 1st 2025 and February 10th 2026** until we have paid out all debt.
 
-          ### Definition of Done
-
-          Each of the people below has taken at least one of the following actions:
-
-          - [ ] @aprilmj
-          - [ ] @yuvipanda
+          ### What we need to do
 
           1. Handle action items and incident resolution
             - review the resolution and the action items of a PD postmortem marked as [`Reviewed` in PD postmortems](https://2i2c-org.pagerduty.com/postmortems)
             - review the resolution and the action items of an incident posted in https://github.com/2i2c-org/incident-reports in the specified period
             - let the team know in the #post-outage-actions Slack channel and ask any clarifying questions
 
-          2. Publish [PD postmortems marked as `Closed`](https://2i2c-org.pagerduty.com/postmortems) to https://github.com/2i2c-org/incident-reports
+          2. Publish incident reports
+            - open a PR in https://github.com/2i2c-org/incident-reports for all [PD postmortems marked as `Closed`](https://2i2c-org.pagerduty.com/postmortems)
             - let the team know in the #post-outage-actions Slack channel and ask any clarifying questions
+
+          ### Definition of Done
+
+          Each of the people below has taken at least one of the actions mentioned above:
+          - [ ] @aprilmj
+          - [ ] @yuvipanda
 
     - name: Sleep a bit to allow issue to be added to the board by automation
       run: sleep 3
