@@ -42,26 +42,28 @@ jobs:
             - handle action items and incident resolution
             - archive outage-related Slack channels
 
+          ### What we need to do
+
+          1. Handle incident report review:
+            - review at least one of the [`Draft` incidents in PagerDuty](https://2i2c-org.pagerduty.com/postmortems), 
+            - edit it and change its status to `Reviewed` when you are done
+            - let the owner know in the #post-outage-actions Slack channel
+          2. Handle incident report writing:
+            - get the list of P1 incidents by sorting [the list of incidents](https://2i2c-org.pagerduty.com/incidents?status=acknowledged%2Ctriggered%2Cresolved) based on priority (start by looking at the past two months)
+            - compare this list with the list of Postmortems
+            - check which incidents do not have postmortems
+            - write up any missing Incident Report and save it as a PD draft postmortem
+            - let the team know in the #post-outage-actions Slack channel
+          3. Archive outage-related Slack channels
+            - review the list of [PD postmortems that are marked as `Closed`](https://2i2c-org.pagerduty.com/postmortems)
+            - if any of these still have Slack channels that have not been archived, archive them now
+
           ### Definition of Done
 
           Each of the people below has taken at least one of the following actions:
 
           - [ ] @agoose77
           - [ ] @GeorgianaElena
-
-            1. Handle incident report review:
-              - review at least one of the [`Draft` incidents in PagerDuty](https://2i2c-org.pagerduty.com/postmortems), 
-              - edit it and change its status to `Reviewed` when you are done
-              - let the owner know in the #post-outage-actions Slack channel
-            2. Handle incident report writing:
-              - get the list of P1 incidents by sorting [the list of incidents](https://2i2c-org.pagerduty.com/incidents?status=acknowledged%2Ctriggered%2Cresolved) based on priority (start by looking at the past two months)
-              - compare this list with the list of Postmortems
-              - check which incidents do not have postmortems
-              - write up any missing Incident Report and save it as a PD draft postmortem
-              - let the team know in the #post-outage-actions Slack channel
-            3. Archive outage-related Slack channels
-              - review the list of [PD postmortems that are marked as `Closed`](https://2i2c-org.pagerduty.com/postmortems)
-              - if any of these still have Slack channels that have not been archived, archive them now
 
     - name: Sleep a bit to allow issue to be added to the board by automation
       run: sleep 3
