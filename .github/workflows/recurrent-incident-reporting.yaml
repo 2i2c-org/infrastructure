@@ -1,0 +1,81 @@
+name: 'Recurrent: Incident Report Writing'
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: 0 4 * * 1
+
+jobs:
+  # Run the action every other week
+  run-fortnightly:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - name: Check if valid week
+      run: |
+        WEEK=$(date +%V)
+        if [ $((WEEK % 2)) -ne 0 ]; then
+            echo "Skipping this week"
+            exit 0
+        fi
+    - name: Get Deadline
+      id: get_deadline
+      run: |
+        echo "deadline=$(date -d '+14 days' +'%B %d')" >> $GITHUB_ENV
+        echo "deadline_as_iso_date=$(date -d '+14 days' +"%Y-%m-%d")" >> $GITHUB_ENV
+    - name: Create issue
+      run: |
+        issue=$(gh issue create \
+        --assignee @agoose77 \
+        --assignee @GeorgianaElena \
+        --label "recurrent" \
+        --title "Pay out past incident reporting debt" \
+        --body "$BODY")
+        echo "issue=$issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          ### Context
+
+          Each sprint, the Infrastructure Engineering team is scheduled to take the following actions, for unpublished **outages that have happened between September 1st 2025 and February 10th 2026** until we have paid out all debt:
+            - handle incident reports
+            - handle action items and incident resolution
+            - archive outage-related Slack channels
+
+          ### Definition of Done
+
+          Each of the people below has taken at least one of the following actions:
+
+          - [ ] @agoose77
+          - [ ] @GeorgianaElena
+
+            1. Handle incident report review:
+              - review at least one of the [`Draft` incidents in PagerDuty](https://2i2c-org.pagerduty.com/postmortems), 
+              - edit it and change its status to `Reviewed` when you are done
+              - let the owner know in the #post-outage-actions Slack channel
+            2. Handle incident report writing:
+              - get the list of P1 incidents by sorting [the list of incidents](https://2i2c-org.pagerduty.com/incidents?status=acknowledged%2Ctriggered%2Cresolved) based on priority (start by looking at the past two months)
+              - compare this list with the list of Postmortems
+              - check which incidents do not have postmortems
+              - write up any missing Incident Report and save it as a PD draft postmortem
+              - let the team know in the #post-outage-actions Slack channel
+            3. Archive outage-related Slack channels
+              - review the list of [PD postmortems that are marked as `Closed`](https://2i2c-org.pagerduty.com/postmortems)
+              - if any of these still have Slack channels that have not been archived, archive them now
+
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
+
+    - name: Set the "Status" and "Estimate" project board fields
+      uses: EndBug/project-fields@v2
+      id: set-fields
+      with:
+        operation: set
+            # If the fields name or type will change
+            # expect this step to fail
+        fields: Status,Estimate,End date
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Up Next,2,${{ env.deadline_as_iso_date }}
+        resource_url: ${{ env.issue }}
