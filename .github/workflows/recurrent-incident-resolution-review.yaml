@@ -1,0 +1,72 @@
+name: 'Recurrent: Incident Resolution Review'
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: 0 4 * * 1
+
+jobs:
+  # Run the action every other week
+  run-fortnightly:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - name: Check if valid week
+      run: |
+        WEEK=$(date +%V)
+        if [ $((WEEK % 2)) -ne 0 ]; then
+            echo "Skipping this week"
+            exit 0
+        fi
+    - name: Get Deadline
+      id: get_deadline
+      run: |
+        echo "deadline=$(date -d '+14 days' +'%B %d')" >> $GITHUB_ENV
+        echo "deadline_as_iso_date=$(date -d '+14 days' +"%Y-%m-%d")" >> $GITHUB_ENV
+    - name: Create issue
+      run: |
+        issue=$(gh issue create \
+        --assignee @aprilmj \
+        --assignee @yuvipanda \
+        --label "recurrent" \
+        --title "Review past outage resolution and actions" \
+        --body "$BODY")
+        echo "issue=$issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          ### Context
+
+          Each sprint, the Team Lead and the Engineering Manager are scheduled to review the resolution and action items of the outages that have happened **between September 1st 2025 and February 10th 2026** until we have paid out all debt.
+
+          ### Definition of Done
+
+          Each of the people below has taken at least one of the following actions:
+
+          - [ ] @aprilmj
+          - [ ] @yuvipanda
+
+          1. Handle action items and incident resolution
+            - review the resolution and the action items of a PD postmortem marked as [`Reviewed` in PD postmortems](https://2i2c-org.pagerduty.com/postmortems)
+            - review the resolution and the action items of an incident posted in https://github.com/2i2c-org/incident-reports in the specified period
+            - let the team know in the #post-outage-actions Slack channel and ask any clarifying questions
+
+          2. Publish [PD postmortems marked as `Closed`](https://2i2c-org.pagerduty.com/postmortems) to https://github.com/2i2c-org/incident-reports
+            - let the team know in the #post-outage-actions Slack channel and ask any clarifying questions
+
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
+
+    - name: Set the "Status" and "Estimate" project board fields
+      uses: EndBug/project-fields@v2
+      id: set-fields
+      with:
+        operation: set
+            # If the fields name or type will change
+            # expect this step to fail
+        fields: Status,Estimate,End date
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Up Next,1,${{ env.deadline_as_iso_date }}
+        resource_url: ${{ env.issue }}
