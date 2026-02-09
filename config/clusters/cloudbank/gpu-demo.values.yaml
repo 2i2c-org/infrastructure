@@ -14,8 +14,8 @@ jupyterhub:
       default: true
       profile_options:
         image:
+          display_name: Image
           choices:
-            display:name: Image
             00-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
@@ -27,20 +27,14 @@ jupyterhub:
               description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
                 image: pangeo/pangeo-notebook:2025.01.24
-        resource_allocation:
-          display_name: Resource Allocation
-          choices:
-            mem_2_gb:
-              display_name: ~2 GB RAM, ~0.2 CPUs
-              description: Up to ~4 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 1951419879
-                mem_limit: 1951419879
-                cpu_guarantee: 0.22815625
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: n2-highmem-4
-                default: true
+      kubespawner_override:
+        mem_guarantee: 1951419879
+        mem_limit: 1951419879
+        cpu_guarantee: 0.22815625
+        cpu_limit: 3.6505
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+        default: true
     - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
       description: Start a container on a dedicated node with a GPU
       allowed_groups:
