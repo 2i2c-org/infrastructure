@@ -10,6 +10,31 @@ jupyterhub:
       guarantee: 4G
       limit: 4G
     profileList:
+    - display_name: CPU only
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          choices:
+            00-scipy:
+              display_name: Jupyter SciPy Notebook
+              description: Scientific Python image
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2025-01-06
+            01-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2025.01.24
+      kubespawner_override:
+        mem_guarantee: 1951419879
+        mem_limit: 1951419879
+        cpu_guarantee: 0.22815625
+        cpu_limit: 3.6505
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+        default: true
     - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
       description: Start a container on a dedicated node with a GPU
       allowed_groups:
