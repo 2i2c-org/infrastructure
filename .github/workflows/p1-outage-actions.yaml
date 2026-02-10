@@ -44,10 +44,10 @@ jobs:
         operation: set
             # If the fields name or type will change
             # expect this step to fail
-        fields: Status,Unplanned,Iteration
+        fields: Status,Unplanned
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: In progress,Emergency,@current
+        values: In progress,Emergency
         resource_url: ${{ env.tracking_issue }}
 
     - name: Create incident report issue
@@ -88,10 +88,10 @@ jobs:
         operation: set
             # If the fields name or type will change
             # expect this step to fail
-        fields: Status,Unplanned,Estimate,Iteration
+        fields: Status,Unplanned,Estimate
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: Committed,Emergency,3,@current
+        values: Committed,Emergency,3
         resource_url: ${{ env.incident_report_issue }}
 
     - name: Create final review issue
@@ -134,10 +134,10 @@ jobs:
         operation: set
             # If the fields name or type will change
             # expect this step to fail
-        fields: Status,Unplanned,Estimate,Iteration
+        fields: Status,Unplanned,Estimate
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: Committed,Emergency,2,@current
+        values: Committed,Emergency,2
         resource_url: ${{ env.final_review_issue }}
 
 
