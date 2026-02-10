@@ -30,6 +30,8 @@ jupyterhub:
         org:
           url: https://catalystproject.cloud/
           logo_url: https://catalystproject.cloud/_images/catalyst-icon-dark.png
+  ingress:
+    enabled: false
   singleuser:
     profileList:
     - display_name: Jupyter SciPy Notebook
