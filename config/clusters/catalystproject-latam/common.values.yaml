@@ -27,6 +27,8 @@ jupyterhub:
           logo_url: https://catalystproject.cloud/_static/catalyst-logo-dark-bg-white.png
   hub:
     allowNamedServers: true
+  ingress:
+    enabled: false
   singleuser:
     profileList:
     - display_name: Jupyter SciPy Notebook
