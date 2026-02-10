@@ -49,6 +49,7 @@ jobs:
         project_url: https://github.com/orgs/2i2c-org/projects/57
         values: In progress,Emergency
         resource_url: ${{ env.tracking_issue }}
+
     - name: Create incident report issue
       run: |
         incident_report_issue=$(gh issue create \
@@ -63,49 +64,7 @@ jobs:
         BODY: |
           ### Context
 
-          Draft an incident report for the outage ${{ env.tracking_issue }}
-
-          ### What we need to do
-
-          1. Write a PD draft postmortem following:
-          - https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#create-an-incident-report-in-pagerduty
-          - https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#steps
-
-          2. Create post-incident action items following https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#create-post-incident-action-items
-
-          ### Definition of Done
-
-          - [ ] A `Draft` PagerDuty postmortem exists
-          - [ ] Action items that will prevent such an outage in the future exist
-
-    - name: Sleep a bit to allow issue to be added to the board by automation
-      run: sleep 3
-
-    - name: Set the "Status" and mark the issue as "Emergency" in the project board
-      uses: EndBug/project-fields@v2
-      with:
-        operation: set
-            # If the fields name or type will change
-            # expect this step to fail
-        fields: Status,Unplanned
-        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-        project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: Committed,Emergency
-        resource_url: ${{ env.incident_report_issue }}
-    - name: Create incident report issue
-      run: |
-        incident_report_issue=$(gh issue create \
-        --label "outage" \
-        --title "Draft the incident report and action items of ${{ env.tracking_issue }}" \
-        --body "$BODY")
-        echo "incident_report_issue=$incident_report_issue" >> $GITHUB_ENV
-      env:
-        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-        GH_REPO: ${{ github.repository }}
-        BODY: |
-          ### Context
-
-          Draft an incident report for the outage ${{ env.tracking_issue }}
+          Draft an incident report and action items for ${{ env.tracking_issue }}
 
           ### What we need to do
 
@@ -134,12 +93,13 @@ jobs:
         project_url: https://github.com/orgs/2i2c-org/projects/57
         values: Committed,Emergency,3
         resource_url: ${{ env.incident_report_issue }}
+
     - name: Create final review issue
       run: |
         final_review_issue=$(gh issue create \
         --label "outage" \
         --assignee aprilmj,yuvipanda \
-        --title "Review resolution and action items of ${{ env.tracking_issue }}" \
+        --title "Review resolution and action items for ${{ env.tracking_issue }}" \
         --body "$BODY")
         echo "final_review_issue=$final_review_issue" >> $GITHUB_ENV
       env:
@@ -168,7 +128,7 @@ jobs:
     - name: Sleep a bit to allow issue to be added to the board by automation
       run: sleep 3
 
-    - name: Set the "Status" and mark the issue as "Emergency" in the project board
+    - name: Set the "Status" , "Estimate" and mark the issue as "Emergency" in the project board
       uses: EndBug/project-fields@v2
       with:
         operation: set
@@ -178,6 +138,6 @@ jobs:
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
         values: Committed,Emergency,2
-        resource_url: ${{ env.incident_report_issue }}
+        resource_url: ${{ env.final_review_issue }}
 
 
