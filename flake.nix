@@ -63,6 +63,9 @@
           terraform
           openstack
           eksctl
+          # Dev deps
+          jq
+          yq-go
         ]);
     in {
       devShell = let
