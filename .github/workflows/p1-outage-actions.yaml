@@ -11,7 +11,7 @@ jobs:
         tracking_issue=$(gh issue create \
         --label "outage" \
         --assignee agoose77,GeorgianaElena \
-        --title "${{ github.event.client_payload.title }}" \
+        --title "Outage: ${{ github.event.client_payload.title }}" \
         --body "$BODY")
         echo "tracking_issue=$tracking_issue" >> $GITHUB_ENV
       env:
@@ -47,7 +47,7 @@ jobs:
         fields: Status,Unplanned
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: In Progress,Emergency
+        values: In progress,Emergency
         resource_url: ${{ env.tracking_issue }}
     - name: Create incident report issue
       run: |
