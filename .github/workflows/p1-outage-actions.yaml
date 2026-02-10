@@ -40,7 +40,6 @@ jobs:
 
     - name: Set the "Status" and mark the issue as "Emergency" in the project board
       uses: EndBug/project-fields@v2
-      id: set-fields
       with:
         operation: set
             # If the fields name or type will change
@@ -84,7 +83,6 @@ jobs:
 
     - name: Set the "Status" and mark the issue as "Emergency" in the project board
       uses: EndBug/project-fields@v2
-      id: set-fields
       with:
         operation: set
             # If the fields name or type will change
@@ -127,7 +125,6 @@ jobs:
 
     - name: Set the "Status" and mark the issue as "Emergency" in the project board
       uses: EndBug/project-fields@v2
-      id: set-fields
       with:
         operation: set
             # If the fields name or type will change
@@ -173,7 +170,6 @@ jobs:
 
     - name: Set the "Status" and mark the issue as "Emergency" in the project board
       uses: EndBug/project-fields@v2
-      id: set-fields
       with:
         operation: set
             # If the fields name or type will change
