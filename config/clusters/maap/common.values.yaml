@@ -139,18 +139,22 @@ jupyterhub:
         readOnly: true
       - name: s3fs-volume
         mountPath: /home/jovyan/my-private-bucket
+        subPath: my-private-bucket
         mountPropagation: HostToContainer
         readOnly: false
       - name: s3fs-volume
         mountPath: /home/jovyan/my-public-bucket
+        subPath: my-public-bucket
         mountPropagation: HostToContainer
         readOnly: false
       - name: s3fs-volume
         mountPath: /home/jovyan/shared-buckets
+        subPath: shared-buckets
         mountPropagation: HostToContainer
         readOnly: true
       - name: s3fs-volume
         mountPath: /home/jovyan/triaged-jobs
+        subPath: triaged-jobs
         mountPropagation: HostToContainer
         readOnly: true
     extraContainers:
@@ -171,15 +175,19 @@ jupyterhub:
       volumeMounts:
       - name: s3fs-volume
         mountPath: /my-public-bucket
+        subPath: my-public-bucket
         mountPropagation: Bidirectional
       - name: s3fs-volume
         mountPath: /my-private-bucket
+        subPath: my-private-bucket
         mountPropagation: Bidirectional
       - name: s3fs-volume
         mountPath: /shared-buckets
+        subPath: shared-buckets
         mountPropagation: Bidirectional
       - name: s3fs-volume
         mountPath: /triaged-jobs
+        subPath: triaged-jobs
         mountPropagation: Bidirectional
     profileList:
     - display_name: Choose your environment and resources
