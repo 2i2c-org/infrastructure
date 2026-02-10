@@ -1,0 +1,187 @@
+name: P1 outages actions
+on:
+  repository_dispatch:
+    types: [p1-outage]
+jobs:
+  create-tracking-issues:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create tracking issue
+      run: |
+        tracking_issue=$(gh issue create \
+        --label "outage" \
+        --assignee agoose77,GeorgianaElena \
+        --title ${{ github.event.client_payload.title }} \
+        --body "$BODY")
+        echo "tracking_issue=$tracking_issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          ### Context
+
+          PagerDuty has alerted us about an incident with a P1 priority.
+          The incident has the following metadata:
+          - title: ${{ github.event.client_payload.title }}
+          - incident id: ${{ github.event.client_payload.incident_id }}
+          - service: ${{ github.event.client_payload.service }}
+          - type: ${{ github.event.client_payload.type }}
+
+          ### What we need to do
+
+          Follow the incident response process https://compass.2i2c.org/services/interactive-computing/incidents/
+
+          ### Definition of Done
+
+          All steps listed in https://compass.2i2c.org/services/interactive-computing/incidents/process/#steps have been followed.
+
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
+
+    - name: Set the "Status" and mark the issue as "Emergency" in the project board
+      uses: EndBug/project-fields@v2
+      id: set-fields
+      with:
+        operation: set
+            # If the fields name or type will change
+            # expect this step to fail
+        fields: Status,Unplanned
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: In Progress,Emergency
+        resource_url: ${{ env.tracking_issue }}
+    - name: Create incident report issue
+      run: |
+        incident_report_issue=$(gh issue create \
+        --label "outage" \
+        --assignee agoose77,GeorgianaElena \
+        --title Draft the incident report and action items of ${{ env.tracking_issue }} \
+        --body "$BODY")
+        echo "incident_report_issue=$incident_report_issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          ### Context
+
+          Draft an incident report for the outage ${{ env.tracking_issue }}
+
+          ### What we need to do
+
+          1. Write a PD draft postmortem following:
+          - https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#create-an-incident-report-in-pagerduty
+          - https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#steps
+
+          2. Create post-incident action items following https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#create-post-incident-action-items
+
+          ### Definition of Done
+
+          - [ ] A `Draft` PagerDuty postmortem exists
+          - [ ] Action items that will prevent such an outage in the future exist
+
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
+
+    - name: Set the "Status" and mark the issue as "Emergency" in the project board
+      uses: EndBug/project-fields@v2
+      id: set-fields
+      with:
+        operation: set
+            # If the fields name or type will change
+            # expect this step to fail
+        fields: Status,Unplanned
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Committed,Emergency
+        resource_url: ${{ env.incident_report_issue }}
+    - name: Create incident report issue
+      run: |
+        incident_report_issue=$(gh issue create \
+        --label "outage" \
+        --title Draft the incident report and action items of ${{ env.tracking_issue }} \
+        --body "$BODY")
+        echo "incident_report_issue=$incident_report_issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          ### Context
+
+          Draft an incident report for the outage ${{ env.tracking_issue }}
+
+          ### What we need to do
+
+          1. Write a PD draft postmortem following:
+          - https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#create-an-incident-report-in-pagerduty
+          - https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#steps
+
+          2. Create post-incident action items following https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#create-post-incident-action-items
+
+          ### Definition of Done
+
+          - [ ] A `Draft` PagerDuty postmortem exists
+          - [ ] Action items that will prevent such an outage in the future exist
+
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
+
+    - name: Set the "Status" and mark the issue as "Emergency" in the project board
+      uses: EndBug/project-fields@v2
+      id: set-fields
+      with:
+        operation: set
+            # If the fields name or type will change
+            # expect this step to fail
+        fields: Status,Unplanned,Estimate
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Committed,Emergency,3
+        resource_url: ${{ env.incident_report_issue }}
+    - name: Create final review issue
+      run: |
+        final_review_issue=$(gh issue create \
+        --label "outage" \
+        --assignee aprilmj,yuvipanda \
+        --title Review resolution and action items of ${{ env.tracking_issue }} \
+        --body "$BODY")
+        echo "final_review_issue=$final_review_issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          ### Context
+
+          Is it ultimately the Team Lead's responsibility to validate that the resolution to an outage was correct and the appropriate follow-up action items were correctly identified.
+
+          ### What we need to do
+
+          **1. Review the action items and incident resolution**
+            - review the resolution and the action items of the ${{ env.tracking_issue }}' [PD postmortem](https://2i2c-org.pagerduty.com/postmortems)
+            - let the team know in the `#post-outage-actions` Slack channel and ask any clarifying questions
+
+          **2. Publish incident report**
+            - open a PR in https://github.com/2i2c-org/incident-reports if you're happy with the resolution
+            - or ask another team member to do it via the #post-outage-actions Slack channel
+
+          ### Definition of Done
+
+          - [ ] The PD postmortem is marked as `Closed`
+          - [ ] The postmortem was exported as a PDF and added to the https://github.com/2i2c-org/incident-reports repo
+
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
+
+    - name: Set the "Status" and mark the issue as "Emergency" in the project board
+      uses: EndBug/project-fields@v2
+      id: set-fields
+      with:
+        operation: set
+            # If the fields name or type will change
+            # expect this step to fail
+        fields: Status,Unplanned,Estimate
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Committed,Emergency,2
+        resource_url: ${{ env.incident_report_issue }}
+
+
