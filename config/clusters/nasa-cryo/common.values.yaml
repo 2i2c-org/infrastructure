@@ -124,7 +124,7 @@ basehub:
                 description: Ocean Biology environment used by the PACE mission
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
-                  image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
+                  image: ghcr.io/nasa/oceandata-jupyterlab:latest
               03-pythonml:
                 display_name: Machine Learning Python Image
                 description: ML environment with TensorFlow, Keras, Scikit from Pangeo
