@@ -4,6 +4,7 @@ jupyterhub:
     tls:
     - hosts: [labi.latam.catalystproject.2i2c.cloud]
       secretName: https-auto-tls
+    enabled: true
   custom:
     homepage:
       templateVars:
