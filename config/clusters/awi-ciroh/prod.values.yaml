@@ -58,7 +58,7 @@ basehub:
                 default: true
                 slug: new
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:15292ed7f573
+                  image: quay.io/2i2c/awi-ciroh-image:d86a62ae0b85
               rkernel:
                 display_name: Notebook with R and Python kernel
                 slug: rkernel
@@ -116,7 +116,7 @@ basehub:
                 display_name: Community Assets Computation Hub
                 slug: devcon8
                 kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:symfluence
+                  image: quay.io/awiciroh/symfluence:v1.0.0
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
