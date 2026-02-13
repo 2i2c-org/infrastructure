@@ -17,7 +17,7 @@ jobs:
         WEEK=$(date +%V)
         if [ $((WEEK % 2)) -ne 0 ]; then
             echo "Skipping this week"
-            exit 0
+            exit 1
         fi
     - name: Get Deadline
       id: get_deadline
