@@ -55,7 +55,6 @@ jupyterhub:
         scope:
         - openid
         enable_auth_state: true
-        auth_refresh_age: 0
         admin_users:
         - benjaminrk@gmail.com
         - yuvipanda@2i2c.org
