@@ -1059,7 +1059,7 @@ jupyterhub:
         - groups
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.14004.h556ee4be8"
+      tag: "0.0.1-0.dev.git.14928.he0b95cbd6"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated

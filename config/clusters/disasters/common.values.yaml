@@ -42,6 +42,7 @@ jupyterhub:
         # Set for us by Keycloak
         admin_users: []
         enable_auth_state: true
+        auth_refresh_age: 0
       GenericOAuthenticator:
         # We want to get user data from the JWT that's the id token,
         # not from a separate userdata API call

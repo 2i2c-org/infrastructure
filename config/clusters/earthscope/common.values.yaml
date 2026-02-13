@@ -87,6 +87,7 @@ basehub:
           # Convert 'scope' from the OAuth2 response into JupyterHub groups
           manage_groups: true
           enable_auth_state: true
+          auth_refresh_age: 0
           admin_users:
           - google-oauth2|117718799995701713253   #Chad Trabant, https://2i2c.freshdesk.com/a/tickets/1279
           - google-oauth2|117710759588624106233   #Sarah Wilson
