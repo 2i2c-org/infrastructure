@@ -27,7 +27,7 @@ jupyterhub:
       templateVars:
         enabled: false
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts: {}
   singleuser:
     nodeSelector:
       # Only use small instances
@@ -40,7 +40,7 @@ jupyterhub:
       limit: 1
     storage:
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts: {}
     initContainers: []
     profileList: []
     cmd:

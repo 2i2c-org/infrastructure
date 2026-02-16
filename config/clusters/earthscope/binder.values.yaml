@@ -26,7 +26,7 @@ basehub:
       binderhubUI:
         enabled: true
       singleuserAdmin:
-        extraVolumeMounts: []
+        extraVolumeMounts: {}
       homepage:
         templateVars:
           redirect_to: https://www.earthscope.org/data/geolab/
@@ -40,7 +40,7 @@ basehub:
         limit: 1
       storage:
         type: none
-        extraVolumeMounts: []
+        extraVolumeMounts: {}
       initContainers: []
       profileList: []
     hub:

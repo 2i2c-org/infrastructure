@@ -31,7 +31,7 @@ jupyterhub:
           name: NASA TOPS-T ScienceCore
           url: ''
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts: {}
   hub:
     config:
       JupyterHub:
@@ -74,7 +74,7 @@ jupyterhub:
         runAsUser: 1000
         runAsGroup: 1000
     storage:
-      extraVolumeMounts: []
+      extraVolumeMounts: {}
 dask-gateway:
   gateway:
     backend:

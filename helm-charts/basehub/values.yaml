@@ -387,18 +387,12 @@ jupyterhub:
     singleuserAdmin:
       extraEnv: {}
       extraVolumeMounts:
-        # IMPORTANT: What is added to this list is copied to other locations
-        #            that wants to add an element to this list. This is done
-        #            because when Helm config files are merged, lists get
-        #            replaced rather than appended. So, if this is to be
-        #            updated, we should update all those copies as well. An easy
-        #            to way find such copies is to search for "singleuserAdmin:"
-        #            in this repo.
-        #
-        - name: home
+        1-shared-readwrite-volumemount:
+          name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
-        - name: home
+        2-shared-readwrite-rstudio-volumemount:
+          name: home
           mountPath: /home/rstudio/shared-readwrite
           subPath: _shared
     2i2c:

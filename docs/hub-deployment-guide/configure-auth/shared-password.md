@@ -103,7 +103,7 @@ We can disable this by setting the following in the `${HUB_NAME}.values.yaml` fi
 jupyterhub:
   custom:
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts: {}
   singleuser:
     initContainers:
       - name: volume-mount-ownership-fix
@@ -119,5 +119,5 @@ jupyterhub:
             mountPath: /home/jovyan
             subPath: "{escaped_username}"
     storage:
-      extraVolumeMounts: []
+      extraVolumeMounts: {}
 ```

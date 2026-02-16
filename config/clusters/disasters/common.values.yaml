@@ -76,27 +76,16 @@ jupyterhub:
     defaultUrl: /lab
     storage:
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/rstudio/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
-      - name: dev-shm
-        mountPath: /dev/shm
-      - name: home
-        mountPath: /home/rstudio
-        subPath: '{escaped_username}'
-      - name: home
-        mountPath: /home/rstudio/shared
-        subPath: _shared
-        readOnly: true
+        1-shared-public:
+          name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        2-rstudio-shared-public:
+          name: home
+          mountPath: /home/rstudio/shared-public
+          subPath: _shared-public
+          readOnly: false
     profileList:
     - display_name: Choose your environment and resources
       default: true
