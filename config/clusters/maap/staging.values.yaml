@@ -12,11 +12,6 @@ jupyterhub:
       gitRepoBranch: staging
       gitRepoUrl: https://github.com/MAAP-Project/maap-hub-homepage
   singleuser:
-    storage:
-      extraVolumes:
-        1-s3f3-volume:
-          name: s3fs-volume
-          emptyDir: {}
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
       MAAP_API_HOST: api.uat.maap-project.org

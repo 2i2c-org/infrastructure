@@ -76,12 +76,12 @@ jupyterhub:
     defaultUrl: /lab
     storage:
       extraVolumeMounts:
-        1-shared-public:
+        1-shared-public-volumemount:
           name: home
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
           readOnly: false
-        2-rstudio-shared-public:
+        2-shared-public-rstudio-volumemount:
           name: home
           mountPath: /home/rstudio/shared-public
           subPath: _shared-public

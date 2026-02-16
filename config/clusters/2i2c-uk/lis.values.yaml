@@ -43,9 +43,6 @@ jupyterhub:
           name: home
           mountPath: /home/jovyan/allusers
           readOnly: false
-          # mounts below are copied from basehub's values that we override by
-          # specifying extraVolumeMounts (lists get overridden when helm values
-          # are combined)
   singleuser:
     defaultUrl: /lab
 

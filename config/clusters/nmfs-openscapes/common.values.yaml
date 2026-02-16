@@ -42,7 +42,7 @@ jupyterhub:
           name: home
           mountPath: /home/jovyan/allusers
           readOnly: false
-        2-rstudio-allusers-volumemount:
+        2-allusers-rstudio-volumemount:
           name: home
           mountPath: /home/rstudio/allusers
           readOnly: false

@@ -29,7 +29,7 @@ basehub:
     singleuser:
       storage:
         extraVolumeMounts:
-          1-shared-public-volumemounts:
+          1-shared-public-volumemount:
             name: home
             mountPath: /home/jovyan/shared-public
             subPath: _shared-public
