@@ -14,21 +14,29 @@
     nixpkgs,
     nixpkgs-helm,
     flake-utils,
-  }:
-    flake-utils.lib.eachDefaultSystem (system: let
+  }: let
+    forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+  in {
+    devShells = forAllSystems (system: let
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
+      inherit (pkgs) lib;
+
+      # Additional nixpkgs for a particular package (helm)
       pkgs-helm = import nixpkgs-helm {
         inherit system;
       };
-      inherit (pkgs) lib;
 
-      # Configure packages that need additional deps
+      # Define our interpreter
+      python = pkgs.python313;
+      manyLinux = pkgs.pythonManylinuxPackages.manylinux2014;
       gdk = pkgs.google-cloud-sdk.withExtraComponents (with pkgs.google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
       ]);
+
+      # Configure packages that need additional deps
       openstack = python.pkgs.toPythonApplication (
         python.pkgs.python-openstackclient.overridePythonAttrs (oldAttrs: {
           dependencies =
@@ -36,9 +44,6 @@
             ++ [python.pkgs.python-magnumclient];
         })
       );
-      # Define our interpreter
-      python = pkgs.python313;
-      manyLinux = pkgs.pythonManylinuxPackages.manylinux2014;
 
       # Define our env packages (including the above)
       packages =
@@ -67,40 +72,39 @@
           jq
           yq-go
         ]);
+      # Unset these unwanted env vars
+      # PYTHONPATH bleeds from Nix Python packages
+      unwantedEnvPreamble = ''
+        unset SOURCE_DATE_EPOCH PYTHONPATH
+      '';
     in {
-      devShell = let
-        # Unset these unwanted env vars
-        # PYTHONPATH bleeds from Nix Python packages
-        unwantedEnvPreamble = ''
-          unset SOURCE_DATE_EPOCH PYTHONPATH
-        '';
-      in
-        pkgs.mkShell rec {
-          inherit packages;
-          # Define additional input for patching interpreter
-          nativeBuildInputs = [pkgs.makeWrapper];
+      default = pkgs.mkShell {
+        inherit packages;
+        # Define additional input for patching interpreter
+        nativeBuildInputs = [pkgs.makeWrapper];
 
-          venvDir = ".venv";
+        venvDir = ".venv";
 
-          # Drop bad env vars on activation
-          postShellHook = unwantedEnvPreamble;
+        # Drop bad env vars on activation
+        postShellHook = unwantedEnvPreamble;
 
-          # Setup venv by patching interpreter with LD_LIBRARY_PATH
-          # This is required because ld does not exist on Nix systems
-          postVenvCreation = let
-            # Find the interpreter of the venv
-            interpreterSubPath = lib.path.subpath.join ["bin" (baseNameOf python.interpreter)];
-          in
-            unwantedEnvPreamble
-            # Patch the venv to find the dynamic libs
-            + ''
-              wrapProgram "$VIRTUAL_ENV/${interpreterSubPath}" --prefix "LD_LIBRARY_PATH" : "${lib.makeLibraryPath manyLinux}"
-            ''
-            +
-            # Install package
-            ''
-              pip install -e ".[dev]"
-            '';
-        };
+        # Setup venv by patching interpreter with LD_LIBRARY_PATH
+        # This is required because ld does not exist on Nix systems
+        postVenvCreation = let
+          # Find the interpreter of the venv
+          interpreterSubPath = lib.path.subpath.join ["bin" (baseNameOf python.interpreter)];
+        in
+          unwantedEnvPreamble
+          # Patch the venv to find the dynamic libs
+          + ''
+            wrapProgram "$VIRTUAL_ENV/${interpreterSubPath}" --prefix "LD_LIBRARY_PATH" : "${lib.makeLibraryPath manyLinux}"
+          ''
+          +
+          # Install package
+          ''
+            pip install -e ".[dev]"
+          '';
+      };
     });
+  };
 }
