@@ -12,11 +12,13 @@ jobs:
       issues: write
     steps:
     - name: Check if valid week
+      # https://stackoverflow.com/questions/24777597/value-too-great-for-base-error-token-is-08/24777667
       run: |
         WEEK=$(date +%V)
+        WEEK=${WEEK#0}
         if [ $((WEEK % 2)) -ne 0 ]; then
             echo "Skipping this week"
-            exit 0
+            exit 1
         fi
     - name: Get Deadline
       id: get_deadline
