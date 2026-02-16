@@ -15,7 +15,7 @@ jobs:
       continue-on-error: false
       run: |
         WEEK=$(date +%V)
-        if [ $((WEEK % 2)) -ne 0 ]; then
+        if [ $((${WEEK#0} % 2)) -ne 0 ]; then
             echo "Skipping this week"
             exit 1
         fi
