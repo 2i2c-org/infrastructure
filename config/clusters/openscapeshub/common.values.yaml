@@ -38,12 +38,12 @@ basehub:
             url: https://nasa-openscapes.github.io/
       singleuserAdmin:
         extraVolumeMounts:
-        1-allusers-volumemount:
-          name: home
-          mountPath: /home/jovyan/allusers
-        2-allusers-rstudio-volumemount:
-          name: home
-          mountPath: /home/rstudio/allusers
+          1-allusers-volumemount:
+            name: home
+            mountPath: /home/jovyan/allusers
+          2-allusers-rstudio-volumemount:
+            name: home
+            mountPath: /home/rstudio/allusers
     singleuser:
       cloudMetadata:
         blockWithIptables: false

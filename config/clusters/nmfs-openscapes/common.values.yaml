@@ -38,14 +38,14 @@ jupyterhub:
           url: https://www.fisheries.noaa.gov
     singleuserAdmin:
       extraVolumeMounts:
-      1-allusers-volumemount:
-        name: home
-        mountPath: /home/jovyan/allusers
-        readOnly: false
-      2-rstudio-allusers-volumemount:
-        name: home
-        mountPath: /home/rstudio/allusers
-        readOnly: false
+        1-allusers-volumemount:
+          name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
+        2-rstudio-allusers-volumemount:
+          name: home
+          mountPath: /home/rstudio/allusers
+          readOnly: false
   singleuser:
     cloudMetadata:
       blockWithIptables: false
