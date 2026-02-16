@@ -22,7 +22,6 @@ hubs:
   - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: sciencecore
   display_name: Sciencecore
   domain: sciencecore.opensci.2i2c.cloud
@@ -32,7 +31,6 @@ hubs:
   - sciencecore.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-sciencecore.secret.values.yaml
-  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: climaterisk
   display_name: climaterisk
   domain: climaterisk.opensci.2i2c.cloud
@@ -41,7 +39,6 @@ hubs:
   - common.values.yaml
   - climaterisk.values.yaml
   - enc-climaterisk.secret.values.yaml
-  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: small-binder
   display_name: OpenSci Binder (Small)
   domain: hub.binder.opensci.2i2c.cloud
@@ -50,7 +47,6 @@ hubs:
   - small-binder.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-small-binder.secret.values.yaml
-  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml
 - name: big-binder
   display_name: OpenSci Binder (Big)
   domain: hub.big.binder.opensci.2i2c.cloud
@@ -59,4 +55,3 @@ hubs:
   - big-binder.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-big-binder.secret.values.yaml
-  chart_override: helm-charts/basehub/Z2jh-4.3.3-chart.yaml

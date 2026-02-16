@@ -16,9 +16,3 @@ charts:
         valuesPath: jupyterhub.hub.image
         buildArgs:
           REQUIREMENTS_FILE: requirements.txt
-      z2jh-433:
-        imageName: quay.io/2i2c/z2jh-433
-        buildArgs:
-          REQUIREMENTS_FILE: requirements.txt
-        contextPath: images/hub
-        dockerfilePath: images/hub/Dockerfile-z2jh-433

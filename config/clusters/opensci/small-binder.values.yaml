@@ -60,9 +60,6 @@ jupyterhub:
       # launch the notebook server
       os.execvp(exe, sys.argv)
   hub:
-    image:
-      name: quay.io/2i2c/z2jh-433
-      tag: 0.0.1-0.dev.git.14741.h1ea063d04
     config:
       BinderSpawnerMixin:
         auth_enabled: false

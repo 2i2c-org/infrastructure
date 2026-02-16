@@ -251,9 +251,6 @@ jupyterhub:
         extra_resource_limits:
           nvidia.com/gpu: '1'
   hub:
-    image:
-      name: quay.io/2i2c/z2jh-433
-      tag: 0.0.1-0.dev.git.14741.h1ea063d04
     extraConfig:
       # Undo unnecessary common config
       00-volumes-and-volume-mounts-as-dict: ''
