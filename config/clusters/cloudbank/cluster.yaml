@@ -45,6 +45,14 @@ hubs:
   - common.values.yaml
   - bcc.values.yaml
   - enc-bcc.secret.values.yaml
+- name: bmcc
+  display_name: Borough of Manhattan Community College, CUNY
+  domain: bmcc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - bmcc.values.yaml
+  - enc-bmcc.secret.values.yaml
 - name: chaffey
   display_name: Chaffey College
   domain: chaffey.cloudbank.2i2c.cloud
