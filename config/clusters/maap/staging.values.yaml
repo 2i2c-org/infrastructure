@@ -260,10 +260,6 @@ jupyterhub:
         oauth_callback_url: https://staging.hub.maap-project.org/hub/oauth_callback
         token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/auth
-      # Disable for now the authentication token refreshing
-      # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
-      Authenticator:
-        auth_refresh_age: 0
   ingress:
     hosts: [staging.hub.maap-project.org]
     tls:
