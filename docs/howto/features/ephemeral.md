@@ -128,20 +128,14 @@ ephemeral hub's users.
          # We still don't want to have per-user storage
          type: none
          extraVolumes:
-           # We include the dev-shm extraVolume as the list of extraVolumes from base hub will be overwritten
-           - name: dev-shm
-             emptyDir:
-               medium: Memory
-           - name: shared-dir-pvc
+           1-shared-dir-volume:
+             name: shared-dir-pv
              persistentVolumeClaim:
-               # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
                claimName: home-nfs
          extraVolumeMounts:
-           # We include the dev-shm extraVolumeMount as the list of extraVolumeMounts from base hub will be overwritten
-           - name: dev-shm
-             mountPath: /dev/shm
-           - name: shared-dir-pvc
-             mountPath: /home/jovyan/shared
+           1-shared-readonly-volumemount:
+             name: shared-dir-pv
+             mountPath: /home/jovyan/shared-readonly
              subPath: _shared
              readOnly: true
    ```

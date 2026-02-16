@@ -755,17 +755,19 @@ jupyterhub:
         pvcName: home-nfs
         subPath: "{escaped_username}"
       extraVolumes:
-        - name: dev-shm
+        001-shm-volume:
+          name: dev-shm
           emptyDir:
             medium: Memory
       extraVolumeMounts:
-        - name: home
+        001-shm-volumemount:
+          name: dev-shm
+          mountPath: /dev/shm
+        002-shared-volumemount:
+          name: home
           mountPath: /home/jovyan/shared
           subPath: _shared
           readOnly: true
-        - name: dev-shm
-          mountPath: /dev/shm
-
         # For all pods, mount home in both /home/jovyan (done via singleuser.storage.static)
         # as well as /home/rstudio. This allows rocker images (which use the
         # rstudio user and put home in /home/rstudio) to be first class citizens
@@ -776,10 +778,12 @@ jupyterhub:
         # end up accidentally hardcoding paths in their notebooks, it will continue to work
         # regardless of whether they or on RStudio or JupyterLab (described to us as a serious
         # problem by openscapes)
-        - name: home
+        003-rstudio-volumemount:
+          name: home
           mountPath: /home/rstudio
           subPath: "{escaped_username}"
-        - name: home
+        004-rstudio-shared-volumemount:
+          name: home
           mountPath: /home/rstudio/shared
           subPath: _shared
           readOnly: true

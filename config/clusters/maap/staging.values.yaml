@@ -14,11 +14,9 @@ jupyterhub:
   singleuser:
     storage:
       extraVolumes:
-      - name: dev-shm
-        emptyDir:
-          medium: Memory
-      - name: s3fs-volume
-        emptyDir: {}
+        1-s3f3-volume:
+          name: s3fs-volume
+          emptyDir: {}
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
       MAAP_API_HOST: api.uat.maap-project.org
