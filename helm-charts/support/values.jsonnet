@@ -265,6 +265,11 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                   'support-grafana',
                   'action needed this week'
                 ),
+                makePodRestartAlert(
+                  'proxy pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
+                  'proxy',
+                  'immediate action needed'
+                ),
               ],
             },
             {
