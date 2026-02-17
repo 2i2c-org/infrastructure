@@ -514,11 +514,10 @@ properties:
             type: object
             additionalProperties: false
             required:
-              - extraVolumeMounts
               - extraEnv
             properties:
               extraVolumeMounts:
-                type: array
+                type: [object, "null"]
                 items:
                   type: object
                   additionalProperties: true

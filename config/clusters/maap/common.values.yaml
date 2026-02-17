@@ -46,6 +46,8 @@ jupyterhub:
         - wildintellect
         authenticator_class: generic-oauth
         enable_auth_state: true
+        # Disable for now the authentication token refreshing
+        # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
         auth_refresh_age: 0
       GenericOAuthenticator:
         # We want to get user data from the JWT that's the id token,
@@ -87,24 +89,6 @@ jupyterhub:
             })
 
         c.Spawner.auth_state_hook = populate_token
-      00-volumes-and-volume-mounts-as-dict: |
-        # The base jupyterhub config in zero-to-jupyterhub defines
-        # volumes and volume_mounts as lists.
-        # But we can't add new volumes or volume_mounts to the list
-        # as that replaces the entire list.
-        # So we convert them to dictionaries, which allows us to
-        # add new volumes and volume_mounts as needed.
-        if isinstance(c.KubeSpawner.volumes, list):
-          existing_volumes = c.KubeSpawner.volumes
-          c.KubeSpawner.volumes = {}
-          for volume in existing_volumes:
-            c.KubeSpawner.volumes[volume["name"]] = volume
-        if isinstance(c.KubeSpawner.volume_mounts, list):
-          existing_volume_mounts = c.KubeSpawner.volume_mounts
-          c.KubeSpawner.volume_mounts = {}
-          for idx, volume_mount in enumerate(existing_volume_mounts):
-            c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
-        c.KubeSpawner.volumes["s3fs-volume"] = {"name": "s3fs-volume", "emptyDir": {}}
   singleuser:
     extraFiles:
       jupyter_server_config.json:
@@ -116,48 +100,45 @@ jupyterhub:
       blockWithIptables: false
     defaultUrl: /lab
     storage:
+      extraVolumes:
+        01-s3f3-volume:
+          name: s3fs-volume
+          emptyDir: {}
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/rstudio/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
-      - name: dev-shm
-        mountPath: /dev/shm
-      - name: home
-        mountPath: /home/rstudio
-        subPath: '{escaped_username}'
-      - name: home
-        mountPath: /home/rstudio/shared
-        subPath: _shared
-        readOnly: true
-      - name: s3fs-volume
-        mountPath: /home/jovyan/my-private-bucket
-        subPath: my-private-bucket
-        mountPropagation: HostToContainer
-        readOnly: false
-      - name: s3fs-volume
-        mountPath: /home/jovyan/my-public-bucket
-        subPath: my-public-bucket
-        mountPropagation: HostToContainer
-        readOnly: false
-      - name: s3fs-volume
-        mountPath: /home/jovyan/shared-buckets
-        subPath: shared-buckets
-        mountPropagation: HostToContainer
-        readOnly: true
-      - name: s3fs-volume
-        mountPath: /home/jovyan/triaged-jobs
-        subPath: triaged-jobs
-        mountPropagation: HostToContainer
-        readOnly: true
+        01-shared-public-volumemount:
+          name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        02-shared-public-rstudio-volumemount:
+          name: home
+          mountPath: /home/rstudio/shared-public
+          subPath: _shared-public
+          readOnly: false
+        03-s3f3-private-bucket-volumemount:
+          name: s3fs-volume
+          mountPath: /home/jovyan/my-private-bucket
+          subPath: my-private-bucket
+          mountPropagation: HostToContainer
+          readOnly: false
+        04-s3f3-public-bucket-volumemount:
+          name: s3fs-volume
+          mountPath: /home/jovyan/my-public-bucket
+          subPath: my-public-bucket
+          mountPropagation: HostToContainer
+          readOnly: false
+        05-s3f3-shared-bucket-volumemount:
+          name: s3fs-volume
+          mountPath: /home/jovyan/shared-buckets
+          subPath: shared-buckets
+          mountPropagation: HostToContainer
+          readOnly: true
+        06-s3f3-private-triaged-jobs-volumemount:
+          name: s3fs-volume
+          mountPath: /home/jovyan/triaged-jobs
+          subPath: triaged-jobs
+          mountPropagation: HostToContainer
+          readOnly: true
     extraContainers:
     - name: s3fs
       image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
