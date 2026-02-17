@@ -51,7 +51,7 @@ Some of the configuration that gets inherited either from the `basehub` defaults
     jupyterhub:
       custom:
         singleuserAdmin:
-          extraVolumeMounts:
+          extraVolumeMounts: []
     ```
 - on the singleuser server, disable storage and init containers and profile lists
 
@@ -64,8 +64,7 @@ Some of the configuration that gets inherited either from the `basehub` defaults
       singleuser:
         storage:
           type: none
-          extraVolumeMounts:
-          extraVolumes:
+          extraVolumeMounts: []
         initContainers: []
         profileList: []
     ```

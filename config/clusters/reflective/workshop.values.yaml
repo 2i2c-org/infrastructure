@@ -15,7 +15,7 @@ jupyterhub:
             Jupyter-book
           </a>
     singleuserAdmin:
-      extraVolumeMounts:
+      extraVolumeMounts: []
   ingress:
     hosts: [workshop.reflective.2i2c.cloud]
     tls:
@@ -38,8 +38,7 @@ jupyterhub:
       PANGEO_SCRATCH: s3://reflective-scratch-workshop/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://reflective-persistent-workshop/$(JUPYTERHUB_USER)
     storage:
-      extraVolumeMounts:
-      extraVolumes:
+      extraVolumeMounts: []
 dask-gateway:
   gateway:
     backend:

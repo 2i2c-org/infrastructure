@@ -33,7 +33,7 @@ jupyterhub:
           url: {{ funded_by_url }}
 {% endif %}
     singleuserAdmin:
-      extraVolumeMounts:
+      extraVolumeMounts: []
   singleuser:
     nodeSelector:
       # Schedule users on the smallest instance
@@ -46,8 +46,7 @@ jupyterhub:
       {% endif %}
     storage:
       type: none
-      extraVolumeMounts:
-      extraVolumes:
+      extraVolumeMounts: []
     initContainers: []
     profileList: []
 {% if authenticator == "none" %}

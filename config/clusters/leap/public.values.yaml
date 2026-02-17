@@ -18,7 +18,7 @@ jupyterhub:
       add_staff_user_ids_of_type: github
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
-      extraVolumeMounts:
+      extraVolumeMounts: []
     homepage:
       templateVars:
         org:
@@ -57,8 +57,7 @@ jupyterhub:
       # No persistent storage should be kept to reduce any potential data
       # retention & privacy issues.
       type: none
-      extraVolumeMounts:
-      extraVolumes:
+      extraVolumeMounts: []
     nodeSelector:
       2i2c.org/community: public
     extraTolerations:
