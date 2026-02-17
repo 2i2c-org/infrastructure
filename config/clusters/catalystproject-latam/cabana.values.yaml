@@ -1,0 +1,30 @@
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.cabana.svc.cluster.local
+jupyterhub:
+  ingress:
+    hosts: [cabana.latam.catalystproject.2i2c.cloud]
+    tls:
+    - hosts: [cabana.latam.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, LatAm - CABANA
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://cabana.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - CatalystProject-Hubs:cabana
+      Authenticator:
+        admin_users:
+        - rebcamsan
+        - l-g-g
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/catalystproject-392106/zones/southamerica-east1-c/disks/hub-nfs-homedirs-cabana
+

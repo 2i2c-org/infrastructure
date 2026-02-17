@@ -1,0 +1,31 @@
+jupyterhub:
+  ingress:
+    hosts: [molerhealth.af.catalystproject.2i2c.cloud]
+    tls:
+    - hosts: [molerhealth.af.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, Africa - MolerHealth
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://molerhealth.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - CatalystProject-Hubs:molerhealth
+      Authenticator:
+        admin_users:
+        - Monsurat-Onabajo
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: molerhealth
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0818b363dec5d022f
+nfs:
+  pv:
+    serverIP: 10.100.220.50

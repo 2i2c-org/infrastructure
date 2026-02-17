@@ -1,0 +1,36 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::495928966746:role/catalystproject-africa-bhki
+jupyterhub:
+  ingress:
+    hosts: [bhki.af.catalystproject.2i2c.cloud]
+    tls:
+    - hosts: [bhki.af.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, Africa - Bioinformatics Hub of Kenya Initiative
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://bhki.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - CatalystProject-Hubs:bhki
+      Authenticator:
+        admin_users:
+        - LandiMi2
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: bhki
+    extraEnv:
+      PERSISTENT_BUCKET: s3://catalystproject-africa-persistent-bhki/$(JUPYTERHUB_USER)
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-010d4c82c22dd5e69
+nfs:
+  pv:
+    serverIP: 10.100.231.92
