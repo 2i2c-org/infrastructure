@@ -18,8 +18,6 @@ jupyterhub:
         token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
       Authenticator:
-        # Disable for now the authentication token refreshing
-        # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
         auth_refresh_age: 0
   ingress:
     hosts: [staging.hub.disasters.2i2c.cloud]

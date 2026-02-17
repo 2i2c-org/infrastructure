@@ -387,12 +387,18 @@ jupyterhub:
     singleuserAdmin:
       extraEnv: {}
       extraVolumeMounts:
-        001-shared-readwrite-volumemount:
-          name: home
+        # IMPORTANT: What is added to this list is copied to other locations
+        #            that wants to add an element to this list. This is done
+        #            because when Helm config files are merged, lists get
+        #            replaced rather than appended. So, if this is to be
+        #            updated, we should update all those copies as well. An easy
+        #            to way find such copies is to search for "singleuserAdmin:"
+        #            in this repo.
+        #
+        - name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
-        002-shared-readwrite-rstudio-volumemount:
-          name: home
+        - name: home
           mountPath: /home/rstudio/shared-readwrite
           subPath: _shared
     2i2c:
@@ -749,19 +755,17 @@ jupyterhub:
         pvcName: home-nfs
         subPath: "{escaped_username}"
       extraVolumes:
-        001-shm-volume:
-          name: dev-shm
+        - name: dev-shm
           emptyDir:
             medium: Memory
       extraVolumeMounts:
-        001-shm-volumemount:
-          name: dev-shm
-          mountPath: /dev/shm
-        002-shared-volumemount:
-          name: home
+        - name: home
           mountPath: /home/jovyan/shared
           subPath: _shared
           readOnly: true
+        - name: dev-shm
+          mountPath: /dev/shm
+
         # For all pods, mount home in both /home/jovyan (done via singleuser.storage.static)
         # as well as /home/rstudio. This allows rocker images (which use the
         # rstudio user and put home in /home/rstudio) to be first class citizens
@@ -772,12 +776,10 @@ jupyterhub:
         # end up accidentally hardcoding paths in their notebooks, it will continue to work
         # regardless of whether they or on RStudio or JupyterLab (described to us as a serious
         # problem by openscapes)
-        003-rstudio-volumemount:
-          name: home
+        - name: home
           mountPath: /home/rstudio
           subPath: "{escaped_username}"
-        004-rstudio-shared-volumemount:
-          name: home
+        - name: home
           mountPath: /home/rstudio/shared
           subPath: _shared
           readOnly: true
@@ -1264,7 +1266,7 @@ jupyterhub:
 
         def modify_pod_hook(spawner, pod):
             """
-            Modify admin user's pod manifests based on *dict* config under
+            Modify admin user's pod manifests based on *list* config under
             `jupyterhub.custom.singleuserAdmin`.
 
             This hook is required to ensures that list config under
@@ -1288,9 +1290,7 @@ jupyterhub:
               else:
                   raise Exception("No container named 'notebook' found in pod definition")
 
-              admin_volume_mounts = custom_admin.get('extraVolumeMounts', {})
-              # custom.singleuserAdmin.extraVolumeMounts is a dict now
-              admin_volume_mounts = list(admin_volume_mounts.values())
+              admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
               notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
 
             # Setup iptables blocking for everyone

@@ -10,7 +10,7 @@ jupyterhub:
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
-      extraVolumeMounts:
+      extraVolumeMounts: []
     homepage:
       # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
       # is merged
@@ -41,8 +41,7 @@ jupyterhub:
     initContainers: []
     storage:
       type: none
-      extraVolumes:
-      extraVolumeMounts:
+      extraVolumeMounts: []
     profileList:
     - display_name: Choose your environment and resources
       slug: only-choice

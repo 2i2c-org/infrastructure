@@ -26,14 +26,21 @@ basehub:
         extraVolumeMounts:
           # /allusers is an extra mount point for admins to access to all users'
           # home dirs
-          01-allusers-volumemount:
-            name: home
-            mountPath: /home/jovyan/allusers
-            readOnly: false
-          02-allusers-rstudio-volumemount:
-            name: home
-            mountPath: /home/rstudio/allusers
-            readOnly: false
+        - name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
+        - name: home
+          mountPath: /home/rstudio/allusers
+          readOnly: false
+          # mounts below are copied from basehub's values that we override by
+          # specifying extraVolumeMounts (lists get overridden when helm values
+          # are combined)
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
+        - name: home
+          mountPath: /home/rstudio/shared-readwrite
+          subPath: _shared
       homepage:
         templateVars:
           org:
@@ -83,16 +90,27 @@ basehub:
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/veda-hub-github-scoped-creds
       storage:
         extraVolumeMounts:
-          01-shared-public-volumemount:
-            name: home
-            mountPath: /home/jovyan/shared-public
-            subPath: _shared-public
-            readOnly: false
-          02-shared-public-volumemount:
-            name: home
-            mountPath: /home/rstudio/shared-public
-            subPath: _shared-public
-            readOnly: false
+        - name: home
+          mountPath: /home/rstudio
+          subPath: '{escaped_username}'
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        - name: home
+          mountPath: /home/rstudio/shared-public
+          subPath: _shared-public
+          readOnly: false
+        - name: home
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+        - name: home
+          mountPath: /home/rstudio/shared
+          subPath: _shared
+          readOnly: true
+        - name: dev-shm
+          mountPath: /dev/shm
       profileList:
       - display_name: Choose your environment and resources
         default: true

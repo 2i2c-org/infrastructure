@@ -87,8 +87,6 @@ basehub:
           # Convert 'scope' from the OAuth2 response into JupyterHub groups
           manage_groups: true
           enable_auth_state: true
-          # Disable for now the authentication token refreshing
-          # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
           auth_refresh_age: 0
           admin_users:
           - google-oauth2|117718799995701713253   #Chad Trabant, https://2i2c.freshdesk.com/a/tickets/1279
