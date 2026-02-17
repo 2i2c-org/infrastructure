@@ -517,7 +517,7 @@ properties:
               - extraEnv
             properties:
               extraVolumeMounts:
-                type: object
+                type: [object, "null"]
                 items:
                   type: object
                   additionalProperties: true
