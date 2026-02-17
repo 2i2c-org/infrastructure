@@ -14,22 +14,10 @@ jupyterhub:
       tag: ab29550edcd8
     storage:
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/submit
-        subPath: _shared-private/{escaped_username}
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
-      - name: dev-shm
-        mountPath: /dev/shm
-      - name: home
-        mountPath: /home/rstudio
-        subPath: '{escaped_username}'
-      - name: home
-        mountPath: /home/rstudio/shared
-        subPath: _shared
-        readOnly: true
+        1-submit-volumemount:
+          name: home
+          mountPath: /home/jovyan/submit
+          subPath: _shared-private/{escaped_username}
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -51,15 +39,10 @@ jupyterhub:
           url: http://cloudbank.org/
     singleuserAdmin:
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/collect
-        subPath: _shared-private
-      - name: home
-        mountPath: /home/jovyan/shared-readwrite
-        subPath: _shared
-      - name: home
-        mountPath: /home/rstudio/shared-readwrite
-        subPath: _shared
+        1-collect-volumemount:
+          name: home
+          mountPath: /home/jovyan/collect
+          subPath: _shared-private
   hub:
     config:
       JupyterHub:
