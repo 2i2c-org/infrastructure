@@ -101,39 +101,39 @@ jupyterhub:
     defaultUrl: /lab
     storage:
       extraVolumes:
-        1-s3f3-volume:
+        01-s3f3-volume:
           name: s3fs-volume
           emptyDir: {}
       extraVolumeMounts:
-        1-shared-public-volumemount:
+        01-shared-public-volumemount:
           name: home
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
           readOnly: false
-        2-shared-public-rstudio-volumemount:
+        02-shared-public-rstudio-volumemount:
           name: home
           mountPath: /home/rstudio/shared-public
           subPath: _shared-public
           readOnly: false
-        3-s3f3-private-bucket-volumemount:
+        03-s3f3-private-bucket-volumemount:
           name: s3fs-volume
           mountPath: /home/jovyan/my-private-bucket
           subPath: my-private-bucket
           mountPropagation: HostToContainer
           readOnly: false
-        4-s3f3-public-bucket-volumemount:
+        04-s3f3-public-bucket-volumemount:
           name: s3fs-volume
           mountPath: /home/jovyan/my-public-bucket
           subPath: my-public-bucket
           mountPropagation: HostToContainer
           readOnly: false
-        5-s3f3-shared-bucket-volumemount:
+        05-s3f3-shared-bucket-volumemount:
           name: s3fs-volume
           mountPath: /home/jovyan/shared-buckets
           subPath: shared-buckets
           mountPropagation: HostToContainer
           readOnly: true
-        6-s3f3-private-triaged-jobs-volumemount:
+        06-s3f3-private-triaged-jobs-volumemount:
           name: s3fs-volume
           mountPath: /home/jovyan/triaged-jobs
           subPath: triaged-jobs

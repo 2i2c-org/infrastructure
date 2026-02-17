@@ -22,10 +22,10 @@ basehub:
         add_staff_user_ids_of_type: github
       singleuserAdmin:
         extraVolumeMounts:
-          1-allusers-volumemount:
+          01-allusers-volumemount:
             name: home
             mountPath: /home/jovyan/allusers
-          2-allusers-rstudio-volumemount:
+          02-allusers-rstudio-volumemount:
             name: home
             mountPath: /home/rstudio/allusers
       homepage:

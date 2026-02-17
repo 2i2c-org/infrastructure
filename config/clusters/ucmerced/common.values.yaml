@@ -18,7 +18,7 @@ jupyterhub:
       extraVolumeMounts:
         # /allusers is an extra mount point for admins to access to all users'
         # home dirs
-        1-allusers-volumemount:
+        01-allusers-volumemount:
           name: home
           mountPath: /home/jovyan/allusers
           readOnly: false

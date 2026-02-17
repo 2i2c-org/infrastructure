@@ -25,7 +25,7 @@ basehub:
       # Ref https://github.com/2i2c-org/infrastructure/issues/2105
       singleuserAdmin:
         extraVolumeMounts:
-          1-allusers-volumemount:
+          01-allusers-volumemount:
             name: home
             mountPath: /home/jovyan/allusers
       2i2c:

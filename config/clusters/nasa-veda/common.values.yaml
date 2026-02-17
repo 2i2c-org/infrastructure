@@ -26,11 +26,11 @@ basehub:
         extraVolumeMounts:
           # /allusers is an extra mount point for admins to access to all users'
           # home dirs
-          1-allusers-volumemount:
+          01-allusers-volumemount:
             name: home
             mountPath: /home/jovyan/allusers
             readOnly: false
-          2-allusers-rstudio-volumemount:
+          02-allusers-rstudio-volumemount:
             name: home
             mountPath: /home/rstudio/allusers
             readOnly: false
@@ -83,12 +83,12 @@ basehub:
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/veda-hub-github-scoped-creds
       storage:
         extraVolumeMounts:
-          1-shared-public-volumemount:
+          01-shared-public-volumemount:
             name: home
             mountPath: /home/jovyan/shared-public
             subPath: _shared-public
             readOnly: false
-          2-shared-public-volumemount:
+          02-shared-public-volumemount:
             name: home
             mountPath: /home/rstudio/shared-public
             subPath: _shared-public
