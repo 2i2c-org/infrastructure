@@ -63,14 +63,15 @@ jupyterhub:
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
-      extraVolumeMounts: {}
+      extraVolumeMounts:
   singleuser:
     initContainers: []
     storage:
       # No persistent storage should be kept to reduce any potential data
       # retention & privacy issues.
       type: none
-      extraVolumeMounts: {}
+      extraVolumeMounts:
+      extraVolumes:
 ```
 
 ## (Optional) Sharing `shared` directories from another hub with an ephemeral hub

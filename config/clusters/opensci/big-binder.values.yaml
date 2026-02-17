@@ -54,7 +54,7 @@ jupyterhub:
             </p>
           </div>
     singleuserAdmin:
-      extraVolumeMounts: {}
+      extraVolumeMounts:
   singleuser:
     nodeSelector:
       # Schedule users on the smallest instance
@@ -70,7 +70,8 @@ jupyterhub:
       guarantee: 8G
     storage:
       type: none
-      extraVolumeMounts: {}
+      extraVolumeMounts:
+      extraVolumes:
     initContainers: []
     profileList: []
   hub:

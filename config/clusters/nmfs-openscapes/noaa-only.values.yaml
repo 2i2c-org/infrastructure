@@ -35,7 +35,7 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_of_type: google
     singleuserAdmin:
-      extraVolumeMounts: {}
+      extraVolumeMounts:
   ingress:
     hosts: [noaa.nmfs-openscapes.2i2c.cloud]
     tls:

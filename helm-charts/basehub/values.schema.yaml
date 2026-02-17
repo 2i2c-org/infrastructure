@@ -514,7 +514,6 @@ properties:
             type: object
             additionalProperties: false
             required:
-              - extraVolumeMounts
               - extraEnv
             properties:
               extraVolumeMounts:

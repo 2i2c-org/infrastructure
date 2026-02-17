@@ -11,7 +11,7 @@ basehub:
         # is merged
         gitRepoBranch: unify-logins-2
       singleuserAdmin:
-        extraVolumeMounts: {}
+        extraVolumeMounts:
     ingress:
       hosts: [workshop.openscapes.2i2c.cloud]
       tls:
