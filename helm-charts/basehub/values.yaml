@@ -387,11 +387,11 @@ jupyterhub:
     singleuserAdmin:
       extraEnv: {}
       extraVolumeMounts:
-        1-shared-readwrite-volumemount:
+        001-shared-readwrite-volumemount:
           name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
-        2-shared-readwrite-rstudio-volumemount:
+        002-shared-readwrite-rstudio-volumemount:
           name: home
           mountPath: /home/rstudio/shared-readwrite
           subPath: _shared
@@ -1264,7 +1264,7 @@ jupyterhub:
 
         def modify_pod_hook(spawner, pod):
             """
-            Modify admin user's pod manifests based on *list* config under
+            Modify admin user's pod manifests based on *dict* config under
             `jupyterhub.custom.singleuserAdmin`.
 
             This hook is required to ensures that list config under
@@ -1289,6 +1289,9 @@ jupyterhub:
                   raise Exception("No container named 'notebook' found in pod definition")
 
               admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+              # custom.singleuserAdmin.extraVolumeMounts is a dict now
+              if admin_volume_mounts:
+                admin_volume_mounts = admin_volume_mounts.values()
               notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
 
             # Setup iptables blocking for everyone
