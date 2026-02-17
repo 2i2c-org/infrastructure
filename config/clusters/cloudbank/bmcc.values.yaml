@@ -39,7 +39,8 @@ jupyterhub:
             default: true
             username_derivation:
               username_claim: email
-            allow_all: true
+            allowed_domains:
+            - bmcc.cuny.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
