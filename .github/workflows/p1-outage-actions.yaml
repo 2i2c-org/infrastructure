@@ -27,6 +27,8 @@ jobs:
           - service: ${{ github.event.client_payload.service }}
           - type: ${{ github.event.client_payload.type }}
 
+          Details of the incident can be found [on PagerDuty](https://2i2c-org.pagerduty.com/incidents/${{ github.event.client_payload.incident_id }}).
+
           ### What we need to do
 
           Follow the incident response process https://compass.2i2c.org/services/interactive-computing/incidents/
