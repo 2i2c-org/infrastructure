@@ -1288,10 +1288,9 @@ jupyterhub:
               else:
                   raise Exception("No container named 'notebook' found in pod definition")
 
-              admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+              admin_volume_mounts = custom_admin.get('extraVolumeMounts', {})
               # custom.singleuserAdmin.extraVolumeMounts is a dict now
-              if admin_volume_mounts:
-                admin_volume_mounts = admin_volume_mounts.values()
+              admin_volume_mounts = list(admin_volume_mounts.values())
               notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
 
             # Setup iptables blocking for everyone
