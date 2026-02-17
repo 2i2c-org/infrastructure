@@ -33,21 +33,11 @@ hub_cloud_permissions = {
 
 user_buckets = {}
 
-# Setup notebook node pools
+# Setup a single node pool, as we don't offer resource selection dropdowns here
 notebook_nodes = {
-  "n2-highmem-4" : {
+  "n2-highmem-2" : {
     min : 0,
-    max : 100,
-    machine_type : "n2-highmem-4",
-  },
-  "n2-highmem-16" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-16",
-  },
-  "n2-highmem-64" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-64",
+    max : 10, # Capped at 10 rather than 100
+    machine_type : "n2-highmem-2",
   }
 }
