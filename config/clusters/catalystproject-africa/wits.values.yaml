@@ -1,0 +1,35 @@
+jupyterhub:
+  ingress:
+    hosts: [wits.af.catalystproject.2i2c.cloud]
+    tls:
+    - hosts: [wits.af.catalystproject.2i2c.cloud]
+      secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, Africa - WITS
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://wits.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+        - CatalystProject-Hubs:wits
+      Authenticator:
+        admin_users:
+        - gentlelab2016
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: wits
+jupyterhub-home-nfs:
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 1 # in GiB
+  eks:
+    volumeId: vol-0c891ce78c5d76b2b
+nfs:
+  pv:
+    serverIP: 10.100.176.128
