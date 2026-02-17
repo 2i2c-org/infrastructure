@@ -39,5 +39,11 @@ notebook_nodes = {
     min : 0,
     max : 10, # Capped at 10 rather than 100
     machine_type : "n2-highmem-2",
+    zones : [
+      # us-west2 has limited resources, so lots of resource exhaustion
+      "us-west2-a",
+      "us-west2-b",
+      "us-west2-c",
+    ]
   }
 }
