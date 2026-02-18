@@ -42,6 +42,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "chicagostate"
   }
+  "cmu" = {
+    size        = 25
+    name_suffix = "cmu"
+  }
   "csm" = {
     size        = 150
     name_suffix = "csm"
