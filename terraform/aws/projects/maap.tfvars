@@ -32,6 +32,7 @@ hub_cloud_permissions = {
               "s3:PutObject",
               "s3:PutObjectAcl",
               "s3:GetObject",
+              "s3:GetObjectTagging",
               "s3:ListBucketMultipartUploads",
               "s3:AbortMultipartUpload",
               "s3:ListBucketVersions",
@@ -106,6 +107,7 @@ hub_cloud_permissions = {
             "Effect": "Allow",
             "Action": [
               "s3:GetObject",
+              "s3:GetObjectTagging",
               "s3:ListBucketVersions",
               "s3:ListBucket",
               "s3:GetBucketLocation"
