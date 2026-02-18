@@ -63,29 +63,6 @@ jupyterhub:
         - efuchs@mail.ccsf.edu
         - amy.mclanahan@mail.ccsf.edu
         - vsoon129@berkeley.edu
-    extraFiles:
-      configurator-schema-default:
-        data:
-          properties:
-            Spawner.default_url:
-              type: string
-              title: Default User Interface
-              enum:
-              - /tree
-              - /lab
-              - /retro
-              default: /tree
-              enumMetadata:
-                interfaces:
-                - value: /tree
-                  title: Classic Notebook
-                  description: The original single-document interface for creating Jupyter Notebooks.
-                - value: /lab
-                  title: JupyterLab
-                  description: A Powerful next generation notebook interface
-                - value: /retro
-                  title: RetroLab
-                  description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ccsf
