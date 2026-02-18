@@ -51,6 +51,11 @@ jupyterhub:
           persistentVolumeClaim:
             claimName: home-nfs
       extraVolumeMounts:
+        # Disable default mounts
+        002-shared-volumemount:
+        003-rstudio-volumemount:
+        004-rstudio-shared-volumemount:
+        # Enable shared readonly mount
         1-shared-readonly-volumemount:
           name: shared-dir-pv
           mountPath: /home/jovyan/shared-readonly
