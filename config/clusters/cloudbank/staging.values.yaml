@@ -13,7 +13,7 @@ jupyterhub:
       limit: 1.5G
     image:
       name: quay.io/ccsf/jupyterhub
-      tag: sp26.4
+      tag: sp26.6
     storage:
       extraVolumeMounts:
       - name: home
