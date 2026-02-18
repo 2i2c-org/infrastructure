@@ -31,10 +31,12 @@ jobs:
         BILLING_MONTH: ${{ env.billing_month }}
         BODY: |
           ### Context
-          - Dedicated clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-with-dedicated-cloud-accounts)  
+          - Dedicated clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-with-dedicated-cloud-accounts)
 
           ### Definition of Done
-          - [ ] Billing data is collected according to instructions.
+          - [ ] AWS Billing data is collected
+          - [ ] GCP Billing data is collected
+          - [ ] OVH Billing data is collected
           - [ ] The billing slack was notified about the new billing data collected
 
     - name: Create issue for shared clusters billing
