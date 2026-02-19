@@ -235,12 +235,24 @@ jupyterhub:
               slug: pytorch
               kubespawner_override:
                 image: quay.io/pangeo/pytorch-notebook:2024.11.11
+            pytorch-maap:
+              display_name: Pangeo PyTorch ML Notebook with MAAP extensions
+              default: false
+              slug: pytorch
+              kubespawner_override:
+                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/pytorch:develop
             tensorflow2:
               display_name: Pangeo Tensorflow2 ML Notebook
-              default: true
+              default: false
               slug: tensorflow2
               kubespawner_override:
                 image: quay.io/pangeo/ml-notebook:2024.11.11
+            tensorflow2-maap:
+              display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
+              default: true
+              slug: tensorflow2
+              kubespawner_override:
+                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:develop
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
