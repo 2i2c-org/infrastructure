@@ -70,6 +70,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - uses: actions/setup-python@v6
       with:
@@ -249,6 +251,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
       uses: ./.github/actions/setup-deploy
@@ -482,6 +486,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
@@ -620,6 +626,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
