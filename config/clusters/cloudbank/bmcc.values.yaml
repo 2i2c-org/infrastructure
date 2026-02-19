@@ -41,6 +41,7 @@ jupyterhub:
               username_claim: email
             allowed_domains:
             - bmcc.cuny.edu
+            - stu.bmcc.cuny.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
