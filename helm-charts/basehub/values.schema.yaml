@@ -518,9 +518,6 @@ properties:
             properties:
               extraVolumeMounts:
                 type: [object, "null"]
-                items:
-                  type: object
-                  additionalProperties: true
               extraEnv:
                 type: object
           2i2c:
