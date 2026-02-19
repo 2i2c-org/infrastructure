@@ -47,8 +47,12 @@ jupyterhub:
         admin_users:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
-        - deblasio@cs.cmu.edu
+        - ddeblasi@andrew.cmu.edu
         - icaoberg@andrew.cmu.edu
+        - aramchal@andrew.cmu.edu
+        - daphneh@andrew.cmu.edu
+        - jslackma@andrew.cmu.edu
+
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-cmu
