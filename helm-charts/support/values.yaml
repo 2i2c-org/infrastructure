@@ -14,6 +14,21 @@
 cluster-autoscaler:
   enabled: false
 
+nginx-ingress:
+  # Disable this by default
+  enabled: false
+  controller:
+    # Don't enable any custom resource definitions, as that just makes our lives hard for no reason
+    enableCustomResources: false
+    appprotect:
+      enable: false
+    appprotectdos:
+      enable: false
+
+    # Get this ingressClass a different name, so we can co-exist with ingress-nginx
+    ingressClass:
+      name: nginx-ingress
+
 # ingress-nginx is responsible for proxying traffic based on k8s Ingress
 # resources defined in the k8s cluster.
 #
