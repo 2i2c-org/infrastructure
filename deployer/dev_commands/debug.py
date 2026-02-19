@@ -159,3 +159,23 @@ def dashboard(
     except KeyError:
         raise KeyError("Cluster {cluster_name!r} does not have a valid provider URL")
     webbrowser.open(url)
+
+
+@debug_app.command()
+def hub(
+    cluster_name: str = typer.Argument(
+        "2i2c", help="Name of cluster for which to load dashboard"
+    ),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+):
+    """
+    Open the provider dashboard for a cluster in the webbrowser
+    """
+    cluster = Cluster.from_name(cluster_name)
+    try:
+        hub = next(h for h in cluster.hubs if h.spec["name"] == hub_name)
+    except StopIteration:
+        raise ValueError(
+            "Cluster {cluster_name!r} does not have a hub called {hub_name!r}"
+        )
+    webbrowser.open(url=hub.spec["domain"])
