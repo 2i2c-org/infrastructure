@@ -1,121 +1,206 @@
-basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-binder
-  nfs:
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-binder
+
+nfs:
+  enabled: false
+  pv:
     enabled: false
-    pv:
+
+jupyterhub-home-nfs:
+  enabled: false
+
+jupyterhub-groups-exporter:
+  config:
+    groupsExporter:
+      allowed_groups:
+      - geolab
+      - geolab:dev
+      - geolab:power
+
+jupyterhub:
+  ingress:
+    hosts: [hub.binder.geolab.earthscope.cloud]
+    tls:
+    - hosts: [hub.binder.geolab.earthscope.cloud]
+      secretName: https-auto-tls
+  cull:
+    every: 300
+    # No pods over 12h long
+    maxAge: 43200
+    # Also cull all users more than 12h old
+    users: true
+  custom:
+    2i2c:
+      # This uses custom ids from auth0, so we can't use our default
+      # emails as access
+      add_staff_user_ids_to_admin_users: false
+    daskhubSetup:
       enabled: false
-  jupyterhub-home-nfs:
-    enabled: false
-  jupyterhub:
-    ingress:
-      hosts: [hub.binder.geolab.earthscope.cloud]
-      tls:
-      - hosts: [hub.binder.geolab.earthscope.cloud]
-        secretName: https-auto-tls
-    cull:
-      every: 300
-      # No pods over 12h long
-      maxAge: 43200
-      # Also cull all users more than 12h old
-      users: true
-    custom:
-      daskhubSetup:
-        enabled: false
-      binderhubUI:
-        enabled: true
-      singleuserAdmin:
-        extraVolumeMounts: []
-      homepage:
-        templateVars:
-          redirect_to: https://www.earthscope.org/data/geolab/
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: binder
-      memory:
-        guarantee: 6G
-        limit: 8G
-      cpu:
-        limit: 1
-      storage:
-        type: none
-        extraVolumeMounts: []
-      initContainers: []
-      profileList: []
-    hub:
-      services:
-        binder:
-          oauth_redirect_uri: https://binder.geolab.earthscope.cloud/oauth_callback
-      config:
-        BinderSpawnerMixin:
-          auth_enabled: true
-        GenericOAuthenticator:
-          token_url: https://login.earthscope.org/oauth/token
-          authorize_url: https://login.earthscope.org/authorize
-          userdata_url: https://login.earthscope.org/userinfo
-          logout_redirect_url: https://login.earthscope.org/v2/logout?client_id=2PbhUTbRU6e7uIaaEZIShotx15MbvsJJ
-          extra_authorize_params:
-            # This isn't an actual URL, just a string. Must not have a trailing slash
-            audience: https://api.earthscope.org
-      redirectToServer: false
-      loadRoles:
-        binder:
-          services:
-          - binder
-          scopes:
-          - servers
-          - read:users
-        user:
-          scopes:
-          - self
-          - access:services!service=binder
-  binderhub-service:
-    enabled: true
-    networkPolicy:
+    binderhubUI:
       enabled: true
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: binder
-    ingress:
+    singleuserAdmin:
+      extraVolumeMounts: []
+    homepage:
+      templateVars:
+        redirect_to: https://www.earthscope.org/data/geolab/
+  singleuser:
+    cloudMetadata:
+      blockWithIptables: false
+    nodeSelector:
+      2i2c/hub-name: binder
+    memory:
+      guarantee: 6G
+      limit: 8G
+    cpu:
+      limit: 1
+    storage:
+      type: none
+      extraVolumeMounts: []
+    initContainers: []
+    profileList: []
+  scheduling:
+    userScheduler:
       enabled: true
-      hosts: [binder.geolab.earthscope.cloud]
-      tls:
-      - hosts: [binder.geolab.earthscope.cloud]
-        secretName: binder-https-auto-tls
-    custom:
-      sendLogsOfLaunchEventsTo2i2c: true
+  hub:
+    extraConfig:
+      001-username-claim: |
+        import json
+        from oauthenticator.generic import GenericOAuthenticator
+        from traitlets import List, Unicode
+        from urllib.parse import urlparse
+
+        def populate_token(spawner, auth_state):
+          # For our deployment-service-check health check user, there is no auth_state.
+          # So these env variables need not be set.
+          if auth_state:
+            url_parts = urlparse(spawner.authenticator.token_url)
+            base_url = f"{url_parts.scheme}://{url_parts.netloc}"
+            scope_str = " ".join(spawner.authenticator.scope)
+
+            # Bootstrap EarthScope SDK settings
+            settings = {
+              "oauth2": {
+                "audience": spawner.authenticator.extra_authorize_params.get("audience", ""),
+                "client_id": spawner.authenticator.client_id,
+                "domain": base_url,
+                "scope": scope_str,
+                "access_token": auth_state.get("access_token", ""),
+                "id_token": auth_state.get("id_token", ""),
+                "refresh_token": auth_state.get("refresh_token", "")
+              }
+            }
+
+            # The spawner expands environment variables using string.format, so we need to escape braces.
+            settings_str = json.dumps(settings)
+            escaped_settings_str = settings_str.replace("{", "{{").replace("}", "}}")
+
+            spawner.environment.update({
+              "ES_BOOTSTRAP_SETTINGS": escaped_settings_str
+            })
+
+        c.Spawner.auth_state_hook = populate_token
+    services:
+      binder:
+        oauth_redirect_uri: https://binder.geolab.earthscope.cloud/oauth_callback
     config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: binder
-          node.kubernetes.io/instance-type: r5.xlarge
-      BinderHub:
-        base_url: /
-        hub_url: https://hub.binder.geolab.earthscope.cloud
-        badge_base_url: https://binder.geolab.earthscope.cloud
+      BinderSpawnerMixin:
         auth_enabled: true
-        enable_api_only_mode: false
-        image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
-      DockerRegistry:
-        url: &url https://quay.io
-        username: &username imagebuilding-non-gcp-hubs+image_builder
-    extraEnv:
-    - name: JUPYTERHUB_API_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: hub
-          key: hub.services.binder.apiToken
-    - name: JUPYTERHUB_CLIENT_ID
-      value: service-binder
-    - name: JUPYTERHUB_API_URL
-      value: https://hub.binder.geolab.earthscope.cloud/hub/api
-      # Without this, the redirect URL to /hub/api/... gets
-      # appended to binderhub's URL instead of the hub's
-    - name: JUPYTERHUB_BASE_URL
-      value: https://hub.binder.geolab.earthscope.cloud/
-    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
-      value: https://binder.geolab.earthscope.cloud/oauth_callback
-    buildPodsRegistryCredentials:
-      server: *url
-      username: *username
+      JupyterHub:
+        authenticator_class: generic-oauth
+      GenericOAuthenticator:
+        allowed_scopes:
+          # This allows EarthScope to control who can login to the hub
+        - geolab
+        auth_state_groups_key: scope
+        scope:
+        - openid
+          # This gives us refresh token
+        - offline_access
+          # This allows EarthScope to control who can login to the hub
+          # Everyone who logs in with Google and has a `@2i2c.org` email will be
+          # automatically granted this scope, so we can test. See
+          # https://2i2c.freshdesk.com/a/tickets/1280 for how this was granted.
+        - geolab
+        - geolab:dev
+        - geolab:power
+        username_claim: sub
+        # Convert 'scope' from the OAuth2 response into JupyterHub groups
+        manage_groups: true
+        enable_auth_state: true
+        auth_refresh_age: 0
+        admin_users:
+        - google-oauth2|117718799995701713253   #Chad Trabant, https://2i2c.freshdesk.com/a/tickets/1279
+        - google-oauth2|117710759588624106233   #Sarah Wilson
+        - google-oauth2|112630227497477971771   #Robert Weekly
+        - google-oauth2|118403506154942842583   #Alex Hamilton
+        - google-oauth2|108516754518362587599   # Yuvi
+        - google-oauth2|117859169473992122769   # Georgiana
+        - google-oauth2|117322480787655244438   # Jenny
+        - google-oauth2|107058254054417943477   # Angus
+        token_url: https://login.earthscope.org/oauth/token
+        authorize_url: https://login.earthscope.org/authorize
+        userdata_url: https://login.earthscope.org/userinfo
+        logout_redirect_url: https://login.earthscope.org/v2/logout?client_id=2PbhUTbRU6e7uIaaEZIShotx15MbvsJJ
+    redirectToServer: false
+    loadRoles:
+      binder:
+        services:
+        - binder
+        scopes:
+        - servers
+        - read:users
+      user:
+        scopes:
+        - self
+        - access:services!service=binder
+binderhub-service:
+  enabled: true
+  networkPolicy:
+    enabled: true
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: binder
+      node.kubernetes.io/instance-type: r5.xlarge
+  ingress:
+    enabled: true
+    hosts: [binder.geolab.earthscope.cloud]
+    tls:
+    - hosts: [binder.geolab.earthscope.cloud]
+      secretName: binder-https-auto-tls
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: true
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: binder
+        node.kubernetes.io/instance-type: r5.xlarge
+    BinderHub:
+      base_url: /
+      hub_url: https://hub.binder.geolab.earthscope.cloud
+      badge_base_url: https://binder.geolab.earthscope.cloud
+      auth_enabled: true
+      enable_api_only_mode: false
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+  extraEnv:
+  - name: JUPYTERHUB_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: hub
+        key: hub.services.binder.apiToken
+  - name: JUPYTERHUB_CLIENT_ID
+    value: service-binder
+  - name: JUPYTERHUB_API_URL
+    value: https://hub.binder.geolab.earthscope.cloud/hub/api
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+  - name: JUPYTERHUB_BASE_URL
+    value: https://hub.binder.geolab.earthscope.cloud/
+  - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+    value: https://binder.geolab.earthscope.cloud/oauth_callback
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username

@@ -33,8 +33,7 @@ hubs:
 - name: binder
   display_name: EarthScope Binder
   domain: hub.binder.geolab.earthscope.cloud
-  helm_chart: daskhub
+  helm_chart: basehub
   helm_chart_values_files:
-  - common.values.yaml
   - binder.values.yaml
   - enc-binder.secret.values.yaml
