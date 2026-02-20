@@ -96,9 +96,10 @@ jupyterhub:
         group_org_team_entries = [
             p
             for p in (
+                # Split "group" of form "team:project" into (team:project, team, project) tuples
                 (g, *g.split(":", 1)) for g in set(c.GitHubOAuthenticator.allowed_organizations)
             )
-            # Only take (group, org, team) entries
+            # Only take (group, org, team) entries (handles groups without "org:team" scheme)
             if len(p) == 3
         ]
 
@@ -118,7 +119,7 @@ jupyterhub:
                 },
             }
             for i, (group, org, team, name) in enumerate(
-                # Allow renaming of the final path
+                # Allow renaming of the final path 
                 (group, org, team, group_to_path_overrides.get(group, team))
                 for group, org, team in group_org_team_entries
             )
