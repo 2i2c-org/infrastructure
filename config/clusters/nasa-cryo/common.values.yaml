@@ -118,7 +118,7 @@ basehub:
                 default: true
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
-                  image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
+                  image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
               02-pythonpace:
                 display_name: Ocean Biology Python Image
                 description: Ocean Biology environment used by the PACE mission
