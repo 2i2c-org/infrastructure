@@ -37,71 +37,13 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: false
     daskhubSetup:
       enabled: false
-  jupyterhub-home-nfs:
-    enabled: false
-  jupyterhub:
-    ingress:
-      hosts: [hub.binder.geolab.earthscope.cloud]
-      tls:
-      - hosts: [hub.binder.geolab.earthscope.cloud]
-        secretName: https-auto-tls
-    cull:
-      every: 300
-      # No pods over 12h long
-      maxAge: 43200
-      # Also cull all users more than 12h old
-      users: true
-    custom:
-      daskhubSetup:
-        enabled: false
-      binderhubUI:
-        enabled: true
-      singleuserAdmin:
-        extraVolumeMounts:
-      homepage:
-        templateVars:
-          redirect_to: https://www.earthscope.org/data/geolab/
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: binder
-      memory:
-        guarantee: 6G
-        limit: 8G
-      cpu:
-        limit: 1
-      storage:
-        type: none
-        extraVolumeMounts:
-        extraVolumes:
-      initContainers: []
-      profileList: []
-    hub:
-      services:
-        binder:
-          oauth_redirect_uri: https://binder.geolab.earthscope.cloud/oauth_callback
-      config:
-        BinderSpawnerMixin:
-          auth_enabled: true
-        GenericOAuthenticator:
-          token_url: https://login.earthscope.org/oauth/token
-          authorize_url: https://login.earthscope.org/authorize
-          userdata_url: https://login.earthscope.org/userinfo
-          logout_redirect_url: https://login.earthscope.org/v2/logout?client_id=2PbhUTbRU6e7uIaaEZIShotx15MbvsJJ
-          extra_authorize_params:
-            # This isn't an actual URL, just a string. Must not have a trailing slash
-            audience: https://api.earthscope.org
-      redirectToServer: false
-      loadRoles:
-        binder:
-          services:
-          - binder
-          scopes:
-          - servers
-          - read:users
-        user:
-          scopes:
-          - self
-          - access:services!service=binder
+    binderhubUI:
+      enabled: true
+    singleuserAdmin:
+      extraVolumeMounts:
+    homepage:
+      templateVars:
+        redirect_to: https://www.earthscope.org/data/geolab/
   singleuser:
     cloudMetadata:
       blockWithIptables: false
@@ -114,7 +56,7 @@ jupyterhub:
       limit: 1
     storage:
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
     initContainers: []
     profileList: []
   scheduling:
