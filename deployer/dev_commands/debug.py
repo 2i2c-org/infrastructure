@@ -162,7 +162,7 @@ def dashboard(
 
 
 @debug_app.command()
-def hub(
+def access_hub(
     cluster_name: str = typer.Argument(
         "2i2c", help="Name of cluster for which to load dashboard"
     ),
