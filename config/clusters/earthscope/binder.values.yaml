@@ -124,9 +124,6 @@ jupyterhub:
         - geolab
         - geolab:dev
         - geolab:power
-        extra_authorize_params:
-          # This isn't an actual URL, just a string. Must not have a trailing slash
-          audience: https://api.dev.earthscope.org
         username_claim: sub
         # Convert 'scope' from the OAuth2 response into JupyterHub groups
         manage_groups: true
