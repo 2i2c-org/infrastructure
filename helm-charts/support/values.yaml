@@ -25,6 +25,9 @@ nginx-ingress:
     appprotectdos:
       enable: false
 
+    # Enable custom config snippets, which we use for rewriting
+    enableSnippets: true
+
     # Get this ingressClass a different name, so we can co-exist with ingress-nginx
     ingressClass:
       name: nginx-ingress
