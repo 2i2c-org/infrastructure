@@ -1,8 +1,8 @@
 jupyterhub:
   ingress:
-    hosts: [bmcc.cloudbank.2i2c.cloud]
+    hosts: [cmu.cloudbank.2i2c.cloud]
     tls:
-    - hosts: [bmcc.cloudbank.2i2c.cloud]
+    - hosts: [cmu.cloudbank.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
@@ -25,23 +25,21 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://s3.amazonaws.com/files.commons.gc.cuny.edu/wp-content/blogs.dir/9457/files/2021/01/bmcc-logo-two-line-RGB-final-1024x663.png
-          name: Borough of Manhattan Community College, CUNY
-          url: https://www.bmcc.cuny.edu/
+          logo_url: https://keystoneacademic-res.cloudinary.com/image/upload/c_pad,w_256,h_121/dpr_auto/f_auto/q_auto/v1/element/22/221143__logo.png
+          name: Carnegie Mellon University
+          url: https://www.cmu.edu
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://bmcc.cloudbank.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://cmu.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+          https://login.cmu.edu/idp/shibboleth:
             default: true
             username_derivation:
               username_claim: email
-            allowed_domains:
-            - bmcc.cuny.edu
-            - stu.bmcc.cuny.edu
+            allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
@@ -49,10 +47,15 @@ jupyterhub:
         admin_users:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
-        - vznamenskiy@bmcc.cuny.edu
+        - ddeblasi@andrew.cmu.edu
+        - icaoberg@andrew.cmu.edu
+        - aramchal@andrew.cmu.edu
+        - daphneh@andrew.cmu.edu
+        - jslackma@andrew.cmu.edu
+
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-bmcc
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-cmu
 nfs:
   pv:
-    serverIP: storage-quota-home-nfs.bmcc.svc.cluster.local
+    serverIP: storage-quota-home-nfs.cmu.svc.cluster.local

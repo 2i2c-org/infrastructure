@@ -23,6 +23,9 @@ properties:
   ingress-nginx:
     type: object
     additionalProperties: true
+  nginx-ingress:
+    type: object
+    additionalProperties: true
   prometheus:
     type: object
     additionalProperties: true

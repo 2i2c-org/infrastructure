@@ -14,6 +14,21 @@
 cluster-autoscaler:
   enabled: false
 
+nginx-ingress:
+  # Disable this by default
+  enabled: false
+  controller:
+    # Don't enable any custom resource definitions, as that just makes our lives hard for no reason
+    enableCustomResources: false
+    appprotect:
+      enable: false
+    appprotectdos:
+      enable: false
+
+    # Get this ingressClass a different name, so we can co-exist with ingress-nginx
+    ingressClass:
+      name: nginx-ingress
+
 # ingress-nginx is responsible for proxying traffic based on k8s Ingress
 # resources defined in the k8s cluster.
 #
@@ -144,11 +159,13 @@ prometheus:
         # into prometheus server from the outside world. This secret is
         # created via templates/prometheus-ingress-auth/secret.yaml file in the support chart,
         # and the contents are controlled by config under prometheusIngressAuthSecret.
-        # Ingress is not enabled by default, so whichever clusters we want
-        # this we should enable it explicitly.
+        # These annotations set it up for ingress-nginx ingress controller
         nginx.ingress.kubernetes.io/auth-type: basic
         nginx.ingress.kubernetes.io/auth-secret: prometheus-ingress-auth-basic
         nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+        # These annotations set it up for the nginx-ingress controller
+        nginx.org/basic-auth-secret: prometheus-nginx-ingress-auth-basic
+        nginx.org/auth-realm: "Authentication Required"
         # If we enable external ingress into prometheus, we must secure it with HTTPS
         cert-manager.io/cluster-issuer: letsencrypt-prod
         # Increase timeout for each query made by the grafana frontend to the

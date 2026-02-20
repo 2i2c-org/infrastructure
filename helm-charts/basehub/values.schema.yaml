@@ -514,14 +514,10 @@ properties:
             type: object
             additionalProperties: false
             required:
-              - extraVolumeMounts
               - extraEnv
             properties:
               extraVolumeMounts:
-                type: array
-                items:
-                  type: object
-                  additionalProperties: true
+                type: [object, "null"]
               extraEnv:
                 type: object
           2i2c:

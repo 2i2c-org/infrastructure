@@ -29,7 +29,7 @@ jupyterhub:
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
-      extraVolumeMounts: []
+      extraVolumeMounts:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
@@ -60,19 +60,21 @@ jupyterhub:
     storage:
       type: none
       extraVolumes:
-      - name: shared-dir-pv
-        persistentVolumeClaim:
-          claimName: home-nfs
-      - name: dev-shm
-        emptyDir:
-          medium: Memory
+        1-shared-dir-volume:
+          name: shared-dir-pv
+          persistentVolumeClaim:
+            claimName: home-nfs
       extraVolumeMounts:
-      - name: shared-dir-pv
-        mountPath: /home/jovyan/shared-readonly
-        subPath: _shared
-        readOnly: true
-      - name: dev-shm
-        mountPath: /dev/shm
+        1-shared-readonly-volumemount:
+          name: shared-dir-pv
+          mountPath: /home/jovyan/shared-readonly
+          subPath: _shared
+          readOnly: true
+        # Disable default mounts
+        002-shared-volumemount:
+        003-rstudio-volumemount:
+        004-rstudio-shared-volumemount:
+        # Enable shared readonly mount
     defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FLorenFrankLab%2Fspyglass-demo&urlpath=lab%2Ftree%2Fspyglass-demo%2Fnotebooks%2F00_HubQuickStart.ipynb&branch=main
     image:
       name: quay.io/lorenlab/hhmi-spyglass-image

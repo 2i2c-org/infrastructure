@@ -29,17 +29,11 @@ hub_cloud_permissions = {
           {
             "Effect": "Allow",
             "Action": [
-              "s3:PutObject",
-              "s3:PutObjectAcl",
               "s3:GetObject",
-              "s3:ListBucketMultipartUploads",
-              "s3:AbortMultipartUpload",
+              "s3:GetObjectTagging",
               "s3:ListBucketVersions",
-              "s3:CreateBucket",
               "s3:ListBucket",
-              "s3:DeleteObject",
-              "s3:GetBucketLocation",
-              "s3:ListMultipartUploadParts"
+              "s3:GetBucketLocation"
             ],
             "Resource": [
               "arn:aws:s3:::veda-data-store",
@@ -88,6 +82,25 @@ hub_cloud_permissions = {
           },
           {
             "Effect": "Allow",
+            "Action": [
+              "s3:PutObject",
+              "s3:PutObjectAcl",
+              "s3:PutObjectTagging",
+              "s3:GetObjectTagging",
+              "s3:ListBucket",
+              "s3:DeleteObject",
+              "s3:GetObject",
+              "s3:RestoreObject",
+              "s3:ListMultipartUploadParts",
+              "s3:AbortMultipartUpload"
+            ],
+            "Resource": [
+              "arn:aws:s3:::maap-ops-workspace",
+              "arn:aws:s3:::maap-ops-workspace/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
             "Action": "s3:ListAllMyBuckets",
             "Resource": "*"
           }
@@ -106,6 +119,7 @@ hub_cloud_permissions = {
             "Effect": "Allow",
             "Action": [
               "s3:GetObject",
+              "s3:GetObjectTagging",
               "s3:ListBucketVersions",
               "s3:ListBucket",
               "s3:GetBucketLocation"
@@ -158,6 +172,8 @@ hub_cloud_permissions = {
             "Action": [
               "s3:PutObject",
               "s3:PutObjectAcl",
+              "s3:PutObjectTagging",
+              "s3:GetObjectTagging",
               "s3:ListBucket",
               "s3:DeleteObject",
               "s3:GetObject",

@@ -22,7 +22,7 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: false
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts:
     homepage:
       templateVars:
         enabled: false
@@ -36,7 +36,8 @@ jupyterhub:
       limit: 1
     storage:
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
+      extraVolumes:
     initContainers: []
     profileList: []
     cmd:
