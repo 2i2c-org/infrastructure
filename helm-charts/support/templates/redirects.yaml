@@ -8,6 +8,25 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: nginx-ingress-redirect-{{ .from }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.org/server-snippets: |
+      rewrite "^\/(?!\.well-known\/acme-challenge)(.*)$" "$scheme://{{ .to }}/$1" {{ .type | default "redirect" }};
+spec:
+  # for nginx-ingress controller
+  ingressClassName: nginx-ingress
+  tls:
+    - hosts:
+        - {{ .from }}
+      secretName: redirect-{{ .from }}-tls
+  rules:
+    - host: {{ .from }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  # for ingress-nginx controller
   name: ingress-redirect-{{ .from }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
