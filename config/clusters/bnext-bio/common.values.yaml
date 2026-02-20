@@ -52,6 +52,7 @@ jupyterhub:
         - nucleus-eng:devcells-all-nodes
         - nucleus-eng:devcells-chicago-node
         - nucleus-eng:devcells-london-node
+        - nucleus-eng:decells-calpoly-node
         - nucleus-eng:bnext
         - nucleus-eng:metapure
       Authenticator:
