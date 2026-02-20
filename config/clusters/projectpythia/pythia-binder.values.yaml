@@ -15,7 +15,7 @@ jupyterhub:
     binderhubUI:
       enabled: true
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts:
   singleuser:
     nodeSelector:
       # Schedule users on the smallest instance
@@ -24,7 +24,8 @@ jupyterhub:
       2i2c/hub-name: pythia-binder
     storage:
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
+      extraVolumes:
     initContainers: []
     # The profile list in the common values files needs to be emptied
     # otherwise the launching will fail
