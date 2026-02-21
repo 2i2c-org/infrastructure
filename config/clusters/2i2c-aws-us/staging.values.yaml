@@ -15,7 +15,7 @@ jupyterhub-home-nfs:
         hard_quota: 10 # in GiB
 jupyterhub:
   ingress:
-    ingressClassName: nginx-ingress
+    ingressClassName: nginx
     hosts: [staging.aws.2i2c.cloud]
     tls:
     - hosts: [staging.aws.2i2c.cloud]

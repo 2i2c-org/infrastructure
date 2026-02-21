@@ -17,7 +17,7 @@ basehub:
           hard_quota: 20 # in GiB
   jupyterhub:
     ingress:
-      ingressClassName: nginx-ingress
+      ingressClassName: nginx
       hosts: [showcase.2i2c.cloud]
       tls:
       - hosts: [showcase.2i2c.cloud]

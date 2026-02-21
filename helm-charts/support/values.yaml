@@ -14,6 +14,10 @@
 cluster-autoscaler:
   enabled: false
 
+trafficEntrypoint:
+  enabled: true
+  targetController: ingress-nginx
+
 nginx-ingress:
   # Disable this by default
   enabled: false
@@ -31,6 +35,9 @@ nginx-ingress:
     # Get this ingressClass a different name, so we can co-exist with ingress-nginx
     ingressClass:
       name: nginx-ingress
+
+    service:
+      type: ClusterIP
 
 # ingress-nginx is responsible for proxying traffic based on k8s Ingress
 # resources defined in the k8s cluster.
