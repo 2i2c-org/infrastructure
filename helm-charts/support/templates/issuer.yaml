@@ -15,9 +15,4 @@ spec:
     solvers:
     - http01:
         ingress:
-          # for the ingress-nginx controller
           class: nginx
-    - http01:
-        ingress:
-          # for the nginx-ingress controller
-          class: nginx-ingress
