@@ -3,10 +3,21 @@ prometheusIngressAuthSecret:
 
 nginx-ingress:
   enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
 
 trafficEntrypoint:
   targetController: ingress-nginx
-
 
 grafana:
   grafana.ini:
@@ -16,7 +27,6 @@ grafana:
       enabled: true
       allowed_organizations: 2i2c-org
   ingress:
-    ingressClassName: nginx
     hosts:
     - grafana.aws.2i2c.cloud
     tls:
