@@ -6,6 +6,8 @@ nginx-ingress:
 
 ingress-nginx:
   controller:
+    # Turn off the controller, as it's all served by nginx-ingress now
+    replicaCount: 0
     service:
       selectorLabelsOverride:
         app.kubernetes.io/instance: support
