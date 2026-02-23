@@ -28,8 +28,8 @@ runs:
       --label "recurrent" \
       --label ${{ inputs.label }} \
       --assignee ${{ inputs.assignee }} \
-      --title ${{ inputs.title }} \
-      --body ${{ inputs.body }})
+      --title "${{ inputs.title }}" \
+      --body "${{ inputs.body }}")
       echo "issue=$issue" >> $GITHUB_ENV
     env:
       GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
