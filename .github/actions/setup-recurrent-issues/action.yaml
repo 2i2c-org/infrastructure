@@ -3,7 +3,7 @@ name: Setup an action for creating recurrent issues
 inputs:
   label:
     required: true
-    default: non-existent-label
+    default: ''
   title:
     required: true
   body:
