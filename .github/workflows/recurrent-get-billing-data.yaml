@@ -12,6 +12,7 @@ jobs:
     permissions:
       issues: write
     steps:
+    - uses: actions/checkout@v6
     - name: Compute billing period and deadline
       run: |
         echo "billing_month=$(date +'%B')" >> $GITHUB_ENV
