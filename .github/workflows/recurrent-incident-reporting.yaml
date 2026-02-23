@@ -11,6 +11,7 @@ jobs:
     permissions:
       issues: write
     steps:
+    - uses: actions/checkout@v6
     - name: Check if valid week
       # https://stackoverflow.com/questions/24777597/value-too-great-for-base-error-token-is-08/24777667
       run: |
@@ -25,18 +26,12 @@ jobs:
       run: |
         echo "deadline=$(date -d '+14 days' +'%B %d')" >> $GITHUB_ENV
         echo "deadline_as_iso_date=$(date -d '+14 days' +"%Y-%m-%d")" >> $GITHUB_ENV
-    - name: Create issue
-      run: |
-        issue=$(gh issue create \
-        --assignee agoose77,GeorgianaElena \
-        --label "recurrent" \
-        --title "Pay out past incident reporting debt" \
-        --body "$BODY")
-        echo "issue=$issue" >> $GITHUB_ENV
-      env:
-        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-        GH_REPO: ${{ github.repository }}
-        BODY: |
+    - name: Setup recurrent issue for incident reporting
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: Pay out past incident reporting debt
+        assignee: agoose77,GeorgianaElena
+        body: |
           ### Context
 
           Each sprint, the Infrastructure Engineering team is scheduled to take the following actions, for unpublished **outages that have happened between September 1st 2025 and February 10th 2026** until we have paid out all debt:
@@ -69,19 +64,6 @@ jobs:
           Each of the people below has taken at least one of the actions mentioned above:
           - [ ] @agoose77
           - [ ] @GeorgianaElena
-
-    - name: Sleep a bit to allow issue to be added to the board by automation
-      run: sleep 3
-
-    - name: Set the "Status" and "Estimate" project board fields
-      uses: EndBug/project-fields@v2
-      id: set-fields
-      with:
-        operation: set
-            # If the fields name or type will change
-            # expect this step to fail
         fields: Status,Estimate,End date
-        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-        project_url: https://github.com/orgs/2i2c-org/projects/57
         values: Up Next,2,${{ env.deadline_as_iso_date }}
-        resource_url: ${{ env.issue }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
