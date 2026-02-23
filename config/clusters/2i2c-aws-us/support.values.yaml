@@ -4,6 +4,15 @@ prometheusIngressAuthSecret:
 nginx-ingress:
   enabled: true
 
+ingress-nginx:
+  controller:
+    # Turn off the controller, as it's all served by nginx-ingress now
+    replicaCount: 0
+    service:
+      selectorLabelsOverride:
+        app.kubernetes.io/instance: support
+        app.kubernetes.io/name: nginx-ingress
+
 grafana:
   grafana.ini:
     server:
