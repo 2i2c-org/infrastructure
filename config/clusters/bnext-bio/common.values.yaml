@@ -48,12 +48,12 @@ jupyterhub:
         allowed_organizations:
         - 2i2c-org:hub-access-for-2i2c-staff
         - nucleus-eng:hub-access
-        - nucleus-eng:nucleus-eng-hub-access
         - nucleus-eng:devcells-all-nodes
         - nucleus-eng:devcells-chicago-node
         - nucleus-eng:devcells-london-node
         - nucleus-eng:decells-calpoly-node
         - nucleus-eng:bnext
+        - nucleus-eng:curvenote
         - nucleus-eng:metapure
       Authenticator:
         admin_users:
@@ -85,72 +85,45 @@ jupyterhub:
           for idx, volume_mount in enumerate(existing_volume_mounts):
             c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
       001-group-shared-directories: |
+        # Allow all <ORG>:<TEAM> entries to have their own shared folders
+
+        # Some overrides for names of directories
+        group_to_path_overrides = {"nucleus-eng:hub-access": "nucleus-eng-hub-access"}
+
+        # Find organization entries that are <ORG>:<TEAM> pairs, and parse them into (group, org, team)
+        assert isinstance(
+            c.GitHubOAuthenticator.allowed_organizations, list
+        ), "Expected list of organizations"
+        group_org_team_entries = [
+            p
+            for p in (
+                # Split "group" of form "team:project" into (team:project, team, project) tuples
+                (g, *g.split(":", 1)) for g in set(c.GitHubOAuthenticator.allowed_organizations)
+            )
+            # Only take (group, org, team) entries (handles groups without "org:team" scheme)
+            if len(p) == 3
+        ]
+
         c.KubeSpawner.group_overrides = {
-          "00-group-hub-access-for-2i2c-staff": {
-            "groups": ["2i2c-org:hub-access-for-2i2c-staff"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-hub-access-for-2i2c-staff": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/projects/hub-access-for-2i2c-staff",
-                  "subPath": "_projects/hub-access-for-2i2c-staff",
-                  "readOnly": False
+            # Don't worry about escaping — the only requirement is these keys are unique
+            f"{i:0>2}-group-{org}-{team}": {
+                "groups": [group],
+                "spawner_override": {
+                    "volume_mounts": {
+                        f"{i:0>2}-group-{org}-{team}": {
+                            "name": "home",
+                            "mountPath": f"/home/jovyan/projects/{name}",
+                            "subPath": f"_projects/{name}",
+                            "readOnly": False,
+                        }
+                    }
                 },
-              }
-            },
-          },
-          "01-group-nucleus-hub-access": {
-            "groups": ["nucleus-eng:hub-access"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-nucleus-hub-access": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/projects/nucleus-eng-hub-access",
-                  "subPath": "_projects/nucleus-eng-hub-access",
-                  "readOnly": False
-                },
-              }
-            },
-          },
-          "02-group-nucleus-devcells-london-node": {
-            "groups": ["nucleus-eng:devcells-london-node"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-nucleus-devcells-london-node": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/projects/devcells-london-node",
-                  "subPath": "_projects/devcells-london-node",
-                  "readOnly": False
-                },
-              }
-            },
-          },
-          "03-group-nucleus-devcells-chicago-node": {
-            "groups": ["nucleus-eng:devcells-chicago-node"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-nucleus-devcells-chicago-node": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/projects/devcells-chicago-node",
-                  "subPath": "_projects/devcells-chicago-node",
-                  "readOnly": False
-                },
-              }
-            },
-          },
-          "04-group-nucleus-devcells-all-nodes": {
-            "groups": ["nucleus-eng:devcells-all-nodes"],
-            "spawner_override": {
-              "volume_mounts": {
-                "00-group-nucleus-devcells-all-nodes": {
-                  "name": "home",
-                  "mountPath": "/home/jovyan/projects/devcells-all-nodes",
-                  "subPath": "_projects/devcells-all-nodes",
-                  "readOnly": False
-                },
-              }
-            },
-          },
+            }
+            for i, (group, org, team, name) in enumerate(
+                # Allow renaming of the final path 
+                (group, org, team, group_to_path_overrides.get(group, team))
+                for group, org, team in group_org_team_entries
+            )
         }
   scheduling:
     userScheduler:
