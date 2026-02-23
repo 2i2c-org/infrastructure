@@ -34,6 +34,7 @@ jobs:
           - [ ] The billing slack was notified about the new billing data collected
         fields: Status,Estimate,Start date,End date
         values: Up Next,1,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Setup recurrent issue for shared clusters billing
       uses: ./.github/actions/setup-recurrent-issues
