@@ -1,0 +1,52 @@
+name: Setup an action for creating recurrent issues
+
+inputs:
+  label:
+    required: true
+    default: non-existent-label
+  title:
+    required: true
+  body:
+    required: true
+  assignee:
+    default: 2i2c-Bot
+  fields:
+    required: true
+  values:
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - uses: actions/setup-python@v6
+    with:
+      python-version: '3.13'
+
+  - name: Create issue
+    run: |
+      issue=$(gh issue create \
+      --label "recurrent" \
+      --label ${{ inputs.label }} \
+      --assignee ${{ inputs.assignee }}
+      --title ${{ inputs.title }} \
+      --body ${{ inputs.body }})
+      echo "issue=$issue" >> $GITHUB_ENV
+    env:
+      GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+
+  - name: Sleep a bit to allow issue to be added to the board by automation
+    run: sleep 3
+
+  - name: Set the "Status" and "Estimate" project board fields
+    uses: EndBug/project-fields@v2
+    id: set-fields
+    with:
+      operation: set
+          # If the fields name or type will change
+          # expect this step to fail
+      fields: ${{ inputs.fields }}
+      github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+      project_url: https://github.com/orgs/2i2c-org/projects/57
+      values: ${{ inputs.values }}
+      resource_url: ${{ env.issue }}
