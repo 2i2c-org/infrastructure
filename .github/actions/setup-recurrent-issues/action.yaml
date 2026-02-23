@@ -31,8 +31,8 @@ runs:
     run: |
       issue=$(gh issue create \
       --label "recurrent" \
-      --label ${{ inputs.label }} \
-      --assignee ${{ inputs.assignee }} \
+      --label "${{ inputs.label }}" \
+      --assignee "${{ inputs.assignee }}" \
       --title "${{ inputs.title }}" \
       --body "${{ inputs.body }}")
       echo "issue=$issue" >> $GITHUB_ENV
