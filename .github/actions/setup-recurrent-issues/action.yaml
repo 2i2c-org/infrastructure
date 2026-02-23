@@ -9,7 +9,7 @@ inputs:
   body:
     required: true
   assignee:
-    default: 2i2c-Bot
+    default: ''
   fields:
     required: true
   values:
