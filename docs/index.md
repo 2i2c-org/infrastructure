@@ -79,7 +79,7 @@ howto/grafana-github-auth.md
 howto/regenerate-smce-creds.md
 howto/troubleshoot/index.md
 howto/send-secrets.md
-howo/migrate-ingress.md
+howto/migrate-ingress.md
 ```
 
 ## Topic guides
