@@ -57,4 +57,3 @@ runs:
       project_url: ${{ inputs.project_board_url }}
       values: ${{ inputs.values }}
       resource_url: ${{ env.issue }}
-      shell: bash
