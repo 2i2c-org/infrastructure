@@ -26,7 +26,7 @@ jobs:
         echo "deadline=$(date -d '+28 days' +'%B %d')" >> $GITHUB_ENV
         echo "deadline_as_iso_date=$(date -d '+28 days' +"%Y-%m-%d")" >> $GITHUB_ENV
 
-    - name: Setup recurrent issue for dedicated clusters billing
+    - name: Setup recurrent issue
       uses: ./.github/actions/setup-recurrent-issues
       with:
         label: good-community-citizen
