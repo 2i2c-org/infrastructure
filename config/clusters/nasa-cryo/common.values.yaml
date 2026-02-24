@@ -78,23 +78,14 @@ basehub:
         blockWithIptables: false
       defaultUrl: /lab
       storage:
-        extraVolumes:
-        - name: dev-shm
-          emptyDir:
-            medium: Memory
         extraVolumeMounts:
           # A shared folder readable & writeable by everyone
           # https://github.com/CryoInTheCloud/hub-image/issues/43#issuecomment-1466392517
-        - name: home
-          mountPath: /home/jovyan/shared-public
-          subPath: _shared-public
-          readOnly: false
-        - name: home
-          mountPath: /home/jovyan/shared
-          subPath: _shared
-          readOnly: true
-        - name: dev-shm
-          mountPath: /dev/shm
+          01-shared-public:
+            name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
+            readOnly: false
       profileList:
       - display_name: CPU Only
         default: true
@@ -118,7 +109,7 @@ basehub:
                 default: true
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
-                  image: quay.io/cryointhecloud/cryo-hub-image:d624b28e39c4
+                  image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
               02-pythonpace:
                 display_name: Ocean Biology Python Image
                 description: Ocean Biology environment used by the PACE mission

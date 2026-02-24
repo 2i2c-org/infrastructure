@@ -16,17 +16,23 @@ jupyterhub:
         image:
           display_name: Image
           choices:
-            00-scipy:
+            00-slm:
+              display_name: Small Language Models - Workshop hub
+              description: Python typical DS plus SLM packages
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-user-image:53ae331b8d4e
+            01-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
               slug: scipy
               kubespawner_override:
                 image: quay.io/jupyter/scipy-notebook:2025-01-06
-            01-pangeo:
+            02-pangeo:
               display_name: Pangeo Notebook Image
               description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
                 image: pangeo/pangeo-notebook:2025.01.24
+
       kubespawner_override:
         mem_guarantee: 1951419879
         mem_limit: 1951419879
@@ -44,12 +50,17 @@ jupyterhub:
         image:
           display_name: Image
           choices:
-            tensorflow:
+            00-sml-pytorch:
+              display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: small_models
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/gpu-user-image:476b21b00c8f
+            01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
               kubespawner_override:
                 image: pangeo/ml-notebook:2026.01.30
-            pytorch:
+            02-pytorch:
               display_name: Pangeo PyTorch ML Notebook (2026.01.30)
               slug: pytorch
               kubespawner_override:

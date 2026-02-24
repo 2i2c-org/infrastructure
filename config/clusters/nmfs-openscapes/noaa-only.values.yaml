@@ -35,7 +35,7 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_of_type: google
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts:
   ingress:
     hosts: [noaa.nmfs-openscapes.2i2c.cloud]
     tls:
@@ -46,22 +46,21 @@ jupyterhub:
     storage:
       type: none
       extraVolumes:
-        # We include the dev-shm extraVolume as the list of extraVolumes from base hub will be overwritten
-      - name: dev-shm
-        emptyDir:
-          medium: Memory
-      - name: shared-dir-pvc
-        persistentVolumeClaim:
-            # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
-          claimName: home-nfs
+        1-shared-dir-volume:
+          name: shared-dir-pv
+          persistentVolumeClaim:
+            claimName: home-nfs
       extraVolumeMounts:
-        # We include the dev-shm extraVolumeMount as the list of extraVolumeMounts from base hub will be overwritten
-      - name: dev-shm
-        mountPath: /dev/shm
-      - name: shared-dir-pvc
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
+        # Disable default mounts
+        002-shared-volumemount:
+        003-rstudio-volumemount:
+        004-rstudio-shared-volumemount:
+        # Enable shared readonly mount
+        1-shared-readonly-volumemount:
+          name: shared-dir-pv
+          mountPath: /home/jovyan/shared-readonly
+          subPath: _shared
+          readOnly: true
     nodeSelector:
       2i2c/hub-name: noaa-only
     extraEnv:

@@ -42,6 +42,8 @@ jupyterhub:
         # Set for us by Keycloak
         admin_users: []
         enable_auth_state: true
+        # Disable for now the authentication token refreshing
+        # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
         auth_refresh_age: 0
       GenericOAuthenticator:
         # We want to get user data from the JWT that's the id token,
@@ -74,27 +76,16 @@ jupyterhub:
     defaultUrl: /lab
     storage:
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/rstudio/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
-      - name: dev-shm
-        mountPath: /dev/shm
-      - name: home
-        mountPath: /home/rstudio
-        subPath: '{escaped_username}'
-      - name: home
-        mountPath: /home/rstudio/shared
-        subPath: _shared
-        readOnly: true
+        01-shared-public-volumemount:
+          name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        02-shared-public-rstudio-volumemount:
+          name: home
+          mountPath: /home/rstudio/shared-public
+          subPath: _shared-public
+          readOnly: false
     profileList:
     - display_name: Choose your environment and resources
       default: true
