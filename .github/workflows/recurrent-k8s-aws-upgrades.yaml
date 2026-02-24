@@ -45,7 +45,7 @@ jobs:
           - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/aws/ to upgrade
 
           ### Definition of Done
-          - [ ] First chosen batch of EKS clusters run the latest k8s version
+          - [ ] Chosen batch of EKS clusters run the latest k8s version
         label: network-wide
         fields: Status,Estimate
         values: Up Next,3
@@ -64,7 +64,7 @@ jobs:
           - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/aws/ to upgrade
 
           ### Definition of Done
-          - [ ] First chosen batch of EKS clusters run the latest k8s version
+          - [ ] Chosen batch of EKS clusters run the latest k8s version
         label: network-wide
         fields: Status,Estimate
         values: Up Next,3
@@ -83,7 +83,7 @@ jobs:
           - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/aws/ to upgrade
 
           ### Definition of Done
-          - [ ] First chosen batch of EKS clusters run the latest k8s version
+          - [ ] Chosen batch of EKS clusters run the latest k8s version
         label: network-wide
         fields: Status,Estimate
         values: Up Next,3
