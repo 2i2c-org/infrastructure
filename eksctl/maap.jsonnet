@@ -23,7 +23,15 @@ local c = cluster.makeCluster(
       instanceType: 'g4dn.xlarge',
     },
   ],
-  nodeGroupGenerations=['c'],
+  nodeGroupGenerations=['d'],
 );
 
-c
+cluster.withNodeGroupConfigOverride(
+  c,
+  kind='notebook',
+  overrides={
+    // For https://github.com/MAAP-Project/Community/issues/1254,
+    // so `/tmp` can be larger
+    volumeSize: 200,
+  }
+)
