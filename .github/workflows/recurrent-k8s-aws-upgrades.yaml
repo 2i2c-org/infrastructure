@@ -1,0 +1,90 @@
+name: 'Recurrent: AWS k8s upgrades'
+on:
+  workflow_dispatch:
+  schedule:
+    # Run on the first of January and July at midnight
+  - cron: 0 0 1 1,7 *
+
+jobs:
+  create_issue:
+    name: Create upgrade issue
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup recurrent first round issue
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: '[Round 1] Upgrade AWS clusters k8s version'
+        body: |
+          ### Context
+          Every six months, we commit to upgrade the k8s version that our clusters are running to ensure latest features, bug fixes and best support, are deployed to our clusters.
+
+          ### What to do
+          - Choose the first batch of clusters to be upgraded
+          - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/aws/ to upgrade
+
+          ### Definition of Done
+          - [ ] First chosen batch of EKS clusters run the latest k8s version
+        label: network-wide
+        fields: Status,Estimate
+        values: Up Next,5
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+
+    - name: Setup recurrent second round issue
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: '[Round 2] Upgrade EKS clusters k8s version'
+        body: |
+          ### Context
+          Every six months, we commit to upgrade the k8s version that our clusters are running to ensure latest features, bug fixes and best support, are deployed to our clusters.
+
+          ### What to do
+          - Choose the second batch of clusters that will be upgraded
+          - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/aws/ to upgrade
+
+          ### Definition of Done
+          - [ ] First chosen batch of EKS clusters run the latest k8s version
+        label: network-wide
+        fields: Status,Estimate
+        values: Up Next,3
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+
+    - name: Setup recurrent second round issue
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: '[Round 3] Upgrade EKS clusters k8s version'
+        body: |
+          ### Context
+          Every six months, we commit to upgrade the k8s version that our clusters are running to ensure latest features, bug fixes and best support, are deployed to our clusters.
+
+          ### What to do
+          - Choose the third batch of clusters that will be upgraded
+          - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/aws/ to upgrade
+
+          ### Definition of Done
+          - [ ] First chosen batch of EKS clusters run the latest k8s version
+        label: network-wide
+        fields: Status,Estimate
+        values: Up Next,3
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+
+    - name: Setup recurrent second round issue
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: '[Round 4] Upgrade EKS clusters k8s version'
+        body: |
+          ### Context
+          Every six months, we commit to upgrade the k8s version that our clusters are running to ensure latest features, bug fixes and best support, are deployed to our clusters.
+
+          ### What to do
+          - Choose the last batch of clusters that will be upgraded
+          - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/aws/ to upgrade
+
+          ### Definition of Done
+          - [ ] First chosen batch of EKS clusters run the latest k8s version
+        label: network-wide
+        fields: Status,Estimate
+        values: Up Next,3
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}

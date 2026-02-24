@@ -1,9 +1,9 @@
-name: 'Recurrent: get billing data'
+name: 'Recurrent: GCP k8s upgrades'
 on:
   workflow_dispatch:
   schedule:
-    # Run on the first of January and March at midnight
-  - cron: 0 0 1 9,3 *
+    # Run on the first of December and June at midnight
+  - cron: 0 0 1 12,6 *
 
 jobs:
   create_issue:
