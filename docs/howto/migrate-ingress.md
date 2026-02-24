@@ -59,10 +59,10 @@ Once the DNS records have been updated to point to the `traffic-entrypoint` LB, 
    ```
 1. Point the `traffic-entrypoint` LB to the new `nginx-ingress` service:
    ```{code-block} yaml
-   trafficEntrypoint:
+   clusterEntrypoint:
      targetController: nginx-ingress
    ```
 
-## How to handle future migrations 
+## How to handle future migrations
 Once all clusters are using the `traffic-entrypoint` LB for their DNS records, it should be trivial to migrate to a new ingress controller or Gateway that establishes a clusterIP service. Once a new controller/gateway is introduced, simply point the `traffic-entrypoint` LB at the new service pods.
 

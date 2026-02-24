@@ -1,10 +1,10 @@
-{{ if .Values.trafficEntrypoint.enabled }}
+{{ if .Values.clusterEntrypoint.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: traffic-entrypoint
+  name: cluster-entrypoint
   labels:
-    app: traffic-entrypoint
+    app: cluster-entrypoint
 spec:
   type: LoadBalancer
   ports:
@@ -15,7 +15,7 @@ spec:
       port: 443
       targetPort: 443
   selector:
-    {{ if eq .Values.trafficEntrypoint.targetController "nginx-ingress" }}
+    {{ if eq .Values.clusterEntrypoint.targetController "nginx-ingress" }}
     app.kubernetes.io/instance: support
     app.kubernetes.io/name: nginx-ingress
     {{ else }}

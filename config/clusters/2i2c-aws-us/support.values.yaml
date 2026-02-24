@@ -16,7 +16,7 @@ ingress-nginx:
     ingressClassResource:
       enabled: false
 
-trafficEntrypoint:
+clusterEntrypoint:
   targetController: nginx-ingress
 
 grafana:

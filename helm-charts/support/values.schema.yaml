@@ -74,7 +74,7 @@ properties:
                 Relates to the HTTP Status code to use for the redirect.
 
                 Specify "redirect" for 302 (default), or "permanent" for 301.
-  trafficEntrypoint:
+  clusterEntrypoint:
     type: object
     additionalProperties: false
     required:

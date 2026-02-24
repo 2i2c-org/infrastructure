@@ -14,7 +14,7 @@
 cluster-autoscaler:
   enabled: false
 
-trafficEntrypoint:
+clusterEntrypoint:
   enabled: true
   targetController: ingress-nginx
 
