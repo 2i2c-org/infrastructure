@@ -35,14 +35,6 @@ persistent_disks = {
   "mtu" = {
     size        = 75 # in GB
     name_suffix = "mtu"
-  },
-  "ucmerced-staging" = {
-    size        = 10 # in GB
-    name_suffix = "ucmerced-staging"
-  },
-  "ucmerced" = {
-    size        = 250 # in GB
-    name_suffix = "ucmerced"
   }
 }
 
@@ -61,22 +53,6 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-  },
-  "n2-highmem-8-ucmerced" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-8",
-    labels : {
-      "2i2c.org/hub-name" : "ucmerced"
-    },
-    taints : [{
-      key : "2i2c.org/hub-name",
-      value : "ucmerced",
-      effect : "NO_SCHEDULE",
-    }],
-    resource_labels : {
-      "hub-name" : "ucmerced",
-    },
   }
 }
 
