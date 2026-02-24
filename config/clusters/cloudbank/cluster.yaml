@@ -509,6 +509,14 @@ hubs:
   - common.values.yaml
   - umd.values.yaml
   - enc-umd.secret.values.yaml
+- name: und
+  display_name: University of North Dakota
+  domain: und.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - und.values.yaml
+  - enc-und.secret.values.yaml
 - name: virginia
   display_name: University of Virginia
   domain: virginia.cloudbank.2i2c.cloud
