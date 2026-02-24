@@ -1,0 +1,32 @@
+name: 'Recurrent: support chart upgrades'
+on:
+  workflow_dispatch:
+  schedule:
+    # Run on the first of January and July at midnight
+  - cron: 0 0 1 3,9 *
+
+jobs:
+  create_issue:
+    name: Create upgrade issue
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup recurrent issue
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: Upgrade the support chart version
+        body: |
+          ### Context
+          Every six months, we commit to upgrade the versions of the support chart's dependencies
+
+          ### What to do
+          - Review and merge dependabot's PRs like https://github.com/2i2c-org/infrastructure/pull/7317 (if it exists)
+
+          ### Definition of Done
+          - [ ] Support chart versions are updated
+        label: network-wide
+        fields: Status,Estimate
+        values: Up Next,3
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
