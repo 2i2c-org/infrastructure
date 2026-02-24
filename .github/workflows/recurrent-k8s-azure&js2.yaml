@@ -2,8 +2,8 @@ name: 'Recurrent: Azure and Jetstream2 k8s upgrades'
 on:
   workflow_dispatch:
   schedule:
-    # Run on the first of December and June at midnight
-  - cron: 0 0 1 12,6 *
+    # Run on the first of Feb and August at midnight
+  - cron: 0 0 1 2,8 *
 
 jobs:
   create_issue:
