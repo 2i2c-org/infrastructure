@@ -83,7 +83,7 @@ jupyterhub:
       limit: 3.4G
       guarantee: 3.4G
     nodeSelector:
-      node.kubernetes.io/instance-type: n2-highmem-4
+      node.kubernetes.io/instance-type: n2-highmem-2
     extraContainers:
     - name: mysql
       image: datajoint/mysql:8.0   # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
