@@ -30,8 +30,8 @@ cluster.withNodeGroupConfigOverride(
   c,
   kind='notebook',
   overrides={
-    # For https://github.com/MAAP-Project/Community/issues/1254,
-    # so `/tmp` can be larger
-    volumeSize: 200
+    // For https://github.com/MAAP-Project/Community/issues/1254,
+    // so `/tmp` can be larger
+    volumeSize: 200,
   }
 )
