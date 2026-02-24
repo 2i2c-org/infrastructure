@@ -1,0 +1,50 @@
+name: 'Recurrent: Azure and Jetstream2 k8s upgrades'
+on:
+  workflow_dispatch:
+  schedule:
+    # Run on the first of Feb and August at midnight
+  - cron: 0 0 1 2,8 *
+
+jobs:
+  create_issue:
+    name: Create upgrade issue
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup recurrent Azure
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: Upgrade Azure clusters k8s version
+        body: |
+          ### Context
+          Every six months, we commit to upgrade the k8s version that our clusters are running to ensure latest features, bug fixes and best support, are deployed to our clusters.
+
+          ### What to do
+          - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/azure/ to upgrade
+
+          ### Definition of Done
+          - [ ] AKS clusters run the latest k8s version
+        label: network-wide
+        fields: Status,Estimate
+        values: Up Next,3
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+
+    - name: Setup recurrent JS2
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: '[Round 2] Upgrade Jetstream2 clusters k8s version'
+        body: |
+          ### Context
+          Every six months, we commit to upgrade the k8s version that our clusters are running to ensure latest features, bug fixes and best support, are deployed to our clusters.
+
+          ### What to do
+          - Follow the docs at ... to upgrade
+
+          ### Definition of Done
+          - [ ] Jetstream2 clusters run the latest k8s version
+        label: network-wide
+        fields: Status,Estimate
+        values: Up Next,3
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}

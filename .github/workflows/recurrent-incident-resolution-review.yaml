@@ -11,6 +11,7 @@ jobs:
     permissions:
       issues: write
     steps:
+    - uses: actions/checkout@v6
     - name: Check if valid week
       # https://stackoverflow.com/questions/24777597/value-too-great-for-base-error-token-is-08/24777667
       run: |
