@@ -5,22 +5,17 @@ on:
   - cron: 0 4 * * 1
 
 jobs:
-  # Run the action every other week
+  compute-week:
+    uses: ./.github/workflows/is-this-sprint-week.yaml
+
   run-fortnightly:
+    needs: compute-week
     runs-on: ubuntu-latest
     permissions:
       issues: write
+    if: ${{ needs.compute-week.outputs.valid_week == True }}
     steps:
     - uses: actions/checkout@v6
-    - name: Check if valid week
-      # https://stackoverflow.com/questions/24777597/value-too-great-for-base-error-token-is-08/24777667
-      run: |
-        WEEK=$(date +%V)
-        WEEK=${WEEK#0}
-        if [ $((WEEK % 2)) -ne 0 ]; then
-            echo "Skipping this week"
-            exit 1
-        fi
     - name: Get Deadline
       id: get_deadline
       run: |
