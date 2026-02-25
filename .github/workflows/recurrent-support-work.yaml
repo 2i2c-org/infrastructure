@@ -8,7 +8,7 @@ jobs:
   compute-week:
     uses: ./.github/workflows/is-this-sprint-week.yaml
 
-  run-fortnightly:
+  create-issue:
     if: ${{ needs.compute-week.outputs.valid_week == 'True' }}
     needs: compute-week
     runs-on: ubuntu-latest
