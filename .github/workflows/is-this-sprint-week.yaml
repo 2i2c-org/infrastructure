@@ -5,7 +5,7 @@
 #   job2:
 #     needs: compute-week
 #     runs-on: ubuntu-latest
-#     if: ${{ needs.compute-week.outputs.valid_week == True }}
+#     if: ${{ needs.compute-week.outputs.valid_week == "True" }}
 #     steps:
 #
 name: Is this a sprint week?
