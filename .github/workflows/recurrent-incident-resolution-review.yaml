@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-    if: ${{ needs.compute-week.outputs.valid_week == True }}
+    if: ${{ needs.compute-week.outputs.valid_week == "True" }}
     steps:
     - uses: actions/checkout@v6
     - name: Get Deadline
