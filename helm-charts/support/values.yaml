@@ -462,6 +462,7 @@ jupyterhub-cost-monitoring:
     memory: 100Mi
 
 dcgm-exporter:
+  enabled: false
   serviceMonitor:
     enabled: false
   podAnnotations:
