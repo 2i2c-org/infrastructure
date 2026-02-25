@@ -482,6 +482,27 @@ nvidiaDevicePlugin:
   aws:
     enabled: false
 
+# Configure DaemonSet to disable core dumps
+# This prevents core dumps from filling up disk storage
+disableCoredumps:
+  enabled: false
+  image: busybox:1.36.1
+  resources:
+    initContainer:
+      limits:
+        cpu: 10m
+        memory: 32Mi
+      requests:
+        cpu: 1m
+        memory: 16Mi
+    pauseContainer:
+      limits:
+        cpu: 5m
+        memory: 16Mi
+      requests:
+        cpu: 1m
+        memory: 8Mi
+
 # Setup a separate storageClass specifically for prometheus data
 prometheusStorageClass:
   gke:

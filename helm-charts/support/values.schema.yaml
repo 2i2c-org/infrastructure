@@ -14,6 +14,7 @@ required:
   - cryptnono
   - redirects
   - jupyterhub-cost-monitoring
+  - disableCoredumps
   - global
 properties:
   # We don't control validation of dependent charts here
@@ -120,6 +121,38 @@ properties:
     properties:
       enabled:
         type: boolean
+
+  disableCoredumps:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable DaemonSet to disable core dumps on all nodes.
+          This prevents core dumps from filling up disk storage.
+      image:
+        type: string
+        description: |
+          Container image to use for the DaemonSet
+      resources:
+        type: object
+        additionalProperties: false
+        description: |
+          Resource requests and limits for the DaemonSet containers
+        properties:
+          initContainer:
+            type: object
+            additionalProperties: true
+            description: |
+              Resources for the init container that sets kernel.core_pattern
+          pauseContainer:
+            type: object
+            additionalProperties: true
+            description: |
+              Resources for the pause container that monitors the setting
 
   prometheusIngressAuthSecret:
     type: object
