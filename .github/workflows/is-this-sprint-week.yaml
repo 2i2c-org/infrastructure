@@ -1,3 +1,13 @@
+# Call this reusable workflow like
+# jobs:
+#   compute-week:
+#     uses: ./.github/workflows/is-this-sprint-week.yaml
+#   job2:
+#     needs: compute-week
+#     runs-on: ubuntu-latest
+#     if: ${{ needs.compute-week.outputs.valid_week == True }}
+#     steps:
+#
 name: Is this a sprint week?
 
 on:
