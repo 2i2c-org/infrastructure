@@ -2,7 +2,7 @@ name: 'Recurrent: support chart upgrades'
 on:
   workflow_dispatch:
   schedule:
-    # Run on the first of January and July at midnight
+    # Run on the first of March and September at midnight
   - cron: 0 0 1 3,9 *
 
 jobs:
