@@ -31,8 +31,8 @@ jobs:
         WEEK=$(date +%V)
         if [ $((${WEEK#0} % 2)) -ne 0 ]; then
             echo "Skipping this week"
-            echo False >> $GITHUB_OUTPUT
+            echo "False" >> $GITHUB_OUTPUT
         else
             echo "Perfect week to run our recurrent workflows"
-            echo True >> $GITHUB_OUTPUT
+            echo "True" >> $GITHUB_OUTPUT
         fi
