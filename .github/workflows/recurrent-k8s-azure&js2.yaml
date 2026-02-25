@@ -34,7 +34,7 @@ jobs:
     - name: Setup recurrent JS2
       uses: ./.github/actions/setup-recurrent-issues
       with:
-        title: '[Round 2] Upgrade Jetstream2 clusters k8s version'
+        title: Upgrade Jetstream2 clusters k8s version
         body: |
           ### Context
           Every six months, we commit to upgrade the k8s version that our clusters are running to ensure latest features, bug fixes and best support, are deployed to our clusters.
