@@ -74,6 +74,20 @@ properties:
                 Relates to the HTTP Status code to use for the redirect.
 
                 Specify "redirect" for 302 (default), or "permanent" for 301.
+  clusterEntrypoint:
+    type: object
+    additionalProperties: false
+    required:
+    - enabled
+    - targetController
+    properties:
+      enabled:
+        type: boolean
+      targetController:
+        type: string
+        enum:
+        - ingress-nginx
+        - nginx-ingress
   nvidiaDevicePlugin:
     type: object
     additionalProperties: false

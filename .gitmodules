@@ -1,3 +1,0 @@
-[submodule "helm-charts/ingress-nginx"]
-	path = helm-charts/ingress-nginx
-	url = https://github.com/kubernetes/ingress-nginx

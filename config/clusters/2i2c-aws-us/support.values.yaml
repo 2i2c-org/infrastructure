@@ -3,15 +3,21 @@ prometheusIngressAuthSecret:
 
 nginx-ingress:
   enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
 
 ingress-nginx:
   controller:
-    # Turn off the controller, as it's all served by nginx-ingress now
+    # Turn off this controller
     replicaCount: 0
-    service:
-      selectorLabelsOverride:
-        app.kubernetes.io/instance: support
-        app.kubernetes.io/name: nginx-ingress
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress
 
 grafana:
   grafana.ini:
@@ -21,7 +27,6 @@ grafana:
       enabled: true
       allowed_organizations: 2i2c-org
   ingress:
-    ingressClassName: nginx-ingress
     hosts:
     - grafana.aws.2i2c.cloud
     tls:
@@ -33,7 +38,6 @@ prometheus:
   server:
     ingress:
       enabled: true
-      ingressClassName: nginx-ingress
       hosts:
       - prometheus.aws.2i2c.cloud
       tls:
