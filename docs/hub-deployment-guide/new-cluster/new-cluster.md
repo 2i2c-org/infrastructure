@@ -249,6 +249,9 @@ you at least one core node running.
 
 ````{tab-item} Google Cloud
 :sync: gcp-key
+```{caution}
+We have encountered resource-exhaustion incidents due to limitations of certain GCP regions. Prefer us-central1 for US-based communities unless _there's a very good reason_, as this decision is hard to change later on.
+```
 ```bash
 export CLUSTER_NAME=<cluster-name>
 export CLUSTER_REGION=<cluster-region-like ca-central-1>
