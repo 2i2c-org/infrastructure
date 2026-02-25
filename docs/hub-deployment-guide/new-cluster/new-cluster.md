@@ -250,7 +250,7 @@ you at least one core node running.
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```{caution}
-We have encountered resource-exhaustion incidents due to limitations of certain GCP regions. Prefer us-centra1 unless _there's a very good reason_, as this decision is hard to change later on.
+We have encountered resource-exhaustion incidents due to limitations of certain GCP regions. Prefer us-central1 unless _there's a very good reason_, as this decision is hard to change later on.
 ```
 ```bash
 export CLUSTER_NAME=<cluster-name>
