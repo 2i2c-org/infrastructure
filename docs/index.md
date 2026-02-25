@@ -98,6 +98,7 @@ topic/features.md
 topic/resource-allocation.md
 topic/jsonnet.md
 topic/internal-tools.md
+topic/cluster-entrypoint.md
 ```
 
 ## Reference

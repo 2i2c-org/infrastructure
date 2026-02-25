@@ -1,4 +1,4 @@
-
+(howto:migrate-ingress)=
 # Migrate from one ingress controller to another
 
 ## Why migrate ingress controllers?
@@ -23,10 +23,10 @@ For clusters that are still running Ingress NGINX Controller, the existing DNS r
 (migrate-ingress:migrate-dns)=
 ### Migrate DNS records to dedicated LoadBalancer service
 
-We recently updated the support chart to enable the LoadBalancer service on all hubs. In this phase, we must migrate the DNS records for the cluster to the `traffic-entrypoint` LoadBalancer external IP. We can easily lookup the LB hostname with:
+We recently updated the support chart to enable the LoadBalancer service on all hubs. In this phase, we must migrate the DNS records for the cluster to the `cluster-entrypoint` LoadBalancer external IP. We can easily lookup the LB hostname with:
 
 ```bash
-kubectl --namespace=support get service/traffic-entrypoint  --template="{{(index .status.loadBalancer.ingress 0).hostname}}"
+kubectl --namespace=support get service/cluster-entrypoint  --template="{{(index .status.loadBalancer.ingress 0).hostname}}"
 ```
 
 We must migrate the DNS records for the domain to point to this external IP. During the migration, both the "new" LB and existing ingress-nginx owned LB must be available.
@@ -35,7 +35,7 @@ We must migrate the DNS records for the domain to point to this external IP. Dur
 (migrate-ingress:switch-controller)=
 ### Switch to official `nginx-ingress` controller
 
-Once the DNS records have been updated to point to the `traffic-entrypoint` LB, we can safely transition to the official `ingress-nginx` service:
+Once the DNS records have been updated to point to the `cluster-entrypoint` LB, we can safely transition to the official `ingress-nginx` service:
 
 1. Enable the `nginx-ingress` service in the support chart with
    ```{code-block} yaml
@@ -57,12 +57,13 @@ Once the DNS records have been updated to point to the `traffic-entrypoint` LB, 
        ingressClassResource:
          enabled: false
    ```
-1. Point the `traffic-entrypoint` LB to the new `nginx-ingress` service:
+1. Point the `cluster-entrypoint` LB to the new `nginx-ingress` service:
    ```{code-block} yaml
    clusterEntrypoint:
      targetController: nginx-ingress
    ```
 
 ## How to handle future migrations
-Once all clusters are using the `traffic-entrypoint` LB for their DNS records, it should be trivial to migrate to a new ingress controller or Gateway that establishes a clusterIP service. Once a new controller/gateway is introduced, simply point the `traffic-entrypoint` LB at the new service pods.
+
+Once all clusters are using the `cluster-entrypoint` LB for their DNS records, it should be trivial to migrate to a new ingress controller or Gateway that establishes a clusterIP service. Once a new controller/gateway is introduced, simply point the `cluster-entrypoint` LB at the new service pods.
 
