@@ -1,0 +1,28 @@
+name: Is this a sprint week?
+
+on:
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    outputs:
+      valid_week:
+        description: Whether or not this is a week when the workflow should run (usually a sprint planning week)
+        value: ${{ jobs.example_job.outputs.output1 }}
+jobs:
+  # Run the action every other week
+  check-week:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.check.outputs.valid_week }}
+    steps:
+    - name: Check if valid week
+      id: check
+      # https://stackoverflow.com/questions/24777597/value-too-great-for-base-error-token-is-08/24777667
+      run: |
+        WEEK=$(date +%V)
+        if [ $((${WEEK#0} % 2)) -ne 0 ]; then
+            echo "Skipping this week"
+            echo False >> $GITHUB_OUTPUT
+        else
+            echo "Perfect week to run our recurrent workflows"
+            echo True >> $GITHUB_OUTPUT
+        fi
