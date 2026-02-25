@@ -15,6 +15,13 @@ jupyterhub:
       profile_options:
         image:
           display_name: Image
+          unlisted_choice:
+            enabled: True
+            display_name: "Custom image"
+            validation_regex: "^.+:.+$"
+            validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+            kubespawner_override:
+              image: "{value}"
           choices:
             00-slm:
               display_name: Small Language Models - Workshop hub
@@ -49,6 +56,13 @@ jupyterhub:
       profile_options:
         image:
           display_name: Image
+          unlisted_choice:
+            enabled: True
+            display_name: "Custom image"
+            validation_regex: "^.+:.+$"
+            validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+            kubespawner_override:
+              image: "{value}"
           choices:
             00-sml-pytorch:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
@@ -65,6 +79,7 @@ jupyterhub:
               slug: pytorch
               kubespawner_override:
                 image: pangeo/pytorch-notebook:2026.01.30
+
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
