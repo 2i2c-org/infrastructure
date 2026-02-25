@@ -1,6 +1,9 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+disableCoredumps:
+  enabled: true
+
 prometheus:
   server:
     ingress:
