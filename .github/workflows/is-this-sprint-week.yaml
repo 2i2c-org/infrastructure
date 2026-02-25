@@ -3,10 +3,12 @@
 #   compute-week:
 #     uses: ./.github/workflows/is-this-sprint-week.yaml
 #   job2:
+#     if: ${{ needs.compute-week.outputs.valid_week == 'True' }}
 #     needs: compute-week
 #     runs-on: ubuntu-latest
-#     if: ${{ needs.compute-week.outputs.valid_week == "True" }}
 #     steps:
+#
+# https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows
 #
 name: Is this a sprint week?
 
@@ -31,8 +33,8 @@ jobs:
         WEEK=$(date +%V)
         if [ $((${WEEK#0} % 2)) -ne 0 ]; then
             echo "Skipping this week"
-            echo False >> $GITHUB_OUTPUT
+            echo "valid_week=False" >> $GITHUB_OUTPUT
         else
             echo "Perfect week to run our recurrent workflows"
-            echo True >> $GITHUB_OUTPUT
+            echo "valid_week=True" >> $GITHUB_OUTPUT
         fi
