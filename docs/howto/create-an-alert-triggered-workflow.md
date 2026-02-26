@@ -24,9 +24,12 @@ To do so, we can use Pagerduty's [incident workflow](https://support.pagerduty.c
    - **URL**: https://api.github.com/repos/2i2c-org/infrastructure/dispatches
    - **Authentication Headers**: Geo-GitHub conn
    - **Headers**:
+     ```yaml
      Content-Type: application/json
      Accept:application/vnd.github.v3+json
+     ```
    - **Body**
+     ```json
      {
        "event_type": "some-relevant-keyword-for-matching-this-event",
        "client_payload": {
@@ -36,6 +39,7 @@ To do so, we can use Pagerduty's [incident workflow](https://support.pagerduty.c
          "type": "{{incident.incident_type.display_name}}"
        }
      }
+     ```
    ```{note}
    Note that the event type is what's going to be used by GitHub to trigger or not the workflow.
    Also, other things can be included in the payload. Experiment!
