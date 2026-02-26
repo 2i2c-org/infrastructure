@@ -41,9 +41,8 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   local makeTwoServersStartupFailureAlert = function(
     summary,
     severity,
-    labels={},
                                             ) {
-    alert: 'Two servers failed to start in the last 30m',
+    alert: 'At least two servers failed to start in the last 30m',
     expr: |||
       changes(
         (
@@ -57,7 +56,8 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     labels: {
       cluster: cluster_name,
       severity: severity,
-    } + labels,
+      recorded_failures: '{{ $value }}',
+    },
     annotations: {
       summary: summary,
     },
@@ -182,6 +182,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 matchers: [
                   'cluster =~ .*',
                   'alertname =~ ".*failed to start.*"',
+                ],
+                group_by: [
+                  'alertname',
+                  'cluster',
+                  'namespace',
+                  'recorded_failures',
                 ],
               },
             ],
