@@ -68,7 +68,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/gpu-user-image:476b21b00c8f
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:2026.02.24
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
@@ -129,7 +129,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 10 # in GiB
+        hard_quota: 20 # in GiB
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.gpu-demo.svc.cluster.local
