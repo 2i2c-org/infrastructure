@@ -23,6 +23,7 @@ jobs:
           f.write(f"hub={hub}")
 
   run-health-check:
+    needs: details
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -43,7 +44,6 @@ jobs:
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
     - name: Run health check against the alerting cluster and hub
-      needs: details
       uses: nick-fields/retry@v3
       with:
         timeout_minutes: 10
