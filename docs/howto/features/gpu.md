@@ -2,7 +2,7 @@
 # Enable access to GPUs
 
 GPUs are heavily used in machine learning workflows, and we support
-GPUs on all major cloud providers.
+GPUs on Google Cloud and AWS.
 
 ## Setting up GPU nodes
 
@@ -13,9 +13,9 @@ GPUs on all major cloud providers.
 New GCP projects start with no GPU quota, so we must ask for some to enable
 GPUs.
 
-1. Go to the [GCP Quotas page](https://console.cloud.google.com/apis/api/compute.googleapis.com/quotas), 
+1. Go to the [GCP Quotas page](https://console.cloud.google.com/apis/api/compute.googleapis.com/quotas),
    **and make sure you are in the right project**.
-   
+
 2. Search for "NVIDIA T4 GPU", and find the entry for the **correct region**.
    This is very important, as getting a quota increase in the wrong region means
    we have to do this all over again.
@@ -27,13 +27,13 @@ GPUs.
    project, 4 is a good starting number. We can consistently ask for more,
    if these get used. GCP requires we provide a description for this quota
    increase request - "We need GPUs to work on some ML based research" is
-   a good start. 
-   
+   a good start.
+
 5. Click "Next", and then "Submit Request".
 
 6. Sometimes the request is immediately granted, other times it takes a few
-   days. 
-   
+   days.
+
 #### Setting up GPU nodepools with terraform
 
 The `notebook_nodes` variable for our GCP terraform accepts a `gpu`
@@ -45,13 +45,14 @@ notebook_nodes = {
   "gpu-t4": {
     min: 0,
     max: 20,
-    machine_type: "n1-highmem-8",
+    machine_type: "n1-highmem-4",
     gpu: {
       enabled: true,
       type: "nvidia-tesla-t4",
       count: 1,
     },
-    # Optional, in case we run into resource exhaustion in the main zone
+    # Set up all possible zones here, as GPU availability is spotty and we will
+    # run into resource exhaustion if we pick only one pool
     zones: [
       "us-central1-a",
       "us-central1-b",
@@ -62,13 +63,59 @@ notebook_nodes = {
 }
 ```
 
-This provisions a `n1-highmem-8` node, where each node has 1 NVidia
-T4 GPU.
+This provisions a `n1-highmem-4` node, where each node has 1 NVidia
+T4 GPU. Since GCP has issues provisioning GPUs, we want to maximize getting
+them wherever possible. This increases some home directory disk latency
+as that becomes cross zone traffic, but is the only way to reliably get
+GPUs on GCP.
 
-In addition, we could ask for GPU nodes to be spawned in whatever zone
-available in the same region, rather than just the same zone as the rest
-of our notebook nodes. This should only be used if we run into GPU scarcity
-issues in the zone!
+##### GPU Time Sharing
+
+In addition, if GPUs are being used for lighter workloads or teaching, you
+can use [GPU Timeslicing](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-sharing.html)
+to split the single GPU into many 'virtual' GPU slices. There's no memory
+isolation, so you may get out of memory errors in your GPU code if you end
+up on same node as another person who is using max GPU memory. But the runtime
+units are spread out, so it looks like you'll have a slower GPU - which is
+better in some teaching cases than no GPU at all. So this is primarily helpful
+in cases when you have many people who are using the GPU *a little* - it's not
+helpful if you have only very few people using GPUs, or if they're using
+GPUs a lot.
+
+To split a T4 GPU into 2, use the following terraform config:
+
+```
+notebook_nodes = {
+  "gpu-t4": {
+    min: 0,
+    max: 20,
+    machine_type: "n1-highmem-4",
+    gpu: {
+      enabled: true,
+      type: "nvidia-tesla-t4",
+      count: 1,
+      # Split GPU for sharing
+      share_gpu: true,
+      sharing_strategy: "TIME_SLICING",
+      shared_clients_per_gpu: 2
+    },
+    # Set up all possible zones here, as GPU availability is spotty and we will
+    # run into resource exhaustion if we pick only one pool
+    zones: [
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f",
+    ],
+  },
+}
+```
+
+This enables time slicing, and splits the GPU into 2. In your hub's config,
+adjust your memory and CPU requests such that two pods can fit onto each node -
+and verify that by actually spawning two pods. Otherwise the GPU splitting will
+be wasted. You can split the GPU further, but we don't have enough usage information
+to know how small a split is still useful.
 
 ### AWS
 
