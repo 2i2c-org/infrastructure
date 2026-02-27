@@ -1,4 +1,4 @@
-name: P1 outages actions
+name: PD triggered health-check
 on:
   repository_dispatch:
     types: [health-check]
