@@ -24,7 +24,7 @@ jupyterhub:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-user-image:53ae331b8d4e
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:d4cf23eec636
             01-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
@@ -65,7 +65,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:2026.02.24
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:6f32f9fc1853
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
