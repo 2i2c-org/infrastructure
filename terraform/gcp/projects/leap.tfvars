@@ -133,6 +133,8 @@ notebook_nodes = {
       type : "nvidia-tesla-t4",
       count : 1
     },
+    # Let's try a faster disk to see if that speeds up image pulls
+    disk_type : "pd-ssd",
     zones : [
       # Get GPUs wherever they are available, as sometimes a single
       # zone might be out of GPUs.
