@@ -3,6 +3,11 @@ prometheusIngressAuthSecret:
 
 prometheus:
   server:
+    resources:
+      limits:
+        memory: 5Gi
+      requests:
+        memory: 5Gi
     persistentVolume:
       size: 750Gi
     ingress:
