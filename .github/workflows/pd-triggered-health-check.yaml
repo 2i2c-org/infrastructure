@@ -1,0 +1,56 @@
+name: P1 outages actions
+on:
+  repository_dispatch:
+    types: [health-check]
+jobs:
+  run-health-check:
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: true
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+    - name: Save pip's install cache on job completion
+      uses: actions/cache@v5
+      with:
+        path: ~/.cache/pip
+        key: ${{ github.run_id }}
+
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+
+    - name: Get the incident details
+      id: details
+      shell: python
+      run: |
+        import os
+
+        # example title: "At least two servers failed to start in the last 30m earthscope prod 3 (immediate action needed)"
+        title = ${{ github.event.client_payload.title }}
+        cluster = title.split()[-6]
+        hub = title.split()[-5]
+
+        output_file = os.getenv("GITHUB_OUTPUT")
+        with open(output_file, "a") as f:
+          f.write(f"cluster={cluster}\n")
+          f.write(f"hub={hub}")
+
+    - name: Run health check against the alerting cluster and hub
+      needs: details
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          deployer run-hub-health-check ${{ needs.details.outputs.cluster }} ${{ needs.details.outputs.hub }}
+
+    # - name: Resolve PagerDuty alert on success
+    #   if: ${{ !failure() && !cancelled() }}
+    #   uses: Entle/action-pagerduty-alert@1.0.5
+    #   with:
+    #     pagerduty-integration-key: '${{ secrets.PAGERDUTY_INTEGRATION_KEY }}'
+    #     pagerduty-dedup-key: 
+    #     resolve: true
