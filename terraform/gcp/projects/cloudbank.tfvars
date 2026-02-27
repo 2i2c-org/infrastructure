@@ -324,9 +324,9 @@ notebook_nodes = {
       enabled : true,
       type : "nvidia-tesla-t4",
       count : 1,
-      share_gpu: true,
-      sharing_strategy: "TIME_SHARING",
-      shared_clients_per_gpu: 2
+      share_gpu : true,
+      sharing_strategy : "TIME_SHARING",
+      shared_clients_per_gpu : 2
     },
     zones : [
       # Get GPUs wherever they are available, as sometimes a single

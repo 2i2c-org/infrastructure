@@ -278,7 +278,7 @@ resource "google_container_node_pool" "notebook" {
           for_each = each.value.gpu.share_gpu ? [1] : []
 
           content {
-            gpu_sharing_strategy = each.value.gpu.sharing_strategy
+            gpu_sharing_strategy       = each.value.gpu.sharing_strategy
             max_shared_clients_per_gpu = each.value.gpu.shared_clients_per_gpu
           }
         }
