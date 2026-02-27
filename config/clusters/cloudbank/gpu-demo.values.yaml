@@ -1,4 +1,11 @@
 jupyterhub:
+  scheduling:
+    userScheduler:
+      # I was noticing sometimes upto a minute between when
+      # a new node is up and the scheduler notices with the
+      # default optimizing scheduler. Let's run our own scheduler
+      # which is much faster. This is anectodal information
+      enabled: true
   ingress:
     hosts: [gpu-demo.cloudbank.2i2c.cloud]
     tls:
