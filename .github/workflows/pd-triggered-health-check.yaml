@@ -3,6 +3,25 @@ on:
   repository_dispatch:
     types: [health-check]
 jobs:
+  details:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get the incident details
+      id: details
+      shell: python
+      run: |
+        import os
+
+        # example title: "At least two servers failed to start in the last 30m 2i2c staging 3 (immediate action needed)"
+        title = ${{ github.event.client_payload.title }}
+        cluster = title.split()[-6]
+        hub = title.split()[-5]
+
+        output_file = os.getenv("GITHUB_OUTPUT")
+        with open(output_file, "a") as f:
+          f.write(f"cluster={cluster}\n")
+          f.write(f"hub={hub}")
+
   run-health-check:
     runs-on: ubuntu-latest
     steps:
@@ -22,22 +41,6 @@ jobs:
       run: |
         pip install --editable .
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
-
-    - name: Get the incident details
-      id: details
-      shell: python
-      run: |
-        import os
-
-        # example title: "At least two servers failed to start in the last 30m earthscope prod 3 (immediate action needed)"
-        title = ${{ github.event.client_payload.title }}
-        cluster = title.split()[-6]
-        hub = title.split()[-5]
-
-        output_file = os.getenv("GITHUB_OUTPUT")
-        with open(output_file, "a") as f:
-          f.write(f"cluster={cluster}\n")
-          f.write(f"hub={hub}")
 
     - name: Run health check against the alerting cluster and hub
       needs: details
