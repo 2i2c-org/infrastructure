@@ -5,9 +5,9 @@ prometheus:
   server:
     resources:
       limits:
-        memory: 5Gi
+        memory: 5.5Gi
       requests:
-        memory: 5Gi
+        memory: 5.5Gi
     persistentVolume:
       size: 750Gi
     ingress:
