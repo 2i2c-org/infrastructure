@@ -329,7 +329,7 @@ notebook_nodes = {
       shared_clients_per_gpu : 2
     },
     # Let's try a faster disk to see if that speeds up image pulls
-    disk_type: "pd-ssd",
+    disk_type : "pd-ssd",
     zones : [
       # Get GPUs wherever they are available, as sometimes a single
       # zone might be out of GPUs.
