@@ -10,11 +10,13 @@ jobs:
     - name: Get the incident details
       id: details
       shell: python
+      env:
+        TITLE: ${{ github.event.client_payload.title }}
       run: |
         import os
 
         # example title: "At least two servers failed to start in the last 30m 2i2c staging 3 (immediate action needed)"
-        title = ${{ github.event.client_payload.title }}
+        title = os.getenv("TITLE")
         cluster = title.split()[-6]
         hub = title.split()[-5]
 
