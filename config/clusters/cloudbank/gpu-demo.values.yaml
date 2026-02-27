@@ -6,9 +6,6 @@ jupyterhub:
       secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
-    memory:
-      guarantee: 4G
-      limit: 4G
     profileList:
     - display_name: CPU only
       default: true
@@ -48,8 +45,8 @@ jupyterhub:
         node_selector:
           node.kubernetes.io/instance-type: n2-highmem-4
         default: true
-    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-      description: Start a container on a dedicated node with a GPU
+    - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
+      description: Upto 3 CPUs when available
       allowed_groups:
       - 2i2c-org:hub-access-for-2i2c-staff
       - ucb-ds:gpu-permitted
@@ -83,10 +80,12 @@ jupyterhub:
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
-        mem_limit:
-        mem_guarantee: 14G
+        mem_guarantee: 8G
+        mem_limit: 8G
+        cpu_guarantee: 1.5
+        cpu_limit: 3
         node_selector:
-          node.kubernetes.io/instance-type: n1-highmem-8
+          node.kubernetes.io/instance-type: n1-highmem-4
         extra_resource_limits:
           nvidia.com/gpu: '1'
   custom:
