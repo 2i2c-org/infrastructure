@@ -1,6 +1,5 @@
 name: PD triggered health-check
 on:
-  workflow_dispatch:
   repository_dispatch:
     types: [health-check]
 jobs:
