@@ -102,7 +102,10 @@ variable "notebook_nodes" {
       object({
         enabled : optional(bool, false),
         type : optional(string, ""),
-        count : optional(number, 1)
+        count : optional(number, 1),
+        share_gpu : optional(bool, false),
+        sharing_strategy : optional(string, null),
+        shared_clients_per_gpu : optional(number, 1)
       }),
       {}
     ),
