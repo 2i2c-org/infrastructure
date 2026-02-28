@@ -115,6 +115,7 @@ jupyterhub:
           name: CloudBank Classroom - GPU Demo
           url: https://www.cloudbank.org/
   hub:
+    allowNamedServers: true
     config:
       JupyterHub:
         authenticator_class: github
