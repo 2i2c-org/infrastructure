@@ -237,8 +237,10 @@ resource "google_container_node_pool" "notebook" {
 
   initial_node_count = each.value.min
   autoscaling {
-    min_node_count = each.value.min
-    max_node_count = each.value.max
+    # Use total_ rather than min_ as we want total max across zones,
+    # rather than just in one zone
+    total_min_node_count = each.value.min
+    total_max_node_count = each.value.max
     # Put nodes wherever we can, don't try to balance across zones
     location_policy = "ANY"
   }
