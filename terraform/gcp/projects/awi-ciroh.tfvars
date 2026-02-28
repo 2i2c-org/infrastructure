@@ -84,6 +84,14 @@ notebook_nodes = {
       type : "nvidia-tesla-t4",
       count : 1,
     },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
 }
 
