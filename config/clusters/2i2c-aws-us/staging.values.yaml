@@ -43,6 +43,11 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.aws.2i2c.cloud/hub/oauth_callback
   singleuser:
+    storage:
+      extraVolumeMounts:
+        blabla:
+          name: bla
+          mountPath: /bla
     nodeSelector:
       2i2c/hub-name: staging
       node.kubernetes.io/instance-type: r5.xlarge
