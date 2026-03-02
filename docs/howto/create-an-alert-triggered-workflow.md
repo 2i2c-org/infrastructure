@@ -22,11 +22,11 @@ To do so, we can use Pagerduty's [incident workflow](https://support.pagerduty.c
 
 7. In that menu, enter the following:
    - **URL**: https://api.github.com/repos/2i2c-org/infrastructure/dispatches
-   - **Authentication Headers**: Geo-GitHub conn
+   - **Authentication Headers**: 2i2c-Bot GitHub PAT
    - **Headers**:
      ```yaml
      Content-Type: application/json
-     Accept:application/vnd.github.v3+json
+     Accept: application/vnd.github.v3+json
      ```
    - **Body**
      ```json

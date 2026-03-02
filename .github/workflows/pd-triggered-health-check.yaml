@@ -14,15 +14,21 @@ jobs:
       run: |
         import os
 
-        # example title: "At least two servers failed to start in the last 30m 2i2c staging 3 (immediate action needed)"
+        # example title: "At least two servers failed to start in the last 30m 2i2c staging 3 (aws immediate action needed)"
         title = os.getenv("TITLE")
-        cluster = title.split()[-6]
-        hub = title.split()[-5]
+        cluster = title.split()[-7]
+        hub = title.split()[-6]
+        failures = title.split()[-5]
+        provider = title.split()[-4][1:]
 
         output_file = os.getenv("GITHUB_OUTPUT")
+        print(cluster, hub, provider, failures)
+
         with open(output_file, "a") as f:
           f.write(f"cluster={cluster}\n")
-          f.write(f"hub={hub}")
+          f.write(f"hub={hub}\n")
+          f.write(f"failures={failures}\n")
+          f.write(f"provider={provider}")
 
   run-health-check:
     needs: details
@@ -45,18 +51,16 @@ jobs:
         pip install --editable .
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
-    - name: Run health check against the alerting cluster and hub
+    - name: Setup deploy for ${{ needs.details.outputs.cluster }} cluster
+      uses: ./.github/actions/setup-deploy
+      with:
+        provider: ${{ needs.details.outputs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Run health check against ${{ needs.details.outputs.cluster }} ${{ needs.details.outputs.hub }}
       uses: nick-fields/retry@v3
       with:
         timeout_minutes: 10
         max_attempts: 3
         command: |
           deployer run-hub-health-check ${{ needs.details.outputs.cluster }} ${{ needs.details.outputs.hub }}
-
-    # - name: Resolve PagerDuty alert on success
-    #   if: ${{ !failure() && !cancelled() }}
-    #   uses: Entle/action-pagerduty-alert@1.0.5
-    #   with:
-    #     pagerduty-integration-key: '${{ secrets.PAGERDUTY_INTEGRATION_KEY }}'
-    #     pagerduty-dedup-key: 
-    #     resolve: true
