@@ -46,11 +46,9 @@ jupyterhub:
         allowed_organizations:
         - fish-pace:2026-hackweek-jupyterhub
         - nmfs-openscapes:longterm-access-2i2c
-        - nmfs-openscapes:2024-mentors
-        - nmfs-openscapes:2024-science-teams
+        - nmfs-openscapes:mentors
         - nmfs-openscapes:2026-jupyterhub
         - nmfs-openscapes:2024-nmfs-champions-cohort
-        - nmfs-openscapes:2025-nmfs-champions-cohort
 
 jupyterhub-home-nfs:
   eks:
