@@ -2,8 +2,10 @@ name: PD triggered health-check
 on:
   repository_dispatch:
     types: [health-check]
+    outputs:
+
 jobs:
-  details:
+  run-health-check:
     runs-on: ubuntu-latest
     steps:
     - name: Get the incident details
@@ -29,11 +31,6 @@ jobs:
           f.write(f"hub={hub}\n")
           f.write(f"failures={failures}\n")
           f.write(f"provider={provider}")
-
-  run-health-check:
-    needs: details
-    runs-on: ubuntu-latest
-    steps:
     - uses: actions/checkout@v6
       with:
         submodules: true
@@ -51,16 +48,16 @@ jobs:
         pip install --editable .
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
-    - name: Setup deploy for ${{ needs.details.outputs.cluster }} cluster
+    - name: Setup deploy for ${{ steps.details.outputs.cluster }} cluster
       uses: ./.github/actions/setup-deploy
       with:
-        provider: ${{ needs.details.outputs.provider }}
+        provider: ${{ steps.details.outputs.provider }}
         GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
-    - name: Run health check against ${{ needs.details.outputs.cluster }} ${{ needs.details.outputs.hub }}
+    - name: Run health check against ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
       uses: nick-fields/retry@v3
       with:
         timeout_minutes: 10
         max_attempts: 3
         command: |
-          deployer run-hub-health-check ${{ needs.details.outputs.cluster }} ${{ needs.details.outputs.hub }}
+          deployer run-hub-health-check ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
