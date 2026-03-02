@@ -359,12 +359,55 @@ basehub:
 
       - display_name: GPU
         slug: gpu
-        description: NVIDIA Tesla T4, 24GB RAM, 8 CPUs
+        description: Start a container on a node with a single GPU available.
         allowed_groups:
         - 2i2c-org:hub-access-for-2i2c-staff
         - leap-stc:leap-pangeo-full-access
         - leap-stc:data-and-compute
         profile_options:
+          requests:
+            display_name: GPU type
+            choices:
+              tesla_t4:
+                display_name: NVIDIA Tesla T4 [16GB VRAM], ~30GB RAM, 8 CPUs
+                default: true
+                kubespawner_override:
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-standard-8
+                    cloud.google.com/gke-accelerator: nvidia-tesla-t4
+                  environment:
+                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                  mem_guarantee: 25G
+                  mem_limit: 29G
+                  extra_resource_limits:
+                    nvidia.com/gpu: '1'
+
+              nvidia_l4:
+                display_name: NVIDIA L4 [24GB VRAM], ~16GB RAM, 4 CPUs
+                kubespawner_override:
+                  node_selector:
+                    node.kubernetes.io/instance-type: g2-standard-4
+                    cloud.google.com/gke-accelerator: nvidia-l4
+                  environment:
+                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                  mem_guarantee: 10G
+                  mem_limit: 15G
+                  extra_resource_limits:
+                    nvidia.com/gpu: '1'
+
+              nvidia_a100:
+                display_name: NVIDIA A100 [40GB VRAM], ~85GB RAM, 12 CPUs
+                kubespawner_override:
+                  node_selector:
+                    node.kubernetes.io/instance-type: a2-highgpu-1g
+                    cloud.google.com/gke-accelerator: nvidia-tesla-a100
+                  environment:
+                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                  mem_guarantee: 70G
+                  mem_limit: 82G
+                  extra_resource_limits:
+                    nvidia.com/gpu: '1'
+
           image:
             display_name: Image
             unlisted_choice: *profile_list_unlisted_choice
@@ -379,16 +422,6 @@ basehub:
                 slug: pytorch
                 kubespawner_override:
                   image: pangeo/pytorch-notebook:2025.11.13
-        kubespawner_override:
-          environment:
-            NVIDIA_DRIVER_CAPABILITIES: compute,utility
-          node_selector:
-            node.kubernetes.io/instance-type: n1-standard-8
-            cloud.google.com/gke-accelerator: nvidia-tesla-t4
-          mem_limit: 30G
-          mem_guarantee: 24G
-          extra_resource_limits:
-            nvidia.com/gpu: '1'
   binderhub-service:
     enabled: true
     config:
