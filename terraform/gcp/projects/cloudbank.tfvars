@@ -301,7 +301,7 @@ k8s_versions = {
 core_node_machine_type = "n2-highmem-2"
 # FIXME: this number should be updated, it was bumped to 30
 #        in order to reflect an imperative change made to the infra
-core_node_max_count   = 30
+core_node_max_count   = 40
 enable_network_policy = true
 
 notebook_nodes = {
@@ -309,20 +309,6 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
-  },
-  # TODO: remove this if it's empty in future.
-  "n2-highmem-4-b" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-4",
-    node_version : "1.32.1-gke.1357001",
-    taints : [
-      {
-        key : "manual-phaseout"
-        value : "noop"
-        effect : "NO_SCHEDULE"
-      }
-    ],
   },
   "gpu-t4" : {
     min : 0,
