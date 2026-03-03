@@ -318,7 +318,7 @@ notebook_nodes = {
   },
   "gpu-t4" : {
     min : 0,
-    max : 16,
+    max : 30,
     machine_type : "n1-highmem-4",
     gpu : {
       enabled : true,
