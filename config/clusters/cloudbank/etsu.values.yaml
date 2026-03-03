@@ -77,7 +77,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 10 # in GiB
+        hard_quota: 20 # in GiB
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.etsu.svc.cluster.local
