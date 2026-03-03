@@ -29,6 +29,10 @@ jupyterhub:
           name: Purdue University
           url: https://www.purdue.edu/
   hub:
+    db:
+      pvc:
+        storageClassName: delayed-stadard-sc
+        storage: 1Gi
     config:
       JupyterHub:
         authenticator_class: cilogon

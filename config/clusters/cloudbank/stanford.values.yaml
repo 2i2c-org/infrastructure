@@ -29,6 +29,10 @@ jupyterhub:
           name: Stanford University
           url: https://www.stanford.edu/
   hub:
+    db:
+      pvc:
+        storageClassName: delayed-stadard-sc
+        storage: 1Gi
     config:
       JupyterHub:
         authenticator_class: cilogon
