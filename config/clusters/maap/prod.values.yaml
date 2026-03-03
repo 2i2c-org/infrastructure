@@ -40,10 +40,10 @@ jupyterhub:
               image: '{value}'
           choices:
             01-pangeo:
-              display_name: Modified Pangeo Notebook v5.0.0
+              display_name: Modified Pangeo Notebook v5.1.0
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.0.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.1.0
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -60,10 +60,10 @@ jupyterhub:
                     runAsUser: 1000
                     runAsGroup: 1000
             02-rocker:
-              display_name: Rocker Geospatial v5.0.0
+              display_name: Rocker Geospatial v5.1.0
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.0.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.1.0
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -80,10 +80,10 @@ jupyterhub:
                     runAsUser: 1000
                     runAsGroup: 1000
             03-isce3:
-              display_name: isce3 v5.0.0
+              display_name: isce3 v5.1.0
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.0.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.1.0
                 init_containers:
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -106,7 +106,7 @@ jupyterhub:
                   # Launch people directly into the Linux desktop when they start
                 default_url: /desktop
                   # Built from https://github.com/2i2c-org/nasa-qgis-image
-                image: quay.io/2i2c/nasa-qgis-image:d76118ea0c15
+                image: quay.io/2i2c/nasa-qgis-image:ff9b8bf0ccef
         resource_allocation:
           display_name: Resource Allocation
           choices:
@@ -224,13 +224,25 @@ jupyterhub:
               default: false
               slug: pytorch
               kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2024.11.11
+                image: quay.io/pangeo/pytorch-notebook:2025.12.30
+            pytorch-maap:
+              display_name: Pangeo PyTorch ML Notebook with MAAP extensions
+              default: false
+              slug: pytorch
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v5.1.0
             tensorflow2:
               display_name: Pangeo Tensorflow2 ML Notebook
+              default: false
+              slug: tensorflow2
+              kubespawner_override:
+                image: quay.io/pangeo/ml-notebook:2025.12.30
+            tensorflow2-maap:
+              display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
               default: true
               slug: tensorflow2
               kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2024.11.11
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v5.1.0
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
