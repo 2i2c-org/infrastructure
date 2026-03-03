@@ -242,6 +242,10 @@ persistent_disks = {
     size        = 2
     name_suffix = "staging"
   }
+  "stanford" = {
+    size        = 25
+    name_suffix = "stanford"
+  }
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
@@ -318,7 +322,7 @@ notebook_nodes = {
   },
   "gpu-t4" : {
     min : 0,
-    max : 16,
+    max : 30,
     machine_type : "n1-highmem-4",
     gpu : {
       enabled : true,
