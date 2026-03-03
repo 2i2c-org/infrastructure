@@ -495,13 +495,8 @@ disableCoredumps:
       requests:
         cpu: 1m
         memory: 16Mi
-    pauseContainer:
-      limits:
-        cpu: 5m
-        memory: 16Mi
-      requests:
-        cpu: 1m
-        memory: 8Mi
+    # Don't set any requests or limits here, as it's ok for it to be best effort qos
+    pauseContainer: {}
 
 # Setup a separate storageClass specifically for prometheus data
 prometheusStorageClass:
