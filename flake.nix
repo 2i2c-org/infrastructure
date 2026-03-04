@@ -8,7 +8,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-helm.url = "github:NixOS/nixpkgs/9b100cfb67ccb2ff6e723b78d4ae2f9c88654a1c";
     dev-python = {
-      url = "github:agoose77/dev-flakes/e0b0b96?dir=python";
+      url = "github:agoose77/dev-flakes/v10?dir=python";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -90,6 +90,11 @@
 
         # Drop bad env vars on activation
         postShellHook = unwantedEnvPreamble;
+
+        env = {
+          # Disable nested kubeconfigs! This is nearly always a footgun
+          DEPLOYER_NO_NESTED_KUBECONFIG = "1";
+        };
 
         # Setup venv by patching interpreter with LD_LIBRARY_PATH
         # This is required because ld does not exist on Nix systems

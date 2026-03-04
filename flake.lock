@@ -8,17 +8,17 @@
       },
       "locked": {
         "dir": "python",
-        "lastModified": 1772196754,
-        "narHash": "sha256-DNlnNdQkydAZl0UWFxsX3burQjp83kOxQEAs5+9fKnw=",
+        "lastModified": 1772621537,
+        "narHash": "sha256-/jBAYzRIRkXwykuNrIUqvh6HzWEiMwc+WBswuO5MB94=",
         "owner": "agoose77",
         "repo": "dev-flakes",
-        "rev": "e0b0b96e09968d3ba1ccf8ec82865a35e2cba7b8",
+        "rev": "45e941722640b75cb55af326151c8a9af52f598b",
         "type": "github"
       },
       "original": {
         "dir": "python",
         "owner": "agoose77",
-        "ref": "e0b0b96",
+        "ref": "v10",
         "repo": "dev-flakes",
         "type": "github"
       }
