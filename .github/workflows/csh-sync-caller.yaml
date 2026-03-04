@@ -1,0 +1,11 @@
+name: CSH Sync
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  sync:
+    if: github.event.label.name == 'CSH'
+    uses: 2i2c-org/csh-sync/.github/workflows/csh-sync.yml@main
+    secrets: inherit
