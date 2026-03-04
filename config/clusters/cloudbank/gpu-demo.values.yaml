@@ -136,7 +136,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     config:
       QuotaManager:
-        hard_quota: 20 # in GiB
+        hard_quota: 30 # in GiB
 nfs:
   pv:
     serverIP: storage-quota-home-nfs.gpu-demo.svc.cluster.local
