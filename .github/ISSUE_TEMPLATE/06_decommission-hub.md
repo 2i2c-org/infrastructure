@@ -36,6 +36,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 - [ ] Manage existing home directory data (migrate data from the hub or delete it)
 - [ ] Manage existing cloud bucket data (migrate data, or delete it)
+- [ ] Delete the hub's DNS entries from Namecheap (the entries set for the hub can be found [here](https://infrastructure.2i2c.org/hub-deployment-guide/deploy-support/configure-support/#setting-dns-records))
 - [ ] Delete the hub's authentication application on GitHub or CILogon (note CILogon removal requires the hub config in place)
 - [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` files. A complete list of relevant files can be found under the appropriate entry in the associated `cluster.yaml` file.
 - [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
