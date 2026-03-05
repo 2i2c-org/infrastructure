@@ -26,7 +26,7 @@ For clusters that are still running Ingress NGINX Controller, the existing DNS r
 We recently updated the support chart to enable the LoadBalancer service on all hubs. In this phase, we must migrate the DNS records for the cluster to the `cluster-entrypoint` LoadBalancer external IP. We can easily lookup the LB hostname with:
 
 ```bash
-kubectl --namespace=support get service/cluster-entrypoint  --template="{{(index .status.loadBalancer.ingress 0).hostname}}"
+kubectl --namespace=support get service/cluster-entrypoint  --template='{{$ingress := (index .status.loadBalancer.ingress 0)}}{{or $ingress.hostname $ingress.ip}}'
 ```
 
 We must migrate the DNS records for the domain to point to this external IP. During the migration, both the "new" LB and existing ingress-nginx owned LB must be available.
