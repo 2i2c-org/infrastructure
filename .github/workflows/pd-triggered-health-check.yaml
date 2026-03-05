@@ -61,3 +61,29 @@ jobs:
         max_attempts: 3
         command: |
           deployer run-hub-health-check ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
+
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
+      with:
+        notify_when: failure
+        status: ${{ job.status }} # required
+            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+        message_format: '{emoji} Hey @channel! The health check for https://api.pagerduty.com/incidents/${{ github.event.client_payload.id }} failed. Checkout the run at {run_url}.'
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+
+    - name: Leave a note to the incident
+      run: |
+        curl --request POST \
+          --url https://api.pagerduty.com/incidents/${{ github.event.client_payload.id }}/notes \
+          --header 'Accept: application/json' \
+          --header 'Authorization: Token token=${{ secrets.PD_TOKEN }}' \
+          --header 'Content-Type: application/json' \
+          --header 'From: ' \
+          --data '{
+          "note": {
+            "content": "The health checks status was: ${{ job.status }}"
+          }
+        }'
