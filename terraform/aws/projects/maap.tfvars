@@ -95,8 +95,8 @@ hub_cloud_permissions = {
               "s3:AbortMultipartUpload"
             ],
             "Resource": [
-              "arn:aws:s3:::maap-ops-workspace",
-              "arn:aws:s3:::maap-ops-workspace/*"
+              "arn:aws:s3:::maap-uat-workspace",
+              "arn:aws:s3:::maap-uat-workspace/*"
             ]
           },
           {
