@@ -553,24 +553,21 @@ To begin deploying and operating hubs on your new cluster, we need to export the
     :sync: jetstream2-key
       To access the cluster using kubectl we need to get the kubeconfig with:
       ```bash
-        openstack coe cluster config <cluster-name> --force > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+        openstack coe cluster config <cluster-name> && \
+        mv ./config ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
       ```
       This command will generate a file named config in the cwd with the configuration.
       The --force flag will overwrite this file if it already exists.
 
       Encrypt the kubeconfig file using `sops`:
       ```bash
-      sops --output ./config --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+      sops --output ../../config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.yaml --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
       ```
 
       ```{note}
       You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
       ```
 
-      Delete the config file to avoid committing it by mistake:
-      ```
-      rm ./config
-      ```
     ````
     `````
 
