@@ -37,16 +37,6 @@ We must migrate the DNS records for the domain to point to this external IP. Dur
 
 Once the DNS records have been updated to point to the `cluster-entrypoint` LB, we can safely transition to the official `ingress-nginx` service:
 
-1. Enable the `nginx-ingress` service in the support chart with
-   ```{code-block} yaml
-   nginx-ingress:
-     # Enable controller
-     enabled: true
-     controller:
-       ingressClass:
-         # Claim the `nginx` ingress class
-         create: true
-   ```
 1. Disable the `ingress-nginx` controller:
    ```{code-block} yaml
    ingress-nginx:
@@ -57,11 +47,23 @@ Once the DNS records have been updated to point to the `cluster-entrypoint` LB, 
        ingressClassResource:
          enabled: false
    ```
+1. Redeploy the support components
+1. Enable the `nginx-ingress` service in the support chart with
+   ```{code-block} yaml
+   nginx-ingress:
+     # Enable controller
+     enabled: true
+     controller:
+       ingressClass:
+         # Claim the `nginx` ingress class
+         create: true
+   ```
 1. Point the `cluster-entrypoint` LB to the new `nginx-ingress` service:
    ```{code-block} yaml
    clusterEntrypoint:
      targetController: nginx-ingress
    ```
+1. Redeploy the support components again!
 
 ## How to handle future migrations
 
