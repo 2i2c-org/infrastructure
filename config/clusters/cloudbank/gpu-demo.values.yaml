@@ -31,7 +31,7 @@ jupyterhub:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:c1f848c5277c
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:8b842304b8bf
             01-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
@@ -54,9 +54,6 @@ jupyterhub:
         default: true
     - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
       description: Upto 3 CPUs when available
-      allowed_groups:
-      - 2i2c-org:hub-access-for-2i2c-staff
-      - ucb-ds:gpu-permitted
       profile_options:
         image:
           display_name: Image
@@ -72,7 +69,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:3b902cd1a123
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:f1f13f861b4f
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
@@ -98,8 +95,9 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_of_type: github
-      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_to_admin_users: false
     homepage:
+      gitRepoBranch: unify-logins-2
       templateVars:
         designed_by:
           name: 2i2c
@@ -115,21 +113,14 @@ jupyterhub:
           name: CloudBank Classroom - GPU Demo
           url: https://www.cloudbank.org/
   hub:
-    allowNamedServers: true
+    #allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: github
-      GitHubOAuthenticator:
-        oauth_callback_url: https://gpu-demo.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_organizations:
-        - ucb-ds
-        scope:
-        - read:org
+        admin_access: true
+        authenticator_class: dummy
       Authenticator:
-        admin_users:
-        - sean-morris
-        - ericvd-ucb
-        - yuvipanda
+        manage_groups: false
+        admin_users: []
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gpu-demo
