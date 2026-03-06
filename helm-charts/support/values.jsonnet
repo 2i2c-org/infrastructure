@@ -54,10 +54,10 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     |||,
     'for': '0m',
     labels: {
-      provider: provider_name,
-      cluster: cluster_name,
+      provider: 'provider=%s' % [provider_name],
+      cluster: 'cluster=%s' % [cluster_name],
+      namespace: 'hub={{ $labels.namespace }}',
       severity: severity,
-      recorded_failures: '{{ $value }}',
     },
     annotations: {
       summary: summary,
@@ -188,7 +188,6 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                   'alertname',
                   'cluster',
                   'namespace',
-                  'recorded_failures',
                 ],
               },
             ],
@@ -245,7 +244,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               rules: [
                 makeTwoServersStartupFailureAlert(
                   'At least two servers have failed to start in the last 30m: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
-                  'immediate action needed'
+                  'immediate action needed',
                 ),
               ],
             },

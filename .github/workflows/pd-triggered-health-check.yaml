@@ -16,21 +16,19 @@ jobs:
       run: |
         import os
 
-        # example title: "At least two servers failed to start in the last 30m 2i2c staging 3 (aws immediate action needed)"
-        title = os.getenv("TITLE")
-        cluster = title.split()[-7]
-        hub = title.split()[-6]
-        failures = title.split()[-5]
-        provider = title.split()[-4][1:]
+        # example title: "[FIRING:1] At least two servers failed to start in the last 30m cluster=2i2c-aws-us hub=staging (provider=aws immediate action needed)"
+        title_splits = os.getenv("TITLE").split()
+        cluster = next(x for x in title_splits if "cluster=" in x)
+        hub = next(x for x in title_splits if "hub=" in x)
+        provider = next(x for x in title_splits if "provider=" in x)[1:]
 
         output_file = os.getenv("GITHUB_OUTPUT")
-        print(cluster, hub, provider, failures)
+        print(cluster, hub, provider)
 
         with open(output_file, "a") as f:
-          f.write(f"cluster={cluster}\n")
-          f.write(f"hub={hub}\n")
-          f.write(f"failures={failures}\n")
-          f.write(f"provider={provider}")
+          f.write(f"{cluster}\n")
+          f.write(f"{hub}\n")
+          f.write(f"{provider}")
     - uses: actions/checkout@v6
       with:
         submodules: true
@@ -70,18 +68,23 @@ jobs:
         notify_when: failure
         status: ${{ job.status }} # required
             # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-        message_format: The health check for https://api.pagerduty.com/incidents/${{ github.event.client_payload.id }} failed. Checkout the run at {run_url}.
+        message_format: The health check for [$TITLE](https://api.pagerduty.com/incidents/$ID) failed. Heads up, it might be an outage!
         mention_groups: '!channel'
         footer: <{run_url}|Failing Run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PD_NOTIFICATIONS_WEBHOOK_URL }}
+        ID: ${{ github.event.client_payload.id }}
+        TITLE: ${{ github.event.client_payload.title }}
 
     - name: Leave a note to the incident
+      env:
+        ID: ${{ github.event.client_payload.id }}
+        PD_TOKEN: ${{ secrets.PD_TOKEN }}
       run: |
         curl --request POST \
-          --url https://api.pagerduty.com/incidents/${{ github.event.client_payload.id }}/notes \
+          --url https://api.pagerduty.com/incidents/$ID/notes \
           --header 'Accept: application/json' \
-          --header 'Authorization: Token token=${{ secrets.PD_TOKEN }}' \
+          --header 'Authorization: Token token=$PD_TOKEN' \
           --header 'Content-Type: application/json' \
           --header 'From: ' \
           --data '{
@@ -92,11 +95,14 @@ jobs:
 
     - name: Resolve the incident if successful run
       if: ${{ steps.health_check.result }} == 'success'
+      env:
+        ID: ${{ github.event.client_payload.id }}
+        PD_TOKEN: ${{ secrets.PD_TOKEN }}
       run: |
         curl --request PUT \
-          --url https://api.pagerduty.com/incidents/{{ github.event.client_payload.id }} \
+          --url https://api.pagerduty.com/incidents/$ID \
           --header 'Accept: application/json' \
-          --header 'Authorization: Token token=${{ secrets.PD_TOKEN }}' \
+          --header 'Authorization: Token token=$PD_TOKEN' \
           --header 'Content-Type: application/json' \
           --header 'From: ' \
           --data '{
