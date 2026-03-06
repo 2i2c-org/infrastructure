@@ -6,6 +6,9 @@ jupyterhub:
       # default optimizing scheduler. Let's run our own scheduler
       # which is much faster. This is anecdotal information
       enabled: true
+  prePuller:
+    continuous:
+      enabled: true
   ingress:
     hosts: [gpu-demo.cloudbank.2i2c.cloud]
     tls:
@@ -124,6 +127,8 @@ jupyterhub:
         allow_all: true
         admin_users:
         - yuvipanda@2i2c.org
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gpu-demo

@@ -99,7 +99,7 @@ persistent_disks = {
     name_suffix = "golden"
   }
   "gpu-demo" = {
-    size        = 100
+    size        = 500
     name_suffix = "gpu-demo"
   }
   "gwu" = {
