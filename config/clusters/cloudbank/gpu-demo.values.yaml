@@ -98,7 +98,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_of_type: github
-      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_to_admin_users: false
     homepage:
       templateVars:
         designed_by:
@@ -118,18 +118,11 @@ jupyterhub:
     allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: github
-      GitHubOAuthenticator:
-        oauth_callback_url: https://gpu-demo.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_organizations:
-        - ucb-ds
-        scope:
-        - read:org
+        admin_access: true
+        authenticator_class: dummy
       Authenticator:
-        admin_users:
-        - sean-morris
-        - ericvd-ucb
-        - yuvipanda
+        manage_groups: false
+        admin_users: []
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gpu-demo
