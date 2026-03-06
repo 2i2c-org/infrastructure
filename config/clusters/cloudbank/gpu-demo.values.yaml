@@ -54,9 +54,6 @@ jupyterhub:
         default: true
     - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
       description: Upto 3 CPUs when available
-      allowed_groups:
-      - 2i2c-org:hub-access-for-2i2c-staff
-      - ucb-ds:gpu-permitted
       profile_options:
         image:
           display_name: Image
@@ -100,6 +97,7 @@ jupyterhub:
       add_staff_user_ids_of_type: github
       add_staff_user_ids_to_admin_users: false
     homepage:
+      gitRepoBranch: unify-logins-2
       templateVars:
         designed_by:
           name: 2i2c
@@ -115,7 +113,7 @@ jupyterhub:
           name: CloudBank Classroom - GPU Demo
           url: https://www.cloudbank.org/
   hub:
-    allowNamedServers: true
+    #allowNamedServers: true
     config:
       JupyterHub:
         admin_access: true
