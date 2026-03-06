@@ -16,21 +16,19 @@ jobs:
       run: |
         import os
 
-        # example title: "At least two servers failed to start in the last 30m 2i2c staging 3 (aws immediate action needed)"
-        title = os.getenv("TITLE")
-        cluster = title.split()[-7]
-        hub = title.split()[-6]
-        failures = title.split()[-5]
-        provider = title.split()[-4][1:]
+        # example title: "[FIRING:1] At least two servers failed to start in the last 30m cluster=2i2c-aws-us hub=staging (provider=aws immediate action needed)"
+        title_splits = os.getenv("TITLE").split()
+        cluster = next(x for x in title_splits if "cluster=" in x)
+        hub = next(x for x in title_splits if "hub=" in x)
+        provider = next(x for x in title_splits if "provider=" in x)[1:]
 
         output_file = os.getenv("GITHUB_OUTPUT")
-        print(cluster, hub, provider, failures)
+        print(cluster, hub, provider)
 
         with open(output_file, "a") as f:
-          f.write(f"cluster={cluster}\n")
-          f.write(f"hub={hub}\n")
-          f.write(f"failures={failures}\n")
-          f.write(f"provider={provider}")
+          f.write(f"{cluster}\n")
+          f.write(f"{hub}\n")
+          f.write(f"{provider}")
     - uses: actions/checkout@v6
       with:
         submodules: true
