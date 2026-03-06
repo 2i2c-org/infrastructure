@@ -31,7 +31,7 @@ jupyterhub:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:9ed8bc915da1
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:c1f848c5277c
             01-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
@@ -72,7 +72,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:15a37550f4cd
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:3b902cd1a123
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
@@ -98,7 +98,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_of_type: github
-      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_to_admin_users: false
     homepage:
       templateVars:
         designed_by:
@@ -118,18 +118,11 @@ jupyterhub:
     allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: github
-      GitHubOAuthenticator:
-        oauth_callback_url: https://gpu-demo.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_organizations:
-        - ucb-ds
-        scope:
-        - read:org
+        admin_access: true
+        authenticator_class: dummy
       Authenticator:
-        admin_users:
-        - sean-morris
-        - ericvd-ucb
-        - yuvipanda
+        manage_groups: false
+        admin_users: []
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gpu-demo
