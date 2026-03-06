@@ -121,7 +121,7 @@ jupyterhub:
       Authenticator:
         manage_groups: false
         # Allow everyone with the right password to log in
-        allow_all: True
+        allow_all: true
         admin_users:
         - yuvipanda@2i2c.org
 jupyterhub-home-nfs:
