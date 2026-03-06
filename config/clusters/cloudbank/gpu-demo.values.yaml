@@ -117,10 +117,13 @@ jupyterhub:
     config:
       JupyterHub:
         admin_access: true
-        authenticator_class: dummy
+        authenticator_class: shared-password
       Authenticator:
         manage_groups: false
-        admin_users: []
+        # Allow everyone with the right password to log in
+        allow_all: True
+        admin_users:
+        - yuvipanda@2i2c.org
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gpu-demo
