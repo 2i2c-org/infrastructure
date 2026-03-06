@@ -320,6 +320,7 @@ notebook_nodes = {
     },
     # Let's try a faster disk to see if that speeds up image pulls
     disk_type : "pd-ssd",
+    disk_size : 150, # 100G default too small for big images
     zones : [
       # Get GPUs wherever they are available, as sometimes a single
       # zone might be out of GPUs.
