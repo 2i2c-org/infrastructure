@@ -54,6 +54,7 @@ jobs:
 
     - name: Run health check against ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
       uses: nick-fields/retry@v3
+      continue-on-error: true
       id: health-check
       with:
         timeout_minutes: 10
