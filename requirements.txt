@@ -3,7 +3,7 @@
 #
 
 # ruamel.yaml is used to read and write .yaml files.
-ruamel.yaml==0.18.*
+ruamel.yaml==0.19.*
 
 # jsonschema is used for validating cluster.yaml configurations
 jsonschema==4.*
