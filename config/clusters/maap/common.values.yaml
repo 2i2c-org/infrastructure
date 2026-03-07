@@ -90,12 +90,6 @@ jupyterhub:
 
         c.Spawner.auth_state_hook = populate_token
   singleuser:
-    extraFiles:
-      jupyter_server_config.json:
-        data:
-          FileContentsManager:
-            # Allow deleting full directories
-            always_delete_dir: true
     cloudMetadata:
       blockWithIptables: false
     defaultUrl: /lab
