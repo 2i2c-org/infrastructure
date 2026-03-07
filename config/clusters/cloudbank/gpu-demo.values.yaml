@@ -7,6 +7,10 @@ jupyterhub:
       # which is much faster. This is anecdotal information
       enabled: true
   prePuller:
+    extraTolerations:
+    - key: nvidia.com/gpu
+      operator: Exists
+      effect: NoSchedule
     continuous:
       enabled: true
   ingress:
