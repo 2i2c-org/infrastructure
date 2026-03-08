@@ -55,7 +55,7 @@ jupyterhub:
               kubespawner_override:
                 image: pangeo/pangeo-notebook:2025.01.24
       kubespawner_override:
-        mem_guarantee: 16G
+        mem_guarantee: 12G
         mem_limit: 16G
         cpu_guarantee: 0.22815625
         cpu_limit: 3.6505
