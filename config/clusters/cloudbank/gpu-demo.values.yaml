@@ -25,6 +25,43 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     profileList:
+    - display_name: CPU only
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-slm:
+              display_name: Small Language Models - Workshop hub
+              description: Python typical DS plus SLM packages
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:f6f187f86979
+            01-scipy:
+              display_name: Jupyter SciPy Notebook
+              description: Scientific Python image
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2025-01-06
+            02-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2025.01.24
+      kubespawner_override:
+        mem_guarantee: 16G
+        mem_limit: 16G
+        cpu_guarantee: 0.22815625
+        cpu_limit: 3.6505
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+        default: true
     - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
       description: Upto 3 CPUs when available
       profile_options:
@@ -65,44 +102,7 @@ jupyterhub:
           node.kubernetes.io/instance-type: n1-highmem-4
         extra_resource_limits:
           nvidia.com/gpu: '1'
-    - display_name: CPU only
-      default: true
-      profile_options:
-        image:
-          display_name: Image
-          unlisted_choice:
-            enabled: true
-            display_name: Custom image
-            validation_regex: ^.+:.+$
-            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
-            kubespawner_override:
-              image: '{value}'
-          choices:
-            00-slm:
-              display_name: Small Language Models - Workshop hub
-              description: Python typical DS plus SLM packages
-              kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:f6f187f86979
-            01-scipy:
-              display_name: Jupyter SciPy Notebook
-              description: Scientific Python image
-              slug: scipy
-              kubespawner_override:
-                image: quay.io/jupyter/scipy-notebook:2025-01-06
-            02-pangeo:
-              display_name: Pangeo Notebook Image
-              description: Python image with scientific, dask and geospatial tools
-              kubespawner_override:
-                image: pangeo/pangeo-notebook:2025.01.24
-
-      kubespawner_override:
-        mem_guarantee: 1951419879
-        mem_limit: 1951419879
-        cpu_guarantee: 0.22815625
-        cpu_limit: 3.6505
-        node_selector:
-          node.kubernetes.io/instance-type: n2-highmem-4
-        default: true
+    
   custom:
     2i2c:
       add_staff_user_ids_of_type: github
