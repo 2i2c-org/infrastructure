@@ -102,7 +102,6 @@ jupyterhub:
           node.kubernetes.io/instance-type: n1-highmem-8
         extra_resource_limits:
           nvidia.com/gpu: '1'
-    
   custom:
     2i2c:
       add_staff_user_ids_of_type: github
