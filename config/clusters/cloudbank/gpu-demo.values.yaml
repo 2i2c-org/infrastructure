@@ -94,12 +94,12 @@ jupyterhub:
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
-        mem_guarantee: 8G
+        mem_guarantee: 12G
         mem_limit: 16G
         cpu_guarantee: 1.5
         cpu_limit: 3
         node_selector:
-          node.kubernetes.io/instance-type: n1-highmem-4
+          node.kubernetes.io/instance-type: n1-highmem-8
         extra_resource_limits:
           nvidia.com/gpu: '1'
     
