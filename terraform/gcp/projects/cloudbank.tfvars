@@ -305,11 +305,13 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
+    disk_size_gb : 150,
   },
   "gpu-t4" : {
     min : 0,
     max : 30,
     machine_type : "n1-highmem-4",
+    disk_size_gb : 200,
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
@@ -320,7 +322,6 @@ notebook_nodes = {
     },
     # Let's try a faster disk to see if that speeds up image pulls
     disk_type : "pd-ssd",
-    disk_size : 150, # 100G default too small for big images
     zones : [
       # Get GPUs wherever they are available, as sometimes a single
       # zone might be out of GPUs.
