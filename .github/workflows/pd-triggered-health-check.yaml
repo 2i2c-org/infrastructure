@@ -55,7 +55,7 @@ jobs:
     - name: Run health check against ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
       uses: nick-fields/retry@v3
       continue-on-error: true
-      id: health-check
+      id: health_check
       with:
         timeout_minutes: 10
         max_attempts: 3
@@ -81,7 +81,7 @@ jobs:
         }'
 
     - name: Resolve the incident if successful run
-      if: steps.health_check.outcome == "success"
+      if: steps.health_check.outcome == 'success'
       env:
         ID: ${{ github.event.client_payload.id }}
         PD_TOKEN: ${{ secrets.PD_TOKEN }}
