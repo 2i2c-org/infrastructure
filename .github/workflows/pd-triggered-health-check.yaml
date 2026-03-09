@@ -62,6 +62,22 @@ jobs:
         command: |
           deployer run-hub-health-check ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
 
+    - name: Report Status
+      if: always()
+      uses: ravsamhq/notify-slack-action@v2
+      with:
+        notify_when: success,failure
+        status: ${{ job.status }} # required
+        notification_title: Health check status for <${{ env.URL }}|${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}>
+        message_format: ':point_right: ${{ job.status }}'
+        mention_groups: '!channel'
+        mention_groups_when: failure
+        footer: <{run_url}|Failing Run>
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PD_NOTIFICATIONS_WEBHOOK_URL }}
+        URL: https://api.pagerduty.com/incidents/${{ github.event.client_payload.id }}
+
+
     - name: Leave a note to the incident
       env:
         ID: ${{ github.event.client_payload.id }}
