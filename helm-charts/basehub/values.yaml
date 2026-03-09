@@ -13,8 +13,6 @@ binderhub-service:
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
       cert-manager.io/cluster-issuer: letsencrypt-prod
-      nginx.org/server-snippets: |
-        resolver_timeout 30s;
   nodeSelector:
     hub.jupyter.org/node-purpose: core
   service:
@@ -437,8 +435,6 @@ jupyterhub:
       nginx.org/location-snippets: |
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
-      nginx.org/server-snippets: |
-        resolver_timeout 30s;
       cert-manager.io/cluster-issuer: letsencrypt-prod
   scheduling:
     # We declare matchNodePurpose=require to get a nodeAffinity like a
