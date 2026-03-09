@@ -431,6 +431,10 @@ jupyterhub:
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      # Handle websocket upgrades in nginx-ingress
+      nginx.org/location-snippets: |
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
       cert-manager.io/cluster-issuer: letsencrypt-prod
   scheduling:
     # We declare matchNodePurpose=require to get a nodeAffinity like a
