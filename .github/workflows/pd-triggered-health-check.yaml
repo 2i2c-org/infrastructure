@@ -66,15 +66,14 @@ jobs:
       env:
         ID: ${{ github.event.client_payload.id }}
         PD_TOKEN: ${{ secrets.PD_TOKEN }}
-        status: ${{ steps.health_check.result }}
       run: |
         echo $status
         curl --request POST \
           --url https://api.pagerduty.com/incidents/$ID/notes \
-          --header 'Accept: application/json' \
-          --header 'Authorization: Token token=$PD_TOKEN' \
-          --header 'Content-Type: application/json' \
-          --header 'From: ' \
+          --header "Accept: application/json" \
+          --header "Authorization: Token token=$PD_TOKEN" \
+          --header "Content-Type: application/json" \
+          --header "From: " \
           --data '{
           "note": {
             "content": "The health checks status was: ${{ job.status }}"
@@ -82,17 +81,17 @@ jobs:
         }'
 
     - name: Resolve the incident if successful run
-      if: ${{ steps.health_check.result }} == 'success'
+      if: steps.health_check.outcome == "success"
       env:
         ID: ${{ github.event.client_payload.id }}
         PD_TOKEN: ${{ secrets.PD_TOKEN }}
       run: |
         curl --request PUT \
           --url https://api.pagerduty.com/incidents/$ID \
-          --header 'Accept: application/json' \
-          --header 'Authorization: Token token=$PD_TOKEN' \
-          --header 'Content-Type: application/json' \
-          --header 'From: ' \
+          --header "Accept: application/json" \
+          --header "Authorization: Token token=$PD_TOKEN" \
+          --header "Content-Type: application/json" \
+          --header "From: " \
           --data '{
           "incident": {
             "type": "incident_reference",
