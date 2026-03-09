@@ -75,7 +75,7 @@ jobs:
         footer: <{run_url}|Failing Run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PD_NOTIFICATIONS_WEBHOOK_URL }}
-        URL: https://api.pagerduty.com/incidents/${{ github.event.client_payload.id }}
+        URL: https://2i2c-org.pagerduty.com/incidents/${{ github.event.client_payload.id }}
 
 
     - name: Leave a note to the incident
