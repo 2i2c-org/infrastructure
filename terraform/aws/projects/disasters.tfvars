@@ -61,7 +61,25 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters",
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::sentinel-s2-l1c",
-              "arn:aws:s3:::sentinel-s2-l1c/*"
+              "arn:aws:s3:::sentinel-s2-l1c/*",
+              "arn:aws:s3:::csda-data-vendor-airbus-optical",
+              "arn:aws:s3:::csda-data-vendor-airbus-optical/*",
+              "arn:aws:s3:::csdap-ghgsat-delivery",
+              "arn:aws:s3:::csdap-ghgsat-delivery/*",
+              "arn:aws:s3:::csda-data-vendor-umbra",
+              "arn:aws:s3:::csda-data-vendor-umbra/*",
+              "arn:aws:s3:::csdap-capellaspace-delivery",
+              "arn:aws:s3:::csdap-capellaspace-delivery/*",
+              "arn:aws:s3:::csdap-airbus-delivery",
+              "arn:aws:s3:::csdap-airbus-delivery/*",
+              "arn:aws:s3:::csdap-blacksky-delivery",
+              "arn:aws:s3:::csdap-blacksky-delivery/*",
+              "arn:aws:s3:::csda-data-vendor-satellogic",
+              "arn:aws:s3:::csda-data-vendor-satellogic/*",
+              "arn:aws:s3:::csdap-iceye-delivery",
+              "arn:aws:s3:::csdap-iceye-delivery/*",
+              "arn:aws:s3:::naip-analytic",
+              "arn:aws:s3:::naip-analytic/*"
             ]
           },
           {
@@ -117,7 +135,25 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters",
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::sentinel-s2-l1c",
-              "arn:aws:s3:::sentinel-s2-l1c/*"
+              "arn:aws:s3:::sentinel-s2-l1c/*",
+              "arn:aws:s3:::csda-data-vendor-airbus-optical",
+              "arn:aws:s3:::csda-data-vendor-airbus-optical/*",
+              "arn:aws:s3:::csdap-ghgsat-delivery",
+              "arn:aws:s3:::csdap-ghgsat-delivery/*",
+              "arn:aws:s3:::csda-data-vendor-umbra",
+              "arn:aws:s3:::csda-data-vendor-umbra/*",
+              "arn:aws:s3:::csdap-capellaspace-delivery",
+              "arn:aws:s3:::csdap-capellaspace-delivery/*",
+              "arn:aws:s3:::csdap-airbus-delivery",
+              "arn:aws:s3:::csdap-airbus-delivery/*",
+              "arn:aws:s3:::csdap-blacksky-delivery",
+              "arn:aws:s3:::csdap-blacksky-delivery/*",
+              "arn:aws:s3:::csda-data-vendor-satellogic",
+              "arn:aws:s3:::csda-data-vendor-satellogic/*",
+              "arn:aws:s3:::csdap-iceye-delivery",
+              "arn:aws:s3:::csdap-iceye-delivery/*",
+              "arn:aws:s3:::naip-analytic",
+              "arn:aws:s3:::naip-analytic/*"
             ]
           },
           {
