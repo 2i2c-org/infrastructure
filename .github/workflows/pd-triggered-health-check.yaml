@@ -72,7 +72,7 @@ jobs:
         message_format: ':point_right: ${{ job.status }}'
         mention_groups: '!channel'
         mention_groups_when: failure
-        footer: <{run_url}|Failing Run>
+        footer: <{run_url}|GitHub Run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PD_NOTIFICATIONS_WEBHOOK_URL }}
         URL: https://2i2c-org.pagerduty.com/incidents/${{ github.event.client_payload.id }}
