@@ -60,7 +60,11 @@ jobs:
         timeout_minutes: 10
         max_attempts: 3
         command: |
-          deployer run-hub-health-check ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
+          {
+            echo "health_check_output<<EOF"
+            deployer run-hub-health-check "${{ steps.details.outputs.cluster }}" "${{ steps.details.outputs.hub }}" | tee /dev/tty
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
     - name: Report Status
       if: always()
@@ -79,25 +83,15 @@ jobs:
 
 
     - name: Leave a note to the incident
-      env:
-        ID: ${{ github.event.client_payload.id }}
-        PD_TOKEN: ${{ secrets.PD_TOKEN }}
-      run: |
-        echo $status
-        curl --request POST \
-          --url https://api.pagerduty.com/incidents/$ID/notes \
-          --header "Accept: application/json" \
-          --header "Authorization: Token token=$PD_TOKEN" \
-          --header "Content-Type: application/json" \
-          --header "From: " \
-          --data '{
-          "note": {
-            "content": "The health checks status was: ${{ job.status }}"
-          }
-        }'
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        incident_id: ${{ github.event.client_payload.id }}
+        token: ${{ secrets.PD_TOKEN }}
+        message: 'The health checks status was: ${{ job.status }}'
 
     - name: Resolve the incident if successful run
-      if: steps.health_check.outcome == 'success'
+      # We don't yet run health checks against binders
+      if: steps.health_check.outcome == 'success' && !contains(steps.health_check.outputs.health_check_output, 'Skipping')
       env:
         ID: ${{ github.event.client_payload.id }}
         PD_TOKEN: ${{ secrets.PD_TOKEN }}
