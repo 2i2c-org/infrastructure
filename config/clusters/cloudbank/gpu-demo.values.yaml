@@ -1,4 +1,7 @@
 jupyterhub:
+  cull:
+    # Don't allow user pods to run for longer than 4hr
+    maxAge: 14400 # 4 hours in seconds
   scheduling:
     userScheduler:
       # I was noticing sometimes upto a minute between when
