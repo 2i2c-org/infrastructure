@@ -81,7 +81,7 @@ class Cluster:
                 f"Minimum required version of helm is v4. Found version {helm_version}",
                 file=sys.stderr,
             )
-            print(f"Upgrade your version of helm and try again")
+            print("Upgrade your version of helm and try again", file=sys.stderr)
             sys.exit(1)
         cert_manager_url = "https://charts.jetstack.io"
 
