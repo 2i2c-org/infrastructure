@@ -79,7 +79,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:e66082ed2ac0
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:98c145168e64
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
