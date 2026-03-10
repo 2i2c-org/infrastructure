@@ -78,6 +78,8 @@ At the time of writing, we have the following [alerting rules groups](https://pr
    For when a user server has failed to start.
 4. **DiskIO saturation**
    For when a disk is approaching IO saturation
+5. **Pods stuck in an undesirable state for too long**
+   For when there's a pod that's stuck in `Pending` for more than 15m or a pod stuck in `Terminating` for more than 10m.
 
 Each of these alerts is integrated with a **Pagerduty Service**. And these services can then be grouped under **Pagerduty Business Services** that can be presented on the status page.
 

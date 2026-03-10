@@ -120,6 +120,42 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     },
   };
 
+  local makePodStuckInPendingForTooLongAlert = function(
+    summary,
+    severity,
+                                               ) {
+    alert: 'Pod stuck in Pending for at least 15m',
+    expr: |||
+      max by (namespace, pod) (kube_pod_status_phase{phase="Pending"}) > 0
+    |||,
+    'for': '15m',
+    labels: {
+      cluster: cluster_name,
+      severity: severity,
+    },
+    annotations: {
+      summary: summary,
+    },
+  };
+
+  local makePodStuckInTerminatingForTooLongAlert = function(
+    summary,
+    severity,
+                                                   ) {
+    alert: 'Pod stuck in Terminating for at least 10m',
+    expr: |||
+      count(kube_pod_deletion_timestamp) by (namespace, pod) * count(kube_pod_status_reason{reason="NodeLost"} == 0) by (namespace, pod)
+    |||,
+    'for': '10m',
+    labels: {
+      cluster: cluster_name,
+      severity: severity,
+    },
+    annotations: {
+      summary: summary,
+    },
+  };
+
   local configCostMonitoring = function(VARS_2I2C_AWS_ACCOUNT_ID) {
     enabled: true,
     extraEnv: [
@@ -184,10 +220,12 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                   'cluster =~ .*',
                   'alertname =~ ".*failed to start.*"',
                 ],
-                group_by: [
-                  'alertname',
-                  'cluster',
-                  'namespace',
+              },
+              {
+                receiver: 'pod-stuck-in-state-pager',
+                matchers: [
+                  'cluster =~ .*',
+                  'alertname =~ ".*stuck in state.*"',
                 ],
               },
             ],
@@ -275,6 +313,19 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                   'proxy pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
                   'proxy',
                   'immediate action needed'
+                ),
+              ],
+            },
+            {
+              name: 'Pod stuck in state for too long',
+              rules: [
+                makePodStuckInPendingForTooLongAlert(
+                  'Pod is stuck in Pending state for a suspicious long time',
+                  'action needed this week'
+                ),
+                makePodStuckInTerminatingForTooLongAlert(
+                  'Pod is stuck in Terminating state for a suspicious long time',
+                  'action needed this week'
                 ),
               ],
             },
