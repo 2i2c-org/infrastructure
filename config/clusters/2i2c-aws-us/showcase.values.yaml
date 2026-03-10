@@ -42,14 +42,60 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
     hub:
+      image:
+        name: quay.io/2i2c/jupyterhub-usage-quotas
+        tag: 0.0.1-0.dev.git.15309.h485066330
+        pullPolicy: Always
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://showcase.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
+          - 2i2c-org:test-quotas
           - 2i2c-community-showcase:access-2i2c-showcase
           - 2i2c-community-showcase:magiclinks-demo
           - 2i2c-demo-hub-access:showcase-topst
           - ScienceCore
+        UsageQuotaManager:
+          prometheus_scrape_interval: 60
+          prometheus_url: http://support-prometheus-server.support.svc.cluster.local
+          prometheus_usage_metrics:
+            memory: kube_pod_container_resource_requests{resource='memory'}
+          scope_backup_strategy:
+            empty:
+              resource: memory
+              limit:
+                value: 1000
+                unit: GiB-hours
+              window: 7
+            intersection: max
+          policy:
+          - resource: memory
+            limit:
+              value: 35
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - 2i2c-org:test-quotas
+      extraConfig:
+        11-enforce-usage-quotas: |
+          from jupyterhub_usage_quotas.manager import SpawnException, UsageQuotaManager
+
+          quota_manager = UsageQuotaManager(config=c)
+
+          async def quota_pre_spawn_hook(spawner):
+              try:
+                  output = await quota_manager.enforce(spawner)
+                  launch_flag = output["allow_server_launch"]
+              except Exception:
+                  raise SpawnException(
+                      log_message="Spawn failed occurred due to quota system error. Please contact your hub admin for assistance."
+                  )
+              if launch_flag is False:
+                  raise SpawnException(
+                      log_message=f"{output['error']['message']} Last queried: {output['timestamp']}"
+                  )
+          c.KubeSpawner.pre_spawn_hook = quota_pre_spawn_hook
     singleuser:
       nodeSelector:
         2i2c/hub-name: showcase
