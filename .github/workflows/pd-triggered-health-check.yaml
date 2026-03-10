@@ -47,7 +47,7 @@ jobs:
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
     - name: Setup deploy for ${{ steps.details.outputs.cluster }} cluster
-      uses: ./.github/actions/pagerduty-note
+      uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ steps.details.outputs.provider }}
         GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
@@ -61,7 +61,7 @@ jobs:
         max_attempts: 3
         command: |
           echo "health_check_output<<EOF" | tee --append "$GITHUB_OUTPUT"
-          deployer run-hub-health-check "${{ steps.details.outputs.cluster }}" "${{ steps.details.outputs.hub }}" | tee --append "$GITHUB_OUTPUT"
+          deployer run-hub-health-check ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }} | tee --append "$GITHUB_OUTPUT"
           echo "EOF" | tee --append "$GITHUB_OUTPUT"
 
     - name: Report Status
@@ -81,7 +81,7 @@ jobs:
 
 
     - name: Leave a note to the incident
-      uses: ./.github/actions/setup-recurrent-issues
+      uses: ./.github/actions/pagerduty-note
       with:
         incident_id: ${{ github.event.client_payload.id }}
         token: ${{ secrets.PD_TOKEN }}
