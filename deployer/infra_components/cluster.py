@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import sys
 import json
 import os
 import subprocess
+import sys
 import tempfile
 from contextlib import ExitStack, contextmanager
 from pathlib import Path
@@ -73,9 +73,14 @@ class Cluster:
             raise ValueError(f"Provider {self.spec['provider']} not supported")
 
     def deploy_support(self, cert_manager_version, debug, dry_run):
-        helm_version = subprocess.check_output(["helm", "version", "--short"]).decode().strip()
+        helm_version = (
+            subprocess.check_output(["helm", "version", "--short"]).decode().strip()
+        )
         if not helm_version.startswith("v4."):
-            print(f"Minimum required version of helm is v4. Found version {helm_version}", file=sys.stderr)
+            print(
+                f"Minimum required version of helm is v4. Found version {helm_version}",
+                file=sys.stderr,
+            )
             print(f"Upgrade your version of helm and try again")
             sys.exit(1)
         cert_manager_url = "https://charts.jetstack.io"
