@@ -83,22 +83,11 @@ jobs:
 
 
     - name: Leave a note to the incident
-      env:
-        ID: ${{ github.event.client_payload.id }}
-        PD_TOKEN: ${{ secrets.PD_TOKEN }}
-      run: |
-        echo $status
-        curl --request POST \
-          --url https://api.pagerduty.com/incidents/$ID/notes \
-          --header "Accept: application/json" \
-          --header "Authorization: Token token=$PD_TOKEN" \
-          --header "Content-Type: application/json" \
-          --header "From: " \
-          --data '{
-          "note": {
-            "content": "The health checks status was: ${{ job.status }}"
-          }
-        }'
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        incident_id: ${{ github.event.client_payload.id }}
+        token: ${{ secrets.PD_TOKEN }}
+        message: 'The health checks status was: ${{ job.status }}'
 
     - name: Resolve the incident if successful run
       # We don't yet run health checks against binders
