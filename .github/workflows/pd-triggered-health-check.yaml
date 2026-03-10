@@ -85,7 +85,7 @@ jobs:
       with:
         incident_id: ${{ github.event.client_payload.id }}
         token: ${{ secrets.PD_TOKEN }}
-        message: 'The health checks status was: ${{ job.status }}'
+        note_content: 'The health checks status was: ${{ job.status }}'
 
     - name: Resolve the incident if successful run
       # We don't yet run health checks against binders
