@@ -244,7 +244,7 @@ def run_hub_health_check(
         f"--hub-type={hub.spec['helm_chart']}",
     ]
 
-    if hub.type == "daskhub" and check_dask_scaling:
+    if hub.type == "daskhub" or check_dask_scaling:
         pytest_args.append("--check-dask-scaling")
 
     if gh_ci == "true":
