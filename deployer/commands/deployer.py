@@ -188,7 +188,7 @@ def run_hub_health_check(
     # Skip the regular hub health check for hubs with binderhub ui that are not authenticated
     if hub.binderhub_ui and hub.authenticator == "null":
         print_colour(
-            f"Testing {hub.spec['name']} is not yet supported. Skipping ...",
+            f"Testing {hub.spec['name']} is not supported yet. Skipping ...",
             "yellow",
         )
         return

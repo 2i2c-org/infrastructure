@@ -60,7 +60,11 @@ jobs:
         timeout_minutes: 10
         max_attempts: 3
         command: |
-          deployer run-hub-health-check ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
+          {
+            echo "health_check_output<<EOF"
+            deployer run-hub-health-check "${{ steps.details.outputs.cluster }}" "${{ steps.details.outputs.hub }}" | tee /dev/tty
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
     - name: Report Status
       if: always()
@@ -97,7 +101,8 @@ jobs:
         }'
 
     - name: Resolve the incident if successful run
-      if: steps.health_check.outcome == 'success'
+      # We don't yet run health checks against binders
+      if: steps.health_check.outcome == 'success' && !contains(steps.health_check.outputs.health_check_output, 'Skipping')
       env:
         ID: ${{ github.event.client_payload.id }}
         PD_TOKEN: ${{ secrets.PD_TOKEN }}
