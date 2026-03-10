@@ -15,8 +15,6 @@ jupyterhub:
         oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
       GenericOAuthenticator:
         oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
-        token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
-        authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
       Authenticator:
         # Disable for now the authentication token refreshing
         # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age

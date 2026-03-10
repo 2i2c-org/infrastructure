@@ -46,6 +46,8 @@ jupyterhub:
         # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
         auth_refresh_age: 0
       GenericOAuthenticator:
+        token_url: https://auth.openveda.cloud/realms/disasters/protocol/openid-connect/token
+        authorize_url: https://auth.openveda.cloud/realms/disasters/protocol/openid-connect/auth
         # We want to get user data from the JWT that's the id token,
         # not from a separate userdata API call
         userdata_from_id_token: true
