@@ -81,10 +81,10 @@ jupyterhub:
             pgt = f"jwt:{auth_state.get('id_token', '')}"
             
             spawner.environment.update({
-                "MAAP_PGT": pgt,
-                "KC_ACCESS_TOKEN": auth_state.get("access_token", ""),
-                "KC_ID_TOKEN": auth_state.get("id_token", ""),
-                "KC_REFRESH_TOKEN": auth_state.get("refresh_token", "")
+              "MAAP_PGT": pgt,
+              "KC_ACCESS_TOKEN": auth_state.get("access_token", ""),
+              "KC_ID_TOKEN": auth_state.get("id_token", ""),
+              "KC_REFRESH_TOKEN": auth_state.get("refresh_token", "")
             })
             
             # Inject MAAP_PGT into the s3fs sidecar container
