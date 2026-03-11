@@ -1,2 +1,2 @@
-git+https://github.com/jnywong/jupyterhub-usage-quotas@d97e3b74c2a31afb442c702b079ce710b5e4472a
+git+https://github.com/2i2c-org/jupyterhub-usage-quotas@985ab1ac79e3b83ec1fd5543564347856859b0d5
 jupyterhub-fancy-profiles==0.4.1
