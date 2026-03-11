@@ -2,11 +2,14 @@ name: PD triggered health-check
 on:
   repository_dispatch:
     types: [health-check]
-    outputs:
 
 jobs:
-  run-health-check:
+  get_incident_details:
     runs-on: ubuntu-latest
+    outputs:
+      cluster: ${{ steps.details.outputs.cluster }}
+      hub: ${{ steps.details.outputs.hub }}
+      provider: ${{ steps.details.outputs.provider }}
     steps:
     - name: Get the incident details
       id: details
@@ -29,49 +32,28 @@ jobs:
           f.write(f"{cluster}\n")
           f.write(f"{hub}\n")
           f.write(f"{provider}")
-    - uses: actions/checkout@v6
-      with:
-        submodules: true
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-    - name: Save pip's install cache on job completion
-      uses: actions/cache@v5
-      with:
-        path: ~/.cache/pip
-        key: ${{ github.run_id }}
 
-    - name: Install deployer script's Python dependencies
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+  health_check:
+    needs: get_incident_details
+    uses: ./.github/workflows/reusable-health-check.yaml
+    with:
+      cluster: ${{ needs.get_incident_details.outputs.cluster }}
+      hub: ${{ needs.get_incident_details.outputs.hub }}
+      provider: ${{ needs.get_incident_details.outputs.provider }}
+    secrets: inherit
 
-    - name: Setup deploy for ${{ steps.details.outputs.cluster }} cluster
-      uses: ./.github/actions/setup-deploy
-      with:
-        provider: ${{ steps.details.outputs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
-
-    - name: Run health check against ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}
-      uses: nick-fields/retry@v3
-      continue-on-error: true
-      id: health_check
-      with:
-        timeout_minutes: 10
-        max_attempts: 3
-        command: |
-          echo "health_check_output<<EOF" | tee --append "$GITHUB_OUTPUT"
-          deployer run-hub-health-check ${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }} | tee --append "$GITHUB_OUTPUT"
-          echo "EOF" | tee --append "$GITHUB_OUTPUT"
-
+  report_status:
+    needs: [get_incident_details, health_check]
+    runs-on: ubuntu-latest
+    steps:
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
       with:
         notify_when: success,failure
-        status: ${{ job.status }} # required
-        notification_title: Health check status for <${{ env.URL }}|${{ steps.details.outputs.cluster }} ${{ steps.details.outputs.hub }}>
-        message_format: ':point_right: ${{ job.status }}'
+        status: ${{ needs.health_check.result }}
+        notification_title: Health check status for <${{ env.URL }}|${{ needs.get_incident_details.outputs.cluster }} ${{ needs.get_incident_details.outputs.hub }}>
+        message_format: ':point_right: ${{ needs.health_check.result }}'
         mention_groups: '!channel'
         mention_groups_when: failure
         footer: <{run_url}|GitHub Run>
@@ -79,17 +61,25 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PD_NOTIFICATIONS_WEBHOOK_URL }}
         URL: https://2i2c-org.pagerduty.com/incidents/${{ github.event.client_payload.id }}
 
+    - name: Set note content
+      id: note
+      run: |
+        if [[ "${{ needs.health_check.outputs.health_check_output }}" == *"Skipping"* ]]; then
+          echo "note_content=Health check skipped" >> "$GITHUB_OUTPUT"
+        else
+          echo "note_content=Health check status was: ${{ needs.health_check.result }}" >> "$GITHUB_OUTPUT"
+        fi
 
     - name: Leave a note to the incident
       uses: ./.github/actions/pagerduty-note
       with:
         incident_id: ${{ github.event.client_payload.id }}
         token: ${{ secrets.PD_TOKEN }}
-        note_content: 'The health checks status was: ${{ job.status }}'
+        note_content: ${{ steps.note.outputs.note_content }}
 
     - name: Resolve the incident if successful run
       # We don't yet run health checks against binders
-      if: steps.health_check.outcome == 'success' && !contains(steps.health_check.outputs.health_check_output, 'Skipping')
+      if: needs.health_check.result == 'success' && !contains(needs.health_check.outputs.health_check_output, 'Skipping')
       env:
         ID: ${{ github.event.client_payload.id }}
         PD_TOKEN: ${{ secrets.PD_TOKEN }}

@@ -43,7 +43,7 @@ def test_generate_hub_matrix_jobs_one_staging_hub():
     cluster_info = {
         "cluster_name": cluster_config.get("name", {}),
         "provider": cluster_config.get("provider", {}),
-        "reason_for_redeploy": "",
+        "choice_reason": "",
     }
 
     modified_file = {
@@ -55,7 +55,7 @@ def test_generate_hub_matrix_jobs_one_staging_hub():
             "provider": "gcp",
             "cluster_name": "cluster1",
             "hub_name": "staging",
-            "reason_for_redeploy": "Following helm chart values files were modified: staging.values.yaml",
+            "choice_reason": "Following helm chart values files were modified: staging.values.yaml",
         }
     ]
 
@@ -78,7 +78,7 @@ def test_generate_hub_matrix_jobs_one_prod_hub():
     cluster_info = {
         "cluster_name": cluster_config.get("name", {}),
         "provider": cluster_config.get("provider", {}),
-        "reason_for_redeploy": "",
+        "choice_reason": "",
     }
 
     modified_file = {
@@ -90,7 +90,7 @@ def test_generate_hub_matrix_jobs_one_prod_hub():
             "provider": "gcp",
             "cluster_name": "cluster1",
             "hub_name": "hub1",
-            "reason_for_redeploy": "Following helm chart values files were modified: hub1.values.yaml",
+            "choice_reason": "Following helm chart values files were modified: hub1.values.yaml",
         }
     ]
 
@@ -113,7 +113,7 @@ def test_generate_hub_matrix_jobs_many_hubs():
     cluster_info = {
         "cluster_name": cluster_config.get("name", {}),
         "provider": cluster_config.get("provider", {}),
-        "reason_for_redeploy": "",
+        "choice_reason": "",
     }
 
     modified_files = {
@@ -126,13 +126,13 @@ def test_generate_hub_matrix_jobs_many_hubs():
             "provider": "gcp",
             "cluster_name": "cluster1",
             "hub_name": "hub1",
-            "reason_for_redeploy": "Following helm chart values files were modified: hub1.values.yaml",
+            "choice_reason": "Following helm chart values files were modified: hub1.values.yaml",
         },
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
             "hub_name": "hub2",
-            "reason_for_redeploy": "Following helm chart values files were modified: hub2.values.yaml",
+            "choice_reason": "Following helm chart values files were modified: hub2.values.yaml",
         },
     ]
 
@@ -156,7 +156,7 @@ def test_generate_hub_matrix_jobs_all_hubs():
     cluster_info = {
         "cluster_name": cluster_config.get("name", {}),
         "provider": cluster_config.get("provider", {}),
-        "reason_for_redeploy": "cluster.yaml file was modified",
+        "choice_reason": "cluster.yaml file was modified",
     }
 
     reasons = [
@@ -172,7 +172,7 @@ def test_generate_hub_matrix_jobs_all_hubs():
                 "provider": "gcp",
                 "cluster_name": "cluster1",
                 "hub_name": "staging",
-                "reason_for_redeploy": reason,
+                "choice_reason": reason,
             }
         ]
 
@@ -181,19 +181,19 @@ def test_generate_hub_matrix_jobs_all_hubs():
                 "provider": "gcp",
                 "cluster_name": "cluster1",
                 "hub_name": "hub1",
-                "reason_for_redeploy": reason,
+                "choice_reason": reason,
             },
             {
                 "provider": "gcp",
                 "cluster_name": "cluster1",
                 "hub_name": "hub2",
-                "reason_for_redeploy": reason,
+                "choice_reason": reason,
             },
             {
                 "provider": "gcp",
                 "cluster_name": "cluster1",
                 "hub_name": "hub3",
-                "reason_for_redeploy": reason,
+                "choice_reason": reason,
             },
         ]
 
@@ -222,7 +222,7 @@ def test_generate_hub_matrix_jobs_skip_deploy_label():
     cluster_info = {
         "cluster_name": cluster_config.get("name", {}),
         "provider": cluster_config.get("provider", {}),
-        "reason_for_redeploy": "",
+        "choice_reason": "",
     }
 
     modified_file = {
@@ -247,7 +247,7 @@ def test_generate_support_matrix_jobs_one_cluster():
     cluster_info = {
         "cluster_name": cluster_config.get("name", {}),
         "provider": cluster_config.get("provider", {}),
-        "reason_for_redeploy": "",
+        "choice_reason": "",
     }
 
     modified_file = {
@@ -258,7 +258,7 @@ def test_generate_support_matrix_jobs_one_cluster():
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "reason_for_redeploy": "Following helm chart values files were modified: support.values.yaml",
+            "choice_reason": "Following helm chart values files were modified: support.values.yaml",
         }
     ]
 
@@ -279,7 +279,7 @@ def test_generate_support_matrix_jobs_all_clusters():
     cluster_info = {
         "cluster_name": cluster_config.get("name", {}),
         "provider": cluster_config.get("provider", {}),
-        "reason_for_redeploy": "cluster.yaml file was modified",
+        "choice_reason": "cluster.yaml file was modified",
     }
 
     reasons = [
@@ -294,7 +294,7 @@ def test_generate_support_matrix_jobs_all_clusters():
             {
                 "provider": "gcp",
                 "cluster_name": "cluster1",
-                "reason_for_redeploy": reason,
+                "choice_reason": reason,
             }
         ]
 
@@ -320,7 +320,7 @@ def test_generate_support_matrix_jobs_skip_deploy_label():
     cluster_info = {
         "cluster_name": cluster_config.get("name", {}),
         "provider": cluster_config.get("provider", {}),
-        "reason_for_redeploy": "",
+        "choice_reason": "",
     }
 
     modified_file = {
@@ -374,13 +374,13 @@ def test_filter_out_staging_hubs_job_exists():
             "cluster_name": "cluster1",
             "provider": "gcp",
             "hub_name": "staging",
-            "reason_for_redeploy": "cluster.yaml file was modified",
+            "choice_reason": "cluster.yaml file was modified",
         },
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
             "hub_name": "hub1",
-            "reason_for_redeploy": "cluster.yaml file was modified",
+            "choice_reason": "cluster.yaml file was modified",
         },
     ]
 
@@ -389,7 +389,7 @@ def test_filter_out_staging_hubs_job_exists():
             "cluster_name": "cluster1",
             "provider": "gcp",
             "hub_name": "staging",
-            "reason_for_redeploy": "cluster.yaml file was modified",
+            "choice_reason": "cluster.yaml file was modified",
         }
     ]
     expected_prod_hub_matrix_jobs = [
@@ -397,7 +397,7 @@ def test_filter_out_staging_hubs_job_exists():
             "cluster_name": "cluster1",
             "provider": "gcp",
             "hub_name": "hub1",
-            "reason_for_redeploy": "cluster.yaml file was modified",
+            "choice_reason": "cluster.yaml file was modified",
         },
     ]
 
@@ -418,13 +418,13 @@ def test_filter_out_staging_hubs_job_does_not_exist():
             "cluster_name": "cluster1",
             "provider": "gcp",
             "hub_name": "staging",
-            "reason_for_redeploy": "cluster.yaml file was modified",
+            "choice_reason": "cluster.yaml file was modified",
         },
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
             "hub_name": "hub1",
-            "reason_for_redeploy": "cluster.yaml file was modified",
+            "choice_reason": "cluster.yaml file was modified",
         },
     ]
 
@@ -433,7 +433,7 @@ def test_filter_out_staging_hubs_job_does_not_exist():
             "cluster_name": "cluster1",
             "provider": "gcp",
             "hub_name": "staging",
-            "reason_for_redeploy": "cluster.yaml file was modified",
+            "choice_reason": "cluster.yaml file was modified",
         }
     ]
     expected_prod_hub_matrix_jobs = [
@@ -441,7 +441,7 @@ def test_filter_out_staging_hubs_job_does_not_exist():
             "cluster_name": "cluster1",
             "provider": "gcp",
             "hub_name": "hub1",
-            "reason_for_redeploy": "cluster.yaml file was modified",
+            "choice_reason": "cluster.yaml file was modified",
         },
     ]
 
@@ -473,7 +473,7 @@ def test_assign_staging_jobs_for_missing_clusters_is_missing():
             "provider": "gcp",
             "cluster_name": "cluster1",
             "hub_name": "staging",
-            "reason_for_redeploy": "Following prod hubs require redeploy: hub1",
+            "choice_reason": "Following prod hubs require redeploy: hub1",
         }
     ]
 
@@ -503,7 +503,7 @@ def test_assign_staging_jobs_for_missing_clusters_is_present():
             "provider": "gcp",
             "cluster_name": "cluster1",
             "hub_name": "staging",
-            "reason_for_redeploy": "Following prod hubs require redeploy: hub1",
+            "choice_reason": "Following prod hubs require redeploy: hub1",
         }
     ]
 
@@ -512,7 +512,7 @@ def test_assign_staging_jobs_for_missing_clusters_is_present():
             "provider": "gcp",
             "cluster_name": "cluster1",
             "hub_name": "staging",
-            "reason_for_redeploy": "Following prod hubs require redeploy: hub1",
+            "choice_reason": "Following prod hubs require redeploy: hub1",
         }
     ]
 
@@ -542,13 +542,13 @@ def test_assign_staging_jobs_for_missing_clusters_is_missing_many_staging():
             "provider": "gcp",
             "cluster_name": "cluster3",
             "hub_name": "staging1",
-            "reason_for_redeploy": "Following prod hubs require redeploy: prod",
+            "choice_reason": "Following prod hubs require redeploy: prod",
         },
         {
             "provider": "gcp",
             "cluster_name": "cluster3",
             "hub_name": "staging2",
-            "reason_for_redeploy": "Following prod hubs require redeploy: prod",
+            "choice_reason": "Following prod hubs require redeploy: prod",
         },
     ]
 

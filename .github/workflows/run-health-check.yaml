@@ -1,0 +1,117 @@
+name: Run a health check on hubs
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - terraform/**
+    - eksctl/**
+  pull_request:
+    branches:
+    - main
+    paths:
+    - terraform/**
+    - eksctl/**
+
+# ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || 'not-a-pr' }}
+  cancel-in-progress: false
+
+env:
+  TERM: xterm
+  USE_GKE_GCLOUD_AUTH_PLUGIN: 'True'
+
+jobs:
+  generate-jobs:
+    runs-on: ubuntu-latest
+    outputs:
+      support-jobs: ${{ steps.generate-jobs.outputs.support-jobs }}
+      staging-jobs: ${{ steps.generate-jobs.outputs.staging-jobs }}
+      prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: true
+
+    - name: Identify files that have been added or modified
+          # Action repo: https://github.com/dorny/paths-filter
+      uses: dorny/paths-filter@v3
+      id: changed-files
+      with:
+        token: ''
+        list-files: csv
+        filters: |
+          changed:
+            - added|modified: terraform/**
+            - added|modified: eksctl/**
+
+        # This step will create a comment-body.txt file containing the jobs to be run in a
+        # Markdown table format to be posted on a Pull Request
+    - name: Generate matrix jobs
+      id: generate-jobs
+      run: |
+        deployer plan-health-check "${{ steps.changed-files.outputs.changed_files }}"
+
+        # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
+        # know the PR number, so we save it to a file to pass to that workflow
+    - name: Save Pull Request number to a file
+      if: github.event_name == 'pull_request'
+      run: |
+        echo "${{ github.event.number }}" > pr-number.txt
+
+        # Upload the pr-number.txt and comment-body.txt files as artifacts for the
+        # comment-deployment-plan-pr.yaml workflow to access
+    - name: Upload artifacts
+      if: >
+        github.event_name == 'pull_request' &&
+        (steps.generate-jobs.outputs.support-jobs != '[]' ||
+        steps.generate-jobs.outputs.staging-jobs != '[]' ||
+        steps.generate-jobs.outputs.prod-jobs != '[]')
+      uses: actions/upload-artifact@v6
+      with:
+        name: pr
+        path: |
+          pr-number.txt
+          comment-body.txt
+  upgrade-staging:
+    runs-on: ubuntu-latest
+    needs: [generate-jobs]
+    name: ${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}
+    if: |
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&
+      needs.generate-jobs.outputs.staging-jobs != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.staging-jobs) }}
+    uses: ./.github/workflows/reusable-health-check.yaml
+    with:
+      cluster: ${{ matrix.jobs.cluster_name }}
+      hub: ${{ matrix.jobs.hub_name }}
+      provider: ${{ matrix.jobs.provider }}
+    secrets: inherit
+
+  upgrade-prod:
+    runs-on: ubuntu-latest
+    needs: [generate-jobs]
+    name: ${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}
+    if: |
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&' &&
+      needs.generate-jobs.outputs.prod-jobs != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.prod-jobs) }}
+    uses: ./.github/workflows/reusable-health-check.yaml
+    with:
+      cluster: ${{ matrix.jobs.cluster_name }}
+      hub: ${{ matrix.jobs.hub_name }}
+      provider: ${{ matrix.jobs.provider }}
+    secrets: inherit
