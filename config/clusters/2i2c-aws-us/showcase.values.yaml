@@ -44,7 +44,7 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 0.0.1-0.dev.git.15309.h485066330
+        tag: 0.0.1-0.dev.git.15310.hc76f02d9a
         pullPolicy: Always
       config:
         GitHubOAuthenticator:
