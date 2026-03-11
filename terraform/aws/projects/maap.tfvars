@@ -62,8 +62,6 @@ hub_cloud_permissions = {
               "arn:aws:s3:::podaac-ops-cumulus-public/*",
               "arn:aws:s3:::podaac-ops-cumulus-protected",
               "arn:aws:s3:::podaac-ops-cumulus-protected/*",
-              "arn:aws:s3:::maap-ops-workspace",
-              "arn:aws:s3:::maap-ops-workspace/*",
               "arn:aws:s3:::nasa-maap-data-store",
               "arn:aws:s3:::nasa-maap-data-store/*",
               "arn:aws:s3:::sdap-dev-zarr",
@@ -83,20 +81,55 @@ hub_cloud_permissions = {
           {
             "Effect": "Allow",
             "Action": [
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:GetObjectVersionTagging",
+              "s3:GetObjectAttributes",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:ListMultipartUploadParts",
+              "s3:ListBucketMultipartUploads",
               "s3:PutObject",
               "s3:PutObjectAcl",
               "s3:PutObjectTagging",
-              "s3:GetObjectTagging",
-              "s3:ListBucket",
               "s3:DeleteObject",
-              "s3:GetObject",
-              "s3:RestoreObject",
-              "s3:ListMultipartUploadParts",
-              "s3:AbortMultipartUpload"
+              "s3:AbortMultipartUpload",
+              "s3:RestoreObject"
             ],
             "Resource": [
               "arn:aws:s3:::maap-uat-workspace",
               "arn:aws:s3:::maap-uat-workspace/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": [
+                "arn:aws:iam::884094767067:role/MAAP-API",
+                "arn:aws:iam::884094767067:role/MAAP-API-User-Folder"
+              ]
+            },
+            "Action": [
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:GetObjectVersionTagging",
+              "s3:GetObjectAttributes",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:ListMultipartUploadParts",
+              "s3:ListBucketMultipartUploads",
+              "s3:PutObject",
+              "s3:PutObjectAcl",
+              "s3:PutObjectTagging",
+              "s3:DeleteObject",
+              "s3:AbortMultipartUpload",
+              "s3:RestoreObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::nasa-maap-geotrees",
+              "arn:aws:s3:::nasa-maap-geotrees/*"
             ]
           },
           {
@@ -170,20 +203,55 @@ hub_cloud_permissions = {
           {
             "Effect": "Allow",
             "Action": [
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:GetObjectVersionTagging",
+              "s3:GetObjectAttributes",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:ListMultipartUploadParts",
+              "s3:ListBucketMultipartUploads",
               "s3:PutObject",
               "s3:PutObjectAcl",
               "s3:PutObjectTagging",
-              "s3:GetObjectTagging",
-              "s3:ListBucket",
               "s3:DeleteObject",
-              "s3:GetObject",
-              "s3:RestoreObject",
-              "s3:ListMultipartUploadParts",
-              "s3:AbortMultipartUpload"
+              "s3:AbortMultipartUpload",
+              "s3:RestoreObject"
             ],
             "Resource": [
               "arn:aws:s3:::maap-ops-workspace",
               "arn:aws:s3:::maap-ops-workspace/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": [
+                "arn:aws:iam::884094767067:role/MAAP-API",
+                "arn:aws:iam::884094767067:role/MAAP-API-User-Folder"
+              ]
+            },
+            "Action": [
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:GetObjectVersionTagging",
+              "s3:GetObjectAttributes",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:ListMultipartUploadParts",
+              "s3:ListBucketMultipartUploads",
+              "s3:PutObject",
+              "s3:PutObjectAcl",
+              "s3:PutObjectTagging",
+              "s3:DeleteObject",
+              "s3:AbortMultipartUpload",
+              "s3:RestoreObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::nasa-maap-geotrees",
+              "arn:aws:s3:::nasa-maap-geotrees/*"
             ]
           },
           {
