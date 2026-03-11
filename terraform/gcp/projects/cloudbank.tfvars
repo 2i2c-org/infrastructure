@@ -79,7 +79,7 @@ persistent_disks = {
     name_suffix = "evc"
   }
   "etsu" = {
-    size        = 25
+    size        = 100
     name_suffix = "etsu"
   }
   "foothill" = {
