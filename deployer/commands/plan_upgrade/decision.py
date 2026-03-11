@@ -91,7 +91,7 @@ def discover_modified_iaac_files(modified_paths):
     def get_config_modified(includes=None, excludes=None, provider=None):
         if not includes and not excludes and provider:
             includes = [f"terraform/{provider}/*"]
-            excludes = [f"terraform/{provider}/projects"]
+            excludes = [f"terraform/{provider}/projects/*"]
         changed_dependent_files = (
             n
             for n in modified_paths
@@ -108,7 +108,7 @@ def discover_modified_iaac_files(modified_paths):
     health_check["openstack"] = get_config_modified(provider="openstack")
     aws_includes = ["terraform/aws/*", "eksctl/libsonnet/*"]
     aws_excludes = [
-        "terraform/aws/projects",
+        "terraform/aws/projects/*",
     ]
     health_check["aws"] = get_config_modified(
         includes=aws_includes, excludes=aws_excludes

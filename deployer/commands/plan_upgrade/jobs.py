@@ -33,9 +33,9 @@ def plan_health_check(
     decide which clusters and/or hubs require health checks to be performed.
     """
     changed_filepaths = changed_filepaths.split(",")
+
     # Convert changed filepaths into absolute Posix Paths
     changes_per_provider = discover_modified_iaac_files(changed_filepaths)
-
     changed_filepaths = [
         REPO_ROOT_PATH.joinpath(filepath) for filepath in changed_filepaths
     ]
@@ -86,9 +86,7 @@ def plan_health_check(
                 REPO_ROOT_PATH / "terraform/openstack/azure" / f"{cluster_name}.tfvars",
             ]
         for terraform_file_path in terraform_file_paths:
-            intersection = set(changed_filepaths).intersection(
-                [str(terraform_file_path)]
-            )
+            intersection = set(changed_filepaths).intersection([terraform_file_path])
 
         if intersection:
             print_colour(
