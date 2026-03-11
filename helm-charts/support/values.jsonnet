@@ -95,7 +95,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
 
   local makePodRestartAlert = function(
     summary,
-    pod_name_substring,
+    pod_name_regex,
     severity,
     labels={}
                               ) {
@@ -105,11 +105,11 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
       # We sum by pod name (which resets after restart) and namespace, so we don't get all
       # the other labels of the metric in our alert.
         (
-              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"})
+              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~"%s"})
             -
-              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"} offset 10m)
+              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~"%s"} offset 10m)
         ) >= 1    
-    ||| % [pod_name_substring, pod_name_substring],
+    ||| % [pod_name_regex, pod_name_regex],
     'for': '5m',
     labels: {
       cluster: cluster_name,
@@ -291,27 +291,27 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               rules: [
                 makePodRestartAlert(
                   'jupyterhub-cost-monitoring pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                  'cost-monitoring',
+                  '.*cost-monitoring.*',
                   'action needed this week'
                 ),
                 makePodRestartAlert(
                   'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                  'groups-exporter',
+                  '.*groups-exporter.*',
                   'action needed this week'
                 ),
                 makePodRestartAlert(
                   'jupyterhub-home-nfs pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                  'storage-quota-home-nfs',
+                  '^storage-quota-home-nfs.*',
                   'same day action needed'
                 ),
                 makePodRestartAlert(
                   'support-grafana pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                  'support-grafana',
+                  '^support-grafana.*',
                   'action needed this week'
                 ),
                 makePodRestartAlert(
                   'proxy pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                  'proxy',
+                  '^proxy.*',
                   'immediate action needed'
                 ),
               ],
