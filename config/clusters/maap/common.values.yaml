@@ -76,7 +76,7 @@ jupyterhub:
         - GPU:T4
     extraConfig:
       001-username-claim: |
-      	def populate_token(spawner, auth_state):
+        def populate_token(spawner, auth_state):
       	    if auth_state:
       	        pgt = f"jwt:{auth_state.get('id_token', '')}"
               
