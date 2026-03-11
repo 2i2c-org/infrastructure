@@ -98,7 +98,6 @@ def discover_modified_iaac_files(modified_paths):
             if any(fnmatch.fnmatchcase(n, p) for p in includes)
             and not any(fnmatch.fnmatchcase(n, p) for p in excludes)
         )
-
         # Discover if any common config has been modified
         return next(changed_dependent_files, False)
 

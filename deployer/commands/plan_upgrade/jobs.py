@@ -87,10 +87,12 @@ def plan_health_check(
             ]
         for terraform_file_path in terraform_file_paths:
             intersection = set(changed_filepaths).intersection([terraform_file_path])
+            if intersection:
+                break
 
         if intersection:
             print_colour(
-                f"This cluster.yaml terraform file has been modified. Generating jobs to run the health check against all hubs on this cluster: {cluster_name}"
+                f"This cluster's terraform file has been modified. Generating jobs to run the health check against all hubs on this cluster: {cluster_name}"
             )
             check_all_hubs_on_this_cluster = True
             cluster_info["choice_reason"] = "terraform file was modified"
@@ -99,7 +101,7 @@ def plan_health_check(
 
         # If this is an AWS cluster, check if this cluster's eksctl file file has been modified. If so, set boolean flags to True
         eksctl_file_path = REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet"
-        intersection = set(changed_filepaths).intersection([str(eksctl_file_path)])
+        intersection = set(changed_filepaths).intersection([eksctl_file_path])
         if intersection:
             print_colour(
                 f"This cluster.yaml eksctl file has been modified. Generating jobs to run the health check against all hubs on this cluster: {cluster_name}"
