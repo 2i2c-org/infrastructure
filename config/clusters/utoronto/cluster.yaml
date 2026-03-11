@@ -1,5 +1,6 @@
 name: utoronto
 provider: kubeconfig # azure based, cloud infra work requires a dedicated utoronto account
+provider_url: https://portal.azure.com/?l=en.en-gb#@utoronto.onmicrosoft.com/resource/subscriptions/ead3521a-d994-4a44-a68d-b16e35642d5b/resourceGroups/2i2c-utoronto-cluster/providers/Microsoft.ContainerService/managedClusters/hub-cluster/overview
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:
