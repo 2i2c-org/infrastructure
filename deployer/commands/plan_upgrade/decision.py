@@ -73,6 +73,49 @@ def discover_modified_common_files(modified_paths):
     return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
 
 
+def discover_modified_iaac_files(modified_paths):
+    """There are certain infrastructure files which, if modified, we should run a
+    health check on all hubs of a cluster.
+
+    Args:
+        modified_paths (list[str]): The list of files that have been added or modified
+            in a given GitHub Pull Request.
+
+    Returns:
+        health_check (dict(str:bool)): Whether or not all clusters and hubs
+            of a provider should be checked
+    """
+
+    # If any of the following filepaths have changed, we should test
+    # all hubs on all clusters
+    def get_config_modified(includes=None, excludes=None, provider=None):
+        if not includes and not excludes and provider:
+            includes = [f"terraform/{provider}/*"]
+            excludes = [f"terraform/{provider}/projects"]
+        changed_dependent_files = (
+            n
+            for n in modified_paths
+            if any(fnmatch.fnmatchcase(n, p) for p in includes)
+            and not any(fnmatch.fnmatchcase(n, p) for p in excludes)
+        )
+
+        # Discover if any common config has been modified
+        return next(changed_dependent_files, False)
+
+    health_check = {}
+    health_check["gcp"] = get_config_modified(provider="gcp")
+    health_check["azure"] = get_config_modified(provider="azure")
+    health_check["openstack"] = get_config_modified(provider="openstack")
+    aws_includes = ["terraform/aws/*", "eksctl/libsonnet/*"]
+    aws_excludes = [
+        "terraform/aws/projects",
+    ]
+    health_check["aws"] = get_config_modified(
+        includes=aws_includes, excludes=aws_excludes
+    )
+    return health_check
+
+
 def filter_out_staging_hubs(all_hub_matrix_jobs):
     """Separate staging hubs from prod hubs in hub matrix jobs.
 
@@ -121,7 +164,7 @@ def generate_hub_matrix_jobs(
             dictionary format
         cluster_info (dict): A template dictionary for defining matrix jobs prepopulated
             with some info. "cluster_name": The name of the given cluster; "provider":
-            the cloud provider the given cluster runs on; "reason_for_redeploy":
+            the cloud provider the given cluster runs on; "choice_reason":
             what has changed in the repository to prompt a hub on this cluster to be
             redeployed.
         added_or_modified_files (set[str]): A set of all added or modified files
@@ -157,11 +200,9 @@ def generate_hub_matrix_jobs(
 
             if upgrade_all_hubs_on_all_clusters:
                 if pr_labels and "deployer:deploy-hubs" in pr_labels:
-                    matrix_job["reason_for_redeploy"] = (
-                        "deployer:deploy-hubs label detected"
-                    )
+                    matrix_job["choice_reason"] = "deployer:deploy-hubs label detected"
                 else:
-                    matrix_job["reason_for_redeploy"] = (
+                    matrix_job["choice_reason"] = (
                         "Core infrastructure has been modified"
                     )
 
@@ -183,11 +224,53 @@ def generate_hub_matrix_jobs(
                 # upgraded
                 matrix_job = cluster_info.copy()
                 matrix_job["hub_name"] = hub["name"]
-                matrix_job["reason_for_redeploy"] = (
+                matrix_job["choice_reason"] = (
                     "Following helm chart values files were modified: "
                     + ", ".join([path.name for path in intersection])
                 )
                 matrix_jobs.append(matrix_job)
+
+    staging_hub_matrix_jobs, prod_hub_matrix_jobs = filter_out_staging_hubs(matrix_jobs)
+
+    return staging_hub_matrix_jobs, prod_hub_matrix_jobs
+
+
+def generate_provider_hub_matrix_jobs(
+    cluster_config,
+    cluster_info,
+    all_hubs_on_this_cluster,
+    all_hubs_in_the_provider,
+):
+    """Generate a list of dictionaries describing which hubs on a given cluster need
+    to undergo a health check.
+
+    Args:
+        cluster_config (dict): The cluster-wide config for a given cluster in
+            dictionary format
+        cluster_info (dict): A template dictionary for defining matrix jobs prepopulated
+            with some info. It has the following keys "cluster_name"; "provider"; "choice_reason".
+        all_hubs_on_this_cluster (bool, optional): Generates jobs to
+            upgrade all hubs on the given cluster.
+        all_hubs_in_the_provider (bool, optional): Generates jobs to
+            upgrade all hubs in a certain provider.
+
+    Returns:
+        list[dict]: A list of dictionaries. Each dictionary contains: the name of a
+            cluster, the cloud provider that cluster runs on, the name of a hub
+            deployed to that cluster, and the reason that hub needs to be redeployed.
+    """
+    # Empty list to store all the matrix job definitions in
+    matrix_jobs = []
+
+    # Loop over each hub on this cluster
+    for hub in cluster_config.get("hubs", {}):
+        provider = cluster_info["provider"]
+        if all_hubs_on_this_cluster or all_hubs_in_the_provider.get(provider, ""):
+            # We know we're upgrading all hubs, so just add the hub name to the list
+            # of matrix jobs and move on
+            matrix_job = cluster_info.copy()
+            matrix_job["hub_name"] = hub["name"]
+            matrix_jobs.append(matrix_job)
 
     staging_hub_matrix_jobs, prod_hub_matrix_jobs = filter_out_staging_hubs(matrix_jobs)
 
@@ -215,7 +298,7 @@ def generate_support_matrix_jobs(
             dictionary format
         cluster_info (dict): A template dictionary for defining matrix jobs prepopulated
             with some info. "cluster_name": The name of the given cluster; "provider":
-            the cloud provider the given cluster runs on; "reason_for_redeploy":
+            the cloud provider the given cluster runs on; "choice_reason":
             what has changed in the repository to prompt the support chart for this
             cluster to be redeployed.
         added_or_modified_files (set[str]): A set of all added or modified files
@@ -240,7 +323,7 @@ def generate_support_matrix_jobs(
                 {
                     "cluster_name": 2i2c,
                     "provider": "gcp",
-                    "reason_for_redeploy": "Support helm chart has been modified",
+                    "choice_reason": "Support helm chart has been modified",
                 },
             ]
     """
@@ -260,13 +343,11 @@ def generate_support_matrix_jobs(
 
             if upgrade_support_on_all_clusters:
                 if pr_labels and "deployer:deploy-support" in pr_labels:
-                    matrix_job["reason_for_redeploy"] = (
+                    matrix_job["choice_reason"] = (
                         "deployer:deploy-support label detected"
                     )
                 else:
-                    matrix_job["reason_for_redeploy"] = (
-                        "Support helm chart has been modified"
-                    )
+                    matrix_job["choice_reason"] = "Support helm chart has been modified"
 
             matrix_jobs.append(matrix_job)
 
@@ -280,7 +361,7 @@ def generate_support_matrix_jobs(
 
             if intersection:
                 matrix_job = cluster_info.copy()
-                matrix_job["reason_for_redeploy"] = (
+                matrix_job["choice_reason"] = (
                     "Following helm chart values files were modified: "
                     + ", ".join([path.name for path in intersection])
                 )
@@ -359,7 +440,7 @@ def assign_staging_jobs_for_missing_clusters(
                     "cluster_name": missing_cluster,
                     "provider": provider,
                     "hub_name": staging_hub,
-                    "reason_for_redeploy": (
+                    "choice_reason": (
                         "Following prod hubs require redeploy: " + ", ".join(prod_hubs)
                     ),
                 }
@@ -369,7 +450,7 @@ def assign_staging_jobs_for_missing_clusters(
 
 
 def pretty_print_matrix_jobs(
-    support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs
+    staging_hub_matrix_jobs, prod_hub_matrix_jobs, support_matrix_jobs=[]
 ):
     # Construct table for support chart upgrades
     support_table = Table(title="Support chart upgrades")
@@ -382,7 +463,7 @@ def pretty_print_matrix_jobs(
         support_table.add_row(
             job["provider"],
             job["cluster_name"],
-            job["reason_for_redeploy"],
+            job["choice_reason"],
             end_section=True,
         )
 
@@ -399,7 +480,7 @@ def pretty_print_matrix_jobs(
             job["provider"],
             job["cluster_name"],
             job["hub_name"],
-            job["reason_for_redeploy"],
+            job["choice_reason"],
             end_section=True,
         )
 
@@ -416,7 +497,7 @@ def pretty_print_matrix_jobs(
             job["provider"],
             job["cluster_name"],
             job["hub_name"],
-            job["reason_for_redeploy"],
+            job["choice_reason"],
             end_section=True,
         )
 

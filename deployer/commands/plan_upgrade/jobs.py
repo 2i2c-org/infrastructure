@@ -11,13 +11,134 @@ from deployer.utils.rendering import create_markdown_comment, print_colour
 from .decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
+    discover_modified_iaac_files,
     generate_hub_matrix_jobs,
+    generate_provider_hub_matrix_jobs,
     generate_support_matrix_jobs,
     pretty_print_matrix_jobs,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
+
+
+@app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
+def plan_health_check(
+    changed_filepaths: str = typer.Argument(
+        ..., help="Comma delimited list of files that have changed"
+    ),
+):
+    """
+    Analyze added or modified files from a GitHub Pull Request and
+    decide which clusters and/or hubs require health checks to be performed.
+    """
+    changed_filepaths = changed_filepaths.split(",")
+    # Convert changed filepaths into absolute Posix Paths
+    changes_per_provider = discover_modified_iaac_files(changed_filepaths)
+
+    changed_filepaths = [
+        REPO_ROOT_PATH.joinpath(filepath) for filepath in changed_filepaths
+    ]
+
+    # Get a list of filepaths to all cluster.yaml files in the repo
+    cluster_files = get_all_cluster_yaml_files()
+
+    # Empty lists to store job definitions in
+    staging_hub_matrix_jobs = []
+    prod_hub_matrix_jobs = []
+
+    for cluster_file in cluster_files:
+        # Read in the cluster.yaml file
+        with open(cluster_file) as f:
+            cluster_config = yaml.load(f)
+
+        # Get cluster's name and its cloud provider
+        cluster_name = cluster_config.get("name", {})
+        provider = cluster_config.get("provider", {})
+        if provider == "kubeconfig":
+            provider_url = cluster_config.get("provider_url", "")
+            if "azure" in provider_url:
+                provider = "azure"
+            elif "jetstreeam2" in provider_url:
+                provider = "openstack"
+
+        # Generate template dictionary for all jobs associated with this cluster
+        cluster_info = {
+            "cluster_name": cluster_name,
+            "provider": provider,
+            "choice_reason": "Core common infrastructure has been updated",
+        }
+
+        # Check if this cluster's terraform file has been modified. If so, set boolean flags to True
+        if provider != "kubeconfig":
+            terraform_file_paths = [
+                REPO_ROOT_PATH
+                / "terraform"
+                / provider
+                / "projects"
+                / f"{cluster_name}.tfvars"
+            ]
+        else:
+            terraform_file_paths = [
+                REPO_ROOT_PATH
+                / "terraform/openstack/projects"
+                / f"{cluster_name}.tfvars",
+                REPO_ROOT_PATH / "terraform/openstack/azure" / f"{cluster_name}.tfvars",
+            ]
+        for terraform_file_path in terraform_file_paths:
+            intersection = set(changed_filepaths).intersection(
+                [str(terraform_file_path)]
+            )
+
+        if intersection:
+            print_colour(
+                f"This cluster.yaml terraform file has been modified. Generating jobs to run the health check against all hubs on this cluster: {cluster_name}"
+            )
+            check_all_hubs_on_this_cluster = True
+            cluster_info["choice_reason"] = "terraform file was modified"
+        else:
+            check_all_hubs_on_this_cluster = False
+
+        # If this is an AWS cluster, check if this cluster's eksctl file file has been modified. If so, set boolean flags to True
+        eksctl_file_path = REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet"
+        intersection = set(changed_filepaths).intersection([str(eksctl_file_path)])
+        if intersection:
+            print_colour(
+                f"This cluster.yaml eksctl file has been modified. Generating jobs to run the health check against all hubs on this cluster: {cluster_name}"
+            )
+            check_all_hubs_on_this_cluster = True
+            cluster_info["choice_reason"] = "eksctl file was modified"
+
+        # Generate a job matrix of all hubs that need upgrading on this cluster
+        staging_hubs, prod_hubs = generate_provider_hub_matrix_jobs(
+            cluster_config,
+            cluster_info,
+            all_hubs_on_this_cluster=check_all_hubs_on_this_cluster,
+            all_hubs_in_the_provider=changes_per_provider,
+        )
+        staging_hub_matrix_jobs.extend(staging_hubs)
+        prod_hub_matrix_jobs.extend(prod_hubs)
+
+    # Clean up the matrix jobs
+    staging_hub_matrix_jobs = assign_staging_jobs_for_missing_clusters(
+        staging_hub_matrix_jobs, prod_hub_matrix_jobs
+    )
+    # Pretty print the jobs using rich
+    pretty_print_matrix_jobs(staging_hub_matrix_jobs, prod_hub_matrix_jobs)
+
+    # The existence of the CI environment variable is an indication that we are running
+    # in an GitHub Actions workflow
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-defining-outputs-for-a-job
+    # This will avoid errors trying to set CI output variables in an environment that
+    # doesn't exist.
+    ci_env = os.environ.get("CI", False)
+    # More info on GITHUB_OUTPUT: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/passing-information-between-jobs
+    output_file = os.getenv("GITHUB_OUTPUT")
+    if ci_env:
+        # Add these matrix jobs as output variables for use in another job
+        with open(output_file, "a") as f:
+            f.write(f"staging-jobs={json.dumps(staging_hub_matrix_jobs)}\n")
+            f.write(f"prod-jobs={json.dumps(prod_hub_matrix_jobs)}\n")
 
 
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
@@ -74,7 +195,7 @@ def plan_upgrade(
         cluster_info = {
             "cluster_name": cluster_name,
             "provider": provider,
-            "reason_for_redeploy": "",
+            "choice_reason": "",
         }
 
         # Check if this cluster file has been modified. If so, set boolean flags to True
@@ -85,7 +206,7 @@ def plan_upgrade(
             )
             upgrade_all_hubs_on_this_cluster = True
             upgrade_support_on_this_cluster = True
-            cluster_info["reason_for_redeploy"] = "cluster.yaml file was modified"
+            cluster_info["choice_reason"] = "cluster.yaml file was modified"
         else:
             upgrade_all_hubs_on_this_cluster = False
             upgrade_support_on_this_cluster = False
@@ -122,7 +243,7 @@ def plan_upgrade(
     )
     # Pretty print the jobs using rich
     pretty_print_matrix_jobs(
-        support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs
+        staging_hub_matrix_jobs, prod_hub_matrix_jobs, support_matrix_jobs
     )
 
     # The existence of the CI environment variable is an indication that we are running
