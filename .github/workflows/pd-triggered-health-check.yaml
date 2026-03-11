@@ -35,7 +35,7 @@ jobs:
 
   health_check:
     needs: get_incident_details
-    uses: ./.github/workflows/run-hub-health-check.yaml
+    uses: ./.github/workflows/reusable-health-check.yaml
     with:
       cluster: ${{ needs.get_incident_details.outputs.cluster }}
       hub: ${{ needs.get_incident_details.outputs.hub }}
