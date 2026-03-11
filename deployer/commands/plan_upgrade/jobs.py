@@ -55,12 +55,13 @@ def plan_health_check(
         # Get cluster's name and its cloud provider
         cluster_name = cluster_config.get("name", {})
         provider = cluster_config.get("provider", {})
+        real_provider = provider
         if provider == "kubeconfig":
             provider_url = cluster_config.get("provider_url", "")
             if "azure" in provider_url:
-                provider = "azure"
-            elif "jetstreeam2" in provider_url:
-                provider = "openstack"
+                real_provider = "azure"
+            elif "jetstream" in provider_url:
+                real_provider = "openstack"
 
         # Generate template dictionary for all jobs associated with this cluster
         cluster_info = {
@@ -70,15 +71,17 @@ def plan_health_check(
         }
 
         # Check if this cluster's terraform file has been modified. If so, set boolean flags to True
-        if provider != "kubeconfig":
+        if real_provider != "kubeconfig":
             terraform_file_paths = [
                 REPO_ROOT_PATH
                 / "terraform"
-                / provider
+                / real_provider
                 / "projects"
                 / f"{cluster_name}.tfvars"
             ]
         else:
+            print(real_provider)
+            # It might be azure or jetstream2, so we check both
             terraform_file_paths = [
                 REPO_ROOT_PATH
                 / "terraform/openstack/projects"
@@ -113,6 +116,7 @@ def plan_health_check(
         staging_hubs, prod_hubs = generate_provider_hub_matrix_jobs(
             cluster_config,
             cluster_info,
+            real_provider,
             all_hubs_on_this_cluster=check_all_hubs_on_this_cluster,
             all_hubs_in_the_provider=changes_per_provider,
         )

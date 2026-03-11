@@ -237,33 +237,18 @@ def generate_hub_matrix_jobs(
 def generate_provider_hub_matrix_jobs(
     cluster_config,
     cluster_info,
+    provider,
     all_hubs_on_this_cluster,
     all_hubs_in_the_provider,
 ):
     """Generate a list of dictionaries describing which hubs on a given cluster need
     to undergo a health check.
-
-    Args:
-        cluster_config (dict): The cluster-wide config for a given cluster in
-            dictionary format
-        cluster_info (dict): A template dictionary for defining matrix jobs prepopulated
-            with some info. It has the following keys "cluster_name"; "provider"; "choice_reason".
-        all_hubs_on_this_cluster (bool, optional): Generates jobs to
-            upgrade all hubs on the given cluster.
-        all_hubs_in_the_provider (bool, optional): Generates jobs to
-            upgrade all hubs in a certain provider.
-
-    Returns:
-        list[dict]: A list of dictionaries. Each dictionary contains: the name of a
-            cluster, the cloud provider that cluster runs on, the name of a hub
-            deployed to that cluster, and the reason that hub needs to be redeployed.
     """
     # Empty list to store all the matrix job definitions in
     matrix_jobs = []
 
     # Loop over each hub on this cluster
     for hub in cluster_config.get("hubs", {}):
-        provider = cluster_info["provider"]
         if all_hubs_on_this_cluster or all_hubs_in_the_provider.get(provider, ""):
             # We know we're upgrading all hubs, so just add the hub name to the list
             # of matrix jobs and move on
