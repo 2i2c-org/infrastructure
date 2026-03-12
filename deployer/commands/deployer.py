@@ -58,6 +58,11 @@ def deploy_support(
         "--dry-run",
         help="When present, the `--dry-run` flag will be passed to the `helm upgrade` command.",
     ),
+    skip_crds: bool = typer.Option(
+        False,
+        "--skip-crds",
+        help="When present, the `--skip-crds` flag will cause the deployer to skip external CRD deployments.",
+    ),
 ):
     """
     Deploy support components to a cluster
@@ -73,6 +78,7 @@ def deploy_support(
                 cert_manager_version=cert_manager_version,
                 debug=debug,
                 dry_run=dry_run,
+                skip_crds=skip_crds,
             )
 
 
