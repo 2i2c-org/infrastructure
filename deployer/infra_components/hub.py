@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from contextlib import ExitStack
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -95,6 +96,17 @@ class Hub:
         """
         Deploy this hub
         """
+        # Make sure we're on helm v4
+        helm_version = (
+            subprocess.check_output(["helm", "version", "--short"]).decode().strip()
+        )
+        if not helm_version.startswith("v4."):
+            print(
+                f"Minimum required version of helm is v4. Found version {helm_version}",
+                file=sys.stderr,
+            )
+            print("Upgrade your version of helm and try again", file=sys.stderr)
+            sys.exit(1)
         # Support overriding domain configuration in the loaded cluster.yaml via
         # a cluster.yaml specified enc-<something>.secret.yaml file that only
         # includes the domain configuration of a typical cluster.yaml file.
