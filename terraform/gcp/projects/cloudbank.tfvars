@@ -46,6 +46,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "cmu"
   }
+  "cra" = {
+    size        = 25
+    name_suffix = "cra"
+  }
   "csm" = {
     size        = 150
     name_suffix = "csm"
