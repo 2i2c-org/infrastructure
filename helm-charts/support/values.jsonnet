@@ -94,12 +94,13 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   };
 
   local makePodRestartAlert = function(
+    pod_name,
     summary,
     pod_name_regex,
     severity,
     labels={}
                               ) {
-    alert: pod_name_substring + ' pod has restarted',
+    alert: pod_name + ' pod has restarted',
     expr: |||
       # Count total container restarts with pod name containing 'pod_name_substring'.
       # We sum by pod name (which resets after restart) and namespace, so we don't get all
@@ -290,26 +291,31 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               name: 'Important Pod Restart',
               rules: [
                 makePodRestartAlert(
+                  'jupyterhub-cost-monitoring',
                   'jupyterhub-cost-monitoring pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
                   '.*cost-monitoring.*',
                   'action needed this week'
                 ),
                 makePodRestartAlert(
+                  'jupyterhub-groups-exporter',
                   'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
                   '.*groups-exporter.*',
                   'action needed this week'
                 ),
                 makePodRestartAlert(
+                  'jupyterhub-home-nfs',
                   'jupyterhub-home-nfs pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
                   '^storage-quota-home-nfs.*',
                   'same day action needed'
                 ),
                 makePodRestartAlert(
+                  'support-grafana',
                   'support-grafana pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
                   '^support-grafana.*',
                   'action needed this week'
                 ),
                 makePodRestartAlert(
+                  'proxy',
                   'proxy pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
                   '^proxy.*',
                   'immediate action needed'

@@ -89,12 +89,29 @@ jobs:
       fail-fast: false
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.staging-jobs) }}
-    uses: ./.github/workflows/reusable-health-check.yaml
-    with:
-      cluster: ${{ matrix.jobs.cluster_name }}
-      hub: ${{ matrix.jobs.hub_name }}
-      provider: ${{ matrix.jobs.provider }}
-    secrets: inherit
+    steps:
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }}cluster
+      uses: ./.github/actions/setup-deploy
+      with:
+        provider: ${{ matrix.jobs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+      uses: nick-fields/retry@v3
+      id: health_check
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
+          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
 
   upgrade-prod:
     runs-on: ubuntu-latest
@@ -103,15 +120,30 @@ jobs:
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
-      needs.generate-jobs.result == 'success' &&' &&
+      needs.generate-jobs.result == 'success' &&
       needs.generate-jobs.outputs.prod-jobs != '[]'
     strategy:
       fail-fast: false
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.prod-jobs) }}
-    uses: ./.github/workflows/reusable-health-check.yaml
-    with:
-      cluster: ${{ matrix.jobs.cluster_name }}
-      hub: ${{ matrix.jobs.hub_name }}
-      provider: ${{ matrix.jobs.provider }}
-    secrets: inherit
+    steps:
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }}cluster
+      uses: ./.github/actions/setup-deploy
+      with:
+        provider: ${{ matrix.jobs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+      uses: nick-fields/retry@v3
+      id: health_check
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
+          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
