@@ -120,7 +120,7 @@ jobs:
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
-      needs.generate-jobs.result == 'success' &&' &&
+      needs.generate-jobs.result == 'success' &&
       needs.generate-jobs.outputs.prod-jobs != '[]'
     strategy:
       fail-fast: false
