@@ -54,3 +54,5 @@ jobs:
         terraform init
         # Run terraform automatically
         terraform apply -auto-approve
+      env:
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
