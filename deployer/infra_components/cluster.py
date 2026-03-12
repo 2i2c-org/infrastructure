@@ -71,87 +71,88 @@ class Cluster:
         else:
             raise ValueError(f"Provider {self.spec['provider']} not supported")
 
-    def deploy_support(self, cert_manager_version, debug, dry_run):
-        cert_manager_url = "https://charts.jetstack.io"
+    def deploy_support(self, cert_manager_version, debug, skip_crds, dry_run):
+        if not skip_crds:
+            cert_manager_url = "https://charts.jetstack.io"
 
-        print_colour("Provisioning cert-manager...")
-        subprocess.check_call(
-            [
-                "kubectl",
-                "apply",
-                "-f",
-                f"https://github.com/cert-manager/cert-manager/releases/download/{cert_manager_version}/cert-manager.crds.yaml",
-            ]
-        )
-        subprocess.check_call(
-            [
-                "helm",
-                "upgrade",
-                "cert-manager",  # given release name (aka. installation name)
-                "cert-manager",  # helm chart to install
-                f"--repo={cert_manager_url}",
-                "--install",
-                "--create-namespace",
-                "--namespace=cert-manager",
-                f"--version={cert_manager_version}",
-            ]
-        )
-        print_colour("Done!")
-
-        if self.spec["provider"] == "aws":
-            print_colour("Provisioning tigera operator...")
-            # Hardcoded here, as we want to upgrade everywhere together
-            # Ideally this would be a subchart of our support chart,
-            # but helm has made some unfortunate architectural choices
-            # with respect to CRDs and they seem super unreliable when
-            # used as subcharts. So we install it here directly from the
-            # manifests.
-            # We unconditionally install this on all AWS clusters - however,
-            # that doesn't actually turn NetworkPolicy enforcement on. That
-            # requires setting `calico.enabled` to True in `support` so a
-            # calico `Installation` object can be set up.
-            # I deeply loathe the operator *singleton* pattern.
-            tigera_operator_version = "v3.29.3"
+            print_colour("Provisioning cert-manager...")
             subprocess.check_call(
                 [
                     "kubectl",
                     "apply",
-                    "--force-conflicts",  # This gives ownership to the resource, back to kubectl https://kubernetes.io/docs/reference/using-api/server-side-apply/#conflicts
-                    "--server-side",  # https://github.com/projectcalico/calico/issues/7826
                     "-f",
-                    f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml",
+                    f"https://github.com/cert-manager/cert-manager/releases/download/{cert_manager_version}/cert-manager.crds.yaml",
+                ]
+            )
+            subprocess.check_call(
+                [
+                    "helm",
+                    "upgrade",
+                    "cert-manager",  # given release name (aka. installation name)
+                    "cert-manager",  # helm chart to install
+                    f"--repo={cert_manager_url}",
+                    "--install",
+                    "--create-namespace",
+                    "--namespace=cert-manager",
+                    f"--version={cert_manager_version}",
                 ]
             )
             print_colour("Done!")
 
-            # Patch the tigera operator to remove the NoSchedule toleration
-            # otherwise it will schedule on tainted nodes
-            print_colour("Patching tigera operator...")
-            patch_tolerations = {
-                "spec": {
-                    "template": {
-                        "spec": {
-                            "tolerations": [
-                                {"effect": "NoExecute", "operator": "Exists"},
-                            ],
+            if self.spec["provider"] == "aws":
+                print_colour("Provisioning tigera operator...")
+                # Hardcoded here, as we want to upgrade everywhere together
+                # Ideally this would be a subchart of our support chart,
+                # but helm has made some unfortunate architectural choices
+                # with respect to CRDs and they seem super unreliable when
+                # used as subcharts. So we install it here directly from the
+                # manifests.
+                # We unconditionally install this on all AWS clusters - however,
+                # that doesn't actually turn NetworkPolicy enforcement on. That
+                # requires setting `calico.enabled` to True in `support` so a
+                # calico `Installation` object can be set up.
+                # I deeply loathe the operator *singleton* pattern.
+                tigera_operator_version = "v3.29.3"
+                subprocess.check_call(
+                    [
+                        "kubectl",
+                        "apply",
+                        "--force-conflicts",  # This gives ownership to the resource, back to kubectl https://kubernetes.io/docs/reference/using-api/server-side-apply/#conflicts
+                        "--server-side",  # https://github.com/projectcalico/calico/issues/7826
+                        "-f",
+                        f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml",
+                    ]
+                )
+                print_colour("Done!")
+
+                # Patch the tigera operator to remove the NoSchedule toleration
+                # otherwise it will schedule on tainted nodes
+                print_colour("Patching tigera operator...")
+                patch_tolerations = {
+                    "spec": {
+                        "template": {
+                            "spec": {
+                                "tolerations": [
+                                    {"effect": "NoExecute", "operator": "Exists"},
+                                ],
+                            }
                         }
                     }
                 }
-            }
-            patch_tolerations_json = json.dumps(patch_tolerations)
-            subprocess.check_call(
-                [
-                    "kubectl",
-                    "--namespace",
-                    "tigera-operator",
-                    "patch",
-                    "deployment",
-                    "tigera-operator",
-                    "--patch",
-                    patch_tolerations_json,
-                ],
-            )
-            print_colour("Done!")
+                patch_tolerations_json = json.dumps(patch_tolerations)
+                subprocess.check_call(
+                    [
+                        "kubectl",
+                        "--namespace",
+                        "tigera-operator",
+                        "patch",
+                        "deployment",
+                        "tigera-operator",
+                        "--patch",
+                        patch_tolerations_json,
+                    ],
+                )
+                print_colour("Done!")
 
         print_colour("Provisioning support charts...")
 

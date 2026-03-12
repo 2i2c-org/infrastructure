@@ -46,6 +46,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "cmu"
   }
+  "cra" = {
+    size        = 25
+    name_suffix = "cra"
+  }
   "csm" = {
     size        = 150
     name_suffix = "csm"
@@ -79,7 +83,7 @@ persistent_disks = {
     name_suffix = "evc"
   }
   "etsu" = {
-    size        = 25
+    size        = 100
     name_suffix = "etsu"
   }
   "foothill" = {
@@ -302,13 +306,13 @@ enable_network_policy = true
 
 notebook_nodes = {
   "n2-highmem-4" : {
-    min : 0,
+    min : 2,
     max : 100,
     machine_type : "n2-highmem-4",
     disk_size_gb : 150,
   },
   "gpu-t4" : {
-    min : 0,
+    min : 1,
     max : 30,
     machine_type : "n1-highmem-8",
     disk_size_gb : 200,
