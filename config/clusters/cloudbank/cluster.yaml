@@ -93,6 +93,14 @@ hubs:
   - common.values.yaml
   - cmu.values.yaml
   - enc-cmu.secret.values.yaml
+- name: cra
+  display_name: Computing Research Association
+  domain: cra.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - cra.values.yaml
+  - enc-cra.secret.values.yaml
 - name: csm
   display_name: College of San Mateo
   domain: csm.cloudbank.2i2c.cloud
