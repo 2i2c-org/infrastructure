@@ -48,11 +48,11 @@ jobs:
       run: |
         cd terraform/uptime-checks
         # Decrypt the GCP ServiceAccount key with permissions to run terraform
-        sops -d secret/enc-service-account-key.secret.json > service-account-key.json
+        sops -d \
+          --gcp-kms-service-account ${{ secrets.GCP_KMS_DECRYPTOR_KEY }} \
+          secret/enc-service-account-key.secret.json > service-account-key.json
         export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
         # Setup Terraform
         terraform init
         # Run terraform automatically
         terraform apply -auto-approve
-      env:
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
