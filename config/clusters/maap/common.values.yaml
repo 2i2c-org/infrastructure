@@ -78,15 +78,24 @@ jupyterhub:
       001-username-claim: |
         def populate_token(spawner, auth_state):
           # For our deployment-service-check health check user, there is no auth_state.
-          # So these env variables need not be set.
           if auth_state:
-
+            pgt = f"jwt:{auth_state.get('id_token', '')}"
+            
             spawner.environment.update({
-              "MAAP_PGT": f"jwt:{auth_state.get("id_token", "")}",
+              "MAAP_PGT": pgt,
               "KC_ACCESS_TOKEN": auth_state.get("access_token", ""),
               "KC_ID_TOKEN": auth_state.get("id_token", ""),
               "KC_REFRESH_TOKEN": auth_state.get("refresh_token", "")
             })
+            
+            # Inject MAAP_PGT into the s3fs sidecar container
+            for container in spawner.extra_containers:
+              if container.get("name") == "s3fs":
+                env_list = container.setdefault("env", [])
+                env_list.append({
+                    "name": "MAAP_PGT",
+                    "value": pgt,
+                })
 
         c.Spawner.auth_state_hook = populate_token
   singleuser:
@@ -101,7 +110,7 @@ jupyterhub:
     defaultUrl: /lab
     storage:
       extraVolumes:
-        01-s3f3-volume:
+        01-s3fs-volume:
           name: s3fs-volume
           emptyDir: {}
       extraVolumeMounts:
@@ -115,30 +124,36 @@ jupyterhub:
           mountPath: /home/rstudio/shared-public
           subPath: _shared-public
           readOnly: false
-        03-s3f3-private-bucket-volumemount:
+        03-s3fs-private-bucket-volumemount:
           name: s3fs-volume
           mountPath: /home/jovyan/my-private-bucket
           subPath: my-private-bucket
           mountPropagation: HostToContainer
           readOnly: false
-        04-s3f3-public-bucket-volumemount:
+        04-s3fs-public-bucket-volumemount:
           name: s3fs-volume
           mountPath: /home/jovyan/my-public-bucket
           subPath: my-public-bucket
           mountPropagation: HostToContainer
           readOnly: false
-        05-s3f3-shared-bucket-volumemount:
+        05-s3fs-shared-bucket-volumemount:
           name: s3fs-volume
           mountPath: /home/jovyan/shared-buckets
           subPath: shared-buckets
           mountPropagation: HostToContainer
           readOnly: true
-        06-s3f3-private-triaged-jobs-volumemount:
+        06-s3fs-private-triaged-jobs-volumemount:
           name: s3fs-volume
           mountPath: /home/jovyan/triaged-jobs
           subPath: triaged-jobs
           mountPropagation: HostToContainer
           readOnly: true
+        07-s3fs-org-buckets-volumemount:
+          name: s3fs-volume
+          mountPath: /home/jovyan/my-team-buckets
+          subPath: my-team-buckets
+          mountPropagation: HostToContainer
+          readOnly: false
     extraContainers:
     - name: s3fs
       image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
@@ -170,6 +185,10 @@ jupyterhub:
       - name: s3fs-volume
         mountPath: /triaged-jobs
         subPath: triaged-jobs
+        mountPropagation: Bidirectional
+      - name: s3fs-volume
+        mountPath: /my-team-buckets
+        subPath: my-team-buckets
         mountPropagation: Bidirectional
     profileList:
     - display_name: Choose your environment and resources
