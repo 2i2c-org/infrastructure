@@ -58,3 +58,10 @@ dependencies:
     version: "v1.1.1"
     repository: https://2i2c.org/jupyterhub-cost-monitoring/
     condition: jupyterhub-cost-monitoring.enabled
+
+  # Provide metrics about GPU usage
+  # https://github.com/NVIDIA/dcgm-exporter
+  - name: dcgm-exporter
+    version: 4.8.1
+    repository: https://nvidia.github.io/dcgm-exporter/helm-charts
+    condition: dcgm-exporter.enabled
