@@ -92,7 +92,7 @@ jupyterhub:
             for container in spawner.extra_containers:
               if container.get("name") == "s3fs":
                 env_list = container.setdefault("env", [])
-                container["env"].append({
+                env_list.append({
                     "name": "MAAP_PGT",
                     "value": pgt,
                 })
