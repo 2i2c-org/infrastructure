@@ -38,17 +38,13 @@ jobs:
     - name: Install sops
       uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
-      # Authenticate with the correct KMS key that sops will use.
-    - name: Setup sops credentials to decrypt repo secrets
-      uses: google-github-actions/auth@v3
-      with:
-        credentials_json: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
-
     - name: ensure uptime checks are set up
       run: |
         cd terraform/uptime-checks
         # Decrypt the GCP ServiceAccount key with permissions to run terraform
-        sops -d secret/enc-service-account-key.secret.json > service-account-key.json
+        sops -d \
+          --gcp-kms-service-account ${{ secrets.GCP_KMS_DECRYPTOR_KEY }} \
+          secret/enc-service-account-key.secret.json > service-account-key.json
         export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
         # Setup Terraform
         terraform init
