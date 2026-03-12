@@ -302,13 +302,13 @@ enable_network_policy = true
 
 notebook_nodes = {
   "n2-highmem-4" : {
-    min : 0,
+    min : 2,
     max : 100,
     machine_type : "n2-highmem-4",
     disk_size_gb : 150,
   },
   "gpu-t4" : {
-    min : 0,
+    min : 1,
     max : 30,
     machine_type : "n1-highmem-8",
     disk_size_gb : 200,
