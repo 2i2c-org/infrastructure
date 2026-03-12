@@ -77,6 +77,7 @@ jupyterhub:
     extraConfig:
       001-username-claim: |
         def populate_token(spawner, auth_state):
+          # For our deployment-service-check health check user, there is no auth_state.
           if auth_state:
             pgt = f"jwt:{auth_state.get('id_token', '')}"
             
@@ -91,10 +92,6 @@ jupyterhub:
             for container in spawner.extra_containers:
               if container.get("name") == "s3fs":
                 env_list = container.setdefault("env", [])
-                # Remove any existing MAAP_PGT entry to avoid duplicates
-                container["env"] = [
-                    e for e in env_list if e.get("name") != "MAAP_PGT"
-                ]
                 container["env"].append({
                     "name": "MAAP_PGT",
                     "value": pgt,
