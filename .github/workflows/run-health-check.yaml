@@ -1,4 +1,4 @@
-name: Run a health check on hubs
+name: Run a health check on hubs with modified infrastructure
 
 on:
   push:
