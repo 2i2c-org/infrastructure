@@ -105,16 +105,11 @@ jobs:
       with:
         submodules: true
 
-    - uses: actions/setup-python@v6
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
+      uses: ./.github/actions/setup-deploy
       with:
-        python-version: '3.13'
-
-    - uses: actions/setup-go@v6
-
-    - name: Install deployer script's dependencies
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+        provider: ${{ matrix.jobs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
       uses: nick-fields/retry@v3
@@ -145,16 +140,12 @@ jobs:
     - uses: actions/checkout@v6
       with:
         submodules: true
-    - uses: actions/setup-python@v6
+
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
+      uses: ./.github/actions/setup-deploy
       with:
-        python-version: '3.13'
-
-    - uses: actions/setup-go@v6
-
-    - name: Install deployer script's dependencies
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+        provider: ${{ matrix.jobs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
       uses: nick-fields/retry@v3
