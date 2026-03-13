@@ -36,6 +36,17 @@ jobs:
       with:
         submodules: true
 
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+
+    - uses: actions/setup-go@v6
+
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+
     - name: Identify files that have been added or modified
       # Action repo: https://github.com/dorny/paths-filter
       uses: dorny/paths-filter@v3
@@ -47,15 +58,6 @@ jobs:
           changed:
             - added|modified: terraform/**
             - added|modified: eksctl/**
-
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-
-    - name: Install deployer script's Python dependencies
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
       # This step will create a comment-body.txt file containing the jobs to be run in a
       # Markdown table format to be posted on a Pull Request
@@ -103,6 +105,8 @@ jobs:
       with:
         python-version: '3.13'
 
+    - uses: actions/setup-go@v6
+
     - name: Install deployer script's dependencies
       run: |
         pip install --editable .
@@ -137,6 +141,8 @@ jobs:
     - uses: actions/setup-python@v6
       with:
         python-version: '3.13'
+
+    - uses: actions/setup-go@v6
 
     - name: Install deployer script's dependencies
       run: |
