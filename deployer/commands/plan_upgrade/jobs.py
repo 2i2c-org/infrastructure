@@ -144,6 +144,12 @@ def plan_health_check(
             f.write(f"staging-jobs={json.dumps(staging_hub_matrix_jobs)}\n")
             f.write(f"prod-jobs={json.dumps(prod_hub_matrix_jobs)}\n")
 
+        # Don't bother generating a comment if all of the matrices are empty
+        if staging_hub_matrix_jobs or prod_hub_matrix_jobs:
+            # Generate Markdown tables from the job matrices and write them to a file
+            # for use in another job
+            create_markdown_comment([], staging_hub_matrix_jobs, prod_hub_matrix_jobs)
+
 
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def plan_upgrade(
