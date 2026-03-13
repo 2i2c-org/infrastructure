@@ -80,6 +80,9 @@ basehub:
           - geolab
           - geolab:dev
           - geolab:power
+          - cpu-1
+          - cpu-2
+          - cpu-3
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
