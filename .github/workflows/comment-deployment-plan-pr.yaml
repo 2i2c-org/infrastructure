@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows:
     - Deploy and test hubs
+    - Run a health check on hubs with modified infrastructure
     types:
     - completed
 
