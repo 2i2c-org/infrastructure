@@ -37,7 +37,7 @@ jobs:
         submodules: true
 
     - name: Identify files that have been added or modified
-          # Action repo: https://github.com/dorny/paths-filter
+      # Action repo: https://github.com/dorny/paths-filter
       uses: dorny/paths-filter@v3
       id: changed-files
       with:
@@ -48,22 +48,20 @@ jobs:
             - added|modified: terraform/**
             - added|modified: eksctl/**
 
-        # This step will create a comment-body.txt file containing the jobs to be run in a
-        # Markdown table format to be posted on a Pull Request
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+
+      # This step will create a comment-body.txt file containing the jobs to be run in a
+      # Markdown table format to be posted on a Pull Request
     - name: Generate matrix jobs
       id: generate-jobs
-      steps:
-      - name: Install deployer script's Python dependencies
-        run: |
-          pip install --editable .
-          go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+      run: |
+        deployer plan-health-check "${{ steps.changed-files.outputs.changed_files }}"
 
-      - name: Plan the health check jobs
-        run: |
-          deployer plan-health-check "${{ steps.changed-files.outputs.changed_files }}"
-
-          # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
-          # know the PR number, so we save it to a file to pass to that workflow
+      # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
+      # know the PR number, so we save it to a file to pass to that workflow
     - name: Save Pull Request number to a file
       if: github.event_name == 'pull_request'
       run: |
