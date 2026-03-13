@@ -52,11 +52,18 @@ jobs:
         # Markdown table format to be posted on a Pull Request
     - name: Generate matrix jobs
       id: generate-jobs
-      run: |
-        deployer plan-health-check "${{ steps.changed-files.outputs.changed_files }}"
+      steps:
+      - name: Install deployer script's Python dependencies
+        run: |
+          pip install --editable .
+          go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
-        # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
-        # know the PR number, so we save it to a file to pass to that workflow
+      - name: Plan the health check jobs
+        run: |
+          deployer plan-health-check "${{ steps.changed-files.outputs.changed_files }}"
+
+          # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
+          # know the PR number, so we save it to a file to pass to that workflow
     - name: Save Pull Request number to a file
       if: github.event_name == 'pull_request'
       run: |
@@ -90,16 +97,10 @@ jobs:
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.staging-jobs) }}
     steps:
-    - name: Install deployer script's Python dependencies
+    - name: Install deployer script's dependencies
       run: |
         pip install --editable .
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
-
-    - name: Setup deploy for ${{ matrix.jobs.cluster_name }}cluster
-      uses: ./.github/actions/setup-deploy
-      with:
-        provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
       uses: nick-fields/retry@v3
@@ -127,15 +128,10 @@ jobs:
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.prod-jobs) }}
     steps:
-    - name: Install deployer script's Python dependencies
+    - name: Install deployer script's dependencies
       run: |
         pip install --editable .
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
-    - name: Setup deploy for ${{ matrix.jobs.cluster_name }}cluster
-      uses: ./.github/actions/setup-deploy
-      with:
-        provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
       uses: nick-fields/retry@v3
