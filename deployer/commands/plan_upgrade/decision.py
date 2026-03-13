@@ -105,7 +105,7 @@ def discover_modified_iaac_files(modified_paths):
     health_check["gcp"] = get_config_modified(provider="gcp")
     health_check["azure"] = get_config_modified(provider="azure")
     health_check["openstack"] = get_config_modified(provider="openstack")
-    aws_includes = ["terraform/aws/*", "eksctl/libsonnet/*"]
+    aws_includes = ["terraform/aws/*", "eksctl/libsonnet/*", "eksctl/template.jsonnet"]
     aws_excludes = [
         "terraform/aws/projects/*",
     ]
