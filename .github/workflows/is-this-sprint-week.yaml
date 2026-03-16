@@ -18,13 +18,13 @@ on:
     outputs:
       valid_week:
         description: Whether or not this is a week when the workflow should run (usually a sprint planning week)
-        value: ${{ jobs.example_job.outputs.output1 }}
+        value: ${{ jobs.check-week.outputs.week-is-valid }}
 jobs:
   # Run the action every other week
   check-week:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.check.outputs.valid_week }}
+      week-is-valid: ${{ steps.check.outputs.valid_week }}
     steps:
     - name: Check if valid week
       id: check
