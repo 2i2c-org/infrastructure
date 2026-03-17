@@ -18,7 +18,7 @@ local c = cluster.withNodeGroupConfigOverride(
         instanceType: 'g4dn.xlarge',
       },
     ],
-    nodeGroupGenerations=['a', 'b']
+    nodeGroupGenerations=['b']
   ),
   kind='core',
   overrides={ maxSize: 2 }
