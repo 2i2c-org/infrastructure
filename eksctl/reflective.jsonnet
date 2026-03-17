@@ -7,17 +7,17 @@ local c = cluster.makeCluster(
   version='1.34',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
-    [
-      'r5.xlarge',
-      'r5.4xlarge',
-      'r5.16xlarge',
-    ],
+    'r5.xlarge',
+    'r5.4xlarge',
+    'r5.16xlarge',
   ],
   daskInstanceTypes=[
     // Allow for a range of spot instance types
-    'r5.4xlarge',
-    'r7i.4xlarge',
-    'r6i.4xlarge',
+    [
+      'r5.4xlarge',
+      'r7i.4xlarge',
+      'r6i.4xlarge',
+    ],
   ],
   hubs=['staging', 'prod', 'workshop'],
   nodeGroupGenerations=['a']
