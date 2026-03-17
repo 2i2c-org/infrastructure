@@ -433,6 +433,7 @@ jupyterhub:
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      nginx.org/client-max-body-size: 256m
       # Handle websocket upgrades in nginx-ingress
       nginx.org/location-snippets: |
         proxy_set_header Upgrade $http_upgrade;
