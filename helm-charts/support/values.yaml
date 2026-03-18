@@ -186,7 +186,7 @@ prometheus:
         # prometheus, the central grafana used does go through nginx. So we
         # increase the timeout here as well.
         nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
-        nginx.org/proxy-read-timeout: "120"
+        nginx.org/proxy-read-timeout: "120s"
     strategy:
       # type is set to Recreate as we have a persistent disk attached. The
       # default of RollingUpdate would fail by getting stuck waiting for a new
@@ -325,7 +325,7 @@ grafana:
       # set under `grafana.ini` below. These two timeouts are set together
       # to allow prometheus the best chance of executing queries we care about.
       nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
-      nginx.org/proxy-read-timeout: "120"
+      nginx.org/proxy-read-timeout: 120s
       cert-manager.io/cluster-issuer: letsencrypt-prod
 
   # grafana is partially configured for GitHub authentication here, but the
