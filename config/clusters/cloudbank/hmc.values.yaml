@@ -1,0 +1,69 @@
+jupyterhub:
+  ingress:
+    hosts: [hmc.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [hmc.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  prePuller:
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image
+    hook:
+      enabled: true
+  singleuser:
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
+    homepage:
+      templateVars:
+        org:
+          name: Harvey Mudd College
+          logo_url: https://www.hmc.edu/communications/wp-content/uploads/sites/19/2023/08/College-logo-sample-1.png
+          url: https://www.hmc.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://hmc.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          https://sso.hmc.edu/idp:
+            default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - humboldt.edu
+      Authenticator:
+        admin_users:
+        - ericvd@berkeley.edu
+        - sean.smorris@berkeley.edu
+        - dodds@cs.hmc.edu
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-hmc
+
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.hmc.svc.cluster.local
