@@ -15,12 +15,12 @@ jobs:
     permissions:
       issues: write
     steps:
+    - uses: actions/checkout@v6
     - name: Get Deadline
       id: get_deadline
       run: |
         echo "deadline=$(date -d '+28 days' +'%B %d')" >> $GITHUB_ENV
         echo "deadline_as_iso_date=$(date -d '+28 days' +"%Y-%m-%d")" >> $GITHUB_ENV
-
     - name: Setup recurrent issue
       uses: ./.github/actions/setup-recurrent-issues
       with:

@@ -1,0 +1,2 @@
+git+https://github.com/2i2c-org/jupyterhub-usage-quotas@985ab1ac79e3b83ec1fd5543564347856859b0d5
+jupyterhub-fancy-profiles==0.4.1

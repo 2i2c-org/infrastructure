@@ -1,0 +1,70 @@
+# Call this reusable workflow like
+# jobs:
+#   job1:
+#     uses: ./.github/workflows/run-hub-health-check.yaml
+#     with:
+#       cluster: cluster-name
+#       hub: hub-name
+#       provider: provider
+#
+# https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows
+#
+name: Run a hub health check
+
+on:
+  workflow_call:
+    inputs:
+      cluster:
+        required: true
+        type: string
+      hub:
+        required: true
+        type: string
+      provider:
+        required: true
+        type: string
+    secrets:
+      GCP_KMS_DECRYPTOR_KEY:
+        required: true
+    outputs:
+      health_check_output:
+        value: ${{ jobs.run_health_check.outputs.output1 }}
+jobs:
+  run_health_check:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.health_check.outputs.health_check_output }}
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: true
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+    - name: Save pip's install cache on job completion
+      uses: actions/cache@v5
+      with:
+        path: ~/.cache/pip
+        key: ${{ github.run_id }}
+
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+
+    - name: Setup deploy for ${{ inputs.cluster }} cluster
+      uses: ./.github/actions/setup-deploy
+      with:
+        provider: ${{ inputs.provider }}
+        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Run health check against ${{ inputs.cluster }} ${{ inputs.hub }}
+      uses: nick-fields/retry@v3
+      id: health_check
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
+          deployer run-hub-health-check ${{ inputs.cluster }} ${{ inputs.hub }} | tee --append "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"

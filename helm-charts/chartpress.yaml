@@ -16,3 +16,9 @@ charts:
         valuesPath: jupyterhub.hub.image
         buildArgs:
           REQUIREMENTS_FILE: requirements.txt
+      usage-quotas:
+        imageName: quay.io/2i2c/jupyterhub-usage-quotas
+        buildArgs:
+          REQUIREMENTS_FILE: quotas-requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile
