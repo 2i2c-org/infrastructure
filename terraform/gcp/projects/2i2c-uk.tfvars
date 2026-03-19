@@ -17,20 +17,6 @@ core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
 notebook_nodes = {
-  # Todo: rm this node pool once there are no nodes left
-  "n2-highmem-4" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-4",
-    node_version : "1.32.1-gke.1200003",
-    taints : [
-      {
-        key : "manual-phaseout"
-        value : "noop"
-        effect : "NO_SCHEDULE"
-      }
-    ],
-  },
   "n2-highmem-4-a" : {
     min : 0,
     max : 100,
