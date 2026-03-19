@@ -9,10 +9,10 @@ budget_alert_enabled = false
 billing_account_id   = ""
 
 k8s_versions = {
-  min_master_version : "1.32.1-gke.1357001",
-  core_nodes_version : "1.32.1-gke.1357001",
-  notebook_nodes_version : "1.32.1-gke.1357001",
-  dask_nodes_version : "1.32.1-gke.1357001",
+  min_master_version : "1.34.4-gke.1130000",
+  core_nodes_version : "1.34.4-gke.1130000",
+  notebook_nodes_version : "1.34.4-gke.1130000",
+  dask_nodes_version : "1.34.4-gke.1130000",
 }
 
 # GPUs not available in us-central1-b
@@ -112,7 +112,7 @@ notebook_nodes = {
     },
   }
 
-  "n2-highmem-16-c" : {
+  "n2-highmem-16" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
     min : 1,
