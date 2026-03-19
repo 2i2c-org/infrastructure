@@ -87,31 +87,6 @@ binderhub-service:
               return [CloudLoggingHandler(client, name=log_name)]
           c.EventLogger.handlers_maker = _make_eventsink_handler
 
-ingressBasicAuth:
-  enabled: false
-  # Primarily here for validation to 'work',
-  # as these are set in secret config otherwise. I don't like this,
-  # as we won't catch these values missing if they aren't set.
-  username: ""
-  password: ""
-
-dex:
-  enabled: false
-
-staticWebsite:
-  enabled: false
-  source:
-    git:
-      branch: main
-  githubAuth:
-    enabled: false
-    githubApp:
-      # Primarily here for validation to 'work',
-      # as these are set in secret config otherwise. I don't like this,
-      # as we won't catch these values missing if they aren't set.
-      id: 0
-      privateKey: ""
-
 dask-gateway:
   enabled: false # Enabling dask-gateway will install Dask Gateway as a dependency.
   # Further Dask Gateway configuration goes here
