@@ -76,7 +76,7 @@ class Cluster:
         helm_version = subprocess.check_output(["helm", "version", "--short"]).decode().strip()
         if not helm_version.startswith("v4."):
             print(f"Minimum required version of helm is v4. Found version {helm_version}", file=sys.stderr)
-            print(f"Upgrade your version of helm and try again")
+            print("Upgrade your version of helm and try again")
             sys.exit(1)
 
         if not skip_crds:
