@@ -29,10 +29,10 @@ budget_alert_enabled = false
 billing_account_id   = ""
 
 k8s_versions = {
-  min_master_version : "1.32.1-gke.1200003",
-  core_nodes_version : "1.32.1-gke.1200003",
-  notebook_nodes_version : "1.32.1-gke.1200003",
-  dask_nodes_version : "1.32.1-gke.1200003",
+  min_master_version : "1.34.4-gke.1130000",
+  core_nodes_version : "1.34.4-gke.1130000",
+  notebook_nodes_version : "1.34.4-gke.1130000",
+  dask_nodes_version : "1.34.4-gke.1130000",
 }
 
 user_buckets = {
