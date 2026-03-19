@@ -105,7 +105,7 @@ class Hub:
                 f"Minimum required version of helm is v4. Found version {helm_version}",
                 file=sys.stderr,
             )
-            print(f"Upgrade your version of helm and try again")
+            print("Upgrade your version of helm and try again")
             sys.exit(1)
         # Support overriding domain configuration in the loaded cluster.yaml via
         # a cluster.yaml specified enc-<something>.secret.yaml file that only
