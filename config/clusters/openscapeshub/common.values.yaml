@@ -169,6 +169,7 @@ basehub:
           - NASA-Openscapes:workshopaccess-2i2c
           - NASA-Openscapes:longtermaccess-2i2c
           - NASA-Openscapes:championsaccess-2i2c
+          - NASA-Openscapes:defined-term-access-2i2c
             # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
           - nasa-openscapes-workshops:AdminTeam
           - nasa-openscapes-workshops:nasa-champions-2024
