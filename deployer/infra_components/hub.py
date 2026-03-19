@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from contextlib import ExitStack
 from pathlib import Path
-import sys
 from typing import TYPE_CHECKING
 
 from ruamel.yaml import YAML
@@ -97,9 +97,14 @@ class Hub:
         Deploy this hub
         """
         # Make sure we're on helm v4
-        helm_version = subprocess.check_output(["helm", "version", "--short"]).decode().strip()
+        helm_version = (
+            subprocess.check_output(["helm", "version", "--short"]).decode().strip()
+        )
         if not helm_version.startswith("v4."):
-            print(f"Minimum required version of helm is v4. Found version {helm_version}", file=sys.stderr)
+            print(
+                f"Minimum required version of helm is v4. Found version {helm_version}",
+                file=sys.stderr,
+            )
             print(f"Upgrade your version of helm and try again")
             sys.exit(1)
         # Support overriding domain configuration in the loaded cluster.yaml via
