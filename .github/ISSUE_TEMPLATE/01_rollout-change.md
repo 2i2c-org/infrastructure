@@ -17,10 +17,6 @@ title: "Rollout <change>"
 
 <!-- Document the process anticipated for doing the upgrade or migration. Use sufficient detail so that multiple team members could pick up and assist with the work. See https://github.com/2i2c-org/infrastructure/issues/6756 for an example -->
 
-## Validation
-
-<!-- Steps to confirm that the change or migration worked as expected> -->
-
 ## Clusters to Migrate
 
 <!-- If not all, list which clusters should be migrated -->
