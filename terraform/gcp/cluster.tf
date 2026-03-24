@@ -217,6 +217,10 @@ resource "google_container_node_pool" "core" {
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
+
+    kubelet_config {
+      single_process_oom_kill = true
+    }
   }
 }
 
@@ -352,6 +356,10 @@ resource "google_container_node_pool" "notebook" {
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
+
+    kubelet_config {
+      single_process_oom_kill = true
+    }
   }
 }
 
@@ -442,5 +450,9 @@ resource "google_container_node_pool" "dask_worker" {
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
+
+    kubelet_config {
+      single_process_oom_kill = true
+    }
   }
 }
