@@ -48,7 +48,7 @@ jobs:
         fields: Status,Unplanned,Iteration
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: In progress,Emergency,Iteration ${{ needs.compute-iteration.outputs.iteration
+        values: In progress,Emergency,Iteration ${{ needs.compute-iteration.outputs.iteration }}
         resource_url: ${{ env.tracking_issue }}
 
     - name: Create incident report issue
@@ -96,7 +96,7 @@ jobs:
         fields: Status,Unplanned,Estimate,Iteration
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: Committed,Emergency,3,Iteration ${{ needs.compute-iteration.outputs.iteration
+        values: Committed,Emergency,3,Iteration ${{ needs.compute-iteration.outputs.iteration }}
         resource_url: ${{ env.incident_report_issue }}
 
     - name: Create final review issue
@@ -142,7 +142,7 @@ jobs:
         fields: Status,Unplanned,Estimate,Iteration
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: Committed,Emergency,2,Iteration ${{ needs.compute-iteration.outputs.iteration
+        values: Committed,Emergency,2,Iteration ${{ needs.compute-iteration.outputs.iteration }}
         resource_url: ${{ env.final_review_issue }}
 
 
