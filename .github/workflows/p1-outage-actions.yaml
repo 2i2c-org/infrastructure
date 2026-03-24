@@ -10,8 +10,8 @@ jobs:
       run: |
         tracking_issue=$(gh issue create \
         --label "outage" \
-        --assignee agoose77,GeorgianaElena \
-        --title "Outage ongoing: ${{ github.event.client_payload.title }}" \
+        --assignee agoose77,GeorgianaElena,yuvipanda \
+        --title "Ongoing Outage: ${{ github.event.client_payload.title }}" \
         --body "$BODY")
         echo "tracking_issue=$tracking_issue" >> $GITHUB_ENV
       env:
@@ -21,13 +21,9 @@ jobs:
           ### Context
 
           PagerDuty has alerted us about an incident with a P1 priority.
-          The incident has the following metadata:
-          - title: ${{ github.event.client_payload.title }}
-          - incident id: ${{ github.event.client_payload.incident_id }}
-          - service: ${{ github.event.client_payload.service }}
-          - type: ${{ github.event.client_payload.type }}
-
-          Details of the incident can be found [on PagerDuty](https://2i2c-org.pagerduty.com/incidents/${{ github.event.client_payload.incident_id }}).
+          - **link**: https://2i2c-org.pagerduty.com/incidents/${{ github.event.client_payload.incident_id }}
+          - **title**: ${{ github.event.client_payload.title }}
+          - **service**: ${{ github.event.client_payload.service }}
 
           ### What we need to do
 
@@ -57,7 +53,7 @@ jobs:
         incident_report_issue=$(gh issue create \
         --label "outage" \
         --assignee agoose77,GeorgianaElena \
-        --title "Draft the incident report and action items of ${{ env.tracking_issue }}" \
+        --title "Incident report of ${{ github.event.client_payload.title }}" \
         --body "$BODY")
         echo "incident_report_issue=$incident_report_issue" >> $GITHUB_ENV
       env:
@@ -66,7 +62,8 @@ jobs:
         BODY: |
           ### Context
 
-          Draft an incident report and action items for ${{ env.tracking_issue }}
+          Write the incident report and action items for ${{ env.tracking_issue }}.
+          The second assignee should review them once they're done.
 
           ### What we need to do
 
@@ -76,10 +73,13 @@ jobs:
 
           2. Create post-incident action items following https://compass.2i2c.org/services/interactive-computing/incidents/after-incident/#create-post-incident-action-items
 
+          3. Ping the second engineer for a review of the indent report and action items
+
           ### Definition of Done
 
-          - [ ] A `Draft` PagerDuty postmortem exists
+          - [ ] An incident report for this outage exists
           - [ ] Action items that will prevent such an outage in the future exist
+          - [ ] A second pair of eyes has reviewed the report and action items
 
     - name: Sleep a bit to allow issue to be added to the board by automation
       run: sleep 3
@@ -100,8 +100,8 @@ jobs:
       run: |
         final_review_issue=$(gh issue create \
         --label "outage" \
-        --assignee aprilmj,yuvipanda \
-        --title "Review resolution and action items for ${{ env.tracking_issue }}" \
+        --assignee agoose77,GeorgianaElena,yuvipanda \
+        --title "Review the resolution of ${{ github.event.client_payload.title }}" \
         --body "$BODY")
         echo "final_review_issue=$final_review_issue" >> $GITHUB_ENV
       env:
@@ -114,18 +114,18 @@ jobs:
 
           ### What we need to do
 
-          **1. Review the action items and incident resolution**
-            - review the resolution and the action items of the ${{ env.tracking_issue }}' [PD postmortem](https://2i2c-org.pagerduty.com/postmortems)
-            - let the team know in the `#post-outage-actions` Slack channel and ask any clarifying questions
-
-          **2. Publish incident report**
+          1. **Review** the action items and incident resolution of ${{ env.tracking_issue }}: [PD postmortem list](https://2i2c-org.pagerduty.com/postmortems)
+          2. *Address the feedback**
+          3. **Mark** the postmortem as "Closed" in PD
+          4. **Publish** incident report
             - open a PR in https://github.com/2i2c-org/incident-reports if you're happy with the resolution
             - or ask another team member to do it via the #post-outage-actions Slack channel
 
           ### Definition of Done
-
+          - [ ] Report is reviewed by Team Lead
+          - [ ] Feedback is addressed
           - [ ] The PD postmortem is marked as `Closed`
-          - [ ] The postmortem was exported as a PDF and added to the https://github.com/2i2c-org/incident-reports repo
+          - [ ] The postmortem was exported as a PDF and added to the https://github.com/2i2c-org/incident-reports repository
 
     - name: Sleep a bit to allow issue to be added to the board by automation
       run: sleep 3
