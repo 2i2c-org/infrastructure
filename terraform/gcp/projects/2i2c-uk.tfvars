@@ -22,6 +22,12 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
+  "n2-highmem-4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+    single_process_oom_kill: true
+  },
   "n2-highmem-16" : {
     min : 0,
     max : 100,

@@ -86,6 +86,7 @@ variable "notebook_nodes" {
     min : number,
     max : number,
     machine_type : string,
+    single_process_oom_kill: optional(bool, null),
     labels : optional(map(string), {}),
     taints : optional(list(object({
       key : string,
