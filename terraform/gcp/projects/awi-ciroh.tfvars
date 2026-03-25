@@ -9,6 +9,8 @@ enable_logging         = false
 enable_filestore_backups = true
 filestores               = {}
 
+single_process_oom_kill = false
+
 persistent_disks = {
   "staging" = {
     size        = 165 # in GiB

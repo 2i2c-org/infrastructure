@@ -86,7 +86,6 @@ variable "notebook_nodes" {
     min : number,
     max : number,
     machine_type : string,
-    single_process_oom_kill : optional(bool, null),
     labels : optional(map(string), {}),
     taints : optional(list(object({
       key : string,
@@ -240,6 +239,15 @@ variable "core_node_max_count" {
   but large enough to support occasional spikes for whatever reason.
 
   Minimum node count is fixed at 1.
+  EOT
+}
+
+# TODO: remove once all clusters set this to true
+variable "single_process_oom_kill" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Enable single process OOM killing kubelet flag to restore cgroupv1 behaviour.
   EOT
 }
 

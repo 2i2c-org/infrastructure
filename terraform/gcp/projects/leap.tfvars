@@ -2,7 +2,8 @@ prefix     = "leap"
 project_id = "leap-pangeo"
 # core_node_machine_type is set to n2-highmem-4 instead of n2-highmem-2 because
 # prometheus requires more memory than a n2-highmem-2 can provide.
-core_node_machine_type = "n2-highmem-4"
+core_node_machine_type  = "n2-highmem-4"
+single_process_oom_kill = false
 
 # Cloud costs for this project are not passed through by 2i2c
 budget_alert_enabled = false

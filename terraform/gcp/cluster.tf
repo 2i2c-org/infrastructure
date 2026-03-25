@@ -219,7 +219,7 @@ resource "google_container_node_pool" "core" {
     tags = []
 
     kubelet_config {
-      single_process_oom_kill = true
+      single_process_oom_kill = var.single_process_oom_kill
     }
   }
 }
@@ -358,7 +358,7 @@ resource "google_container_node_pool" "notebook" {
     tags = []
 
     kubelet_config {
-      single_process_oom_kill = each.value.single_process_oom_kill
+      single_process_oom_kill = var.single_process_oom_kill
     }
   }
 }
@@ -452,7 +452,7 @@ resource "google_container_node_pool" "dask_worker" {
     tags = []
 
     kubelet_config {
-      single_process_oom_kill = true
+      single_process_oom_kill = var.single_process_oom_kill
     }
   }
 }
