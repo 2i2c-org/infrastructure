@@ -15,5 +15,5 @@ jupyterhub:
         # prod stores logs, so let's make it big
         storage: 10Gi
     config:
-      CILogonOAuthenticator:
+      GenericOAuthenticator:
         oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
