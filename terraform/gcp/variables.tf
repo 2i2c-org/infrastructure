@@ -242,6 +242,15 @@ variable "core_node_max_count" {
   EOT
 }
 
+# TODO: remove once all clusters set this to true
+variable "single_process_oom_kill" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Enable single process OOM killing kubelet flag to restore cgroupv1 behaviour.
+  EOT
+}
+
 variable "enable_network_policy" {
   type        = bool
   default     = false

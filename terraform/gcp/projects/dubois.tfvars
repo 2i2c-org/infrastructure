@@ -6,6 +6,7 @@ enable_network_policy    = true
 enable_filestore_backups = false
 core_node_machine_type   = "n2-highmem-2"
 filestores               = {}
+single_process_oom_kill  = false
 
 # Config required to enable automatic budget alerts to be sent to support@2i2c.org
 billing_account_id = "0157F7-E3EA8C-25AC3C"

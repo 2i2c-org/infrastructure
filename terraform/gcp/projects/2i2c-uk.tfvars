@@ -17,7 +17,7 @@ core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
 notebook_nodes = {
-  "n2-highmem-4-a" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",

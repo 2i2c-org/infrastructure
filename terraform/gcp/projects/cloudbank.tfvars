@@ -8,6 +8,7 @@ regional_cluster = false
 
 enable_filestore_backups = false
 filestores               = {}
+single_process_oom_kill  = false
 
 persistent_disks = {
   "ahs" = {
