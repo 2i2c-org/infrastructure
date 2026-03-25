@@ -256,13 +256,13 @@ basehub:
                 default: false
                 slug: pytorch
                 kubespawner_override:
-                  image: quay.io/pangeo/pytorch-notebook:2024.11.11
+                  image: quay.io/pangeo/pytorch-notebook:2025.12.30
               tensorflow2:
                 display_name: Pangeo Tensorflow2 ML Notebook
                 default: true
                 slug: tensorflow2
                 kubespawner_override:
-                  image: quay.io/pangeo/ml-notebook:2024.11.11
+                  image: quay.io/pangeo/ml-notebook:2025.12.30
         kubespawner_override:
           environment:
             NVIDIA_DRIVER_CAPABILITIES: compute,utility
