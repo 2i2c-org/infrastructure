@@ -41,6 +41,15 @@ basehub:
                 unit: GiB-hours
               window: 7
             intersection: max
+          policy:
+          - resource: memory
+            limit:
+              value: 250
+              unit: GiB-hours
+            window: 7
+            scope:
+              group:
+              - cpu-1
       extraConfig:
         11-enforce-usage-quotas: |
           from jupyterhub_usage_quotas.manager import SpawnException, UsageQuotaManager
