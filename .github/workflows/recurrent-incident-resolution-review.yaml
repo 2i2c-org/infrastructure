@@ -1,4 +1,4 @@
-name: 'Recurrent: Incident Resolution Review'
+name: 'Recurrent Debt: Incident Resolution Review'
 on:
   workflow_dispatch:
   schedule:
@@ -24,31 +24,21 @@ jobs:
     - name: Setup recurrent issue for incident reporting
       uses: ./.github/actions/setup-recurrent-issues
       with:
-        title: Review past outage resolution and actions
-        assignee: aprilmj,yuvipanda
+        title: Debt - review past outage resolution and actions
+        assignee: yuvipanda,agoose77,GeorgianaElena
         body: |
           ### Context
 
-          Each sprint, the Team Lead and the Engineering Manager are scheduled to review the resolution and action items of the outages that have happened **between September 1st 2025 and February 10th 2026** until we have paid out all debt.
+          Each sprint, the Team Lead is scheduled to review the resolution and action items of the outages that have happened **between September 1st 2025 and February 10th 2026** until we have paid out all debt.
 
           ### What we need to do
-
-          Choose at least one activity from the following list and follow the steps listed.
-
-          **1. Handle action items and incident resolution**
-            - review the resolution and the action items of a PD postmortem marked as [`Reviewed` in PD postmortems](https://2i2c-org.pagerduty.com/postmortems)
-            - review the resolution and the action items of an incident posted in https://github.com/2i2c-org/incident-reports in the specified period
-            - let the team know in the #post-outage-actions Slack channel and ask any clarifying questions
-
-          **2. Publish incident reports**
-            - open a PR in https://github.com/2i2c-org/incident-reports for all [PD postmortems marked as `Closed`](https://2i2c-org.pagerduty.com/postmortems)
-            - let the team know in the #post-outage-actions Slack channel and ask any clarifying questions
+          - [ ] review the resolution and the action items of a PD postmortem marked as ["Reviewed" in PD postmortems](https://2i2c-org.pagerduty.com/postmortems)
+          - [ ] let the team know either in this issue, or the #post-outage-actions Slack channel and ask any clarifying questions
 
           ### Definition of Done
+          - [ ] @yuvipanda has provided feedback to at least one PD postmortem that was in `Reviewed` state
+          - [ ] @georgianaelena or @agoose77 has addressed feedback and published the report reviewed by Yuvi
 
-          Each of the people below has taken at least one of the actions mentioned above:
-          - [ ] @aprilmj
-          - [ ] @yuvipanda
         fields: Status,Estimate,End date
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-        values: Up Next,1,${{ env.deadline_as_iso_date }}
+        values: Up Next,2,${{ env.deadline_as_iso_date }}
