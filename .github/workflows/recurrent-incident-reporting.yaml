@@ -24,12 +24,12 @@ jobs:
     - name: Setup recurrent issue for incident reporting
       uses: ./.github/actions/setup-recurrent-issues
       with:
-        title: Pay out past incident reporting debt
+        title: Debt - incident report writing
         assignee: agoose77,GeorgianaElena
         body: |
           ### Context
 
-          Each sprint, the Infrastructure Engineering team is scheduled to take the following actions, for unpublished **outages that have happened between September 1st 2025 and February 10th 2026** until we have paid out all debt:
+          Each sprint, the Infrastructure Engineering team is scheduled to take the following actions, for unpublished **outages that have happened between September 1st 2025 and February 10th 2026**, starting from the most recent ones, until we have paid out all debt:
             - handle incident reports
             - handle action items and incident resolution
             - archive outage-related Slack channels
@@ -39,12 +39,12 @@ jobs:
           Choose at least one activity from the following list and follow the steps listed.
 
           **1. Handle incident report review**
-            - review at least one of the [`Draft` incidents in PagerDuty](https://2i2c-org.pagerduty.com/postmortems), 
-            - edit it and change its status to `Reviewed` when you are done
-            - let the owner know in the #post-outage-actions Slack channel
+            - review at least one of the ["Draft" incidents in PagerDuty](https://2i2c-org.pagerduty.com/postmortems),
+            - edit it and change its status to "Reviewed" when you are done
+            - let the owner know either via the #post-outage-actions Slack channel or this issue
 
           **2. Handle incident report writing**
-            - get the list of P1 incidents by sorting [the list of incidents](https://2i2c-org.pagerduty.com/incidents?status=acknowledged%2Ctriggered%2Cresolved) based on priority (start by looking at the past two months)
+            - get the list of [P1 incidents  in a time frame](https://2i2c-org.pagerduty.com/analytics/insights/incident-activity-report/mTZF8rz8in0fluyZ2m1vjQ)
             - compare this list with the list of Postmortems
             - check which incidents do not have postmortems
             - write up any missing Incident Report and save it as a PD draft postmortem
