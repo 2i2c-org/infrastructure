@@ -1,4 +1,4 @@
-name: 'Recurrent: Incident Report Writing'
+name: 'Recurrent Debt: Incident Report Writing'
 on:
   workflow_dispatch:
   schedule:
