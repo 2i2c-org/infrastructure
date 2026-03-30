@@ -1,0 +1,34 @@
+name: 🩹 Incident Action Item
+description: File an incident report action item.
+title: '[Incident Action]: '
+labels: [incident-action-item]
+projects: [2i2c-org/57]
+body:
+- type: input
+  id: incident-report
+  attributes:
+    label: Incident Report
+    description: URL of PagerDuty postmortem or PDF report
+    placeholder: ex. https://2i2c-org.pagerduty.com/postmortems/188a9e3f-5584-6ffd-5eaa-2fec4e15d4d7
+  validations:
+    required: false
+- type: textarea
+  id: what-to-do
+  attributes:
+    label: What needs to happen?
+    description: Include any context required.
+    placeholder: Describe the incident action item!
+  validations:
+    required: true
+- type: textarea
+  id: definition-of-done
+  attributes:
+    label: What is definition of done for this item?
+    description: Include any context required.
+    placeholder: |
+      - [ ] Fix the broken things 
+    value: |
+      - [ ] 
+  validations:
+    required: true
+

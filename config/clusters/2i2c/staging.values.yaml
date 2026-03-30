@@ -1,20 +1,11 @@
-dex:
-  enabled: false
-  hubHostName: staging.2i2c.cloud
-
-staticWebsite:
-  enabled: false
-  source:
-    git:
-      repo: https://github.com/jupyter/try.jupyter.org
-      branch: gh-pages
-  ingress:
-    host: staging.2i2c.cloud
-    path: /textbook
-  githubAuth:
-    enabled: false
-
 jupyterhub:
+  scheduling:
+    userPlaceholder:
+      # Keep at least half of a spare node around
+      replicas: 0
+      resources:
+        requests:
+          memory: 16Gi
   ingress:
     hosts:
     - staging.2i2c.cloud

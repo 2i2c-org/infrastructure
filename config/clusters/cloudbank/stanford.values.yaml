@@ -1,0 +1,62 @@
+jupyterhub:
+  ingress:
+    hosts: [stanford.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [stanford.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://identity.stanford.edu/wp-content/uploads/sites/3/2020/06/wordmark-nospace-stacked-red.png
+          name: Stanford University
+          url: https://www.stanford.edu/
+  hub:
+    db:
+      pvc:
+        storageClassName: delayed-stadard-sc
+        storage: 1Gi
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://stanford.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          urn:mace:incommon:stanford.edu:
+            default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - ellianna@stanford.edu
+        - bchivers@stanford.edu
+        - btempero@stanford.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-stanford
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.stanford.svc.cluster.local

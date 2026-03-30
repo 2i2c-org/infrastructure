@@ -41,9 +41,8 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   local makeTwoServersStartupFailureAlert = function(
     summary,
     severity,
-    labels={},
                                             ) {
-    alert: 'Two servers failed to start in the last 30m',
+    alert: 'At least two servers failed to start in the last 30m',
     expr: |||
       changes(
         (
@@ -55,9 +54,11 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     |||,
     'for': '0m',
     labels: {
-      cluster: cluster_name,
+      provider: 'provider=%s' % [provider_name],
+      cluster: 'cluster=%s' % [cluster_name],
+      namespace: 'hub={{ $labels.namespace }}',
       severity: severity,
-    } + labels,
+    },
     annotations: {
       summary: summary,
     },
@@ -93,27 +94,64 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
   };
 
   local makePodRestartAlert = function(
+    pod_name,
     summary,
-    pod_name_substring,
+    pod_name_regex,
     severity,
     labels={}
                               ) {
-    alert: pod_name_substring + ' pod has restarted',
+    alert: pod_name + ' pod has restarted',
     expr: |||
       # Count total container restarts with pod name containing 'pod_name_substring'.
       # We sum by pod name (which resets after restart) and namespace, so we don't get all
       # the other labels of the metric in our alert.
         (
-              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"})
+              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~"%s"})
             -
-              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~".*%s.*"} offset 10m)
+              sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~"%s"} offset 10m)
         ) >= 1    
-    ||| % [pod_name_substring, pod_name_substring],
+    ||| % [pod_name_regex, pod_name_regex],
     'for': '5m',
     labels: {
       cluster: cluster_name,
       severity: severity,
     } + labels,
+    annotations: {
+      summary: summary,
+    },
+  };
+
+  local makePodStuckInPendingForTooLongAlert = function(
+    summary,
+    severity,
+                                               ) {
+    alert: 'Pod stuck in Pending for at least 15m',
+    expr: |||
+      max by (namespace, pod) (kube_pod_status_phase{phase="Pending"}) > 0
+    |||,
+    'for': '15m',
+    labels: {
+      cluster: cluster_name,
+      severity: severity,
+    },
+    annotations: {
+      summary: summary,
+    },
+  };
+
+  local makePodStuckInTerminatingForTooLongAlert = function(
+    summary,
+    severity,
+                                                   ) {
+    alert: 'Pod stuck in Terminating for at least 10m',
+    expr: |||
+      count(kube_pod_deletion_timestamp) by (namespace, pod) * count(kube_pod_status_reason{reason="NodeLost"} == 0) by (namespace, pod)
+    |||,
+    'for': '10m',
+    labels: {
+      cluster: cluster_name,
+      severity: severity,
+    },
     annotations: {
       summary: summary,
     },
@@ -184,6 +222,13 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                   'alertname =~ ".*failed to start.*"',
                 ],
               },
+              {
+                receiver: 'pod-stuck-in-state-pager',
+                matchers: [
+                  'cluster =~ .*',
+                  'alertname =~ ".*stuck in state.*"',
+                ],
+              },
             ],
           },
         },
@@ -237,8 +282,8 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               name: 'Server Startup Failure',
               rules: [
                 makeTwoServersStartupFailureAlert(
-                  'At least two servers have failed to start in the last hour: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
-                  'immediate action needed'
+                  'At least two servers have failed to start in the last 30m: cluster %s hub:{{ $labels.namespace }}' % [cluster_name],
+                  'immediate action needed',
                 ),
               ],
             },
@@ -246,23 +291,46 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
               name: 'Important Pod Restart',
               rules: [
                 makePodRestartAlert(
+                  'jupyterhub-cost-monitoring',
                   'jupyterhub-cost-monitoring pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                  'cost-monitoring',
+                  '.*cost-monitoring.*',
                   'action needed this week'
                 ),
                 makePodRestartAlert(
+                  'jupyterhub-groups-exporter',
                   'jupyterhub-groups-exporter pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                  'groups-exporter',
+                  '.*groups-exporter.*',
                   'action needed this week'
                 ),
                 makePodRestartAlert(
+                  'jupyterhub-home-nfs',
                   'jupyterhub-home-nfs pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                  'storage-quota-home-nfs',
+                  '^storage-quota-home-nfs.*',
                   'same day action needed'
                 ),
                 makePodRestartAlert(
-                  'support-grafana pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
                   'support-grafana',
+                  'support-grafana pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
+                  '^support-grafana.*',
+                  'action needed this week'
+                ),
+                makePodRestartAlert(
+                  'proxy',
+                  'proxy pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
+                  '^proxy.*',
+                  'immediate action needed'
+                ),
+              ],
+            },
+            {
+              name: 'Pod stuck in state for too long',
+              rules: [
+                makePodStuckInPendingForTooLongAlert(
+                  'Pod is stuck in Pending state for a suspicious long time',
+                  'action needed this week'
+                ),
+                makePodStuckInTerminatingForTooLongAlert(
+                  'Pod is stuck in Terminating state for a suspicious long time',
                   'action needed this week'
                 ),
               ],

@@ -21,13 +21,14 @@ from deployer.cli_app import validate_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
+    REPO_ROOT_PATH,
 )
 from deployer.utils.jsonnet import render_jsonnet
 from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
-HUB_CHART_PREFIX = "2i2c-custom-hub-chart"
+CUSTOM_HUB_CHART_PREFIX = "2i2c-custom-hub-chart"
 
 
 @functools.lru_cache
@@ -63,9 +64,10 @@ def _prepare_support_helm_charts_dependencies_and_schema():
 def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
     # FIXME: replace all string paths with Path objects
     hub_chart_dir = Path(hub_chart_dir)
+    cleanup_values_schema_json(hub_chart_dir)
 
     if legacy_daskub:
-        if not hub_chart_dir.name.startswith(HUB_CHART_PREFIX):
+        if not hub_chart_dir.name.startswith(CUSTOM_HUB_CHART_PREFIX):
             _generate_values_schema_json(HELM_CHARTS_DIR / "basehub")
             subprocess.check_call(["helm", "dep", "up", HELM_CHARTS_DIR / "basehub"])
     else:
@@ -154,7 +156,7 @@ def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
             # that we're copying the contents for helm-charts/basehub and not the
             # deprecated daskhub chart
             default_chart_dir = HELM_CHARTS_DIR / "basehub"
-            temp_chart_dir = tempfile.TemporaryDirectory(prefix=HUB_CHART_PREFIX)
+            temp_chart_dir = tempfile.TemporaryDirectory(prefix=CUSTOM_HUB_CHART_PREFIX)
             temp_chart_dir_name = temp_chart_dir.name
             # copy the chart directory into the temporary location
             shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)
@@ -218,31 +220,32 @@ def validate_authenticator_config(
     # If the authenticator class is github, then raise an error
     # if `Authenticator.allowed_users` is set
     if hub.authenticator == "github" and allowed_users and org_based_github_auth:
-        raise ValueError(
-            f"""
+        raise ValueError(f"""
                 Please unset `Authenticator.allowed_users` for {hub.spec["name"]} when GitHub Orgs/Teams is
                 being used for auth so valid members are not refused access.
-            """
-        )
+            """)
     elif hub.authenticator == "dummy" and admin_users != []:
-        raise ValueError(
-            f"""
+        raise ValueError(f"""
                 For security reasons, please unset `Authenticator.admin_users` for {hub.spec["name"]} when the dummy authenticator is
                 being used for authentication.
-            """
-        )
+            """)
 
 
 @validate_app.command()
 def support_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
+    debug: bool = typer.Option(False, help="Enable verbose output"),
+    skip_refresh: bool = typer.Option(
+        False,
+        help="Skip the helm dep update",
+    ),
 ):
     """
     Validates the provided non-encrypted helm chart values files for the support chart
     of a specific cluster.
     """
-    _prepare_support_helm_charts_dependencies_and_schema()
+    if not skip_refresh:
+        _prepare_support_helm_charts_dependencies_and_schema()
 
     cluster = Cluster.from_name(cluster_name)
 
@@ -274,12 +277,11 @@ def support_config(
                 # FIXME: The logic here for figuring out non secret files is not correct
                 elif "secret" not in os.path.basename(values_file):
                     cmd.append(f"--values={cluster.config_dir / values_file}")
-
-                try:
-                    subprocess.check_output(cmd, text=True)
-                except subprocess.CalledProcessError as e:
-                    print(e.stdout)
-                    sys.exit(1)
+            try:
+                subprocess.check_output(cmd, text=True)
+            except subprocess.CalledProcessError as e:
+                print(e.stdout)
+                sys.exit(1)
     else:
         print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
 
@@ -312,10 +314,8 @@ def cluster_config(
 def all_hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
-    skip_refresh: bool = typer.Option(
-        False, "--skip-refresh", help="Skip the helm dep update"
-    ),
-    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
+    skip_refresh: bool = typer.Option(False, help="Skip the helm dep update"),
+    debug: bool = typer.Option(False, help="Enable verbose output"),
 ):
     """
     Validates the provided non-encrypted helm chart values files and the
@@ -329,9 +329,13 @@ def all_hub_config(
     for i, hub in enumerate(hubs):
         default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
         chart_override = hub.spec.get("chart_override", None)
-        chart_override_path = (
-            hub.cluster.config_dir / chart_override if chart_override else None
-        )
+        if chart_override and "/" in chart_override:
+            chart_override_path = REPO_ROOT_PATH / chart_override
+            chart_override = chart_override.split("/")[-1]
+        else:
+            chart_override_path = (
+                hub.cluster.config_dir / chart_override if chart_override else None
+            )
         with get_chart_dir(
             default_chart_dir, chart_override, chart_override_path
         ) as chart_dir:

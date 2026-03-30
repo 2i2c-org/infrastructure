@@ -11,10 +11,10 @@ k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
-  min_master_version : "1.32.1-gke.1357001",
-  core_nodes_version : "1.32.1-gke.1357001",
-  notebook_nodes_version : "1.32.1-gke.1357001",
-  dask_nodes_version : "1.32.1-gke.1357001",
+  min_master_version : "1.34.1-gke.3971001",
+  core_nodes_version : "1.34.1-gke.3971001",
+  notebook_nodes_version : "1.34.1-gke.3971001",
+  dask_nodes_version : "1.34.1-gke.3971001",
 }
 
 core_node_machine_type = "n2-highmem-4"
@@ -35,14 +35,6 @@ persistent_disks = {
   "mtu" = {
     size        = 75 # in GB
     name_suffix = "mtu"
-  },
-  "ucmerced-staging" = {
-    size        = 10 # in GB
-    name_suffix = "ucmerced-staging"
-  },
-  "ucmerced" = {
-    size        = 250 # in GB
-    name_suffix = "ucmerced"
   }
 }
 
@@ -51,22 +43,6 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
-  },
-  "n2-highmem-8-ucmerced" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-8",
-    labels : {
-      "2i2c.org/hub-name" : "ucmerced"
-    },
-    taints : [{
-      key : "2i2c.org/hub-name",
-      value : "ucmerced",
-      effect : "NO_SCHEDULE",
-    }],
-    resource_labels : {
-      "hub-name" : "ucmerced",
-    },
   },
   "n2-highmem-16" : {
     min : 0,
@@ -77,7 +53,7 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-  },
+  }
 }
 
 # Setup a single node pool for dask workers.

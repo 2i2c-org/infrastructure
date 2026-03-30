@@ -70,6 +70,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - uses: actions/setup-python@v6
       with:
@@ -81,7 +83,7 @@ jobs:
         # this job is re-attempted as part of the same workflow run after
         # succeeding previously.
     - name: Save pip's install cache on job completion
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.cache/pip
         key: ${{ github.run_id }}
@@ -165,7 +167,7 @@ jobs:
         (steps.generate-jobs.outputs.support-jobs != '[]' ||
         steps.generate-jobs.outputs.staging-jobs != '[]' ||
         steps.generate-jobs.outputs.prod-jobs != '[]')
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: pr
         path: |
@@ -213,8 +215,6 @@ jobs:
       failure_aimatx-2i2c-hub: ${{ steps.declare-failure.outputs.failure_aimatx-2i2c-hub }}
       failure_awi-ciroh: ${{ steps.declare-failure.outputs.failure_awi-ciroh }}
       failure_bnext-bio: ${{ steps.declare-failure.outputs.failure_bnext-bio }}
-      failure_catalystproject-africa: ${{ steps.declare-failure.outputs.failure_catalystproject-africa }}
-      failure_catalystproject-latam: ${{ steps.declare-failure.outputs.failure_catalystproject-latam }}
       failure_cloudbank: ${{ steps.declare-failure.outputs.failure_cloudbank }}
       failure_disasters: ${{ steps.declare-failure.outputs.failure_disasters }}
       failure_dubois: ${{ steps.declare-failure.outputs.failure_dubois }}
@@ -233,12 +233,10 @@ jobs:
       failure_reflective: ${{ steps.declare-failure.outputs.failure_reflective }}
       failure_smithsonian: ${{ steps.declare-failure.outputs.failure_smithsonian }}
       failure_strudel: ${{ steps.declare-failure.outputs.failure_strudel }}
-      failure_ubc-eoas: ${{ steps.declare-failure.outputs.failure_ubc-eoas }}
       failure_utoronto: ${{ steps.declare-failure.outputs.failure_utoronto }}
       failure_victor: ${{ steps.declare-failure.outputs.failure_victor }}
       failure_berkeley_geojupyter: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter }}
       failure_temple: ${{ steps.declare-failure.outputs.failure_temple }}
-      failure_oceanhackweek: ${{ steps.declare-failure.outputs.failure_oceanhackweek }}
 
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -251,6 +249,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
       uses: ./.github/actions/setup-deploy
@@ -456,8 +456,6 @@ jobs:
       failure_aimatx-2i2c-hub_staging: ${{ steps.declare-failure.outputs.failure_aimatx-2i2c-hub_staging }}
       failure_awi-ciroh_staging: ${{ steps.declare-failure.outputs.failure_awi-ciroh_staging }}
       failure_bnext-bio_staging: ${{ steps.declare-failure.outputs.failure_bnext-bio_staging }}
-      failure_catalystproject-africa_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-africa_staging }}
-      failure_catalystproject-latam_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-latam_staging }}
       failure_cloudbank_staging: ${{ steps.declare-failure.outputs.failure_cloudbank_staging }}
       failure_dubois_staging: ${{ steps.declare-failure.outputs.failure_dubois_staging }}
       failure_disasters_staging: ${{ steps.declare-failure.outputs.failure_disasters_staging }}
@@ -476,16 +474,16 @@ jobs:
       failure_reflective_staging: ${{ steps.declare-failure.outputs.failure_reflective_staging }}
       failure_smithsonian_staging: ${{ steps.declare-failure.outputs.failure_smithsonian_staging }}
       failure_strudel_staging: ${{ steps.declare-failure.outputs.failure_strudel_staging }}
-      failure_ubc-eoas_staging: ${{ steps.declare-failure.outputs.failure_ubc-eoas_staging }}
       failure_utoronto_staging: ${{ steps.declare-failure.outputs.failure_utoronto_staging }}
       failure_utoronto_r-staging: ${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
       failure_berkeley_geojupyter_staging: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter_staging }}
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
-      failure_oceanhackweek_staging: ${{ steps.declare-failure.outputs.failure_oceanhackweek_staging }}
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
@@ -624,6 +622,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy

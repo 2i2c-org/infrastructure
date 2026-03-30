@@ -23,7 +23,7 @@ Setup your environment:
 export CLUSTER_NAME=<cluster-name>
 cd terraform/gcp
 terraform init
-terraforam workspace select $CLUSTER_NAME
+terraform workspace select $CLUSTER_NAME
 ```
 
 ### Zonal vs. regional clusters
@@ -70,5 +70,29 @@ The process for upgrading the worker node pools is very similar to that for [upg
 First, upgrade the core node pool by updating the `core_nodes_version` variable in the `k8s_versions` block of the cluster's `.tfvars` file, and plan and apply the changes.
 
 Then upgrade the server node pools by updating the `notebook_node_version` variable, and the `dask_nodes_version` variable if present, and plan and apply the changes.
+
+````{note}
+Normally we don't want to drain user nodes. As such, the best strategy _for now_ is to create a new node pool that will run the new k8s version. The existing nodepool should have the following changes:
+```
+notebook_nodes = {
+  # ...
+  "my-existing-nodepool-name" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+    node_version : "<OLD-GKE-VERSION>",
+    taints : [
+      # Prevent new pods from scheduling here.
+      {
+        key : "manual-phaseout"
+        value : "noop"
+        effect : "NO_SCHEDULE"
+      }
+    ],
+  },
+}
+```
+In future, we might want to look at using the autoscaled blue-green strategy to handle this process automatically: https://docs.cloud.google.com/kubernetes-engine/docs/concepts/node-pool-upgrade-strategies#autoscaled-blue-green-upgrade-strategy
+````
 
 Unlike with the control plane, you can jump straight from the current version to the desired version.

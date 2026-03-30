@@ -1,8 +1,4 @@
 jupyterhub:
-  singleuser:
-    image:
-      name: quay.io/2i2c/utoronto-image
-      tag: fbad32f53fb4
   ingress:
     hosts: [staging.utoronto.2i2c.cloud]
     tls:
@@ -10,8 +6,9 @@ jupyterhub:
       secretName: https-auto-tls
   hub:
     config:
-      CILogonOAuthenticator:
+      GenericOAuthenticator:
         oauth_callback_url: https://staging.utoronto.2i2c.cloud/hub/oauth_callback
+
     db:
       pvc:
         # limit was increased because of https://github.com/2i2c-org/infrastructure/issues/2288

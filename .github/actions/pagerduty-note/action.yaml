@@ -1,0 +1,29 @@
+name: Leave a note to a PD incident
+
+inputs:
+  token:
+    required: true
+    default: ${{ secrets.PD_TOKEN }}
+  incident_id:
+    required: true
+  note_content:
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - name: Leave a note to the incident
+    run: |
+      curl --request POST \
+        --url https://api.pagerduty.com/incidents/${{ inputs.incident_id }}/notes \
+        --header "Accept: application/json" \
+        --header "Authorization: Token token=${{ inputs.token }}" \
+        --header "Content-Type: application/json" \
+        --header "From: " \
+        --data '{
+        "note": {
+          "content": "${{ inputs.note_content }}"
+        }
+      }'
+      echo "issue=$issue" >> $GITHUB_ENV
+    shell: bash

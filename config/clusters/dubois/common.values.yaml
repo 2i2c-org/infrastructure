@@ -46,6 +46,7 @@ jupyterhub:
               display_name: Du Bois Jupyter Notebook
               kubespawner_override:
                 image: quay.io/highereddata/du-bois-stem:latest
+                image_pull_policy: Always
           unlisted_choice:
             enabled: true
             display_name: Custom image

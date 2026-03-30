@@ -32,6 +32,25 @@ grafana:
       hosts:
       - grafana.bnext-bio.2i2c.cloud
 
+
+nginx-ingress:
+  enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress
+
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
@@ -48,6 +67,6 @@ nvidiaDevicePlugin:
 redirects:
   rules:
   - from: staging.bnext-bio.2i2c.cloud
-    to: staging.beta-hub.nucleus.engineering
+    to: staging.hub.nucleus.engineering
   - from: bnext-bio.2i2c.cloud
-    to: beta-hub.nucleus.engineering
+    to: hub.nucleus.engineering

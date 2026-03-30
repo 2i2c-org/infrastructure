@@ -1,0 +1,66 @@
+name: Scale user placeholders
+on:
+  workflow_dispatch:
+    inputs:
+      cluster:
+        description: Name of cluster
+        required: true
+      hub:
+        description: Name of cluster
+        required: true
+      replicas:
+        description: Number of placeholders
+        required: true
+
+jobs:
+  create-scale-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-go@v6
+
+          # There will almost never be a cache hit on the cache key when this job is
+          # run, as it is the first of all jobs in this workflow. An exception is if
+          # this job is re-attempted as part of the same workflow run after
+          # succeeding previously.
+    - name: Setup Git
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '22'
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+    - name: Install deployer
+      run: |
+        python3 -m pip install -e .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+    - name: Apply scale-change
+      run: |
+        deployer generate replicas ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
+    - name: Commit change
+      run: |
+        # Store branch name
+        branch_name="placeholders/scale-${{github.event.inputs.cluster}}-${{github.event.inputs.hub}}-${{github.event.inputs.replicas}}-${GITHUB_SHA}"
+
+        # Switch to branch
+        git switch -c "${branch_name}"
+
+        # Add changes in config/clusters of existing tracked files
+        git add -u config/clusters
+        git commit -m "Scale placeholders to ${{ github.event.inputs.replicas }} for ${{ github.event.inputs.cluster }}/${{ github.event.inputs.hub }}"
+
+        # Push upstream
+        git push --set-upstream origin "${branch_name}"
+    - name: Create PR
+      run: |
+        gh pr create \
+          --title "[${{ github.event.inputs.cluster }}, ${{github.event.inputs.hub }}] Scale placeholders to ${{ github.event.inputs.replicas }}" \
+          --body "This change was performed by a GitHub workflow."
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

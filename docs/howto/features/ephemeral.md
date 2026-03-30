@@ -63,14 +63,15 @@ jupyterhub:
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
-      extraVolumeMounts: []
+      extraVolumeMounts:
   singleuser:
     initContainers: []
     storage:
       # No persistent storage should be kept to reduce any potential data
       # retention & privacy issues.
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
+      extraVolumes:
 ```
 
 ## (Optional) Sharing `shared` directories from another hub with an ephemeral hub
@@ -128,20 +129,14 @@ ephemeral hub's users.
          # We still don't want to have per-user storage
          type: none
          extraVolumes:
-           # We include the dev-shm extraVolume as the list of extraVolumes from base hub will be overwritten
-           - name: dev-shm
-             emptyDir:
-               medium: Memory
-           - name: shared-dir-pvc
+           1-shared-dir-volume:
+             name: shared-dir-pv
              persistentVolumeClaim:
-               # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
                claimName: home-nfs
          extraVolumeMounts:
-           # We include the dev-shm extraVolumeMount as the list of extraVolumeMounts from base hub will be overwritten
-           - name: dev-shm
-             mountPath: /dev/shm
-           - name: shared-dir-pvc
-             mountPath: /home/jovyan/shared
+           1-shared-readonly-volumemount:
+             name: shared-dir-pv
+             mountPath: /home/jovyan/shared-readonly
              subPath: _shared
              readOnly: true
    ```
@@ -220,61 +215,3 @@ link generator. [Firefox](https://addons.mozilla.org/en-US/firefox/addon/nbgitpu
 and [Google Chrome](https://chrome.google.com/webstore/detail/nbgitpuller-link-generato/hpdbdpklpmppnoibabdkkhnfhkkehgnc)
 extensions are also available.
 
-
-## (Optional) Shared systemwide password setup
-
-Optionally, in addition to the cryptnono setup documented above, a shared
-password may be used as additional protection to guard against random cryptobros
-abusing using our systems for 'free' compute. This password is same for all
-users, and can be shared by the community champions of the hub in whatever form
-they wish.
-
-This requires two bits of config - one in the `<hub>.values.yaml` file for the hub,
-and another in the `enc-<hub>.secret.values.yaml` file.
-
-In `<hub>.values.yaml`:
-
-```yaml
-ingressBasicAuth:
-  enabled: true
-
-jupyterhub:
-  ingress:
-    annotations:
-      # We protect our entire hub from cryptobros by putting it all
-      # behind a single shared basicauth
-      nginx.ingress.kubernetes.io/auth-type: basic
-      nginx.ingress.kubernetes.io/auth-secret: ingress-basic-auth
-      nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
-```
-
-In `enc-<hub>.secret.values.yaml`:
-```yaml
-ingressBasicAuth:
-  username: <username>
-  password: <password>
-```
-
-```{tip}
-Pick a *passphrase* for the password, like [the holy book says](https://xkcd.com/936/).
-```
-
-```{note}
-Make sure the `enc-<hub>.secret.values.yaml` is encrypted via [sops](tools:sops)
-```
-
-### Customizing the uptime check to expect a HTTP `401`
-
-Our [uptime checks](uptime-checks) expect a HTTP `200` response to consider a
-hub as live. However, since we protect the entire hub at the Ingress level,
-all endpoints will return a HTTP `401` asking for a password. We can configure
-our uptime checks to allow for `401` as a valid response in the appropriate
-`cluster.yaml` definition for this hub.
-
-```yaml
-  - name: <name-of-hub>
-    display_name: <display-name>
-    uptime_check:
-      # This is an ephemeral hub, fully password protected with HTTP Basic Auth
-      expected_status: 401
-```

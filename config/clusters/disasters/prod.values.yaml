@@ -2,6 +2,10 @@ nfs:
   pv:
     serverIP: 10.100.150.169
 
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::515966502221:role/disasters-prod
+
 jupyterhub:
   singleuser:
     nodeSelector:
@@ -12,8 +16,6 @@ jupyterhub:
         oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
       GenericOAuthenticator:
         oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
-        token_url: https://auth.openveda.cloud//realms/veda/protocol/openid-connect/token
-        authorize_url: https://auth.openveda.cloud/realms/veda/protocol/openid-connect/auth
   ingress:
     hosts: [hub.disasters.2i2c.cloud]
     tls:

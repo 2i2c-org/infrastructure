@@ -15,7 +15,7 @@ basehub:
   jupyterhub:
     custom:
       singleuserAdmin:
-        extraVolumeMounts: []
+        extraVolumeMounts:
       homepage:
         gitRepoBranch: unify-logins-2
     ingress:
@@ -25,7 +25,8 @@ basehub:
         secretName: https-auto-tls
     singleuser:
       storage:
-        extraVolumeMounts: []
+        extraVolumeMounts:
+        extraVolumes:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable

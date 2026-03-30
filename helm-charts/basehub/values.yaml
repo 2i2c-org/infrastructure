@@ -12,6 +12,7 @@ binderhub-service:
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      nginx.org/client-max-body-size: 256m
       cert-manager.io/cluster-issuer: letsencrypt-prod
   nodeSelector:
     hub.jupyter.org/node-purpose: core
@@ -85,31 +86,6 @@ binderhub-service:
               get_logger().info(f"Sending logs of launch events to a 2i2c managed GCP project {client.project} under log name {log_name}.")
               return [CloudLoggingHandler(client, name=log_name)]
           c.EventLogger.handlers_maker = _make_eventsink_handler
-
-ingressBasicAuth:
-  enabled: false
-  # Primarily here for validation to 'work',
-  # as these are set in secret config otherwise. I don't like this,
-  # as we won't catch these values missing if they aren't set.
-  username: ""
-  password: ""
-
-dex:
-  enabled: false
-
-staticWebsite:
-  enabled: false
-  source:
-    git:
-      branch: main
-  githubAuth:
-    enabled: false
-    githubApp:
-      # Primarily here for validation to 'work',
-      # as these are set in secret config otherwise. I don't like this,
-      # as we won't catch these values missing if they aren't set.
-      id: 0
-      privateKey: ""
 
 dask-gateway:
   enabled: false # Enabling dask-gateway will install Dask Gateway as a dependency.
@@ -387,18 +363,12 @@ jupyterhub:
     singleuserAdmin:
       extraEnv: {}
       extraVolumeMounts:
-        # IMPORTANT: What is added to this list is copied to other locations
-        #            that wants to add an element to this list. This is done
-        #            because when Helm config files are merged, lists get
-        #            replaced rather than appended. So, if this is to be
-        #            updated, we should update all those copies as well. An easy
-        #            to way find such copies is to search for "singleuserAdmin:"
-        #            in this repo.
-        #
-        - name: home
+        001-shared-readwrite-volumemount:
+          name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
-        - name: home
+        002-shared-readwrite-rstudio-volumemount:
+          name: home
           mountPath: /home/rstudio/shared-readwrite
           subPath: _shared
     2i2c:
@@ -437,6 +407,11 @@ jupyterhub:
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      nginx.org/client-max-body-size: 256m
+      # Handle websocket upgrades in nginx-ingress
+      nginx.org/location-snippets: |
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
       cert-manager.io/cluster-issuer: letsencrypt-prod
   scheduling:
     # We declare matchNodePurpose=require to get a nodeAffinity like a
@@ -755,17 +730,19 @@ jupyterhub:
         pvcName: home-nfs
         subPath: "{escaped_username}"
       extraVolumes:
-        - name: dev-shm
+        001-shm-volume:
+          name: dev-shm
           emptyDir:
             medium: Memory
       extraVolumeMounts:
-        - name: home
+        001-shm-volumemount:
+          name: dev-shm
+          mountPath: /dev/shm
+        002-shared-volumemount:
+          name: home
           mountPath: /home/jovyan/shared
           subPath: _shared
           readOnly: true
-        - name: dev-shm
-          mountPath: /dev/shm
-
         # For all pods, mount home in both /home/jovyan (done via singleuser.storage.static)
         # as well as /home/rstudio. This allows rocker images (which use the
         # rstudio user and put home in /home/rstudio) to be first class citizens
@@ -776,10 +753,12 @@ jupyterhub:
         # end up accidentally hardcoding paths in their notebooks, it will continue to work
         # regardless of whether they or on RStudio or JupyterLab (described to us as a serious
         # problem by openscapes)
-        - name: home
+        003-rstudio-volumemount:
+          name: home
           mountPath: /home/rstudio
           subPath: "{escaped_username}"
-        - name: home
+        004-rstudio-shared-volumemount:
+          name: home
           mountPath: /home/rstudio/shared
           subPath: _shared
           readOnly: true
@@ -1059,7 +1038,7 @@ jupyterhub:
         - groups
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.14004.h556ee4be8"
+      tag: "0.0.1-0.dev.git.14928.he0b95cbd6"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -1266,7 +1245,7 @@ jupyterhub:
 
         def modify_pod_hook(spawner, pod):
             """
-            Modify admin user's pod manifests based on *list* config under
+            Modify admin user's pod manifests based on *dict* config under
             `jupyterhub.custom.singleuserAdmin`.
 
             This hook is required to ensures that list config under
@@ -1290,7 +1269,9 @@ jupyterhub:
               else:
                   raise Exception("No container named 'notebook' found in pod definition")
 
-              admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+              admin_volume_mounts = custom_admin.get('extraVolumeMounts', {})
+              # custom.singleuserAdmin.extraVolumeMounts is a dict now
+              admin_volume_mounts = list(admin_volume_mounts.values())
               notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
 
             # Setup iptables blocking for everyone
@@ -1622,6 +1603,17 @@ jupyterhub:
         elif c.JupyterHub.authenticator_class == "github":
           print("No GitHubOAuthenticator.allowed_organizations found, setting to ['2i2c-org:hub-access-for-2i2c-staff']")
           c.GitHubOAuthenticator.allowed_organizations = ["2i2c-org:hub-access-for-2i2c-staff"]
+      10-skip_refresh_for_test_user.py: |
+        def refresh_user_hook(authenticator, user, auth_state):
+            if user.name == "deployment-service-check":
+                # if this is the user,
+                # refresh_user doesn't make sense
+                # consider it always fresh
+                return True
+            # for all other users, refresh as usual
+            return None
+
+        c.OAuthenticator.refresh_user_hook = refresh_user_hook
 
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |

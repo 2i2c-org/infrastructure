@@ -1,5 +1,25 @@
 (upgrade-k8s-cluster:azure)=
+
 # Upgrade Kubernetes cluster on Azure
+
+````{warning}
+At present, it's not trivial to run `terraform` commands on engineer's machines due to https://github.com/2i2c-org/infrastructure/issues/890.
+
+A workaround is to temporarily add the engineer's external IP address to the allow-list of the storage share. A deployer command exists to make this easier.
+
+Instead of
+```bash
+terraform plan projects/$CLUSTER_NAME.tfvars
+```
+prefix the command with the following deployer command:
+```bash
+deployer exec az with-storage-rule \
+  <SHARE-NAME> <IP-ADDRESS> -- \
+  terraform plan projects/$CLUSTER_NAME.tfvars
+```
+This will temporarily establish an exception for your public IP. This should only be performed if your external IP address is unique to your network.
+
+````
 
 ## Cluster upgrade
 

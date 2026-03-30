@@ -16,9 +16,9 @@ charts:
         valuesPath: jupyterhub.hub.image
         buildArgs:
           REQUIREMENTS_FILE: requirements.txt
-      pkce-experiment:
-        imageName: quay.io/2i2c/pkce-experiment
+      usage-quotas:
+        imageName: quay.io/2i2c/jupyterhub-usage-quotas
         buildArgs:
-          REQUIREMENTS_FILE: pkce-requirements.txt
+          REQUIREMENTS_FILE: quotas-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile

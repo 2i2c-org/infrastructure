@@ -9,9 +9,11 @@ enable_logging         = false
 enable_filestore_backups = true
 filestores               = {}
 
+single_process_oom_kill = false
+
 persistent_disks = {
   "staging" = {
-    size        = 120 # in GiB
+    size        = 165 # in GiB
     name_suffix = "staging"
   }
   "prod" = {
@@ -29,10 +31,10 @@ budget_alert_enabled = false
 billing_account_id   = ""
 
 k8s_versions = {
-  min_master_version : "1.32.1-gke.1200003",
-  core_nodes_version : "1.32.1-gke.1200003",
-  notebook_nodes_version : "1.32.1-gke.1200003",
-  dask_nodes_version : "1.32.1-gke.1200003",
+  min_master_version : "1.34.4-gke.1130000",
+  core_nodes_version : "1.34.4-gke.1130000",
+  notebook_nodes_version : "1.34.4-gke.1130000",
+  dask_nodes_version : "1.34.4-gke.1130000",
 }
 
 user_buckets = {
@@ -84,6 +86,14 @@ notebook_nodes = {
       type : "nvidia-tesla-t4",
       count : 1,
     },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
 }
 

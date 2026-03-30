@@ -1,0 +1,35 @@
+name: 'Recurrent: Support work'
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: 0 5 * * 3
+
+jobs:
+  compute-week:
+    uses: ./.github/workflows/is-this-sprint-week.yaml
+
+  create-issue:
+    if: ${{ needs.compute-week.outputs.valid_week == 'True' }}
+    needs: compute-week
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - uses: actions/checkout@v6
+    - name: Get Deadline
+      id: get_deadline
+      run: |
+        echo "deadline=$(date -d '+28 days' +'%B %d')" >> $GITHUB_ENV
+        echo "deadline_as_iso_date=$(date -d '+28 days' +"%Y-%m-%d")" >> $GITHUB_ENV
+    - name: Setup recurrent issue
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        label: support
+        title: '[${{ env.deadline }}] Support'
+        body: |
+          ### Context
+
+          Includes triage and a <30 min support timebox per person per day.
+        fields: Status,Estimate,End date
+        values: Up Next,5,${{ env.deadline_as_iso_date }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}

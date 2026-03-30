@@ -42,7 +42,12 @@ jupyterhub:
         # Set for us by Keycloak
         admin_users: []
         enable_auth_state: true
+        # Disable for now the authentication token refreshing
+        # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
+        auth_refresh_age: 0
       GenericOAuthenticator:
+        token_url: https://auth.openveda.cloud/realms/disasters/protocol/openid-connect/token
+        authorize_url: https://auth.openveda.cloud/realms/disasters/protocol/openid-connect/auth
         # We want to get user data from the JWT that's the id token,
         # not from a separate userdata API call
         userdata_from_id_token: true
@@ -73,27 +78,16 @@ jupyterhub:
     defaultUrl: /lab
     storage:
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/rstudio/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
-      - name: dev-shm
-        mountPath: /dev/shm
-      - name: home
-        mountPath: /home/rstudio
-        subPath: '{escaped_username}'
-      - name: home
-        mountPath: /home/rstudio/shared
-        subPath: _shared
-        readOnly: true
+        01-shared-public-volumemount:
+          name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        02-shared-public-rstudio-volumemount:
+          name: home
+          mountPath: /home/rstudio/shared-public
+          subPath: _shared-public
+          readOnly: false
     profileList:
     - display_name: Choose your environment and resources
       default: true
@@ -115,7 +109,7 @@ jupyterhub:
               display_name: Modified Pangeo Notebook
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
-                image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.08.14-v2
+                image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.12.30-v1
                 init_containers:
                 # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                 # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
@@ -263,13 +257,13 @@ jupyterhub:
               default: false
               slug: pytorch
               kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2024.11.11
+                image: quay.io/pangeo/pytorch-notebook:2025.12.30
             tensorflow2:
               display_name: Pangeo Tensorflow2 ML Notebook
               default: true
               slug: tensorflow2
               kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2024.11.11
+                image: quay.io/pangeo/ml-notebook:2025.12.30
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility

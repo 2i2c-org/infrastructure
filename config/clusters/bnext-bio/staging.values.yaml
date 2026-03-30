@@ -8,16 +8,16 @@ userServiceAccount:
 
 jupyterhub:
   ingress:
-    hosts: [staging.beta-hub.nucleus.engineering]
+    hosts: [staging.hub.nucleus.engineering]
     tls:
-    - hosts: [staging.beta-hub.nucleus.engineering]
+    - hosts: [staging.hub.nucleus.engineering]
       secretName: https-auto-tls
   hub:
     config:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://staging.beta-hub.nucleus.engineering/hub/oauth_callback
+        oauth_callback_url: https://staging.hub.nucleus.engineering/hub/oauth_callback
   singleuser:
     profileList:
     - display_name: Choose your environment and resources

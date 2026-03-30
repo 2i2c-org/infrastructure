@@ -1,0 +1,21 @@
+jupyterhub:
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: generic-oauth
+      GenericOAuthenticator:
+        token_url: https://utoronto-dev.instructure.com/login/oauth2/token
+        userdata_url: https://utoronto-dev.instructure.com/api/v1/users/self/profile
+        authorize_url: https://utoronto-dev.instructure.com/login/oauth2/auth
+        username_claim: sis_user_id
+        scope:
+        - url:GET|/api/v1/users/:user_id/profile
+        - url:GET|/api/v1/users/self/groups
+        - url:GET|/api/v1/courses
+        admin_users:
+        - holla162
+        - pandayuv
+        - elenageo
+        - wonj202
+        - grahamj
+        - huaani1

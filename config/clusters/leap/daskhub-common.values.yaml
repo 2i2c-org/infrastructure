@@ -25,17 +25,9 @@ basehub:
       # Ref https://github.com/2i2c-org/infrastructure/issues/2105
       singleuserAdmin:
         extraVolumeMounts:
-        - name: home
-          mountPath: /home/jovyan/allusers
-          # mounts below are copied from basehub's values that we override by
-          # specifying extraVolumeMounts (lists get overridden when helm values
-          # are combined)
-        - name: home
-          mountPath: /home/jovyan/shared-readwrite
-          subPath: _shared
-        - name: home
-          mountPath: /home/rstudio/shared-readwrite
-          subPath: _shared
+          01-allusers-volumemount:
+            name: home
+            mountPath: /home/jovyan/allusers
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: github
@@ -44,7 +36,7 @@ basehub:
           org:
             name: LEAP
             url: https://leap-stc.github.io
-            logo_url: https://leap-stc.github.io/_static/LEAP_logo.png
+            logo_url: https://raw.githubusercontent.com/leap-stc/leap-stc.github.io/refs/heads/main/docs/assets/NSF_LEAP_joint_logo.svg
           designed_by:
             name: 2i2c
             url: https://2i2c.org

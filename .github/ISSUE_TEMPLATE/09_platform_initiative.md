@@ -2,7 +2,7 @@
 name: New Platform Initiative
 about: Platform Initiative template for the P&S Board
 title: Initiative name in GitHub issue
-labels:
+labels: ''
 assignees: ''
 
 ---

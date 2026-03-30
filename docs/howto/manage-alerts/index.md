@@ -86,6 +86,17 @@ To resolve the alert:
 
 Any time two consecutive spawns fail in a 30m time window, we trigger an alert. This alert doesn't have a severity lever or a priority level set on it by default because it can be anything. This is why is best to investigate these ASAP.
 
+There is additional automation that runs each time an alert like this is triggered. The automation triggers a [GitHub workflow](https://github.com/2i2c-org/infrastructure/blob/main/.github/workflows/pd-triggered-health-check.yaml) that runs a health check for the alerting cluster and hub.
+- A note with the status of this run is left in the PagerDuty incident
+- In addition, if the health check succeeds, the incident is resolved and a message with this status is posted in the `#pagerduty-notifications` Slack channel
+- If the health check fails, then a message, mentioning the channel members, is posted in the `#pagerduty-notifications` Slack channel
+
+#### To resolve the alert:
+1. Check if you can spawn a server on that cluster and hub. If not, then is most likely an outage an you must set the P1 priority on this alert and follow the incident response process for outages.
+2. If you can spawn a server, then this is most likely not an outage. But check the list of possible causes above and find the one that matches what you're seeing in the logs.
+  - If logs are not available or not proving any useful info, then you can manually resolve the alert in PD as a mystery. It will likely come back if there's an underlying issue and a pair of eyes will be available to investigate.
+  - If the logs seem suspicious but you cannot put your finger on the issue, then open a tracking GitHub issue to be discussed with the rest of the engineering team.
+
 The causes for this can be varied, and it always requires investigation. Some common causes are:
 1. Node was too slow to spin up. This may be transient - test again, and if this works, it's fine.
 2. The user may try to bring their own image and that image is not available or buggy in some way. There is not much we can do here.
@@ -94,13 +105,6 @@ The causes for this can be varied, and it always requires investigation. Some co
 5. There is not enough quota in the cloud project for node spin up to happen. Check the cloud console to see if this is the case, and request additional quota.
 6. There is a cloud provider outage. Check out their status page.
 7. A mysterious 7th option. Form a mental model of our infrastructure, and poke around. If you find any useful info, 
-
-To resolve the alert:
-1. Check if you can spawn a server on that cluster and hub. If not, then is most likely an outage an you must set the P1 priority on this alert and follow the incident response process for outages.
-2. If you can spawn a server, then this is most likely not an outage. But check the list of possible causes above and find the one that matches what you're seeing in the logs.
-  - If logs are not available or not proving any useful info, then you can manually resolve the alert in PD as a mystery. It will likely come back if there's an underlying issue and a pair of eyes will be available to investigate.
-  - If the logs seem suspicious but you cannot put your finger on the issue, then open a tracking GitHub issue to be discussed with the rest of the engineering team.
-
 
 ## How to get useful information about an alert
 

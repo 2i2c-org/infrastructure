@@ -85,9 +85,7 @@ import os
 import subprocess
 
 # -- Custom scripts -----------------------------------------
-subprocess.run(
-    ["python", "helper-programs/generate-general-info-table-about-hubs.py"], check=True
-)
+subprocess.run(["python", "-m", "helper_programs.hub_info_table"], check=True)
 
 # -- Set canonical custom domain via html_baseurl -----------
 # -- See https://github.com/2i2c-org/infrastructure/issues/4629

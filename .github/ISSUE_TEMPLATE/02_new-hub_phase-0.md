@@ -1,9 +1,12 @@
 ---
-name: "New Hub Turnup Phase 0 - Partnership/Engineering sync chat"
-about: |
-  If partnerships need a conversation with an engineer to help with filling out
-  the other phases, they should open this type of issue to trigger that process.
-title: "[New Hub] [Due by: {{date}}] [Spike: 30mins] Sync chat to refine phases - {{community_name}}"
+name: New Hub Turnup Phase 0 - Partnership/Engineering sync chat
+about: If partnerships need a conversation with an engineer to help with filling outthe
+  other phases, they should open this type of issue to trigger that process.
+title: "[New Hub] [Due by: {{date}}] [Spike: 30mins] Sync chat to refine phases -
+  {{community_name}}"
+labels: ''
+assignees: ''
+
 ---
 
 This issue is to be used when Partnerships require some engineering assistance to refine the requirements for an upcoming new hub deployment.

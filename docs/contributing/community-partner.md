@@ -51,6 +51,7 @@ We recognize that this will not scale as the communities we work with grows.
 In the future, we plan to make **technical** restrictions on which folders a user may write to.
 ```
 
+(contributing:community-partner:terraform)=
 ## Community hosted terraform state
 
 In some cases, we want our community partners to be able to apply terraform changes

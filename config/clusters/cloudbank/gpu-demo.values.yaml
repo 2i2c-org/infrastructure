@@ -1,0 +1,148 @@
+jupyterhub:
+  scheduling:
+    userScheduler:
+      # I was noticing sometimes upto a minute between when
+      # a new node is up and the scheduler notices with the
+      # default optimizing scheduler. Let's run our own scheduler
+      # which is much faster. This is anecdotal information
+      enabled: true
+  prePuller:
+    extraTolerations:
+    - key: hub.jupyter.org/dedicated
+      operator: Exists
+      effect: NoSchedule
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: present
+      effect: NoSchedule
+    continuous:
+      enabled: true
+  ingress:
+    hosts: [gpu-demo.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [gpu-demo.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    profileList:
+    - display_name: CPU only
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-slm:
+              display_name: Small Language Models - Workshop hub
+              description: Python typical DS plus SLM packages
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:f6f187f86979
+            01-scipy:
+              display_name: Jupyter SciPy Notebook
+              description: Scientific Python image
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2025-01-06
+            02-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2025.01.24
+      kubespawner_override:
+        mem_guarantee: 12G
+        mem_limit: 16G
+        cpu_guarantee: 0.22815625
+        cpu_limit: 3.6505
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+        default: true
+    - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
+      description: Upto 3 CPUs when available
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-sml-pytorch:
+              display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: small_models
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:98c145168e64
+            01-tensorflow:
+              display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
+              slug: tensorflow
+              kubespawner_override:
+                image: pangeo/ml-notebook:2026.01.30
+            02-pytorch:
+              display_name: Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: pytorch
+              kubespawner_override:
+                image: pangeo/pytorch-notebook:2026.01.30
+
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_guarantee: 12G
+        mem_limit: 16G
+        cpu_guarantee: 1.5
+        cpu_limit: 3
+        node_selector:
+          node.kubernetes.io/instance-type: n1-highmem-8
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: github
+      add_staff_user_ids_to_admin_users: false
+    homepage:
+      gitRepoBranch: unify-logins-2
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.cloudbank.org/sites/default/files/file_fields/logo.png
+          name: CloudBank Classroom - GPU Demo
+          url: https://www.cloudbank.org/
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        admin_access: true
+        authenticator_class: shared-password
+      Authenticator:
+        manage_groups: false
+        # Allow everyone with the right password to log in
+        allow_all: true
+        admin_users:
+        - yuvipanda@2i2c.org
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gpu-demo
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 30 # in GiB
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.gpu-demo.svc.cluster.local

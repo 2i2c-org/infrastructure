@@ -21,6 +21,7 @@ user_buckets = {
 hub_cloud_permissions = {
   "staging" : {
     bucket_admin_access : ["scratch-staging"],
+    max_session_duration : 12 * 60 * 60, # 12 hr max
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
@@ -28,17 +29,11 @@ hub_cloud_permissions = {
           {
             "Effect": "Allow",
             "Action": [
-              "s3:PutObject",
-              "s3:PutObjectAcl",
               "s3:GetObject",
-              "s3:ListBucketMultipartUploads",
-              "s3:AbortMultipartUpload",
+              "s3:GetObjectTagging",
               "s3:ListBucketVersions",
-              "s3:CreateBucket",
               "s3:ListBucket",
-              "s3:DeleteObject",
-              "s3:GetBucketLocation",
-              "s3:ListMultipartUploadParts"
+              "s3:GetBucketLocation"
             ],
             "Resource": [
               "arn:aws:s3:::veda-data-store",
@@ -67,8 +62,6 @@ hub_cloud_permissions = {
               "arn:aws:s3:::podaac-ops-cumulus-public/*",
               "arn:aws:s3:::podaac-ops-cumulus-protected",
               "arn:aws:s3:::podaac-ops-cumulus-protected/*",
-              "arn:aws:s3:::maap-ops-workspace",
-              "arn:aws:s3:::maap-ops-workspace/*",
               "arn:aws:s3:::nasa-maap-data-store",
               "arn:aws:s3:::nasa-maap-data-store/*",
               "arn:aws:s3:::sdap-dev-zarr",
@@ -87,6 +80,29 @@ hub_cloud_permissions = {
           },
           {
             "Effect": "Allow",
+            "Action": [
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:GetObjectVersionTagging",
+              "s3:GetObjectAttributes",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:ListMultipartUploadParts",
+              "s3:ListBucketMultipartUploads",
+              "s3:PutObject",
+              "s3:PutObjectTagging",
+              "s3:DeleteObject",
+              "s3:AbortMultipartUpload",
+              "s3:RestoreObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::maap-uat-workspace",
+              "arn:aws:s3:::maap-uat-workspace/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
             "Action": "s3:ListAllMyBuckets",
             "Resource": "*"
           }
@@ -96,6 +112,7 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch-prod"],
+    max_session_duration : 12 * 60 * 60, # 12 hr max
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
@@ -104,6 +121,7 @@ hub_cloud_permissions = {
             "Effect": "Allow",
             "Action": [
               "s3:GetObject",
+              "s3:GetObjectTagging",
               "s3:ListBucketVersions",
               "s3:ListBucket",
               "s3:GetBucketLocation"
@@ -154,8 +172,20 @@ hub_cloud_permissions = {
           {
             "Effect": "Allow",
             "Action": [
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:GetObjectVersionTagging",
+              "s3:GetObjectAttributes",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:ListMultipartUploadParts",
+              "s3:ListBucketMultipartUploads",
               "s3:PutObject",
-              "s3:PutObjectAcl"
+              "s3:PutObjectTagging",
+              "s3:DeleteObject",
+              "s3:AbortMultipartUpload",
+              "s3:RestoreObject"
             ],
             "Resource": [
               "arn:aws:s3:::maap-ops-workspace",

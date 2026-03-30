@@ -207,7 +207,7 @@ To get a deeper understanding of the resource allocation topic, you can read up 
 #### Introducing user placeholders
 Whilst one strategy to minimising startup times is to increase the number of user pods that fit onto a single node (thereby reducing the number of times a node needs to be scaled up across the event), this approach will still introduce waiting points when a scale up is required.
 
-A useful mechanism for reducing the likelihood of a blocking scale up is the use of [user-placeholders])(https://z2jh.jupyter.org/en/stable/administrator/optimization.html#scaling-up-in-time-user-placeholders). This technique involves scheduling pods that represent a "seat" or "placeholder" for anticipated user servers. Once users join the cluster, these pods are evicted by the scheduler to make room for the real user pods. 
+A useful mechanism for reducing the likelihood of a blocking scale up is the use of [user-placeholders](https://z2jh.jupyter.org/en/stable/administrator/optimization.html#scaling-up-in-time-user-placeholders). This technique involves scheduling pods that represent a "seat" or "placeholder" for anticipated user servers. Once users join the cluster, these pods are evicted by the scheduler to make room for the real user pods. 
 
 To illustrate this, consider a hub with a dedicated user nodepool. Each node can support 64 singleuser pods. Let's imagine that the number of user placeholder replicas is set to 32:
 

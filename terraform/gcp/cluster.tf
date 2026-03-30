@@ -16,7 +16,9 @@ data "google_container_engine_versions" "k8s_version_prefixes" {
 }
 output "regular_channel_latest_k8s_versions" {
   value = {
-    for k, v in data.google_container_engine_versions.k8s_version_prefixes : k => v.release_channel_latest_version["REGULAR"]
+    for k, v in data.google_container_engine_versions.k8s_version_prefixes :
+    k => try(v.release_channel_latest_version["REGULAR"], null)
+    if contains(keys(v.release_channel_latest_version), "REGULAR")
   }
 }
 
@@ -215,6 +217,10 @@ resource "google_container_node_pool" "core" {
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
+
+    kubelet_config {
+      single_process_oom_kill = var.single_process_oom_kill
+    }
   }
 }
 
@@ -235,8 +241,12 @@ resource "google_container_node_pool" "notebook" {
 
   initial_node_count = each.value.min
   autoscaling {
-    min_node_count = each.value.min
-    max_node_count = each.value.max
+    # Use total_ rather than min_ as we want total max across zones,
+    # rather than just in one zone
+    total_min_node_count = each.value.min
+    total_max_node_count = each.value.max
+    # Put nodes wherever we can, don't try to balance across zones
+    location_policy = "ANY"
   }
 
   lifecycle {
@@ -258,8 +268,10 @@ resource "google_container_node_pool" "notebook" {
 
 
   node_config {
-    disk_type    = each.value.disk_type
-    disk_size_gb = each.value.disk_size_gb
+    boot_disk {
+      disk_type = each.value.disk_type
+      size_gb   = each.value.disk_size_gb
+    }
 
     dynamic "guest_accelerator" {
       for_each = each.value.gpu.enabled ? [1] : []
@@ -270,6 +282,15 @@ resource "google_container_node_pool" "notebook" {
 
         gpu_driver_installation_config {
           gpu_driver_version = "DEFAULT"
+        }
+
+        dynamic "gpu_sharing_config" {
+          for_each = each.value.gpu.share_gpu ? [1] : []
+
+          content {
+            gpu_sharing_strategy       = each.value.gpu.sharing_strategy
+            max_shared_clients_per_gpu = each.value.gpu.shared_clients_per_gpu
+          }
         }
       }
 
@@ -335,6 +356,10 @@ resource "google_container_node_pool" "notebook" {
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
+
+    kubelet_config {
+      single_process_oom_kill = var.single_process_oom_kill
+    }
   }
 }
 
@@ -425,5 +450,9 @@ resource "google_container_node_pool" "dask_worker" {
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
+
+    kubelet_config {
+      single_process_oom_kill = var.single_process_oom_kill
+    }
   }
 }

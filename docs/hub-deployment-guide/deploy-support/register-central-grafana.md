@@ -11,15 +11,16 @@ need to recreate them, only update them if required.
 
 ## Create a `support.secret.values.yaml` file
 
-Only 2i2c staff and our centralized grafana should be able to access the prometheus data on a cluster from outside the cluster.
+Only 2i2c staff and our centralized grafana should be able to access the prometheus data on a cluster from outside the cluster. If you would like to provision extra credentials for users, please see [User access to Prometheus endpoint](/sre-guide/support/prometheus-credentials.md)
 The [basic auth](https://kubernetes.github.io/ingress-nginx/examples/auth/basic/) feature of nginx-ingress is used to restrict this.
-A `support.secret.values.yaml` file is used to provide these secret credentials, which we create under the relevant `config/clusters/<cluster-name>/` folder.
+A `enc-support.secret.values.yaml` file is used to provide these secret credentials, which we create under the relevant `config/clusters/<cluster-name>/` folder.
 It requires the following configuration:
 
 ```yaml
 prometheusIngressAuthSecret:
-  username: <output of pwgen -s 64 1>
-  password: <output of pwgen -s 64 1>
+  users:
+    - username: <output of pwgen -s 64 1>
+      password: <output of pwgen -s 64 1>
 ```
 
 ```{note}

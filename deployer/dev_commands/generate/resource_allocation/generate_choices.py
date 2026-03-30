@@ -1,8 +1,9 @@
+import itertools
 import json
 import sys
 from enum import Enum
 from pathlib import Path
-from typing import List
+from typing import Annotated
 
 import typer
 from ruamel.yaml import YAML
@@ -119,16 +120,33 @@ def proportional_memory_strategy(
     return choices
 
 
+def update_without_conflicts(dst, src, suffix_template="_{}"):
+    for key, value in src.items():
+        # Find unique key
+        conflict_it = itertools.count(1)
+        original_key = key
+        while key in dst:
+            suffix = suffix_template.format(next(conflict_it))
+            key = f"{original_key}{suffix}"
+
+        dst[key] = src[original_key]
+
+
 @resource_allocation_app.command()
 def choices(
-    instance_specification: List[str] = typer.Argument(
-        ...,
-        help="Instance type and number of choices to generate Resource Allocation options for. Specify as instance_type:count.",
-    ),
-    strategy: ResourceAllocationStrategies = typer.Option(
-        ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY,
-        help="Strategy to use for generating resource allocation choices choices",
-    ),
+    instance_specification: Annotated[
+        list[str],
+        typer.Argument(
+            help="Instance type and number of choices to generate Resource Allocation options for. Specify as instance_type:count.",
+        ),
+    ],
+    strategy: Annotated[
+        ResourceAllocationStrategies,
+        typer.Option(
+            help="Strategy to use for generating resource allocation choices choices"
+        ),
+    ] = ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY,
+    default: Annotated[bool, typer.Option(help="Set a default option")] = False,
 ):
     """
     Generate a custom number of resource allocation choices for a certain instance type,
@@ -150,11 +168,18 @@ def choices(
 
         # Call appropriate function based on what strategy we want to use
         if strategy == ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY:
-            choices.update(
+            update_without_conflicts(
+                choices,
                 proportional_memory_strategy(
                     instance_type, nodeinfo[instance_type], int(num_allocations)
-                )
+                ),
             )
         else:
             raise ValueError(f"Strategy {strategy} is not currently supported")
+
+    # Set a default option
+    if choices and default:
+        first_choice = next(iter(choices.values()))
+        first_choice["default"] = True
+
     yaml.dump(choices, sys.stdout)

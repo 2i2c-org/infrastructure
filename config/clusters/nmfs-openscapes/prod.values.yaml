@@ -32,14 +32,11 @@ jupyterhub:
     storage:
       extraVolumeMounts:
         # A shared folder readable & writeable by everyone
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
+        1-shared-public-volumemount:
+          name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
   hub:
     config:
       JupyterHub:
@@ -47,12 +44,11 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://nmfs-openscapes.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
+        - fish-pace:2026-hackweek-jupyterhub
         - nmfs-openscapes:longterm-access-2i2c
-        - nmfs-openscapes:2024-mentors
-        - nmfs-openscapes:2024-science-teams
-        - nmfs-openscapes:2024-CoastWatch
+        - nmfs-openscapes:mentors
+        - nmfs-openscapes:2026-jupyterhub
         - nmfs-openscapes:2024-nmfs-champions-cohort
-        - nmfs-openscapes:2025-nmfs-champions-cohort
 
 jupyterhub-home-nfs:
   eks:

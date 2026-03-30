@@ -1,0 +1,79 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    mountOptions:
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
+    - retrans=2
+    - noresvport
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
+    singleuserAdmin:
+      extraVolumeMounts:
+        # /allusers is an extra mount point for admins to access to all users'
+        # home dirs
+        01-allusers-volumemount:
+          name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
+    homepage:
+      templateVars:
+        org:
+          name: University of California, Merced
+          url: http://www.ucmerced.edu/
+          logo_url: https://github.com/user-attachments/assets/122471f8-2915-4868-ae8b-ac54faea8e70
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: University of California, Merced
+          url: http://www.ucmerced.edu/
+        learn_more: |
+          UC Merced has <a href="https://ucmerced.github.io/hpc_docs/#/jupyterhub">
+          resources and documentation</a> on how to utilize JupyterHub.
+        announcements:
+          # from https://2i2c.freshdesk.com/a/tickets/1512
+        - |
+          <div>
+            <p>
+              Support for JupyterHub is provided during standard operating hours: 8:00 a.m. –
+              5:00 p.m., Monday through Friday. Please submit a general ticket through the <a
+              href="https://ucmerced.service-now.com/servicehub?id=public_kb_article&sys_id=3c3ee9ff1b67a0543a003112cd4bcb13&form_id=06da3f8edbfc08103c4d56f3ce9619f4">
+              UC Merced ServiceHub</a>.
+            </p>
+
+            <p>
+              If you're having issues accessing JupterHub, please Report a Problem at
+              <a href="https://ucmerced.service-now.com/servicehub">servicehub.ucmerced.edu</a> or call 228-HELP (4357).
+            </p>
+          </div>
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          urn:mace:incommon:ucmerced.edu:
+            default: true
+            username_derivation:
+              username_claim: eppn
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - schadalapaka@ucmerced.edu
+        - sannapragada@ucmerced.edu
+  scheduling:
+    userScheduler:
+      enabled: true

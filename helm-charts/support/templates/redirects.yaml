@@ -11,6 +11,10 @@ metadata:
   name: ingress-redirect-{{ .from }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    # for nginx-ingress controller
+    nginx.org/server-snippets: |
+      rewrite "^\/(?!\.well-known\/acme-challenge)(.*)$" "$scheme://{{ .to }}/$1" {{ .type | default "redirect" }};
+    # for ingress-nginx controller
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite "^\/(?!\.well-known\/acme-challenge)(.*)$" "$scheme://{{ .to }}/$1" {{ .type | default "redirect" }};
 spec:

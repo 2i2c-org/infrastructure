@@ -7,6 +7,7 @@ default_budget_alert = {
 }
 
 enable_jupyterhub_cost_monitoring = true
+enable_jupyterhub_cost_tags       = true
 disable_cluster_wide_filestore    = true
 
 # The initial EFS is now used by the prod hub only

@@ -1,0 +1,83 @@
+jupyterhub:
+  ingress:
+    hosts: [etsu.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [etsu.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 2G
+      limit: 32G
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/cloudbank-etsu-image
+      tag: ab29550edcd8
+    storage:
+      extraVolumeMounts:
+        1-submit-volumemount:
+          name: home
+          mountPath: /home/jovyan/submit
+          subPath: _shared-private/{escaped_username}
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
+    homepage:
+      templateVars:
+        org:
+          name: East Tennessee State University
+          logo_url: https://images.sidearmdev.com/convert?url=https%3a%2f%2fdbukjj6eu5tsf.cloudfront.net%2fsidearm.sites%2fetsu.sidearmsports.com%2fimages%2f2023%2f7%2f26%2fE_gold-blue.jpg&type=webp
+          url: https://www.etsu.edu/ehome/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+    singleuserAdmin:
+      extraVolumeMounts:
+        1-collect-volumemount:
+          name: home
+          mountPath: /home/jovyan/collect
+          subPath: _shared-private
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://etsu.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - etsu.edu
+            - mail.etsu.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - ERNENWEI@mail.etsu.edu
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-etsu
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 20 # in GiB
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.etsu.svc.cluster.local

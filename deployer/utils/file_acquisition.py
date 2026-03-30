@@ -29,12 +29,10 @@ def _assert_file_exists(filepath):
         filepath (str): Absolute path to the file that is to be asserted for existence
     """
     if not os.path.isfile(filepath):
-        raise FileNotFoundError(
-            f"""
+        raise FileNotFoundError(f"""
             File Not Found at following location! Have you checked it's the correct path?
             {filepath}
-        """
-        )
+        """)
 
 
 def persist_config_in_encrypted_file(encrypted_file, new_config):

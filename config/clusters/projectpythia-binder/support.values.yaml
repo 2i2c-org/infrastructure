@@ -33,3 +33,22 @@ redirects:
     to: binder.projectpythia.org
   - from: hub.binder-pythia.jetstream2.2i2c.cloud
     to: hub.projectpythia.org
+
+ingress-nginx:
+  controller:
+    # Turn off controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+nginx-ingress:
+  # Enable controller
+  enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+clusterEntrypoint:
+  targetController: nginx-ingress

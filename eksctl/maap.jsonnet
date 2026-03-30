@@ -13,7 +13,11 @@ local c = cluster.makeCluster(
   ],
   daskInstanceTypes=[
     // Allow for a range of spot instance types
-    ['r5.4xlarge', 'r7i.4xlarge', 'r6i.4xlarge'],
+    [
+      'r5.4xlarge',
+      'r7i.4xlarge',
+      'r6i.4xlarge',
+    ],
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[
@@ -21,7 +25,15 @@ local c = cluster.makeCluster(
       instanceType: 'g4dn.xlarge',
     },
   ],
-  nodeGroupGenerations=['b'],
+  nodeGroupGenerations=['d'],
 );
 
-c
+cluster.withNodeGroupConfigOverride(
+  c,
+  kind='notebook',
+  overrides={
+    // For https://github.com/MAAP-Project/Community/issues/1254,
+    // so `/tmp` can be larger
+    volumeSize: 200,
+  }
+)

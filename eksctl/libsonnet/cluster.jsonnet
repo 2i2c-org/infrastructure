@@ -1,4 +1,5 @@
 local escapeName(name) = std.strReplace(name, '.', '-');
+local lowerCaseLetter(i) = std.char(97 + i);
 {
   /**
    Create a managed nodegroup config that can autoscale from 0.
@@ -15,6 +16,7 @@ local escapeName(name) = std.strReplace(name, '.', '-');
    - extraTaints [array[dict[string, string]]]: Extra taints to add to nodes in this nodeGroup.
                                                 List of dicts with keys 'key', 'value', 'effect'
    - extraTags [dict[string, string]]: Extra resource tags to add to EC2 instances spawned by this nodeGroup
+   - extraKubeletConfig [dict[string, any]]: Extra kubelet configuration
    */
   makeNodeGroup(
     clusterName,
@@ -26,7 +28,8 @@ local escapeName(name) = std.strReplace(name, '.', '-');
     maxSize,
     extraLabels={},
     extraTaints=[],
-    extraTags={}
+    extraTags={},
+    extraKubeletConfig=null,
   ):: {
     /**
      Generate EC2 resource tags representing node labels that cluster autoscaler's autodiscovery understands
@@ -80,7 +83,24 @@ local escapeName(name) = std.strReplace(name, '.', '-');
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': clusterName,
     } + extraTags,
-  },
+  } + (
+    // Allow custom kubelet config
+    if std.type(extraKubeletConfig) == 'null' then {} else
+      {
+        overrideBootstrapCommand: std.manifestYamlDoc(
+          {
+            apiVersion: 'node.eks.aws/v1alpha1',
+            kind: 'NodeConfig',
+            spec: {
+              kubelet: {
+                config: extraKubeletConfig,
+              },
+            },
+          },
+          quote_keys=false
+        ),
+      }
+  ),
 
   makeCoreNodeGroup(
     clusterName,
@@ -153,7 +173,10 @@ local escapeName(name) = std.strReplace(name, '.', '-');
     extraTags={
       '2i2c:node-purpose': 'user',
       '2i2c:hub-name': hubName,
-    } + extraTags
+    } + extraTags,
+    extraKubeletConfig={
+      singleProcessOOMKill: true,
+    },
   ) + {
     _kind:: 'notebook',
     _hubName:: hubName,
@@ -235,7 +258,10 @@ local escapeName(name) = std.strReplace(name, '.', '-');
         ],
         extraTags={
           '2i2c:node-purpose': 'worker',
-        }
+        },
+        extraKubeletConfig={
+          singleProcessOOMKill: true,
+        },
       ) +
       {
         _kind:: 'dask-worker',
@@ -263,7 +289,8 @@ local escapeName(name) = std.strReplace(name, '.', '-');
     notebookCPUInstanceTypes,
     notebookGPUNodeGroups=[],
     daskInstanceTypes=[],
-    nodeGroupGenerations=[]
+    nodeGroupGenerations=[],
+    regionSize=3
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -276,7 +303,7 @@ local escapeName(name) = std.strReplace(name, '.', '-');
         '2i2c.org/cluster-name': name,
       },
     },
-    availabilityZones: ['%s%s' % [region, i] for i in ['a', 'b', 'c']],
+    availabilityZones: ['%s%s' % [region, lowerCaseLetter(i)] for i in std.range(0, regionSize - 1)],
     iam: {
       withOIDC: true,
     },

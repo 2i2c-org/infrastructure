@@ -111,6 +111,36 @@ Currently this is the recommended way of retrieving the costs from GCP.
 
 [2i2c billing account]: https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2024-01-01;to=2024-01-31;dateType=INVOICE_DATE;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see
 
+
+### Get a community's costs from OVH
+
+We currently have an account on OVH Cloud US, where we pay for a mybinder.org federation
+member for BIDS.
+
+```{warning}
+Currently, all our OVH costs will be billed to BIDS. When we start supporting multiple
+other users on OVH, we will need to handle invoices better.
+```
+
+1. Go to [https://manager.us.ovhcloud.com/#/billing/history](OVH US Billing Console) using
+   credentials provided to you. If you don't have credentials, reach out to Yuvi to get some.
+2. Under filter, select:
+
+   1. "Issue Date" as column
+   2. "is after" as condition
+   3. The start of the month for which we are looking at cloud costs as "Value". For example,
+      if you're looking for cloud costs for January 2026, set this value to 1 Jan 2026. The
+      goal is to make sure we get all the invoices that have been issued since our last time,
+      so verify by looking at the last OVH invoices upload.
+
+3. Under "Actions" click "Export as CSV".
+
+4. Go to the [Cloud Costs Google Drive Folder](https://drive.google.com/drive/folders/1_xXZ2ndEOplZidG_mj6nmUTzsOuxARcL)
+   and upload this CSV. Rename it to `OVH_<starting-year>-<starting-month>-<starting-date>_<ending-year>-<ending-month>-<ending-date>`,
+   based on the first and last entry in the invoice (eg. `OVH_2025-12-01_2026-02-01.csv`)
+
+5. Post a link to this in the `#billing` channel
+
 ## Experimental
 
 We have an unfinished attempt to automate collection of community monthly costs.

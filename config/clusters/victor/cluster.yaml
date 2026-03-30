@@ -8,7 +8,7 @@ aws:
   clusterName: victor
   region: us-west-2
   billing:
-    paid_by_us: true
+    paid_by_us: false
 support:
   helm_chart_values_files:
   - support.values.yaml

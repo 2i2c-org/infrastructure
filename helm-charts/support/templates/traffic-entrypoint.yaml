@@ -1,0 +1,26 @@
+{{ if .Values.clusterEntrypoint.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: cluster-entrypoint
+  labels:
+    app: cluster-entrypoint
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443
+  selector:
+    {{ if eq .Values.clusterEntrypoint.targetController "nginx-ingress" }}
+    app.kubernetes.io/instance: support
+    app.kubernetes.io/name: nginx-ingress
+    {{ else }}
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: support
+    app.kubernetes.io/name: ingress-nginx
+    {{ end }}
+{{- end }}

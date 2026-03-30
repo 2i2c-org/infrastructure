@@ -1,0 +1,27 @@
+# CSH Sync Caller
+#
+# Add this file to any 2i2c-org repo that should participate in
+# Community Success Hours tracking.
+#
+# Place at: .github/workflows/csh-sync-caller.yml
+#
+# Prerequisites:
+#   - The org-level secrets ASANA_ACCESS_TOKEN and CSH_SYNC_PAT must be set
+#   - The repo must have a "CSH" label created
+#   - The 2i2c-org/csh-sync repo must exist with the reusable workflow
+
+name: CSH Sync
+
+on:
+  issues:
+    types: [labeled, edited, assigned, unassigned, milestoned, demilestoned, closed, reopened]
+
+jobs:
+  sync:
+    # For 'labeled' events: only fire when the CSH label is the one being added.
+    # For all other events: fire if the issue already carries the CSH label.
+    if: >-
+      (github.event.action == 'labeled' && github.event.label.name == 'CSH')
+      || (github.event.action != 'labeled' && contains(toJson(github.event.issue.labels.*.name), 'CSH'))
+    uses: 2i2c-org/csh-sync/.github/workflows/csh-sync.yml@main
+    secrets: inherit

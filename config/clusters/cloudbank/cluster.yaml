@@ -21,6 +21,14 @@ hubs:
   - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
+- name: ahs
+  display_name: Albany High School
+  domain: ahs.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ahs.values.yaml
+  - enc-ahs.secret.values.yaml
 - name: authoring
   display_name: Authoring Hub
   domain: authoring.cloudbank.2i2c.cloud
@@ -37,6 +45,14 @@ hubs:
   - common.values.yaml
   - bcc.values.yaml
   - enc-bcc.secret.values.yaml
+- name: bmcc
+  display_name: Borough of Manhattan Community College, CUNY
+  domain: bmcc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - bmcc.values.yaml
+  - enc-bmcc.secret.values.yaml
 - name: chaffey
   display_name: Chaffey College
   domain: chaffey.cloudbank.2i2c.cloud
@@ -61,6 +77,30 @@ hubs:
   - common.values.yaml
   - chabot.values.yaml
   - enc-chabot.secret.values.yaml
+- name: chicagostate
+  display_name: Chicago State University
+  domain: chicagostate.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - chicagostate.values.yaml
+  - enc-chicagostate.secret.values.yaml
+- name: cmu
+  display_name: Carnegie Mellon University
+  domain: cmu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - cmu.values.yaml
+  - enc-cmu.secret.values.yaml
+- name: cra
+  display_name: Computing Research Association
+  domain: cra.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - cra.values.yaml
+  - enc-cra.secret.values.yaml
 - name: csm
   display_name: College of San Mateo
   domain: csm.cloudbank.2i2c.cloud
@@ -125,6 +165,14 @@ hubs:
   - common.values.yaml
   - evc.values.yaml
   - enc-evc.secret.values.yaml
+- name: etsu
+  display_name: East Tennessee State University
+  domain: etsu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - etsu.values.yaml
+  - enc-etsu.secret.values.yaml
 - name: fresno
   display_name: Fresno City College
   domain: fresno.cloudbank.2i2c.cloud
@@ -165,6 +213,14 @@ hubs:
   - common.values.yaml
   - gwu.values.yaml
   - enc-gwu.secret.values.yaml
+- name: gpu-demo
+  display_name: CloudBank Classroom - GPU Demo
+  domain: gpu-demo.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - gpu-demo.values.yaml
+  - enc-gpu-demo.secret.values.yaml
 - name: high
   display_name: High School Experimental Hub
   domain: high.cloudbank.2i2c.cloud
@@ -173,6 +229,14 @@ hubs:
   - common.values.yaml
   - high.values.yaml
   - enc-high.secret.values.yaml
+- name: hmc
+  display_name: Harvey Mudd College
+  domain: hmc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - hmc.values.yaml
+  - enc-hmc.secret.values.yaml
 - name: humboldt
   display_name: Cal Poly Humboldt
   domain: humboldt.cloudbank.2i2c.cloud
@@ -181,6 +245,14 @@ hubs:
   - common.values.yaml
   - humboldt.values.yaml
   - enc-humboldt.secret.values.yaml
+- name: kean
+  display_name: Kean University
+  domain: kean.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - kean.values.yaml
+  - enc-kean.secret.values.yaml
 - name: lacc
   display_name: Los Angeles City College
   domain: lacc.cloudbank.2i2c.cloud
@@ -245,6 +317,14 @@ hubs:
   - common.values.yaml
   - merritt.values.yaml
   - enc-merritt.secret.values.yaml
+- name: mmc
+  display_name: Meharry Medical College
+  domain: mmc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - mmc.values.yaml
+  - enc-mmc.secret.values.yaml
 - name: miracosta
   display_name: MiraCosta College
   domain: miracosta.cloudbank.2i2c.cloud
@@ -277,6 +357,14 @@ hubs:
   - common.values.yaml
   - norco.values.yaml
   - enc-norco.secret.values.yaml
+- name: ocu
+  display_name: Oakland City University
+  domain: ocu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ocu.values.yaml
+  - enc-ocu.secret.values.yaml
 - name: palomar
   display_name: Palomar Community College
   domain: palomar.cloudbank.2i2c.cloud
@@ -389,6 +477,14 @@ hubs:
   - common.values.yaml
   - sou.values.yaml
   - enc-sou.secret.values.yaml
+- name: stanford
+  display_name: Stanford University
+  domain: stanford.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - stanford.values.yaml
+  - enc-stanford.secret.values.yaml
 - name: spelman
   display_name: Spelman College
   domain: spelman.cloudbank.2i2c.cloud
@@ -421,6 +517,30 @@ hubs:
   - common.values.yaml
   - ucsc.values.yaml
   - enc-ucsc.secret.values.yaml
+- name: uchicago
+  display_name: University of Chicago
+  domain: uchicago.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - uchicago.values.yaml
+  - enc-uchicago.secret.values.yaml
+- name: umd
+  display_name: University of Maryland
+  domain: umd.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - umd.values.yaml
+  - enc-umd.secret.values.yaml
+- name: und
+  display_name: University of North Dakota
+  domain: und.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - und.values.yaml
+  - enc-und.secret.values.yaml
 - name: virginia
   display_name: University of Virginia
   domain: virginia.cloudbank.2i2c.cloud

@@ -1,0 +1,62 @@
+jupyterhub:
+  ingress:
+    hosts: [kean.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [kean.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
+    homepage:
+      templateVars:
+        org:
+          name: Kean University
+          logo_url: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSG79uEiO2_elhU5RDHISFlMrM6KEiCRMEJoA&s
+          url: https://www.kean.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://kean.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          https://sso.kean.edu/idp:
+            default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - cecil.saunders@kean.edu
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-kean
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.kean.svc.cluster.local

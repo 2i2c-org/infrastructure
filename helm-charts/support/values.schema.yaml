@@ -14,6 +14,7 @@ required:
   - cryptnono
   - redirects
   - jupyterhub-cost-monitoring
+  - disableCoredumps
   - global
 properties:
   # We don't control validation of dependent charts here
@@ -21,6 +22,9 @@ properties:
     type: object
     additionalProperties: true
   ingress-nginx:
+    type: object
+    additionalProperties: true
+  nginx-ingress:
     type: object
     additionalProperties: true
   prometheus:
@@ -71,6 +75,20 @@ properties:
                 Relates to the HTTP Status code to use for the redirect.
 
                 Specify "redirect" for 302 (default), or "permanent" for 301.
+  clusterEntrypoint:
+    type: object
+    additionalProperties: false
+    required:
+    - enabled
+    - targetController
+    properties:
+      enabled:
+        type: boolean
+      targetController:
+        type: string
+        enum:
+        - ingress-nginx
+        - nginx-ingress
   nvidiaDevicePlugin:
     type: object
     additionalProperties: false
@@ -104,6 +122,38 @@ properties:
       enabled:
         type: boolean
 
+  disableCoredumps:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable DaemonSet to disable core dumps on all nodes.
+          This prevents core dumps from filling up disk storage.
+      image:
+        type: string
+        description: |
+          Container image to use for the DaemonSet
+      resources:
+        type: object
+        additionalProperties: false
+        description: |
+          Resource requests and limits for the DaemonSet containers
+        properties:
+          initContainer:
+            type: object
+            additionalProperties: true
+            description: |
+              Resources for the init container that sets kernel.core_pattern
+          pauseContainer:
+            type: object
+            additionalProperties: true
+            description: |
+              Resources for the pause container that monitors the setting
+
   prometheusIngressAuthSecret:
     type: object
     additionalProperties: false
@@ -112,14 +162,23 @@ properties:
     properties:
       enabled:
         type: boolean
-      username:
-        type: string
-        description: |
-          Username for basic auth protecting prometheus
-      password:
-        type: string
-        description: |
-          Password for basic auth protecting prometheus
+      users:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            username:
+              type: string
+              description: |
+                Username for basic auth protecting prometheus
+            password:
+              type: string
+              description: |
+                Password for basic auth protecting prometheus
+          required:
+            - username
+            - password
 
   prometheusStorageClass:
     type: object

@@ -1,0 +1,63 @@
+jupyterhub:
+  ingress:
+    hosts: [und.cloudbank.2i2c.cloud]
+    tls:
+    - hosts: [und.cloudbank.2i2c.cloud]
+      secretName: https-auto-tls
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
+    homepage:
+      templateVars:
+        org:
+          name: University of North Dakota
+          logo_url: https://campus.und.edu/brand/_files/images/logos/logosystem-flame-2022-600x250.jpg
+          url: https://und.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://und.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          https://idp.und.edu/idp:
+            default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - matthew.gilmore@und.edu
+        - aaron.bergstrom@und.edu
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-und
+nfs:
+  pv:
+    serverIP: storage-quota-home-nfs.und.svc.cluster.local

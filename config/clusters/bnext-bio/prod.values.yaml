@@ -8,16 +8,16 @@ userServiceAccount:
 
 jupyterhub:
   ingress:
-    hosts: [beta-hub.nucleus.engineering]
+    hosts: [hub.nucleus.engineering]
     tls:
-    - hosts: [beta-hub.nucleus.engineering]
+    - hosts: [hub.nucleus.engineering]
       secretName: https-auto-tls
   hub:
     config:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://beta-hub.nucleus.engineering/hub/oauth_callback
+        oauth_callback_url: https://hub.nucleus.engineering/hub/oauth_callback
   singleuser:
     image:
       name: quay.io/nucleus/nucleus-hub

@@ -32,14 +32,11 @@ jupyterhub:
     storage:
       extraVolumeMounts:
         # A shared folder readable & writeable by everyone
-      - name: home
-        mountPath: /home/jovyan/shared-public
-        subPath: _shared-public
-        readOnly: false
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
+        1-shared-public-volumemount:
+          name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
   hub:
     config:
       JupyterHub:

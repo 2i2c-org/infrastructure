@@ -1,3 +1,4 @@
+# The state for this is stored in backend configured via backends/cloudbank.hcl
 prefix     = "cb"
 project_id = "cb-1003-1696"
 
@@ -7,8 +8,13 @@ regional_cluster = false
 
 enable_filestore_backups = false
 filestores               = {}
+single_process_oom_kill  = false
 
 persistent_disks = {
+  "ahs" = {
+    size        = 25
+    name_suffix = "ahs"
+  }
   "authoring" = {
     size        = 25
     name_suffix = "authoring"
@@ -16,6 +22,10 @@ persistent_disks = {
   "bcc" = {
     size        = 60
     name_suffix = "bcc"
+  }
+  "bmcc" = {
+    size        = 25
+    name_suffix = "bmcc"
   }
   "ccsf" = {
     size        = 450
@@ -28,6 +38,18 @@ persistent_disks = {
   "chaffey" = {
     size        = 25
     name_suffix = "chaffey"
+  }
+  "chicagostate" = {
+    size        = 25
+    name_suffix = "chicagostate"
+  }
+  "cmu" = {
+    size        = 25
+    name_suffix = "cmu"
+  }
+  "cra" = {
+    size        = 25
+    name_suffix = "cra"
   }
   "csm" = {
     size        = 150
@@ -61,6 +83,10 @@ persistent_disks = {
     size        = 200
     name_suffix = "evc"
   }
+  "etsu" = {
+    size        = 100
+    name_suffix = "etsu"
+  }
   "foothill" = {
     size        = 200
     name_suffix = "foothill"
@@ -77,6 +103,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "golden"
   }
+  "gpu-demo" = {
+    size        = 500
+    name_suffix = "gpu-demo"
+  }
   "gwu" = {
     size        = 300
     name_suffix = "gwu"
@@ -85,9 +115,17 @@ persistent_disks = {
     size        = 120
     name_suffix = "high"
   }
+  "hmc" = {
+    size        = 25
+    name_suffix = "hmc"
+  }
   "humboldt" = {
     size        = 200
     name_suffix = "humboldt"
+  }
+  "kean" = {
+    size        = 25
+    name_suffix = "kean"
   }
   "lacc" = {
     size        = 140
@@ -121,6 +159,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "merritt"
   }
+  "mmc" = {
+    size        = 25
+    name_suffix = "mmc"
+  }
   "miracosta" = {
     size        = 60
     name_suffix = "miracosta"
@@ -136,6 +178,10 @@ persistent_disks = {
   "norco" = {
     size        = 40
     name_suffix = "norco"
+  }
+  "ocu" = {
+    size        = 25
+    name_suffix = "ocu"
   }
   "palomar" = {
     size        = 40
@@ -198,12 +244,16 @@ persistent_disks = {
     name_suffix = "spelman"
   }
   "srjc" = {
-    size        = 30
+    size        = 50
     name_suffix = "srjc"
   }
   "staging" = {
     size        = 2
     name_suffix = "staging"
+  }
+  "stanford" = {
+    size        = 25
+    name_suffix = "stanford"
   }
   "tuskegee" = {
     size        = 20
@@ -212,6 +262,18 @@ persistent_disks = {
   "ucsc" = {
     size        = 20
     name_suffix = "ucsc"
+  }
+  "uchicago" = {
+    size        = 25
+    name_suffix = "uchicago"
+  }
+  "umd" = {
+    size        = 25
+    name_suffix = "umd"
+  }
+  "und" = {
+    size        = 25
+    name_suffix = "und"
   }
   "unr" = {
     size        = 40
@@ -235,23 +297,48 @@ k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
-  min_master_version : "1.32.1-gke.1357001",
-  core_nodes_version : "1.32.1-gke.1357001",
-  notebook_nodes_version : "1.32.1-gke.1357001",
-  dask_nodes_version : "1.32.1-gke.1357001",
+  min_master_version : "1.34.1-gke.3971001",
+  core_nodes_version : "1.34.1-gke.3971001",
+  notebook_nodes_version : "1.34.1-gke.3971001",
+  dask_nodes_version : "1.34.1-gke.3971001",
 }
 
 core_node_machine_type = "n2-highmem-2"
 # FIXME: this number should be updated, it was bumped to 30
 #        in order to reflect an imperative change made to the infra
-core_node_max_count   = 30
+core_node_max_count   = 40
 enable_network_policy = true
 
 notebook_nodes = {
-  "n2-highmem-4-b" : {
-    min : 0,
+  "n2-highmem-4" : {
+    min : 2,
     max : 100,
     machine_type : "n2-highmem-4",
+    disk_size_gb : 150,
+  },
+  "gpu-t4" : {
+    min : 1,
+    max : 30,
+    machine_type : "n1-highmem-8",
+    disk_size_gb : 200,
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 1,
+      share_gpu : true,
+      sharing_strategy : "TIME_SHARING",
+      shared_clients_per_gpu : 2
+    },
+    # Let's try a faster disk to see if that speeds up image pulls
+    disk_type : "pd-ssd",
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
   "n2-highmem-16" : {
     min : 0,
