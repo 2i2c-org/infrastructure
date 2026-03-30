@@ -11,7 +11,7 @@ jupyterhub:
       limit: 1G
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-user-image
-      tag: 60943b1dc997
+      tag: 274cf39408ab
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
