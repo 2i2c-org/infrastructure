@@ -20,10 +20,10 @@ persistent_disks = {
     size        = 2965 # in GiB
     name_suffix = "prod"
   }
-  #  "workshop" = {
-  #    size        = 1000 # in GiB
-  #    name_suffix = "workshop"
-  #  }
+  "workshop" = {
+    size        = 1000 # in GiB
+    name_suffix = "workshop"
+  }
 }
 
 # Cloud costs for this project are not passed through by 2i2c
@@ -54,10 +54,10 @@ user_buckets = {
     "delete_after" : null,
     "uniform_bucket_level_access_only" : true
   }
-  #  "scratch-workshop" : {
-  #    "delete_after" : 7,
-  #    "uniform_bucket_level_access_only" : true
-  #  },
+  "scratch-workshop" : {
+    "delete_after" : 7,
+    "uniform_bucket_level_access_only" : true
+  },
 }
 
 # Setup notebook node pools
@@ -121,10 +121,10 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch", "persistent"],
     hub_namespace : "prod"
   }
-  #  "workshop" : {
-  #    bucket_admin_access : ["scratch-workshop"],
-  #    hub_namespace : "workshop"
-  #  }
+  "workshop" : {
+    bucket_admin_access : ["scratch-workshop"],
+    hub_namespace : "workshop"
+  }
 }
 
 container_repos = []
