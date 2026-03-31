@@ -859,7 +859,7 @@ jupyterhub:
         manage_groups: true
         populate_teams_in_auth_state: true
         scope:
-          - read:org
+        - read:org
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
@@ -1033,10 +1033,10 @@ jupyterhub:
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-          - jupyterhub-groups-exporter
+        - jupyterhub-groups-exporter
         scopes:
-          - users
-          - groups
+        - users
+        - groups
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.15467.h0cadc91ad"
