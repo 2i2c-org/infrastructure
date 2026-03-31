@@ -21,6 +21,8 @@ jupyterhub:
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://berkeley-geojupyter-scratch/$(JUPYTERHUB_USER)
+    nodeSelector:
+      2i2c/hub-name: prod
 
 jupyterhub-home-nfs:
   eks:
