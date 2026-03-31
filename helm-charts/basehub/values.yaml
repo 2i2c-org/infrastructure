@@ -859,7 +859,7 @@ jupyterhub:
         manage_groups: true
         populate_teams_in_auth_state: true
         scope:
-        - read:org
+          - read:org
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
@@ -877,7 +877,8 @@ jupyterhub:
             KubeSpawner.image:
               type: string
               title: User docker image
-              description: Determines languages, libraries and interfaces available
+              description: Determines languages, libraries and interfaces 
+                available
               help: Leave this blank to use the default
             Spawner.default_url:
               type: string
@@ -1032,13 +1033,13 @@ jupyterhub:
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-        - jupyterhub-groups-exporter
+          - jupyterhub-groups-exporter
         scopes:
-        - users
-        - groups
+          - users
+          - groups
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.14928.he0b95cbd6"
+      tag: "0.0.1-0.dev.git.15467.h0cadc91ad"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -1579,7 +1580,7 @@ jupyterhub:
 
       08-auth-state-groups: |
         # Pass the user's GitHub teams from auth_state to JupyterHub group memberships.
-        
+
         async def custom_auth_state_groups_key(auth_state):
           if "teams" not in auth_state.keys():
             print("No GitHub teams found in auth_state.")
