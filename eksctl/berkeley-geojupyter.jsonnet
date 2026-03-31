@@ -4,7 +4,7 @@ local c = cluster.makeCluster(
   name='berkeley-geojupyter',
   region='us-west-2',
   nodeAz='us-west-2a',
-  version='1.33',
+  version='1.34',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     'r5.xlarge',
@@ -12,11 +12,16 @@ local c = cluster.makeCluster(
     'r5.16xlarge',
   ],
   daskInstanceTypes=[
-    'r5.4xlarge',
+    // Allow for a range of spot instance types
+    [
+      'r5.4xlarge',
+      'r7i.4xlarge',
+      'r6i.4xlarge',
+    ],
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[],
-  nodeGroupGenerations=['b']
+  nodeGroupGenerations=['d']
 );
 
 c
