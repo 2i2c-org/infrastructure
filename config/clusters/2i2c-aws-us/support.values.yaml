@@ -4,10 +4,6 @@ prometheusIngressAuthSecret:
 nginx-ingress:
   enabled: true
   controller:
-    reportIngressStatus:
-      # This fixes Helm deploy _for this cluster_.
-      # The fact that we have to do this only for 2i2c-aws-us is ... worrying.
-      enableLeaderElection: false
     ingressClass:
       # Claim the `nginx` ingress class
       create: true
