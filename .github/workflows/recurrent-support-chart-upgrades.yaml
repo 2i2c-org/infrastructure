@@ -24,6 +24,11 @@ jobs:
           ### What to do
           - Review and merge dependabot's PRs like https://github.com/2i2c-org/infrastructure/pull/7317 (if it exists)
 
+          > [!Important]
+          > When upgrading the `cluster-autoscaler` version, make sure that the new version is compatible with
+          > the k8s version of all eks clusters
+          > See [this compatibility matrix](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#releases)
+
           ### Definition of Done
           - [ ] Support chart versions are updated
         label: network-wide
