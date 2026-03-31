@@ -14,6 +14,10 @@ metadata:
     # for nginx-ingress controller
     nginx.org/server-snippets: |
       rewrite "^\/(?!\.well-known\/acme-challenge)(.*)$" "$scheme://{{ .to }}/$1" {{ .type | default "redirect" }};
+    # Allow cert-manager to edit this ingress
+    # as nginx-ingress considers duplicate hosts "host collisions"
+    # causing problems when cert-manager creates the temporary ACME ingress
+    acme.cert-manager.io/http01-edit-in-place: "true"
     # for ingress-nginx controller
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite "^\/(?!\.well-known\/acme-challenge)(.*)$" "$scheme://{{ .to }}/$1" {{ .type | default "redirect" }};
