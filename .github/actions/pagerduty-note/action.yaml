@@ -3,7 +3,6 @@ name: Leave a note to a PD incident
 inputs:
   token:
     required: true
-    default: ${{ secrets.PD_TOKEN }}
   incident_id:
     required: true
   note_content:
