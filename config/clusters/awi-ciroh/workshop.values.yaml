@@ -66,7 +66,7 @@ basehub:
                 default: true
                 slug: new
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:43afa7f902b4
+                  image: quay.io/2i2c/awi-ciroh-image:d86a62ae0b85
               rkernel:
                 display_name: Notebook with R and Python kernel
                 slug: rkernel
@@ -115,10 +115,16 @@ basehub:
                   image: quay.io/awiciroh/devcon25:jmframe_d25
                   image_pull_policy: Always
               devcon7:
-                display_name: NextGen National Water Model(NWM)
+                display_name: CIROH Community NextGen Hub
                 slug: devcon7
                 kubespawner_override:
-                  image: quay.io/fbaig25/ngiab-2i2c:v1.0.0
+                  image: quay.io/awiciroh/ngiab-2i2c:v1.2.3
+                  image_pull_policy: Always
+              devcon8:
+                display_name: Community Assets Computation Hub
+                slug: devcon8
+                kubespawner_override:
+                  image: quay.io/awiciroh/symfluence:v1.0.0
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
