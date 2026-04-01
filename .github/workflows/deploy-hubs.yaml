@@ -130,7 +130,7 @@ jobs:
 
     - name: Identify files that have been added or modified
           # Action repo: https://github.com/dorny/paths-filter
-      uses: dorny/paths-filter@v3
+      uses: dorny/paths-filter@v4
       id: changed-files
       with:
         token: ''
@@ -167,7 +167,7 @@ jobs:
         (steps.generate-jobs.outputs.support-jobs != '[]' ||
         steps.generate-jobs.outputs.staging-jobs != '[]' ||
         steps.generate-jobs.outputs.prod-jobs != '[]')
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: pr
         path: |
@@ -497,7 +497,7 @@ jobs:
 
         # Retry action: https://github.com/marketplace/actions/retry-step
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-      uses: nick-fields/retry@v3
+      uses: nick-fields/retry@v4
       with:
         timeout_minutes: 10
         max_attempts: 3
@@ -637,7 +637,7 @@ jobs:
 
         # Retry action: https://github.com/marketplace/actions/retry-step
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-      uses: nick-fields/retry@v3
+      uses: nick-fields/retry@v4
       with:
         timeout_minutes: 10
         max_attempts: 3

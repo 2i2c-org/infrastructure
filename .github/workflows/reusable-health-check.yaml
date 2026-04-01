@@ -59,7 +59,7 @@ jobs:
         GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
     - name: Run health check against ${{ inputs.cluster }} ${{ inputs.hub }}
-      uses: nick-fields/retry@v3
+      uses: nick-fields/retry@v4
       id: health_check
       with:
         timeout_minutes: 10
