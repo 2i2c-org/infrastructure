@@ -191,6 +191,10 @@ prometheus:
         # increase the timeout here as well.
         nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
         nginx.org/proxy-read-timeout: "120s"
+        # Allow cert-manager to edit this ingress
+        # as nginx-ingress considers duplicate hosts "host collisions"
+        # causing problems when cert-manager creates the temporary ACME ingress
+        acme.cert-manager.io/http01-edit-in-place: "true"
     strategy:
       # type is set to Recreate as we have a persistent disk attached. The
       # default of RollingUpdate would fail by getting stuck waiting for a new
@@ -331,6 +335,10 @@ grafana:
       nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
       nginx.org/proxy-read-timeout: 120s
       cert-manager.io/cluster-issuer: letsencrypt-prod
+      # Allow cert-manager to edit this ingress
+      # as nginx-ingress considers duplicate hosts "host collisions"
+      # causing problems when cert-manager creates the temporary ACME ingress
+      acme.cert-manager.io/http01-edit-in-place: "true"
 
   # grafana is partially configured for GitHub authentication here, but the
   # following values need to be set as well, where client_secret should be kept
