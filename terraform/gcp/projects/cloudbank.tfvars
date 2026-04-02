@@ -12,7 +12,7 @@ single_process_oom_kill  = false
 
 persistent_disks = {
   "ahs" = {
-    size        = 25
+    size        = 100
     name_suffix = "ahs"
   }
   "authoring" = {
@@ -317,7 +317,7 @@ notebook_nodes = {
     disk_size_gb : 150,
   },
   "gpu-t4" : {
-    min : 1,
+    min : 0,
     max : 30,
     machine_type : "n1-highmem-8",
     disk_size_gb : 200,
