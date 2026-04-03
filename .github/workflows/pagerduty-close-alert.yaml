@@ -1,0 +1,70 @@
+name: P1 outages actions
+on:
+  issues:
+    types: [closed]
+jobs:
+  parse-issue:
+    if: >
+      contains(github.event.issue.labels.*.name, 'pagerduty-alert') ||
+      contains(github.event.issue.labels.*.name, 'outage')
+    runs-on: ubuntu-latest
+
+  steps:
+  - name: Extract link from issue body
+    id: extract
+    shell: bash
+    env:
+      ISSUE_BODY: ${{ github.event.issue.body }}
+    run: |
+      set -euo pipefail
+
+      link="$(printf '%s\n' "$ISSUE_BODY" | sed -n 's/^link:[[:space:]]*//p' | head -n1)"
+
+      if [[ -z "$link" ]]; then
+        echo "No link: line found in issue body" >&2
+        exit 1
+      fi
+
+      echo "link=$link" >> "$GITHUB_OUTPUT"
+
+  - name: Extract incident ID from issue body
+    id: extract
+    shell: python
+    run: |
+      import os
+
+      body = "${{ github.event.issue.body }}"
+      output_file = os.getenv("GITHUB_OUTPUT")
+
+      incident_match = re.search(r'/incidents/([A-Z0-9]+)', body)
+      incident_id = incident_match.group(1) if incident_match else ''
+      print(incident_id)
+
+      with open(output_file, "a") as f:
+        f.write(f"incident_id={incident_id}")
+
+
+  - name: Leave a note to the incident
+    uses: ./.github/actions/pagerduty-note
+    with:
+      incident_id: ${{ github.event.client_payload.id }}
+      token: ${{ secrets.PD_TOKEN }}
+      note_content: Solved in ${{ github.event.issue.html_url }}
+
+  - name: Resolve incident
+    env:
+      ID: ${{ steps.extract.outputs.incident_id }}
+      PD_TOKEN: ${{ secrets.PD_TOKEN }}
+    run: |-
+      curl --request PUT \
+        --url https://api.pagerduty.com/incidents/$ID \
+        --header "Accept: application/json" \
+        --header "Authorization: Token token=$PD_TOKEN" \
+        --header "Content-Type: application/json" \
+        --header "From: " \
+        --data '{
+        "incident": {
+          "type": "incident_reference",
+          "status": "resolved"
+        }
+      }'
