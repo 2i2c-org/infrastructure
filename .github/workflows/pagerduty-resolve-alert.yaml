@@ -15,7 +15,7 @@ jobs:
       run: |
         import os
   
-        body = "${{ github.event.issue.body }}"
+        body = """${{ github.event.issue.body }}"""
         output_file = os.getenv("GITHUB_OUTPUT")
   
         incident_match = re.search(r'/incidents/([A-Z0-9]+)', body)
