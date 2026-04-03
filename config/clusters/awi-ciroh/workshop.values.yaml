@@ -11,7 +11,7 @@ basehub:
     quotaEnforcer:
       config:
         QuotaManager:
-          hard_quota: 250 # in GiB
+          hard_quota: 40 # in GiB
   jupyterhub:
     custom:
       singleuserAdmin:
@@ -66,7 +66,7 @@ basehub:
                 default: true
                 slug: new
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:43afa7f902b4
+                  image: quay.io/2i2c/awi-ciroh-image:d86a62ae0b85
               rkernel:
                 display_name: Notebook with R and Python kernel
                 slug: rkernel
@@ -115,10 +115,16 @@ basehub:
                   image: quay.io/awiciroh/devcon25:jmframe_d25
                   image_pull_policy: Always
               devcon7:
-                display_name: NextGen National Water Model(NWM)
+                display_name: CIROH Community NextGen Hub
                 slug: devcon7
                 kubespawner_override:
-                  image: quay.io/fbaig25/ngiab-2i2c:v1.0.0
+                  image: quay.io/awiciroh/ngiab-2i2c:v1.2.3
+                  image_pull_policy: Always
+              devcon8:
+                display_name: Community Assets Computation Hub
+                slug: devcon8
+                kubespawner_override:
+                  image: quay.io/awiciroh/symfluence:v1.0.0
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
@@ -157,35 +163,6 @@ basehub:
           cpu_guarantee: 7.5
           node_selector:
             node.kubernetes.io/instance-type: n2-highmem-16
-      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-        description: Start a container on a dedicated node with a GPU
-        allowed_groups:
-        - 2i2c-org:hub-access-for-2i2c-staff
-        - AlabamaWaterInstitute:2i2c_portal_users_gpu
-        profile_options:
-          image:
-            display_name: Image
-            choices:
-              tensorflow:
-                display_name: Pangeo Tensorflow ML Notebook
-                slug: tensorflow
-                kubespawner_override:
-                  image: pangeo/ml-notebook:2024.05.07
-              pytorch:
-                display_name: Pangeo PyTorch ML Notebook
-                default: true
-                slug: pytorch
-                kubespawner_override:
-                  image: pangeo/pytorch-notebook:2024.05.07
-        kubespawner_override:
-          environment:
-            NVIDIA_DRIVER_CAPABILITIES: compute,utility
-          mem_limit:
-          mem_guarantee: 14G
-          node_selector:
-            node.kubernetes.io/instance-type: n1-highmem-8
-          extra_resource_limits:
-            nvidia.com/gpu: '1'
       extraEnv:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
