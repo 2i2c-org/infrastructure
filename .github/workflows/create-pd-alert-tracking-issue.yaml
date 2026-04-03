@@ -1,4 +1,4 @@
-name: P1 outages actions
+name: Create a PD alert tracking issue
 on:
   repository_dispatch:
     types: [tracking-issue]
