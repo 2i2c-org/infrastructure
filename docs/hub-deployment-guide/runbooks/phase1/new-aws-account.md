@@ -58,8 +58,24 @@ When an AWS account is created under our AWS Organization, the default quotas
 that AWS applies to our organization are already set up for for the new account.
 By default, we don't need to request quota increases here.
 
-We typically need to increase three kinds of quotas described below. The values
+We typically need to increase the kinds of quotas described below. The values
 of these are all 'Total CPUs' and hence larger nodes consume more quota.
+
+- **EKS managed node groups quota** (`Managed node groups per cluster`)
+
+  These quotas are required to be able to create up to 100 managed node groups
+  per EKS cluster.
+
+  By default, AWS grants us 30 quota here for both.
+
+  Request an increase here: https://us-west-2.console.aws.amazon.com/servicequotas/home/services/eks/quotas/L-6D54EA21 or run the following AWS CLI command:
+
+  ```bash
+  aws service-quotas request-service-quota-increase \
+   --service-code eks \
+   --quota-code L-6D54EA21 \
+   --desired-value 100
+  ```
 
 - **Standard instance quota** (`Running On-Demand Standard (A, C, D, H, I, M, R, T, Z) instances`)
 
