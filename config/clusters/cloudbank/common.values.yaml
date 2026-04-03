@@ -24,7 +24,22 @@ jupyterhub:
       # Put everything on the most appropriate instance type for these users
       node.kubernetes.io/instance-type: n2-highmem-4
 jupyterhub-home-nfs:
+  # Reduce nfs server requests and limits from baseline,
+  # as we have a *lot* of hubs and spend a lot of money on core nodes
   quotaEnforcer:
+    resources:
+      requests:
+        cpu: 0.1
+        memory: 256M
+      limits:
+        cpu: 0.4
+        memory: 1G
     config:
       QuotaManager:
         hard_quota: 5 # in GiB
+  nfsServer:
+    resources:
+      requests:
+        memory: 512M
+      limits:
+        memory: 1.5G
