@@ -12,7 +12,7 @@ jsonschema==4.*
 # be difficult to parse by a human
 rich==14.*
 py-markdown-table==1.3.*
-tabulate==0.9.*
+tabulate==0.10.*
 
 # jhub_client, pytest, and pytest-asyncio are used for our health checks
 jhub-client==0.1.*
