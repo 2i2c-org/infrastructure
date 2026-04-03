@@ -133,26 +133,30 @@ properties:
         description: |
           Enable DaemonSet to disable core dumps on all nodes.
           This prevents core dumps from filling up disk storage.
-      image:
-        type: string
-        description: |
-          Container image to use for the DaemonSet
-      resources:
+      pauseContainer:
+        type: object
+        required:
+        - image
+        properties:
+          image:
+            type: string
+            description: |
+              Container image to use for the DaemonSet's pause container
+      initContainer:
         type: object
         additionalProperties: false
-        description: |
-          Resource requests and limits for the DaemonSet containers
+        required:
+        - image
         properties:
-          initContainer:
+          image:
+            type: string
+            description: |
+              Container image to use for the DaemonSet's initcontainer
+          resources:
             type: object
             additionalProperties: true
             description: |
               Resources for the init container that sets kernel.core_pattern
-          pauseContainer:
-            type: object
-            additionalProperties: true
-            description: |
-              Resources for the pause container that monitors the setting
 
   prometheusIngressAuthSecret:
     type: object
