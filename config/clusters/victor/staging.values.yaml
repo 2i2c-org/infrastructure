@@ -32,7 +32,20 @@ basehub:
     hub:
       config:
         CILogonOAuthenticator:
+          manage_groups: true
           oauth_callback_url: https://staging.hub.victorproject.org/hub/oauth_callback
+      extraConfig:
+        01-test-auth.py: |
+          def auth_state_groups_key(auth_state):
+            groups = []
+
+            email = auth_state.get("cilogon_user", {}).get("email")
+            if email is not None:
+              prefix, domain = email.split("@", 1)
+              groups.append(f"domain::{domain}")
+
+            return groups
+          c.CILogonOAuthenticator.auth_state_groups_key = auth_state_groups_key
     singleuser:
       nodeSelector:
         2i2c/hub-name: staging
