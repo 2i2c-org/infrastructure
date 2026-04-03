@@ -18,6 +18,9 @@ binderhub-service:
       # as nginx-ingress considers duplicate hosts "host collisions"
       # causing problems when cert-manager creates the temporary ACME ingress
       acme.cert-manager.io/http01-edit-in-place: "true"
+      nginx.org/proxy-buffering: "false"
+      nginx.org/proxy-read-timeout: "120s"
+
   nodeSelector:
     hub.jupyter.org/node-purpose: core
   service:
