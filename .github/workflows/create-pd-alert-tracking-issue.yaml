@@ -1,0 +1,48 @@
+name: Create a PD alert tracking issue
+on:
+  repository_dispatch:
+    types: [tracking-issue]
+jobs:
+  compute-iteration:
+    uses: ./.github/workflows/compute-iteration-number.yaml
+  create-tracking-issues:
+    runs-on: ubuntu-latest
+    needs: compute-iteration
+    steps:
+    - name: Create tracking issue
+      run: |
+        tracking_issue=$(gh issue create \
+        --label "pagerduty-alert" \
+        --title "Alert: ${{ github.event.client_payload.title }}" \
+        --body "$BODY")
+        echo "tracking_issue=$tracking_issue" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BODY: |
+          ### Context
+
+          This is an issue tracking the following PagerDuty alert:
+          - **link**: https://2i2c-org.pagerduty.com/incidents/${{ github.event.client_payload.incident_id }}
+          - **priority**: ${{ github.event.client_payload.priority }}
+          - **title**: ${{ github.event.client_payload.title }}
+          - **service**: ${{ github.event.client_payload.service }}
+
+          ### Definition of Done
+
+          - [ ] Solve the alert
+
+    - name: Sleep a bit to allow issue to be added to the board by automation
+      run: sleep 3
+
+    - name: Set the "Status" and mark the issue as "Emergency" in the project board
+      uses: EndBug/project-fields@v2
+      with:
+        operation: set
+            # If the fields name or type will change
+            # expect this step to fail
+        fields: Status,Unplanned,Iteration
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: In progress,Unplanned,Iteration ${{ needs.compute-iteration.outputs.iteration }}
+        resource_url: ${{ env.tracking_issue }}

@@ -65,6 +65,7 @@ jobs:
         timeout_minutes: 10
         max_attempts: 3
         command: |
+          set -euo pipefail
           echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
           deployer run-hub-health-check ${{ inputs.cluster }} ${{ inputs.hub }} | tee --append "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
