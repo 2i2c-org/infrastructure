@@ -9,30 +9,31 @@ jobs:
       contains(github.event.issue.labels.*.name, 'outage')
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v6
     - name: Extract incident ID from issue body
       id: extract
       shell: python
       run: |
         import os
         import re
-  
+
         body = """${{ github.event.issue.body }}"""
         output_file = os.getenv("GITHUB_OUTPUT")
-  
+
         incident_match = re.search(r'/incidents/([A-Z0-9]+)', body)
         incident_id = incident_match.group(1) if incident_match else ''
         print(incident_id)
-  
+
         with open(output_file, "a") as f:
           f.write(f"incident_id={incident_id}")
-  
+
     - name: Leave a note to the incident
       uses: ./.github/actions/pagerduty-note
       with:
         incident_id: ${{ steps.extract.outputs.incident_id }}
         token: ${{ secrets.PD_TOKEN }}
         note_content: Solved in ${{ github.event.issue.html_url }}
-  
+
     - name: Resolve incident
       env:
         ID: ${{ steps.extract.outputs.incident_id }}
