@@ -1,4 +1,4 @@
-name: P1 outages actions
+name: Resolve PagerDuty alert
 on:
   issues:
     types: [closed]
