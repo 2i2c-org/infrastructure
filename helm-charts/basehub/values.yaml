@@ -424,6 +424,8 @@ jupyterhub:
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
       cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.org/proxy-buffering: "false"
+      nginx.org/proxy-read-timeout: "120s"
   scheduling:
     # We declare matchNodePurpose=require to get a nodeAffinity like a
     # nodeSelector on all core pods and user pods. core pods like hub and proxy
