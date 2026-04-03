@@ -86,7 +86,7 @@ To resolve the alert:
 
 Any time two consecutive spawns fail in a 30m time window, we trigger an alert. This alert doesn't have a severity lever or a priority level set on it by default because it can be anything. This is why is best to investigate these ASAP.
 
-There is additional automation that runs each time an alert like this is triggered. The automation triggers a [GitHub workflow](https://github.com/2i2c-org/infrastructure/blob/main/.github/workflows/pd-triggered-health-check.yaml) that runs a health check for the alerting cluster and hub.
+There is additional automation that runs each time an alert like this is triggered. The automation triggers a [GitHub workflow](https://github.com/2i2c-org/infrastructure/blob/main/.github/workflows/pagerduty-triggered-health-check.yaml) that runs a health check for the alerting cluster and hub.
 - A note with the status of this run is left in the PagerDuty incident
 - In addition, if the health check succeeds, the incident is resolved and a message with this status is posted in the `#pagerduty-notifications` Slack channel
 - If the health check fails, then a message, mentioning the channel members, is posted in the `#pagerduty-notifications` Slack channel
