@@ -104,7 +104,7 @@ runs:
     # - 2i2c, k8s upgrades tracked: https://github.com/2i2c-org/infrastructure/issues/2293
     # - 2i2c, historical issue: https://github.com/2i2c-org/infrastructure/issues/1271
     #
-  - uses: azure/setup-kubectl@v4
+  - uses: azure/setup-kubectl@v5
     with:
       version: v1.28.8
 
