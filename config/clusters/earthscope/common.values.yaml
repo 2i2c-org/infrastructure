@@ -23,6 +23,9 @@ basehub:
         # emails as access
         add_staff_user_ids_to_admin_users: false
     hub:
+      image:
+        # Temporarily add latest fancy profiles to pilot-hub image
+        tag: 0.0.1-0.dev.git.15540.hbaaa997ce
       extraConfig:
         001-username-claim: |
           import json
