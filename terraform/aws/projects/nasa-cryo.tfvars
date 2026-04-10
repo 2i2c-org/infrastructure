@@ -73,6 +73,11 @@ hub_cloud_permissions = {
                   "arn:aws:s3:::ghgc-data-store/*"
 
                 ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": "lambda:InvokeFunction",
+                "Resource": "arn:aws:lambda:us-west-2:429435741471:function:process-morton-cell"
             }
         ]
       }
@@ -107,6 +112,11 @@ hub_cloud_permissions = {
                   "arn:aws:s3:::ghgc-data-store",
                   "arn:aws:s3:::ghgc-data-store/*"
                 ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": "lambda:InvokeFunction",
+                "Resource": "arn:aws:lambda:us-west-2:429435741471:function:process-morton-cell"
             }
         ]
       }
