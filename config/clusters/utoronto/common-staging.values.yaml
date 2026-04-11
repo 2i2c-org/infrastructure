@@ -12,7 +12,7 @@ jupyterhub:
             return auth_state
 
           auth_url = urlparse(authenticator.authorize_url)
-          org_url = f"{url.scheme}://{url.netloc}" 
+          canvas_url = f"{auth_url.scheme}://{auth_url.netloc}" 
 
           access_token = auth_state["access_token"]
 
@@ -36,13 +36,14 @@ jupyterhub:
         - url:GET|/api/v1/users/:user_id/profile
         - url:GET|/api/v1/users/self/groups
         - url:GET|/api/v1/courses
+        admin_groups:
+        - course::2i2c-jupyter::enrollment_type::teacher
         admin_users:
         - holla162
         - pandayuv
         - elenageo
         - wonj202
-        - grahamj
-        - huaani1
+        #- grahamj
+        #- huaani1
         manage_groups: true
         auth_state_groups_key: groups
-        allowed_groups: []
