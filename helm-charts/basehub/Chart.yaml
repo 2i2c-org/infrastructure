@@ -5,7 +5,7 @@ name: basehub
 # Updates to this version must be kept in sync with the dependency reference in
 # the daskhub chart. Since we don't publish this, we opt to have it frozen at
 # version 0.1.0 instead.
-version: "0.1.0"
+version: "0.0.1-0.dev.git.15497.h40180b4bf"
 dependencies:
   - name: jupyterhub
     # Updates to this version should follow go hand in hand with updates to

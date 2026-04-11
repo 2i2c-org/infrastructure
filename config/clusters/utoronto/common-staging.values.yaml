@@ -1,5 +1,29 @@
 jupyterhub:
   hub:
+    image:
+      name: quay.io/2i2c/pilot-hub-authz-helpers
+      tag: 0.0.1-0.dev.git.15467.h0cadc91ad
+    extraConfig:
+      001-canvas-auth: |
+        from urllib.parse import urlparse
+        from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups
+        async def auth_state_hook(authenticator, auth_state):
+          if not auth_state:
+            return auth_state
+
+          auth_url = urlparse(authenticator.authorize_url)
+          org_url = f"{url.scheme}://{url.netloc}" 
+
+          access_token = auth_state["access_token"]
+
+          auth_state["groups"] = [
+            *await get_course_groups(canvas_url, access_token, "course_code"),
+            *await get_user_groups(canvas_url, access_token),
+          ]
+
+          return auth_state
+
+        c.OAuthenticator.modify_auth_state_hook = auth_state_hook
     config:
       JupyterHub:
         authenticator_class: generic-oauth
@@ -19,3 +43,6 @@ jupyterhub:
         - wonj202
         - grahamj
         - huaani1
+        manage_groups: true
+        auth_state_groups_key: groups
+        allowed_groups: []
