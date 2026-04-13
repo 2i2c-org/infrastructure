@@ -2,7 +2,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/pilot-hub-authz-helpers
-      tag: 0.0.1-0.dev.git.15546.h9e7f8378a
+      tag: 0.0.1-0.dev.git.15549.h02b2a4460
     extraConfig:
       001-canvas-auth: |
         from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls, build_profile_url
