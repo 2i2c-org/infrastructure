@@ -2,10 +2,10 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/pilot-hub-authz-helpers
-      tag: 0.0.1-0.dev.git.15551.he712603ac
+      tag: 0.0.1-0.dev.git.15553.h6a0c1c344
     extraConfig:
       001-canvas-auth: |
-        from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls, build_profile_url
+        from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls
         canvas_url = "https://utoronto-dev.instructure.com"
 
         async def auth_state_hook(authenticator, auth_state):
@@ -22,11 +22,10 @@ jupyterhub:
         cfg = c.GenericOAuthenticator
         cfg.modify_auth_state_hook = auth_state_hook
 
-        cfg.token_url, cfg.authorize_url = build_auth_urls(canvas_url)
-        cfg.userdata_url = build_profile_url(canvas_url)
+        cfg.authorize_url, cfg.token_url, c.userdata_url = build_auth_urls(canvas_url)
 
         # Scopes that this token will need
-        cfg.scope = [*build_profile_url.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
+        cfg.scope = [*build_auth_urls.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
     config:
       JupyterHub:
         authenticator_class: generic-oauth
