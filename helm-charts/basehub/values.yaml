@@ -1464,7 +1464,7 @@ jupyterhub:
                     # will then not be allowed to 'write in' a value.
                     if 'unlisted_choice' in po:
                       if 'allowed_groups' in po['unlisted_choice']:
-                        if not (set(po['unlisted_choice']['allowed_groups']) and groups):
+                        if not (set(po['unlisted_choice']['allowed_groups']) & groups):
                           del po['unlisted_choice']
 
                     if 'choices' in po:
