@@ -32,6 +32,9 @@ jupyterhub:
     config:
       GenericOAuthenticator:
         username_claim: sis_user_id
+        # Replace rather than duplicate tokens
+        token_params:
+          replace_tokens: 1
 
     extraConfig:
       001-canvas-auth: |
