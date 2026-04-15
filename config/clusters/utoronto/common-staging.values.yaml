@@ -31,6 +31,8 @@ jupyterhub:
         authenticator_class: generic-oauth
       GenericOAuthenticator:
         username_claim: sis_user_id
+        token_params:
+          replace_tokens: 1
         admin_groups:
         - course::2i2c-jupyter::enrollment_type::teacher
         admin_users:
