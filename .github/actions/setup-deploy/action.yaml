@@ -69,54 +69,19 @@ runs:
       go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
     shell: bash
 
-    # This action use the github official cache mechanism internally
   - uses: azure/setup-helm@v4
     with:
-        # Manually update a pinning of helm to a minor version based on:
-        #
-        # - it seems to work
-        # - to avoid falling behind
-        #
-        # Related:
-        #
-        # - helm versions: https://github.com/helm/helm/releases
-        #
-      version: v3.14.4
+      version: v4.1.1
 
-    # Manually update a pinning of kubectl to a minor version based on:
-    #
-    # - the current range of k8s version in our k8s clusters, as of 2024-04-17,
-    #   this is k8s 1.27 - 1.29
-    # - the next expected change in this range, as of 2024-04-17, is to expand
-    #   to include 1.30
-    # - the kubectl <-> k8s api-server skew policy of +/- one minor version
-    # - the policy of attempting to update our kubectl version here to be +/-
-    #   one minor versions of future k8s clusters additions or upgrades, so that
-    #   additions or upgrades of k8s clusters aren't unexpectedly held back
-    #
-    # As an example, we upgraded to kubectl to version 1.24 before we
-    # added/upgraded a k8s cluster to version 1.25.
-    #
-    # Related:
-    #
-    # - k8s versions: https://kubernetes.io/releases/
-    # - Kubectl version skew policy: https://kubernetes.io/releases/version-skew-policy/#kubectl
-    # - 2i2c, k8s upgrades tracked: https://github.com/2i2c-org/infrastructure/issues/2293
-    # - 2i2c, historical issue: https://github.com/2i2c-org/infrastructure/issues/1271
-    #
   - uses: azure/setup-kubectl@v4
     with:
-      version: v1.28.8
+      version: v1.34
 
-    # This action use the github official cache mechanism internally
   - name: Install sops
     uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
     # Install pre-requisite for "gcloud container clusters get-credentials"
-    # command with a modern k8s client.
-    #
-    # A manual install step has been needed as they opted to not provide it in
-    # the github-runner image. See
+    # command with a modern k8s client. See
     # https://github.com/actions/runner-images/issues/5925#issuecomment-1216417721.
     #
   - name: Install gke-gcloud-auth-plugin
