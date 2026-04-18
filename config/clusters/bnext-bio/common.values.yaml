@@ -19,7 +19,7 @@ jupyterhub:
       templateVars:
         org:
           name: bnext-bio
-          logo_url: https://bnext.bio/assets/logo_1752007791752-BRLYypJ5.png
+          logo_url: https://github.com/nucleus-eng/nucleus-docs/blob/main/logo.png
           url: https://bnext.bio/
         designed_by:
           name: 2i2c
