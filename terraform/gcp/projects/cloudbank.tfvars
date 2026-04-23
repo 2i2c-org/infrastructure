@@ -232,7 +232,7 @@ persistent_disks = {
     name_suffix = "sjsu"
   }
   "skyline" = {
-    size        = 96
+    size        = 115
     name_suffix = "skyline"
   }
   "sou" = {
