@@ -15,10 +15,12 @@ basehub:
         templateVars:
           # To login to earthscope staging, now use https://staging.geolab.earthscope.cloud/hub/oauth_login
           redirect_to: https://www.earthscope.org/data/geolab/
+    debug:
+      enabled: true
     hub:
       image:
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 0.0.1-0.dev.git.15467.h0cadc91ad
+        tag: 1389e6181c78ec61e9c3c5e430e8840758d0854c
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token
@@ -29,8 +31,8 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
+          refresh_pre_spawn: true
         UsageQuotaManager:
-          prometheus_scrape_interval: 60
           prometheus_url: http://support-prometheus-server.support.svc.cluster.local
           prometheus_usage_metrics:
             memory: kube_pod_container_resource_requests{resource='memory'}
@@ -42,33 +44,107 @@ basehub:
                 unit: GiB-hours
               window: 7
             intersection: max
+          failover_open: true
       extraConfig:
         11-enforce-usage-quotas: |
+          from jupyterhub_usage_quotas import setup_usage_quotas
           from jupyterhub_usage_quotas.manager import SpawnException, UsageQuotaManager
 
+          setup_usage_quotas(c)
           quota_manager = UsageQuotaManager(config=c)
 
           async def quota_pre_spawn_hook(spawner):
-              try:
-                  output = await quota_manager.enforce(spawner)
-                  launch_flag = output["allow_server_launch"]
-              except Exception:
-                  raise SpawnException(
-                      status_code=424,
-                      log_message="Spawn failed occurred due to a failed dependency in the usage quota system. Please contact your hub admin for assistance.",
-                  )
-              if launch_flag is False:
-                  raise SpawnException(
-                      status_code=403,
-                      log_message=f"{output['error']['message']}",
-                      html_message=f"<p>Compute {output['quota']['resource']} quota limit exceeded.</p><p style='font-size:100%'>You have used <span style='color:var(--bs-red)'>{output['quota']['used']:.2f}</span> / {output['quota']['limit']['value']:.2f} {output['quota']['limit']['unit']} in the last {output['quota']['window']} days.</p><p style='font-size:100%'>Contact your JupyterHub admin if you need additional quota.</p><i style='font-size:100%;color:var(--bs-gray)'>Last updated: {output["timestamp"]} (UTC).</i>",
-                  )
-          c.KubeSpawner.pre_spawn_hook = quota_pre_spawn_hook                   
+            try:
+                user_name = spawner.user.name
+                user_groups = [g.name for g in spawner.user.groups]
+                output = await quota_manager.enforce(user_name, user_groups)
+                launch_flag = output["allow_server_launch"]
+            except Exception as e:
+                if c.UsageQuotaManager.failover_open is True:
+                    launch_flag = True
+                    quota_manager.log.error(
+                        f"Usage quota system failed open for user {user_name} with exception: {e}."
+                    )
+                else:
+                    raise SpawnException(
+                        status_code=424,
+                        log_message="Spawn failure occurred due to a failed dependency in the usage quota system. Please contact your hub admin for assistance.",
+                    )
+            if launch_flag is False:
+                raise SpawnException(
+                    status_code=422,
+                    log_message=f"{output['error']['message']}",
+                    html_message=f"<p>Compute {output['quota']['resource']} quota limit exceeded.</p><p style='font-size:100%'>You have used <span style='color:var(--bs-red)'>{output['quota']['used']:.2f}</span> / {output['quota']['limit']['value']:.2f} {output['quota']['limit']['unit']} in the last {output['quota']['window']} days.</p><p style='font-size:100%'>Your quota will reset on <b><time datetime='{output['error']['retry_time']}'>{output['error']['retry_time']}</time></b>.</p><p style='font-size:100%'>Contact your JupyterHub admin if you need additional quota.</p><i style='font-size:100%;color:var(--bs-gray)'>Last updated: <time datetime='{output['timestamp']}'>{output["timestamp"]}</time>.</i>",
+                )
+          c.KubeSpawner.pre_spawn_hook = quota_pre_spawn_hook   
+      services:
+        usage-quota:
+          url: http://hub:9000
+          display: false
+          oauth_no_confirm: true
+          command:
+          - python
+          - -m
+          - jupyterhub_usage_quotas.services.usage_viewer
+          - --port=9000
+          - --public-hub-url=https://staging.geolab.earthscope.cloud
+          - --prometheus-url=http://support-prometheus-server.support.svc.cluster.local
+          - --hub-namespace=staging
+          - --UsageViewer.escape_username_safe_scheme=False
+      loadRoles:
+        usage-quota-service:
+          scopes:
+          - read:users
+          services:
+          - usage-quota
+        user:
+          scopes:
+          - self
+          - access:services!service=usage-quota
+      service:
+        extraPorts:
+        - port: 9000
+          targetPort: 9000
+          name: usage-quota
+      networkPolicy:
+        ingress:
+        - ports:
+          - port: 9000
+          from:
+          # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
+          # for hub managed services.
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
+          # Allow traffic from the proxy api pod
+          - podSelector:
+              matchLabels:
+                hub.jupyter.org/network-access-hub: 'true'
+        - ports:
+          - port: 8081
+          from:
+          # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
     singleuser:
       nodeSelector:
         2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
+    proxy:
+      chp:
+        networkPolicy:
+          egress:
+          - to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: jupyterhub
+                  app.kubernetes.io/component: hub
+            ports:
+            - port: 9000
   dask-gateway:
     gateway:
       backend:
