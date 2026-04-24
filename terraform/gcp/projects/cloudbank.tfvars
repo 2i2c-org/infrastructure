@@ -28,7 +28,7 @@ persistent_disks = {
     name_suffix = "bmcc"
   }
   "ccsf" = {
-    size        = 450
+    size        = 513
     name_suffix = "ccsf"
   }
   "chabot" = {
@@ -68,7 +68,7 @@ persistent_disks = {
     name_suffix = "demo"
   }
   "dvc" = {
-    size        = 90
+    size        = 98
     name_suffix = "dvc"
   }
   "elac" = {
