@@ -2,9 +2,29 @@ local cluster_name = std.extVar('VARS_2I2C_CLUSTER_NAME');
 local provider_name = std.extVar('VARS_2I2C_PROVIDER');
 
 function(VARS_2I2C_AWS_ACCOUNT_ID=null)
-  local sameDayAction = 'same day action needed',
-  local sameWeekAction = 'action needed this week',
-  local immediateAction = 'take immediate action',
+  local sameDayAction = 'same day action needed';
+  local sameWeekAction = 'action needed this week';
+  local immediateAction = 'take immediate action';
+  local makeMissingKubeletVolumeMetricsAlert = function(
+    summary,
+    severity,
+    forInterval='5m',
+                                               ) {
+    alert: 'Kubelet volume metrics are missing',
+    expr: |||
+      # Detect when the kubelet PVC metrics are missing
+      absent(kubelet_volume_stats_available_bytes) == 1
+    |||,
+    'for': forInterval,
+    labels: {
+      cluster: cluster_name,
+      severity: severity,
+    } + labels,
+    annotations: {
+      summary: summary,
+    },
+  };
+
   local makePVCApproachingFullAlert = function(
     summary,
     persistentvolumeclaim,
@@ -344,6 +364,16 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
                 diskIOApproachingSaturation(
                   'Disk IO approaching saturation',
                   sameWeekAction
+                ),
+              ],
+            },
+            {
+              name: 'Infrastructure Integrity',
+              rules: [
+                makeMissingKubeletVolumeMetricsAlert(
+                  'Kubelet volume metrics are not being reported',
+                  sameDayAction,
+                  '30m'
                 ),
               ],
             },
