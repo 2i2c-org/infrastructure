@@ -15,7 +15,7 @@ The sub-sections below cover both scenarios.
 
 #### 1.1.1 Backup the hub database
 
-[Backup the `jupyterhub.sqlite` database](https://infrastructure.2i2c.org/en/latest/howto/hubs/move-hub.html#transfer-the-jupyterhub-database) off the hub.
+[Backup the `jupyterhub.sqlite` database](backup-hub-db) off the hub.
 
 #### 1.1.2. Backup the home directory contents.
 
