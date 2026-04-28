@@ -13,6 +13,34 @@ user_buckets = {
   },
   "scratch" : {
     "delete_after" : 7,
+    "bucket_policy" : <<-EOT
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "MAAPHubAllowReadOnly",
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": [
+                "arn:aws:iam::916098889494:role/maap-staging",
+                "arn:aws:iam::916098889494:role/maap-prod"
+              ]
+            },
+            "Action": [
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:ListBucketVersions",
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": [
+              "__BUCKET_ARN__",
+              "__BUCKET_ARN__/*"
+            ]
+          }
+        ]
+      }
+    EOT,
     "tags" : { "2i2c:hub-name" : "prod" },
   },
   "scratch-binder" : {

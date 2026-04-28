@@ -57,6 +57,17 @@ locals {
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document
 data "aws_iam_policy_document" "bucket_access" {
   for_each = { for bp in local.bucket_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
+  source_policy_documents = compact([
+    try(
+      replace(
+        var.user_buckets[each.value.bucket_name].bucket_policy,
+        "__BUCKET_ARN__",
+        aws_s3_bucket.user_buckets[each.value.bucket_name].arn
+      ),
+      null
+    )
+  ])
+
   statement {
     effect  = "Allow"
     actions = ["s3:*"]
