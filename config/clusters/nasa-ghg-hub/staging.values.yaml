@@ -43,6 +43,7 @@ basehub:
           - --public-hub-url=https://staging.ghg.2i2c.cloud
           - --prometheus-url=http://support-prometheus-server.support.svc.cluster.local
           - --hub-namespace=staging
+          - --UsageConfig.config_file=/usr/local/etc/jupyterhub/usage_quota_config.py
       loadRoles:
         usage-quota-service:
           scopes:
