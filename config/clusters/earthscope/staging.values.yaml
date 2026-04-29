@@ -39,6 +39,15 @@ basehub:
                 unit: GiB-hours
               window: 7
             intersection: max
+          policy:
+          - resource: memory
+            limit:
+              value: 1000
+              unit: GiB-hours
+            window: 7
+            scope:
+              group:
+              - geolab:dev
           failover_open: true
       extraConfig:
         11-enforce-usage-quotas: |
