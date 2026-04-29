@@ -48,6 +48,15 @@ basehub:
       config:
         JupyterHub:
           authenticator_class: github
+        Spawner:
+          # Scopes granted to the server for the *browser* token
+          # This list was taken from https://jupyterhub.readthedocs.io/en/stable/tutorial/sharing.html#grant-servers-permission-to-share-themselves-admin
+          # and then reduced to _only_ the current server
+          oauth_client_allowed_scopes:
+            - shares!server
+            - servers!server
+            - read:users:name
+            - list:users
         GitHubOAuthenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to populate the teams in the auth state
@@ -71,8 +80,11 @@ basehub:
       loadRoles:
         user:
           scopes:
-          - self
-          - shares!user
+            - self
+            # Sharing scopes
+            - shares!user
+            - read:users:name
+            - list:users
     singleuser:
       cloudMetadata:
         blockWithIptables: false
