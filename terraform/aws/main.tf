@@ -19,6 +19,11 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.6"
     }
+
+    sops = {
+      source  = "carlpett/sops"
+      version = "~> 1.1"
+    }
   }
   backend "gcs" {
     bucket = "two-eye-two-see-org-terraform-state"
