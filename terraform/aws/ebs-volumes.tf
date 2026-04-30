@@ -34,6 +34,7 @@ resource "aws_sns_topic_subscription" "volume_metric_exceeded_https_target" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
+  for_each                  = aws_ebs_volume.nfs_home_dirs
   alarm_name                = "warn-volume-throughput-exceeded"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = 1
@@ -45,9 +46,13 @@ resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
   alarm_description         = "This metric monitors disk throughput"
   insufficient_data_actions = []
   alarm_actions             = [aws_sns_topic.volume_metric_exceeded.arn]
+  dimensions = {
+    VolumeId = each.value.id
+  }
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_iops_alarm" {
+  for_each                  = aws_ebs_volume.nfs_home_dirs
   alarm_name                = "warn-volume-iops-exceeded"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = 1
@@ -59,6 +64,9 @@ resource "aws_cloudwatch_metric_alarm" "volume_iops_alarm" {
   alarm_description         = "This metric monitors disk IOPs"
   insufficient_data_actions = []
   alarm_actions             = [aws_sns_topic.volume_metric_exceeded.arn]
+  dimensions = {
+    VolumeId = each.value.id
+  }
 }
 
 output "ebs_volume_id_map" {
