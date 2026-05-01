@@ -1,0 +1,12 @@
+config:
+  JupyterBookPubApp:
+    base_url: /services/jupyterbook-pub/
+
+extraBuilderConfig:
+  name: builder_config.json
+  json:
+    JupyterBook2Builder:
+      allow_source_builds: false
+
+auth:
+  enabled: false

@@ -83,6 +83,9 @@ jupyterhub:
       nodeSelector:
         capi.stackhpc.com/node-group: user-m3-large
   hub:
+    services:
+      jupyterbook-pub:
+        url: http://jupyterbook-pub-service
     nodeSelector:
       capi.stackhpc.com/node-group: core
     loadRoles:
