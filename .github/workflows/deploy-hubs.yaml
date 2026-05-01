@@ -94,7 +94,7 @@ jobs:
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
     - name: Get merged/open PR labels
-      uses: actions/github-script@v8
+      uses: actions/github-script@v9
       id: pr-labels
       with:
           # Both pull_request and push can have triggered this job to run. A
