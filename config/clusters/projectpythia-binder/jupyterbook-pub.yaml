@@ -1,3 +1,6 @@
+# Manually deployed from
+# https://agoose77.github.io/jupyterbook-pub-service/
+# 0.1.0-0.dev.git.27.h91f01c4
 config:
   JupyterBookPubApp:
     base_url: /services/jupyterbook-pub/
