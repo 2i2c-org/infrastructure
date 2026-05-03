@@ -1,6 +1,9 @@
 name: disasters
 provider: aws
 provider_url: https://smce-aws-disasters.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 86933236464
 aws:
   account: 515966502221
   key: enc-deployer-credentials.secret.json

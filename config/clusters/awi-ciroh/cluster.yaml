@@ -1,6 +1,9 @@
 name: awi-ciroh
 provider: gcp
 provider_url: https://console.cloud.google.com/home/dashboard?&project=ciroh-jupyterhub-423218
+metadata:
+  2i2c:
+    hubspot_deal_id: 86221242068
 gcp:
   key: enc-deployer-credentials.secret.json
   project: ciroh-jupyterhub-423218
