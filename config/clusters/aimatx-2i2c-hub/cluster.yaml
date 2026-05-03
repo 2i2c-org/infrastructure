@@ -1,6 +1,9 @@
 name: aimatx-2i2c-hub
 provider: aws
 provider_url: https://426578051359.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 160773736149
 aws:
   account: 426578051359
   key: enc-deployer-credentials.secret.json
