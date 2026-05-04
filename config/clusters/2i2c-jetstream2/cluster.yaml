@@ -3,6 +3,9 @@ provider: kubeconfig # allocation CIS250031_IU in https://js2.jetstream-cloud.or
 provider_url: https://js2.jetstream-cloud.org/project/
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
+metadata:
+  2i2c:
+    hubspot_deal_id: 323519075008
 support:
   helm_chart_values_files:
   - support.values.yaml
