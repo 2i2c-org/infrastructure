@@ -45,6 +45,22 @@ properties:
 
   # These provide values for objects we create, so we validate their schema
   # to the best of our ability.
+  copyfail:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+      image:
+        type: object
+        additionalProperties: false
+        properties:
+          repository:
+            type: string
+          tag:
+            type: string
   redirects:
     type: object
     additionalProperties: false
