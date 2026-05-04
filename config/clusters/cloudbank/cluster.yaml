@@ -8,6 +8,9 @@ gcp:
   zone: us-central1-b
   billing:
     paid_by_us: false
+metadata:
+  2i2c:
+    hubspot_deal_id: 86933236427
 support:
   helm_chart_values_files:
   - support.values.yaml
