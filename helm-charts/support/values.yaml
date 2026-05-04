@@ -14,6 +14,12 @@
 cluster-autoscaler:
   enabled: false
 
+copyfail:
+  enabled: true
+  image:
+    repository: ghcr.io/iwanhae/copyfail-ebpf
+    tag: latest
+
 clusterEntrypoint:
   enabled: true
   targetController: ingress-nginx
