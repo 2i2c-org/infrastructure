@@ -29,7 +29,7 @@ persistent_disks = {
     name_suffix = "staging"
   },
   "mtu" = {
-    size        = 75 # in GB
+    size        = 83 # in GB
     name_suffix = "mtu"
   }
 }
