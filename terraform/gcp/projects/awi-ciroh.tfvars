@@ -31,10 +31,10 @@ budget_alert_enabled = false
 billing_account_id   = ""
 
 k8s_versions = {
-  min_master_version : "1.34.4-gke.1130000",
-  core_nodes_version : "1.34.4-gke.1130000",
-  notebook_nodes_version : "1.34.4-gke.1130000",
-  dask_nodes_version : "1.34.4-gke.1130000",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
+  dask_nodes_version : "1.35.3-gke.1943000",
 }
 
 user_buckets = {
@@ -68,6 +68,20 @@ notebook_nodes = {
     machine_type : "n2-highmem-4",
   },
   "n2-highmem-16" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
+    node_version : "1.34.4-gke.1130000",
+    taints : [
+      # Prevent new pods from scheduling here.
+      {
+        key : "manual-phaseout"
+        value : "noop"
+        effect : "NO_SCHEDULE"
+      }
+    ],
+  },
+  "n2-highmem-16-a" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",

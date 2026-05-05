@@ -236,7 +236,7 @@ persistent_disks = {
     name_suffix = "skyline"
   }
   "sou" = {
-    size        = 25
+    size        = 100
     name_suffix = "sou"
   }
   "spelman" = {
@@ -293,10 +293,10 @@ k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
-  min_master_version : "1.34.4-gke.1193000",
-  core_nodes_version : "1.34.4-gke.1193000",
-  notebook_nodes_version : "1.34.4-gke.1193000",
-  dask_nodes_version : "1.34.4-gke.1193000",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
+  dask_nodes_version : "1.35.3-gke.1943000",
 }
 
 core_node_machine_type = "n2-highmem-2"
@@ -307,17 +307,11 @@ enable_network_policy = true
 
 notebook_nodes = {
   "n2-highmem-4-b" : {
-    min : 2,
-    max : 100,
-    machine_type : "n2-highmem-4",
-    disk_size_gb : 150,
-  },
-  "n2-highmem-4" : {
-    node_version : "1.34.1-gke.3971001",
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
     disk_size_gb : 150,
+    node_version : "1.34.4-gke.1193000",
     taints : [
       # Prevent new pods from scheduling here.
       {
@@ -326,6 +320,12 @@ notebook_nodes = {
         effect : "NO_SCHEDULE"
       }
     ],
+  },
+  "n2-highmem-4-a" : {
+    min : 2,
+    max : 100,
+    machine_type : "n2-highmem-4",
+    disk_size_gb : 150,
   },
   "gpu-t4" : {
     min : 0,

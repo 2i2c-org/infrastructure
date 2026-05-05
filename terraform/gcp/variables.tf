@@ -54,7 +54,9 @@ variable "k8s_version_prefixes" {
     "1.32.",
     "1.33.",
     "1.34.",
-    "1.",
+    "1.35.",
+    "1.36.",
+    "1."
   ]
   description = <<-EOT
   A list of k8s version prefixes that can be evaluated to their latest version by
