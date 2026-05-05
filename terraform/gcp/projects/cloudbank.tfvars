@@ -321,7 +321,7 @@ notebook_nodes = {
       }
     ],
   },
-  "n2-highmem-4" : {
+  "n2-highmem-4-a" : {
     min : 2,
     max : 100,
     machine_type : "n2-highmem-4",
