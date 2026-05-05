@@ -11,10 +11,10 @@ k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
-  min_master_version : "1.34.1-gke.3971001",
-  core_nodes_version : "1.34.1-gke.3971001",
-  notebook_nodes_version : "1.34.1-gke.3971001",
-  dask_nodes_version : "1.34.1-gke.3971001",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
+  dask_nodes_version : "1.35.3-gke.1943000",
 }
 
 core_node_machine_type = "n2-highmem-2"
@@ -29,7 +29,7 @@ persistent_disks = {
     name_suffix = "staging"
   },
   "mtu" = {
-    size        = 75 # in GB
+    size        = 83 # in GB
     name_suffix = "mtu"
   }
 }
