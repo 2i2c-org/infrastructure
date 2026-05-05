@@ -7,10 +7,10 @@ billing_account_id     = "0157F7-E3EA8C-25AC3C"
 enable_network_policy  = true
 
 k8s_versions = {
-  min_master_version : "1.34.4-gke.1130000",
-  core_nodes_version : "1.34.4-gke.1130000",
-  notebook_nodes_version : "1.34.4-gke.1130000",
-  dask_nodes_version : "1.34.4-gke.1130000",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
+  dask_nodes_version : "1.35.3-gke.1943000",
 }
 
 # Disable single centralised filestore in favour of persistent disks
