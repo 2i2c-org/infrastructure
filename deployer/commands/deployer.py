@@ -125,6 +125,7 @@ def deploy(
             default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
             chart_override = hub.spec.get("chart_override", None)
             if chart_override and "/" in chart_override:
+                # It's probably a path relative to the repo root
                 chart_override_path = REPO_ROOT_PATH / chart_override
                 chart_override = chart_override.split("/")[-1]
             else:
