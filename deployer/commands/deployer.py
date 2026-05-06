@@ -133,7 +133,10 @@ def deploy(
                     hub.cluster.config_dir / chart_override if chart_override else None
                 )
             with get_chart_dir(
-                default_chart_dir, chart_override, chart_override_path
+                default_chart_dir,
+                chart_override,
+                chart_override_path,
+                hub.legacy_daskhub,
             ) as chart_dir:
                 if chart_override_path:
                     print_colour(
