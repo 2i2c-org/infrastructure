@@ -168,13 +168,24 @@ def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
             # if we're overriding the Chart.yaml file, then we need to make sure
             # that we're copying the contents for helm-charts/basehub and not the
             # deprecated daskhub chart
-            default_chart_dir = HELM_CHARTS_DIR / "basehub"
+            default_basehub_chart_dir = HELM_CHARTS_DIR / "basehub"
             temp_chart_dir = tempfile.TemporaryDirectory(prefix=CUSTOM_HUB_CHART_PREFIX)
             temp_chart_dir_name = temp_chart_dir.name
+            if "daskhub":
+                temp_chart_dir_name = temp_chart_dir_name / "basehub"
+
             # copy the chart directory into the temporary location
-            shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)
+            shutil.copytree(
+                default_basehub_chart_dir, temp_chart_dir_name, dirs_exist_ok=True
+            )
             # copy the chart override file into the temporary chart directory
             shutil.copy(chart_override_path, temp_chart_dir_name)
+            if "daskhub":
+                default_daskhub_chart_dir = HELM_CHARTS_DIR / "daskhub"
+                temp_chart_dir_name = temp_chart_dir_name
+                shutil.copytree(
+                    default_daskhub_chart_dir, temp_chart_dir_name, dirs_exist_ok=True
+                )
             # rename the override file so that it overrides "Chart.yaml"
             default_chart_yaml = Path(temp_chart_dir_name) / "Chart.yaml"
             os.rename(Path(temp_chart_dir_name) / chart_override, default_chart_yaml)
