@@ -31,4 +31,3 @@ hubs:
   - daskhub-common.values.yaml
   - showcase.values.yaml
   - enc-showcase.secret.values.yaml
-  chart_override: showcase-override-chart.yaml
