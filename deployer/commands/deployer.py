@@ -82,15 +82,23 @@ def deploy_support(
             )
 
 
+def determine_dask_gateway_version(chart_dir):
+    # Function to determine what dask-gateway version to install CRDs for
+    # We check the Chart file directly to get this info
+    chart_config = chart_dir / "Chart.yaml"
+    with open(chart_config, "r+") as f:
+        config = yaml.load(f)
+        for dep in config["dependencies"]:
+            if dep["name"] == "dask-gateway":
+                return dep["version"]
+
+
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
         None,
         help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
-    ),
-    dask_gateway_version: str = typer.Option(
-        "2024.1.0", help="Version of dask-gateway to install CRDs for"
     ),
     debug: bool = typer.Option(
         False,
@@ -138,6 +146,17 @@ def deploy(
                 chart_override_path,
                 hub.legacy_daskhub,
             ) as chart_dir:
+                if hub.legacy_daskhub:
+                    dask_gateway_version = determine_dask_gateway_version(
+                        chart_dir.parent / "basehub"
+                    )
+                else:
+                    dask_gateway_version = determine_dask_gateway_version(chart_dir)
+                print_colour(
+                    f"Installing CRDs for dask-gateway version {dask_gateway_version}",
+                    "yellow",
+                )
+
                 if chart_override_path:
                     print_colour(
                         f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}, for {chart_override_path}",
