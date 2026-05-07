@@ -1,4 +1,8 @@
 # See https://agoose77.github.io/jupyterbook-pub-service/
+# Run the core service on the core nodes
+nodeSelector: &nodeSelector
+  capi.stackhpc.com/node-group: core
+
 config:
   JupyterBookPubApp:
     base_url: /services/jupyterbook-pub/
@@ -10,6 +14,7 @@ config:
         memory: 128Mi
       limits:
         memory: 500Mi
+    builder_node_selector: *nodeSelector
 
 extraBuilderConfig:
   name: builder_config.json
@@ -21,7 +26,3 @@ volumeClaim:
   - ReadWriteMany
 auth:
   enabled: false
-
-# Run the core service on the core nodes
-nodeSelector:
-  capi.stackhpc.com/node-group: core
