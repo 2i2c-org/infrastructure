@@ -1,9 +1,15 @@
+# See https://agoose77.github.io/jupyterbook-pub-service/
 config:
   JupyterBookPubApp:
     base_url: /services/jupyterbook-pub/
   KubernetesExecutor:
     # Current JS2 certs are not X509 valid
     disable_strict_ssl_verification: true
+    builder_resources:
+      requests:
+        memory: 128Mi
+      limits:
+        memory: 500Mi
 
 extraBuilderConfig:
   name: builder_config.json
@@ -15,3 +21,7 @@ volumeClaim:
   - ReadWriteMany
 auth:
   enabled: false
+
+# Run the core service on the core nodes
+nodeSelector:
+  capi.stackhpc.com/node-group: core
