@@ -22,6 +22,7 @@ extraBuilderConfig:
     JupyterBook2Builder:
       allow_source_builds: false
 volumeClaim:
+  size: 20G
   accessModes:
   - ReadWriteMany
 auth:
