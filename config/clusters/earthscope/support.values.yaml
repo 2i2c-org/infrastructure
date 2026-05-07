@@ -22,9 +22,39 @@ prometheus:
       - secretName: prometheus-tls
         hosts:
         - prometheus.earthscope.2i2c.cloud
-
     extraArgs:
       web.config.file: /etc/config/web.yml
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+      - name: Server Startup Failure
+        rules:
+        - alert: At least two servers failed to start in the last 30m
+          annotations:
+            summary: 'At least two servers have failed to start in the last 30m: cluster earthscope hub:{{ $labels.namespace }}'
+          expr: |
+            changes(
+              (
+                max by (namespace) (
+                  jupyterhub_server_spawn_duration_seconds_count{status="failure"}
+                )
+              )[30m:1m]
+            ) -
+            # Subtract failures from the usage quota system
+            changes
+              (
+                max by (namespace) (
+                  jupyterhub_request_duration_seconds_count{handler="jupyterhub.handlers.pages.SpawnPendingHandler", code="422"}
+                    or 0*jupyterhub_request_duration_seconds_count # 0 values and absent values are distinct, so we need to 'fill-in' absent values across the time series so that the changes operator acts consistently
+                  )
+                )[30m:1m]
+            ) >= 2
+          for: 0m
+          labels:
+            cluster: cluster=earthscope
+            namespace: hub={{ $labels.namespace }}
+            provider: provider=aws
+            severity: immediate action needed
 grafana:
   grafana.ini:
     server:
