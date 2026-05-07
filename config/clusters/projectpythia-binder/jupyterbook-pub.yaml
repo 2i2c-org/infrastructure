@@ -1,6 +1,9 @@
 config:
   JupyterBookPubApp:
     base_url: /services/jupyterbook-pub/
+  KubernetesExecutor:
+    # Current JS2 certs are not X509 valid
+    disable_strict_ssl_verification: true
 
 extraBuilderConfig:
   name: builder_config.json
