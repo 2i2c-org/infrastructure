@@ -115,33 +115,33 @@ jupyterhub:
                 })
 
         c.Spawner.auth_state_hook = populate_token
-    002-post-auth-webhook: |
-      from tornado.httpclient import AsyncHTTPClient
-      from z2jh import get_config
+      002-post-auth-webhook: |
+        from tornado.httpclient import AsyncHTTPClient
+        from z2jh import get_config
 
-      async def maap_post_auth_hook(authenticator, handler, authentication):
-          """Notify MAAP REST API after successful login."""
-          base_url = get_config("custom.maapApiBaseUrl", "")
-          if not base_url:
-              return authentication
+        async def maap_post_auth_hook(authenticator, handler, authentication):
+            """Notify MAAP REST API after successful login."""
+            base_url = get_config("custom.maapApiBaseUrl", "")
+            if not base_url:
+                return authentication
 
-          auth_state = authentication.get("auth_state", {})
-          pgt = f"jwt:{auth_state.get('id_token', '')}"
+            auth_state = authentication.get("auth_state", {})
+            pgt = f"jwt:{auth_state.get('id_token', '')}"
 
-          http_client = AsyncHTTPClient()
-          try:
-              await http_client.fetch(
-                  f"{base_url}/api/members/self",
-                  method="GET",
-                  headers={"Authorization": f"Bearer {pgt}"},
-                  request_timeout=5.0,
-              )
-          except Exception as e:
-              authenticator.log.warning("MAAP post-auth webhook failed: %s", e)
+            http_client = AsyncHTTPClient()
+            try:
+                await http_client.fetch(
+                    f"{base_url}/api/members/self",
+                    method="GET",
+                    headers={"Authorization": f"Bearer {pgt}"},
+                    request_timeout=5.0,
+                )
+            except Exception as e:
+                authenticator.log.warning("MAAP post-auth webhook failed: %s", e)
 
-          return authentication
+            return authentication
 
-      c.GenericOAuthenticator.post_auth_hook = maap_post_auth_hook
+        c.GenericOAuthenticator.post_auth_hook = maap_post_auth_hook
   singleuser:
     extraFiles:
       jupyter_server_config.json:
