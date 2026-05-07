@@ -50,18 +50,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
             jupyterhub_server_spawn_duration_seconds_count{status="failure"}
           )
         )[30m:1m]
-      )
-      -
-      # Subtract server launch denies from usage quota system
-      changes(
-        (
-          max by (namespace) (
-            jupyterhub_request_duration_seconds_count{namespace="staging", handler="jupyterhub.handlers.pages.SpawnPendingHandler", code="422"}
-              or 0*jupyterhub_request_duration_seconds_count # fill-in absent values with zeroes for 'changes' operator to apply consistently
-          )
-        )[30m:1m]
-      )
-      >= 2
+      ) >= 2
     |||,
     'for': '0m',
     labels: {

@@ -91,12 +91,6 @@ There is additional automation that runs each time an alert like this is trigger
 - In addition, if the health check succeeds, the incident is resolved and a message with this status is posted in the `#pagerduty-notifications` Slack channel
 - If the health check fails, then a message, mentioning the channel members, is posted in the `#pagerduty-notifications` Slack channel
 
-```{note}
-A [temporary workaround](https://github.com/2i2c-org/infrastructure/issues/8203) has been introduced to ignore server startup failures caused by denials from the usage quota system. We should update this when a [long-term fix upstream](https://github.com/jupyterhub/jupyterhub/issues/5357) is available.
-
-The usage quota system is not widely deployed yet, but bear this in mind when investigating this alert.
-```
-
 #### To resolve the alert:
 1. Check if you can spawn a server on that cluster and hub. If not, then is most likely an outage an you must set the P1 priority on this alert and follow the incident response process for outages.
 2. If you can spawn a server, then this is most likely not an outage. But check the list of possible causes above and find the one that matches what you're seeing in the logs.
