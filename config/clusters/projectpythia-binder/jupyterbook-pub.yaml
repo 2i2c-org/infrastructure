@@ -10,6 +10,8 @@ extraBuilderConfig:
   json:
     JupyterBook2Builder:
       allow_source_builds: false
-
+volumeClaim:
+  accessModes:
+  - ReadWriteMany
 auth:
   enabled: false
