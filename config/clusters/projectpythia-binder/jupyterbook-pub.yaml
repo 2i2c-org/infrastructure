@@ -22,8 +22,12 @@ extraBuilderConfig:
     JupyterBook2Builder:
       allow_source_builds: false
 volumeClaim:
-  size: 20G
-  accessModes:
-  - ReadWriteMany
+  enabled: false
+
+volume:
+    hostPath:
+      path: /var/cache/jupyterbook-pub/
+      type: DirectoryOrCreate
+
 auth:
   enabled: false
