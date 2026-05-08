@@ -57,3 +57,7 @@ cluster-autoscaler:
 
 calico:
   enabled: true
+
+
+dirtyfrag:
+  enabled: true
