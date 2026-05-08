@@ -62,3 +62,6 @@ calico:
 nvidiaDevicePlugin:
   aws:
     enabled: true
+
+dirtyfrag:
+  enabled: true
