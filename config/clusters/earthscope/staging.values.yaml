@@ -41,6 +41,14 @@ basehub:
           policy:
           - resource: memory
             limit:
+              value: 500
+              unit: GiB-hours
+            window: 1
+            scope:
+              group:
+              - geolab
+          - resource: memory
+            limit:
               value: 1000
               unit: GiB-hours
             window: 7
