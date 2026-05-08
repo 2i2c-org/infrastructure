@@ -54,5 +54,3 @@ ingress-nginx:
 clusterEntrypoint:
   targetController: nginx-ingress
 
-dirtyfrag:
-  enabled: true
