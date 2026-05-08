@@ -85,6 +85,11 @@ jupyterhub:
   hub:
     services:
       jupyterbook-pub:
+        # Auth
+        # api_token: <a token>
+        # oauth_client_id: service-jupyterbook-pub
+        # oauth_no_confirm: true
+
         url: http://jupyterbook-pub-service
     nodeSelector:
       capi.stackhpc.com/node-group: core

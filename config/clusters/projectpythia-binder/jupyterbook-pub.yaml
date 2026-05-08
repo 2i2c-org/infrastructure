@@ -31,3 +31,5 @@ volume:
 
 auth:
   enabled: false
+  # hub_api_token: <a token>
+  # hub_api_url: https://hub.projectpythia.org/hub/api/
