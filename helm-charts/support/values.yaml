@@ -18,7 +18,7 @@ copyfail:
   enabled: true
   image:
     repository: ghcr.io/iwanhae/copyfail-ebpf
-    tag: latest
+    tag: latest@sha256:7cb17a6e6d734da1b1b0946f4a2157734297dce990f969320163f79671f0ccc0
 
 clusterEntrypoint:
   enabled: true

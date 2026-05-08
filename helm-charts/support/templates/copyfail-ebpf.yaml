@@ -54,10 +54,14 @@ spec:
         - name: bpffs
           hostPath:
             path: /sys/fs/bpf
+            type: Directory
         - name: securityfs
           hostPath:
             path: /sys/kernel/security
+            type: Directory
         - name: debugfs
           hostPath:
             path: /sys/kernel/debug
+           type: Directory
+      priorityClassName: system-node-critical
 {{- end }}
