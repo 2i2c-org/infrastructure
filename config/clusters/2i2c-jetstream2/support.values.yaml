@@ -26,6 +26,3 @@ grafana:
     - secretName: grafana-tls
       hosts:
       - grafana.staging.js.2i2c.cloud
-
-dirtyfrag:
-  enabled: true
