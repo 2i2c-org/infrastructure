@@ -9,12 +9,12 @@ config:
   KubernetesExecutor:
     # Current JS2 certs are not X509 valid
     disable_strict_ssl_verification: true
-    builder_resources:
+    resources:
       requests:
         memory: 128Mi
       limits:
         memory: 500Mi
-    builder_node_selector: *nodeSelector
+    node_selector: *nodeSelector
 
 extraBuilderConfig:
   name: builder_config.json
