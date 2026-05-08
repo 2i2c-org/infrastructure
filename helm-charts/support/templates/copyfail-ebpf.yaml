@@ -62,6 +62,6 @@ spec:
         - name: debugfs
           hostPath:
             path: /sys/kernel/debug
-           type: Directory
+            type: Directory
       priorityClassName: system-node-critical
 {{- end }}
