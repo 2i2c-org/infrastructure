@@ -61,6 +61,22 @@ properties:
             type: string
           tag:
             type: string
+  dirtyfrag:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+      image:
+        type: object
+        additionalProperties: false
+        properties:
+          repository:
+            type: string
+          tag:
+            type: string
   redirects:
     type: object
     additionalProperties: false
