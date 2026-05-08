@@ -17,14 +17,14 @@ cluster-autoscaler:
 copyfail:
   enabled: true
   image:
-    repository: ghcr.io/iwanhae/copyfail-ebpf
-    tag: latest@sha256:7cb17a6e6d734da1b1b0946f4a2157734297dce990f969320163f79671f0ccc0
+    repository: quay.io/2i2c/copyfail-mitigation
+    tag: main@sha256:8b16afdd1bd74b3aad006d695020408f47966609ff0225c5c666312d7e8e1a9e
 
 dirtyfrag:
   enabled: true
   image:
-    repository: quay.io/mrunalp/block-dirtyfrag
-    tag: latest@sha256:87bfa255fddb21991de42f962da181d15dc25e75bb7c73044cee832fcd306fd9
+    repository: quay.io/2i2c/dirtyfrag-mitigation
+    tag: main@sha256:e1510268a125ea3d17663e11f63d4dcfded3e361c5bfccf2cc3d689f0fd0984b
 
 clusterEntrypoint:
   enabled: true
