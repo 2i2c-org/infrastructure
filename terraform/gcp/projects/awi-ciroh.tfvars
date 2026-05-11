@@ -67,20 +67,6 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  "n2-highmem-16" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-16",
-    node_version : "1.34.4-gke.1130000",
-    taints : [
-      # Prevent new pods from scheduling here.
-      {
-        key : "manual-phaseout"
-        value : "noop"
-        effect : "NO_SCHEDULE"
-      }
-    ],
-  },
   "n2-highmem-16-a" : {
     min : 0,
     max : 100,
@@ -90,6 +76,12 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
+  },
+  "n2-standard-64" : {
+    min : 0,
+    # Keep the numbers down, for safety!
+    max : 20,
+    machine_type : "n2-standard-64",
   },
   "gpu-t4" : {
     min : 0,
