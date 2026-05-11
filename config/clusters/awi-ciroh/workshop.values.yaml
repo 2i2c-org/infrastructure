@@ -170,7 +170,7 @@ basehub:
           cpu_limit: 16
           cpu_guarantee: 7.5
           node_selector:
-            node.kubernetes.io/instance-type: n2-highmem-16
+            node.kubernetes.io/instance-type: n2-standard-64
       extraEnv:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
