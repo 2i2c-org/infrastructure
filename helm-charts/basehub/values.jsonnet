@@ -109,6 +109,12 @@ local jupyterhubGroupsExporterConfig = {
   },
 };
 
+local pvConfig = {
+  pv: {
+    serverIP: 'storage-quota-home-nfs.%s.svc.cluster.local' % hub_name,
+  },
+};
+
 local nfsConfig = {
   dirsizeReporter: {
     reportTotalSize: provider == 'kubeconfig',
@@ -116,7 +122,7 @@ local nfsConfig = {
   volumeReporter: {
     enabled: provider == 'kubeconfig',
   },
-};
+} + if provider == 'gcp' then pvConfig else {};
 
 local hubIngressConfig = {
   hosts: [hub_domain],
