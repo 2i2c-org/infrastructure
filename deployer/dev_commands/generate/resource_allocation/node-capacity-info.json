@@ -142,5 +142,23 @@
             "cpu": 63.298,
             "memory": 257075171328
         }
+    },
+    "n2-standard-16": {
+        "capacity": {
+            "cpu": 16.0,
+            "memory": 67428651008
+        },
+        "allocatable": {
+            "cpu": 15.89,
+            "memory": 61481127936
+        },
+        "measured_overhead": {
+            "cpu": 0.472,
+            "memory": 685768704
+        },
+        "available": {
+            "cpu": 15.418,
+            "memory": 60795359232
+        }
     }
 }
