@@ -35,8 +35,8 @@ jupyterhub:
               image: '{value}'
           choices:
             00-base:
-              display_name: CloudBank Base Image
-              description: Default CloudBank image
+              display_name: CS200 - Your Course Image
+              description: CS200 - Your Course Image
               default: true
               kubespawner_override:
                 image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:6d61d3c15d47
