@@ -391,7 +391,6 @@ jupyterhub:
         - GeorgianaElena
         - Gman0909
         - haroldcampbell
-        - jmunroe
         - jnywong
         - yuvipanda
       staff_google_ids:
@@ -401,7 +400,6 @@ jupyterhub:
         - georgianaelena@2i2c.org
         - gmaciocci@2i2c.org
         - hcampbell@2i2c.org
-        - jmunroe@2i2c.org
         - jwong@2i2c.org
         - yuvipanda@2i2c.org
     homepage:
