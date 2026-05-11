@@ -14,7 +14,7 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: a2cba773049eb77b8b1ce97e1de50324022d9a21
+        tag: 151611d97a999608a4185e00da4bb67b606fc853
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token
@@ -39,6 +39,14 @@ basehub:
               window: 7
             intersection: max
           policy:
+          - resource: memory
+            limit:
+              value: 0.5
+              unit: GiB-hours
+            window: 1
+            scope:
+              group:
+              - geolab
           - resource: memory
             limit:
               value: 1000
