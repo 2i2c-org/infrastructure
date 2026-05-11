@@ -41,7 +41,7 @@ prometheus:
               )[30m:1m]
             ) -
             # Subtract failures from the usage quota system
-            changes
+            changes(
               (
                 max by (namespace) (
                   jupyterhub_request_duration_seconds_count{handler="jupyterhub.handlers.pages.SpawnPendingHandler", code="422"}
