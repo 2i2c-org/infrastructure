@@ -473,6 +473,11 @@ prometheusIngressAuthSecret:
   enabled: false
   users: []
 
+prometheusAuthSecret:
+  enabled: false
+  username: ""
+  password: ""
+
 redirects:
   rules: []
 
