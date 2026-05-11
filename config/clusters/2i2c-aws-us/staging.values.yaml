@@ -14,6 +14,14 @@ jupyterhub-home-nfs:
       QuotaManager:
         hard_quota: 10 # in GiB
 jupyterhub:
+  hub:
+    services:
+      jupyterbook-pub:
+        # Auth
+        # api_token: <see secret>
+        oauth_client_id: service-jupyterbook-pub
+        oauth_no_confirm: true
+        url: http://jupyterbook-pub-service
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true

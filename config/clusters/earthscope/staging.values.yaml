@@ -41,7 +41,7 @@ basehub:
           policy:
           - resource: memory
             limit:
-              value: 0.5
+              value: 500
               unit: GiB-hours
             window: 1
             scope:
@@ -115,6 +115,7 @@ basehub:
           scopes:
           - self
           - access:services!service=usage-quota
+          - access:services!service=dask-gateway
       service:
         extraPorts:
         - port: 9000
@@ -161,6 +162,10 @@ basehub:
             - port: 9000
   dask-gateway:
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         scheduler:
           extraPodConfig:

@@ -915,6 +915,10 @@ jupyterhub:
                     title: RStudio
                     description: An IDE For R, created by the RStudio company
     extraEnv:
+      # Turn off IP checks for XSRF, as we aren't currently able to consistently
+      # get the end user IP to the JupyterHub process at all times
+      # See https://github.com/2i2c-org/infrastructure/issues/8192
+      JUPYTERHUB_XSRF_ANONYMOUS_IP_CIDRS: "10.0.0.0/8;172.16.0.0/12;192.168.0.0/16"
       BASEHUB_K8S_DIST:
         valueFrom:
           configMapKeyRef:
