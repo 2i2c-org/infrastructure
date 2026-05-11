@@ -173,11 +173,11 @@ basehub:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
     hub:
+      allowNamedServers: true
       config:
         JupyterHub:
           authenticator_class: shared-password
         GitHubOAuthenticator: {}
         Authenticator:
           manage_groups: false
-          admin_users: []
           allow_all: true
