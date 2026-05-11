@@ -35,8 +35,8 @@ jupyterhub:
               image: '{value}'
           choices:
             00-base:
-              display_name: CS200 - Your Course Image
-              description: CS200 - Your Course Image
+              display_name: CS 200 Course Image
+              description: Please pick this image CS 200 students
               default: true
               kubespawner_override:
                 image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:6d61d3c15d47
@@ -65,7 +65,7 @@ jupyterhub:
           node.kubernetes.io/instance-type: n2-highmem-4
         default: true
     - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
-      description: Upto 3 CPUs when available
+      description: Up to 3 CPUs when available
       profile_options:
         image:
           display_name: Image
