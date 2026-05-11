@@ -160,13 +160,13 @@ basehub:
           node_selector:
             node.kubernetes.io/instance-type: n2-highmem-16
       - display_name: Huge
-        description: ~59 GB RAM, ~16 CPUs
+        description: ~59 GB RAM, ~15 CPUs
         profile_options: *profile_options
         kubespawner_override:
-          mem_guarantee: 63731921920
-          mem_limit: 63731921920
-          cpu_guarantee: 15.5745
-          cpu_limit: 62.298
+          mem_guarantee: 59579452047
+          mem_limit: 59579452047
+          cpu_guarantee: 15.109639999999999
+          cpu_limit: 15.109639999999999
           node_selector:
             node.kubernetes.io/instance-type: n2-standard-16
       extraEnv:
