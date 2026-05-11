@@ -43,7 +43,8 @@ variable "user_buckets" {
      object in this bucket will be automatically transitioned to a cheaper,
      slower storageclass for cost savings. Set to null to not transition.
   3. `bucket_policy` - optional AWS IAM policy document JSON to be merged into
-     this bucket's policy.
+     this bucket's policy. __BUCKET_ARN__ in the policy will be string replaced
+     with the actual arn of the bucket.
   4. `tags` - bucket specific tags to be merged into the general tags variable.
   EOT
 }
