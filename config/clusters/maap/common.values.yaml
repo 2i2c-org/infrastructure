@@ -116,18 +116,12 @@ jupyterhub:
 
         c.Spawner.auth_state_hook = populate_token
       002-post-auth-webhook: |
+        import asyncio
         from tornado.httpclient import AsyncHTTPClient
         from z2jh import get_config
 
-        async def maap_post_auth_hook(authenticator, handler, authentication):
-            """Notify MAAP REST API after successful login."""
-            base_url = get_config("custom.maapApiBaseUrl", "")
-            if not base_url:
-                return authentication
-
-            auth_state = authentication.get("auth_state", {})
-            pgt = f"jwt:{auth_state.get('id_token', '')}"
-
+        async def _notify_maap_api(authenticator, base_url, pgt):
+            """Fire-and-forget call to MAAP REST API."""
             http_client = AsyncHTTPClient()
             try:
                 await http_client.fetch(
@@ -138,6 +132,17 @@ jupyterhub:
                 )
             except Exception as e:
                 authenticator.log.warning("MAAP post-auth webhook failed: %s", e)
+
+        async def maap_post_auth_hook(authenticator, handler, authentication):
+            """Notify MAAP REST API after successful login (non-blocking)."""
+            base_url = get_config("custom.maapApiBaseUrl", "")
+            if not base_url:
+                return authentication
+
+            auth_state = authentication.get("auth_state", {})
+            pgt = f"jwt:{auth_state.get('id_token', '')}"
+
+            asyncio.ensure_future(_notify_maap_api(authenticator, base_url, pgt))
 
             return authentication
 
