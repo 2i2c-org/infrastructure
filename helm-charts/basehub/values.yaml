@@ -1,11 +1,3 @@
-# We define a service account that is attached by default to all Jupyter user pods
-# and dask-gateway workers. By default, this has the permissions defined in
-# basehub/values.jsonnet for GCP AND AWS clusters and now permissions for the rest.
-# See docs/topic/features.md.
-userServiceAccount:
-  enabled: true
-  annotations: {}
-
 binderhub-service:
   enabled: false
   ingress:
