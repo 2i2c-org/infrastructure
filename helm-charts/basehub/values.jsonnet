@@ -194,6 +194,8 @@ local binderhubServiceConfig = {
   dockerApi: {
     nodeSelector: {
       '2i2c/hub-name': hub_name,
+      // Schedule dockerApi pods to run on the smallest user nodes only
+      // https://github.com/2i2c-org/infrastructure/issues/4241
       'node.kubernetes.io/instance-type': if provider == 'aws' then 'r5.xlarge' else if provider == 'gcp' then 'n2-highmem-4' else '',
     },
   },
@@ -201,6 +203,8 @@ local binderhubServiceConfig = {
     KubernetesBuildExecutor: {
       node_selector: {
         '2i2c/hub-name': hub_name,
+        // Schedule builder pods to run on the smallest user nodes only
+        // https://github.com/2i2c-org/infrastructure/issues/4241
         'node.kubernetes.io/instance-type': if provider == 'aws' then 'r5.xlarge' else if provider == 'gcp' then 'n2-highmem-4' else '',
       },
     },
