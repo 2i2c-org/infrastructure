@@ -135,3 +135,5 @@ jupyterhub:
         authenticator_class: tmp
       Authenticator:
         allow_all: true
+userServiceAccount:
+  annotations: {}

@@ -145,3 +145,5 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 30 # in GiB
+userServiceAccount:
+  annotations: {}

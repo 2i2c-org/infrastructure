@@ -93,3 +93,5 @@ jupyterhub:
         admin_users:
         - maundjs-lis
 
+userServiceAccount:
+  annotations: {}

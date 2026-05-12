@@ -2,9 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.102.109
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-prod
   jupyterhub:
     ingress:
       hosts: [hub.cryointhecloud.com]

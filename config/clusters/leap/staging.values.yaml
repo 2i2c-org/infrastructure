@@ -1,7 +1,4 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      iam.gke.io/gcp-service-account: leap-staging@leap-pangeo.iam.gserviceaccount.com
   jupyterhub:
     singleuser:
       extraEnv:

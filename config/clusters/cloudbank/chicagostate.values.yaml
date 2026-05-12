@@ -58,3 +58,5 @@ jupyterhub-home-nfs:
         memory: 500M
       limits:
         memory: 1.5G
+userServiceAccount:
+  annotations: {}

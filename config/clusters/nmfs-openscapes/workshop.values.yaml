@@ -56,3 +56,5 @@ jupyterhub-home-nfs:
 
 binderhub-service:
   enabled: false
+userServiceAccount:
+  annotations: {}

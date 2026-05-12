@@ -26,3 +26,5 @@ binderhub-service:
         2i2c/hub-name: advanced
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-advanced-
+userServiceAccount:
+  annotations: {}

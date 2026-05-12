@@ -80,3 +80,5 @@ jupyterhub-home-nfs:
     resources:
       requests:
         cpu: 0.001
+userServiceAccount:
+  annotations: {}

@@ -65,3 +65,5 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.100.147.181
+userServiceAccount:
+  annotations: {}

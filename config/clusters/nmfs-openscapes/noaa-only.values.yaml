@@ -14,10 +14,6 @@ nfs:
 jupyterhub-home-nfs:
   enabled: false
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-noaa-only
-
 dask-gateway:
   gateway:
     backend:

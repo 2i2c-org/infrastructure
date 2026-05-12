@@ -97,3 +97,5 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   enabled: false
+userServiceAccount:
+  annotations: {}

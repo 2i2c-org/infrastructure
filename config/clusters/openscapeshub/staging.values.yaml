@@ -2,9 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.90.25
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-staging
   jupyterhub:
     singleuser:
       nodeSelector:
@@ -28,3 +25,5 @@ basehub:
     eks:
       volumeId: vol-0728f7b1555016f13
 
+  userServiceAccount:
+    annotations: {}

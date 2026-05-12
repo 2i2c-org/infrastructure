@@ -2,10 +2,6 @@ nfs:
   pv:
     serverIP: 10.100.10.116
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::882437028641:role/bnext-bio-prod
-
 jupyterhub:
   ingress:
     hosts: [hub.nucleus.engineering]
