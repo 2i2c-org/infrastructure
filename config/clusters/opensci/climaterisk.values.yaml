@@ -89,3 +89,5 @@ dask-gateway:
         extraPodConfig:
           nodeSelector:
             2i2c/hub-name: climaterisk
+userServiceAccount:
+  annotations: {}

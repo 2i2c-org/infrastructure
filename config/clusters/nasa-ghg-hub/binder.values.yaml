@@ -1,7 +1,3 @@
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::597746869805:role/nasa-ghg-hub-binder
-
 jupyterhub-home-nfs:
   enabled: false
 jupyterhub:

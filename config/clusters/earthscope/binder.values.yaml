@@ -1,7 +1,3 @@
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-binder
-
 nfs:
   enabled: false
   pv:

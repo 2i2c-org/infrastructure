@@ -195,9 +195,9 @@ class Cluster:
                         "hub_domain": None,
                     }
                     if self.spec["provider"] == "aws":
-                        render_args["aws_account_id"] = self.spec["aws"]["account"]
+                        render_args["account_id"] = self.spec["aws"]["account"]
                     else:
-                        render_args["aws_account_id"] = None
+                        render_args["account_id"] = None
                     rendered_path = jsonnet_stack.enter_context(
                         render_jsonnet(**render_args)
                     )

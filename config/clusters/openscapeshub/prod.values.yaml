@@ -1,7 +1,4 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-prod
   jupyterhub:
     ingress:
       hosts: [openscapes.2i2c.cloud]

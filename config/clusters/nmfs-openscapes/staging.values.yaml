@@ -1,10 +1,6 @@
 nfs:
   pv:
     serverIP: 10.100.91.72
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-staging
-
 dask-gateway:
   gateway:
     backend:

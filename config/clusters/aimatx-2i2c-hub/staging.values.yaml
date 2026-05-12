@@ -2,10 +2,6 @@ nfs:
   pv:
     serverIP: 10.100.133.67
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::426578051359:role/aimatx-2i2c-hub-staging
-
 jupyterhub:
   singleuser:
     nodeSelector:

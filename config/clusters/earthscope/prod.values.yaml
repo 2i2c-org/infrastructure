@@ -1,7 +1,4 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-prod
   jupyterhub:
     ingress:
       hosts: [geolab.earthscope.cloud]
