@@ -30,8 +30,6 @@ jupyterhub:
         manage_groups: false
         allow_all: true
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: workshop
     extraEnv:
       SCRATCH_BUCKET: s3://reflective-scratch-workshop/$(JUPYTERHUB_USER)
       PANGEO_SCRATCH: s3://reflective-scratch-workshop/$(JUPYTERHUB_USER)

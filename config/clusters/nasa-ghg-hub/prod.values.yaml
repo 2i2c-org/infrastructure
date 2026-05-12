@@ -10,9 +10,6 @@ basehub:
         gitRepoBranch: bootstrap5-nasa-ghg-prod
         # FIXME: use this repository again, once the changes in the bootstrap5-nasa-ghg-staging branch of 2i2c-org/default-hub-homepage have been ported to it
         # gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
   dask-gateway:
     gateway:
       backend:

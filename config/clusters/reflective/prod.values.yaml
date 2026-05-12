@@ -8,8 +8,6 @@ jupyterhub:
     - hosts: [reflective.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: prod
     extraEnv:
       SCRATCH_BUCKET: s3://reflective-scratch-prod/$(JUPYTERHUB_USER)
       PANGEO_SCRATCH: s3://reflective-scratch-prod/$(JUPYTERHUB_USER)

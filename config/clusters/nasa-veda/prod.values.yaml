@@ -12,9 +12,6 @@ basehub:
       homepage:
         gitRepoBranch: master
         gitRepoUrl: https://github.com/NASA-IMPACT/veda-hub-homepage
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
     hub:
       image:
         # Temporary image with jupyterhub-fancy-profiles 0.6.0

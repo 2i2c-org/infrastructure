@@ -4,8 +4,6 @@ basehub:
       serverIP: 10.100.95.149
   jupyterhub:
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://nasa-cryo-scratch-staging/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: s3://nasa-cryo-scratch-staging/$(JUPYTERHUB_USER)

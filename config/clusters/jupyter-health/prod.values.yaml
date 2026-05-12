@@ -24,5 +24,3 @@ jupyterhub:
   singleuser:
     extraEnv:
       JHE_URL: https://berkeley-jhe-demo.jupyterhealth.org
-    nodeSelector:
-      2i2c/hub-name: prod

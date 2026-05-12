@@ -9,8 +9,6 @@ jupyterhub:
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liL9VT25MVvo3RYq
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-advanced-github-push-access
-    nodeSelector:
-      2i2c/hub-name: advanced
   ingress:
     hosts: [advanced.temple.2i2c.cloud]
     tls:

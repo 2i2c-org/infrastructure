@@ -1,7 +1,5 @@
 jupyterhub:
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: staging
     profileList:
     - display_name: Python
       description: Start a Python server with JupyterLab and scientific Python stack

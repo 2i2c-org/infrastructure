@@ -3,9 +3,6 @@ nfs:
     serverIP: 10.100.200.179
 
 jupyterhub:
-  singleuser:
-    nodeSelector:
-      2i2c/hub-name: staging
   hub:
     config:
       Authenticator:

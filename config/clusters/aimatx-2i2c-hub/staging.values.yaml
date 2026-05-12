@@ -4,8 +4,6 @@ nfs:
 
 jupyterhub:
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: staging
     extraEnv:
       SCRATCH_BUCKET: s3://aimatx-2i2c-hub-scratch-staging/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent-staging/$(JUPYTERHUB_USER)

@@ -25,7 +25,6 @@ jupyterhub:
       limit: 3.6505
     nodeSelector:
       node.kubernetes.io/instance-type: r5.xlarge
-      2i2c/hub-name: prod
     extraEnv:
       SCRATCH_BUCKET: s3://bnext-bio-scratch/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://bnext-bio-persistent/$(JUPYTERHUB_USER)

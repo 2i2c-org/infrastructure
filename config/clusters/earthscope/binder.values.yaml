@@ -43,8 +43,6 @@ jupyterhub:
   singleuser:
     cloudMetadata:
       blockWithIptables: false
-    nodeSelector:
-      2i2c/hub-name: binder
     memory:
       guarantee: 6G
       limit: 8G

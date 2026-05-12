@@ -9,8 +9,6 @@ basehub:
       - hosts: [hub.cryointhecloud.com]
         secretName: https-auto-tls
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
       extraEnv:
         SCRATCH_BUCKET: s3://nasa-cryo-scratch/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: s3://nasa-cryo-scratch/$(JUPYTERHUB_USER)

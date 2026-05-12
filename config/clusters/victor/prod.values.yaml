@@ -27,8 +27,6 @@ basehub:
       - hosts: [hub.victorproject.org]
         secretName: https-auto-tls
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
       profileList:
         # IMPORTANT: Staging and prod's profileList's are meant to be kept
         #            equivalent with the exception that staging adds

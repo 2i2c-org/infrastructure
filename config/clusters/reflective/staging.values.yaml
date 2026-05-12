@@ -3,8 +3,6 @@ nfs:
     serverIP: 10.100.120.249
 jupyterhub:
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: staging
     extraEnv:
       SCRATCH_BUCKET: s3://reflective-scratch-staging/$(JUPYTERHUB_USER)
       PANGEO_SCRATCH: s3://reflective-scratch-staging/$(JUPYTERHUB_USER)

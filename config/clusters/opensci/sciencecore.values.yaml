@@ -33,8 +33,6 @@ jupyterhub:
           name: ''
           url: ''
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: sciencecore
     defaultUrl: /lab
     extraEnv:
       SCRATCH_BUCKET: s3://opensci-scratch-sciencecore/$(JUPYTERHUB_USER)

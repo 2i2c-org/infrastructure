@@ -23,8 +23,6 @@ jupyterhub:
       templateVars:
         enabled: false
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: binder
     memory:
       guarantee: 1G
       limit: 8G

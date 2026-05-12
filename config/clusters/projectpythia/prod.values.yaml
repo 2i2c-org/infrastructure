@@ -19,6 +19,3 @@ jupyterhub:
       templateVars:
         org:
           name: ProjectPythia
-  singleuser:
-    nodeSelector:
-      2i2c/hub-name: prod

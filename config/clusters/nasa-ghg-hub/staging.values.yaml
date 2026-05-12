@@ -76,9 +76,6 @@ basehub:
               matchLabels:
                 app.kubernetes.io/component: hub
                 app.kubernetes.io/name: jupyterhub
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
     proxy:
       chp:
         networkPolicy:

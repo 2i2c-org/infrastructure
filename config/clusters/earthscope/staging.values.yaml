@@ -141,8 +141,6 @@ basehub:
                 app.kubernetes.io/component: hub
                 app.kubernetes.io/name: jupyterhub
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
     proxy:

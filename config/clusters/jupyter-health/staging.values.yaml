@@ -27,5 +27,3 @@ jupyterhub:
           SMARTExtensionApp:
             redirect_uri: https://staging.jupyter-health.2i2c.cloud/hub/user-redirect/smart-on-fhir/callback
 
-    nodeSelector:
-      2i2c/hub-name: staging
