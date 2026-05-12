@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import subprocess
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -17,8 +17,6 @@ from deployer.utils.file_acquisition import (
 )
 from deployer.utils.helm import wait_for_deployments_daemonsets
 from deployer.utils.rendering import print_colour
-
-from ..utils.jsonnet import render_jsonnet
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -158,21 +156,10 @@ class Hub:
                 chart_dir,
             ]
 
-            provider = self.cluster.spec["provider"]
-            account_id = None
-            if provider == "gcp":
-                account_id = self.cluster.spec[provider]["project"]
-            elif provider == "aws":
-                account_id = self.cluster.spec[provider]["account"]
             # Add on rendered jsonnet values.yaml file for the chart
             rendered_values_path = jsonnet_stack.enter_context(
-                render_jsonnet(
+                self.render_jsonnet(
                     chart_dir / "values.jsonnet",
-                    self.cluster.spec["name"],
-                    self.spec["name"],
-                    provider,
-                    hub_domain=self.spec["domain"],
-                    account_id=account_id,
                 )
             )
 
@@ -209,3 +196,18 @@ class Hub:
 
         if not dry_run:
             wait_for_deployments_daemonsets(self.spec["name"])
+
+    @contextmanager
+    def render_jsonnet(self, jsonnet_file: Path, **kwargs):
+        """
+        Render given jsonnet file with context of this hub.
+
+        Any additional kwargs will be passed through to `Cluster.render_jsonnet`
+        """
+        with self.cluster.render_jsonnet(
+            jsonnet_file,
+            hub_name=self.cluster.spec["name"],
+            hub_domain=self.spec["domain"],
+            **kwargs
+        ) as rendered_file:
+            yield rendered_file

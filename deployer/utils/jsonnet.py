@@ -31,10 +31,10 @@ def validate_jsonnet_version():
 def render_jsonnet(
     jsonnet_file: Path,
     cluster_name: str,
-    hub_name: str | None,
     provider: str,
-    hub_domain: str | None,
-    account_id: str | None = None,
+    account_id: str | None,
+    hub_domain: str | None = None,
+    hub_name: str | None = None,
 ):
     """
     Provide path to rendered json file for given jsonnet file
@@ -59,10 +59,8 @@ def render_jsonnet(
         command += ["--ext-str", f"VARS_2I2C_HUB_NAME={hub_name}"]
     if hub_domain is not None:
         command += ["--ext-str", f"VARS_2I2C_HUB_DOMAIN={hub_domain}"]
-    if provider is not None:
-        command += ["--ext-str", f"VARS_2I2C_PROVIDER={provider}"]
-    if account_id is not None:
-        command += ["--ext-str", f"VARS_2I2C_ACCOUNT_ID={account_id}"]
+    command += ["--ext-str", f"VARS_2I2C_PROVIDER={provider}"]
+    command += ["--ext-str", f"VARS_2I2C_ACCOUNT_ID={account_id}"]
     # Make the jsonnet file passed be an absolute path, but do not *resolve*
     # it - so symlinks are resolved by jsonnet rather than us. This is important
     # for daskhub compatibility.
