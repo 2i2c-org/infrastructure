@@ -15,5 +15,3 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
-userServiceAccount:
-  annotations: {}

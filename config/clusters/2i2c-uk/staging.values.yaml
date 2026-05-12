@@ -44,5 +44,3 @@ jupyterhub:
             default: true
             username_derivation:
               username_claim: email
-userServiceAccount:
-  annotations: {}

@@ -165,5 +165,3 @@ binderhub-service:
         2i2c/hub-name: research
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-research-
-userServiceAccount:
-  annotations: {}

@@ -50,5 +50,3 @@ basehub:
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-072fbfa88f513edb7
-  userServiceAccount:
-    annotations: {}

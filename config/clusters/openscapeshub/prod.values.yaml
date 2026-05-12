@@ -33,5 +33,3 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.200.56
-  userServiceAccount:
-    annotations: {}

@@ -128,5 +128,3 @@ jupyterhub:
         allowed_organizations:
         - 2i2c-demo-hub-access
 
-userServiceAccount:
-  annotations: {}

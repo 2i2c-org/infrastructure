@@ -149,5 +149,3 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: https://us-central1-docker.pkg.dev
     username: _json_key
-userServiceAccount:
-  annotations: {}

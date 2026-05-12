@@ -21,5 +21,3 @@ binderhub-service:
         2i2c/hub-name: staging
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-staging-
-userServiceAccount:
-  annotations: {}
