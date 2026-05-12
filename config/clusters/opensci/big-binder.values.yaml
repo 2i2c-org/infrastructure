@@ -157,5 +157,3 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: *url
     username: *username
-userServiceAccount:
-  annotations: {}
