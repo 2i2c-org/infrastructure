@@ -176,5 +176,6 @@ emitDaskHubCompatibleConfig(
     'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
     'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
     jupyterhub: jupyterhubConfig,
-  } + if provider == 'gcp' || provider == 'aws' then { userServiceAccount: userServiceAccountConfig } else {}
+    userServiceAccount: userServiceAccountConfig,
+  }
 )
