@@ -80,6 +80,3 @@ jupyterhub-home-nfs:
     resources:
       requests:
         cpu: 0.001
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.mtu.svc.cluster.local

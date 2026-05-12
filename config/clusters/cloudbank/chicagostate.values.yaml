@@ -58,6 +58,3 @@ jupyterhub-home-nfs:
         memory: 500M
       limits:
         memory: 1.5G
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.chicagostate.svc.cluster.local

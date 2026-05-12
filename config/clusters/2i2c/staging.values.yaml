@@ -42,6 +42,3 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 5 # in GiB
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.staging.svc.cluster.local
