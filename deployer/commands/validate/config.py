@@ -117,6 +117,7 @@ def validate_hub_config(
         account_id = cluster.spec[provider]["account"]
 
     with ExitStack() as jsonnet_stack:
+
         # Add on rendered jsonnet values.yaml file for the chart
         rendered_values_path = jsonnet_stack.enter_context(
             render_jsonnet(
