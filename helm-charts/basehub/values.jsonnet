@@ -1,6 +1,7 @@
 local hub_name = std.extVar('VARS_2I2C_HUB_NAME');
 local provider = std.extVar('VARS_2I2C_PROVIDER');
 local hub_domain = std.extVar('VARS_2I2C_HUB_DOMAIN');
+local account_id = std.extVar('VARS_2I2C_ACCOUNT_ID');
 
 // Assume we are a staging hub if the word 'staging' is in the
 // name of the hub.

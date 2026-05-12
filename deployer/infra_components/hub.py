@@ -158,14 +158,16 @@ class Hub:
                 chart_dir,
             ]
 
+            provider = self.cluster.spec["provider"]
             # Add on rendered jsonnet values.yaml file for the chart
             rendered_values_path = jsonnet_stack.enter_context(
                 render_jsonnet(
                     chart_dir / "values.jsonnet",
                     self.cluster.spec["name"],
                     self.spec["name"],
-                    self.cluster.spec["provider"],
+                    provider,
                     hub_domain=self.spec["domain"],
+                    aws_account_id=self.cluster.spec[provider]["account_id"],
                 )
             )
 
@@ -186,8 +188,9 @@ class Hub:
                             Path(values_file),
                             self.cluster.spec["name"],
                             self.spec["name"],
-                            self.cluster.spec["provider"],
+                            provider,
                             hub_domain=self.spec["domain"],
+                            aws_account_id=self.cluster.spec[provider]["account_id"],
                         )
                     )
                     cmd.append(f"--values={rendered_path}")
