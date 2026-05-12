@@ -13,17 +13,7 @@ jupyterhub:
       PANGEO_SCRATCH: s3://reflective-scratch-prod/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://reflective-persistent-prod/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET_LARGE: s3://reflective-persistent-prod-large/$(JUPYTERHUB_USER)
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
+
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0ac31776780207b43

@@ -23,22 +23,6 @@ To enable dask-gateway support on a hub, the following configuration changes nee
           enabled: true
     ```
 
-1. set appropriate tags on worker and scheduler pods in order for the cost allocation system to pick the up accordingly
-
-    ```yaml
-    dask-gateway:
-      gateway:
-        backend:
-          scheduler:
-            extraPodConfig:
-              nodeSelector:
-                2i2c/hub-name: {{ hub-name }}
-          worker:
-            extraPodConfig:
-              nodeSelector:
-                2i2c/hub-name: {{ hub-name }}
-    ```
-
 1. set `jupyterhub.singleuser.cloudMetadata.blockWithIptables` to false:
 
     This is to don't block access to the cloud provider's metadata server!

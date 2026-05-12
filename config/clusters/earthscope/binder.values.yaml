@@ -154,7 +154,6 @@ binderhub-service:
     enabled: true
   dockerApi:
     nodeSelector:
-      2i2c/hub-name: binder
       node.kubernetes.io/instance-type: r5.xlarge
   ingress:
     enabled: true
@@ -167,7 +166,6 @@ binderhub-service:
   config:
     KubernetesBuildExecutor:
       node_selector:
-        2i2c/hub-name: binder
         node.kubernetes.io/instance-type: r5.xlarge
     BinderHub:
       base_url: /

@@ -10,12 +10,6 @@ jupyterhub:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23libKsm2tlJzjYplj
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-advanced-staging-push
 binderhub-service:
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: staging
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        2i2c/hub-name: staging
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-staging-

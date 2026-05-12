@@ -1,17 +1,6 @@
 nfs:
   pv:
     serverIP: 10.100.33.250
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
 
 jupyterhub:
   ingress:

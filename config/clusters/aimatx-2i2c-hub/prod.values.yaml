@@ -14,17 +14,6 @@ jupyterhub:
       PERSISTENT_BUCKET: s3://aimatx-2i2c-hub-persistent/$(JUPYTERHUB_USER)
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liT6RbWppY8dPBPu
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/aimatx-2i2c-hub-github
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
 
 jupyterhub-home-nfs:
   eks:

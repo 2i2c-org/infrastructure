@@ -302,9 +302,6 @@ basehub:
     enabled: true
     networkPolicy:
       enabled: true
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: binder
     config:
       KubernetesBuildExecutor:
         node_selector:

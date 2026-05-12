@@ -77,14 +77,4 @@ jupyterhub:
     storage:
       extraVolumeMounts:
       extraVolumes:
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: climaterisk
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: climaterisk
+

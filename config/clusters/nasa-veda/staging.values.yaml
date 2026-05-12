@@ -32,24 +32,10 @@ basehub:
   dask-gateway:
     gateway:
       backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
-        worker:
-          extraPodConfig:
-            node_selector:
-              2i2c/hub-name: staging
         imagePullSecrets: [name: image-pull-secret]
 
   binderhub-service:
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: staging
     config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: staging
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-staging-
         auth_enabled: true

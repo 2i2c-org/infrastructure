@@ -15,12 +15,6 @@ jupyterhub:
     - hosts: [advanced.temple.2i2c.cloud]
       secretName: https-auto-tls
 binderhub-service:
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: advanced
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        2i2c/hub-name: advanced
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-advanced-
