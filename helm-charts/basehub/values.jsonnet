@@ -162,6 +162,11 @@ local jupyterhubConfig = {
       },
     },
   },
+  singleuser: {
+    nodeSelector: {
+      '2i2c/hub-name': hub_name,
+    },
+  },
 };
 
 // We define a service account that is attached by default to all Jupyter user pods
