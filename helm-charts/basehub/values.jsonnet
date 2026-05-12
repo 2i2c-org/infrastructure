@@ -153,20 +153,21 @@ local jupyterhubConfig = {
 // We define a service account that is attached by default to all Jupyter user pods
 // and dask-gateway workers. By default, this has no permissions for clusters not
 // on GCP or AWS - see docs/topic/features.md.
-local userServiceAccountConfig = {
-                                   enabled: true,
-                                 } +
-                                 if provider == 'gcp' then {
-                                   annotations: {
-                                     'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [account_id, cluster_name, hub_name],
-                                   },
-                                 } else if provider == 'aws' then {
-                                   annotations: {
-                                     'iam.gke.io/gcp-service-account': '%s-%s@%s.iam.gserviceaccount.com' % [cluster_name, hub_name, account_id],
-                                   },
-                                 } else {
-                                   annotations: {},
-                                 };
+local userServiceAccountConfig =
+  {
+    enabled: true,
+  } +
+  if provider == 'gcp' then {
+    annotations: {
+      'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [account_id, cluster_name, hub_name],
+    },
+  } else if provider == 'aws' then {
+    annotations: {
+      'iam.gke.io/gcp-service-account': '%s-%s@%s.iam.gserviceaccount.com' % [cluster_name, hub_name, account_id],
+    },
+  } else {
+    annotations: {},
+  };
 
 
 emitDaskHubCompatibleConfig(
