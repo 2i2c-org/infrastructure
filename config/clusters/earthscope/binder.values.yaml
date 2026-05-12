@@ -152,9 +152,6 @@ binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      node.kubernetes.io/instance-type: r5.xlarge
   ingress:
     enabled: true
     hosts: [binder.geolab.earthscope.cloud]
@@ -164,9 +161,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        node.kubernetes.io/instance-type: r5.xlarge
     BinderHub:
       base_url: /
       hub_url: https://hub.binder.geolab.earthscope.cloud

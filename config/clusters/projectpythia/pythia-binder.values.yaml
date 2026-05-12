@@ -82,11 +82,6 @@ binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
   ingress:
     enabled: true
     hosts: [binder.pythia.2i2c.cloud]
@@ -96,11 +91,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        node.kubernetes.io/instance-type: r5.xlarge
     BinderHub:
       base_url: /
       badge_base_url: https://binder.pythia.2i2c.cloud

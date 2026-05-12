@@ -88,11 +88,6 @@ binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: n2-highmem-2
   ingress:
     enabled: true
     hosts: [binder.hhmi.2i2c.cloud]
@@ -102,11 +97,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        node.kubernetes.io/instance-type: n2-highmem-2
     BinderHub:
       base_url: /
       hub_url: https://hub.binder.hhmi.2i2c.cloud

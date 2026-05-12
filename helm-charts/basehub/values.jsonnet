@@ -194,12 +194,14 @@ local binderhubServiceConfig = {
   dockerApi: {
     nodeSelector: {
       '2i2c/hub-name': hub_name,
+      'node.kubernetes.io/instance-type': if provider == 'aws' then 'r5.xlarge' else if provider == 'gcp' then 'n2-highmem-4' else '',
     },
   },
   config: {
     KubernetesBuildExecutor: {
       node_selector: {
         '2i2c/hub-name': hub_name,
+        'node.kubernetes.io/instance-type': if provider == 'aws' then 'r5.xlarge' else if provider == 'gcp' then 'n2-highmem-4' else '',
       },
     },
   },

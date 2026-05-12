@@ -94,11 +94,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        node.kubernetes.io/instance-type: r5.xlarge
     BinderHub:
       base_url: /
       hub_url: https://hub.binder.ghg.2i2c.cloud
