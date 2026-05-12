@@ -8,6 +8,7 @@ nfs:
     - soft
     - noatime
     shareNameOverride: spyglass
+    serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
 
 jupyterhub:
   custom:
