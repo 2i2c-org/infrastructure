@@ -110,8 +110,13 @@ def validate_hub_config(
         cmd.append("--debug")
 
     provider = cluster.spec["provider"]
-    with ExitStack() as jsonnet_stack:
+    account_id = None
+    if provider == "gcp":
+        account_id = cluster.spec[provider]["project"]
+    elif provider == "aws":
+        account_id = cluster.spec[provider]["account_id"]
 
+    with ExitStack() as jsonnet_stack:
         # Add on rendered jsonnet values.yaml file for the chart
         rendered_values_path = jsonnet_stack.enter_context(
             render_jsonnet(
@@ -120,7 +125,7 @@ def validate_hub_config(
                 hub.spec["name"],
                 provider,
                 hub_domain=hub.spec["domain"],
-                aws_account_id=cluster.spec[provider]["account_id"],
+                account_id=account_id,
             )
         )
 
@@ -136,7 +141,7 @@ def validate_hub_config(
                         hub_name,
                         provider,
                         hub_domain=hub.spec["domain"],
-                        aws_account_id=cluster.spec[provider]["account_id"],
+                        account_id=account_id,
                     )
                 )
                 cmd.append(f"--values={rendered_file}")
@@ -303,7 +308,6 @@ def support_config(
         if debug:
             cmd.append("--debug")
 
-        provider = cluster.spec["provider"]
         with ExitStack() as jsonnet_stack:
             for values_file in cluster.support["helm_chart_values_files"]:
                 if values_file.endswith(".jsonnet"):
@@ -312,9 +316,8 @@ def support_config(
                             cluster.config_dir / values_file,
                             cluster_name,
                             None,
-                            provider,
+                            cluster.spec["provider"],
                             hub_domain=None,
-                            aws_account_id=cluster.spec[provider]["account_id"],
                         )
                     )
                     cmd.append(f"--values={rendered_file}")

@@ -1,7 +1,7 @@
 local cluster_name = std.extVar('VARS_2I2C_CLUSTER_NAME');
 local provider_name = std.extVar('VARS_2I2C_PROVIDER');
 
-function(VARS_2I2C_AWS_ACCOUNT_ID=null)
+function(VARS_2I2C_ACCOUNT_ID=null)
   local makePVCApproachingFullAlert = function(
     summary,
     persistentvolumeclaim,
@@ -157,7 +157,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     },
   };
 
-  local configCostMonitoring = function(VARS_2I2C_AWS_ACCOUNT_ID) {
+  local configCostMonitoring = function(VARS_2I2C_ACCOUNT_ID) {
     enabled: true,
     extraEnv: [
       {
@@ -168,7 +168,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     serviceAccount: {
       annotations: {
         // See terraform/aws/cost-monitoring.tf
-        'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_cost_monitoring_iam_role' % VARS_2I2C_AWS_ACCOUNT_ID,
+        'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_cost_monitoring_iam_role' % VARS_2I2C_ACCOUNT_ID,
       },
     },
   };
@@ -178,7 +178,7 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
     grafana: {
       serviceAccount: {
         annotations: if provider_name == 'aws' then {
-          'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_grafana_cloudwatch' % VARS_2I2C_AWS_ACCOUNT_ID,
+          'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_grafana_cloudwatch' % VARS_2I2C_ACCOUNT_ID,
         } else {},
       },
     },
@@ -356,5 +356,5 @@ function(VARS_2I2C_AWS_ACCOUNT_ID=null)
         },
       },
     },
-    'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring(VARS_2I2C_AWS_ACCOUNT_ID) else { enabled: false },
+    'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring(VARS_2I2C_ACCOUNT_ID) else { enabled: false },
   }

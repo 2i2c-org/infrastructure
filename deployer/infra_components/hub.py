@@ -159,6 +159,11 @@ class Hub:
             ]
 
             provider = self.cluster.spec["provider"]
+            account_id = None
+            if provider == "gcp":
+                account_id = self.cluster.spec[provider]["project"]
+            elif provider == "aws":
+                account_id = self.cluster.spec[provider]["account_id"]
             # Add on rendered jsonnet values.yaml file for the chart
             rendered_values_path = jsonnet_stack.enter_context(
                 render_jsonnet(
@@ -167,7 +172,7 @@ class Hub:
                     self.spec["name"],
                     provider,
                     hub_domain=self.spec["domain"],
-                    aws_account_id=self.cluster.spec[provider]["account_id"],
+                    account_id=account_id,
                 )
             )
 
@@ -190,7 +195,7 @@ class Hub:
                             self.spec["name"],
                             provider,
                             hub_domain=self.spec["domain"],
-                            aws_account_id=self.cluster.spec[provider]["account_id"],
+                            account_id=account_id,
                         )
                     )
                     cmd.append(f"--values={rendered_path}")

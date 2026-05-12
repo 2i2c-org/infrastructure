@@ -110,7 +110,7 @@ local jupyterhubGroupsExporterConfig = {
   },
 };
 
-local pvConfig = function(provider, hub_name)
+local pvConfig =
   if provider == 'gcp' then {
     pv: {
       serverIP: 'storage-quota-home-nfs.%s.svc.cluster.local' % hub_name,
@@ -124,7 +124,7 @@ local nfsConfig = {
   volumeReporter: {
     enabled: provider == 'kubeconfig',
   },
-} + pvConfig(provider, hub_name);
+} + pvConfig;
 
 local hubIngressConfig = {
   hosts: [hub_domain],
@@ -145,14 +145,26 @@ local jupyterhubConfig = {
         // guessed 'wrong'.
         oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
       },
-
     },
   },
 };
+
+local userServiceAccountConfig =
+  if provider == 'gcp' then {
+    annotations: {
+      'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [account_id, cluster_name, hub_name],
+    },
+  } else if provider == 'aws' then {
+    annotations: {
+      'iam.gke.io/gcp-service-account': '%s-%s@%s.iam.gserviceaccount.com' % [cluster_name, hub_name, account_id],
+    },
+  } else {};
+
 
 emitDaskHubCompatibleConfig({
   nfs: nfsConfig,
   'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
   'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
   jupyterhub: jupyterhubConfig,
+  userServiceAccountConfig: userServiceAccountConfig(provider, cluster_name, hub_name, account_id),
 })
