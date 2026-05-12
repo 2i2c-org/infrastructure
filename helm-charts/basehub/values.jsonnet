@@ -1,4 +1,5 @@
 local hub_name = std.extVar('VARS_2I2C_HUB_NAME');
+local cluster_name = std.extVar('VARS_2I2C_CLUSTER_NAME');
 local provider = std.extVar('VARS_2I2C_PROVIDER');
 local hub_domain = std.extVar('VARS_2I2C_HUB_DOMAIN');
 local account_id = std.extVar('VARS_2I2C_ACCOUNT_ID');
@@ -161,10 +162,11 @@ local userServiceAccountConfig =
   } else {};
 
 
-emitDaskHubCompatibleConfig({
-  nfs: nfsConfig,
-  'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
-  'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
-  jupyterhub: jupyterhubConfig,
-  userServiceAccountConfig: userServiceAccountConfig(provider, cluster_name, hub_name, account_id),
-})
+emitDaskHubCompatibleConfig(
+  {
+    nfs: nfsConfig,
+    'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
+    'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
+    jupyterhub: jupyterhubConfig,
+  } + if provider == 'gcp' || provider == 'aws' then { userServiceAccount: userServiceAccountConfig } else {}
+)

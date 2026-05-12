@@ -42,12 +42,9 @@ def render_jsonnet(
     The following global variables are passed as extVars to jsonnet:
         - cluster_name
         - provider
+        - account_id
         - hub_name (optional)
         - hub_domain (optional)
-
-    Top-level arguments can be referenced in jsonnet even if they are undefined.
-    The following variables are passed as top-level arguments to jsonnet:
-        - account_id (optional)
 
     Be careful in adding more arguments, as that may cause right to replicate issues.
     """
@@ -65,7 +62,7 @@ def render_jsonnet(
     if provider is not None:
         command += ["--ext-str", f"VARS_2I2C_PROVIDER={provider}"]
     if account_id is not None:
-        command += ["--tla-str", f"VARS_2I2C_ACCOUNT_ID={account_id}"]
+        command += ["--ext-str", f"VARS_2I2C_ACCOUNT_ID={account_id}"]
     # Make the jsonnet file passed be an absolute path, but do not *resolve*
     # it - so symlinks are resolved by jsonnet rather than us. This is important
     # for daskhub compatibility.
