@@ -178,6 +178,7 @@ binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
+  config:
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
