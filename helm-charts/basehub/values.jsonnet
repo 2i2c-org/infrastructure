@@ -115,8 +115,22 @@ local pvConfig =
   if provider == 'gcp' then {
     pv: {
       serverIP: 'storage-quota-home-nfs.%s.svc.cluster.local' % hub_name,
+      // We pick soft over hard, so NFS lockups don't lead to hung processes
+      mountOptions: [
+        'rsize=1048576',
+        'wsize=1048576',
+        'timeo=600',
+        'soft',
+        'retrans=2',
+        'noresvport',
+      ],
     },
-  } else {};
+  } else
+    if provider == 'aws' then {
+      pv: {
+        mountOptions: ['soft', 'noatime'],
+      },
+    } else {};
 
 local nfsConfig = {
   dirsizeReporter: {
