@@ -4,9 +4,6 @@ nfs:
     enabled: false
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
     shareNameOverride: spyglass
     serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
 
