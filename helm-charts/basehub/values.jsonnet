@@ -157,11 +157,11 @@ local userServiceAccountConfig =
   {
     enabled: true,
   } +
-  if provider == 'gcp' then {
+  if provider == 'aws' then {
     annotations: {
       'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [account_id, cluster_name, hub_name],
     },
-  } else if provider == 'aws' then {
+  } else if provider == 'gcp' then {
     annotations: {
       'iam.gke.io/gcp-service-account': '%s-%s@%s.iam.gserviceaccount.com' % [cluster_name, hub_name, account_id],
     },

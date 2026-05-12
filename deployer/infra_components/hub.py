@@ -163,7 +163,7 @@ class Hub:
             if provider == "gcp":
                 account_id = self.cluster.spec[provider]["project"]
             elif provider == "aws":
-                account_id = self.cluster.spec[provider]["account_id"]
+                account_id = self.cluster.spec[provider]["account"]
             # Add on rendered jsonnet values.yaml file for the chart
             rendered_values_path = jsonnet_stack.enter_context(
                 render_jsonnet(

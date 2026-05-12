@@ -114,7 +114,7 @@ def validate_hub_config(
     if provider == "gcp":
         account_id = cluster.spec[provider]["project"]
     elif provider == "aws":
-        account_id = cluster.spec[provider]["account_id"]
+        account_id = cluster.spec[provider]["account"]
 
     with ExitStack() as jsonnet_stack:
         # Add on rendered jsonnet values.yaml file for the chart
