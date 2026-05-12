@@ -169,6 +169,42 @@ local jupyterhubConfig = {
   },
 };
 
+local daskGatewayConfig = {
+  gateway: {
+    backend: {
+      scheduler: {
+        extraPodConfig: {
+          nodeSelector: {
+            '2i2c/hub-name': hub_name,
+          },
+        },
+      },
+      worker: {
+        extraPodConfig: {
+          nodeSelector: {
+            '2i2c/hub-name': hub_name,
+          },
+        },
+      },
+    },
+  },
+};
+
+local binderhubServiceConfig = {
+  dockerApi: {
+    nodeSelector: {
+      '2i2c/hub-name': hub_name,
+    },
+  },
+  config: {
+    KubernetesBuildExecutor: {
+      node_selector: {
+        '2i2c/hub-name': hub_name,
+      },
+    },
+  },
+};
+
 // We define a service account that is attached by default to all Jupyter user pods
 // and dask-gateway workers. By default, this has no permissions for clusters not
 // on GCP or AWS - see docs/topic/features.md.
@@ -196,5 +232,7 @@ emitDaskHubCompatibleConfig(
     'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
     jupyterhub: jupyterhubConfig,
     userServiceAccount: userServiceAccountConfig,
+    'dask-gateway': daskGatewayConfig,
+    'binderhub-service': binderhubServiceConfig,
   }
 )
