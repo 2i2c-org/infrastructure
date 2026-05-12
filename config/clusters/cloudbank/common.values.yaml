@@ -4,10 +4,6 @@ nfs:
     enabled: false
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    # MUST HAVE TRAILING SLASH
 jupyterhub:
   singleuser:
     cpu:

@@ -2,9 +2,6 @@ nfs:
   enabled: false
   pv:
     enabled: false
-    mountOptions:
-    - soft
-    - noatime
     serverIP: 10.53.69.162
 jupyterhub:
   custom:

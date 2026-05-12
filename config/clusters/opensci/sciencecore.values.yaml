@@ -1,5 +1,3 @@
-userServiceAccount:
-  enabled: true
 nfs:
   pv:
     serverIP: 10.100.184.138
