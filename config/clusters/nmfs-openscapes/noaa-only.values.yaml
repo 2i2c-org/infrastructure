@@ -7,18 +7,6 @@ nfs:
 jupyterhub-home-nfs:
   enabled: false
 
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: noaa-only
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: noaa-only
-
 jupyterhub:
   custom:
     2i2c:
@@ -50,8 +38,6 @@ jupyterhub:
           mountPath: /home/jovyan/shared-readonly
           subPath: _shared
           readOnly: true
-    nodeSelector:
-      2i2c/hub-name: noaa-only
     extraEnv:
       SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-noaa-only/$(JUPYTERHUB_USER)
       GH_SCOPED_CREDS_CLIENT_ID: Iv23lie5oLneHExwicr2

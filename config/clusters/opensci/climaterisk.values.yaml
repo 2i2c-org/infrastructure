@@ -51,7 +51,6 @@ jupyterhub:
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/climaterisk-gh-scoped-creds
     nodeSelector:
       node.kubernetes.io/instance-type: r5.4xlarge
-      2i2c/hub-name: climaterisk
     memory:
       guarantee: 15929958203
       limit: 15929958203
@@ -78,14 +77,4 @@ jupyterhub:
     storage:
       extraVolumeMounts:
       extraVolumes:
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: climaterisk
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: climaterisk
+

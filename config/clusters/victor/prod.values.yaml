@@ -2,17 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.14.113
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0aa2e34864c248eb2
@@ -27,8 +16,6 @@ basehub:
       - hosts: [hub.victorproject.org]
         secretName: https-auto-tls
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
       profileList:
         # IMPORTANT: Staging and prod's profileList's are meant to be kept
         #            equivalent with the exception that staging adds

@@ -2,17 +2,7 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.237.53
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
+
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0a4147126b73d7ff9
@@ -22,8 +12,6 @@ basehub:
           hard_quota: 5 # in GiB
   jupyterhub:
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
       profileList:
         # IMPORTANT: Staging and prod's profileList's are meant to be kept
         #            equivalent with the exception that staging adds

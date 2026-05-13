@@ -147,21 +147,18 @@ binderhub-service:
     nodeSelector:
       # Schedule dockerApi pods to run on the smallest user nodes only
       # https://github.com/2i2c-org/infrastructure/issues/4241
-      2i2c/hub-name: binder
       node.kubernetes.io/instance-type: n2-highmem-4
   config:
     KubernetesBuildExecutor:
       node_selector:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
-        2i2c/hub-name: binder
         node.kubernetes.io/instance-type: n2-highmem-4
 jupyterhub:
   singleuser:
     nodeSelector:
       # Schedule users on the smallest instance
       # https://github.com/2i2c-org/infrastructure/issues/4241
-      2i2c/hub-name: binder
       node.kubernetes.io/instance-type: n2-highmem-4
 ```
 

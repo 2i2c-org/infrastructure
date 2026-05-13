@@ -158,9 +158,6 @@ jupyterhub:
     cpu:
       limit: 3.725
       guarantee: 0.2328125
-    nodeSelector:
-      node.kubernetes.io/instance-type: r5.xlarge
-
   scheduling:
     userScheduler:
       enabled: true

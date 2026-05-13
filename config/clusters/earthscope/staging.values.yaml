@@ -141,8 +141,6 @@ basehub:
                 app.kubernetes.io/component: hub
                 app.kubernetes.io/name: jupyterhub
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
     proxy:
@@ -162,15 +160,6 @@ basehub:
         type: jupyterhub
         jupyterhub:
           jupyterhubServiceName: dask-gateway
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0eb31cae0bd3ee261
@@ -178,11 +167,3 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.35.0
-  binderhub-service:
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: staging
-    config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: staging

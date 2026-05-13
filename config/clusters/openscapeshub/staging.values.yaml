@@ -4,23 +4,10 @@ basehub:
       serverIP: 10.100.90.25
   jupyterhub:
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://openscapeshub-scratch-staging/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://openscapeshub-persistent-staging/$(JUPYTERHUB_USER)
 
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0728f7b1555016f13

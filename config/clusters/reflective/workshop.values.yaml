@@ -30,8 +30,6 @@ jupyterhub:
         manage_groups: false
         allow_all: true
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: workshop
     extraEnv:
       SCRATCH_BUCKET: s3://reflective-scratch-workshop/$(JUPYTERHUB_USER)
       PANGEO_SCRATCH: s3://reflective-scratch-workshop/$(JUPYTERHUB_USER)
@@ -39,17 +37,7 @@ jupyterhub:
     storage:
       extraVolumeMounts:
       extraVolumes:
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: workshop
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: workshop
+
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-00223ae14cbcad300

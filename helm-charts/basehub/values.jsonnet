@@ -162,6 +162,71 @@ local jupyterhubConfig = {
       },
     },
   },
+  singleuser: {
+    nodeSelector:
+      {
+        '2i2c/hub-name': hub_name,
+      } +
+      if provider == 'aws' then {
+        'node.kubernetes.io/instance-type': 'r5.xlarge',
+      }
+      else if provider == 'gcp' then {
+        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+      } else {},
+  },
+};
+
+local daskGatewayConfig = {
+  gateway: {
+    backend: {
+      scheduler: {
+        extraPodConfig: {
+          nodeSelector: {
+            '2i2c/hub-name': hub_name,
+          },
+        },
+      },
+      worker: {
+        extraPodConfig: {
+          nodeSelector: {
+            '2i2c/hub-name': hub_name,
+          },
+        },
+      },
+    },
+  },
+};
+
+local binderhubServiceConfig = {
+  // Schedule builder pods to run on the default smallest user nodes
+  // https://github.com/2i2c-org/infrastructure/issues/4241
+  dockerApi: {
+    nodeSelector:
+      {
+        '2i2c/hub-name': hub_name,
+      } +
+      if provider == 'aws' then {
+        'node.kubernetes.io/instance-type': 'r5.xlarge',
+      }
+      else if provider == 'gcp' then {
+        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+      } else {},
+  },
+  config: {
+    KubernetesBuildExecutor:
+      {
+        node_selector:
+          {
+            '2i2c/hub-name': hub_name,
+          } +
+          if provider == 'aws' then {
+            'node.kubernetes.io/instance-type': 'r5.xlarge',
+          }
+          else if provider == 'gcp' then {
+            'node.kubernetes.io/instance-type': 'n2-highmem-4',
+          } else {},
+      },
+  },
 };
 
 // We define a service account that is attached by default to all Jupyter user pods
@@ -191,5 +256,7 @@ emitDaskHubCompatibleConfig(
     'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
     jupyterhub: jupyterhubConfig,
     userServiceAccount: userServiceAccountConfig,
+    'dask-gateway': daskGatewayConfig,
+    'binderhub-service': binderhubServiceConfig,
   }
 )
