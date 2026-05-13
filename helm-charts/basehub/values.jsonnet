@@ -154,79 +154,82 @@ local hubIngressConfig = {
 local jupyterhubConfig = {
   ingress: hubIngressConfig,
   hub: {
-    config: {
-      OAuthenticator: {
-        // Always set oauth callback URL, to prevent it from being
-        // guessed 'wrong'.
-        oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
-      },
-    },
-  },
-  singleuser: {
-    nodeSelector:
-      {
-        '2i2c/hub-name': hub_name,
-      } +
-      if provider == 'aws' then {
-        'node.kubernetes.io/instance-type': 'r5.xlarge',
-      }
-      else if provider == 'gcp' then {
-        'node.kubernetes.io/instance-type': 'n2-highmem-4',
-      } else {},
-  },
+         config: {
+           OAuthenticator: {
+             // Always set oauth callback URL, to prevent it from being
+             // guessed 'wrong'.
+             oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
+           },
+         },
+       } +
+       if provider == 'aws' then {
+         singleuser: {
+           nodeSelector: {
+             '2i2c/hub-name': hub_name,
+             'node.kubernetes.io/instance-type': 'r5.xlarge',
+           },
+         },
+       }
+       else if provider == 'gcp' then {
+         singleuser: {
+           nodeSelector: {
+             'node.kubernetes.io/instance-type': 'n2-highmem-4',
+           },
+         },
+       } else {},
 };
 
-local daskGatewayConfig = {
-  gateway: {
-    backend: {
-      scheduler: {
-        extraPodConfig: {
-          nodeSelector: {
-            '2i2c/hub-name': hub_name,
+local daskGatewayConfig =
+  if provider == 'aws' then {
+    gateway: {
+      backend: {
+        scheduler: {
+          extraPodConfig: {
+            nodeSelector: {
+              '2i2c/hub-name': hub_name,
+            },
           },
         },
-      },
-      worker: {
-        extraPodConfig: {
-          nodeSelector: {
-            '2i2c/hub-name': hub_name,
+        worker: {
+          extraPodConfig: {
+            nodeSelector: {
+              '2i2c/hub-name': hub_name,
+            },
           },
         },
       },
     },
-  },
-};
+  } else {};
 
 local binderhubServiceConfig = {
   // Schedule builder pods to run on the default smallest user nodes
   // https://github.com/2i2c-org/infrastructure/issues/4241
-  dockerApi: {
-    nodeSelector:
-      {
+  dockerApi:
+    {} +
+    if provider == 'aws' then {
+      nodeSelector: {
         '2i2c/hub-name': hub_name,
-      } +
-      if provider == 'aws' then {
         'node.kubernetes.io/instance-type': 'r5.xlarge',
-      }
-      else if provider == 'gcp' then {
-        'node.kubernetes.io/instance-type': 'n2-highmem-4',
-      } else {},
-  },
-  config: {
-    KubernetesBuildExecutor:
-      {
-        node_selector:
-          {
-            '2i2c/hub-name': hub_name,
-          } +
-          if provider == 'aws' then {
-            'node.kubernetes.io/instance-type': 'r5.xlarge',
-          }
-          else if provider == 'gcp' then {
-            'node.kubernetes.io/instance-type': 'n2-highmem-4',
-          } else {},
       },
-  },
+    }
+    else if provider == 'gcp' then {
+      nodeSelector: {
+        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+      },
+    } else {},
+  config:
+    {} +
+    if provider == 'aws' then {
+      KubernetesBuildExecutor: {
+        '2i2c/hub-name': hub_name,
+        'node.kubernetes.io/instance-type': 'r5.xlarge',
+      },
+    }
+    else if provider == 'gcp' then {
+      KubernetesBuildExecutor: {
+        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+      },
+    } else {},
 };
 
 // We define a service account that is attached by default to all Jupyter user pods
