@@ -3,6 +3,8 @@ nfs:
     serverIP: 10.100.129.224
 jupyterhub:
   custom:
+    maap:
+      apiBaseUrl: https://api.uat.maap-project.org
     2i2c:
       add_staff_user_ids_to_admin_users: false
     homepage:
