@@ -163,9 +163,16 @@ local jupyterhubConfig = {
     },
   },
   singleuser: {
-    nodeSelector: {
-      '2i2c/hub-name': hub_name,
-    },
+    nodeSelector:
+      {
+        '2i2c/hub-name': hub_name,
+      } +
+      if provider == 'aws' then {
+        'node.kubernetes.io/instance-type': 'r5.xlarge',
+      }
+      else if provider == 'gcp' then {
+        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+      } else {},
   },
 };
 
@@ -194,28 +201,31 @@ local binderhubServiceConfig = {
   // Schedule builder pods to run on the default smallest user nodes
   // https://github.com/2i2c-org/infrastructure/issues/4241
   dockerApi: {
-    nodeSelector: {
-                    '2i2c/hub-name': hub_name,
-                  } +
-                  if provider == 'aws' then {
-                    'node.kubernetes.io/instance-type': 'r5.xlarge',
-                  }
-                  else if provider == 'gcp' then {
-                    'node.kubernetes.io/instance-type': 'n2-highmem-4',
-                  } else {},
+    nodeSelector:
+      {
+        '2i2c/hub-name': hub_name,
+      } +
+      if provider == 'aws' then {
+        'node.kubernetes.io/instance-type': 'r5.xlarge',
+      }
+      else if provider == 'gcp' then {
+        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+      } else {},
   },
   config: {
-    KubernetesBuildExecutor: {
-      node_selector: {
-                       '2i2c/hub-name': hub_name,
-                     } +
-                     if provider == 'aws' then {
-                       'node.kubernetes.io/instance-type': 'r5.xlarge',
-                     }
-                     else if provider == 'gcp' then {
-                       'node.kubernetes.io/instance-type': 'n2-highmem-4',
-                     } else {},
-    },
+    KubernetesBuildExecutor:
+      {
+        node_selector:
+          {
+            '2i2c/hub-name': hub_name,
+          } +
+          if provider == 'aws' then {
+            'node.kubernetes.io/instance-type': 'r5.xlarge',
+          }
+          else if provider == 'gcp' then {
+            'node.kubernetes.io/instance-type': 'n2-highmem-4',
+          } else {},
+      },
   },
 };
 
