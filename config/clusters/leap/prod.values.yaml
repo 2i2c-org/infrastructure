@@ -9,12 +9,6 @@ dask-gateway:
           request: 2G
           limit: 4G
 basehub:
-  nfs:
-    pv:
-      serverIP: storage-quota-home-nfs.prod.svc.cluster.local
-  userServiceAccount:
-    annotations:
-      iam.gke.io/gcp-service-account: leap-prod@leap-pangeo.iam.gserviceaccount.com
   jupyterhub:
     ingress:
       hosts: [leap.2i2c.cloud]
@@ -50,9 +44,6 @@ basehub:
         limits:
           cpu: 1
           memory: 1Gi
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://leap.2i2c.cloud/hub/oauth_callback
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://leap-scratch/$(JUPYTERHUB_USER)

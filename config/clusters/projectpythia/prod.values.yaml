@@ -22,7 +22,3 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://projectpythia.2i2c.cloud/hub/oauth_callback

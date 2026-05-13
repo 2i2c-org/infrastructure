@@ -2,9 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.32.135
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-prod
   jupyterhub:
     ingress:
       hosts: [hub.openveda.cloud]
@@ -22,10 +19,6 @@ basehub:
       image:
         # Temporary image with jupyterhub-fancy-profiles 0.6.0
         tag: 0.0.1-0.dev.git.15540.hbaaa997ce
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://hub.openveda.cloud/hub/oauth_callback
-
   dask-gateway:
     gateway:
       backend:

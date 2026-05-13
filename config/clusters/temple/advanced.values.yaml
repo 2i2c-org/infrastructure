@@ -5,10 +5,6 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0b5fc915293bd5bec
 jupyterhub:
-  hub:
-    config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://advanced.temple.2i2c.cloud/hub/oauth_callback
   singleuser:
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liL9VT25MVvo3RYq

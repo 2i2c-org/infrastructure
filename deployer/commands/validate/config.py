@@ -62,14 +62,20 @@ def _prepare_support_helm_charts_dependencies_and_schema():
 
 @functools.lru_cache
 def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_daskub):
-    # FIXME: replace all string paths with Path objects
     hub_chart_dir = Path(hub_chart_dir)
     cleanup_values_schema_json(hub_chart_dir)
 
     if legacy_daskub:
-        if not hub_chart_dir.name.startswith(CUSTOM_HUB_CHART_PREFIX):
+        if not hub_chart_dir.parent.name.startswith(
+            CUSTOM_HUB_CHART_PREFIX
+        ) and not hub_chart_dir.name.startswith(CUSTOM_HUB_CHART_PREFIX):
             _generate_values_schema_json(HELM_CHARTS_DIR / "basehub")
             subprocess.check_call(["helm", "dep", "up", HELM_CHARTS_DIR / "basehub"])
+        else:
+            if hub_chart_dir.name == "daskhub":
+                basehub_dir = hub_chart_dir.parent / "basehub"
+                _generate_values_schema_json(basehub_dir)
+                subprocess.check_call(["helm", "dep", "up", basehub_dir])
     else:
         _generate_values_schema_json(hub_chart_dir)
 
@@ -79,7 +85,7 @@ def _prepare_hub_helm_charts_dependencies_and_schema(hub_chart_dir, legacy_dasku
 def validate_hub_config(
     cluster_name,
     hub_name,
-    helm_chart_dir="",
+    helm_chart_dir: Path,
     skip_refresh=False,
     debug=False,
 ):
@@ -90,8 +96,6 @@ def validate_hub_config(
     cluster = Cluster.from_name(cluster_name)
     hub = next((h for h in cluster.hubs if h.spec["name"] == hub_name), None)
 
-    if not helm_chart_dir:
-        helm_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
     if not skip_refresh:
         _prepare_hub_helm_charts_dependencies_and_schema(
             helm_chart_dir, hub.legacy_daskhub
@@ -105,7 +109,29 @@ def validate_hub_config(
     if debug:
         cmd.append("--debug")
 
+    provider = cluster.spec["provider"]
+    account_id = None
+    if provider == "gcp":
+        account_id = cluster.spec[provider]["project"]
+    elif provider == "aws":
+        account_id = cluster.spec[provider]["account"]
+
     with ExitStack() as jsonnet_stack:
+
+        # Add on rendered jsonnet values.yaml file for the chart
+        rendered_values_path = jsonnet_stack.enter_context(
+            render_jsonnet(
+                helm_chart_dir / "values.jsonnet",
+                cluster.spec["name"],
+                hub.spec["name"],
+                provider,
+                hub_domain=hub.spec["domain"],
+                account_id=account_id,
+            )
+        )
+
+        cmd += ["--values", rendered_values_path]
+
         for values_file in hub.spec["helm_chart_values_files"]:
             # FIXME: The logic here for figuring out non secret files is not correct
             if values_file.endswith(".jsonnet"):
@@ -114,7 +140,9 @@ def validate_hub_config(
                         cluster.config_dir / values_file,
                         cluster_name,
                         hub_name,
-                        cluster.spec["provider"],
+                        provider,
+                        hub_domain=hub.spec["domain"],
+                        account_id=account_id,
                     )
                 )
                 cmd.append(f"--values={rendered_file}")
@@ -140,7 +168,9 @@ def validate_hub_config(
 
 
 @contextmanager
-def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
+def get_chart_dir(
+    default_chart_dir, chart_override, chart_override_path, legacy_daskhub
+):
     """
     Returns the default chart directory (basehub or daskhub)
     or a temporary directory.
@@ -152,19 +182,36 @@ def get_chart_dir(default_chart_dir, chart_override, chart_override_path):
     chart_dir = default_chart_dir
     try:
         if chart_override:
-            # if we're overriding the Chart.yaml file, then we need to make sure
-            # that we're copying the contents for helm-charts/basehub and not the
-            # deprecated daskhub chart
-            default_chart_dir = HELM_CHARTS_DIR / "basehub"
+            default_basehub_chart_dir = HELM_CHARTS_DIR / "basehub"
             temp_chart_dir = tempfile.TemporaryDirectory(prefix=CUSTOM_HUB_CHART_PREFIX)
             temp_chart_dir_name = temp_chart_dir.name
-            # copy the chart directory into the temporary location
-            shutil.copytree(default_chart_dir, temp_chart_dir_name, dirs_exist_ok=True)
+            if legacy_daskhub:
+                temp_chart_dir_name = temp_chart_dir.name + "/basehub"
+
+            # copy the basehub chart directory into the temporary location
+            shutil.copytree(
+                default_basehub_chart_dir, temp_chart_dir_name, dirs_exist_ok=True
+            )
+
             # copy the chart override file into the temporary chart directory
             shutil.copy(chart_override_path, temp_chart_dir_name)
+
             # rename the override file so that it overrides "Chart.yaml"
             default_chart_yaml = Path(temp_chart_dir_name) / "Chart.yaml"
             os.rename(Path(temp_chart_dir_name) / chart_override, default_chart_yaml)
+
+            if legacy_daskhub:
+                # if this is a legacy daskhub, we need to copy the daskhub chart directory
+                # into the temporary location too
+                default_daskhub_chart_dir = HELM_CHARTS_DIR / "daskhub"
+                shutil.copytree(
+                    default_daskhub_chart_dir,
+                    temp_chart_dir.name + "/daskhub",
+                    dirs_exist_ok=True,
+                )
+                # the chart location is the temporary daskhub dir in this case
+                temp_chart_dir_name = temp_chart_dir.name + "/daskhub"
+
             chart_dir = Path(temp_chart_dir_name)
         yield chart_dir
     finally:
@@ -271,6 +318,7 @@ def support_config(
                             cluster_name,
                             None,
                             cluster.spec["provider"],
+                            hub_domain=None,
                         )
                     )
                     cmd.append(f"--values={rendered_file}")
@@ -337,7 +385,7 @@ def all_hub_config(
                 hub.cluster.config_dir / chart_override if chart_override else None
             )
         with get_chart_dir(
-            default_chart_dir, chart_override, chart_override_path
+            default_chart_dir, chart_override, chart_override_path, hub.legacy_daskhub
         ) as chart_dir:
             print_colour(
                 f"{i + 1} / {len(hubs)}: Validating hub and authenticator config for {hub.spec['name']}..."

@@ -49,7 +49,7 @@ jobs:
 
     - name: Identify files that have been added or modified
       # Action repo: https://github.com/dorny/paths-filter
-      uses: dorny/paths-filter@v3
+      uses: dorny/paths-filter@v4
       id: changed-files
       with:
         token: ''
@@ -81,7 +81,7 @@ jobs:
         (steps.generate-jobs.outputs.support-jobs != '[]' ||
         steps.generate-jobs.outputs.staging-jobs != '[]' ||
         steps.generate-jobs.outputs.prod-jobs != '[]')
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: pr
         path: |
@@ -112,7 +112,7 @@ jobs:
         GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
-      uses: nick-fields/retry@v3
+      uses: nick-fields/retry@v4
       id: health_check
       with:
         timeout_minutes: 10
@@ -148,7 +148,7 @@ jobs:
         GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
-      uses: nick-fields/retry@v3
+      uses: nick-fields/retry@v4
       id: health_check
       with:
         timeout_minutes: 10

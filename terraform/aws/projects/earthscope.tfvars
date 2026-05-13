@@ -22,8 +22,9 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 4096 # 4TiB 
+    size        = 4096 # 4TiB
     type        = "gp3"
+    throughput  = 250 # Double the default 125
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
   },

@@ -1,10 +1,6 @@
 nfs:
   pv:
     serverIP: 10.100.90.206
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::622703418259:role/berkeley-geojupyter-prod
-
 jupyterhub:
   ingress:
     hosts: [berkeley-geojupyter.2i2c.cloud]
@@ -15,8 +11,6 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
-      GitHubOAuthenticator:
-        oauth_callback_url: https://berkeley-geojupyter.2i2c.cloud/hub/oauth_callback
 
   singleuser:
     extraEnv:

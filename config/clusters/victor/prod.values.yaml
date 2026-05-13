@@ -2,9 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.14.113
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/victor-prod
   dask-gateway:
     gateway:
       backend:
@@ -29,10 +26,6 @@ basehub:
       tls:
       - hosts: [hub.victorproject.org]
         secretName: https-auto-tls
-    hub:
-      config:
-        CILogonOAuthenticator:
-          oauth_callback_url: https://hub.victorproject.org/hub/oauth_callback
     singleuser:
       nodeSelector:
         2i2c/hub-name: prod
@@ -51,7 +44,7 @@ basehub:
                 display_name: Victor Notebook
                 default: true
                 kubespawner_override:
-                  image: quay.io/volcanocyber/victor-notebook:bbedd617d96e
+                  image: quay.io/volcanocyber/victor-notebook:35cb62f8095e
               b-pytorch-notebook:
                 display_name: Pangeo ML Notebook (Pytorch)
                 kubespawner_override:

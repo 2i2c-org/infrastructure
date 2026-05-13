@@ -2,20 +2,10 @@ nfs:
   pv:
     serverIP: 10.100.150.169
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::515966502221:role/disasters-prod
-
 jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
-      GenericOAuthenticator:
-        oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
   ingress:
     hosts: [hub.disasters.2i2c.cloud]
     tls:

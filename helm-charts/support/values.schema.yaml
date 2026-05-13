@@ -11,6 +11,7 @@ required:
   - grafana
   - nvidiaDevicePlugin
   - prometheusIngressAuthSecret
+  - prometheusAuthSecret
   - cryptnono
   - redirects
   - jupyterhub-cost-monitoring
@@ -45,6 +46,38 @@ properties:
 
   # These provide values for objects we create, so we validate their schema
   # to the best of our ability.
+  copyfail:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+      image:
+        type: object
+        additionalProperties: false
+        properties:
+          repository:
+            type: string
+          tag:
+            type: string
+  dirtyfrag:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+      image:
+        type: object
+        additionalProperties: false
+        properties:
+          repository:
+            type: string
+          tag:
+            type: string
   redirects:
     type: object
     additionalProperties: false
@@ -183,6 +216,26 @@ properties:
           required:
             - username
             - password
+
+  prometheusAuthSecret:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          When enabled, creates a Kubernetes Secret with prometheus
+          username and password credentials.
+      username:
+        type: string
+        description: |
+          Username for prometheus authentication.
+      password:
+        type: string
+        description: |
+          Password for prometheus authentication.
 
   prometheusStorageClass:
     type: object

@@ -1,10 +1,4 @@
 basehub:
-  nfs:
-    pv:
-      serverIP: storage-quota-home-nfs.workshop.svc.cluster.local
-  userServiceAccount:
-    annotations:
-      iam.gke.io/gcp-service-account: awi-ciroh-workshop@ciroh-jupyterhub-423218.iam.gserviceaccount.com
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-workshop
@@ -160,23 +154,24 @@ basehub:
           node_selector:
             node.kubernetes.io/instance-type: n2-highmem-16
       - display_name: Huge
-        description: 52GB RAM, 16 CPUs
+        description: ~59 GB RAM, ~15 CPUs
         profile_options: *profile_options
         kubespawner_override:
-          mem_limit: 60G
-          mem_guarantee: 52G
-          cpu_limit: 16
-          cpu_guarantee: 7.5
+          mem_guarantee: 59579452047
+          mem_limit: 59579452047
+          cpu_guarantee: 15.109639999999999
+          cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n2-highmem-16
+            node.kubernetes.io/instance-type: n2-standard-16
       extraEnv:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
     hub:
+      allowNamedServers: true
       config:
         JupyterHub:
-          authenticator_class: dummy
+          authenticator_class: shared-password
         GitHubOAuthenticator: {}
         Authenticator:
           manage_groups: false
-          admin_users: []
+          allow_all: true

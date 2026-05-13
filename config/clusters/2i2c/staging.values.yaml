@@ -6,13 +6,6 @@ jupyterhub:
       resources:
         requests:
           memory: 16Gi
-  ingress:
-    hosts:
-    - staging.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - staging.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -37,7 +30,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://staging.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
@@ -50,6 +42,3 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 5 # in GiB
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.staging.svc.cluster.local

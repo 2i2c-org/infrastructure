@@ -2,12 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.220.250
-  userServiceAccount:
-    annotations:
-      # When we renamed this hub, we did so at a DNS level and not an infrastructure
-      # level. No terraform config was touched. Hence the kubernetes annotations retain
-      # the original hub name.
-      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-showcase
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0a55e84bbf716b456
@@ -44,7 +38,6 @@ basehub:
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: https://showcase.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
           - 2i2c-community-showcase:access-2i2c-showcase
           - 2i2c-community-showcase:magiclinks-demo

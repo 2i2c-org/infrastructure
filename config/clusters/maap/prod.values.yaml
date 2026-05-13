@@ -1,9 +1,6 @@
 nfs:
   pv:
     serverIP: 10.100.56.44
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/maap-prod
 jupyterhub:
   custom:
     2i2c:
@@ -44,61 +41,16 @@ jupyterhub:
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.1.0
-                init_containers:
-                - name: jupyterhub-gitpuller-init
-                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-                  env:
-                  - name: TARGET_PATH
-                    value: veda-docs
-                  - name: SOURCE_REPO
-                    value: https://github.com/NASA-IMPACT/veda-docs
-                  volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: '{escaped_username}'
-                  securityContext:
-                    runAsUser: 1000
-                    runAsGroup: 1000
             02-rocker:
               display_name: Rocker Geospatial v5.1.0
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.1.0
-                init_containers:
-                - name: jupyterhub-gitpuller-init
-                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-                  env:
-                  - name: TARGET_PATH
-                    value: veda-docs
-                  - name: SOURCE_REPO
-                    value: https://github.com/NASA-IMPACT/veda-docs
-                  volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: '{escaped_username}'
-                  securityContext:
-                    runAsUser: 1000
-                    runAsGroup: 1000
             03-isce3:
               display_name: isce3 v5.1.0
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.1.0
-                init_containers:
-                - name: jupyterhub-gitpuller-init
-                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-                  env:
-                  - name: TARGET_PATH
-                    value: veda-docs
-                  - name: SOURCE_REPO
-                    value: https://github.com/NASA-IMPACT/veda-docs
-                  volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: '{escaped_username}'
-                  securityContext:
-                    runAsUser: 1000
-                    runAsGroup: 1000
             04-qgis:
               display_name: QGIS on Linux Desktop
               description: Linux desktop in the browser, with qgis installed
@@ -110,11 +62,6 @@ jupyterhub:
         resource_allocation:
           display_name: Resource Allocation
           choices:
-              # [[[cog
-              # import os; assert "IGNORE_COG_WARNING" in os.environ, "SET IGNORE_COG_WARNING and modify after running"
-              # from deployer.dev_commands.generate.resource_allocation.generate_choices import choices
-              # choices(["r5.xlarge:5", "r5.4xlarge:2"], "proportional-memory-strategy", default=True)
-              # ]]]
             mem_2_gb:
               display_name: ~2 GB RAM, ~0.2 CPUs
               allowed_groups:
@@ -152,35 +99,36 @@ jupyterhub:
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
             mem_15_gb:
-              display_name: ~15 GB RAM, ~1.8 CPUs
+              display_name: ~15 GB RAM, ~1.9 CPUs
+              description: Up to ~15 CPUs when available
+              default: true
               allowed_groups:
               - CPU:L
-              description: Up to ~4 CPUs when available
               kubespawner_override:
-                mem_guarantee: 15611359038
-                mem_limit: 15611359038
-                cpu_guarantee: 1.82525
-                cpu_limit: 3.6505
+                mem_guarantee: 16005176754
+                mem_limit: 16005176754
+                cpu_guarantee: 1.9226375
+                cpu_limit: 15.3811
                 node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-              default: true
-            mem_29_gb:
-              display_name: ~29 GB RAM, ~4 CPUs
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_30_gb:
+              display_name: ~30 GB RAM, ~4 CPUs
+              description: Up to ~15 CPUs when available
               allowed_groups:
               - CPU:XL
-              description: ~4 CPUs always available
               kubespawner_override:
-                mem_guarantee: 31222718077
-                mem_limit: 31222718077
-                cpu_guarantee: 3.6505
-                cpu_limit: 3.6505
+                mem_guarantee: 32010353508
+                mem_limit: 32010353508
+                cpu_guarantee: 3.845275
+                cpu_limit: 15.3811
                 node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
+                  node.kubernetes.io/instance-type: r5.4xlarge
             mem_60_gb:
               display_name: ~60 GB RAM, ~8 CPUs
+              description: Up to ~15 CPUs when available
+
               allowed_groups:
               - CPU:XXL
-              description: Up to ~15 CPUs when available
               kubespawner_override:
                 mem_guarantee: 64020707016
                 mem_limit: 64020707016
@@ -190,9 +138,9 @@ jupyterhub:
                   node.kubernetes.io/instance-type: r5.4xlarge
             mem_119_gb:
               display_name: ~119 GB RAM, ~15 CPUs
+              description: ~15 CPUs always available
               allowed_groups:
               - CPU:XXXL
-              description: ~15 CPUs always available
               kubespawner_override:
                 mem_guarantee: 128041414033
                 mem_limit: 128041414033
@@ -200,7 +148,6 @@ jupyterhub:
                 cpu_limit: 15.3811
                 node_selector:
                   node.kubernetes.io/instance-type: r5.4xlarge
-                # [[[end]]]
     - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
       description: Start a container on a dedicated node with a GPU
       slug: gpu
@@ -255,7 +202,6 @@ jupyterhub:
   hub:
     config:
       GenericOAuthenticator:
-        oauth_callback_url: https://hub.maap-project.org/hub/oauth_callback
         token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token
         authorize_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/auth
   ingress:

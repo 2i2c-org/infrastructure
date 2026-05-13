@@ -5,21 +5,12 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-09652a5540fdbd50f
 jupyterhub:
-  hub:
-    config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://staging.temple.2i2c.cloud/hub/oauth_callback
   singleuser:
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23libKsm2tlJzjYplj
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-advanced-staging-push
     nodeSelector:
       2i2c/hub-name: staging
-  ingress:
-    hosts: [staging.temple.2i2c.cloud]
-    tls:
-    - hosts: [staging.temple.2i2c.cloud]
-      secretName: https-auto-tls
 binderhub-service:
   dockerApi:
     nodeSelector:

@@ -2,22 +2,11 @@ nfs:
   pv:
     serverIP: 10.100.228.215
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::882437028641:role/bnext-bio-staging
-
 jupyterhub:
-  ingress:
-    hosts: [staging.hub.nucleus.engineering]
-    tls:
-    - hosts: [staging.hub.nucleus.engineering]
-      secretName: https-auto-tls
   hub:
     config:
       JupyterHub:
         authenticator_class: github
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.hub.nucleus.engineering/hub/oauth_callback
   singleuser:
     profileList:
     - display_name: Choose your environment and resources

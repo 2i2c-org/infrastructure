@@ -4,10 +4,6 @@ nfs:
     enabled: false
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    # MUST HAVE TRAILING SLASH
 jupyterhub:
   singleuser:
     cpu:
@@ -30,10 +26,10 @@ jupyterhub-home-nfs:
     resources:
       requests:
         cpu: 0.001
-        memory: 256M
+        memory: 32Mi
       limits:
         cpu: 0.2
-        memory: 1G
+        memory: 256Mi
     config:
       QuotaManager:
         hard_quota: 5 # in GiB

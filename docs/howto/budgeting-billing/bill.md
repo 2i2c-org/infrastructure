@@ -27,24 +27,13 @@ before following the steps below. Your 2i2c.org email should give you access.
 
 ## Communities in shared cloud accounts
 
-The procedure for GCP projects and AWS accounts is similar. It is practically
-demonstrated in a ~20 minute [video] working in a [spreadsheet for accounting of
-cost for communities in shared clusters].
-
-The procedure from the video is:
-
-1. Open the [spreadsheet for accounting of cost for communities in shared
-   clusters].
-2. Duplicate the page for the previous month and clear outdated values in green
-   cells.
-3. Use guidance in pink cells to fill in green cells and finally verify a sum.
-4. Protect the page by right clicking on its tab in order to warn users trying
-   to edit it going onwards.
-5. Enter the verified monthly community costs in the [spreadsheet for billing]
-   and double check anything looking odd in relation to previous months' values.
-
-[video]: https://drive.google.com/file/d/1NQAVo3iJuuaDAp5WI0uinY148M9IK1Ty/view?usp=drive_link
-[spreadsheet for accounting of cost for communities in shared clusters]: https://docs.google.com/spreadsheets/d/1tzKlNBkJiqmm_eTO7dqxIYugverZNi_zSlmBWP3Ek5E/edit#gid=120717885
+We used to run hubs on a shared cluster, but we don't anymore. There's only
+one hub remaining on shared clusters - Michigan Tech University. We will
+[migrate it](https://github.com/2i2c-org/infrastructure/issues/5875) to its
+own cluster at some point soon. Until then, since it's the only hub running
+on the `two-eye-two-see` `pilot-hubs` cluster, we can use
+[this report](https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2026-03-01;to=2026-03-31;dateType=INVOICE_DATE;projects=350668521154;labels=goog-k8s-cluster-name:pilot-hubs-cluster;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see)
+to roughly approximate the cloud cost of the MTU hub.
 
 ## Communities with dedicated cloud accounts
 

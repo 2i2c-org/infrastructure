@@ -2,21 +2,10 @@ nfs:
   dirsizeReporter:
     enabled: false
   pv:
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
     serverIP: 10.100.33.250
     shareNameOverride: prod
 jupyterhub-home-nfs:
   enabled: false
-
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-noaa-only
 
 dask-gateway:
   gateway:
@@ -273,7 +262,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://noaa.nmfs-openscapes.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:

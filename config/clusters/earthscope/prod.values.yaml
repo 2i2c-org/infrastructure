@@ -1,7 +1,4 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-prod
   jupyterhub:
     ingress:
       hosts: [geolab.earthscope.cloud]
@@ -19,7 +16,6 @@ basehub:
           authorize_url: https://login.earthscope.org/authorize
           userdata_url: https://login.earthscope.org/userinfo
           logout_redirect_url: https://login.earthscope.org/v2/logout?client_id=2PbhUTbRU6e7uIaaEZIShotx15MbvsJJ
-          oauth_callback_url: https://geolab.earthscope.cloud/hub/oauth_callback
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org

@@ -272,6 +272,7 @@ variable "ebs_volumes" {
     name_suffix = optional(string, null)
     tags        = optional(map(string), {})
     iops        = optional(number, 3000)
+    throughput  = optional(number, 125)
   }))
   default     = {}
   description = <<-EOT

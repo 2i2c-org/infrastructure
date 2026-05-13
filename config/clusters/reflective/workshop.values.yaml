@@ -1,12 +1,10 @@
 nfs:
   pv:
     serverIP: 10.100.92.0
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/reflective-workshop
 jupyterhub:
   custom:
-    2i2c: {}
+    2i2c:
+      add_staff_user_ids_to_admin_users: false
     homepage:
       templateVars:
         learn_more: |
@@ -25,11 +23,12 @@ jupyterhub:
     config:
       GitHubOAuthenticator: {}
       JupyterHub:
-        authenticator_class: dummy
+        authenticator_class: shared-password
       Authenticator:
         admin_users: []
         enable_auth_state: false
         manage_groups: false
+        allow_all: true
   singleuser:
     nodeSelector:
       2i2c/hub-name: workshop

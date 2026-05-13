@@ -1,8 +1,3 @@
-userServiceAccount:
-  enabled: true
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/opensci-sciencecore
-
 nfs:
   pv:
     serverIP: 10.100.184.138
@@ -164,7 +159,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://sciencecore.opensci.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - 2i2c-demo-hub-access
         - ScienceCore:climaterisk-team

@@ -1,7 +1,13 @@
 # Shared Password Authentication
 
-This documentation covers setting up a hub to have a shared password for login using the [Dummy Authenticator](https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html#the-dummy-authenticator)
-for a hub.
+This documentation covers setting up a hub to have a shared password for login using the
+[Shared Password Authenticator](https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html#shared-password-authenticator)
+
+```{note}
+We used to use the
+[Dummy Authenticator](https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html#the-dummy-authenticator)
+instead. That is deprecated
+```
 
 For this section, it may be useful to set the following environment variables in your terminal.
 
@@ -26,99 +32,52 @@ jupyterhub:
       # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
       # is merged
       gitRepoBranch: unify-logins-2
-      templateVars: [...]  # These values are as normal
 ```
 
-## Using a global password
+## Set a *regular* user password and an *admin* password
 
-We **only** support using a global password with this method of authentication.
-A global password is simple to distribute to a large group of people for a specific event, such as a workshop, while still locking the hub down from the public which can protect it from cryptomining abuse.
+When using the shared password method, you can have *two* passwords:
 
-Enable the Dummy Authenticator in the `${HUB_NAME}.values.yaml` file with the following config.
+1. A *regular* user password, to be distributed to all users. Anyone can login with this
+   password and an arbitrary username. This *must* be at least **8 characters** in length.
+
+2. (Optional) An *admin* user password, to be distributed *just* to admins. Anyone whose name is
+   listed as an admin user (through `Authenticator.admin_users` config) can log in when
+   using this admin password. This must be at least **32 characters** in length, as admin
+   users have additional powers (such as shared directory access, being able to list of
+   users logged in, access anyone's home directory, etc).
+
+Enable the Shared Password Authenticator in the `${HUB_NAME}.values.yaml` file with the following config.
 
 ```yaml
 jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: dummy
+        authenticator_class: shared-password
+        Authenticator:
+          # We don't use the per-group password feature of shared-passwords yet
+          manage_groups: false
+          # Allow everyone with the password to log in
+          allow_all: true
+          # List of admin users, *if* admin_password is set in the next step
+          admin_users:
+          - <admin1>
+          - <admin2>
 ```
 
-Then, in a `${HUB_NAME}.secret.values.yaml` file, include the password.
+Then, in the `sops` encrypted `enc-${HUB_NAME}.secret.values.yaml` file, include the passwords.
 
 ```yaml
 jupyterhub:
   hub:
     config:
-      DummyAuthenticator:
-        password: <password>
+      SharedPasswordAuthenticator:
+        user_password: <password>
 ```
 
-You can then encrypt the password using the below `sops` command.
-
-```bash
-sops --output config/clusters/${CLUSTER_NAME}/enc-${HUB_NAME}.secret.values.yaml -e config/clusters/${CLUSTER_NAME}/${HUB_NAME}.secret.values.yaml
-```
-
-Ensure both these files are listed in the related `cluster.yaml` file.
-
-```yaml
-[...]
-hubs:
-  - name: ...
-    display_name: ...
-    domain: ...
-    helm_chart: ...
-    helm_chart_values_files:
-      - ${HUB_NAME}.values.yaml
-      - enc-${HUB_NAME}.secret.values.yaml
-```
 
 ### How the community should request changing the password
 
-If the community wishes to change the global password, they should do so by [submitting a ticket the support team](https://docs.2i2c.org/support/).
-
-## Disabling admin users
-
-Since using the Dummy Authenticator will allow any username with the correct password to login, this opens scope for a user to login with an admin username and gain admin rights.
-Hence, we disable all admins on the hub to prevent this.
-We do this by not providing anything to `jupyterhub.hub.config.Authenticator.admin_users`.
-
-However if the hub is sharing config with another, e.g. via a `common.values.yaml` file, you may need to explicitly disable admin users with the following config in the `${HUB_NAME}.values.yaml` file.
-
-```yaml
-jupyterhub:
-  hub:
-    config:
-      Authenticator:
-        admin_users: []
-```
-
-## Disabling shared/shared-read-write directories
-
-Since there are no admin users on shared passwords hub, there's no point in having a shared directory.
-We can disable this by setting the following in the `${HUB_NAME}.values.yaml` file.
-
-```yaml
-jupyterhub:
-  custom:
-    singleuserAdmin:
-      extraVolumeMounts:
-  singleuser:
-    initContainers:
-      - name: volume-mount-ownership-fix
-        image: busybox:1.36.1
-        command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{escaped_username}"
-    storage:
-      extraVolumeMounts:
-      extraVolumes:
-```
+If the community wishes to change the global password or the admin, they should
+do so by [submitting a ticket the support team](https://docs.2i2c.org/support/).

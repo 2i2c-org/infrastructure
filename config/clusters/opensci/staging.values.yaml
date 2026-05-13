@@ -7,13 +7,6 @@ jupyterhub-home-nfs:
 
 
 jupyterhub:
-  ingress:
-    hosts:
-    - staging.opensci.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - staging.opensci.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -132,7 +125,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://staging.opensci.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - 2i2c-demo-hub-access
 

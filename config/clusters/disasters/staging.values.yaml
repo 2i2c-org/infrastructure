@@ -2,29 +2,16 @@ nfs:
   pv:
     serverIP: 10.100.200.179
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::515966502221:role/disasters-staging
 jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
   hub:
     config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
-      GenericOAuthenticator:
-        oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
       Authenticator:
         # Disable for now the authentication token refreshing
         # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
         auth_refresh_age: 0
-  ingress:
-    hosts: [staging.hub.disasters.2i2c.cloud]
-    tls:
-    - hosts: [staging.hub.disasters.2i2c.cloud]
-      secretName: https-auto-tls
-
 dask-gateway:
   gateway:
     backend:

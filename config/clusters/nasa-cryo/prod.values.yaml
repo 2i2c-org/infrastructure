@@ -2,19 +2,12 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.102.109
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-prod
   jupyterhub:
     ingress:
       hosts: [hub.cryointhecloud.com]
       tls:
       - hosts: [hub.cryointhecloud.com]
         secretName: https-auto-tls
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://hub.cryointhecloud.com/hub/oauth_callback
     singleuser:
       nodeSelector:
         2i2c/hub-name: prod

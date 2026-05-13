@@ -7,11 +7,6 @@ jupyterhub-home-nfs:
 
 
 jupyterhub:
-  ingress:
-    hosts: [staging.projectpythia.2i2c.cloud]
-    tls:
-    - hosts: [staging.projectpythia.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
@@ -20,7 +15,3 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.projectpythia.2i2c.cloud/hub/oauth_callback

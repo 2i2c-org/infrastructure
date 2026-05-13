@@ -2,10 +2,6 @@ nfs:
   enabled: true
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    serverIP: storage-quota-home-nfs.lis.svc.cluster.local
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
@@ -88,7 +84,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://ds.lis.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - lisacuk
       Authenticator:

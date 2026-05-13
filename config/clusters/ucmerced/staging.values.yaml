@@ -1,11 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts:
-    - staging.ucmerced.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - staging.ucmerced.2i2c.cloud
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
@@ -62,10 +55,6 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices: {}
-  hub:
-    config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://staging.ucmerced.2i2c.cloud/hub/oauth_callback
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-09923c5867cea492a

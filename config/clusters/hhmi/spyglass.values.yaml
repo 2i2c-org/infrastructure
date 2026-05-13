@@ -6,17 +6,39 @@ nfs:
     enabled: false
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/hhmi-398911/zones/us-west2-b/disks/hub-nfs-homedirs-spyglass
+  # Reduce quota, as this hub isn't heavily used
   quotaEnforcer:
+    resources:
+      requests:
+        cpu: 0.001
+        memory: 32Mi
+      limits:
+        cpu: 0.2
+        memory: 256Mi
     config:
       QuotaManager:
         hard_quota: 100 # in GiB
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 128M
+      limits:
+        cpu: 0.1
+        memory: 512M
+  nodeExporter:
+    resources:
+      requests:
+        cpu: 0.001
+      limits:
+        cpu: 0.1
+  autoResizer:
+    resources:
+      requests:
+        cpu: 0.001
 
 jupyterhub:
   ingress:

@@ -38,7 +38,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://hmc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://sso.hmc.edu/idp:
             default: true
@@ -65,6 +64,3 @@ jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-hmc
 
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.hmc.svc.cluster.local

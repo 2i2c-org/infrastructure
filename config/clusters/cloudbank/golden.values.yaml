@@ -34,7 +34,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://golden.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
@@ -53,6 +52,3 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-golden
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.golden.svc.cluster.local

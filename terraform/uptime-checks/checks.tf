@@ -92,6 +92,42 @@ resource "google_monitoring_alert_policy" "hub_simple_uptime_alert" {
   notification_channels = [google_monitoring_notification_channel.pagerduty_hubs.name]
 }
 
+resource "google_monitoring_alert_policy" "hub_https_certificate_expiry_alert" {
+  display_name = "HTTPS Certificate expiry alert"
+  combiner     = "OR"
+
+  conditions {
+    display_name = "HTTPS Certificate expiry alert"
+    condition_threshold {
+      filter = <<-EOT
+      resource.type = "uptime_url"
+      AND metric.type = "monitoring.googleapis.com/uptime_check/time_until_ssl_cert_expires"
+      EOT
+      # Alert if we have a failure condition for 31 minutes - given we do checks
+      # every 15 minutes, this means we alert if two checks have failed. This shoulod
+      # prevent alerts if the hub is momentarily down during a deployment. All alerts
+      # *must* be actionable, so we trade-off some latency here for resiliency.
+      duration        = "1860s"
+      threshold_value = 24 # This is 3 weeks, so we alert if this is less than 3 weeks
+      comparison      = "COMPARISON_LT"
+      aggregations {
+        group_by_fields = ["resource.label.host"]
+        # https://cloud.google.com/monitoring/alerts/concepts-indepth#duration has
+        # more info on alignment
+        alignment_period   = "900s"
+        per_series_aligner = "ALIGN_NEXT_OLDER"
+        # Count each failure as a "1"
+        cross_series_reducer = "REDUCE_MEAN"
+      }
+    }
+  }
+
+  project = var.project_id
+
+  # Send a notification to our PagerDuty channel when this is triggered
+  notification_channels = [google_monitoring_notification_channel.pagerduty_certificates.name]
+}
+
 resource "google_monitoring_uptime_check_config" "prometheus_simple_uptime_check" {
   for_each = { for p in local.prometheuses : p.domain => p }
 

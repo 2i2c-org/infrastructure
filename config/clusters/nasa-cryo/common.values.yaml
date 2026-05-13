@@ -5,13 +5,6 @@ basehub:
       # pv.serverIP is set in each individual staging and prod config file
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
   dask-gateway:
     enabled: true
     gateway:
@@ -48,6 +41,15 @@ basehub:
       config:
         JupyterHub:
           authenticator_class: github
+        Spawner:
+          # Scopes granted to the server for the *browser* token
+          # This list was taken from https://jupyterhub.readthedocs.io/en/stable/tutorial/sharing.html#grant-servers-permission-to-share-themselves-admin
+          # and then reduced to _only_ the current server
+          oauth_client_allowed_scopes:
+          - shares!server
+          - servers!server
+          - read:users:name
+          - list:users
         GitHubOAuthenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to populate the teams in the auth state
@@ -72,7 +74,10 @@ basehub:
         user:
           scopes:
           - self
+            # Sharing scopes
           - shares!user
+          - read:users:name
+          - list:users
     singleuser:
       cloudMetadata:
         blockWithIptables: false

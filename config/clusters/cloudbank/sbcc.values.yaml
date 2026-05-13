@@ -28,7 +28,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://sbcc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
@@ -69,6 +68,3 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-sbcc
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.sbcc.svc.cluster.local

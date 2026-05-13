@@ -2,10 +2,6 @@ nfs:
   pv:
     serverIP: 10.100.10.116
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::882437028641:role/bnext-bio-prod
-
 jupyterhub:
   ingress:
     hosts: [hub.nucleus.engineering]
@@ -16,8 +12,6 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
-      GitHubOAuthenticator:
-        oauth_callback_url: https://hub.nucleus.engineering/hub/oauth_callback
   singleuser:
     image:
       name: quay.io/nucleus/nucleus-hub

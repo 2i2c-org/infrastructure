@@ -45,12 +45,12 @@ jobs:
   report_status:
     needs: [get_incident_details, health_check]
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     steps:
     - uses: actions/checkout@v6
       with:
         submodules: true
     - name: Report Status
-      if: always()
       uses: ravsamhq/notify-slack-action@v2
       with:
         notify_when: success,failure

@@ -5,10 +5,6 @@ jupyterhub-home-nfs:
   eks:
     volumeId: vol-0e89a2ab60575e25a
 jupyterhub:
-  hub:
-    config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod

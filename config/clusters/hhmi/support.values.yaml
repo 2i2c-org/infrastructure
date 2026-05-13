@@ -3,6 +3,12 @@ prometheusIngressAuthSecret:
 
 prometheus:
   server:
+    resources:
+      requests:
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+
     ingress:
       enabled: true
       hosts:

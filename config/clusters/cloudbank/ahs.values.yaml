@@ -12,9 +12,6 @@ jupyterhub:
     cpu:
       guarantee: 1
       limit: 2
-    storage:
-      extraVolumeMounts:
-      extraVolumes:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -42,7 +39,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://ahs.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             username_derivation:
@@ -69,6 +65,3 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ahs
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.ahs.svc.cluster.local

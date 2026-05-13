@@ -57,11 +57,6 @@ jupyterhub:
             # https://github.com/2i2c-org/infrastructure/issues/2559
         working_dir: /home/rstudio
       profile_options: *profile_options
-  hub:
-    config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://ucmerced.2i2c.cloud/hub/oauth_callback
-
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0d9447f7288f66d1d

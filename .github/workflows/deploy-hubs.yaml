@@ -130,7 +130,7 @@ jobs:
 
     - name: Identify files that have been added or modified
           # Action repo: https://github.com/dorny/paths-filter
-      uses: dorny/paths-filter@v3
+      uses: dorny/paths-filter@v4
       id: changed-files
       with:
         token: ''
@@ -167,7 +167,7 @@ jobs:
         (steps.generate-jobs.outputs.support-jobs != '[]' ||
         steps.generate-jobs.outputs.staging-jobs != '[]' ||
         steps.generate-jobs.outputs.prod-jobs != '[]')
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: pr
         path: |
@@ -232,7 +232,6 @@ jobs:
       failure_projectpythia: ${{ steps.declare-failure.outputs.failure_projectpythia }}
       failure_reflective: ${{ steps.declare-failure.outputs.failure_reflective }}
       failure_smithsonian: ${{ steps.declare-failure.outputs.failure_smithsonian }}
-      failure_strudel: ${{ steps.declare-failure.outputs.failure_strudel }}
       failure_utoronto: ${{ steps.declare-failure.outputs.failure_utoronto }}
       failure_victor: ${{ steps.declare-failure.outputs.failure_victor }}
       failure_berkeley_geojupyter: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter }}
@@ -473,7 +472,6 @@ jobs:
       failure_projectpythia_staging: ${{ steps.declare-failure.outputs.failure_projectpythia_staging }}
       failure_reflective_staging: ${{ steps.declare-failure.outputs.failure_reflective_staging }}
       failure_smithsonian_staging: ${{ steps.declare-failure.outputs.failure_smithsonian_staging }}
-      failure_strudel_staging: ${{ steps.declare-failure.outputs.failure_strudel_staging }}
       failure_utoronto_staging: ${{ steps.declare-failure.outputs.failure_utoronto_staging }}
       failure_utoronto_r-staging: ${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
@@ -497,7 +495,7 @@ jobs:
 
         # Retry action: https://github.com/marketplace/actions/retry-step
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-      uses: nick-fields/retry@v3
+      uses: nick-fields/retry@v4
       with:
         timeout_minutes: 10
         max_attempts: 3
@@ -637,7 +635,7 @@ jobs:
 
         # Retry action: https://github.com/marketplace/actions/retry-step
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-      uses: nick-fields/retry@v3
+      uses: nick-fields/retry@v4
       with:
         timeout_minutes: 10
         max_attempts: 3

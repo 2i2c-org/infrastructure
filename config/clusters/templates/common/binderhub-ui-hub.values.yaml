@@ -92,12 +92,8 @@ jupyterhub:
         auth_enabled: true
       JupyterHub:
         authenticator_class: {{ authenticator }}
-  {% if authenticator == "github" %}
-      GitHubOAuthenticator:
-        oauth_callback_url: https://{{ jupyterhub_domain }}/hub/oauth_callback
-  {% elif authenticator == "cilogon" %}
+  {% if authenticator == "cilogon" %}
       CILogonOAuthenticator:
-        oauth_callback_url: https://{{ jupyterhub_domain }}/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:

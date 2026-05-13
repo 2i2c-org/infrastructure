@@ -2,9 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.29.199
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
   jupyterhub:
     singleuser:
       nodeSelector:
@@ -14,9 +11,6 @@ basehub:
         # custom image built to install jupyterhub-fancy-profiles from commit 9754f2188e337cd34cc5c533080583fe92fd47ca
         # from the PR https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/149 for testing
         tag: 0.0.1-0.dev.git.15561.hd27897dad
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
       loadRoles:
         binder:
           services:
@@ -33,11 +27,6 @@ basehub:
           oauth_client_id: service-binderhub
           oauth_no_confirm: true
           oauth_redirect_uri: https://staging.hub.openveda.cloud/services/binder/oauth_callback
-    ingress:
-      hosts: [staging.hub.openveda.cloud]
-      tls:
-      - hosts: [staging.hub.openveda.cloud]
-        secretName: https-auto-tls
     custom:
       homepage:
         gitRepoBranch: staging

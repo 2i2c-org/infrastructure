@@ -3,9 +3,6 @@ basehub:
     enabled: true
     pv:
       enabled: true
-      mountOptions:
-      - soft
-      - noatime
   jupyterhub-home-nfs:
     config:
       groupsExporter:

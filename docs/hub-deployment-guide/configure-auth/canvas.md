@@ -52,17 +52,6 @@ jupyterhub:
 
 When the Hub queries the `userdata_url` endpoint to resolve information about the granted token, it needs guidance on which field to consume as the username in the response. Details of the `User` object returned by this endpoint response can be found [on the Canvas API docs](https://developerdocs.instructure.com/services/canvas/resources/users). The Student Information System (SIS) that is integrated with Canvas records its user ID in the `sis_user_id` field.
 
-Simultaneously, in the public per-hub config (of form `<hub-name>.secret.values.yaml`), we define the OAuth redirect URL for each hub:
-
-```{code-block} yaml
-:emphasize-lines: 5
-jupyterhub:
-  hub:
-    config:
-      GenericOAuthenticator:
-        oauth_callback_url: https://<hub-domain>/hub/oauth_callback
-```
-
 Although this is mostly boilerplate at this stage, later additions for things like course-based access controls (authorization) are easy to slot in with this approach.
 
 ## Define the OAuth secrets

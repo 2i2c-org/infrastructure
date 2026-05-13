@@ -1,19 +1,12 @@
 nfs:
   pv:
     serverIP: 10.100.36.26
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/reflective-prod
 jupyterhub:
   ingress:
     hosts: [reflective.2i2c.cloud]
     tls:
     - hosts: [reflective.2i2c.cloud]
       secretName: https-auto-tls
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://reflective.2i2c.cloud/hub/oauth_callback
   singleuser:
     nodeSelector:
       2i2c/hub-name: prod

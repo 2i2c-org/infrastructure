@@ -1,7 +1,4 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::597746869805:role/nasa-ghg-hub-staging
   dask-gateway:
     gateway:
       backend:
@@ -15,11 +12,6 @@ basehub:
               2i2c/hub-name: staging
 
   jupyterhub:
-    ingress:
-      hosts: [staging.ghg.2i2c.cloud]
-      tls:
-      - hosts: [staging.ghg.2i2c.cloud]
-        secretName: https-auto-tls
     custom:
       homepage:
         gitRepoBranch: staging
@@ -27,10 +19,7 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 8fbdaf8ce82e245a
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://staging.ghg.2i2c.cloud/hub/oauth_callback
+        tag: 1389e6181c78ec61e9c3c5e430e8840758d0854c
       extraConfig:
         11-usage-quotas-viewer: |
           from jupyterhub_usage_quotas import setup_usage_quotas
@@ -48,6 +37,7 @@ basehub:
           - --public-hub-url=https://staging.ghg.2i2c.cloud
           - --prometheus-url=http://support-prometheus-server.support.svc.cluster.local
           - --hub-namespace=staging
+          - --UsageConfig.config_file=/usr/local/etc/jupyterhub/usage_quota_config.py
       loadRoles:
         usage-quota-service:
           scopes:

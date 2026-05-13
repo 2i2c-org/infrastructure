@@ -37,7 +37,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://sjsu.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://idp01.sjsu.edu/idp/shibboleth:
             default: true
@@ -61,6 +60,3 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-sjsu
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.sjsu.svc.cluster.local

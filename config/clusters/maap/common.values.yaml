@@ -3,17 +3,26 @@ nfs:
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
-
 dask-gateway:
   enabled: true
 jupyterhub:
+
+  prePuller:
+    # Pre-pull all explicitly specified images in our profiles on all nodes
+    # when they start up
+    continuous:
+      enabled: true
+
+    extraImages:
+      # Keep up to date with the init container used for pulling in docs, under initContainers
+      nbgitpuller:
+        name: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init
+        tag: 97eb45f9d23b128aff810e45911857d5cffd05c2
+      # Keep up to date with s3fs sidecar
+      s3fs:
+        name: mas.dit.maap-project.org/root/che-sidecar-s3fs
+        tag: 2i2c # This is a mutable tag, so may trigger re-pulls
+
   custom:
     daskhubSetup:
       enabled: true
@@ -154,6 +163,22 @@ jupyterhub:
           subPath: my-team-buckets
           mountPropagation: HostToContainer
           readOnly: false
+    initContainers:
+    - name: jupyterhub-gitpuller-init
+      # Keep this up to date with `prePuller.extraImages`
+      image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+      env:
+      - name: TARGET_PATH
+        value: veda-docs
+      - name: SOURCE_REPO
+        value: https://github.com/NASA-IMPACT/veda-docs
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
     extraContainers:
     - name: s3fs
       image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
@@ -190,182 +215,6 @@ jupyterhub:
         mountPath: /my-team-buckets
         subPath: my-team-buckets
         mountPropagation: Bidirectional
-    profileList:
-    - display_name: Choose your environment and resources
-      default: true
-      profile_options:
-        image:
-          display_name: Environment
-          dynamic_image_building:
-            enabled: true
-          unlisted_choice:
-            enabled: true
-            display_name: Custom image
-            validation_regex: ^.+:.+$
-            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
-            kubespawner_override:
-              image: '{value}'
-          choices:
-            01-modify-pangeo:
-              display_name: Modified Pangeo Notebook
-              description: Pangeo based notebook with a Python environment
-              kubespawner_override:
-                image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.12.30-v1
-                init_containers:
-                # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-                # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
-                - name: jupyterhub-gitpuller-init
-                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-                  env:
-                  - name: TARGET_PATH
-                    value: veda-docs
-                  - name: SOURCE_REPO
-                    value: https://github.com/NASA-IMPACT/veda-docs
-                  volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: '{escaped_username}'
-                  securityContext:
-                    runAsUser: 1000
-                    runAsGroup: 1000
-            02-rocker:
-              display_name: Rocker Geospatial with RStudio
-              description: R environment with many geospatial libraries pre-installed
-              kubespawner_override:
-                image: rocker/binder:4.4
-                image_pull_policy: Always
-                  # Launch RStudio after the user logs in
-                default_url: /rstudio
-                  # Ensures container working dir is homedir
-                  # https://github.com/2i2c-org/infrastructure/issues/2559
-                working_dir: /home/rstudio
-            03-qgis:
-              display_name: QGIS on Linux Desktop
-              description: Linux desktop in the browser, with qgis installed
-              kubespawner_override:
-                  # Launch people directly into the Linux desktop when they start
-                default_url: /desktop
-                  # Built from https://github.com/2i2c-org/nasa-qgis-image
-                image: quay.io/2i2c/nasa-qgis-image:2725f26348ba
-        resource_allocation:
-          display_name: Resource Allocation
-          choices:
-            # [[[cog
-            # from deployer.dev_commands.generate.resource_allocation.generate_choices import choices
-            # choices(["r5.xlarge:5", "r5.4xlarge:2"], "proportional-memory-strategy", default=True)
-            # ]]]
-            mem_2_gb:
-              display_name: ~2 GB RAM, ~0.2 CPUs
-              description: Up to ~4 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 1951419879
-                mem_limit: 1951419879
-                cpu_guarantee: 0.22815625
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-              default: true
-            mem_4_gb:
-              display_name: ~4 GB RAM, ~0.5 CPUs
-              description: Up to ~4 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 3902839759
-                mem_limit: 3902839759
-                cpu_guarantee: 0.4563125
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-            mem_7_gb:
-              display_name: ~7 GB RAM, ~0.9 CPUs
-              description: Up to ~4 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 7805679519
-                mem_limit: 7805679519
-                cpu_guarantee: 0.912625
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-            mem_15_gb:
-              display_name: ~15 GB RAM, ~1.8 CPUs
-              description: Up to ~4 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 15611359038
-                mem_limit: 15611359038
-                cpu_guarantee: 1.82525
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-            mem_29_gb:
-              display_name: ~29 GB RAM, ~4 CPUs
-              description: ~4 CPUs always available
-              kubespawner_override:
-                mem_guarantee: 31222718077
-                mem_limit: 31222718077
-                cpu_guarantee: 3.6505
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-            mem_60_gb:
-              display_name: ~60 GB RAM, ~8 CPUs
-              description: Up to ~15 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 64020707016
-                mem_limit: 64020707016
-                cpu_guarantee: 7.69055
-                cpu_limit: 15.3811
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.4xlarge
-            mem_119_gb:
-              display_name: ~119 GB RAM, ~15 CPUs
-              description: ~15 CPUs always available
-              kubespawner_override:
-                mem_guarantee: 128041414033
-                mem_limit: 128041414033
-                cpu_guarantee: 15.3811
-                cpu_limit: 15.3811
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.4xlarge
-            # [[[end]]]
-    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-      description: Start a container on a dedicated node with a GPU
-      slug: gpu
-      allowed_groups:
-      - 2i2c-org:hub-access-for-2i2c-staff
-      - MAAP-Project:gpu
-      profile_options:
-        image:
-          display_name: Environment
-          dynamic_image_building:
-            enabled: true
-          unlisted_choice:
-            enabled: true
-            display_name: Custom image
-            validation_regex: ^.+:.+$
-            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
-            kubespawner_override:
-              image: '{value}'
-          choices:
-            pytorch:
-              display_name: Pangeo PyTorch ML Notebook
-              default: false
-              slug: pytorch
-              kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2025.12.30
-            tensorflow2:
-              display_name: Pangeo Tensorflow2 ML Notebook
-              default: true
-              slug: tensorflow2
-              kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2025.12.30
-      kubespawner_override:
-        environment:
-          NVIDIA_DRIVER_CAPABILITIES: compute,utility
-        mem_limit:
-        mem_guarantee: 14G
-        node_selector:
-          node.kubernetes.io/instance-type: g4dn.xlarge
-        extra_resource_limits:
-          nvidia.com/gpu: '1'
 
   scheduling:
     userScheduler:
@@ -382,7 +231,6 @@ binderhub-service:
       node.kubernetes.io/instance-type: r5.xlarge
   config:
     KubernetesBuildExecutor:
-      build_image: quay.io/jupyterhub/repo2docker:2025.12.1.dev94-gd3893dba2
       node_selector:
         node.kubernetes.io/instance-type: r5.xlarge
     DockerRegistry:

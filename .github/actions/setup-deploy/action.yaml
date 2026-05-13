@@ -55,7 +55,7 @@ runs:
     # action is run, as its only done after the "generate-jobs" job has been run
     # which will save a cache.
   - name: Restore pip's install cache
-    uses: actions/cache@v4
+    uses: actions/cache@v5
     with:
       path: ~/.cache/pip
         # key determines if we define or reuse an existing cache or not. Our
@@ -70,7 +70,7 @@ runs:
     shell: bash
 
     # This action use the github official cache mechanism internally
-  - uses: azure/setup-helm@v4
+  - uses: azure/setup-helm@v5
     with:
         # Manually update a pinning of helm to a minor version based on:
         #
@@ -104,7 +104,7 @@ runs:
     # - 2i2c, k8s upgrades tracked: https://github.com/2i2c-org/infrastructure/issues/2293
     # - 2i2c, historical issue: https://github.com/2i2c-org/infrastructure/issues/1271
     #
-  - uses: azure/setup-kubectl@v4
+  - uses: azure/setup-kubectl@v5
     with:
       version: v1.28.8
 

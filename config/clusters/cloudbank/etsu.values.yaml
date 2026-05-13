@@ -48,7 +48,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://etsu.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
@@ -78,6 +77,3 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 20 # in GiB
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.etsu.svc.cluster.local

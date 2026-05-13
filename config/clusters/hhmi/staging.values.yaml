@@ -4,20 +4,10 @@ nfs:
     enabled: false
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
     shareNameOverride: spyglass
+    serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
 
 jupyterhub:
-  ingress:
-    hosts:
-    - staging.hhmi.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - staging.hhmi.2i2c.cloud
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins

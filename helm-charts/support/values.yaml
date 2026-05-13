@@ -14,6 +14,18 @@
 cluster-autoscaler:
   enabled: false
 
+copyfail:
+  enabled: true
+  image:
+    repository: quay.io/2i2c/copyfail-mitigation
+    tag: main@sha256:8b16afdd1bd74b3aad006d695020408f47966609ff0225c5c666312d7e8e1a9e
+
+dirtyfrag:
+  enabled: true
+  image:
+    repository: quay.io/2i2c/dirtyfrag-mitigation
+    tag: main@sha256:e1510268a125ea3d17663e11f63d4dcfded3e361c5bfccf2cc3d689f0fd0984b
+
 clusterEntrypoint:
   enabled: true
   targetController: ingress-nginx
@@ -164,6 +176,11 @@ prometheus:
 
   server:
     retention: 1098d # Keep data for at least 3 years
+
+    global:
+      # node_exporter on some nodes can take upto 15s, so let's increase
+      # the timeout for each scrape
+      scrape_timeout: 30s
 
     ingress:
       ingressClassName: nginx
@@ -455,6 +472,11 @@ jupyterhub-cost-monitoring:
 prometheusIngressAuthSecret:
   enabled: false
   users: []
+
+prometheusAuthSecret:
+  enabled: false
+  username: ""
+  password: ""
 
 redirects:
   rules: []
