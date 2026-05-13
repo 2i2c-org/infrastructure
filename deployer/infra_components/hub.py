@@ -199,7 +199,7 @@ class Hub:
         """
         with self.cluster.render_jsonnet(
             jsonnet_file,
-            hub_name=self.cluster.spec["name"],
+            hub_name=self.spec["name"],
             hub_domain=self.spec["domain"],
             **kwargs,
         ) as rendered_file:
