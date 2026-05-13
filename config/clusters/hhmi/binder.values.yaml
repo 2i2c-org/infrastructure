@@ -69,7 +69,9 @@ jupyterhub:
       BinderSpawnerMixin:
         auth_enabled: false
       JupyterHub:
-        authenticator_class: 'null'
+        authenticator_class: tmp
+      TmpAuthenticator:
+        auto_login: false
     redirectToServer: false
     loadRoles:
       binder:
