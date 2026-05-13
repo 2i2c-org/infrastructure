@@ -1,10 +1,4 @@
 basehub:
-  nfs:
-    pv:
-      serverIP: storage-quota-home-nfs.workshop.svc.cluster.local
-  userServiceAccount:
-    annotations:
-      iam.gke.io/gcp-service-account: awi-ciroh-workshop@ciroh-jupyterhub-423218.iam.gserviceaccount.com
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-workshop
@@ -14,8 +8,6 @@ basehub:
           hard_quota: 40 # in GiB
   jupyterhub:
     custom:
-      2i2c:
-        add_staff_user_ids_to_admin_users: false
       singleuserAdmin:
         extraVolumeMounts:
       homepage:
@@ -74,48 +66,6 @@ basehub:
                 slug: rkernel
                 kubespawner_override:
                   image: quay.io/2i2c/awi-ciroh-image:f7f6aa41555b
-              preprocessor:
-                display_name: NGIAB Data Preprocessor
-                kubespawner_override:
-                    # From  https://github.com/CIROH-UA/NGIAB_data_preprocess
-                  image: quay.io/awiciroh/devcon25:ngiab_datapreprocess
-                  image_pull_policy: Always
-              devcon1:
-                display_name: USGS Surface Water Tools
-                slug: devcon1
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-usgs
-                  image_pull_policy: Always
-              devcon2:
-                display_name: SHAP for ML Interpretation
-                slug: devcon2
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-shap
-                  image_pull_policy: Always
-              devcon3:
-                display_name: TEVA for Feature Selection
-                slug: devcon3
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-teva
-                  image_pull_policy: Always
-              devcon4:
-                display_name: LightGBM for Forecast
-                slug: devcon4
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-forecasting
-                  image_pull_policy: Always
-              devcon5:
-                display_name: ML for Hydro Model Outputs
-                slug: devcon5
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:sneisary_d25
-                  image_pull_policy: Always
-              devcon6:
-                display_name: HydroGeoSpatial Modeling
-                slug: devcon6
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:jmframe_d25
-                  image_pull_policy: Always
               devcon7:
                 display_name: CIROH Community NextGen Hub
                 slug: devcon7
@@ -133,6 +83,12 @@ basehub:
                 slug: devcon9
                 kubespawner_override:
                   image: quay.io/awiciroh/ewri2026:ewri2026
+                  image_pull_policy: Always
+              devcon1:
+                display_name: Inflect
+                slug: devcon1
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-inflect
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
@@ -162,24 +118,24 @@ basehub:
           node_selector:
             node.kubernetes.io/instance-type: n2-highmem-16
       - display_name: Huge
-        description: 52GB RAM, 16 CPUs
+        description: ~59 GB RAM, ~15 CPUs
         profile_options: *profile_options
         kubespawner_override:
-          mem_limit: 60G
-          mem_guarantee: 52G
-          cpu_limit: 16
-          cpu_guarantee: 7.5
+          mem_guarantee: 59579452047
+          mem_limit: 59579452047
+          cpu_guarantee: 15.109639999999999
+          cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n2-highmem-16
+            node.kubernetes.io/instance-type: n2-standard-16
       extraEnv:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
     hub:
+      allowNamedServers: true
       config:
         JupyterHub:
           authenticator_class: shared-password
         GitHubOAuthenticator: {}
         Authenticator:
           manage_groups: false
-          admin_users: []
           allow_all: true

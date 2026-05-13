@@ -3,14 +3,7 @@ dask-gateway:
   gateway:
     backend:
       imagePullSecrets: [name: image-pull-secret]
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: big-binder
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: big-binder
+
 jupyterhub-home-nfs:
   enabled: false
 jupyterhub:
@@ -56,11 +49,6 @@ jupyterhub:
     singleuserAdmin:
       extraVolumeMounts:
   singleuser:
-    nodeSelector:
-      # Schedule users on the smallest instance
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
-      2i2c/hub-name: big-binder
     cloudMetadata:
       blockWithIptables: false
     cpu:
@@ -105,12 +93,6 @@ binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
-      2i2c/hub-name: big-binder
   ingress:
     enabled: true
     hosts: [big.binder.opensci.2i2c.cloud]
@@ -120,12 +102,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        node.kubernetes.io/instance-type: r5.xlarge
-        2i2c/hub-name: big-binder
     BinderHub:
       base_url: /
       hub_url: https://hub.big.binder.opensci.2i2c.cloud

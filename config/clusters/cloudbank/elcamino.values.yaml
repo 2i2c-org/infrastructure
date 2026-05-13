@@ -67,6 +67,3 @@ jupyterhub-home-nfs:
       limits:
         cpu: 0.4
         memory: 1.2G
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.elcamino.svc.cluster.local

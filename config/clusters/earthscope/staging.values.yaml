@@ -1,8 +1,4 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-staging
-
   jupyterhub:
     custom:
       homepage:
@@ -14,7 +10,7 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: a2cba773049eb77b8b1ce97e1de50324022d9a21
+        tag: e084a6fd31f6c3a24818490269fd2f9833b6a580
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token
@@ -39,6 +35,14 @@ basehub:
               window: 7
             intersection: max
           policy:
+          - resource: memory
+            limit:
+              value: 500
+              unit: GiB-hours
+            window: 1
+            scope:
+              group:
+              - geolab
           - resource: memory
             limit:
               value: 1000
@@ -96,7 +100,6 @@ basehub:
           - --public-hub-url=https://staging.geolab.earthscope.cloud
           - --prometheus-url=http://support-prometheus-server.support.svc.cluster.local
           - --hub-namespace=staging
-          - --UsageViewer.escape_username_safe_scheme=False
       loadRoles:
         usage-quota-service:
           scopes:
@@ -107,6 +110,7 @@ basehub:
           scopes:
           - self
           - access:services!service=usage-quota
+          - access:services!service=dask-gateway
       service:
         extraPorts:
         - port: 9000
@@ -136,8 +140,6 @@ basehub:
                 app.kubernetes.io/component: hub
                 app.kubernetes.io/name: jupyterhub
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
     proxy:
@@ -153,15 +155,10 @@ basehub:
             - port: 9000
   dask-gateway:
     gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0eb31cae0bd3ee261
@@ -169,11 +166,3 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.35.0
-  binderhub-service:
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: staging
-    config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: staging

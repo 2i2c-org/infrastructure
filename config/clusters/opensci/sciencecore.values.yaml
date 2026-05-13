@@ -1,8 +1,3 @@
-userServiceAccount:
-  enabled: true
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/opensci-sciencecore
-
 nfs:
   pv:
     serverIP: 10.100.184.138
@@ -38,8 +33,6 @@ jupyterhub:
           name: ''
           url: ''
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: sciencecore
     defaultUrl: /lab
     extraEnv:
       SCRATCH_BUCKET: s3://opensci-scratch-sciencecore/$(JUPYTERHUB_USER)

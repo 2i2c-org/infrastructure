@@ -109,6 +109,13 @@ def validate_hub_config(
     if debug:
         cmd.append("--debug")
 
+    provider = cluster.spec["provider"]
+    account_id = None
+    if provider == "gcp":
+        account_id = cluster.spec[provider]["project"]
+    elif provider == "aws":
+        account_id = cluster.spec[provider]["account"]
+
     with ExitStack() as jsonnet_stack:
 
         # Add on rendered jsonnet values.yaml file for the chart
@@ -117,8 +124,9 @@ def validate_hub_config(
                 helm_chart_dir / "values.jsonnet",
                 cluster.spec["name"],
                 hub.spec["name"],
-                cluster.spec["provider"],
+                provider,
                 hub_domain=hub.spec["domain"],
+                account_id=account_id,
             )
         )
 
@@ -132,8 +140,9 @@ def validate_hub_config(
                         cluster.config_dir / values_file,
                         cluster_name,
                         hub_name,
-                        cluster.spec["provider"],
+                        provider,
                         hub_domain=hub.spec["domain"],
+                        account_id=account_id,
                     )
                 )
                 cmd.append(f"--values={rendered_file}")

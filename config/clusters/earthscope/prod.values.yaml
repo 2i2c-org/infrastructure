@@ -1,7 +1,4 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-prod
   jupyterhub:
     ingress:
       hosts: [geolab.earthscope.cloud]
@@ -23,21 +20,8 @@ basehub:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
   jupyterhub-home-nfs:
     quotaEnforcer:
       config:
@@ -49,11 +33,3 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.106.116
-  binderhub-service:
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: prod
-    config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: prod

@@ -48,7 +48,7 @@ Two external variables (accessible via `std.extVar` in jsonnet files) are inject
 2. `VARS_2I2C_HUB_NAME` - Name of the hub we are deploying. Unset for support deploys.
 3. `VARS_2I2C_HUB_DOMAIN` - Domain of the hub we are deploying. Unset for support deploys.
 4. `VARS_2I2C_PROVIDER` - Provider the current hub is being deployed on (aws, gcp, etc)
-5. `VARS_2I2C_AWS_ACCOUNT_ID` - AWS Account ID for hubs on AWS
+5. `VARS_2I2C_ACCOUNT_ID` - Account ID or project ID for hubs on AWS or GCP
 
 We want to keep this set of variables *super minimal*, to prevent right to replicate related
 issues. A community that wants to replicate our code should be able to convert the jsonnet

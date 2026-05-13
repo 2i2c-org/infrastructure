@@ -1,9 +1,6 @@
 nfs:
   pv:
     serverIP: 10.100.129.224
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/maap-staging
 jupyterhub:
   custom:
     maapApiBaseUrl: https://api.uat.maap-project.org
@@ -19,11 +16,6 @@ jupyterhub:
       WORKSPACE_BUCKET: maap-staging-workspace
       DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
       DOCKERIMAGE_PATH_BASE_IMAGE: $(JUPYTER_IMAGE)
-    nodeSelector:
-      2i2c/hub-name: staging
-    # NOTE the only difference between profileList for staging and prod is the image tags
-    # prod should always have the latest official release and staging has develop unless we are
-    # actively doing a release in which case staging images point to our release tag
     profileList:
     - display_name: Choose your environment and resources
       default: true
@@ -237,24 +229,10 @@ jupyterhub:
 dask-gateway:
   gateway:
     backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: staging
-      worker:
-        extraPodConfig:
-          node_selector:
-            2i2c/hub-name: staging
       imagePullSecrets: [name: image-pull-secret]
 
 binderhub-service:
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: staging
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        2i2c/hub-name: staging
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-staging-
 

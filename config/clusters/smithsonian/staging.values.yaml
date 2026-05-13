@@ -6,18 +6,3 @@ basehub:
     eks:
       volumeId: vol-0ec551895e93e4d59
 
-  jupyterhub:
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging

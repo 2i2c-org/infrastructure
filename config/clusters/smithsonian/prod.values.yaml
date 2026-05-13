@@ -12,17 +12,4 @@ basehub:
       tls:
       - hosts: [smithsonian.2i2c.cloud]
         secretName: https-auto-tls
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
+

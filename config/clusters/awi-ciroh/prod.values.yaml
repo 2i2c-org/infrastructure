@@ -1,10 +1,4 @@
 basehub:
-  nfs:
-    pv:
-      serverIP: storage-quota-home-nfs.prod.svc.cluster.local
-  userServiceAccount:
-    annotations:
-      iam.gke.io/gcp-service-account: awi-ciroh-prod@ciroh-jupyterhub-423218.iam.gserviceaccount.com
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-prod
@@ -117,6 +111,12 @@ basehub:
                 slug: devcon8
                 kubespawner_override:
                   image: quay.io/awiciroh/symfluence:v1.0.0
+                  image_pull_policy: Always
+              devcon9:
+                display_name: Symfluence
+                slug: devcon9
+                kubespawner_override:
+                  image: quay.io/2i2c/awi-ciroh-image:symfluence-beta
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G

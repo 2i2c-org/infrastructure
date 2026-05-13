@@ -1,26 +1,9 @@
 nfs:
   pv:
     serverIP: 10.100.91.72
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-staging
-
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: staging
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: staging
 
 jupyterhub:
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: staging
     extraEnv:
       SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-staging/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://nmfs-openscapes-persistent-staging/$(JUPYTERHUB_USER)

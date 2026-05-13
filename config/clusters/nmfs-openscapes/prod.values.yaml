@@ -1,21 +1,6 @@
 nfs:
   pv:
     serverIP: 10.100.33.250
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-prod
-
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
 
 jupyterhub:
   ingress:
@@ -24,8 +9,6 @@ jupyterhub:
     - hosts: [nmfs-openscapes.2i2c.cloud]
       secretName: https-auto-tls
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: prod
     extraEnv:
       SCRATCH_BUCKET: s3://nmfs-openscapes-scratch/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://nmfs-openscapes-persistent/$(JUPYTERHUB_USER)

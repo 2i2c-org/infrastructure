@@ -1,10 +1,4 @@
 basehub:
-  nfs:
-    pv:
-      serverIP: storage-quota-home-nfs.staging.svc.cluster.local
-  userServiceAccount:
-    annotations:
-      iam.gke.io/gcp-service-account: leap-staging@leap-pangeo.iam.gserviceaccount.com
   jupyterhub:
     singleuser:
       extraEnv:

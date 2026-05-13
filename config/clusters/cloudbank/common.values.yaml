@@ -4,10 +4,6 @@ nfs:
     enabled: false
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    # MUST HAVE TRAILING SLASH
 jupyterhub:
   singleuser:
     cpu:
@@ -20,9 +16,6 @@ jupyterhub:
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
       tag: 6d61d3c15d47
-    nodeSelector:
-      # Put everything on the most appropriate instance type for these users
-      node.kubernetes.io/instance-type: n2-highmem-4
 jupyterhub-home-nfs:
   # Reduce nfs server requests and limits from baseline,
   # as we have a *lot* of hubs and spend a lot of money on core nodes

@@ -58,6 +58,3 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 10 # in GiB
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.umd.svc.cluster.local

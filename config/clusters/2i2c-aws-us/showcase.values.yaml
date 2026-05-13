@@ -2,12 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.220.250
-  userServiceAccount:
-    annotations:
-      # When we renamed this hub, we did so at a DNS level and not an infrastructure
-      # level. No terraform config was touched. Hence the kubernetes annotations retain
-      # the original hub name.
-      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-showcase
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0a55e84bbf716b456
@@ -50,8 +44,6 @@ basehub:
           - 2i2c-demo-hub-access:showcase-topst
           - ScienceCore
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: showcase
       extraEnv:
         SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-showcase/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://2i2c-aws-us-persistent-showcase/$(JUPYTERHUB_USER)
@@ -250,14 +242,3 @@ basehub:
           extra_resource_limits:
             nvidia.com/gpu: '1'
 
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: showcase
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: showcase

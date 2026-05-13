@@ -4,13 +4,6 @@ basehub:
     pv:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
       serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
   dask-gateway:
     enabled: true
@@ -309,13 +302,7 @@ basehub:
     enabled: true
     networkPolicy:
       enabled: true
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: binder
     config:
-      KubernetesBuildExecutor:
-        node_selector:
-          node.kubernetes.io/instance-type: r5.xlarge
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
       DockerRegistry:

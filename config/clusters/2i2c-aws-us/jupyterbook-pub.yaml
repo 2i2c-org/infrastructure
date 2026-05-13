@@ -1,14 +1,14 @@
 # See https://agoose77.github.io/jupyterbook-pub-service/
 # Run the core service on the core nodes
 nodeSelector: &nodeSelector
-  capi.stackhpc.com/node-group: core
+  hub.jupyter.org/node-purpose: core
 
 config:
   JupyterBookPubApp:
     base_url: /services/jupyterbook-pub/
+    site_subheading: |
+      Instantly render pre-built JupyterBook AST!
   KubernetesExecutor:
-    # Current JS2 certs are not X509 valid
-    disable_strict_ssl_verification: true
     resources:
       requests:
         memory: 128Mi
@@ -21,6 +21,7 @@ extraBuilderConfig:
   json:
     JupyterBook2Builder:
       allow_source_builds: false
+
 volumeClaim:
   enabled: false
 
@@ -30,6 +31,6 @@ volume:
     type: DirectoryOrCreate
 
 auth:
-  enabled: false
-  # hub_api_token: <a token>
-  # hub_api_url: https://hub.projectpythia.org/hub/api/
+  enabled: true
+  # hub_api_token: <set via deploy>
+  hub_api_url: https://staging.aws.2i2c.cloud/hub/api/

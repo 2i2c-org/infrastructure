@@ -4,11 +4,8 @@ nfs:
     enabled: false
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
     shareNameOverride: spyglass
+    serverIP: storage-quota-home-nfs.spyglass.svc.cluster.local
 
 jupyterhub:
   custom:
