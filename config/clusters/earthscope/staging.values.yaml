@@ -10,7 +10,7 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 151611d97a999608a4185e00da4bb67b606fc853
+        tag: e084a6fd31f6c3a24818490269fd2f9833b6a580
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token
@@ -100,7 +100,6 @@ basehub:
           - --public-hub-url=https://staging.geolab.earthscope.cloud
           - --prometheus-url=http://support-prometheus-server.support.svc.cluster.local
           - --hub-namespace=staging
-          - --UsageViewer.escape_username_safe_scheme=False
       loadRoles:
         usage-quota-service:
           scopes:
