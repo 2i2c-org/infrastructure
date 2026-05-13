@@ -151,33 +151,34 @@ local hubIngressConfig = {
   ],
 };
 
-local jupyterhubConfig = {
-  ingress: hubIngressConfig,
-  hub: {
-         config: {
-           OAuthenticator: {
-             // Always set oauth callback URL, to prevent it from being
-             // guessed 'wrong'.
-             oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
-           },
-         },
-       } +
-       if provider == 'aws' then {
-         singleuser: {
-           nodeSelector: {
-             '2i2c/hub-name': hub_name,
-             'node.kubernetes.io/instance-type': 'r5.xlarge',
-           },
-         },
-       }
-       else if provider == 'gcp' then {
-         singleuser: {
-           nodeSelector: {
-             'node.kubernetes.io/instance-type': 'n2-highmem-4',
-           },
-         },
-       } else {},
-};
+local jupyterhubConfig =
+  {
+    ingress: hubIngressConfig,
+    hub: {
+      config: {
+        OAuthenticator: {
+          // Always set oauth callback URL, to prevent it from being
+          // guessed 'wrong'.
+          oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
+        },
+      },
+    },
+  } +
+  if provider == 'aws' then {
+    singleuser: {
+      nodeSelector: {
+        '2i2c/hub-name': hub_name,
+        'node.kubernetes.io/instance-type': 'r5.xlarge',
+      },
+    },
+  }
+  else if provider == 'gcp' then {
+    singleuser: {
+      nodeSelector: {
+        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+      },
+    },
+  } else {};
 
 local daskGatewayConfig =
   if provider == 'aws' then {
