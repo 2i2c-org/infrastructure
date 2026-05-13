@@ -107,6 +107,7 @@ jupyterhub:
                 })
 
         c.Spawner.auth_state_hook = populate_token
+      # Post auth API endpoint maintained by the MAAP Platform team
       002-post-auth-webhook: |
         import asyncio
         from tornado.httpclient import AsyncHTTPClient
@@ -123,7 +124,7 @@ jupyterhub:
                     request_timeout=5.0,
                 )
             except Exception as e:
-                authenticator.log.warning("MAAP post-auth webhook failed: %s", e)
+                authenticator.log.exception("MAAP post-auth webhook failed: %s", e)
 
         async def maap_post_auth_hook(authenticator, handler, authentication):
             """Notify MAAP REST API after successful login (non-blocking)."""
