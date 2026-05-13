@@ -160,5 +160,23 @@
             "cpu": 15.418,
             "memory": 60795359232
         }
+    },
+    "r5.2xlarge": {
+        "capacity": {
+            "cpu": 8.0,
+            "memory": 66681921536
+        },
+        "allocatable": {
+            "cpu": 7.91,
+            "memory": 65640685568
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 343932928
+        },
+        "available": {
+            "cpu": 7.685,
+            "memory": 65296752640
+        }
     }
 }
