@@ -128,7 +128,7 @@ jupyterhub:
 
         async def maap_post_auth_hook(authenticator, handler, authentication):
             """Notify MAAP REST API after successful login (non-blocking)."""
-            base_url = get_config("custom.maapApiBaseUrl", "")
+            base_url = get_config("custom.maap.apiBaseUrl", "")
             if not base_url:
                 return authentication
 
