@@ -79,7 +79,13 @@ hub_cloud_permissions = {
               "arn:aws:s3:::csdap-iceye-delivery",
               "arn:aws:s3:::csdap-iceye-delivery/*",
               "arn:aws:s3:::naip-analytic",
-              "arn:aws:s3:::naip-analytic/*"
+              "arn:aws:s3:::naip-analytic/*",
+              "arn:aws:s3:::csdap-planet-skysat-delivery",
+              "arn:aws:s3:::csdap-planet-skysat-delivery/*",
+              "arn:aws:s3:::nasa-disasters-dev",
+              "arn:aws:s3:::nasa-disasters-dev/*",
+              "arn:aws:s3:::nasa-disasters-staging",
+              "arn:aws:s3:::nasa-disasters-staging/*"
             ]
           },
           {
@@ -153,7 +159,13 @@ hub_cloud_permissions = {
               "arn:aws:s3:::csdap-iceye-delivery",
               "arn:aws:s3:::csdap-iceye-delivery/*",
               "arn:aws:s3:::naip-analytic",
-              "arn:aws:s3:::naip-analytic/*"
+              "arn:aws:s3:::naip-analytic/*",
+              "arn:aws:s3:::csdap-planet-skysat-delivery",
+              "arn:aws:s3:::csdap-planet-skysat-delivery/*",
+              "arn:aws:s3:::nasa-disasters-dev",
+              "arn:aws:s3:::nasa-disasters-dev/*",
+              "arn:aws:s3:::nasa-disasters-staging",
+              "arn:aws:s3:::nasa-disasters-staging/*"
             ]
           },
           {
