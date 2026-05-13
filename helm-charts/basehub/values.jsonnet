@@ -191,22 +191,30 @@ local daskGatewayConfig = {
 };
 
 local binderhubServiceConfig = {
+  // Schedule builder pods to run on the default smallest user nodes
+  // https://github.com/2i2c-org/infrastructure/issues/4241
   dockerApi: {
     nodeSelector: {
-      '2i2c/hub-name': hub_name,
-      // Schedule dockerApi pods to run on the smallest user nodes only
-      // https://github.com/2i2c-org/infrastructure/issues/4241
-      'node.kubernetes.io/instance-type': if provider == 'aws' then 'r5.xlarge' else if provider == 'gcp' then 'n2-highmem-4' else '',
-    },
+                    '2i2c/hub-name': hub_name,
+                  } +
+                  if provider == 'aws' then {
+                    'node.kubernetes.io/instance-type': 'r5.xlarge',
+                  }
+                  else if provider == 'gcp' then {
+                    'node.kubernetes.io/instance-type': 'n2-highmem-4',
+                  } else {},
   },
   config: {
     KubernetesBuildExecutor: {
       node_selector: {
-        '2i2c/hub-name': hub_name,
-        // Schedule builder pods to run on the smallest user nodes only
-        // https://github.com/2i2c-org/infrastructure/issues/4241
-        'node.kubernetes.io/instance-type': if provider == 'aws' then 'r5.xlarge' else if provider == 'gcp' then 'n2-highmem-4' else '',
-      },
+                       '2i2c/hub-name': hub_name,
+                     } +
+                     if provider == 'aws' then {
+                       'node.kubernetes.io/instance-type': 'r5.xlarge',
+                     }
+                     else if provider == 'gcp' then {
+                       'node.kubernetes.io/instance-type': 'n2-highmem-4',
+                     } else {},
     },
   },
 };
