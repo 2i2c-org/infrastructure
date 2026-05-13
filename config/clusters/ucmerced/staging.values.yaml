@@ -1,5 +1,10 @@
 jupyterhub:
   singleuser:
+    # [CUSTOM] jupyterhub.singleuser.nodeSelector 
+    # 
+    # Used by userPlaceholder (and profiles)
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.2xlarge
     profileList:
     - display_name: Python
       description: Start a Python server with JupyterLab and scientific Python stack
