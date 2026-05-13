@@ -44,6 +44,22 @@ basehub:
       defaultUrl: /lab
       cloudMetadata:
         blockWithIptables: false
+      storage:
+        extraVolumes:
+          002-scratch-session:
+            name: scratch-session
+            emptyDir:
+              # Limit total size, to prevent pod being evicted
+              # with over use by any one user. This can be increased,
+              # but may need to increase the size of the node disk
+              sizeLimit: 5Gi
+        extraVolumeMounts:
+          002-scratch-session-jovyan:
+            name: scratch-session
+            mountPath: /home/jovyan/scratch-session
+          002-scratch-session-rstudio:
+            name: scratch-session
+            mountPath: /home/rstudio/scratch-session
     hub:
       config:
         JupyterHub:
