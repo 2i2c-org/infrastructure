@@ -90,6 +90,12 @@ basehub:
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-inflect
                   image_pull_policy: Always
+              devcon2:
+                display_name: Hydroserver
+                slug: devcon2
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-hydroserver
+                  image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
           mem_guarantee: 5G
