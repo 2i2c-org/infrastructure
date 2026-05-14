@@ -1,10 +1,5 @@
 basehub:
   jupyterhub:
-    ingress:
-      hosts: [openscapes.2i2c.cloud]
-      tls:
-      - hosts: [openscapes.2i2c.cloud]
-        secretName: https-auto-tls
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://openscapeshub-scratch/$(JUPYTERHUB_USER)

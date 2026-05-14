@@ -3,11 +3,6 @@ nfs:
     serverIP: 10.100.10.116
 
 jupyterhub:
-  ingress:
-    hosts: [hub.nucleus.engineering]
-    tls:
-    - hosts: [hub.nucleus.engineering]
-      secretName: https-auto-tls
   hub:
     config:
       JupyterHub:

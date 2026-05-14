@@ -9,11 +9,6 @@ jupyterhub-home-nfs:
       QuotaManager:
         hard_quota: 2 # in GiB
 jupyterhub:
-  ingress:
-    hosts: [projectpythia.2i2c.cloud]
-    tls:
-    - hosts: [projectpythia.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:

@@ -13,11 +13,6 @@ jupyterhub:
       add_staff_user_ids_of_type: google
     singleuserAdmin:
       extraVolumeMounts:
-  ingress:
-    hosts: [noaa.nmfs-openscapes.2i2c.cloud]
-    tls:
-    - hosts: [noaa.nmfs-openscapes.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     initContainers: []
     storage:

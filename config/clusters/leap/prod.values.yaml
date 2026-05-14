@@ -10,11 +10,6 @@ dask-gateway:
           limit: 4G
 basehub:
   jupyterhub:
-    ingress:
-      hosts: [leap.2i2c.cloud]
-      tls:
-      - hosts: [leap.2i2c.cloud]
-        secretName: https-auto-tls
     proxy:
       chp:
         resources:

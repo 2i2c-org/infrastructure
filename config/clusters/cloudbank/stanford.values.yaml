@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [stanford.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [stanford.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
     memory:

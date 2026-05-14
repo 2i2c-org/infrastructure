@@ -41,13 +41,6 @@ jupyterhub-home-nfs:
         cpu: 0.001
 
 jupyterhub:
-  ingress:
-    hosts:
-    - spyglass.hhmi.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - spyglass.hhmi.2i2c.cloud
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins

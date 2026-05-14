@@ -8,11 +8,6 @@ basehub:
         # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
         # is merged
         gitRepoBranch: unify-logins-2
-    ingress:
-      hosts: [workshop.openscapes.2i2c.cloud]
-      tls:
-      - hosts: [workshop.openscapes.2i2c.cloud]
-        secretName: https-auto-tls
     hub:
       allowNamedServers: true
       config:

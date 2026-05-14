@@ -7,11 +7,6 @@ basehub:
         QuotaManager:
           hard_quota: 40 # in GiB
   jupyterhub:
-    ingress:
-      hosts: [ciroh.awi.2i2c.cloud]
-      tls:
-      - hosts: [ciroh.awi.2i2c.cloud]
-        secretName: https-auto-tls
     singleuser:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods

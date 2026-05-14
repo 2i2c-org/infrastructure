@@ -2,11 +2,6 @@ nfs:
   pv:
     serverIP: 10.100.36.26
 jupyterhub:
-  ingress:
-    hosts: [reflective.2i2c.cloud]
-    tls:
-    - hosts: [reflective.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://reflective-scratch-prod/$(JUPYTERHUB_USER)

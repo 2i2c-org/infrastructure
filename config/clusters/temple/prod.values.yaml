@@ -4,14 +4,7 @@ nfs:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0e89a2ab60575e25a
-jupyterhub:
-  ingress:
-    hosts:
-    - temple.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - temple.2i2c.cloud
+jupyterhub: {}
 binderhub-service:
   config:
     BinderHub:

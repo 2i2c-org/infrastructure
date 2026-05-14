@@ -2,13 +2,7 @@ nfs:
   pv:
     serverIP: 10.100.150.169
 
-jupyterhub:
-  ingress:
-    hosts: [hub.disasters.2i2c.cloud]
-    tls:
-    - hosts: [hub.disasters.2i2c.cloud]
-      secretName: https-auto-tls
-
+jupyterhub: {}
 dask-gateway:
   gateway:
     backend:

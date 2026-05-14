@@ -1,13 +1,6 @@
 jupyterhub-home-nfs:
   enabled: false
 jupyterhub:
-  ingress:
-    hosts:
-    - hub.binder.openveda.cloud
-    tls:
-    - hosts:
-      - hub.binder.openveda.cloud
-      secretName: https-auto-tls
   cull:
     every: 300
     # No pods over 12h long

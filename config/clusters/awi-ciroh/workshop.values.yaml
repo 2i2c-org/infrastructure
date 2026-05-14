@@ -12,11 +12,6 @@ basehub:
         extraVolumeMounts:
       homepage:
         gitRepoBranch: unify-logins-2
-    ingress:
-      hosts: [workshop.ciroh.awi.2i2c.cloud]
-      tls:
-      - hosts: [workshop.ciroh.awi.2i2c.cloud]
-        secretName: https-auto-tls
     singleuser:
       storage:
         extraVolumeMounts:

@@ -2,11 +2,6 @@ nfs:
   pv:
     serverIP: 10.100.90.206
 jupyterhub:
-  ingress:
-    hosts: [berkeley-geojupyter.2i2c.cloud]
-    tls:
-    - hosts: [berkeley-geojupyter.2i2c.cloud]
-      secretName: https-auto-tls
   hub:
     config:
       JupyterHub:
