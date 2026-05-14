@@ -56,7 +56,7 @@ If an Alert goes from P1 to another priority number or no number at all, Pagerdu
 
 (alerting:jsonnet-alerts)=
 ## Alerts configured with Jsonnet
-There are a set of alerts that are configured in support deployments using [](#topic/jsonnet).
+Certain alerts are configured in support deployments using [](#topic/jsonnet).
 
 (alerting:configuration)=
 ### Configuration
@@ -87,7 +87,18 @@ Each of these alerts is integrated with a **Pagerduty Service**. And these servi
 You can find the existing Services under [Service Directory](https://2i2c-org.pagerduty.com/service-directory) and the existing [Business Services](https://2i2c-org.pagerduty.com/business-services) on [2i2c's Pagerduty page](https://2i2c-org.pagerduty.com).
 ```
 
-### Important Pagerduty pages to know about
+(alerting:terraform-alerts)=
+## Alerts configured with Terraform
+Some alerts are configured at the infrastructure using Terraform.
+
+
+(alerting:configuration)=
+### Configuration
+
+1. **AWS NFS Home Directory IOPs & Throughput**
+   When the EBS volume for NFS home directory storage becomes saturated at the provisioned IOPs or throughput limits for three in five one-minute collection periods, a CloudWatch Alarm is triggered, which propagates through to PagerDuty.
+
+## Important Pagerduty pages to know about
 All of the alerts we have configured are managed by [Pagerduty](https://www.pagerduty.com/)
 There are some important web pages provided by Pagerduty that are relevant to know about:
 
