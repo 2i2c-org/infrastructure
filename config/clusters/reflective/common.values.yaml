@@ -162,6 +162,8 @@ jupyterhub:
             mem_60_gb:
               display_name: ~60 GB RAM, ~8 CPUs
               description: Up to ~15 CPUs when available
+              allowed_groups:
+              - ReflectiveCloud:power-user
               kubespawner_override:
                 mem_guarantee: 64020707016
                 mem_limit: 64020707016
@@ -172,6 +174,8 @@ jupyterhub:
             mem_119_gb:
               display_name: ~119 GB RAM, ~15 CPUs
               description: ~15 CPUs always available
+              allowed_groups:
+              - ReflectiveCloud:power-user
               kubespawner_override:
                 mem_guarantee: 128041414033
                 mem_limit: 128041414033
