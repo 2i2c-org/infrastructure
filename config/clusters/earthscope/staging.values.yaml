@@ -20,9 +20,8 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
-        UsageConfig:
-          prometheus_url: http://support-prometheus-server.support.svc.cluster.local
-          hub_namespace: staging
+
+        # Metrics config
         UsageQuotaManager:
           scope_backup_strategy:
             empty:
@@ -33,44 +32,58 @@ basehub:
               window: 7
             intersection: max
           policy:
-          - resource: memory
-            limit:
-              value: 500
-              unit: GiB-hours
-            window: 1
-            scope:
-              group:
-              - geolab
-          - resource: memory
-            limit:
-              value: 1000
-              unit: GiB-hours
-            window: 7
-            scope:
-              group:
-              - geolab:dev
+            - resource: memory
+              limit:
+                value: 500
+                unit: GiB-hours
+              window: 1
+              scope:
+                group:
+                  - geolab
+            - resource: memory
+              limit:
+                value: 1000
+                unit: GiB-hours
+              window: 7
+              scope:
+                group:
+                  - geolab:dev
           failover_open: true
+
+        # Metrics config
+        UsageConfig: &commonUsageConfig
+          prometheus_url: http://support-prometheus-server.support.svc.cluster.local
+          hub_namespace: staging
+
       extraConfig:
         11-setup-usage-quotas: |
           from jupyterhub_usage_quotas import setup_usage_quotas
           setup_usage_quotas(c)
+
+      extraFiles:
+        # Viewer config
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_usage_quotas_config.json
+          data:
+            UsageConfig: *commonUsageConfig
+
       services:
         usage-quota:
           url: http://hub:9000
           display: false
           oauth_no_confirm: true
           command:
-          - python
-          - -m
-          - jupyterhub_usage_quotas.services.usage_viewer
-          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.py
-          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_usage_quotas_config.py
+            - python
+            - -m
+            - jupyterhub_usage_quotas.services.usage_viewer
+            - --config-files=/usr/local/etc/jupyterhub/jupyterhub_usage_quotas_config.json
+            - --config-files=/usr/local/etc/jupyterhub/jupyterhub_usage_quotas_config_secret.json
       loadRoles:
         usage-quota-service:
           scopes:
-          - read:users
+            - read:users
           services:
-          - usage-quota
+            - usage-quota
         user:
           scopes:
           - self
@@ -82,32 +95,32 @@ basehub:
           - access:services!service=dask-gateway
       service:
         extraPorts:
-        - port: 9000
-          targetPort: 9000
-          name: usage-quota
+          - port: 9000
+            targetPort: 9000
+            name: usage-quota
       networkPolicy:
         ingress:
-        - ports:
-          - port: 9000
-          from:
-          # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
-          # for hub managed services.
-          - podSelector:
-              matchLabels:
-                app.kubernetes.io/component: hub
-                app.kubernetes.io/name: jupyterhub
-          # Allow traffic from the proxy api pod
-          - podSelector:
-              matchLabels:
-                hub.jupyter.org/network-access-hub: 'true'
-        - ports:
-          - port: 8081
-          from:
-          # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
-          - podSelector:
-              matchLabels:
-                app.kubernetes.io/component: hub
-                app.kubernetes.io/name: jupyterhub
+          - ports:
+              - port: 9000
+            from:
+              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
+              # for hub managed services.
+              - podSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: hub
+                    app.kubernetes.io/name: jupyterhub
+              # Allow traffic from the proxy api pod
+              - podSelector:
+                  matchLabels:
+                    hub.jupyter.org/network-access-hub: "true"
+          - ports:
+              - port: 8081
+            from:
+              # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
+              - podSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: hub
+                    app.kubernetes.io/name: jupyterhub
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
@@ -115,13 +128,13 @@ basehub:
       chp:
         networkPolicy:
           egress:
-          - to:
-            - podSelector:
-                matchLabels:
-                  app.kubernetes.io/name: jupyterhub
-                  app.kubernetes.io/component: hub
-            ports:
-            - port: 9000
+            - to:
+                - podSelector:
+                    matchLabels:
+                      app.kubernetes.io/name: jupyterhub
+                      app.kubernetes.io/component: hub
+              ports:
+                - port: 9000
   dask-gateway:
     gateway:
       auth:
