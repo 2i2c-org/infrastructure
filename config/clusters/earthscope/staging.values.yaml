@@ -50,11 +50,6 @@ basehub:
                   - geolab:dev
           failover_open: true
 
-        # Metrics config
-        UsageConfig: &commonUsageConfig
-          prometheus_url: http://support-prometheus-server.support.svc.cluster.local
-          hub_namespace: staging
-
       extraConfig:
         11-setup-usage-quotas: |
           from jupyterhub_usage_quotas import setup_usage_quotas
@@ -63,9 +58,10 @@ basehub:
       extraFiles:
         # Viewer config
         usage_quotas_config:
-          mountPath: /usr/local/etc/jupyterhub/jupyterhub_usage_quotas_config.json
-          data:
-            UsageConfig: *commonUsageConfig
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageConfig.hub_namespace = "staging"
 
       services:
         usage-quota:
@@ -76,8 +72,8 @@ basehub:
             - python
             - -m
             - jupyterhub_usage_quotas.services.usage_viewer
-            - --config-files=/usr/local/etc/jupyterhub/jupyterhub_usage_quotas_config.json
-            - --config-files=/usr/local/etc/jupyterhub/jupyterhub_usage_quotas_config_secret.json
+            - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+            - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
       loadRoles:
         usage-quota-service:
           scopes:
