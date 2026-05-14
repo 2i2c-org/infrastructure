@@ -1,5 +1,7 @@
 nfs:
+  enabled: true
   pv:
+    enabled: true
     serverIP: 10.100.169.190
 
 jupyterhub-home-nfs:
@@ -10,7 +12,13 @@ jupyterhub-home-nfs:
       QuotaManager:
         hard_quota: 10 # in GiB
 jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
   hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
     services:
       jupyterbook-pub:
         # Auth

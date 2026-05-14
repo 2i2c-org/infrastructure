@@ -111,6 +111,10 @@ basehub:
           - self
           - access:services!service=usage-quota
           - access:services!service=dask-gateway
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
       service:
         extraPorts:
         - port: 9000

@@ -1,7 +1,16 @@
 basehub:
   nfs:
+    enabled: true
     pv:
+      enabled: true
       serverIP: 10.100.220.250
+  dask-gateway:
+    enabled: true
+    gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0a55e84bbf716b456
@@ -10,7 +19,12 @@ basehub:
         QuotaManager:
           hard_quota: 20 # in GiB
   jupyterhub:
+    scheduling:
+      userScheduler:
+        enabled: true
     custom:
+      daskhubSetup:
+        enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: github
@@ -32,13 +46,26 @@ basehub:
             url: https://2i2c.org
     hub:
       config:
+        JupyterHub:
+          authenticator_class: github
         GitHubOAuthenticator:
           allowed_organizations:
           - 2i2c-community-showcase:access-2i2c-showcase
           - 2i2c-community-showcase:magiclinks-demo
           - 2i2c-demo-hub-access:showcase-topst
           - ScienceCore
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+        user:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       extraEnv:
         SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-showcase/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://2i2c-aws-us-persistent-showcase/$(JUPYTERHUB_USER)
@@ -50,7 +77,7 @@ basehub:
         allowed_groups:
         - 2i2c-community-showcase:magiclinks-demo
         kubespawner_override:
-          image: pangeo/pangeo-notebook:2023.06.20
+          image: pangeo/pangeo-notebook:2026.04.29
           mem_guarantee: 7.234G
           cpu_guarantee: 0.1
           mem_limit:
@@ -111,7 +138,7 @@ basehub:
                 display_name: Pangeo Notebook
                 slug: pangeo
                 kubespawner_override:
-                  image: pangeo/pangeo-notebook:2023.06.20
+                  image: pangeo/pangeo-notebook:2026.04.29
 
         kubespawner_override:
           mem_guarantee: 7.234G
@@ -145,7 +172,7 @@ basehub:
                 default: true
                 slug: pangeo
                 kubespawner_override:
-                  image: pangeo/pangeo-notebook:2023.06.20
+                  image: pangeo/pangeo-notebook:2026.04.29
               jupyter-scipy:
                 display_name: Jupyter SciPy
                 slug: jupyter-scipy
