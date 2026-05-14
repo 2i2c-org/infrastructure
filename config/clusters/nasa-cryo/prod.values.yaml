@@ -3,11 +3,6 @@ basehub:
     pv:
       serverIP: 10.100.102.109
   jupyterhub:
-    ingress:
-      hosts: [hub.cryointhecloud.com]
-      tls:
-      - hosts: [hub.cryointhecloud.com]
-        secretName: https-auto-tls
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://nasa-cryo-scratch/$(JUPYTERHUB_USER)

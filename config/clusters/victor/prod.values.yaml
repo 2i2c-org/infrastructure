@@ -10,11 +10,6 @@ basehub:
         QuotaManager:
           hard_quota: 20 # in GiB
   jupyterhub:
-    ingress:
-      hosts: [hub.victorproject.org]
-      tls:
-      - hosts: [hub.victorproject.org]
-        secretName: https-auto-tls
     singleuser:
       profileList:
         # IMPORTANT: Staging and prod's profileList's are meant to be kept

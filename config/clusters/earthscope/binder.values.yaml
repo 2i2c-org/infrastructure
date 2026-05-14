@@ -15,11 +15,6 @@ jupyterhub-groups-exporter:
       - geolab:power
 
 jupyterhub:
-  ingress:
-    hosts: [hub.binder.geolab.earthscope.cloud]
-    tls:
-    - hosts: [hub.binder.geolab.earthscope.cloud]
-      secretName: https-auto-tls
   cull:
     every: 300
     # No pods over 12h long

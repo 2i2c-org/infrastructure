@@ -148,11 +148,6 @@ jupyterhub:
           node.kubernetes.io/instance-type: g4dn.xlarge
         extra_resource_limits:
           nvidia.com/gpu: '1'
-  ingress:
-    hosts: [research.temple.2i2c.cloud]
-    tls:
-    - hosts: [research.temple.2i2c.cloud]
-      secretName: https-auto-tls
 binderhub-service:
   config:
     BinderHub:

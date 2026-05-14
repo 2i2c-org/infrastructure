@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [ocu.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [ocu.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
     memory:

@@ -3,11 +3,6 @@ nfs:
     serverIP: 10.100.33.250
 
 jupyterhub:
-  ingress:
-    hosts: [nmfs-openscapes.2i2c.cloud]
-    tls:
-    - hosts: [nmfs-openscapes.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://nmfs-openscapes-scratch/$(JUPYTERHUB_USER)

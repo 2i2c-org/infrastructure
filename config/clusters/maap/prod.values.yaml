@@ -201,12 +201,6 @@ jupyterhub:
       GenericOAuthenticator:
         token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token
         authorize_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/auth
-  ingress:
-    hosts: [hub.maap-project.org]
-    tls:
-    - hosts: [hub.maap-project.org]
-      secretName: https-auto-tls
-
 dask-gateway:
   gateway:
     backend:

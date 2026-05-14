@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [authoring.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [authoring.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   prePuller:
     # hook prePuller shouldn't be enabled when configuring images in any other
     # way than singleuser.image

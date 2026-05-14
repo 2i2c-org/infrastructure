@@ -1,10 +1,5 @@
 basehub:
   jupyterhub:
-    ingress:
-      hosts: [hub.ghg.center]
-      tls:
-      - hosts: [hub.ghg.center]
-        secretName: https-auto-tls
     custom:
       homepage:
         gitRepoBranch: bootstrap5-nasa-ghg-prod

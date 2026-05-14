@@ -3,11 +3,6 @@ basehub:
     pv:
       serverIP: 10.100.32.135
   jupyterhub:
-    ingress:
-      hosts: [hub.openveda.cloud]
-      tls:
-      - hosts: [hub.openveda.cloud]
-        secretName: https-auto-tls
     custom:
       homepage:
         gitRepoBranch: master

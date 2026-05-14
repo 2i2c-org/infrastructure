@@ -10,11 +10,6 @@ basehub:
         QuotaManager:
           hard_quota: 20 # in GiB
   jupyterhub:
-    ingress:
-      hosts: [showcase.2i2c.cloud]
-      tls:
-      - hosts: [showcase.2i2c.cloud]
-        secretName: https-auto-tls
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true

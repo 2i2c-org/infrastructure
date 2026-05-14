@@ -7,11 +7,6 @@ dask-gateway:
 jupyterhub-home-nfs:
   enabled: false
 jupyterhub:
-  ingress:
-    hosts: [hub.big.binder.opensci.2i2c.cloud]
-    tls:
-    - hosts: [hub.big.binder.opensci.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     binderhubUI:
       enabled: true

@@ -19,11 +19,6 @@ jupyterhub:
       # We don't need this right now, and it's causing alert
       # failures
       enabled: false
-  ingress:
-    hosts: [gpu-demo.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [gpu-demo.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
     profileList:

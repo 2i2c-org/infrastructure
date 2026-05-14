@@ -6,11 +6,6 @@ jupyterhub-home-nfs:
     volumeId: vol-03d03c8c473d83e5d
 
 jupyterhub:
-  ingress:
-    hosts: [climaterisk.opensci.2i2c.cloud]
-    tls:
-    - hosts: [climaterisk.opensci.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     homepage:
       # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51

@@ -13,11 +13,6 @@ jupyterhub:
       effect: NoSchedule
     continuous:
       enabled: false
-  ingress:
-    hosts: [ahs.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [ahs.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
     profileList:

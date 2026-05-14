@@ -9,11 +9,6 @@ jupyterhub:
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liL9VT25MVvo3RYq
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-advanced-github-push-access
-  ingress:
-    hosts: [advanced.temple.2i2c.cloud]
-    tls:
-    - hosts: [advanced.temple.2i2c.cloud]
-      secretName: https-auto-tls
 binderhub-service:
   config:
     BinderHub:

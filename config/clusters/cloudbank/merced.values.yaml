@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [merced.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [merced.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
