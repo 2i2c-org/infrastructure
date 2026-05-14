@@ -55,11 +55,10 @@ basehub:
           - 2i2c-demo-hub-access:showcase-topst
           - ScienceCore
       loadRoles:
-        dask-gateway:
+        server:
           scopes:
-          - read:users
-          services:
-          - dask-gateway
+          - self
+          - access:services!service=dask-gateway
         user:
           scopes:
           - self
@@ -78,7 +77,7 @@ basehub:
         allowed_groups:
         - 2i2c-community-showcase:magiclinks-demo
         kubespawner_override:
-          image: pangeo/pangeo-notebook:2023.06.20
+          image: pangeo/pangeo-notebook:2026.04.29
           mem_guarantee: 7.234G
           cpu_guarantee: 0.1
           mem_limit:
@@ -139,7 +138,7 @@ basehub:
                 display_name: Pangeo Notebook
                 slug: pangeo
                 kubespawner_override:
-                  image: pangeo/pangeo-notebook:2023.06.20
+                  image: pangeo/pangeo-notebook:2026.04.29
 
         kubespawner_override:
           mem_guarantee: 7.234G
@@ -173,7 +172,7 @@ basehub:
                 default: true
                 slug: pangeo
                 kubespawner_override:
-                  image: pangeo/pangeo-notebook:2023.06.20
+                  image: pangeo/pangeo-notebook:2026.04.29
               jupyter-scipy:
                 display_name: Jupyter SciPy
                 slug: jupyter-scipy
