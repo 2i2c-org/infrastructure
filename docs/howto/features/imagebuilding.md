@@ -42,7 +42,7 @@ We call this an `imagebuilding` style hub and the primary features offered would
                     display_name: Pangeo Notebook Image
                     description: "Python image with scientific, dask and geospatial tools"
                     kubespawner_override:
-                      image: pangeo/pangeo-notebook:2023.09.11
+                      image: pangeo/pangeo-notebook:2026.04.29
                   scipy:
                     display_name: Jupyter SciPy Notebook
                     slug: scipy
