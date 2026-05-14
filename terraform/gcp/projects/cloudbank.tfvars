@@ -247,10 +247,6 @@ persistent_disks = {
     size        = 50
     name_suffix = "srjc"
   }
-  "ssu" = {
-    size        = 25
-    name_suffix = "ssu"
-  }
   "staging" = {
     size        = 2
     name_suffix = "staging"
