@@ -23,7 +23,6 @@ from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
     REPO_ROOT_PATH,
 )
-from deployer.utils.jsonnet import render_jsonnet
 from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
@@ -109,24 +108,11 @@ def validate_hub_config(
     if debug:
         cmd.append("--debug")
 
-    provider = cluster.spec["provider"]
-    account_id = None
-    if provider == "gcp":
-        account_id = cluster.spec[provider]["project"]
-    elif provider == "aws":
-        account_id = cluster.spec[provider]["account"]
-
     with ExitStack() as jsonnet_stack:
-
         # Add on rendered jsonnet values.yaml file for the chart
         rendered_values_path = jsonnet_stack.enter_context(
-            render_jsonnet(
+            hub.render_jsonnet(
                 helm_chart_dir / "values.jsonnet",
-                cluster.spec["name"],
-                hub.spec["name"],
-                provider,
-                hub_domain=hub.spec["domain"],
-                account_id=account_id,
             )
         )
 
@@ -136,13 +122,8 @@ def validate_hub_config(
             # FIXME: The logic here for figuring out non secret files is not correct
             if values_file.endswith(".jsonnet"):
                 rendered_file = jsonnet_stack.enter_context(
-                    render_jsonnet(
+                    hub.render_jsonnet(
                         cluster.config_dir / values_file,
-                        cluster_name,
-                        hub_name,
-                        provider,
-                        hub_domain=hub.spec["domain"],
-                        account_id=account_id,
                     )
                 )
                 cmd.append(f"--values={rendered_file}")
@@ -313,12 +294,8 @@ def support_config(
             for values_file in cluster.support["helm_chart_values_files"]:
                 if values_file.endswith(".jsonnet"):
                     rendered_file = jsonnet_stack.enter_context(
-                        render_jsonnet(
+                        cluster.render_jsonnet(
                             cluster.config_dir / values_file,
-                            cluster_name,
-                            None,
-                            cluster.spec["provider"],
-                            hub_domain=None,
                         )
                     )
                     cmd.append(f"--values={rendered_file}")
