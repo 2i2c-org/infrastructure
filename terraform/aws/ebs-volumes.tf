@@ -36,37 +36,56 @@ resource "aws_sns_topic_subscription" "volume_metric_exceeded_https_target" {
 
 resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
   for_each                  = aws_ebs_volume.nfs_home_dirs
-  alarm_name                = "warn-volume-throughput-exceeded"
-  comparison_operator       = "GreaterThanThreshold"
-  evaluation_periods        = 1
-  metric_name               = "VolumeThroughputExceededCheck"
-  namespace                 = "AWS/EBS"
-  period                    = 300
-  statistic                 = "Average"
-  threshold                 = 0.7
+  alarm_name                = "Throughput Limit Exceeded for ${each.value.tags["Name"]} (${var.cluster_name})"
+  evaluation_periods        = 5
+  datapoints_to_alarm       = 3
+  threshold                 = 1.0
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_description         = "This metric monitors disk throughput"
   insufficient_data_actions = []
   alarm_actions             = [aws_sns_topic.volume_metric_exceeded.arn]
-  dimensions = {
-    VolumeId = each.value.id
+  ok_actions                = [aws_sns_topic.volume_metric_exceeded.arn]
+
+  metric_query {
+    id          = "max_throughput_exceeded"
+    return_data = "true"
+    expression  = <<-EOT
+       SELECT MAX(VolumeThroughputExceededCheck) 
+       FROM "AWS/EBS" 
+       WHERE VolumeId = '${each.value.id}'
+     EOT
+    period      = 60
+  }
+  tags = {
+    Name = each.value.tags["Name"]
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_iops_alarm" {
   for_each                  = aws_ebs_volume.nfs_home_dirs
-  alarm_name                = "warn-volume-iops-exceeded"
-  comparison_operator       = "GreaterThanThreshold"
-  evaluation_periods        = 1
-  metric_name               = "VolumeIOPSExceededCheck"
-  namespace                 = "AWS/EBS"
-  period                    = 300
-  statistic                 = "Average"
-  threshold                 = 0.7
+  alarm_name                = "IOPs Limit Exceeded for ${each.value.tags["Name"]} (${var.cluster_name})"
+  evaluation_periods        = 5
+  datapoints_to_alarm       = 3
+  threshold                 = 1.0
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_description         = "This metric monitors disk IOPs"
   insufficient_data_actions = []
   alarm_actions             = [aws_sns_topic.volume_metric_exceeded.arn]
-  dimensions = {
-    VolumeId = each.value.id
+  ok_actions                = [aws_sns_topic.volume_metric_exceeded.arn]
+
+  metric_query {
+    id          = "max_iops_exceeded"
+    return_data = "true"
+    expression  = <<-EOT
+       SELECT MAX(VolumeIOPSExceededCheck) 
+       FROM "AWS/EBS" 
+       WHERE VolumeId = '${each.value.id}'
+     EOT
+    # Smallest possible period
+    period = 60
+  }
+  tags = {
+    Name = each.value.tags["Name"]
   }
 }
 
