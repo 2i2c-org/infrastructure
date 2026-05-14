@@ -477,6 +477,14 @@ hubs:
   - common.values.yaml
   - sou.values.yaml
   - enc-sou.secret.values.yaml
+- name: ssu
+  display_name: Sonoma State University
+  domain: ssu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ssu.values.yaml
+  - enc-ssu.secret.values.yaml
 - name: stanford
   display_name: Stanford University
   domain: stanford.cloudbank.2i2c.cloud
