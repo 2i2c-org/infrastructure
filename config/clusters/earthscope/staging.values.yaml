@@ -32,22 +32,22 @@ basehub:
               window: 7
             intersection: max
           policy:
-            - resource: memory
-              limit:
-                value: 500
-                unit: GiB-hours
-              window: 1
-              scope:
-                group:
-                  - geolab
-            - resource: memory
-              limit:
-                value: 1000
-                unit: GiB-hours
-              window: 7
-              scope:
-                group:
-                  - geolab:dev
+          - resource: memory
+            limit:
+              value: 500
+              unit: GiB-hours
+            window: 1
+            scope:
+              group:
+              - geolab
+          - resource: memory
+            limit:
+              value: 1000
+              unit: GiB-hours
+            window: 7
+            scope:
+              group:
+              - geolab:dev
           failover_open: true
 
       extraConfig:
@@ -69,17 +69,17 @@ basehub:
           display: false
           oauth_no_confirm: true
           command:
-            - python
-            - -m
-            - jupyterhub_usage_quotas.services.usage_viewer
-            - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
-            - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
+          - python
+          - -m
+          - jupyterhub_usage_quotas.services.usage_viewer
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
       loadRoles:
         usage-quota-service:
           scopes:
-            - read:users
+          - read:users
           services:
-            - usage-quota
+          - usage-quota
         user:
           scopes:
           - self
@@ -91,32 +91,32 @@ basehub:
           - access:services!service=dask-gateway
       service:
         extraPorts:
-          - port: 9000
-            targetPort: 9000
-            name: usage-quota
+        - port: 9000
+          targetPort: 9000
+          name: usage-quota
       networkPolicy:
         ingress:
-          - ports:
-              - port: 9000
-            from:
+        - ports:
+          - port: 9000
+          from:
               # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
               # for hub managed services.
-              - podSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: hub
-                    app.kubernetes.io/name: jupyterhub
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
               # Allow traffic from the proxy api pod
-              - podSelector:
-                  matchLabels:
-                    hub.jupyter.org/network-access-hub: "true"
-          - ports:
-              - port: 8081
-            from:
+          - podSelector:
+              matchLabels:
+                hub.jupyter.org/network-access-hub: 'true'
+        - ports:
+          - port: 8081
+          from:
               # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
-              - podSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: hub
-                    app.kubernetes.io/name: jupyterhub
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
@@ -124,13 +124,13 @@ basehub:
       chp:
         networkPolicy:
           egress:
-            - to:
-                - podSelector:
-                    matchLabels:
-                      app.kubernetes.io/name: jupyterhub
-                      app.kubernetes.io/component: hub
-              ports:
-                - port: 9000
+          - to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: jupyterhub
+                  app.kubernetes.io/component: hub
+            ports:
+            - port: 9000
   dask-gateway:
     gateway:
       auth:
