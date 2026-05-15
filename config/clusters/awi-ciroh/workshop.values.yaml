@@ -73,12 +73,6 @@ basehub:
                 kubespawner_override:
                   image: quay.io/awiciroh/symfluence:v1.0.0
                   image_pull_policy: Always
-              devcon9:
-                display_name: CCNH for ewri
-                slug: devcon9
-                kubespawner_override:
-                  image: quay.io/awiciroh/ewri2026:ewri2026
-                  image_pull_policy: Always
               devcon1:
                 display_name: Inflect
                 slug: devcon1
@@ -90,6 +84,18 @@ basehub:
                 slug: devcon2
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-hydroserver
+                  image_pull_policy: Always
+              devcon3:
+                display_name: Hillslope
+                slug: devcon3
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-hillslope
+                  image_pull_policy: Always
+              devcon4:
+                display_name: Emulator
+                slug: devcon4
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-emulator
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
