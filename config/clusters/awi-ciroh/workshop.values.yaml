@@ -97,6 +97,18 @@ basehub:
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-emulator
                   image_pull_policy: Always
+              devcon5:
+                display_name: Satellite
+                slug: devcon5
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-satellite
+                  image_pull_policy: Always
+              devcon6:
+                display_name: Cuahsi
+                slug: devcon6
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-cuahsi
+                  image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G
           mem_guarantee: 5G
