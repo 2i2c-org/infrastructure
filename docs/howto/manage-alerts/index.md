@@ -106,6 +106,17 @@ The causes for this can be varied, and it always requires investigation. Some co
 6. There is a cloud provider outage. Check out their status page.
 7. A mysterious 7th option. Form a mental model of our infrastructure, and poke around. If you find any useful info, 
 
+### What to do for alerts on home directory IOPs or Throughput
+
+Whenever the home directory storage IOPs or Throughput performance is limited (saturated) for an extended period ([defined in Terraform](https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/ebs-volumes.tf) as `datapoints_to_alarm` triggers over `evaluation_periods` evaluation periods), PagerDuty triggers an alert. Triggers can be back-to-back, or distributed over the interval.
+
+Under day-to-day conditions, we should treat this alert as an indication that we might need to increase the performance of the home directory disk. We should periodically analyse the number of times that disk performance has been limited (using the Prometheus metrics) over a month, and consider bumping these if the community needs more headroom.
+
+Under workshop conditions, this alert should be considered early warning that the home disk is under pressure. The consequences of this are typically reduced filesystem performance for all workshop users, which may manifest as slow/laggy user experience in JupyterLab, and poor performance of analysis code running in kernels.
+
+This can be improved by bumping either the `iops` or the `throughput` variables for the home directory disk in Terraform, or by temporarily imperatively modifying these values in the AWS console.
+
+
 ## How to get useful information about an alert
 
 Each automatic alert will have a title which is formed using the alert name and various labels considered important.
