@@ -1,6 +1,9 @@
 name: projectpythia
 provider: aws
 provider_url: https://590183926898.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 102799509217
 aws:
   account: 590183926898
   key: enc-deployer-credentials.secret.json

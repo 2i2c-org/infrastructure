@@ -1,6 +1,9 @@
 name: smithsonian
 provider: aws
 provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 86933237434
 aws:
   account: 969396938818
   key: enc-deployer-credentials.secret.json

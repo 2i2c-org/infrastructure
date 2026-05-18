@@ -1,6 +1,9 @@
 name: berkeley-geojupyter
 provider: aws
 provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 86221242070
 aws:
   account: 622703418259
   key: enc-deployer-credentials.secret.json

@@ -1,6 +1,10 @@
 name: jupyter-health
 provider: aws
 provider_url: https://2i2c.awsapps.com/start/#/
+metadata:
+  2i2c:
+    # Counted as part of the BIDS contract
+    hubspot_deal_id: 86221242070
 aws:
   account: 211125465508
   key: enc-deployer-credentials.secret.json

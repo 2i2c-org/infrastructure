@@ -1,6 +1,9 @@
 name: maap
 provider: aws
 provider_url: https://916098889494.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 86933236464
 aws:
   account: 916098889494
   key: enc-deployer-credentials.secret.json

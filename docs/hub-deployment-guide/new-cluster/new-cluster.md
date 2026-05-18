@@ -355,6 +355,19 @@ An automated deployer command doesn't exist yet, these files need to be manually
 ````
 `````
 
+## Specify `hubspot_deal_id`
+
+We want to match every cluster we deploy to a particular contract that we have to run it
+for a specific time. We manage contracts on Hubspot, and each contract is associated with
+a "Deal". We specify the id of this deal for each Cluster under `metadata.2i2c.hubspot_deal_id`,
+and it must be specified when creating the cluster. The new hub request issue should have
+a Hubspot deal URL, and you can determine the deal ID by either:
+
+1. Opening the URL, logging into hubspot and looking in the sidebar
+2. Manually just look at the URL - if the URL of the deal looks like
+   https://app-na2.hubspot.com/contacts/242496330/record/0-3/96602996427,
+   the deal ID is the last integer, that comes after `0-3`.
+
 ## Add GPU nodegroup if needed
 
 If this cluster is going to have GPUs, you should edit the generated jsonnet file

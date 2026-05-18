@@ -1,6 +1,9 @@
 name: earthscope
 provider: aws
 provider_url: https://762698921361.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 96791452357
 aws:
   account: 762698921361
   key: enc-deployer-credentials.secret.json
