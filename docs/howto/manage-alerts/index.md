@@ -108,7 +108,7 @@ The causes for this can be varied, and it always requires investigation. Some co
 
 ### What to do for alerts on home directory IOPs or Throughput
 
-Whenever the home directory storage incurs a limitation in IOPs or Throughput for an extended period ([defined in Terraform](https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/ebs-volumes.tf) as `datapoints_to_alarm` triggers over `evaluation_periods` evaluation periods), PagerDuty triggers an alert. Triggers can be back-to-back, or distributed over the interval.
+Whenever the home directory storage IOPs or Throughput performance is limited (saturated) for an extended period ([defined in Terraform](https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/ebs-volumes.tf) as `datapoints_to_alarm` triggers over `evaluation_periods` evaluation periods), PagerDuty triggers an alert. Triggers can be back-to-back, or distributed over the interval.
 
 Under day-to-day conditions, we should treat this alert as an indication that we might need to increase the performance of the home directory disk. We should periodically analyse the number of times that disk performance has been limited (using the Prometheus metrics) over a month, and consider bumping these if the community needs more headroom.
 
