@@ -16,7 +16,7 @@ default_budget_alert = {
 
 ebs_volumes = {
   "staging" = {
-    size        = 2
+    size        = 5
     type        = "gp3"
     name_suffix = "staging"
     tags        = { "2i2c:hub-name" : "staging" }
