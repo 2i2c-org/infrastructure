@@ -290,6 +290,31 @@ prometheus:
           labels:
             cluster: earthscope
             severity: action needed this week
+      - name: Compute usage quotas - Fail open detected
+        rules:
+        - alert: At least one fail open detected by compute usage quotas system in the last 30 mins
+          annotations:
+            summary: Fail open detected on cluster earthscope, hub {{ $labels.namespace }} in the last 30 mins
+          expr: |
+            sum(
+              changes(jupyterhub_usage_quotas_fail_open_total[30m])
+            ) by (namespace) >= 1
+          for: 0m
+          labels:
+            namespace: hub={{ $labels.namespace }}
+            severity: same day action needed
+      - name: Compute usage quotas - Prometheus error
+        rules:
+        - alert: At least one Prometheus error detected by compute usage quotas system in the last 30 mins
+          annotations:
+            summary: At least one Prometheus error detected in cluster earthscope by compute usage quotas system in the last 30 mins
+          expr: |
+            sum(
+              changes(jupyterhub_usage_quotas_prometheus_error_total[30m])
+            ) >= 1
+          for: 0m
+          labels:
+            severity: same day action needed
 grafana:
   grafana.ini:
     server:
