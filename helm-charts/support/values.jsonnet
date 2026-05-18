@@ -180,7 +180,7 @@ local configCostMonitoring = {
       annotations: if provider_name == 'aws' then {
         'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_grafana_cloudwatch' % account_id,
       } else if provider_name == 'gcp' then {
-        'iam.gke.io/gcp-service-account': 'grafana-2i2c-sa@%s.iam.gserviceaccount.com' % account_id
+        'iam.gke.io/gcp-service-account': 'grafana-2i2c-sa@%s.iam.gserviceaccount.com' % account_id,
       } else {},
     },
   },

@@ -14,7 +14,7 @@ resource "google_service_account_iam_binding" "grafana_sa_binding" {
 }
 
 resource "google_project_iam_member" "grafana_sa_membership" {
-  project  = var.project_id
-  role     = "roles/monitoring.viewer"
-  member   = "serviceAccount:${google_service_account.grafana_sa.email}"
+  project = var.project_id
+  role    = "roles/monitoring.viewer"
+  member  = "serviceAccount:${google_service_account.grafana_sa.email}"
 }
