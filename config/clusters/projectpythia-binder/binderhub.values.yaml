@@ -141,6 +141,7 @@ binderhub-service:
       - ^ktyle/.*$
       - ^DAES433533/.*$
       - ^binder-examples/.*
+      - ^brian-rose/.*$
     BinderHub:
       base_url: /
       hub_url: https://hub.projectpythia.org
