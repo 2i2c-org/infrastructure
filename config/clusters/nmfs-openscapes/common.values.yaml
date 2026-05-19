@@ -3,8 +3,14 @@ nfs:
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
 
 jupyterhub:
   custom:
@@ -276,6 +282,15 @@ jupyterhub:
 
   hub:
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+      user:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
     config:
       Authenticator:
         admin_users:
