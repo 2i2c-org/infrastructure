@@ -75,6 +75,8 @@ At the time of writing, we have the following [alerting rules groups](https://pr
    - `jupyterhub-home-nfs` restart
    - `jupyterhub-cost-monitoring` restart
    - `support-grafana` restart
+   - `support-prometheus-server` restart
+   - `proxy` restart
 3. **Server Startup Failure**
    For when a user server has failed to start.
 4. **DiskIO saturation**
