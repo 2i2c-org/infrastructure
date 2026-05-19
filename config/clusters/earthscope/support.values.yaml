@@ -292,7 +292,7 @@ prometheus:
             severity: action needed this week
       - name: Possible application outage
         rules:
-        - alert: At least one fail open detected by compute usage quotas system in the last 30 mins
+        - alert: Compute usage quotas - At least one fail open detected in the last 30 mins
           annotations:
             summary: Compute usage quotas - Fail open detected on cluster earthscope, hub {{ $labels.namespace }} in the last 30m
           expr: |
@@ -303,7 +303,7 @@ prometheus:
           labels:
             namespace: hub={{ $labels.namespace }}
             severity: immediate action needed
-        - alert: At least one Prometheus error detected by compute usage quotas system in the last 30m
+        - alert: Compute usage quotas - At least one Prometheus error detected  in the last 30m
           annotations:
             summary: Compute usage quotas - At least one Prometheus error detected in cluster earthscope by compute usage quotas system in the last 30 mins
           expr: |
