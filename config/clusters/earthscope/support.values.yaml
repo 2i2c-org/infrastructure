@@ -302,7 +302,7 @@ prometheus:
           for: 0m
           labels:
             namespace: hub={{ $labels.namespace }}
-            severity: same day action needed
+            severity: immediate action needed
       - name: Compute usage quotas - Prometheus error
         rules:
         - alert: At least one Prometheus error detected by compute usage quotas system in the last 30m
@@ -314,7 +314,7 @@ prometheus:
             ) >= 1
           for: 0m
           labels:
-            severity: same day action needed
+            severity: immediate action needed
   alertmanager:
     config:
       route:
