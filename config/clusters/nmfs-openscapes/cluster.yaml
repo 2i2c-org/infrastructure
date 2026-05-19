@@ -54,4 +54,4 @@ hubs:
   - common.values.yaml
   - noaa-only.values.yaml
   - enc-noaa-only.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yamlQ
+  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
