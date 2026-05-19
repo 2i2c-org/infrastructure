@@ -24,7 +24,8 @@ ebs_volumes = {
   "prod" = {
     size        = 4096 # 4TiB
     type        = "gp3"
-    throughput  = 250 # Double the default 125
+    iops        = 10000 # Increase to account for heavier usage - see https://2i2c.freshdesk.com/a/tickets/5477
+    throughput  = 1000 # Increase to account for heavier usage - see https://2i2c.freshdesk.com/a/tickets/5477
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
   },
