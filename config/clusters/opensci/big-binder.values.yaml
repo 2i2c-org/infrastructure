@@ -1,6 +1,10 @@
 dask-gateway:
   enabled: true
   gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
     backend:
       imagePullSecrets: [name: image-pull-secret]
 
@@ -72,6 +76,10 @@ jupyterhub:
       binder:
         oauth_redirect_uri: https://big.binder.opensci.2i2c.cloud/oauth_callback
     loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
       binder:
         services:
         - binder
@@ -84,6 +92,8 @@ jupyterhub:
           # Admin users will by default have access:services, so this is only
           # observed to be required for non-admin users.
         - access:services!service=binder
+        - access:services!service=dask-gateway
+
 binderhub-service:
   enabled: true
   networkPolicy:
