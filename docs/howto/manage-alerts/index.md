@@ -140,7 +140,7 @@ Also, clicking on an alert in PagerDuty, gets you all the metadata associated wi
 ## How to add a new alert
 
 1. To add a new alert, you'll have to add it to `/helm-charts/support/values.jsonnet` first after checking out [](#topic/jsonnet).
-2. Then, if this is an alert that doesn't pertain to any of the existing alerting groups as defined in [](alerting:configuration), you'll have to:
+2. Then, if this is an alert that doesn't pertain to any of the existing alerting groups as defined in [Alerting - Configuration](alerting:jsonnet-alerts), you'll have to:
   - create a new group
   - create a new Service in Pagerduty for this groups
   - get the integration key of this service and store it encrypted under a new Pagerduty receiver
