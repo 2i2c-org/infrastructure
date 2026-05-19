@@ -53,12 +53,11 @@ If an Alert goes from P1 to another priority number or no number at all, Pagerdu
 - Correlate `to be planned in sprint planning` severity level
 - Community not necessarily affected on a specific timeline, but we must take some action into the committed column of next sprint
 
-
 (alerting:jsonnet-alerts)=
 ## Alerts configured with Jsonnet
 Certain alerts are configured in support deployments using [](#topic/jsonnet).
 
-(alerting:configuration)=
+(alerting:jsonnet:configuration)=
 ### Configuration
 We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
 
@@ -74,12 +73,16 @@ At the time of writing, we have the following [alerting rules groups](https://pr
    For when a pod has restarted, with the following alerts:
    - `jupyterhub-groups-exporter` restart
    - `jupyterhub-home-nfs` restart
+   - `jupyterhub-cost-monitoring` restart
+   - `support-grafana` restart
 3. **Server Startup Failure**
    For when a user server has failed to start.
 4. **DiskIO saturation**
    For when a disk is approaching IO saturation
 5. **Pods stuck in an undesirable state for too long**
    For when there's a pod that's stuck in `Pending` for more than 15m or a pod stuck in `Terminating` for more than 10m.
+6. **Possible application outage**
+   For when an application is not working as expected.
 
 Each of these alerts is integrated with a **Pagerduty Service**. And these services can then be grouped under **Pagerduty Business Services** that can be presented on the status page.
 
@@ -91,8 +94,7 @@ You can find the existing Services under [Service Directory](https://2i2c-org.pa
 ## Alerts configured with Terraform
 Some alerts are configured at the infrastructure using Terraform.
 
-
-(alerting:configuration)=
+(alerting:terraform:configuration)=
 ### Configuration
 
 1. **AWS NFS Home Directory IOPs & Throughput**
