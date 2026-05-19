@@ -222,13 +222,17 @@ local binderhubServiceConfig = {
     {} +
     if provider == 'aws' then {
       KubernetesBuildExecutor: {
-        '2i2c/hub-name': hub_name,
-        'node.kubernetes.io/instance-type': 'r5.xlarge',
+        node_selector: {
+          '2i2c/hub-name': hub_name,
+          'node.kubernetes.io/instance-type': 'r5.xlarge',
+        },
       },
     }
     else if provider == 'gcp' then {
       KubernetesBuildExecutor: {
-        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+        node_selector: {
+          'node.kubernetes.io/instance-type': 'n2-highmem-4',
+        },
       },
     } else {},
 };

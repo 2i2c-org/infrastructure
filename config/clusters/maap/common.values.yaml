@@ -5,6 +5,12 @@ nfs:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
+
 jupyterhub:
 
   prePuller:
@@ -46,6 +52,15 @@ jupyterhub:
           url: https://www.earthdata.nasa.gov/esds
   hub:
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+      user:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
     config:
       JupyterHub:
         authenticator_class: generic-oauth

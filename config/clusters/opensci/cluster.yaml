@@ -58,3 +58,4 @@ hubs:
   - big-binder.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-big-binder.secret.values.yaml
+  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
