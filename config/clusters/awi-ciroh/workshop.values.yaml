@@ -71,7 +71,7 @@ basehub:
                 display_name: Community Assets Computation Hub
                 slug: devcon8
                 kubespawner_override:
-                  image: quay.io/awiciroh/symfluence:v1.0.0
+                  image: quay.io/2i2c/awi-ciroh-image:symfluence-v0.8.3
                   image_pull_policy: Always
               devcon1:
                 display_name: Inflect
