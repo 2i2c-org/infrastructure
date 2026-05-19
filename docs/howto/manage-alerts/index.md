@@ -70,6 +70,9 @@ We monitor pod restarts for the following services:
 
 - `jupyterhub-groups-exporter`
 - `jupyterhub-home-nfs`
+- `jupyterhub-cost-monitoring`
+- `support-grafana`
+- hub proxy pod
 
 If a pod has restarted, it may indicate an issue with the service or its configuration.
 To resolve the alert:
@@ -90,6 +93,10 @@ There is additional automation that runs each time an alert like this is trigger
 - A note with the status of this run is left in the PagerDuty incident
 - In addition, if the health check succeeds, the incident is resolved and a message with this status is posted in the `#pagerduty-notifications` Slack channel
 - If the health check fails, then a message, mentioning the channel members, is posted in the `#pagerduty-notifications` Slack channel
+
+### What to do for alerts for application outages
+
+When an application is not working as expected, it is classed as a possible application outage. Similar to the server start alert above, it's best to investigate these ASAP to validate whether this is an outage or not. If it is an outage, follow the incident process as normal.
 
 #### To resolve the alert:
 1. Check if you can spawn a server on that cluster and hub. If not, then is most likely an outage an you must set the P1 priority on this alert and follow the incident response process for outages.
@@ -126,7 +133,7 @@ Example: `[FIRING:1] home-nfs has 10% of space left openscapes prod (same day ac
 - The `FIRING:n` part tracks how many times the alert has been triggered. But because we are not yet grouping alerts, it will always be 1, so it can be ignored.
 - `<disk name> has <limit>% of space left` this is the alert name and it has info about which disk the alert is about and how much space left it has
 - `<cluster-name> <hub-name>` these are labels that provide info about the cluster and hub for which the alert has triggered for
-- `same day action needed` the severity of the alert, which set the timeline when this alert should be handled 
+- `same day action needed` the severity of the alert, which set the timeline when this alert should be handled
 
 Also, clicking on an alert in PagerDuty, gets you all the metadata associated with it, where you can find extra info, like the summary.
 
@@ -138,5 +145,5 @@ Also, clicking on an alert in PagerDuty, gets you all the metadata associated wi
   - create a new Service in Pagerduty for this groups
   - get the integration key of this service and store it encrypted under a new Pagerduty receiver
   - write a matcher rule in Alert Manager that will link this group to this new receiver
-3. Test i
+3. Test it
 4. If you know what the outage condition for this new group is, create a new Orchestration rule for it, so that outage alerts are automatically assigned P1 and shown in the status page
