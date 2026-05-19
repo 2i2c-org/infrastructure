@@ -72,7 +72,8 @@ We monitor pod restarts for the following services:
 - `jupyterhub-home-nfs`
 - `jupyterhub-cost-monitoring`
 - `support-grafana`
-- hub proxy pod
+- `support-prometheus-server`
+- `proxy`
 
 If a pod has restarted, it may indicate an issue with the service or its configuration.
 To resolve the alert:
