@@ -318,7 +318,7 @@ prometheus:
           expr: |
             sum(
               changes(jupyterhub_usage_quotas_prometheus_error_total[30m])
-            ) >= 1
+            ) >= 3
           for: 0m
           labels:
             cluster: earthscope
