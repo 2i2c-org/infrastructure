@@ -109,6 +109,12 @@ basehub:
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-cuahsi
                   image_pull_policy: Always
+              devcon9:
+                display_name: Foundations
+                slug: devcon9
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-foundations
+                  image_pull_policy: Always
         kubespawner_override:
           mem_guarantee: 7447431505
           mem_limit: 7447431505
