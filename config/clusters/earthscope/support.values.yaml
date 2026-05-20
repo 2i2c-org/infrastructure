@@ -249,6 +249,14 @@ prometheus:
           labels:
             cluster: earthscope
             severity: immediate action needed
+        - alert: support-prometheus-server pod has restarted
+          annotations:
+            summary: support-prometheus-server pod has restarted on earthscope:{{ $labels.namespace }}
+          expr: "# Count total container restarts with pod name containing 'pod_name_substring'.\n# We sum by pod name (which resets after restart) and namespace, so we don't get all\n# the other labels of the metric in our alert.\n  (\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^support-prometheus-server.*\"})\n      -\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^support-prometheus-server.*\"} offset 10m)\n  ) >= 1    \n"
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: immediate action needed
       - name: Pod stuck in state for too long
         rules:
         - alert: Pod stuck in Pending for at least 30m
@@ -301,6 +309,7 @@ prometheus:
             ) by (namespace) >= 1
           for: 0m
           labels:
+            cluster: earthscope
             namespace: hub={{ $labels.namespace }}
             severity: immediate action needed
         - alert: Compute usage quotas - At least one Prometheus error detected  in the last 30m
@@ -312,6 +321,7 @@ prometheus:
             ) >= 1
           for: 0m
           labels:
+            cluster: earthscope
             severity: immediate action needed
   alertmanager:
     config:
