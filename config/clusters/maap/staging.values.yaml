@@ -32,6 +32,7 @@ jupyterhub:
             validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
             kubespawner_override:
               image: '{value}'
+              image_pull_policy: Always
           choices:
             01-pangeo:
               display_name: Modified Pangeo Notebook
