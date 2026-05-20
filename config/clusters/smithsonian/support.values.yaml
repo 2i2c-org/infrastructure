@@ -4,9 +4,6 @@ cluster-autoscaler:
     clusterName: smithsonian
   awsRegion: us-east-2
 
-prometheusIngressAuthSecret:
-  enabled: false
-
 grafana:
   grafana.ini:
     server:
