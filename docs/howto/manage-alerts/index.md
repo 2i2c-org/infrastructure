@@ -146,5 +146,9 @@ Also, clicking on an alert in PagerDuty, gets you all the metadata associated wi
   - create a new Service in Pagerduty for this groups
   - get the integration key of this service and store it encrypted under a new Pagerduty receiver
   - write a matcher rule in Alert Manager that will link this group to this new receiver
-3. Test it
-4. If you know what the outage condition for this new group is, create a new Orchestration rule for it, so that outage alerts are automatically assigned P1 and shown in the status page
+4. Configure Slack notifications with the PagerDuty service integrations
+   - Go to the `#pagerduty-notifications` channel in the 2i2c Slack
+   - Make sure your PD account is linked to Slack with the shortcut command `/pd link`
+   - Use `/pd connect` to select the service to connect to the channel and select *Responder* for how you want to be notified
+5. Test it
+6. If you know what the outage condition for this new group is, create a new Orchestration rule for it, so that outage alerts are automatically assigned P1 and shown in the status page
