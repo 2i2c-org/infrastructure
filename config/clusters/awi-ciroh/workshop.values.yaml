@@ -183,6 +183,7 @@ basehub:
       config:
         JupyterHub:
           authenticator_class: shared-password
-        SharedPasswordAuthenticator:
-          manage_groups: true
+        GitHubOAuthenticator: {}
+        Authenticator:
+          manage_groups: false
           allow_all: true
