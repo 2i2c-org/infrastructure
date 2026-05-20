@@ -14,7 +14,7 @@ ebs_volumes = {
   "prod" = {
     size        = 5600
     type        = "gp3"
-    throughput  = 250 # Double the throughput, handling alerts for exceeding throughput consistently
+    throughput  = 375 # Triple the throughput, handling alerts for exceeding throughput consistently
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
   }
