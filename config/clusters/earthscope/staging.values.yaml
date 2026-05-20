@@ -10,7 +10,7 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: bfdbe0bee333610ff2163455e5da36eea9f5d893
+        tag: f2689dcd155e22e9a1f4115e78448f5393b021c6
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token

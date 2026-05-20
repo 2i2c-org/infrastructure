@@ -330,6 +330,12 @@ local configCostMonitoring = {
                 '^proxy.*',
                 'immediate action needed'
               ),
+              makePodRestartAlert(
+                'support-prometheus-server',
+                'support-prometheus-server pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
+                '^proxy.*',
+                'same day action needed'
+              ),
             ],
           },
           {
