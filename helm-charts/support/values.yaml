@@ -507,10 +507,6 @@ jupyterhub-cost-monitoring:
 # -------------------------------------------------------------------------------
 #
 
-prometheusIngressAuthSecret:
-  enabled: false
-  users: []
-
 prometheusAuthSecret:
   enabled: true
 
