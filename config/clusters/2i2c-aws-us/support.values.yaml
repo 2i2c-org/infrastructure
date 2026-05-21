@@ -44,8 +44,6 @@ prometheus:
     persistentVolume:
       size: 500Gi
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 cluster-autoscaler:
   enabled: true
   autoDiscovery:

@@ -19,8 +19,6 @@ prometheus:
       - secretName: prometheus-tls
         hosts:
         - prometheus.earthscope.2i2c.cloud
-    extraArgs:
-      web.config.file: /etc/config/web.yml
   serverFiles:
     alerting_rules.yml:
       groups:

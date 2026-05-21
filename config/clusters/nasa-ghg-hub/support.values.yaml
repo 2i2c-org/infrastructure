@@ -30,8 +30,6 @@ prometheus:
         hosts:
         - prometheus.nasa-ghg.2i2c.cloud
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 nginx-ingress:
   enabled: true
   controller:

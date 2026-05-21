@@ -26,8 +26,6 @@ prometheus:
         hosts:
         - prometheus.pilot.2i2c.cloud
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:

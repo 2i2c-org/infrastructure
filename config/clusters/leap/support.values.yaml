@@ -16,8 +16,6 @@ prometheus:
       limits:
         memory: 20Gi
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:

@@ -39,8 +39,6 @@ prometheus:
         hosts:
         - prometheus.nasa-veda.2i2c.cloud
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 calico:
   enabled: true
 

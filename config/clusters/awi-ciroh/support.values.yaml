@@ -41,5 +41,3 @@ prometheus:
       - secretName: prometheus-tls
         hosts:
         - prometheus.ciroh.awi.2i2c.cloud
-    extraArgs:
-      web.config.file: /etc/config/web.yml
