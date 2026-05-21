@@ -4,9 +4,6 @@ cluster-autoscaler:
     clusterName: smithsonian
   awsRegion: us-east-2
 
-prometheusIngressAuthSecret:
-  enabled: false
-
 grafana:
   grafana.ini:
     server:
@@ -33,8 +30,6 @@ prometheus:
         hosts:
         - prometheus.smithsonian.2i2c.cloud
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 calico:
   enabled: true
 

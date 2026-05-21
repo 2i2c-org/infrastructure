@@ -10,7 +10,6 @@ required:
   - prometheus
   - grafana
   - nvidiaDevicePlugin
-  - prometheusIngressAuthSecret
   - prometheusAuthSecret
   - cryptnono
   - redirects
@@ -190,32 +189,6 @@ properties:
             additionalProperties: true
             description: |
               Resources for the init container that sets kernel.core_pattern
-
-  prometheusIngressAuthSecret:
-    type: object
-    additionalProperties: false
-    required:
-      - enabled
-    properties:
-      enabled:
-        type: boolean
-      users:
-        type: array
-        items:
-          type: object
-          additionalProperties: false
-          properties:
-            username:
-              type: string
-              description: |
-                Username for basic auth protecting prometheus
-            password:
-              type: string
-              description: |
-                Password for basic auth protecting prometheus
-          required:
-            - username
-            - password
 
   prometheusAuthSecret:
     type: object

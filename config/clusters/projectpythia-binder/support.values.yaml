@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
 prometheus:
   server:
     ingress:
@@ -12,8 +9,6 @@ prometheus:
         hosts:
         - prometheus.binder-pythia.jetstream2.2i2c.cloud
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:

@@ -1,9 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
-prometheusAuthSecret:
-  enabled: true
-
 redirects:
   rules:
   - from: staging.earthscope.2i2c.cloud
@@ -16,21 +10,6 @@ redirects:
     to: hub.binder.geolab.earthscope.cloud
 
 prometheus:
-  configmapReload:
-    reloadUrl: http://$(PROMETHEUS_USERNAME):$(PROMETHEUS_PASSWORD)@127.0.0.1:9090/-/reload
-    env:
-    - name: PROMETHEUS_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: prometheus-auth
-          key: password
-          optional: false
-    - name: PROMETHEUS_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: prometheus-auth
-          key: username
-          optional: false
   server:
     ingress:
       enabled: true
@@ -40,8 +19,6 @@ prometheus:
       - secretName: prometheus-tls
         hosts:
         - prometheus.earthscope.2i2c.cloud
-    extraArgs:
-      web.config.file: /etc/config/web.yml
   serverFiles:
     alerting_rules.yml:
       groups:

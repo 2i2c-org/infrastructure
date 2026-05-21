@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
@@ -33,8 +30,6 @@ prometheus:
         hosts:
         - prometheus.victor.2i2c.cloud
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 nginx-ingress:
   enabled: true
   controller:

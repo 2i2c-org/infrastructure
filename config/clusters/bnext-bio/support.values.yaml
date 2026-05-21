@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
 prometheus:
   server:
     persistentVolume:
@@ -14,8 +11,6 @@ prometheus:
         hosts:
         - prometheus.bnext-bio.2i2c.cloud
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:
