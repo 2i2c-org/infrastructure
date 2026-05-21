@@ -1,2 +1,2 @@
-jupyterhub-usage-quotas[service] @ git+https://github.com/2i2c-org/jupyterhub-usage-quotas@e084a6fd31f6c3a24818490269fd2f9833b6a580
+jupyterhub-usage-quotas[service]==0.1.2
 jupyterhub-fancy-profiles==0.6.0

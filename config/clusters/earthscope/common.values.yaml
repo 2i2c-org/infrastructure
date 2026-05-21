@@ -17,8 +17,9 @@ basehub:
         add_staff_user_ids_to_admin_users: false
     hub:
       image:
-        # Temporarily add latest fancy profiles to pilot-hub image
-        tag: 0.0.1-0.dev.git.15540.hbaaa997ce
+        # Usage quotas 0.1.2 and fancy-profiles 0.6.0
+        name: quay.io/2i2c/jupyterhub-usage-quotas
+        tag: 0.1.2
       extraConfig:
         001-username-claim: |
           import json
@@ -56,7 +57,52 @@ basehub:
               })
 
           c.Spawner.auth_state_hook = populate_token
-
+        11-setup-usage-quotas: |
+          from jupyterhub_usage_quotas import setup_usage_quotas
+          existing_hook = getattr(c.Spawner, "pre_spawn_hook", None)
+          if not callable(existing_hook):
+              existing_hook = None
+          setup_usage_quotas(c, existing_hook)
+      extraEnv:
+        METRICS_EXPORTER_TOKEN:
+          valueFrom:
+            secretKeyRef:
+              name: hub
+              key: hub.services.metrics-exporter.apiToken
+              optional: false
+      services:
+        usage-quota:
+          url: http://hub:9000
+          display: false
+          oauth_no_confirm: true
+          command:
+          - python
+          - -m
+          - jupyterhub_usage_quotas.services.usage_viewer
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
+        metrics-exporter:
+          display: false
+      loadRoles:
+        usage-quota-service:
+          scopes:
+          - read:users
+          services:
+          - usage-quota
+        metrics-exporter-service:
+          scopes:
+          - users
+          services:
+          - metrics-exporter
+        user:
+          scopes:
+          - self
+          - access:services!service=usage-quota
+          - access:services!service=dask-gateway
+        server:
+          scopes:
+          - self
+          - users:activity!user
       config:
         JupyterHub:
           authenticator_class: generic-oauth
@@ -95,6 +141,44 @@ basehub:
           - google-oauth2|117859169473992122769   # Georgiana
           - google-oauth2|117322480787655244438   # Jenny
           - google-oauth2|107058254054417943477   # Angus
+        UsageQuotaManager:
+          scope_backup_strategy:
+            empty:
+              resource: memory
+              limit:
+                value: 2500
+                unit: GiB-hours
+              window: 30
+            intersection: max
+          failover_open: true
+      service:
+        extraPorts:
+        - port: 9000
+          targetPort: 9000
+          name: usage-quota
+      networkPolicy:
+        ingress:
+        - ports:
+          - port: 9000
+          from:
+              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
+              # for hub managed services.
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
+              # Allow traffic from the proxy api pod
+          - podSelector:
+              matchLabels:
+                hub.jupyter.org/network-access-hub: 'true'
+        - ports:
+          - port: 8081
+          from:
+              # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
     singleuser:
       cloudMetadata:
         blockWithIptables: false
