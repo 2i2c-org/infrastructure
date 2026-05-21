@@ -8,9 +8,6 @@ basehub:
     debug:
       enabled: true
     hub:
-      image:
-        name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: f2689dcd155e22e9a1f4115e78448f5393b021c6
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token
@@ -48,38 +45,15 @@ basehub:
             scope:
               group:
               - geolab:dev
-          failover_open: true
-
-      extraConfig:
-        11-setup-usage-quotas: |
-          from jupyterhub_usage_quotas import setup_usage_quotas
-          setup_usage_quotas(c)
-
       extraFiles:
-        # Viewer config
         usage_quotas_config:
           mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
           stringData: |
+            import os
             c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
             c.UsageConfig.hub_namespace = "staging"
-
-      services:
-        usage-quota:
-          url: http://hub:9000
-          display: false
-          oauth_no_confirm: true
-          command:
-          - python
-          - -m
-          - jupyterhub_usage_quotas.services.usage_viewer
-          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
-          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
+            c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
       loadRoles:
-        usage-quota-service:
-          scopes:
-          - read:users
-          services:
-          - usage-quota
         user:
           scopes:
           - self
@@ -89,34 +63,6 @@ basehub:
           scopes:
           - self
           - access:services!service=dask-gateway
-      service:
-        extraPorts:
-        - port: 9000
-          targetPort: 9000
-          name: usage-quota
-      networkPolicy:
-        ingress:
-        - ports:
-          - port: 9000
-          from:
-              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
-              # for hub managed services.
-          - podSelector:
-              matchLabels:
-                app.kubernetes.io/component: hub
-                app.kubernetes.io/name: jupyterhub
-              # Allow traffic from the proxy api pod
-          - podSelector:
-              matchLabels:
-                hub.jupyter.org/network-access-hub: 'true'
-        - ports:
-          - port: 8081
-          from:
-              # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
-          - podSelector:
-              matchLabels:
-                app.kubernetes.io/component: hub
-                app.kubernetes.io/name: jupyterhub
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
