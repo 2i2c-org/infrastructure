@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
 prometheus:
   server:
     # Bumped as part of https://github.com/2i2c-org/infrastructure/issues/4632
@@ -20,8 +17,6 @@ prometheus:
       limits:
         memory: 8Gi
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:

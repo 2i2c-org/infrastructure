@@ -113,6 +113,22 @@ ingress-nginx:
 # values ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/values.yaml
 #
 prometheus:
+  configmapReload:
+    reloadUrl: http://$(PROMETHEUS_USERNAME):$(PROMETHEUS_PASSWORD)@127.0.0.1:9090/-/reload
+    env:
+    - name: PROMETHEUS_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: prometheus-auth
+          key: password
+          optional: false
+    - name: PROMETHEUS_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: prometheus-auth
+          key: username
+          optional: false
+
   alertmanager:
     enabled: false
 
@@ -176,6 +192,9 @@ prometheus:
 
   server:
     retention: 1098d # Keep data for at least 3 years
+
+    extraArgs:
+      web.config.file: /etc/config/web.yml
 
     global:
       # node_exporter on some nodes can take upto 15s, so let's increase
@@ -390,6 +409,28 @@ grafana:
   plugins:
     - yesoreyeram-infinity-datasource
 
+  envFromSecret: prometheus-auth
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: prometheus
+          orgId: 1
+          type: prometheus
+          url: http://support-prometheus-server
+          access: proxy
+          isDefault: false
+          editable: false
+          basicAuth: true
+          basicAuthUser: '${username}'
+          secureJsonData:
+            basicAuthPassword: '${password}'
+        - name: yesoreyeram-infinity-datasource
+          type: yesoreyeram-infinity-datasource
+          isDefault: false
+          editable: true
+
 # cryptnono kills processes attempting to mine the cryptocurrency Monero in the
 # k8s cluster.
 #
@@ -469,14 +510,8 @@ jupyterhub-cost-monitoring:
 # -------------------------------------------------------------------------------
 #
 
-prometheusIngressAuthSecret:
-  enabled: false
-  users: []
-
 prometheusAuthSecret:
-  enabled: false
-  username: ""
-  password: ""
+  enabled: true
 
 redirects:
   rules: []

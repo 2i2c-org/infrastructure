@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
 redirects:
   rules:
   - from: r-staging.utoronto.2i2c.cloud
@@ -33,8 +30,6 @@ prometheus:
       limits:
         memory: 12Gi
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:
