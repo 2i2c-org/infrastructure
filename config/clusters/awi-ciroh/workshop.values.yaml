@@ -74,43 +74,43 @@ basehub:
                   image: quay.io/2i2c/awi-ciroh-image:symfluence-v0.8.3
                   image_pull_policy: Always
               devcon1:
-                display_name: Inflect
+                display_name: INFLECT FIM
                 slug: devcon1
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-inflect
                   image_pull_policy: Always
               devcon2:
-                display_name: Hydroserver
+                display_name: HydroServer
                 slug: devcon2
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-hydroserver
                   image_pull_policy: Always
               devcon3:
-                display_name: Hillslope
+                display_name: Hillslope Water Quality Prediction
                 slug: devcon3
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-hillslope
                   image_pull_policy: Always
               devcon4:
-                display_name: Emulator
+                display_name: ML Emulator Models
                 slug: devcon4
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-emulator
                   image_pull_policy: Always
               devcon5:
-                display_name: Satellite
+                display_name: Satellite Data Projection
                 slug: devcon5
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-satellite
                   image_pull_policy: Always
               devcon6:
-                display_name: Cuahsi
+                display_name: CUAHSI Hydroinformatics
                 slug: devcon6
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-cuahsi
                   image_pull_policy: Always
               devcon9:
-                display_name: Foundations
+                display_name: Foundations of ML
                 slug: devcon9
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-foundations
