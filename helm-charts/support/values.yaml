@@ -406,6 +406,28 @@ grafana:
   plugins:
     - yesoreyeram-infinity-datasource
 
+  envFromSecret: prometheus-auth
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: prometheus
+          orgId: 1
+          type: prometheus
+          url: http://support-prometheus-server
+          access: proxy
+          isDefault: false
+          editable: false
+          basicAuth: true
+          basicAuthUser: '${username}'
+          secureJsonData:
+            basicAuthPassword: '${password}'
+        - name: yesoreyeram-infinity-datasource
+          type: yesoreyeram-infinity-datasource
+          isDefault: false
+          editable: true
+
 # cryptnono kills processes attempting to mine the cryptocurrency Monero in the
 # k8s cluster.
 #
