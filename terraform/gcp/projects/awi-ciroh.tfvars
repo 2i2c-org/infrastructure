@@ -96,7 +96,9 @@ notebook_nodes = {
   },
 
   # Workshop N4 nodes
-  # Designed around "huge" node configuration
+  # Designed around n4-standard-16 node configuration
+  # These are optimal for supporting even huge instances whilst 
+  # Having better perf on hyperdisks than 64
   # Model this on Medium profiles
   # Assuming 10GiB scratch per user, 240MiB/s, 1250 IOPS
   "n4-standard-4" : {
@@ -113,8 +115,10 @@ notebook_nodes = {
     # Bump these relative to scaling from 64, as the law of large numbers is worse for smaller samples
     # And the pathological best-case is objectively worse (one person using IO can only hit disk limit)
     # than the n4-standard-64 case
-    disk_iops : 2500,
-    disk_throughput : 480
+    # Minimum 3000  
+    disk_iops : 3000,
+    # Limit of n4-standard-4
+    disk_throughput : 240
   },
   "n4-standard-16" : {
     min : 0,
@@ -123,11 +127,15 @@ notebook_nodes = {
     machine_type : "n4-standard-16",
 
     disk_type : "hyperdisk-balanced",
+
+    # Allow for 50% oversubscription (small + medium) and 100GiB for images
+    # i.e. X = (X_user * N_user * 1.5) + 100
     disk_size_gb : 160,
 
-    # Same rationale as above
-    disk_iops : 4500,
-    disk_throughput : 950
+    # Do not compute oversubscription due to small numbers --
+    # Mix of smaller-than-medium profiles would disrupt this
+    disk_iops : 5000,
+    disk_throughput : 960
   },
   "n4-standard-64" : {
     min : 0,
@@ -136,14 +144,11 @@ notebook_nodes = {
     machine_type : "n4-standard-64",
 
     disk_type : "hyperdisk-balanced",
-    # Allow for 50% oversubscription (small + medium) and 100GiB for images
-    # i.e. X = (X_user * N_user * 1.5) + 100
     disk_size_gb : 340,
 
-    # Assume 25% aren't using scratch at any time
-    # i.e. X = X_user * N_user * 0.75
+    # Limit of n4-standard-64 is 2400 MiB/s
     disk_iops : 15000,
-    disk_throughput : 2880,
+    disk_throughput : 2400,
   },
 
   "gpu-t4" : {
