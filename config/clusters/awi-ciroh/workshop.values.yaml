@@ -112,8 +112,8 @@ basehub:
                   image: quay.io/awiciroh/devcon26:devcon26-foundations
                   image_pull_policy: Always
         kubespawner_override:
-          mem_guarantee: 7447431505
-          mem_limit: 7447431505
+          mem_guarantee: 7447432007
+          mem_limit: 7447432007
           cpu_guarantee: 1.8887049999999999
           cpu_limit: 15.109639999999999
           node_selector:
@@ -123,8 +123,8 @@ basehub:
         description: ~14 GB RAM, ~4 CPUs. Up to ~15 CPUs when available
         profile_options: *profile_options
         kubespawner_override:
-          mem_guarantee: 14894863011
-          mem_limit: 14894863011
+          mem_guarantee: 14894864015
+          mem_limit: 14894864015
           cpu_guarantee: 3.7774099999999997
           cpu_limit: 15.109639999999999
           node_selector:
@@ -133,10 +133,10 @@ basehub:
         description: ~30 GB RAM, ~8 CPUs .Up to ~62 CPUs when available
         profile_options: *profile_options
         kubespawner_override:
-          mem_guarantee: 31865960960
-          mem_limit: 31865960960
-          cpu_guarantee: 7.78725
-          cpu_limit: 62.298
+          mem_guarantee: 29789728030
+          mem_limit: 29789728030
+          cpu_guarantee: 7.554819999999999
+          cpu_limit: 15.109639999999999
           node_selector:
             node.kubernetes.io/instance-type: n4-standard-16
       - display_name: Huge
@@ -145,10 +145,10 @@ basehub:
         allowed_groups:
         - huge
         kubespawner_override:
-          mem_guarantee: 63731921920
-          mem_limit: 63731921920
-          cpu_guarantee: 15.5745
-          cpu_limit: 62.298
+          mem_guarantee: 59579456061
+          mem_limit: 59579456061
+          cpu_guarantee: 15.109639999999999
+          cpu_limit: 15.109639999999999
           node_selector:
             node.kubernetes.io/instance-type: n4-standard-16
       - display_name: Small (2i2c testing)
