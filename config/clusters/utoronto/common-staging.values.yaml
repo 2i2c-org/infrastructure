@@ -42,5 +42,6 @@ jupyterhub:
         - wonj202
         #- grahamj
         #- huaani1
+        allow_all: true
         manage_groups: true
         auth_state_groups_key: groups
