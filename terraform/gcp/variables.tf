@@ -215,6 +215,19 @@ variable "zone" {
   EOT
 }
 
+variable "core_node_boot_disk" {
+  type = object({
+    type       = optional(string, null)
+    size_gb    = optional(number, 30)
+    iops       = optional(number, 3000)
+    throughput = optional(number, 140)
+  })
+  default     = {}
+  description = <<-EOT
+  Configure core node boot disk type.
+  EOT
+}
+
 variable "core_node_machine_type" {
   type        = string
   description = <<-EOT
