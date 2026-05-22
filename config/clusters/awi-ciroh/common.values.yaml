@@ -52,14 +52,11 @@ basehub:
               # Limit total size, to prevent pod being evicted
               # with over use by any one user. This can be increased,
               # but may need to increase the size of the node disk
-              sizeLimit: 5Gi
+              sizeLimit: 10Gi
         extraVolumeMounts:
-          002-scratch-session-jovyan:
+          002-scratch-session:
             name: scratch-session
-            mountPath: /home/jovyan/scratch-session
-          002-scratch-session-rstudio:
-            name: scratch-session
-            mountPath: /home/rstudio/scratch-session
+            mountPath: /tmp
     hub:
       config:
         JupyterHub:
