@@ -121,7 +121,7 @@ basehub:
           cpu_guarantee: 1.8887049999999999
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n2-standard-16
+            node.kubernetes.io/instance-type: n4-standard-16
       - display_name: Medium
         description: ~14 GB RAM, ~4 CPUs. Up to ~15 CPUs when available
         profile_options: *profile_options
@@ -131,7 +131,7 @@ basehub:
           cpu_guarantee: 3.7774099999999997
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n2-standard-16
+            node.kubernetes.io/instance-type: n4-standard-16
       - display_name: Large
         description: ~30 GB RAM, ~8 CPUs .Up to ~62 CPUs when available
         profile_options: *profile_options
@@ -141,21 +141,33 @@ basehub:
           cpu_guarantee: 7.78725
           cpu_limit: 62.298
           node_selector:
-            node.kubernetes.io/instance-type: n2-standard-64
+            node.kubernetes.io/instance-type: n4-standard-16
       - display_name: Huge
         description: ~59 GB RAM, ~16 CPUs. Up to ~62 CPUs when available
         profile_options: *profile_options
+        allowed_groups:
+        - huge
         kubespawner_override:
           mem_guarantee: 63731921920
           mem_limit: 63731921920
           cpu_guarantee: 15.5745
           cpu_limit: 62.298
           node_selector:
-            node.kubernetes.io/instance-type: n2-standard-64
+            node.kubernetes.io/instance-type: n4-standard-16
+      - display_name: Small (2i2c testing)
+        profile_options: *profile_options
+        allowed_groups:
+        - 2i2c
+        kubespawner_override:
+          mem_guarantee: 7447431505
+          mem_limit: 7447431505
+          cpu_guarantee: 1.8887049999999999
+          cpu_limit: 15.109639999999999
+          node_selector:
+            node.kubernetes.io/instance-type: n4-standard-4
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
         description: Start a container on a dedicated node with a GPU
         allowed_groups:
-        - 2i2c-org:hub-access-for-2i2c-staff
         - gpu
         profile_options:
           image:

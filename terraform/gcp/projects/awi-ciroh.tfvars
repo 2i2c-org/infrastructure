@@ -3,8 +3,13 @@ project_id             = "ciroh-jupyterhub-423218"
 zone                   = "us-central1-b"
 region                 = "us-central1"
 core_node_machine_type = "n2-highmem-4"
-enable_network_policy  = true
-enable_logging         = false
+#core_node_machine_type = "n4-highmem-4"
+enable_network_policy = true
+enable_logging        = false
+
+core_node_boot_disk = {
+  #type = "hyperdisk-balanced"
+}
 
 enable_filestore_backups = true
 filestores               = {}
@@ -89,10 +94,73 @@ notebook_nodes = {
     max : 20,
     machine_type : "n2-standard-64",
   },
+
+  # Workshop N4 nodes
+  # Designed around n4-standard-16 node configuration
+  # These are optimal for supporting even huge instances whilst 
+  # Having better perf on hyperdisks than 64
+  # Model this on Medium profiles
+  # Assuming 10GiB scratch per user, 240MiB/s, 1250 IOPS
+  "n4-standard-4" : {
+    min : 0,
+    # Keep the numbers down, for safety!
+    max : 100,
+    machine_type : "n4-standard-4",
+
+    disk_type : "hyperdisk-balanced",
+
+    # Prefer large disks as cheap and safer
+    disk_size_gb : 130,
+
+    # Bump these relative to scaling from 64, as the law of large numbers is worse for smaller samples
+    # And the pathological best-case is objectively worse (one person using IO can only hit disk limit)
+    # than the n4-standard-64 case
+    # Minimum 3000  
+    disk_iops : 3000,
+    # Limit of n4-standard-4
+    disk_throughput : 240
+  },
+  "n4-standard-16" : {
+    min : 0,
+    # Keep the numbers down, for safety!
+    max : 100,
+    machine_type : "n4-standard-16",
+
+    disk_type : "hyperdisk-balanced",
+
+    # Allow for 50% oversubscription (small + medium) and 100GiB for images
+    # i.e. X = (X_user * N_user * 1.5) + 100
+    disk_size_gb : 160,
+
+    # Do not compute oversubscription due to small numbers --
+    # Mix of smaller-than-medium profiles would disrupt this
+    disk_iops : 5000,
+    disk_throughput : 960
+  },
+  "n4-standard-64" : {
+    min : 0,
+    # Keep the numbers down, for safety!
+    max : 30,
+    machine_type : "n4-standard-64",
+
+    disk_type : "hyperdisk-balanced",
+    disk_size_gb : 340,
+
+    # Limit of n4-standard-64 is 2400 MiB/s
+    disk_iops : 15000,
+    disk_throughput : 2400,
+  },
+
   "gpu-t4" : {
     min : 0,
     max : 20,
     machine_type : "n1-highmem-8",
+
+    # Use regular storage for scratch
+    # As this is an n1 node
+    disk_type : "pd-ssd",
+    disk_size_gb : 100,
+
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",

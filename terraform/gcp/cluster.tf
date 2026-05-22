@@ -193,7 +193,22 @@ resource "google_container_node_pool" "core" {
     # than SSD disks. It contributes heavily to how fast new nodes spin up,
     # as images being pulled takes up a lot of new node spin up time.
     # Faster disks provide faster image pulls!
-    disk_type = "pd-balanced"
+
+    # Hyperdisks can be customised further, but only work with certain nodes
+    # And updating existing nodepools with the boot_disk block will force a recreation.
+    disk_type    = var.core_node_boot_disk.type == null ? "pd-balanced" : null
+    disk_size_gb = var.core_node_boot_disk.type == null ? 30 : null
+
+    dynamic "boot_disk" {
+      # pd-balanced disks can't be tuned, and they were the default
+      for_each = var.core_node_boot_disk.type == null ? [] : [var.core_node_boot_disk]
+      content {
+        disk_type              = boot_disk.value.type
+        size_gb                = boot_disk.value.size_gb
+        provisioned_iops       = boot_disk.value.iops
+        provisioned_throughput = boot_disk.value.throughput
+      }
+    }
 
     resource_labels = {
       "node-purpose" : "core"
@@ -204,7 +219,6 @@ resource "google_container_node_pool" "core" {
       "k8s.dask.org/node-purpose"    = "core"
     }
     machine_type = var.core_node_machine_type
-    disk_size_gb = 30
 
     # Our service account gets all OAuth scopes so it can access
     # all APIs, but only fine grained permissions + roles are
@@ -269,8 +283,10 @@ resource "google_container_node_pool" "notebook" {
 
   node_config {
     boot_disk {
-      disk_type = each.value.disk_type
-      size_gb   = each.value.disk_size_gb
+      disk_type              = each.value.disk_type
+      size_gb                = each.value.disk_size_gb
+      provisioned_iops       = each.value.disk_iops
+      provisioned_throughput = each.value.disk_throughput
     }
 
     dynamic "guest_accelerator" {
