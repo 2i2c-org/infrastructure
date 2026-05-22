@@ -39,7 +39,6 @@ basehub:
         #
       - display_name: Small
         description: ~7 GB RAM, ~1.9 CPUs. Up to ~15 CPUs when available
-        default: true
         profile_options: &profile_options
           image:
             display_name: Image
@@ -123,6 +122,7 @@ basehub:
           node_selector:
             node.kubernetes.io/instance-type: n4-standard-16
       - display_name: Medium
+        default: true
         description: ~14 GB RAM, ~4 CPUs. Up to ~15 CPUs when available
         profile_options: *profile_options
         kubespawner_override:
