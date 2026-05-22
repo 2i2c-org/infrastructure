@@ -13,9 +13,6 @@ basehub:
       homepage:
         gitRepoBranch: unify-logins-2
     singleuser:
-      storage:
-        extraVolumeMounts:
-        extraVolumes:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
@@ -39,7 +36,6 @@ basehub:
         #
       - display_name: Small
         description: ~7 GB RAM, ~1.9 CPUs. Up to ~15 CPUs when available
-        default: true
         profile_options: &profile_options
           image:
             display_name: Image
@@ -123,6 +119,7 @@ basehub:
           node_selector:
             node.kubernetes.io/instance-type: n4-standard-16
       - display_name: Medium
+        default: true
         description: ~14 GB RAM, ~4 CPUs. Up to ~15 CPUs when available
         profile_options: *profile_options
         kubespawner_override:
