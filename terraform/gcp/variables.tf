@@ -100,6 +100,8 @@ variable "notebook_nodes" {
     # Faster disks provide faster image pulls!
     disk_type : optional(string, "pd-balanced"),
     disk_size_gb : optional(number, 100),
+    disk_throughput : optional(number, null),
+    disk_iops : optional(number, null),
     gpu : optional(
       object({
         enabled : optional(bool, false),

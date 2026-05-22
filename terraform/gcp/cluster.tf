@@ -283,8 +283,10 @@ resource "google_container_node_pool" "notebook" {
 
   node_config {
     boot_disk {
-      disk_type = each.value.disk_type
-      size_gb   = each.value.disk_size_gb
+      disk_type              = each.value.disk_type
+      size_gb                = each.value.disk_size_gb
+      provisioned_iops       = each.value.disk_iops
+      provisioned_throughput = each.value.disk_throughput
     }
 
     dynamic "guest_accelerator" {

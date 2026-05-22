@@ -98,13 +98,11 @@ notebook_nodes = {
     min : 0,
     # Keep the numbers down, for safety!
     max : 100,
-    machine_type : "n4-standard-4"
-  },
-  "n4-standard-64" : {
-    min : 0,
-    # Keep the numbers down, for safety!
-    max : 20,
-    machine_type : "n4-standard-64"
+    machine_type : "n4-standard-4",
+    disk_type : "hyperdisk-balanced",
+    disk_size_gb : 100,
+    disk_iops : 10000,
+    disk_throughput : 2000,
   },
   "gpu-t4" : {
     min : 0,
