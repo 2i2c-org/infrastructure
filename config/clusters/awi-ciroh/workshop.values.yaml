@@ -13,9 +13,6 @@ basehub:
       homepage:
         gitRepoBranch: unify-logins-2
     singleuser:
-      storage:
-        extraVolumeMounts:
-        extraVolumes:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
