@@ -144,13 +144,15 @@ jupyterhub:
         async def maap_post_auth_hook(authenticator, handler, authentication):
             """Notify MAAP REST API after successful login (non-blocking)."""
             base_url = get_config("custom.maap.apiBaseUrl", "")
+            authenticator.log.info("MAAP post-auth webhook: base_url=%s", base_url)
             if not base_url:
                 return authentication
 
             auth_state = authentication.get("auth_state", {})
             pgt = f"jwt:{auth_state.get('id_token', '')}"
+            authenticator.log.info("MAAP post-auth webhook: calling %s/api/members/self", base_url)
 
-            asyncio.ensure_future(_notify_maap_api(authenticator, base_url, pgt))
+            await _notify_maap_api(authenticator, base_url, pgt)
 
             return authentication
 
