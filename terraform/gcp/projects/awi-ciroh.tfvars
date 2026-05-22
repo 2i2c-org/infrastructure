@@ -134,8 +134,8 @@ notebook_nodes = {
 
     # Do not compute oversubscription due to small numbers --
     # Mix of smaller-than-medium profiles would disrupt this
-    disk_iops : 5000,
-    disk_throughput : 960
+    disk_iops : 7000,
+    disk_throughput : 1200
   },
   "n4-standard-64" : {
     min : 0,
