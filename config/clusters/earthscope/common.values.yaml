@@ -146,7 +146,7 @@ basehub:
             empty:
               resource: memory
               limit:
-                value: 2500
+                value: 5000
                 unit: GiB-hours
               window: 30
             intersection: max
