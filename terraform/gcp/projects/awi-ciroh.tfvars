@@ -94,6 +94,12 @@ notebook_nodes = {
     max : 20,
     machine_type : "n2-standard-64",
   },
+  "n4-standard-4" : {
+    min : 0,
+    # Keep the numbers down, for safety!
+    max : 100,
+    machine_type : "n4-standard-4"
+  },
   "n4-standard-64" : {
     min : 0,
     # Keep the numbers down, for safety!
