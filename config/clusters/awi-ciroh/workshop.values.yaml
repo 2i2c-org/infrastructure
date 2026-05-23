@@ -149,8 +149,6 @@ basehub:
       - display_name: Huge
         description: ~59 GB RAM, ~16 CPUs. Up to ~62 CPUs when available
         profile_options: *profile_options
-        allowed_groups:
-        - huge
         kubespawner_override:
           mem_guarantee: 59579456061
           mem_limit: 59579456061
