@@ -3,13 +3,8 @@ project_id             = "ciroh-jupyterhub-423218"
 zone                   = "us-central1-b"
 region                 = "us-central1"
 core_node_machine_type = "n2-highmem-4"
-#core_node_machine_type = "n4-highmem-4"
 enable_network_policy = true
 enable_logging        = false
-
-core_node_boot_disk = {
-  #type = "hyperdisk-balanced"
-}
 
 enable_filestore_backups = true
 filestores               = {}
