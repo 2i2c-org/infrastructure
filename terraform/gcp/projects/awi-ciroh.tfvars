@@ -100,7 +100,7 @@ notebook_nodes = {
   # These are optimal for supporting even huge instances whilst 
   # Having better perf on hyperdisks than 64
   # Model this on Medium profiles
-  # Assuming 10GiB scratch per user, 240MiB/s, 1250 IOPS
+  # Assuming 20GiB scratch per user, 240MiB/s, 1250 IOPS
   "n4-standard-4" : {
     min : 0,
     # Keep the numbers down, for safety!
@@ -110,7 +110,7 @@ notebook_nodes = {
     disk_type : "hyperdisk-balanced",
 
     # Prefer large disks as cheap and safer
-    disk_size_gb : 130,
+    disk_size_gb : 160,
 
     # Bump these relative to scaling from 64, as the law of large numbers is worse for smaller samples
     # And the pathological best-case is objectively worse (one person using IO can only hit disk limit)
@@ -130,7 +130,7 @@ notebook_nodes = {
 
     # Allow for 50% oversubscription (small + medium) and 100GiB for images
     # i.e. X = (X_user * N_user * 1.5) + 100
-    disk_size_gb : 160,
+    disk_size_gb : 220,
 
     # Do not compute oversubscription due to small numbers --
     # Mix of smaller-than-medium profiles would disrupt this
@@ -144,7 +144,7 @@ notebook_nodes = {
     machine_type : "n4-standard-64",
 
     disk_type : "hyperdisk-balanced",
-    disk_size_gb : 340,
+    disk_size_gb : 580,
 
     # Limit of n4-standard-64 is 2400 MiB/s
     disk_iops : 15000,
@@ -159,7 +159,7 @@ notebook_nodes = {
     # Use regular storage for scratch
     # As this is an n1 node
     disk_type : "pd-ssd",
-    disk_size_gb : 100,
+    disk_size_gb : 120,
 
     gpu : {
       enabled : true,
