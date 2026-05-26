@@ -3,12 +3,12 @@ basehub:
     nodeSelector:
       cloud.google.com/gke-nodepool: workshop-temp-nfs
     tolerations:
-      - effect: NoSchedule
-        key: 2i2c.org/nfs-vm-family
-        operator: Equal
-        value: n4
+    - effect: NoSchedule
+      key: 2i2c.org/nfs-vm-family
+      operator: Equal
+      value: n4
     gke:
-      volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/home-nfs-workshop-hyperdisk 
+      volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/home-nfs-workshop-hyperdisk
     quotaEnforcer:
       config:
         QuotaManager:
