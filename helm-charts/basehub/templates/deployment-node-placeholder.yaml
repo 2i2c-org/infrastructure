@@ -26,19 +26,26 @@ spec:
       tolerations:
         {{- . | toYaml | nindent 8 }}
       {{- end }}
-      # Don't schedule pods on same node
       affinity:
+        # Require that pods run on user nodes only
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: hub.jupyter.org/node-purpose
+                  operator: In
+                  values: [user]
         # Require that pods should not run in the same topology
         podAntiAffinity:
           # Enforce this at scheduling time
           requiredDuringSchedulingIgnoredDuringExecution:
             # Nodes with same host name are considered part of the same topology
           - topologyKey: kubernetes.io/hostname
-              # Find matching pods to determine multiplicity per topology domain
-              labelSelector:
-                matchLabels:
-                  app: jupyterhub
-                  component: node-placeholder
+            # Find matching pods to determine multiplicity per topology domain
+            labelSelector:
+              matchLabels:
+                app: jupyterhub
+                component: node-placeholder
 
       containers:
       - name: pause
