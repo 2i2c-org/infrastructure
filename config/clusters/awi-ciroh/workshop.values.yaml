@@ -4,7 +4,7 @@ basehub:
     enabled: true
     nodeSelector:
       node.kubernetes.io/instance-type: n4-standard-16
-    replicas: 0
+    replicas: 10
   jupyterhub-home-nfs:
     nodeSelector:
       cloud.google.com/gke-nodepool: workshop-temp-nfs
