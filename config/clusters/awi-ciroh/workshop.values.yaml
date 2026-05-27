@@ -14,8 +14,7 @@ basehub:
       operator: Equal
       value: n4
     gke:
-      volumeId: 
-        projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/home-nfs-workshop-hyperdisk
+      volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/home-nfs-workshop-hyperdisk
     quotaEnforcer:
       config:
         QuotaManager:
