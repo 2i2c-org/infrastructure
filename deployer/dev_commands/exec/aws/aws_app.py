@@ -158,15 +158,15 @@ def shell(
     )
 
 
-@aws.command()
+@aws.command(context_settings={"allow_extra_args": True})
 def sso_shell(
+    ctx: typer.Context,
     profile: str = typer.Argument(..., help="Name of AWS SSO profile to login into"),
     account_name: str = typer.Argument(
         "",
         help="The name of the account under SSO that you want to login into",
     ),
     role: str = typer.Argument("", help="What role to assume"),
-    cmd: str = typer.Argument("", help="Command to execute inside the shell"),
 ):
     """
     Exec into a shell with appropriate AWS credentials for an account under SSO
@@ -204,7 +204,7 @@ def sso_shell(
             # Verify if the cached token has expired
             expires_at = datetime.fromisoformat(expires_at_str)
             return datetime.now(expires_at.tzinfo) >= expires_at
-        except:
+        except Exception:
             return True
 
     # Get the access token from th cached file
@@ -266,8 +266,8 @@ def sso_shell(
     )
 
     args = [os.environ["SHELL"], "-l"]
-    if cmd:
-        args.extend(["-c", "cmd"])
+    if ctx.args:
+        args.extend(("-c", " ".join(ctx.args)))
 
     subprocess.check_call(args, env=env)
 
