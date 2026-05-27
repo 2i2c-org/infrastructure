@@ -34,13 +34,10 @@ def ensure_single_kubeconfig_context():
         )
 
 
-@app.command(rich_help_panel=DEVELOPMENT)
+@app.command(context_settings={"allow_extra_args": True}, rich_help_panel=DEVELOPMENT)
 def use_cluster_credentials(
+    ctx: typer.Context,
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    commandline: str = typer.Argument(
-        "",
-        help="Optional shell command line to run after authenticating to this cluster",
-    ),
 ):
     """
     Pop a new shell or execute a command after authenticating to the given cluster using the deployer's credentials
@@ -66,6 +63,6 @@ def use_cluster_credentials(
         # shell.
         args = [os.environ["SHELL"], "-l"]
         # If a command to execute is specified, just execute that and exit.
-        if commandline:
-            args += ["-c", commandline]
+        if ctx.args:
+            args.extend(("-c", " ".join(ctx.args)))
         subprocess.check_call(args)
