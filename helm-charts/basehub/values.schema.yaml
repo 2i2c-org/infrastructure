@@ -127,6 +127,7 @@ properties:
       - tolerations
       - extraTolerations
       - pauseContainer
+      - wait
     properties:
       enabled:
         type: boolean
@@ -151,6 +152,8 @@ properties:
         description: |
           Tolerations allow a pod to be scheduled on nodes with taints.
       extraTolerations: *tolerations-spec
+      wait:
+        type: boolean
   inClusterNFS:
     type: object
     additionalProperties: false
