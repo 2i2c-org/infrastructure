@@ -341,6 +341,23 @@ nfs:
       - vers=4.2
     baseShareName: /
 
+nodePlaceholder:
+  enabled: false
+  replicas: 0
+  pauseContainer:
+    image: registry.k8s.io/pause:3.10.1
+  nodeSelector:
+    hub.jupyter.org/node-purpose: user
+  tolerations:
+    # Tolerate tainted jupyterhub user nodes
+    - key: hub.jupyter.org_dedicated
+      value: user
+      effect: NoSchedule
+    - key: hub.jupyter.org/dedicated
+      value: user
+      effect: NoSchedule
+  extraTolerations: []
+
 # Use NFS provided by an in cluster server with the nfs-external-provisioner chart
 inClusterNFS:
   enabled: false
@@ -863,7 +880,7 @@ jupyterhub:
         manage_groups: true
         populate_teams_in_auth_state: true
         scope:
-        - read:org
+          - read:org
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
@@ -881,7 +898,7 @@ jupyterhub:
             KubeSpawner.image:
               type: string
               title: User docker image
-              description: Determines languages, libraries and interfaces 
+              description: Determines languages, libraries and interfaces
                 available
               help: Leave this blank to use the default
             Spawner.default_url:
@@ -1041,10 +1058,10 @@ jupyterhub:
     loadRoles:
       jupyterhub-groups-exporter:
         services:
-        - jupyterhub-groups-exporter
+          - jupyterhub-groups-exporter
         scopes:
-        - users
-        - groups
+          - users
+          - groups
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.15467.h0cadc91ad"
