@@ -22,6 +22,9 @@ basehub:
   # Ensure that placeholder nodes are densely packed, making instance-type
   # easier to scale down.
   jupyterhub:
+    cull:
+      # No pods over 12h long
+      maxAge: 43200
     scheduling:
       userScheduler:
         enabled: true
