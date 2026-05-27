@@ -62,6 +62,7 @@ basehub:
         server:
           scopes:
           - self
+          - users:activity!user
           - access:services!service=dask-gateway
     singleuser:
       extraEnv:
