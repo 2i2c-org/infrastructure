@@ -12,6 +12,7 @@ type: object
 additionalProperties: false
 required:
   - nfs
+  - nodePlaceholder
   - inClusterNFS
   - global
   - jupyterhub
@@ -116,6 +117,40 @@ properties:
             description: |
               Optional string to use as the name of the share - defaults to name of the
               hub specified in the cluster.yaml file.
+  nodePlaceholder:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+      - replicas
+      - nodeSelector
+      - tolerations
+      - extraTolerations
+      - pauseContainer
+    properties:
+      enabled:
+        type: boolean
+      replicas:
+        type: integer
+        minimum: 0
+      pauseContainer:
+        type: object
+        additionalProperties: false
+        required:
+          - image
+        properties:
+          image:
+            type: string
+      nodeSelector:
+        type: object
+        additionalProperties: true
+        description: |
+          An object with key value pairs representing labels.
+      tolerations: &tolerations-spec
+        type: array
+        description: |
+          Tolerations allow a pod to be scheduled on nodes with taints.
+      extraTolerations: *tolerations-spec
   inClusterNFS:
     type: object
     additionalProperties: false
