@@ -1,4 +1,10 @@
 basehub:
+  # Enable node placeholders, to ensure capacity at first login
+  nodePlaceholder:
+    enabled: true
+    nodeSelector:
+      node.kubernetes.io/instance-type: n4-standard-16
+    replicas: 0
   jupyterhub-home-nfs:
     nodeSelector:
       cloud.google.com/gke-nodepool: workshop-temp-nfs
@@ -13,7 +19,12 @@ basehub:
       config:
         QuotaManager:
           hard_quota: 40 # in GiB
+  # Ensure that placeholder nodes are densely packed, making instance-type
+  # easier to scale down.
   jupyterhub:
+    scheduling:
+      userScheduler:
+        enabled: true
     custom:
       singleuserAdmin:
         extraVolumeMounts:
