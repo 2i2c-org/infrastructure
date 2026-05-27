@@ -98,7 +98,6 @@ basehub:
           scopes:
           - self
           - access:services!service=usage-quota
-          - access:services!service=dask-gateway
         server:
           scopes:
           - self
