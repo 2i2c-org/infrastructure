@@ -19,7 +19,7 @@ basehub:
       image:
         # Usage quotas 0.1.2 and fancy-profiles 0.6.0
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 5e43e13e38a7bff919c1355640f85867758d6c3a
+        tag: 04215347e9f05cc95b7a4eb4c87066bb7bf6f1f9
       extraConfig:
         001-username-claim: |
           import json
@@ -59,7 +59,10 @@ basehub:
           c.Spawner.auth_state_hook = populate_token
         11-setup-usage-quotas: |
           from jupyterhub_usage_quotas import setup_usage_quotas
-          setup_usage_quotas(c)
+          existing_hook = getattr(c.Spawner, "pre_spawn_hook", None)
+          if not callable(existing_hook):
+              existing_hook = None
+          setup_usage_quotas(c, existing_hook)
       extraEnv:
         METRICS_EXPORTER_TOKEN:
           valueFrom:
