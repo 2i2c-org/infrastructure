@@ -136,6 +136,22 @@ jupyterhub:
           [credential "https://github.com"]
           helper = !/opt/github-credential-helper
           useHttpPath = true
+      02-menus:
+        mountPath: /srv/conda/envs/notebook/share/jupyter/lab/settings/overrides.json
+
+        # app-id comes from https://github.com/organizations/utoronto-2i2c/settings/apps/utoronto-jupyterhub-private-cloner
+        data:
+          "@jupyterlab/mainmenu-extension:plugin":
+            menus:
+              - id: jp-mainmenu-help
+                rank: 1001
+                items:
+                  - command: "help:open"
+                    rank: 1001
+                    args:
+                      url: "https://github.com/settings/connections/applications/Ov23liD6D2SAPk4ctcyU"
+                      text: Revoke GitHub Token
+                      newBrowserTab: true
 
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liaEC5WLtjKehTtK
