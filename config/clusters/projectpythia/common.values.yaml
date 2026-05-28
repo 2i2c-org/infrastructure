@@ -26,6 +26,9 @@ jupyterhub:
           logo_url: https://raw.githubusercontent.com/ProjectPythia/projectpythia.github.io/refs/heads/main/portal/_static/images/logos/pythia_logo-blue-rtext.svg
 
   hub:
+    image:
+      # Temporary image with jupyterhub-fancy-profiles 0.6.0
+      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
     allowNamedServers: true
     config:
       JupyterHub:
