@@ -165,9 +165,18 @@ binderhub-service:
   networkPolicy:
     enabled: true
   config:
+    KubernetesBuildExecutor:
+      node_selector:
+        # Schedule build pods to run on the user nodes
+        node.kubernetes.io/instance-type: r5.4xlarge
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/projectpythia-
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: https://quay.io
     username: imagebuilding-non-gcp-hubs+image_builder
+
+  dockerApi:
+    nodeSelector:
+      # Schedule dockerApi pods to run on the user nodes
+      node.kubernetes.io/instance-type: r5.4xlarge
