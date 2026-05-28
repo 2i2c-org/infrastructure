@@ -1,10 +1,7 @@
 basehub:
   # Enable node placeholders, to ensure capacity at first login
   nodePlaceholder:
-    enabled: true
-    nodeSelector:
-      node.kubernetes.io/instance-type: n4-standard-16
-    replicas: 25
+    enabled: false
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-workshop
@@ -35,7 +32,7 @@ basehub:
               # Limit total size, to prevent pod being evicted
               # with over use by any one user. This can be increased,
               # but may need to increase the size of the node disk
-              sizeLimit: 20Gi
+              sizeLimit: 5Gi
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
