@@ -41,7 +41,7 @@ jupyterhub:
     allowNamedServers: true
     extraConfig:
       00-set-gitconfig.py: |
-        def auth_state_hook(spawner, auth_state):
+        async def auth_state_hook(spawner, auth_state):
             spawner.environment["GITHUB_USER"] = auth_state["github_user"]["login"]
             spawner.environment["GIT_AUTHOR_NAME"] = spawner.environment[
                 "GIT_COMMITTER_NAME"
