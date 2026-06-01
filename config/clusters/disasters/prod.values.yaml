@@ -2,11 +2,7 @@ nfs:
   pv:
     serverIP: 10.100.150.169
 
-jupyterhub:
-  hub:
-    image:
-      # Temporary image with jupyterhub-fancy-profiles 0.6.0
-      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
+jupyterhub: {}
 dask-gateway:
   gateway:
     backend:

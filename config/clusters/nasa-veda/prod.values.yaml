@@ -7,10 +7,6 @@ basehub:
       homepage:
         gitRepoBranch: master
         gitRepoUrl: https://github.com/NASA-IMPACT/veda-hub-homepage
-    hub:
-      image:
-        # Temporary image with jupyterhub-fancy-profiles 0.6.0
-        tag: 0.0.1-0.dev.git.15540.hbaaa997ce
   binderhub-service:
     config:
       BinderHub:

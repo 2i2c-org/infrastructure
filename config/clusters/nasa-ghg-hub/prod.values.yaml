@@ -5,10 +5,6 @@ basehub:
         gitRepoBranch: bootstrap5-nasa-ghg-prod
         # FIXME: use this repository again, once the changes in the bootstrap5-nasa-ghg-staging branch of 2i2c-org/default-hub-homepage have been ported to it
         # gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
-    hub:
-      image:
-        # Temporary image with jupyterhub-fancy-profiles 0.6.0
-        tag: 0.0.1-0.dev.git.15540.hbaaa997ce
 
   binderhub-service:
     config:
