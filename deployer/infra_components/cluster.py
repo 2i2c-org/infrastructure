@@ -458,15 +458,10 @@ class Cluster:
                 support_config = yaml.load(f)
 
         # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
-        auth = (
-            support_config.get("prometheus", {})
-            .get("server", {})
-            .get("configmapReload", {})
-            .get("prometheus")
-        )
+        auth = support_config.get("prometheusAuthSecret", {})
         if auth is None:
             raise ValueError(
-                f"""`prometheus.configmapReload.prometheus` authentication wasn't configured for {self.spec["name"]}"""
+                f"""`prometheusAuthSecret` secret wasn't configured for {self.spec["name"]}"""
             )
 
         return (auth["username"], auth["password"])
