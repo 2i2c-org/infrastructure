@@ -13,7 +13,7 @@ dependencies:
   # cost. If we ever have multiple prometheii on the same cluster, we can
   # reconsider using the operator.
   - name: prometheus
-    version: 29.4.0
+    version: 29.9.0
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
