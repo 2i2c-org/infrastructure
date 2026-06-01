@@ -47,7 +47,7 @@ jobs:
             | tar -xvz --one-top-level=$HOME/.local/bin
 
     - name: Install sops
-      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+      uses: mdgreenwald/mozilla-sops-action@v2.0.0
 
     - name: Setup sops credentials to decrypt repo secrets
       uses: google-github-actions/auth@v3
