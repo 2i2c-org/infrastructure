@@ -223,6 +223,10 @@ persistent_disks = {
     size        = 20
     name_suffix = "sbcc-dev"
   }
+  "shasta" = {
+    size        = 25
+    name_suffix = "shasta"
+  }
   "sierra" = {
     size        = 20
     name_suffix = "sierra"
