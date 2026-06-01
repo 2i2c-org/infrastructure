@@ -199,36 +199,14 @@ basehub:
             choices:
               geolab-general:
                 display_name: GeoLab
-                slug: geolab-general
+                slug: geolab-base
                 kubespawner_override:
-                  image: public.ecr.aws/earthscope/geolab/geolab-default:latest
+                  image: public.ecr.aws/earthscope/geolab/geolab-base:latest
               geolab-sfg:
                 display_name: SeaFloor Geodesy
                 slug: geolab-sfg
                 kubespawner_override:
                   image: public.ecr.aws/earthscope/sfg-geolab:latest
-              mspass-shortcourse:
-                display_name: MsPASS ShortCourse
-                slug: mspass-shortcourse
-                kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/mspass_image:mspass_img_test-6db62782
-              jupyter-scipy:
-                display_name: Jupyter
-                slug: jupyter-scipy
-                kubespawner_override:
-                    # FIXME: use quay.io/ for tags after 2023-10-20
-                  image: jupyter/scipy-notebook:2023-06-27
-              rocker-geospatial:
-                display_name: RStudio
-                slug: rocker-geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
-                    # Launch into RStudio after the user logs in
-                  default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
           resource_allocation:
             display_name: Resource Allocation
             choices:
