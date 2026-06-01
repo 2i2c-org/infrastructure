@@ -1,3 +1,5 @@
+jupyterbook-pub-service:
+  enabled: false
 binderhub-service:
   enabled: false
   ingress:
