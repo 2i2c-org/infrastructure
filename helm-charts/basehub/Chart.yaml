@@ -30,3 +30,7 @@ dependencies:
     version: 1.1.1-0.dev.git.133.hd9f9ccc
     repository: https://2i2c.org/jupyterhub-groups-exporter
     condition: jupyterhub-groups-exporter.enabled
+  - name: jupyterbook-pub-service
+    version: 0.1.0-0.dev.git.65.h60d7c7f
+    repository: https://agoose77.github.io/jupyterbook-pub-service
+    condition: jupyterbook-pub-service.enabled
