@@ -9,21 +9,10 @@ basehub:
         # from the PR https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/149 for testing
         tag: 0.0.1-0.dev.git.15561.hd27897dad
       loadRoles:
-        binder:
-          services:
-          - binder
-          scopes:
-          - servers
-          - read:users
         user:
           scopes:
           - self
           - access:services!service=binder
-      services:
-        binder:
-          oauth_client_id: service-binderhub
-          oauth_no_confirm: true
-          oauth_redirect_uri: https://staging.hub.openveda.cloud/services/binder/oauth_callback
     custom:
       homepage:
         gitRepoBranch: staging

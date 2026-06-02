@@ -155,6 +155,12 @@ local jupyterhubConfig =
   {
     ingress: hubIngressConfig,
     hub: {
+      services: {
+        binder: {
+          // dynamically configure redirect_uri for binderhub service, so we don't have to do that in each hub
+          oauth_redirect_uri: 'https://%s/services/binder/oauth_callback' % [hub_domain],
+        },
+      },
       config: {
         OAuthenticator: {
           // Always set oauth callback URL, to prevent it from being

@@ -37,6 +37,9 @@ basehub:
             name: NASA ICESat-2 Science Team
             url: https://icesat-2.gsfc.nasa.gov/science_definition_team
     hub:
+      image:
+        # Temporary image with jupyterhub-fancy-profiles 0.6.0
+        tag: 0.0.1-0.dev.git.15540.hbaaa997ce
       allowNamedServers: true
       config:
         JupyterHub:
@@ -78,6 +81,8 @@ basehub:
           - shares!user
           - read:users:name
           - list:users
+          # Access to binder service
+          - access:services!service=binder
     singleuser:
       cloudMetadata:
         blockWithIptables: false
