@@ -120,13 +120,6 @@ binderhub-service:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
   extraEnv:
-  - name: JUPYTERHUB_API_TOKEN
-    valueFrom:
-      secretKeyRef:
-        name: hub
-        key: hub.services.binder.apiToken
-  - name: JUPYTERHUB_CLIENT_ID
-    value: service-binder
   - name: JUPYTERHUB_API_URL
     value: https://hub.big.binder.opensci.2i2c.cloud/hub/api
     # Without this, the redirect URL to /hub/api/... gets
