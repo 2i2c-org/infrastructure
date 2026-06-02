@@ -255,9 +255,4 @@ def run_hub_health_check(
             )
         service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
 
-    print_colour("Testing locally, do not redirect output")
-    try:
-        asyncio.run(test_hub_healthy(hub_url, service_api_token, hub.type))
-        print_colour("Health check succeeded!")
-    except Exception as e:
-        print("Health check failed!", file=sys.stderr)
+    asyncio.run(test_hub_healthy(hub_url, service_api_token, hub.type))
