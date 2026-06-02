@@ -32,7 +32,21 @@ basehub:
             name: U.S. Greenhouse Gas Center
             url: https://earth.gov/ghgcenter
     hub:
+      image:
+        # Temporary image with jupyterhub-fancy-profiles 0.6.0
+        tag: 0.0.1-0.dev.git.15540.hbaaa997ce
       allowNamedServers: true
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+        user:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+          # Access to binder service
+          - access:services!service=binder
       config:
         JupyterHub:
           authenticator_class: github
@@ -258,6 +272,8 @@ basehub:
       DockerRegistry:
         url: &url https://quay.io
         username: &username imagebuilding-non-gcp-hubs+image_builder
+      BinderHub:
+        auth_enabled: true
     buildPodsRegistryCredentials:
       server: *url
       username: *username
