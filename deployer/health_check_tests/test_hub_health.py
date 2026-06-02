@@ -58,7 +58,7 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             del os.environ["JUPYTERHUB_API_TOKEN"]
 
 
-async def test_hub_healthy(hub_url, api_token, hub_type, check_dask_scaling):
+async def test_hub_healthy(hub_url, api_token, hub_type):
     nb_dir = notebook_dir(hub_type)
     try:
         print(f"Starting hub {hub_url} health validation...")
@@ -68,8 +68,6 @@ async def test_hub_healthy(hub_url, api_token, hub_type, check_dask_scaling):
                 # check_dask_scaling variable is true. We continue in the loop if
                 # check_dask_scaling == False when we iterate over this file.
                 print(f"Running {name} test notebook...")
-                if (not check_dask_scaling) and (name == "scale_dask_workers.ipynb"):
-                    continue
 
                 test_notebook_path = os.path.join(root, name)
                 await check_hub_health(hub_url, test_notebook_path, api_token)

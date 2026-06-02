@@ -190,9 +190,6 @@ def deploy(
 def run_hub_health_check(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    check_dask_scaling: bool = typer.Option(
-        False, help="Check that dask workers can be scaled"
-    ),
 ):
     """
     Run a health check on a given hub on a given cluster. Optionally check scaling
@@ -258,17 +255,9 @@ def run_hub_health_check(
             )
         service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
 
-    check_dask_scaling = False
-    if hub.type == "daskhub" or check_dask_scaling:
-        check_dask_scaling = True
-
     print_colour("Testing locally, do not redirect output")
     try:
-        asyncio.run(
-            test_hub_healthy(
-                hub_url, service_api_token, hub.spec["helm_chart"], check_dask_scaling
-            )
-        )
+        asyncio.run(test_hub_healthy(hub_url, service_api_token, hub.type))
         print_colour("Health check succeeded!")
     except Exception as e:
         print("Health check failed!", file=sys.stderr)
