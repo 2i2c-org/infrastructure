@@ -55,6 +55,15 @@ binderhub-service:
       - key: hub.jupyter.org/dedicated
         value: user
         effect: NoSchedule
+  extraEnv:
+    # Z2jh automatically creates the API token
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: hub
+          key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: &binderhub_client_id service-binderhub
   config:
     BinderHub:
       base_url: /services/binder
@@ -1056,7 +1065,7 @@ jupyterhub:
         # jupyterhub chart will autogenerate a secret with appropriate keys.
         # It's not used if binderhub-service is not enabled.
         # The redirect_url is configured in values.jsonnet
-        oauth_client_id: service-binderhub
+        oauth_client_id: *binderhub_client_id
         display: false
         url: http://binderhub:8090
         oauth_no_confirm: true

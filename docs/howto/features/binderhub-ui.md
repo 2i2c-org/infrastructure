@@ -169,14 +169,6 @@ These are needed by the jupyterhub software bits that the binderhub software use
 ```yaml
 binderhub-service:
   extraEnv:
-    - name: JUPYTERHUB_API_TOKEN
-      valueFrom:
-        # Any JupyterHub Services api_tokens are exposed in this k8s Secret
-        secretKeyRef:
-          name: hub
-          key: hub.services.binder.apiToken
-    - name: JUPYTERHUB_CLIENT_ID
-      value: "service-binder"
     - name: JUPYTERHUB_API_URL
       value: "https://<hub-public-url>.2i2c.cloud/hub/api"
     # Without this, the redirect URL to /hub/api/... gets

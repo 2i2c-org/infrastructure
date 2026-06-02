@@ -148,13 +148,6 @@ binderhub-service:
       banner_message: {{ banner_message }}
       about_message: {{ about_message }}
   extraEnv:
-    - name: JUPYTERHUB_API_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: hub
-          key: hub.services.binder.apiToken
-    - name: JUPYTERHUB_CLIENT_ID
-      value: "service-binder"
     - name: JUPYTERHUB_API_URL
       value: "https://{{ jupyterhub_domain }}/hub/api"
     # Without this, the redirect URL to /hub/api/... gets
