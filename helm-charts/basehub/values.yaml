@@ -64,8 +64,6 @@ binderhub-service:
           key: hub.services.binder.apiToken
     - name: JUPYTERHUB_CLIENT_ID
       value: &binderhub_client_id service-binderhub
-    - name: JUPYTERHUB_API_URL
-      value: http://hub:8081/hub/api
   config:
     BinderHub:
       base_url: /services/binder
