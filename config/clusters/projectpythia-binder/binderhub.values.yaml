@@ -161,6 +161,13 @@ binderhub-service:
         hub.jupyter.org/node-purpose:
         capi.stackhpc.com/node-group: user-m3-large
   extraEnv:
+  - name: JUPYTERHUB_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: '{{ include "jupyterhub.hub.fullname" . }}'
+        key: hub.services.binder.apiToken
+  - name: JUPYTERHUB_CLIENT_ID
+    value: service-binder
   - name: JUPYTERHUB_API_URL
     value: https://hub.projectpythia.org/hub/api
     # Without this, the redirect URL to /hub/api/... gets

@@ -93,6 +93,13 @@ binderhub-service:
       - ^ProjectPythia/.*$
       - binder-examples/requirements
   extraEnv:
+  - name: JUPYTERHUB_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: hub
+        key: hub.services.binder.apiToken
+  - name: JUPYTERHUB_CLIENT_ID
+    value: service-binder
   - name: JUPYTERHUB_API_URL
     value: https://hub.binder.pythia.2i2c.cloud/hub/api
     # Without this, the redirect URL to /hub/api/... gets
