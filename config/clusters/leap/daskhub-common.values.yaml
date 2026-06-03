@@ -64,6 +64,7 @@ basehub:
           - RobertPincus
           - SammyAgrawal
           - sarika-debruyn
+          - ilu24
       extraConfig:
         000-volumes-and-volume-mounts-as-dict: |
           # The base jupyterhub config in zero-to-jupyterhub defines
