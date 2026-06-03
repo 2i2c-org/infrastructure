@@ -18,7 +18,7 @@ jupyterhub:
     continuous:
       # We don't need this right now, and it's causing alert
       # failures
-      enabled: false
+      enabled: true
   singleuser:
     defaultUrl: /lab
     profileList:
