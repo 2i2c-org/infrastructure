@@ -14,14 +14,7 @@ local c = cluster.withNodeGroupConfigOverride(
     ],
     daskInstanceTypes=[
       // Allow for a range of spot instance types
-      [
-        'r5.xlarge',
-        'r5.4xlarge',
-        'r6i.xlarge',
-        'r6i.4xlarge',
-        'r7i.xlarge',
-        'r7i.4xlarge',
-      ],
+      ['r5.4xlarge', 'r7i.4xlarge', 'r6i.4xlarge'],
     ],
     hubs=['staging', 'prod', 'binder'],
     notebookGPUNodeGroups=[
