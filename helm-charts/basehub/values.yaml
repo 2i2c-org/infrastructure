@@ -1062,12 +1062,6 @@ jupyterhub:
         oauth_no_confirm: true
       jupyterhub-groups-exporter: {}
     loadRoles:
-      binder:
-        services:
-        - binder
-        scopes:
-        - servers
-        - read:users
       jupyterhub-groups-exporter:
         services:
           - jupyterhub-groups-exporter
