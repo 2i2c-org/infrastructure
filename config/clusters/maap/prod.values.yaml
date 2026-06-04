@@ -197,9 +197,6 @@ jupyterhub:
         extra_resource_limits:
           nvidia.com/gpu: '1'
   hub:
-    image:
-      # Temporary image with jupyterhub-fancy-profiles 0.6.0
-      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
     config:
       GenericOAuthenticator:
         token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token
@@ -213,6 +210,9 @@ binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-prod-
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: https://hub.maap-project.org/hub/api
 
 jupyterhub-home-nfs:
   eks:
