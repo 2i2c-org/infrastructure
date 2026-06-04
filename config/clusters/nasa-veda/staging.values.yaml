@@ -8,11 +8,6 @@ basehub:
         # custom image built to install jupyterhub-fancy-profiles from commit 9754f2188e337cd34cc5c533080583fe92fd47ca
         # from the PR https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/149 for testing
         tag: 0.0.1-0.dev.git.15561.hd27897dad
-      loadRoles:
-        user:
-          scopes:
-          - self
-          - access:services!service=binder
     custom:
       homepage:
         gitRepoBranch: staging
@@ -27,8 +22,6 @@ basehub:
     config:
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-staging-
-        auth_enabled: true
-        hub_url: https://staging.hub.openveda.cloud
     extraEnv:
     - name: JUPYTERHUB_API_URL
       value: https://staging.hub.openveda.cloud/hub/api
