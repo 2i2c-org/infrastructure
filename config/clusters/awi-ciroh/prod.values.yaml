@@ -60,37 +60,37 @@ basehub:
                   image: quay.io/awiciroh/devcon25:ngiab_datapreprocess
                   image_pull_policy: Always
               devcon1:
-                display_name: USGS Surface Water Tools
+                display_name: Devcon25-USGS Surface Water Tools
                 slug: devcon1
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon25:devcon25-usgs
                   image_pull_policy: Always
               devcon2:
-                display_name: SHAP for ML Interpretation
+                display_name: Devcon25-SHAP for ML Interpretation
                 slug: devcon2
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon25:devcon25-shap
                   image_pull_policy: Always
               devcon3:
-                display_name: TEVA for Feature Selection
+                display_name: Devcon25-TEVA for Feature Selection
                 slug: devcon3
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon25:devcon25-teva
                   image_pull_policy: Always
               devcon4:
-                display_name: LightGBM for Forecast
+                display_name: Devcon25-LightGBM for Forecast
                 slug: devcon4
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon25:devcon25-forecasting
                   image_pull_policy: Always
               devcon5:
-                display_name: ML for Hydro Model Outputs
+                display_name: Devcon25-ML for Hydro Model Outputs
                 slug: devcon5
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon25:sneisary_d25
                   image_pull_policy: Always
               devcon6:
-                display_name: HydroGeoSpatial Modeling
+                display_name: Devcon25-HydroGeoSpatial Modeling
                 slug: devcon6
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon25:jmframe_d25
