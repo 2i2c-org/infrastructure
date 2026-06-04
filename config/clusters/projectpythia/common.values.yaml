@@ -67,6 +67,7 @@ jupyterhub:
         - user
         allowed_organizations:
         - ProjectPythia:cookoff2025
+        - ProjectPythia:cookoff2026
       Authenticator:
         enable_auth_state: true
         admin_users:
@@ -217,15 +218,6 @@ jupyterhub:
                 mem_guarantee: 65094448840
                 mem_limit: 65094448840
                 cpu_guarantee: 7.8475
-                cpu_limit: 15.695
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.4xlarge
-            mem_121_2:
-              display_name: 121.2 GB RAM, upto 15.6 CPUs
-              kubespawner_override:
-                mem_guarantee: 130188897681
-                mem_limit: 130188897681
-                cpu_guarantee: 15.695
                 cpu_limit: 15.695
                 node_selector:
                   node.kubernetes.io/instance-type: r5.4xlarge
