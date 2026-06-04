@@ -67,6 +67,7 @@ jupyterhub:
         - user
         allowed_organizations:
         - ProjectPythia:cookoff2025
+        - ProjectPythia:cookoff2026
       Authenticator:
         enable_auth_state: true
         admin_users:
