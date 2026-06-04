@@ -64,6 +64,7 @@ basehub:
           - RobertPincus
           - SammyAgrawal
           - sarika-debruyn
+          - ilu24
       extraConfig:
         000-volumes-and-volume-mounts-as-dict: |
           # The base jupyterhub config in zero-to-jupyterhub defines
@@ -169,7 +170,7 @@ basehub:
                 display_name: LEAP Education Notebook (Testing Prototype)
                 slug: leap_edu
                 kubespawner_override:
-                  image: quay.io/jbusecke/leap-edu-image:fa442ab4851c
+                  image: quay.io/2i2c/leap-edu-image:278370f204a2
         kubespawner_override:
           cpu_limit:
           mem_limit:
@@ -259,7 +260,7 @@ basehub:
                 display_name: LEAP Education Notebook (Testing Prototype)
                 slug: leap_edu
                 kubespawner_override:
-                  image: quay.io/jbusecke/leap-edu-image:fa442ab4851c
+                  image: quay.io/2i2c/leap-edu-image:278370f204a2
         kubespawner_override: &medium_kubespawner_override
           cpu_limit:
           mem_limit:

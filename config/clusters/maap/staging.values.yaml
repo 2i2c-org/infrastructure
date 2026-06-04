@@ -208,21 +208,10 @@ jupyterhub:
       # Undo unnecessary common config
       00-volumes-and-volume-mounts-as-dict: ''
     loadRoles:
-      binder:
-        services:
-        - binder
-        scopes:
-        - servers
-        - read:users
       user:
         scopes:
         - self
         - access:services!service=binder
-    services:
-      binder:
-        oauth_client_id: service-binderhub
-        oauth_no_confirm: true
-        oauth_redirect_uri: https://staging.hub.maap-project.org/services/binder/oauth_callback
     config:
       GenericOAuthenticator:
         token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token

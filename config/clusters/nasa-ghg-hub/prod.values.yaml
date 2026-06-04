@@ -10,6 +10,9 @@ basehub:
     config:
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-prod-
+    extraEnv:
+    - name: JUPYTERHUB_API_URL
+      value: https://hub.ghg.center/hub/api
 
   jupyterhub-home-nfs:
     eks:

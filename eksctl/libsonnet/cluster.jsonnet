@@ -1,5 +1,7 @@
 local escapeName(name) = std.strReplace(name, '.', '-');
 local lowerCaseLetter(i) = std.char(97 + i);
+local trim63(s) = if std.length(s) > 63 then s[0:62] else s;
+
 {
   /**
    Create a managed nodegroup config that can autoscale from 0.
@@ -58,11 +60,11 @@ local lowerCaseLetter(i) = std.char(97 + i);
     // Include name prefix, escaped instance type (because names can't have .)
     // and name generation
     local instanceTypes = if std.isString(instanceType) then [instanceType] else instanceType,
-    name: std.join('-', [
+    name: trim63(std.join('-', [
       namePrefix,
     ] + std.map(escapeName, instanceTypes) + [
       generation,
-    ]),
+    ])),
     availabilityZones: availabilityZones,
     minSize: minSize,
     maxSize: maxSize,

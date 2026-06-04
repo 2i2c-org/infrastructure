@@ -207,6 +207,9 @@ cython_debug/
 # osx
 .DS_Store
 
+# Claude Code local files
+.claude/
+
 cloudbank_hub_setup_guide.md
 
 # A documentation file with 'secrets' is hard

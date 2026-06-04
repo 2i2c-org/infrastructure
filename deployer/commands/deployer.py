@@ -2,13 +2,11 @@
 Actions available when deploying many JupyterHubs to many Kubernetes clusters
 """
 
+import asyncio
 import base64
-import os
 import subprocess
 import sys
-from contextlib import redirect_stderr, redirect_stdout
 
-import pytest
 import typer
 from ruamel.yaml import YAML
 
@@ -25,6 +23,7 @@ from deployer.commands.validate.config import (
     validate_authenticator_config,
     validate_hub_config,
 )
+from deployer.health_check_tests.test_hub_health import test_hub_healthy
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
@@ -191,9 +190,6 @@ def deploy(
 def run_hub_health_check(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    check_dask_scaling: bool = typer.Option(
-        False, help="Check that dask workers can be scaled"
-    ),
 ):
     """
     Run a health check on a given hub on a given cluster. Optionally check scaling
@@ -259,32 +255,4 @@ def run_hub_health_check(
             )
         service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
 
-    # On failure, pytest prints out params to the test that failed.
-    # This can contain sensitive info - so we hide stderr
-    # FIXME: Don't use pytest - just call a function instead
-    #
-    # Show errors locally but redirect on CI
-    gh_ci = os.environ.get("CI", "false")
-    pytest_args = [
-        "-q",
-        "deployer/health_check_tests",
-        f"--hub-url={hub_url}",
-        f"--api-token={service_api_token}",
-        f"--hub-type={hub.spec['helm_chart']}",
-    ]
-
-    if hub.type == "daskhub" or check_dask_scaling:
-        pytest_args.append("--check-dask-scaling")
-
-    if gh_ci == "true":
-        print_colour("Testing on CI, not printing output")
-        with open(os.devnull, "w") as dn, redirect_stderr(dn), redirect_stdout(dn):
-            exit_code = pytest.main(pytest_args)
-    else:
-        print_colour("Testing locally, do not redirect output")
-        exit_code = pytest.main(pytest_args)
-    if exit_code != 0:
-        print("Health check failed!", file=sys.stderr)
-        sys.exit(exit_code)
-    else:
-        print_colour("Health check succeeded!")
+    asyncio.run(test_hub_healthy(hub_url, service_api_token, hub.type))

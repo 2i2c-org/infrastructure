@@ -70,9 +70,6 @@ jupyterhub:
           # observed to be required for non-admin users.
         - access:services!service=binder
 binderhub-service:
-  enabled: true
-  networkPolicy:
-    enabled: true
   ingress:
     enabled: true
     hosts: [binder.pythia.2i2c.cloud]
@@ -95,9 +92,6 @@ binderhub-service:
       allowed_specs:
       - ^ProjectPythia/.*$
       - binder-examples/requirements
-    DockerRegistry:
-      url: &url https://quay.io
-      username: &username imagebuilding-non-gcp-hubs+image_builder
   extraEnv:
   - name: JUPYTERHUB_API_TOKEN
     valueFrom:
@@ -112,6 +106,3 @@ binderhub-service:
     # appended to binderhub's URL instead of the hub's
   - name: JUPYTERHUB_BASE_URL
     value: https://hub.binder.pythia.2i2c.cloud/
-  buildPodsRegistryCredentials:
-    server: *url
-    username: *username

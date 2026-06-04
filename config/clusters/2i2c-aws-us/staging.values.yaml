@@ -48,3 +48,42 @@ jupyterhub:
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-staging/$(JUPYTERHUB_USER)
+
+jupyterbook-pub-service:
+  enabled: true
+
+    # Run the core service on the core nodes
+  nodeSelector: &nodeSelector
+    hub.jupyter.org/node-purpose: core
+
+  config:
+    JupyterBookPubApp:
+      base_url: /services/jupyterbook-pub/
+      site_subheading: |
+        Instantly render pre-built JupyterBook AST!
+    KubernetesExecutor:
+      resources:
+        requests:
+          memory: 128Mi
+        limits:
+          memory: 500Mi
+      node_selector: *nodeSelector
+
+  extraBuildConfig:
+    name: builder_config.json
+    json:
+      JupyterBook2Builder:
+        allow_source_builds: false
+
+  volumeClaim:
+    enabled: false
+
+  volume:
+    hostPath:
+      path: /var/cache/jupyterbook-pub/
+      type: DirectoryOrCreate
+
+  auth:
+    enabled: true
+    # hub_api_token: <set via deploy>
+    hub_api_url: https://staging.aws.2i2c.cloud/hub/api/

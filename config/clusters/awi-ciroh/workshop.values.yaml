@@ -1,20 +1,10 @@
 basehub:
   # Enable node placeholders, to ensure capacity at first login
   nodePlaceholder:
-    enabled: true
-    nodeSelector:
-      node.kubernetes.io/instance-type: n4-standard-16
-    replicas: 25
+    enabled: false
   jupyterhub-home-nfs:
-    nodeSelector:
-      cloud.google.com/gke-nodepool: workshop-temp-nfs
-    tolerations:
-    - effect: NoSchedule
-      key: 2i2c.org/nfs-vm-family
-      operator: Equal
-      value: n4
     gke:
-      volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/home-nfs-workshop-hyperdisk
+      volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-workshop
     quotaEnforcer:
       config:
         QuotaManager:
@@ -22,6 +12,9 @@ basehub:
   # Ensure that placeholder nodes are densely packed, making instance-type
   # easier to scale down.
   jupyterhub:
+    cull:
+      # No pods over 12h long
+      maxAge: 43200
     scheduling:
       userScheduler:
         enabled: true
@@ -31,6 +24,15 @@ basehub:
       homepage:
         gitRepoBranch: unify-logins-2
     singleuser:
+      storage:
+        extraVolumes:
+          002-scratch-session:
+            name: scratch-session
+            emptyDir:
+              # Limit total size, to prevent pod being evicted
+              # with over use by any one user. This can be increased,
+              # but may need to increase the size of the node disk
+              sizeLimit: 5Gi
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
@@ -135,7 +137,7 @@ basehub:
           cpu_guarantee: 1.8887049999999999
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n4-standard-16
+            node.kubernetes.io/instance-type: n2-standard-16
       - display_name: Medium
         default: true
         description: ~14 GB RAM, ~4 CPUs. Up to ~15 CPUs when available
@@ -146,7 +148,7 @@ basehub:
           cpu_guarantee: 3.7774099999999997
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n4-standard-16
+            node.kubernetes.io/instance-type: n2-standard-16
       - display_name: Large
         description: ~30 GB RAM, ~8 CPUs .Up to ~62 CPUs when available
         profile_options: *profile_options
@@ -156,7 +158,7 @@ basehub:
           cpu_guarantee: 7.554819999999999
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n4-standard-16
+            node.kubernetes.io/instance-type: n2-standard-16
       - display_name: Huge
         description: ~59 GB RAM, ~16 CPUs. Up to ~62 CPUs when available
         profile_options: *profile_options
@@ -168,7 +170,7 @@ basehub:
           cpu_guarantee: 15.109639999999999
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n4-standard-16
+            node.kubernetes.io/instance-type: n2-standard-16
       - display_name: Small (2i2c testing)
         profile_options: *profile_options
         allowed_groups:
@@ -179,7 +181,7 @@ basehub:
           cpu_guarantee: 1.8887049999999999
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n4-standard-4
+            node.kubernetes.io/instance-type: n2-standard-4
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
         description: Start a container on a dedicated node with a GPU
         allowed_groups:

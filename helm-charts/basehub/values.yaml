@@ -1,3 +1,5 @@
+jupyterbook-pub-service:
+  enabled: false
 binderhub-service:
   enabled: false
   ingress:
@@ -1053,11 +1055,19 @@ jupyterhub:
         # We provide an entry here for binderhub-service unconditionally, so the
         # jupyterhub chart will autogenerate a secret with appropriate keys.
         # It's not used if binderhub-service is not enabled.
+        # The redirect_url is configured in values.jsonnet
+        oauth_client_id: service-binderhub
         display: false
         url: http://binderhub:8090
         oauth_no_confirm: true
       jupyterhub-groups-exporter: {}
     loadRoles:
+      binder:
+        services:
+        - binder
+        scopes:
+        - servers
+        - read:users
       jupyterhub-groups-exporter:
         services:
           - jupyterhub-groups-exporter
