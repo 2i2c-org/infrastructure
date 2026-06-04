@@ -315,3 +315,11 @@ variable "enable_nfs_backup" {
   Enable backup of NFS home directories on EBS using Data Lifecycle Manager (DLM).
   EOT
 }
+
+variable "enable_ebs_alarms" {
+  default     = false
+  type        = bool
+  description = <<-EOT
+  Enable alerts for IOPs and throughput
+  EOT
+}

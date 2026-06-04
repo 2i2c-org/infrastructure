@@ -34,6 +34,7 @@ ebs_volumes = {
 enable_jupyterhub_cost_monitoring = true
 
 enable_nfs_backup = true
+enable_ebs_alarms = true
 
 disable_cluster_wide_filestore = true
 
