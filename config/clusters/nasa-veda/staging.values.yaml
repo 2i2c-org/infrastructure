@@ -5,9 +5,9 @@ basehub:
   jupyterhub:
     hub:
       image:
-        # custom image built to install jupyterhub-fancy-profiles from commit 9754f2188e337cd34cc5c533080583fe92fd47ca
+        # custom image built to install jupyterhub-fancy-profiles from commit b63a655d474b45d57cd38adc8e01b7607da2064d
         # from the PR https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/149 for testing
-        tag: 0.0.1-0.dev.git.15561.hd27897dad
+        tag: 0.0.1-0.dev.git.15973.hffad58606
     custom:
       homepage:
         gitRepoBranch: staging
