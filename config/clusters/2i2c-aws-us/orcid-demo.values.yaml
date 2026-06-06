@@ -1,0 +1,81 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    serverIP: 10.100.67.209
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0304a8a5924616729
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 20 # in GiB
+jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
+  custom:
+    daskhubSetup:
+      enabled: true
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: cilogon
+    homepage:
+      templateVars:
+        org:
+          name: 2i2c ORCID Demo
+          url: https://2i2c.org
+          logo_url: https://2i2c.org/media/logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: 2i2c
+          url: https://2i2c.org
+  hub:
+    allowNamedServers: true
+    extraConfig:
+      01-orcid: |
+        def setup_orcid_username(authenticator, handler, authentication):
+          """
+          Fish ORCID username from inside cilogon_user when used with ORCID
+
+          There is no clear way to get just the ORCID id from CILogon, so we
+          have to do this. https://github.com/jupyterhub/oauthenticator/issues/712
+          is the upstream report, we can get rid of this once that gets fixed.
+          """
+          idp = authentication['auth_state']['cilogon_user']['idp']
+          if idp == 'http://orcid.org/oauth/authorize':
+            # Only modify usernames if orcid is used
+            # oidc is of the form https://orcid.org/<orcid-id>
+            authentication['name'] = authentication['auth_state']['cilogon_user']['oidc'].split('/')[-1]
+          return authentication
+
+        c.Authenticator.post_auth_hook = setup_orcid_username
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      Authenticator:
+        admin_users:
+        - 0000-0002-8055-2870 # yuvipanda
+      CILogonOAuthenticator:
+        allowed_idps:
+          http://orcid.org/oauth/authorize:
+            default: true
+            username_derivation:
+              # Not actually used - see extra config
+              username_claim: "given_name"
+            # Don't allow everyone with ORCID to sign in
+            allow_all: False
+  singleuser:
+    cloudMetadata:
+      blockWithIptables: false
+    extraEnv:
+      SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-showcase/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://2i2c-aws-us-persistent-showcase/$(JUPYTERHUB_USER)
+      GH_SCOPED_CREDS_CLIENT_ID: Iv1.f9261c4c78b4dfdd
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-community-showcase-hub
+
