@@ -26,7 +26,6 @@ hubs:
   - enc-common.secret.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
 - name: prod
   display_name: NOAA Fisheries Openscapes
   domain: nmfs-openscapes.2i2c.cloud
@@ -36,7 +35,6 @@ hubs:
   - enc-common.secret.values.yaml
   - prod.values.yaml
   - enc-prod.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
 - name: workshop
   display_name: NOAA Fisheries Openscapes Workshop
   domain: workshop.nmfs-openscapes.2i2c.cloud
@@ -45,7 +43,6 @@ hubs:
   - common.values.yaml
   - workshop.values.yaml
   - enc-workshop.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
 - name: noaa-only
   display_name: NOAA Fisheries Openscapes NOAA-only access
   domain: noaa.nmfs-openscapes.2i2c.cloud
@@ -54,4 +51,3 @@ hubs:
   - common.values.yaml
   - noaa-only.values.yaml
   - enc-noaa-only.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml

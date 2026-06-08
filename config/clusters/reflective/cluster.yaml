@@ -25,7 +25,6 @@ hubs:
   - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
 - name: prod
   display_name: Reflective Cloud - prod
   domain: reflective.2i2c.cloud
@@ -34,7 +33,6 @@ hubs:
   - common.values.yaml
   - prod.values.yaml
   - enc-prod.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
 - name: workshop
   display_name: Reflective Cloud - workshop
   domain: workshop.reflective.2i2c.cloud
@@ -43,4 +41,3 @@ hubs:
   - common.values.yaml
   - workshop.values.yaml
   - enc-workshop.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml

@@ -32,4 +32,3 @@ hubs:
   helm_chart_values_files:
   - showcase.values.yaml
   - enc-showcase.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml

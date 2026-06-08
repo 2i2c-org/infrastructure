@@ -19,8 +19,8 @@ dependencies:
     repository: https://2i2c.org/binderhub-service/
     condition: binderhub-service.enabled
   - name: dask-gateway
-    version: "2024.1.0"
-    repository: "https://helm.dask.org/"
+    version: 2026.3.0
+    repository: https://helm.dask.org/
     condition: dask-gateway.enabled
   - name: jupyterhub-home-nfs
     version: 1.2.1-0.dev.git.1.h1c81b4b

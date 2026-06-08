@@ -7,6 +7,11 @@ basehub:
       serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
   dask-gateway:
     enabled: true
+    gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
   jupyterhub:
     custom:
       daskhubSetup:
@@ -98,10 +103,12 @@ basehub:
           scopes:
           - self
           - access:services!service=usage-quota
+          - access:services!service=dask-gateway
         server:
           scopes:
           - self
           - users:activity!user
+          - access:services!service=dask-gateway
       config:
         JupyterHub:
           authenticator_class: generic-oauth
