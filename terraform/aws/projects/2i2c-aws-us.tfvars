@@ -42,9 +42,21 @@ hub_cloud_permissions = {
     bucket_admin_access: [
       "scratch-orcid-demo",
       "persistent-orcid-demo"
-    ]
+    ],
+    extra_iam_policy: <<-EOT
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*"
+          }
+        ]
+      }
+    EOT
   }
-}
+}w
 
 ebs_volumes = {
   "staging" = {

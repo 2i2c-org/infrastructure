@@ -78,11 +78,184 @@ jupyterhub:
             # Don't allow everyone with ORCID to sign in
             allow_all: False
   singleuser:
+    profileList:
+      - display_name: CPU Only
+        default: true
+        profile_options:
+          image:
+            display_name: Environment
+            dynamic_image_building:
+              enabled: true
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              description: Specify your own docker image (must have python and jupyterhub installed in it)
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              01-python:
+                display_name: CryoCloud Python Image
+                description: Cryo-geo-ocean environment maintained by the CryoCloud team
+                default: true
+                kubespawner_override:
+                  # Image repo: https://github.com/CryoInTheCloud/hub-image
+                  image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
+              02-pythonpace:
+                display_name: Ocean Biology Python Image
+                description: Ocean Biology environment used by the PACE mission
+                kubespawner_override:
+                  # Image repo: https://github.com/CryoInTheCloud/hub-image
+                  image: ghcr.io/nasa/oceandata-jupyterlab:latest
+              03-pythonml:
+                display_name: Machine Learning Python Image
+                description: ML environment with TensorFlow, Keras, Scikit from Pangeo
+                kubespawner_override:
+                  # Image repo: https://github.com/CryoInTheCloud/hub-image
+                  image: pangeo/ml-notebook:2025.12.30
+              04-r:
+                display_name: Py-Rocket R Image
+                description: RStudio and Python environment with many geospatial libraries
+                kubespawner_override:
+                  # Image repo: https://github.com/CryoInTheCloud/hub-Rstudio-image
+                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
+              05-matlab:
+                display_name: Matlab
+                description: Matlab Environment (bring your own license) from Openscapes
+                kubespawner_override:
+                  # From https://2i2c.freshdesk.com/a/tickets/1537
+                  image: openscapes/matlab:latest
+          resource_allocation:
+            display_name: Resource Allocation
+            choices:
+              mem_2_gb:
+                display_name: ~2 GB RAM, ~0.2 CPUs
+                description: Up to ~4 CPUs when available
+                allowed_groups: &regular_allowed_groups
+                  - affiliation:2i2c
+                  - affiliation:lab1
+                kubespawner_override:
+                  mem_guarantee: 1951419879
+                  mem_limit: 1951419879
+                  cpu_guarantee: 0.22815625
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_4_gb:
+                display_name: ~4 GB RAM, ~0.5 CPUs
+                description: Up to ~4 CPUs when available
+                allowed_groups: *regular_allowed_groups
+                kubespawner_override:
+                  mem_guarantee: 3902839759
+                  mem_limit: 3902839759
+                  cpu_guarantee: 0.4563125
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_7_gb:
+                display_name: ~7 GB RAM, ~0.9 CPUs
+                allowed_groups: *regular_allowed_groups
+                description: Up to ~4 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 7805679519
+                  mem_limit: 7805679519
+                  cpu_guarantee: 0.912625
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_15_gb:
+                display_name: ~15 GB RAM, ~1.8 CPUs
+                allowed_groups: *regular_allowed_groups
+                description: Up to ~4 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 15611359038
+                  mem_limit: 15611359038
+                  cpu_guarantee: 1.82525
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_gb:
+                display_name: ~29 GB RAM, ~4 CPUs
+                allowed_groups: *regular_allowed_groups
+                description: ~4 CPUs always available
+                kubespawner_override:
+                  mem_guarantee: 31222718077
+                  mem_limit: 31222718077
+                  cpu_guarantee: 3.6505
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_gb:
+                display_name: ~60 GB RAM, ~8 CPUs
+                description: Up to ~15 CPUs when available
+                allowed_groups: &large_allowed_groups
+                - affiliation:2i2c
+                - affiliation:lab1
+                - affiliation:lab2
+                kubespawner_override:
+                  mem_guarantee: 64020707016
+                  mem_limit: 64020707016
+                  cpu_guarantee: 7.69055
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_119_gb:
+                display_name: ~119 GB RAM, ~15 CPUs
+                allowed_groups: *large_allowed_groups
+                description: ~15 CPUs always available
+                kubespawner_override:
+                  mem_guarantee: 128041414033
+                  mem_limit: 128041414033
+                  cpu_guarantee: 15.3811
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: Start a GPU
+        slug: gpu
+        allowed_groups:
+        - affiliation:2i2c
+        - affiliation:lab2
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              pytorch:
+                display_name: PyTorch ML Image
+                description: ML environment with PyTorch from Pangeo
+                default: true
+                slug: pytorch
+                kubespawner_override:
+                  image: quay.io/pangeo/pytorch-notebook:2025.12.30
+              tensorflow:
+                display_name: Machine Learning Image
+                description: ML environment with TensorFlow, Keras, Scikit from Pangeo
+                slug: tensorflow
+                kubespawner_override:
+                  image: quay.io/pangeo/ml-notebook:2025.12.30
+        kubespawner_override:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          mem_limit:
+          mem_guarantee: 14G
+          node_selector:
+            node.kubernetes.io/instance-type: g4dn.xlarge
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
     cloudMetadata:
       blockWithIptables: false
     extraEnv:
-      SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-showcase/$(JUPYTERHUB_USER)
-      PERSISTENT_BUCKET: s3://2i2c-aws-us-persistent-showcase/$(JUPYTERHUB_USER)
+      SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-orcid-demo/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://2i2c-aws-us-persistent-orcid-demo/$(JUPYTERHUB_USER)
       GH_SCOPED_CREDS_CLIENT_ID: Iv1.f9261c4c78b4dfdd
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-community-showcase-hub
 
