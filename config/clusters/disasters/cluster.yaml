@@ -26,7 +26,6 @@ hubs:
   - staging.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-staging.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
 - name: prod
   display_name: Disasters
   domain: hub.disasters.2i2c.cloud
@@ -36,4 +35,3 @@ hubs:
   - prod.values.yaml
   - enc-imagebuilding-common.secret.values.yaml
   - enc-prod.secret.values.yaml
-  chart_override: helm-charts/latest-dask-gateway-version-chart.yaml
