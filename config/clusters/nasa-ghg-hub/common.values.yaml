@@ -7,6 +7,10 @@ basehub:
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         imagePullSecrets: [name: image-pull-secret]
   jupyterhub:

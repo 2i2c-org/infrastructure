@@ -6,6 +6,10 @@ basehub:
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         scheduler:
           cores:
@@ -49,6 +53,15 @@ basehub:
         # See https://github.com/2i2c-org/infrastructure/issues/3461
         cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
       allowNamedServers: true
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+        user:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
       config:
         JupyterHub:
           authenticator_class: github

@@ -8,6 +8,10 @@ basehub:
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         imagePullSecrets: [name: image-pull-secret]
 
@@ -83,6 +87,11 @@ basehub:
           - list:users
           # Access to binder service
           - access:services!service=binder
+          - access:services!service=dask-gateway
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
     singleuser:
       cloudMetadata:
         blockWithIptables: false

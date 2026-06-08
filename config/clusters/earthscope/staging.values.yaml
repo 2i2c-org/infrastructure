@@ -53,17 +53,6 @@ basehub:
             c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
             c.UsageConfig.hub_namespace = "staging"
             c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
-      loadRoles:
-        user:
-          scopes:
-          - self
-          - access:services!service=usage-quota
-          - access:services!service=dask-gateway
-        server:
-          scopes:
-          - self
-          - users:activity!user
-          - access:services!service=dask-gateway
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
@@ -78,12 +67,7 @@ basehub:
                   app.kubernetes.io/component: hub
             ports:
             - port: 9000
-  dask-gateway:
-    gateway:
-      auth:
-        type: jupyterhub
-        jupyterhub:
-          jupyterhubServiceName: dask-gateway
+
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0eb31cae0bd3ee261
