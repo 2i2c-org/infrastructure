@@ -14,6 +14,18 @@ To enable dask-gateway support on a hub, the following configuration changes nee
       enabled: true
     ```
 
+1. enable authentication with JupyterHub:
+
+    ```yaml
+    dask-gateway:
+      enabled: true
+      gateway:
+        auth:
+          type: jupyterhub
+          jupyterhub:
+            jupyterhubServiceName: dask-gateway
+    ```
+
 1. set `jupyterhub.custom.daskGateway.enabled` to true:
 
     ```yaml
@@ -21,6 +33,44 @@ To enable dask-gateway support on a hub, the following configuration changes nee
       custom:
         daskhubSetup:
           enabled: true
+    ```
+
+
+1. grant some or all Hub users access to the dask-gateway service:
+
+  - all users:
+
+    ```yaml
+    jupyterhub:
+      hub:
+        loadRoles:
+          server:
+            scopes:
+            - self
+            - access:services!service=dask-gateway
+          user:
+            scopes:
+            - self
+            - access:services!service=dask-gateway
+    ```
+
+  - some users (eg. only the `dask-access` group and user `user-with-access` will be able access to dask-gateway)
+
+    ```yaml
+    jupyterhub:
+      hub:
+        loadRoles:
+          server:
+            scopes:
+            - self
+            - access:services!service=dask-gateway
+          dask-users:
+            scopes:
+              - access:services!service=dask-gateway
+            groups:
+              - dask-access
+            users:
+              - user-with-access
     ```
 
 1. set `jupyterhub.singleuser.cloudMetadata.blockWithIptables` to false:
