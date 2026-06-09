@@ -127,182 +127,182 @@ jupyterhub:
         - 0009-0009-7131-4131 # April
         - 0000-0002-8087-0887 # Jim Colliander
       CILogonOAuthenticator:
-        login_service: "ORCID"
+        login_service: ORCID
         allowed_idps:
           http://orcid.org/oauth/authorize:
             default: true
             username_derivation:
               # Not actually used - see extra config
-              username_claim: "given_name"
+              username_claim: given_name
             # Don't allow everyone with ORCID to sign in
-            allow_all: False
+            allow_all: false
   singleuser:
     defaultUrl: /lab
     profileList:
-      - display_name: CPU Only
-        default: true
-        profile_options:
-          image:
-            display_name: Environment
-            dynamic_image_building:
-              enabled: true
-            unlisted_choice:
-              enabled: true
-              display_name: Custom image
-              description: Specify your own docker image (must have python and jupyterhub installed in it)
-              validation_regex: ^.+:.+$
-              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+    - display_name: CPU Only
+      default: true
+      profile_options:
+        image:
+          display_name: Environment
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            description: Specify your own docker image (must have python and jupyterhub installed in it)
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            02-community-base-image:
+              display_name: Community Base Image
+              description: Base Image for everyone on ORCID Demo (2026.06.09)
+              default: true
               kubespawner_override:
-                image: '{value}'
-            choices:
-              02-community-base-image:
-                display_name: Community Base Image
-                description: Base Image for everyone on ORCID Demo (2026.06.09)
-                default: true
-                kubespawner_override:
-                  image: quay.io/2i2c/example-image-stack-base:2026-06-09
-              03-project1:
-                display_name: Project 1 Image
-                description: Image for users working on Project 1 (2026.06.09)
-                kubespawner_override:
-                  image: quay.io/2i2c/example-image-stack-project1:2026-06-09
-              03-project2:
-                display_name: Project 1 Image
-                description: Image for users working on Project 2 (2026.06.09)
-                kubespawner_override:
-                  image: quay.io/2i2c/example-image-stack-project2:2026-06-09
-              04-cryo:
-                display_name: CryoCloud Python Image
-                description: Cryo-geo-ocean environment maintained by the CryoCloud team
-                default: true
-                kubespawner_override:
+                image: quay.io/2i2c/example-image-stack-base:2026-06-09
+            03-project1:
+              display_name: Project 1 Image
+              description: Image for users working on Project 1 (2026.06.09)
+              kubespawner_override:
+                image: quay.io/2i2c/example-image-stack-project1:2026-06-09
+            03-project2:
+              display_name: Project 1 Image
+              description: Image for users working on Project 2 (2026.06.09)
+              kubespawner_override:
+                image: quay.io/2i2c/example-image-stack-project2:2026-06-09
+            04-cryo:
+              display_name: CryoCloud Python Image
+              description: Cryo-geo-ocean environment maintained by the CryoCloud team
+              default: true
+              kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
-                  image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
-          resource_allocation:
-            display_name: Resource Allocation
-            choices:
-              mem_2_gb:
-                display_name: ~2 GB RAM, ~0.2 CPUs
-                description: Up to ~4 CPUs when available
-                allowed_groups: &regular_allowed_groups
-                  - affiliation:2i2c
-                  - affiliation:lab1
-                kubespawner_override:
-                  mem_guarantee: 1951419879
-                  mem_limit: 1951419879
-                  cpu_guarantee: 0.22815625
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_4_gb:
-                display_name: ~4 GB RAM, ~0.5 CPUs
-                description: Up to ~4 CPUs when available
-                allowed_groups: *regular_allowed_groups
-                kubespawner_override:
-                  mem_guarantee: 3902839759
-                  mem_limit: 3902839759
-                  cpu_guarantee: 0.4563125
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-                default: true
-              mem_7_gb:
-                display_name: ~7 GB RAM, ~0.9 CPUs
-                allowed_groups: *regular_allowed_groups
-                description: Up to ~4 CPUs when available
-                kubespawner_override:
-                  mem_guarantee: 7805679519
-                  mem_limit: 7805679519
-                  cpu_guarantee: 0.912625
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_15_gb:
-                display_name: ~15 GB RAM, ~1.8 CPUs
-                allowed_groups: *regular_allowed_groups
-                description: Up to ~4 CPUs when available
-                kubespawner_override:
-                  mem_guarantee: 15611359038
-                  mem_limit: 15611359038
-                  cpu_guarantee: 1.82525
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_gb:
-                display_name: ~29 GB RAM, ~4 CPUs
-                allowed_groups: *regular_allowed_groups
-                description: ~4 CPUs always available
-                kubespawner_override:
-                  mem_guarantee: 31222718077
-                  mem_limit: 31222718077
-                  cpu_guarantee: 3.6505
-                  cpu_limit: 3.6505
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.xlarge
-              mem_60_gb:
-                display_name: ~60 GB RAM, ~8 CPUs
-                description: Up to ~15 CPUs when available
-                allowed_groups: &large_allowed_groups
-                - affiliation:2i2c
-                - affiliation:lab1
-                - affiliation:lab2
-                kubespawner_override:
-                  mem_guarantee: 64020707016
-                  mem_limit: 64020707016
-                  cpu_guarantee: 7.69055
-                  cpu_limit: 15.3811
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.4xlarge
-              mem_119_gb:
-                display_name: ~119 GB RAM, ~15 CPUs
-                allowed_groups: *large_allowed_groups
-                description: ~15 CPUs always available
-                kubespawner_override:
-                  mem_guarantee: 128041414033
-                  mem_limit: 128041414033
-                  cpu_guarantee: 15.3811
-                  cpu_limit: 15.3811
-                  node_selector:
-                    node.kubernetes.io/instance-type: r5.4xlarge
-      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-        description: Start a GPU
-        slug: gpu
-        allowed_groups:
-        - affiliation:2i2c
-        - affiliation:lab2
-        profile_options:
-          image:
-            display_name: Image
-            unlisted_choice:
-              enabled: true
-              display_name: Custom image
-              validation_regex: ^.+:.+$
-              validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+                image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_2_gb:
+              display_name: ~2 GB RAM, ~0.2 CPUs
+              description: Up to ~4 CPUs when available
+              allowed_groups: &regular_allowed_groups
+              - affiliation:2i2c
+              - affiliation:lab1
               kubespawner_override:
-                image: '{value}'
-            choices:
-              pytorch:
-                display_name: PyTorch ML Image
-                description: ML environment with PyTorch from Pangeo
-                default: true
-                slug: pytorch
-                kubespawner_override:
-                  image: quay.io/pangeo/pytorch-notebook:2025.12.30
-              tensorflow:
-                display_name: Machine Learning Image
-                description: ML environment with TensorFlow, Keras, Scikit from Pangeo
-                slug: tensorflow
-                kubespawner_override:
-                  image: quay.io/pangeo/ml-notebook:2025.12.30
-        kubespawner_override:
-          environment:
-            NVIDIA_DRIVER_CAPABILITIES: compute,utility
-          mem_limit:
-          mem_guarantee: 14G
-          node_selector:
-            node.kubernetes.io/instance-type: g4dn.xlarge
-          extra_resource_limits:
-            nvidia.com/gpu: '1'
+                mem_guarantee: 1951419879
+                mem_limit: 1951419879
+                cpu_guarantee: 0.22815625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_4_gb:
+              display_name: ~4 GB RAM, ~0.5 CPUs
+              description: Up to ~4 CPUs when available
+              allowed_groups: *regular_allowed_groups
+              kubespawner_override:
+                mem_guarantee: 3902839759
+                mem_limit: 3902839759
+                cpu_guarantee: 0.4563125
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+              default: true
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              allowed_groups: *regular_allowed_groups
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7805679519
+                mem_limit: 7805679519
+                cpu_guarantee: 0.912625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_15_gb:
+              display_name: ~15 GB RAM, ~1.8 CPUs
+              allowed_groups: *regular_allowed_groups
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 15611359038
+                mem_limit: 15611359038
+                cpu_guarantee: 1.82525
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_gb:
+              display_name: ~29 GB RAM, ~4 CPUs
+              allowed_groups: *regular_allowed_groups
+              description: ~4 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 31222718077
+                mem_limit: 31222718077
+                cpu_guarantee: 3.6505
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_60_gb:
+              display_name: ~60 GB RAM, ~8 CPUs
+              description: Up to ~15 CPUs when available
+              allowed_groups: &large_allowed_groups
+              - affiliation:2i2c
+              - affiliation:lab1
+              - affiliation:lab2
+              kubespawner_override:
+                mem_guarantee: 64020707016
+                mem_limit: 64020707016
+                cpu_guarantee: 7.69055
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_119_gb:
+              display_name: ~119 GB RAM, ~15 CPUs
+              allowed_groups: *large_allowed_groups
+              description: ~15 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 128041414033
+                mem_limit: 128041414033
+                cpu_guarantee: 15.3811
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a GPU
+      slug: gpu
+      allowed_groups:
+      - affiliation:2i2c
+      - affiliation:lab2
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pytorch:
+              display_name: PyTorch ML Image
+              description: ML environment with PyTorch from Pangeo
+              default: true
+              slug: pytorch
+              kubespawner_override:
+                image: quay.io/pangeo/pytorch-notebook:2025.12.30
+            tensorflow:
+              display_name: Machine Learning Image
+              description: ML environment with TensorFlow, Keras, Scikit from Pangeo
+              slug: tensorflow
+              kubespawner_override:
+                image: quay.io/pangeo/ml-notebook:2025.12.30
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
     cloudMetadata:
       blockWithIptables: false
     extraEnv:

@@ -38,12 +38,12 @@ hub_cloud_permissions = {
       "persistent-showcase",
     ],
   },
-  "orcid-demo": {
-    bucket_admin_access: [
+  "orcid-demo" : {
+    bucket_admin_access : [
       "scratch-orcid-demo",
       "persistent-orcid-demo"
     ],
-    extra_iam_policy: <<-EOT
+    extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
         "Statement": [

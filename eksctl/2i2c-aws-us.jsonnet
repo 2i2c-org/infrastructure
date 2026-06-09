@@ -22,7 +22,7 @@ local c = cluster.makeCluster(
   hubs=[
     'staging',
     'showcase',
-    'orcid-demo'
+    'orcid-demo',
   ],
   notebookGPUNodeGroups=[
     {
