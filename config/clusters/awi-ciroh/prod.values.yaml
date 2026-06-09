@@ -59,6 +59,12 @@ basehub:
                     # From  https://github.com/CIROH-UA/NGIAB_data_preprocess
                   image: quay.io/awiciroh/devcon25:ngiab_datapreprocess
                   image_pull_policy: Always
+              devcon15: # Repurposed for Summer Institute '26
+                display_name: Summer Institute Bootcamp
+                slug: devcon15
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-cuahsi
+                  image_pull_policy: Always
               devcon1:
                 display_name: Devcon25-USGS Surface Water Tools
                 slug: devcon1
@@ -142,12 +148,6 @@ basehub:
                 slug: devcon14
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-satellite
-                  image_pull_policy: Always
-              devcon15:
-                display_name: Devcon26-CUAHSI Hydroinformatics
-                slug: devcon15
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon26:devcon26-cuahsi
                   image_pull_policy: Always
               devcon16:
                 display_name: Devcon26-Foundations of ML
