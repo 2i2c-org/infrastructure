@@ -137,6 +137,7 @@ jupyterhub:
             # Don't allow everyone with ORCID to sign in
             allow_all: False
   singleuser:
+    defaultUrl: /lab
     profileList:
       - display_name: CPU Only
         default: true
