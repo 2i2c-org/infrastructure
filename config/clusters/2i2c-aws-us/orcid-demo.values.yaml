@@ -106,7 +106,7 @@ jupyterhub:
                   "volume_mounts": {
                     f"{g.name}-shared": {
                       "name": "home",
-                      "mountPath": f"/home/jovyan/projects/{dirname}",
+                      "mountPath": f"/home/jovyan/shared-projects/{dirname}",
                       "subPath": f"_projects/{dirname}",
                       "readOnly": False
                     }
