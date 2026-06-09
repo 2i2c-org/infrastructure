@@ -127,6 +127,7 @@ jupyterhub:
         - 0009-0009-7131-4131 # April
         - 0000-0002-8087-0887 # Jim Colliander
       CILogonOAuthenticator:
+        login_service: "ORCID"
         allowed_idps:
           http://orcid.org/oauth/authorize:
             default: true
