@@ -263,6 +263,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "stanford"
   }
+  "toledo" = {
+    size        = 25
+    name_suffix = "toledo"
+  }
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
