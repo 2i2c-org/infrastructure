@@ -56,7 +56,7 @@ hub_cloud_permissions = {
       }
     EOT
   }
-}w
+}
 
 ebs_volumes = {
   "staging" = {
