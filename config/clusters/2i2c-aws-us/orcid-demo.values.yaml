@@ -11,6 +11,17 @@ jupyterhub-home-nfs:
       QuotaManager:
         hard_quota: 20 # in GiB
 jupyterhub:
+  prePuller:
+    extraTolerations:
+    - key: hub.jupyter.org/dedicated
+      operator: Exists
+      effect: NoSchedule
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: present
+      effect: NoSchedule
+    continuous:
+      enabled: true
   scheduling:
     userScheduler:
       enabled: true
@@ -37,6 +48,9 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   hub:
+    image:
+      # Temporary image with jupyterhub-fancy-profiles 0.6.0
+      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
     allowNamedServers: true
     extraConfig:
       01-orcid: |
