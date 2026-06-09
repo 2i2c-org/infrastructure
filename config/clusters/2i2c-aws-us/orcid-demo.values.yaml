@@ -155,16 +155,10 @@ jupyterhub:
               kubespawner_override:
                 image: '{value}'
             choices:
-              01-python:
-                display_name: CryoCloud Python Image
-                description: Cryo-geo-ocean environment maintained by the CryoCloud team
-                default: true
-                kubespawner_override:
-                  # Image repo: https://github.com/CryoInTheCloud/hub-image
-                  image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
               02-community-base-image:
                 display_name: Community Base Image
                 description: Base Image for everyone on ORCID Demo (2026.06.09)
+                default: true
                 kubespawner_override:
                   image: quay.io/2i2c/example-image-stack-base:2026-06-09
               03-project1:
@@ -177,6 +171,13 @@ jupyterhub:
                 description: Image for users working on Project 2 (2026.06.09)
                 kubespawner_override:
                   image: quay.io/2i2c/example-image-stack-project2:2026-06-09
+              04-cryo:
+                display_name: CryoCloud Python Image
+                description: Cryo-geo-ocean environment maintained by the CryoCloud team
+                default: true
+                kubespawner_override:
+                  # Image repo: https://github.com/CryoInTheCloud/hub-image
+                  image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
           resource_allocation:
             display_name: Resource Allocation
             choices:
