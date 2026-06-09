@@ -1,0 +1,326 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    serverIP: 10.100.67.209
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0304a8a5924616729
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 20 # in GiB
+jupyterhub:
+  prePuller:
+    extraTolerations:
+    - key: hub.jupyter.org/dedicated
+      operator: Exists
+      effect: NoSchedule
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: present
+      effect: NoSchedule
+    continuous:
+      enabled: true
+  scheduling:
+    userScheduler:
+      enabled: true
+  custom:
+    daskhubSetup:
+      enabled: false
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: cilogon
+    homepage:
+      gitRepoBranch: orcid-demo
+      templateVars:
+        org:
+          name: 2i2c ORCID Demo
+          url: https://2i2c.org
+          logo_url: https://2i2c.org/media/logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: 2i2c
+          url: https://2i2c.org
+  hub:
+    image:
+      # Temporary image with jupyterhub-fancy-profiles 0.6.0
+      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
+    allowNamedServers: true
+    extraConfig:
+      01-orcid: |
+        from oauthenticator.cilogon import CILogonOAuthenticator
+
+        class ORCIDCILogonAuthenticator(CILogonOAuthenticator):
+          def user_info_to_username(self, user_info):
+            """
+            Fish ORCID username from inside cilogon_user when used with ORCID
+
+            There is no clear way to get just the ORCID id from CILogon, so we
+            have to do this. https://github.com/jupyterhub/oauthenticator/issues/712
+            is the upstream report, we can get rid of this once that gets fixed.
+            """
+            print(user_info)
+            idp = user_info['idp']
+            if idp == 'http://orcid.org/oauth/authorize':
+              # Only modify usernames if orcid is used
+              # oidc is of the form https://orcid.org/<orcid-id>
+              return user_info['oidc'].split('/')[-1]
+            return super().user_info_to_username(user_info)
+
+        c.JupyterHub.authenticator_class = ORCIDCILogonAuthenticator
+
+      000-volumes-and-volume-mounts-as-dict: |
+        # The base jupyterhub config in zero-to-jupyterhub defines
+        # volumes and volume_mounts as lists.
+        # But we can't add new volumes or volume_mounts to the list
+        # as that replaces the entire list.
+        # So we convert them to dictionaries, which allows us to
+        # add new volumes and volume_mounts as needed.
+        if isinstance(c.KubeSpawner.volumes, list):
+          existing_volumes = c.KubeSpawner.volumes
+          c.KubeSpawner.volumes = {}
+          for volume in existing_volumes:
+            c.KubeSpawner.volumes[volume["name"]] = volume
+        if isinstance(c.KubeSpawner.volume_mounts, list):
+          existing_volume_mounts = c.KubeSpawner.volume_mounts
+          c.KubeSpawner.volume_mounts = {}
+          for idx, volume_mount in enumerate(existing_volume_mounts):
+            c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
+
+      001-group-shared-directories: |
+        def group_shared(spawner):
+          groups = spawner.user.groups
+          overrides = {}
+          for g in groups:
+            if g.name.startswith("project:"):
+              dirname = g.name[len("project:"):]
+              overrides[g.name] = {
+                "groups": [g.name],
+                "spawner_override": {
+                  "volume_mounts": {
+                    f"{g.name}-shared": {
+                      "name": "home",
+                      "mountPath": f"/home/jovyan/shared-projects/{dirname}",
+                      "subPath": f"_projects/{dirname}",
+                      "readOnly": False
+                    }
+                  }
+                }
+              }
+          print(overrides)
+          return overrides
+
+        c.Spawner.group_overrides = group_shared
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      Authenticator:
+        admin_users:
+        - 0000-0002-8055-2870 # yuvipanda
+        - 0000-0002-2391-0678 # Chris Holdgraf
+        - 0009-0009-7131-4131 # April
+        - 0000-0002-8087-0887 # Jim Colliander
+      CILogonOAuthenticator:
+        login_service: ORCID
+        allowed_idps:
+          http://orcid.org/oauth/authorize:
+            default: true
+            username_derivation:
+              # Not actually used - see extra config
+              username_claim: given_name
+            # Don't allow everyone with ORCID to sign in
+            allow_all: false
+  singleuser:
+    defaultUrl: /lab
+    profileList:
+    - display_name: CPU Only
+      default: true
+      profile_options:
+        image:
+          display_name: Environment
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            description: Specify your own docker image (must have python and jupyterhub installed in it)
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            02-community-base-image:
+              display_name: Community Base Image
+              description: Base Image for everyone on ORCID Demo (2026.06.09)
+              default: true
+              kubespawner_override:
+                image: quay.io/2i2c/example-image-stack-base:2026-06-09
+            03-project1:
+              display_name: Project 1 Image
+              description: Image for users working on Project 1 (2026.06.09)
+              kubespawner_override:
+                image: quay.io/2i2c/example-image-stack-project1:2026-06-09
+            03-project2:
+              display_name: Project 1 Image
+              description: Image for users working on Project 2 (2026.06.09)
+              kubespawner_override:
+                image: quay.io/2i2c/example-image-stack-project2:2026-06-09
+            04-cryo:
+              display_name: CryoCloud Python Image
+              description: Cryo-geo-ocean environment maintained by the CryoCloud team
+              default: true
+              kubespawner_override:
+                  # Image repo: https://github.com/CryoInTheCloud/hub-image
+                image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_2_gb:
+              display_name: ~2 GB RAM, ~0.2 CPUs
+              description: Up to ~4 CPUs when available
+              allowed_groups: &regular_allowed_groups
+              - affiliation:2i2c
+              - affiliation:lab1
+              kubespawner_override:
+                mem_guarantee: 1951419879
+                mem_limit: 1951419879
+                cpu_guarantee: 0.22815625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_4_gb:
+              display_name: ~4 GB RAM, ~0.5 CPUs
+              description: Up to ~4 CPUs when available
+              allowed_groups: *regular_allowed_groups
+              kubespawner_override:
+                mem_guarantee: 3902839759
+                mem_limit: 3902839759
+                cpu_guarantee: 0.4563125
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+              default: true
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              allowed_groups: *regular_allowed_groups
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7805679519
+                mem_limit: 7805679519
+                cpu_guarantee: 0.912625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_15_gb:
+              display_name: ~15 GB RAM, ~1.8 CPUs
+              allowed_groups: *regular_allowed_groups
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 15611359038
+                mem_limit: 15611359038
+                cpu_guarantee: 1.82525
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_gb:
+              display_name: ~29 GB RAM, ~4 CPUs
+              allowed_groups: *regular_allowed_groups
+              description: ~4 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 31222718077
+                mem_limit: 31222718077
+                cpu_guarantee: 3.6505
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_60_gb:
+              display_name: ~60 GB RAM, ~8 CPUs
+              description: Up to ~15 CPUs when available
+              allowed_groups: &large_allowed_groups
+              - affiliation:2i2c
+              - affiliation:lab1
+              - affiliation:lab2
+              kubespawner_override:
+                mem_guarantee: 64020707016
+                mem_limit: 64020707016
+                cpu_guarantee: 7.69055
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_119_gb:
+              display_name: ~119 GB RAM, ~15 CPUs
+              allowed_groups: *large_allowed_groups
+              description: ~15 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 128041414033
+                mem_limit: 128041414033
+                cpu_guarantee: 15.3811
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a GPU
+      slug: gpu
+      allowed_groups:
+      - affiliation:2i2c
+      - affiliation:lab2
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pytorch:
+              display_name: PyTorch ML Image
+              description: ML environment with PyTorch from Pangeo
+              default: true
+              slug: pytorch
+              kubespawner_override:
+                image: quay.io/pangeo/pytorch-notebook:2025.12.30
+            tensorflow:
+              display_name: Machine Learning Image
+              description: ML environment with TensorFlow, Keras, Scikit from Pangeo
+              slug: tensorflow
+              kubespawner_override:
+                image: quay.io/pangeo/ml-notebook:2025.12.30
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
+    cloudMetadata:
+      blockWithIptables: false
+    extraEnv:
+      SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-orcid-demo/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://2i2c-aws-us-persistent-orcid-demo/$(JUPYTERHUB_USER)
+      GH_SCOPED_CREDS_CLIENT_ID: Iv1.f9261c4c78b4dfdd
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-community-showcase-hub
+
+binderhub-service:
+  enabled: true
+  # Explicitly specify what nodes we want for our builds
+  # Otherwise we may scale up a larger node than needed
+  config:
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-cryo-prod-
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
