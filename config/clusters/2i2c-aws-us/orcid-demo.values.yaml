@@ -310,3 +310,16 @@ jupyterhub:
       GH_SCOPED_CREDS_CLIENT_ID: Iv1.f9261c4c78b4dfdd
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-community-showcase-hub
 
+binderhub-service:
+  enabled: true
+  # Explicitly specify what nodes we want for our builds
+  # Otherwise we may scale up a larger node than needed
+  config:
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-cryo-prod-
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
