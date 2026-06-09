@@ -37,5 +37,6 @@ hubs:
   domain: orcid-demo.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
+  - enc-common.secret.values.yaml
   - orcid-demo.values.yaml
   - enc-orcid-demo.secret.values.yaml
