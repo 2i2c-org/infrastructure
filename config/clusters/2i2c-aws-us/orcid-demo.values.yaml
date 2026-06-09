@@ -74,6 +74,49 @@ jupyterhub:
             return super().user_info_to_username(user_info)
 
         c.JupyterHub.authenticator_class = ORCIDCILogonAuthenticator
+
+      000-volumes-and-volume-mounts-as-dict: |
+        # The base jupyterhub config in zero-to-jupyterhub defines
+        # volumes and volume_mounts as lists.
+        # But we can't add new volumes or volume_mounts to the list
+        # as that replaces the entire list.
+        # So we convert them to dictionaries, which allows us to
+        # add new volumes and volume_mounts as needed.
+        if isinstance(c.KubeSpawner.volumes, list):
+          existing_volumes = c.KubeSpawner.volumes
+          c.KubeSpawner.volumes = {}
+          for volume in existing_volumes:
+            c.KubeSpawner.volumes[volume["name"]] = volume
+        if isinstance(c.KubeSpawner.volume_mounts, list):
+          existing_volume_mounts = c.KubeSpawner.volume_mounts
+          c.KubeSpawner.volume_mounts = {}
+          for idx, volume_mount in enumerate(existing_volume_mounts):
+            c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
+
+      001-group-shared-directories: |
+        def group_shared(spawner):
+          groups = spawner.user.groups
+          overrides = {}
+          for g in groups:
+            if g.name.startswith("project:"):
+              dirname = g.name[len("project:"):]
+              overrides[g.name] = {
+                "groups": [g.name],
+                "spawner_override": {
+                  "volume_mounts": {
+                    f"{g.name}-shared": {
+                      "name": "home",
+                      "mountPath": f"/home/jovyan/projects/{dirname}",
+                      "subPath": f"_projects/{dirname}",
+                      "readOnly": False
+                    }
+                  }
+                }
+              }
+          print(overrides)
+          return overrides
+
+        c.Spawner.group_overrides = group_shared
     config:
       JupyterHub:
         authenticator_class: cilogon
