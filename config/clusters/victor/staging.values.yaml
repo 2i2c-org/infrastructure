@@ -18,7 +18,7 @@ basehub:
         #            unlisted_choice to pick a custom image. If you update
         #            either, update the other as well.
         #
-      - display_name: CPU Only
+     - display_name: CPU Only
         profile_options:
           image: &profile_option_image
             display_name: Image
@@ -27,15 +27,15 @@ basehub:
                 display_name: Victor Notebook
                 default: true
                 kubespawner_override:
-                  image: quay.io/volcanocyber/victor-notebook:35cb62f8095e
+                  image: quay.io/volcanocyber/victor-notebook:a7c0638733cc
               b-pytorch-notebook:
                 display_name: Pangeo ML Notebook (Pytorch)
                 kubespawner_override:
-                  image: quay.io/pangeo/pytorch-notebook:2024.09.11
+                  image: quay.io/pangeo/pytorch-notebook:2026.04.29
               c-ml-notebook:
                 display_name: Pangeo ML Notebook (Tensorflow)
                 kubespawner_override:
-                  image: quay.io/pangeo/ml-notebook:2024.09.11
+                  image: quay.io/pangeo/ml-notebook:2026.04.29
             unlisted_choice:
               enabled: true
               display_name: Custom image
