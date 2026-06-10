@@ -23,7 +23,7 @@ dependencies:
     repository: https://helm.dask.org/
     condition: dask-gateway.enabled
   - name: jupyterhub-home-nfs
-    version: 1.2.1-0.dev.git.1.h1c81b4b
+    version: 1.2.1-0.dev.git.1.h3815a8e
     repository: oci://ghcr.io/2i2c-org/jupyterhub-home-nfs
     condition: jupyterhub-home-nfs.enabled
   - name: jupyterhub-groups-exporter
