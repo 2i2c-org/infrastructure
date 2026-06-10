@@ -55,7 +55,7 @@ basehub:
         #             basehub/daskhub template.
         #
       - display_name: Small
-        description: ~7 GB RAM, ~1.9 CPUs. Up to ~15 CPUs when available
+        description: ~14 GB RAM, ~1.9 CPUs. Up to ~15 CPUs when available
         profile_options: &profile_options
           image:
             display_name: Image
@@ -132,56 +132,45 @@ basehub:
                   image: quay.io/awiciroh/devcon26:devcon26-foundations
                   image_pull_policy: Always
         kubespawner_override:
-          mem_guarantee: 7447432007
-          mem_limit: 7447432007
+          mem_guarantee: 15287443456
+          mem_limit: 15287443456
           cpu_guarantee: 1.8887049999999999
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n2-standard-16
+            node.kubernetes.io/instance-type: n2-highmem-16
       - display_name: Medium
         default: true
-        description: ~14 GB RAM, ~4 CPUs. Up to ~15 CPUs when available
+        description: ~28 GB RAM, ~4 CPUs. Up to ~15 CPUs when available
         profile_options: *profile_options
         kubespawner_override:
-          mem_guarantee: 14894864015
-          mem_limit: 14894864015
+          mem_guarantee: 30574886912
+          mem_limit: 30574886912
           cpu_guarantee: 3.7774099999999997
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n2-standard-16
+            node.kubernetes.io/instance-type: n2-highmem-16
       - display_name: Large
-        description: ~30 GB RAM, ~8 CPUs .Up to ~62 CPUs when available
+        description: ~57 GB RAM, ~8 CPUs .Up to ~62 CPUs when available
         profile_options: *profile_options
         kubespawner_override:
-          mem_guarantee: 29789728030
-          mem_limit: 29789728030
+          mem_guarantee: 61149773824
+          mem_limit: 61149773824
           cpu_guarantee: 7.554819999999999
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n2-standard-16
+            node.kubernetes.io/instance-type: n2-highmem-16
       - display_name: Huge
-        description: ~59 GB RAM, ~16 CPUs. Up to ~62 CPUs when available
+        description: ~114 GB RAM, ~16 CPUs. Up to ~62 CPUs when available
         profile_options: *profile_options
         allowed_groups:
         - huge
         kubespawner_override:
-          mem_guarantee: 59579456061
-          mem_limit: 59579456061
+          mem_guarantee: 122299547648
+          mem_limit: 122299547648
           cpu_guarantee: 15.109639999999999
           cpu_limit: 15.109639999999999
           node_selector:
-            node.kubernetes.io/instance-type: n2-standard-16
-      - display_name: Small (2i2c testing)
-        profile_options: *profile_options
-        allowed_groups:
-        - 2i2c
-        kubespawner_override:
-          mem_guarantee: 7447431505
-          mem_limit: 7447431505
-          cpu_guarantee: 1.8887049999999999
-          cpu_limit: 15.109639999999999
-          node_selector:
-            node.kubernetes.io/instance-type: n2-standard-4
+            node.kubernetes.io/instance-type: n2-highmem-16
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
         description: Start a container on a dedicated node with a GPU
         allowed_groups:
