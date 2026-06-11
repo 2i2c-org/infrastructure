@@ -295,10 +295,6 @@ persistent_disks = {
     size        = 180
     name_suffix = "virginia"
   }
-  "washington" = {
-    size        = 25
-    name_suffix = "washington"
-  }
   "wlac" = {
     size        = 20
     name_suffix = "wlac"

@@ -576,14 +576,6 @@ hubs:
   - common.values.yaml
   - virginia.values.yaml
   - enc-virginia.secret.values.yaml
-- name: washington
-  display_name: University of Washington
-  domain: washington.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - washington.values.yaml
-  - enc-washington.secret.values.yaml
 - name: wlac
   display_name: West Los Angeles College
   domain: wlac.cloudbank.2i2c.cloud
