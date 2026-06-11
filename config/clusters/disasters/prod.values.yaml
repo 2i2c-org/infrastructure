@@ -2,11 +2,6 @@ nfs:
   pv:
     serverIP: 10.100.150.169
 
-jupyterhub:
-  hub:
-    image:
-      # Temporary image with jupyterhub-fancy-profiles 0.6.0
-      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
 dask-gateway:
   gateway:
     backend:
@@ -16,6 +11,9 @@ binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/disasters-prod-
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: https://hub.disasters.2i2c.cloud/hub/api
 
 jupyterhub-home-nfs:
   eks:

@@ -32,6 +32,9 @@ jupyterhub:
           name: NASA
           url: https://www.earthdata.nasa.gov/esds
   hub:
+    image:
+      # Temporary image with jupyterhub-fancy-profiles 0.6.0
+      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
     allowNamedServers: true
     loadRoles:
       server:
@@ -42,6 +45,8 @@ jupyterhub:
         scopes:
         - self
         - access:services!service=dask-gateway
+        # Access to binder service
+        - access:services!service=binder
     config:
       JupyterHub:
         authenticator_class: generic-oauth
@@ -295,6 +300,8 @@ binderhub-service:
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
+    BinderHub:
+      auth_enabled: true
   buildPodsRegistryCredentials:
     server: *url
     username: *username
