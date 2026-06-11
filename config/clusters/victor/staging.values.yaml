@@ -18,7 +18,7 @@ basehub:
         #            unlisted_choice to pick a custom image. If you update
         #            either, update the other as well.
         #
-     - display_name: CPU Only
+      - display_name: CPU Only
         profile_options:
           image: &profile_option_image
             display_name: Image
