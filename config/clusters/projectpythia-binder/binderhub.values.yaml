@@ -83,14 +83,6 @@ jupyterhub:
       nodeSelector:
         capi.stackhpc.com/node-group: user-m3-large
   hub:
-    services:
-      jupyterbook-pub:
-        # Auth
-        # api_token: <a token>
-        # oauth_client_id: service-jupyterbook-pub
-        # oauth_no_confirm: true
-
-        url: http://jupyterbook-pub-service
     nodeSelector:
       capi.stackhpc.com/node-group: core
     loadRoles:
@@ -170,49 +162,11 @@ binderhub-service:
     value: service-binder
   - name: JUPYTERHUB_API_URL
     value: https://hub.projectpythia.org/hub/api
-    # Without this, the redirect URL to /hub/api/... gets
-    # appended to binderhub's URL instead of the hub's
+      # Without this, the redirect URL to /hub/api/... gets
+      # appended to binderhub's URL instead of the hub's
   - name: JUPYTERHUB_BASE_URL
     value: https://hub.projectpythia.org/
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: *url
     username: *username
-
-jupyterbook-pub-service:
-  enabled: true
-  # See https://agoose77.github.io/jupyterbook-pub-service/
-  # Run the core service on the core nodes
-  nodeSelector: &nodeSelector
-    capi.stackhpc.com/node-group: core
-
-  config:
-    JupyterBookPubApp:
-      base_url: /services/jupyterbook-pub/
-    KubernetesExecutor:
-      # Current JS2 certs are not X509 valid
-      disable_strict_ssl_verification: true
-      resources:
-        requests:
-          memory: 128Mi
-        limits:
-          memory: 500Mi
-      node_selector: *nodeSelector
-
-  extraBuildConfig:
-    name: builder_config.json
-    json:
-      JupyterBook2Builder:
-        allow_source_builds: false
-  volumeClaim:
-    enabled: false
-
-  volume:
-    hostPath:
-      path: /var/cache/jupyterbook-pub/
-      type: DirectoryOrCreate
-
-  auth:
-    enabled: false
-    # hub_api_token: <a token>
-    # hub_api_url: https://hub.projectpythia.org/hub/api/
