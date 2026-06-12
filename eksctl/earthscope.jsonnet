@@ -31,7 +31,7 @@ local c = cluster.withNodeGroupConfigOverride(
             instanceType: 'g4dn.xlarge',
           },
         ],
-        nodeGroupGenerations=['b', 'c', 'd']
+        nodeGroupGenerations=['b', 'd']
       ),
       // Add provenence of resources
       overrides={
