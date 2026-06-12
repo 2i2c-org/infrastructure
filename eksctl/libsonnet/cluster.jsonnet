@@ -1,6 +1,7 @@
 local escapeName(name) = std.strReplace(name, '.', '-');
 local lowerCaseLetter(i) = std.char(97 + i);
-local trim63(s) = if std.length(s) > 63 then s[0:62] else s;
+// Build 63-char (max) name with untouched generation.
+local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(generation)] + '-' + generation;
 
 {
   /**
@@ -60,11 +61,12 @@ local trim63(s) = if std.length(s) > 63 then s[0:62] else s;
     // Include name prefix, escaped instance type (because names can't have .)
     // and name generation
     local instanceTypes = if std.isString(instanceType) then [instanceType] else instanceType,
-    name: trim63(std.join('-', [
-      namePrefix,
-    ] + std.map(escapeName, instanceTypes) + [
+    name: buildName(
+      [
+        namePrefix,
+      ] + std.map(escapeName, instanceTypes),
       generation,
-    ])),
+    ),
     availabilityZones: availabilityZones,
     minSize: minSize,
     maxSize: maxSize,
