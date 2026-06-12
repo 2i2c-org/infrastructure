@@ -41,7 +41,7 @@ local c = cluster.withNodeGroupConfigOverride(
         },
       }
     ),
-    kind="notebook",
+    kind='notebook',
     overrides={
       // 80 GiB reserved + 4*20GiB (four users)
       volumeSize: 120,
