@@ -14,7 +14,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 280 # in GB
+    size        = 300 # in GB
     type        = "gp3"
     name_suffix = "prod"
     throughput  = 250 # Double the throughput, as we kept getting alerts for throughput consistently
