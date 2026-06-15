@@ -21,4 +21,11 @@ local c = cluster.makeCluster(
   nodeGroupGenerations=['a'],
 );
 
-c
+cluster.withNodeGroupConfigOverride(
+  c,
+  kind='notebook',
+  overrides={
+    // For https://github.com/2i2c-org/infrastructure/issues/8362
+    minSize: 11,
+  }
+)
