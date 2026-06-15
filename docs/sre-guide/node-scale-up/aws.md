@@ -9,22 +9,49 @@ server startup faster.
 1. Open the appropriate `.jsonnet` file for the cluster in question (located in the `eksctl` folder).
    Depending on how you intend to scale the nodepools, there are two approaches you may take.
 
-   1. **Scale all nodepools.**
-      To scale all nodepools, locate the `minSize` property of the `nb` node group and change the value to what you want.
-      An example can be found here:
-      <https://github.com/2i2c-org/infrastructure/blob/f40cfbc2b5bd236a1f95e406a6f6d9bec99e55d2/eksctl/2i2c-aws-us.jsonnet#L102>
+1. Scale the desired nodepool
 
-   2. **Scale a specific nodepool.**
-      If you only wish to scale a specific nodepool, you can add the `minSize` property to the local `notebookNodes` variable next to the `instanceType` that you wish to scale.
-
-   ```{warning}
-   It is currently unclear if *lowering* the `minSize` property just allows
-   the autoscaler to reclaim nodes, or if it actively destroys nodes at time
-   of application! If it actively destroys nodes, it is unclear if it does
-   so regardless of user pods running in these nodes! Until this can be
-   determined, please do scale-downs only when there are no users on
-   the nodes.
+Depending on which nodepool(s) you want to scale up, tweak the arguments of `cluster.withNodeGroupConfigOverride` to match your needs.
+   ```json
+   cluster.withNodeGroupConfigOverride(
+      c,
+      kind='notebook',
+      instanceType='r5.4xlarge',
+      hubName='prod',
+      overrides={
+         desiredCapacity: 10,
+         minSize: 10,
+      }
+   )
    ```
+   Where:
+   - `c` is the cluster object created with `cluster.makeCluster` defined in `eksctl/libsonnet/cluster.jsonnet`
+   - both `minSize` and `desiredCapacity` represent the number of nodes wanted in the nodepool
+
+   ````{tip}
+   You can also chain multiple `cluster.withNodeGroupConfigOverride` for better matching of nodepools to scale.
+   ```json
+   cluster.withNodeGroupConfigOverride(
+      cluster.withNodeGroupConfigOverride(
+         c,
+         kind='notebook',
+         instanceType='r5.4xlarge',
+         hubName='pythia-binder',
+         overrides={
+            desiredCapacity: 11,
+            minSize: 11,
+         }
+      ),
+      kind='notebook',
+      instanceType='r5.4xlarge',
+      hubName='prod',
+      overrides={
+         desiredCapacity: 11,
+         minSize: 11,
+      }
+   )
+   ```
+   ````
 
 2. Render the `.jsonnet` file into a YAML file with:
    ```bash
