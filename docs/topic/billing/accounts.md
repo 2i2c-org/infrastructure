@@ -3,6 +3,15 @@
 Cloud providers have different ways of attaching a source of money
 (a credit card or cloud credits) to the resources we get charged for.
 
+(billing/does-2i2c-pay)=
+## Does 2i2c pay for a hub's cloud costs?
+
+Look at `billing.paid_by_us` in the hub's `cluster.yaml` (under the provider key, e.g. `aws.billing.paid_by_us`):
+
+- **`true`**: 2i2c holds the cloud account, pays the provider, then invoices the community. See [](../../howto/budgeting-billing/bill.md).
+- **`false`**: the community pays their cloud provider directly, or they have credits covering their costs (like CloudBank).
+- **not set** - typically clusters using a raw `kubeconfig`. Usually this means we do NOT pay for cloud, but we leave this "unknown" to be explicit in the table.
+
 ## GCP
 
 A [Billing Account](https://cloud.google.com/billing/docs/how-to/manage-billing-account)

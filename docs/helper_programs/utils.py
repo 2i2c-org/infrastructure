@@ -21,8 +21,15 @@ def get_clusters_list():
 def get_cluster_provider(cluster):
     provider = cluster["provider"]
     if provider == "kubeconfig":
-        # In AKS, we use raw `kubeconfig` files
-        return "azure"
+        # Kubeconfig means we manually provision kubernetes
+        # So we need to infer the cloud provider from the dashboard URL.
+        url = cluster.get("provider_url", "")
+        if "jetstream" in url:
+            return "jetstream2"
+        if "azure" in url:
+            return "azure"
+        # In case we add another kubeconfig usecase in future
+        return "kubeconfig"
     return provider
 
 
