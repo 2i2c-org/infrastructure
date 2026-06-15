@@ -57,9 +57,7 @@ This can be done in a few different ways:
 - setting a minimum node count on a specific node pool
 - using node placeholders
 
-However, **the preferred way to do this is through node sharing via profile lists**.
-
-```{admonition} Expand this to find out the benefits of node sharing via profile lists
+```{admonition} However, **the preferred way to do this is through node sharing via profile lists**.
 :class: dropdown
 Specifically for events, the node sharing benefits via profile lists vs. setting a minimum node count are:
 
@@ -87,19 +85,19 @@ During events, we want to tilt the balance towards reducing server startup time.
 
 Assuming this hub already has a profile list, you should check the following before an event:
 
-```{admonition} 1. **Information is available**
+```{admonition} 1. **Make sure information is available**
 :class: dropdown
-Make sure the information in the event GitHub issue was filled in, especially the number of expected users before an event and their expected resource needs (if that can be known by the community beforehand).
+Make sure the information in the event GitHub issue was filled in, especially the hub that is going to be used, the number of expected users before an event and their expected resource needs (if that can be known by the community beforehand).
 ```
 
-```{admonition} 2. **Given the current setup, calculate how many users will fit on a node?**
+```{admonition} 2. **Calculate how many users will fit on a node?**
 :class: dropdown
 Check that the current number of users/node respects the following general event wishlist.
 ```
 
-````{admonition} 3. **Minimize startup time**
+````{admonition} 3. **Choose the node packing**
 :class: dropdown
-- have at least `3-4 people on a node` as few users per node cause longer startup times, but [no more than ~100]( https://kubernetes.io/docs/setup/best-practices/cluster-large/#:~:text=No%20more%20than%20110%20pods,more%20than%20300%2C000%20total%20containers)
+- have at least `3-4 people on a node` as few users per node cause longer startup times, but [no more than ~100](https://kubernetes.io/docs/setup/best-practices/cluster-large/#:~:text=No%20more%20than%20110%20pods,more%20than%20300%2C000%20total%20containers)
 
 - don't have more than 30% of the users waiting for a node to come up
 
@@ -111,17 +109,13 @@ Check that the current number of users/node respects the following general event
   ```
 ````
 
-```{admonition} 4. **Don't oversubscribe resources**
+````{admonition} 4. **Don't oversubscribe resources**
 :class: dropdown
 The oversubscription factor is how much larger a limit is than the actual request (aka, the minimum guaranteed amount of a resource that is reserved for a container). When this factor is greater, then a more efficient node packing can be achieved because usually most users don't use resources up to their limit, and more users can fit on a node.
 
 However, a bigger oversubscription factor also means that the users that use more resources than they are guaranteed can get their kernels killed or CPU throttled at some other times, based on what other users are doing. This inconsistent behavior is confusing to end users and the hub, so we should try and avoid this during events.
-```
 
-`````{admonition} Action to take
-:class: tip
-
-For an event, you should consider an oversubscription factor of 1.
+**For an event, you should consider an oversubscription factor of 1.**
 
 - if the instance type remains unchanged, then just adjust the limit to match the memory guarantee if not already the case
 
@@ -131,70 +125,12 @@ For an event, you should consider an oversubscription factor of 1.
     - either replace all allocation options with the ones for the new node type
     - or pick the choice(s) that will be used during the event based on expected usage and just don't show the others
 
-````{admonition} Example
-For example, if the community expects to only use ~3GB of memory during an event, and no other users are expected to use the hub for the duration of the event, then you can choose to only make available that one option.
-
-Assuming they had 4 options on a `n2-highmem-2` machine and we wish to move them on a `n2-highmem-4` for the event, we could run:
-
-```{code-block}
-deployer generate resource-allocation choices n2-highmem-4 --num-allocations 4
-```
-
-which will output:
-
-```{code-block}
-# pick this option to present the single ~3GB memory option for the event
-mem_3_4:
-  display_name: 3.4 GB RAM, upto 3.485 CPUs
-  kubespawner_override:
-    mem_guarantee: 3662286336
-    mem_limit: 3662286336
-    cpu_guarantee: 0.435625
-    cpu_limit: 3.485
-    node_selector:
-      node.kubernetes.io/instance-type: n2-highmem-4
-  default: true
-mem_6_8:
-  display_name: 6.8 GB RAM, upto 3.485 CPUs
-  kubespawner_override:
-    mem_guarantee: 7324572672
-    mem_limit: 7324572672
-    cpu_guarantee: 0.87125
-    cpu_limit: 3.485
-    node_selector:
-      node.kubernetes.io/instance-type: n2-highmem-4
-(...2 more options)
-```
-And we would have this in the profileList configuration:
-```{code-block}
-profileList:
-  - display_name: Workshop
-    description: Workshop environment
-    default: true
-    kubespawner_override:
-      image: python:6ee57a9
-    profile_options:
-      requests:
-        display_name: Resource Allocation
-        choices:
-          mem_3_4:
-            display_name: 3.4 GB RAM, upto 3.485 CPUs
-            kubespawner_override:
-              mem_guarantee: 3662286336
-              mem_limit: 3662286336
-              cpu_guarantee: 0.435625
-              cpu_limit: 3.485
-              node_selector:
-                node.kubernetes.io/instance-type: n2-highmem-4
-```
-````
-
-````{warning}
+```{warning}
 The `deployer generate resource-allocation`:
-- cam only generate options where guarantees (requests) equal limits!
+- can only generate options where guarantees (requests) equal limits!
 - supports the instance types located in `node-capacity-info.json` file
+```
 ````
-`````
 
 ### 3.2. Setting a minimum node count on a specific node pool
 ```{warning}
