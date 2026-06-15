@@ -23,16 +23,7 @@ local c = cluster.makeCluster(
 
 
 cluster.withNodeGroupConfigOverride(
-  cluster.withNodeGroupConfigOverride(
-    c,
-    kind='notebook',
-    instanceType='r5.4xlarge',
-    hubName='pythia-binder',
-    overrides={
-      desiredCapacity: 11,
-      minSize: 11,
-    }
-  ),
+  c,
   kind='notebook',
   instanceType='r5.4xlarge',
   hubName='prod',
