@@ -368,6 +368,14 @@ hubs:
   - common.values.yaml
   - moreno.values.yaml
   - enc-moreno.secret.values.yaml
+- name: nicc
+  display_name: Northeast Iowa Community College
+  domain: nicc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - nicc.values.yaml
+  - enc-nicc.secret.values.yaml
 - name: norco
   display_name: Norco College
   domain: norco.cloudbank.2i2c.cloud
