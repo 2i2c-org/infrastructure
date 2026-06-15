@@ -12,10 +12,10 @@ We must ensure that the quotas from the cloud provider are high-enough to handle
 - follow the [GCP quota guide](hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
 ```
 
-## On shared GCP clusters, consider dedicated nodepools
+## Consider dedicated nodepools
 
 ```{important}
-On AWS, all clusters have dedicated nodepools for each hub.
+On AWS, clusters already have dedicated nodepools for each hub.
 ```
 
 If the hub that's having an event is running on a shared cluster, then we might want to consider putting it on a dedicated nodepool as that will help with cost isolation, scaling up/down effectively, and avoid impacting other hub's users performance.
@@ -133,8 +133,10 @@ The `deployer generate resource-allocation`:
 ````
 
 ### 3.2. Setting a minimum node count on a specific node pool
-```{warning}
-This section is a Work in Progress!
+
+```{admonition} Action to take
+:class: tip
+Follow the guide at [](scaling-nodepools) to on how to set a minimum node count on a specific node pool.
 ```
 
 ### 3.4 Add user placeholders
