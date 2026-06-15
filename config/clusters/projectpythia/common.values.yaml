@@ -43,14 +43,27 @@ jupyterhub:
       00-set-gitconfig.py: |
         async def auth_state_hook(spawner, auth_state):
             if auth_state is None:
-              return None
-            spawner.environment["GITHUB_USER"] = auth_state["github_user"]["login"]
-            spawner.environment["GIT_AUTHOR_NAME"] = spawner.environment[
-                "GIT_COMMITTER_NAME"
-            ] = auth_state["github_user"]["name"]
-            spawner.environment["GIT_AUTHOR_EMAIL"] = spawner.environment[
-                "GIT_COMMITTER_EMAIL"
-            ] = spawner.environment["GITHUB_EMAIL"] = auth_state["github_user"]["email"]
+                return None
+
+            try:
+                user = auth_state["github_user"]
+            except KeyError:
+                return auth_state
+
+            raw_environment = {}
+            raw_environment["GITHUB_USER"] = user.get("login")
+            raw_environment["GIT_AUTHOR_NAME"] = raw_environment["GIT_COMMITTER_NAME"] = (
+                user.get("name")
+            )
+            raw_environment["GIT_AUTHOR_EMAIL"] = raw_environment["GIT_COMMITTER_EMAIL"] = (
+                raw_environment["GITHUB_EMAIL"]
+            ) = user.get("email")
+
+            for key, value in raw_environment.items():
+                # Require non-falsey (empty or None) value
+                if value:
+                    spawner.environment[key] = value
+
             return auth_state
 
 
