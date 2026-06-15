@@ -12,7 +12,7 @@ server startup faster.
 1. Scale the desired nodepool
 
 Depending on which nodepool(s) you want to scale up, tweak the arguments of `cluster.withNodeGroupConfigOverride` to match your needs.
-   ```json
+   ```{code-block}
    cluster.withNodeGroupConfigOverride(
       c,
       kind='notebook',
@@ -30,7 +30,7 @@ Depending on which nodepool(s) you want to scale up, tweak the arguments of `clu
 
    ````{tip}
    You can also chain multiple `cluster.withNodeGroupConfigOverride` for better matching of nodepools to scale.
-   ```json
+   ```{code-block}
    cluster.withNodeGroupConfigOverride(
       cluster.withNodeGroupConfigOverride(
          c,
