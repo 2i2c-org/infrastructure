@@ -99,6 +99,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "fresno"
   }
+  "georgetown" = {
+    size        = 25
+    name_suffix = "georgetown"
+  }
   "glendale" = {
     size        = 60
     name_suffix = "glendale"
