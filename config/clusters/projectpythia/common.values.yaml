@@ -60,7 +60,8 @@ jupyterhub:
             ) = user.get("email")
 
             for key, value in raw_environment.items():
-                if value is not None:
+                # Require non-falsey (empty or None) value
+                if value:
                     spawner.environment[key] = value
 
             return auth_state
