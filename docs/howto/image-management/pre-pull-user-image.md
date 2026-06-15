@@ -1,4 +1,4 @@
-(continuous-image-pull)=
+(pre-pull-user-images)=
 # Pre-pull user images at node startup
 
 Image pre-pulling before user arrival is not a feature enabled by default on the hubs, as it comes with an increase in cloud costs. However, there are cases when users need faster startup times like exams, events, or even just a hub with large images. In this situations, given that communities understand the cost tradeoff, this feature can be enabled.

@@ -44,7 +44,10 @@ This should be considered if either of the following are true:
 - the image is huge
 - faster server startup times were requested at the cost of the cloud cost increase 
 
-Follow the guide at [](pre-pull-user-images) to enable this.
+```{admonition} Action to take
+:class: tip
+Follow the guide at [](pre-pull-user-images) to enable image pre-pulling.
+```
 
 ### 2. Pre-warming user nodes
 
