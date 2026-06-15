@@ -1,8 +1,8 @@
 # Event infrastructure preparation checklist
 
-Below are listed the main aspects to consider adjusting on a hub to prepare it for an event:
+Main aspects to consider adjusting on a hub to prepare it for an event:
 
-## 1. Quotas
+## Quotas
 
 We must ensure that the quotas from the cloud provider are high-enough to handle expected usage. It might be that the number of users attending the event is very big, or their expected resource usage is big, or both. Either way, we need to check the the existing quotas will accommodate the new numbers.
 
@@ -12,7 +12,7 @@ We must ensure that the quotas from the cloud provider are high-enough to handle
 - follow the [GCP quota guide](hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
 ```
 
-## 2. Consider dedicated nodepools on shared clusters
+## On shared GCP clusters, consider dedicated nodepools
 
 ```{important}
 On AWS, all clusters have dedicated nodepools for each hub.
@@ -25,39 +25,55 @@ If the hub that's having an event is running on a shared cluster, then we might 
 Follow the guide at [](features:shared-cluster:dedicated-nodepool) in order to setup a dedicated nodepool before an event.
 ```
 
-## 3. Pre-warm the hub to reduce wait times
+## Reduce server startup time
 
-There are two mechanisms that we can use to pre-warm a hub before an event:
+There are two components that we can "pre-warm" before an event, to reduce server startup time and make sure are ready to use right away:
 
-- making sure some **nodes are ready** when users arrive
+- the **user image** through pre-pulling
+- user **nodes** though making sure a fair number of them are ready for users
 
-    This can be done using node sharing via profile lists or by setting a minimum node count.
-  
-    ```{note}
-    You can read more about what to consider when setting resource allocation options in profile lists in [](topic:resource-allocation).
-    ```
+```{warning}
+Although both of these approaches are helpful, they also come with an increase in cloud costs and engineering work, so they should be considered keeping these aspects in mind.
+```
 
-    ```{admonition} Expand this to find out the benefits of node sharing via profile lists
-    :class: dropdown
-    Specifically for events, the node sharing benefits via profile lists vs. setting a minimum node count are:
+(pre-pull-image)=
+### 1. Pre-pulling the image
 
-      - **no `terraform/eks` infrastructure changes**
+This should be considered if either of the following are true:
 
-        they shouldn't require modifying terraform/eks code in order to change the underlying cluster architecture thanks to [](topic:cluster-design:instance-type) that should cover most usage needs
+- the image is huge
+- faster server startup times were requested at the cost of the cloud cost increase 
 
-      - **more cost flexibility**
+Follow the guide at [](pre-pull-user-images) to enable this.
 
-        we can setup the infrastructure a few days before the event by opening a PR, and then just merge it as close to the event as possible. Deploying an infrastructure change for an event a few days before isn't as costly as starting "x" nodes before, which required an engineer to be available to make terraform changes as close to the event as possible due to costs
+### 2. Pre-warming user nodes
 
-      - **less engineering intervention needed**
+This can be done in a few different ways:
 
-        the instructors are empowered to "pre-warm" the hub by starting notebook servers on nodes they wish to have ready.
-    ```
+- node sharing via profile lists
+- setting a minimum node count on a specific node pool
+- using node placeholders
 
-- the user **image is not huge**, otherwise pre-pulling it must be considered
+However, **the preferred way to do this is through node sharing via profile lists**.
 
+```{admonition} Expand this to find out the benefits of node sharing via profile lists
+:class: dropdown
+Specifically for events, the node sharing benefits via profile lists vs. setting a minimum node count are:
 
-### 3.1. Node sharing via profile lists
+  - **no `terraform/eks` infrastructure changes**
+
+    they shouldn't require modifying terraform/eks code in order to change the underlying cluster architecture thanks to [](topic:cluster-design:instance-type) that should cover most usage needs
+
+  - **more cost flexibility**
+
+    we can setup the infrastructure a few days before the event by opening a PR, and then just merge it as close to the event as possible. Deploying an infrastructure change for an event a few days before isn't as costly as starting "x" nodes before, which required an engineer to be available to make terraform changes as close to the event as possible due to costs
+
+  - **less engineering intervention needed**
+
+    the instructors are empowered to "pre-warm" the hub by starting notebook servers on nodes they wish to have ready.
+```
+
+#### 2.1 Node sharing via profile lists
 
 ```{important}
 Currently, this is the recommended way to handle an event on a hub. However, for some communities that don't already use profile lists, setting up one just before an event might be confusing, we might want to consider setting up a minimum node count in this case.
@@ -65,7 +81,7 @@ Currently, this is the recommended way to handle an event on a hub. However, for
 
 During events, we want to tilt the balance towards reducing server startup time. The docs at [](topic:resource-allocation) have more information about all the factors that should be considered during resource allocation.
 
-Assuming this hub already has a profile list, before an event, you should check the following:
+Assuming this hub already has a profile list, you should check the following before an event:
 
 1. **Information is available**
 
@@ -179,26 +195,6 @@ Assuming this hub already has a profile list, before an event, you should check 
 ### 3.2. Setting a minimum node count on a specific node pool
 ```{warning}
 This section is a Work in Progress!
-```
-(pre-pull-image)=
-### 3.3. Pre-pulling the image
-
-```{warning}
-This section is a Work in Progress!
-```
-
-Relevant discussions:
-- https://github.com/2i2c-org/infrastructure/issues/2541
-- https://github.com/2i2c-org/infrastructure/pull/3313
-- https://github.com/2i2c-org/infrastructure/pull/3341
-
-```{important}
-To get a deeper understanding of the resource allocation topic, you can read up these issues and documentation pieces:
-- https://github.com/2i2c-org/infrastructure/issues/2121
-- https://github.com/2i2c-org/infrastructure/pull/3030
-- https://github.com/2i2c-org/infrastructure/issues/3132
-- https://github.com/2i2c-org/infrastructure/issues/3293
-- https://infrastructure.2i2c.org/topic/resource-allocation/#factors-to-balance
 ```
 
 ### 3.4 Add user placeholders
