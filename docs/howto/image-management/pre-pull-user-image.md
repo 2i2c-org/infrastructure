@@ -1,13 +1,13 @@
 (pre-pull-user-images)=
 # Pre-pull user images at node startup
 
-Image pre-pulling before user arrival is not a feature enabled by default on the hubs, as it comes with an increase in cloud costs. However, there are cases when users need faster startup times like exams, events, or even just a hub with large images. In this situations, given that communities understand the cost tradeoff, this feature can be enabled.
+Image pre-pulling before user arrival is not a feature enabled by default on the hubs, because it comes with an increase in cloud costs. However, there are situations like exams, events, or even just a hub with large images when users need faster startup times. If communities agreed to the cost tradeoff, then this feature should be enabled.
 
 More about it at https://z2jh.jupyter.org/en/stable/administrator/optimization.html#pulling-images-before-users-arrive
 
 ## Enable `continuous-image-puller`
 
-The following config will pre-pull all explicitly specified images either through profiles or directly, on all nodes  when they start up.
+The following config will pre-pull all images specified through profile lists or directly, on all nodes, when they start up.
 
 ```yaml
 jupyterhub:
