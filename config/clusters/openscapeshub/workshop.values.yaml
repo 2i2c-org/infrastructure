@@ -25,6 +25,7 @@ basehub:
           - ateucher
           # https://2i2c.freshdesk.com/a/tickets/5763
           - thorntonmm@ornl.gov # Michele Thornton
+          - michele-ornl #  Michele Thornton GitHub
     singleuser:
       storage:
         extraVolumeMounts:
