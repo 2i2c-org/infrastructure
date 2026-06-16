@@ -1,9 +1,9 @@
-# CSH Sync Caller
+# Call Asana Sync
 #
 # Add this file to any 2i2c-org repo that should participate in
 # Community Success Hours tracking.
 #
-# Place at: .github/workflows/csh-sync-caller.yml
+# Place at: .github/workflows/call-asana-sync.yml
 #
 # Prerequisites:
 #   - The org-level secrets ASANA_ACCESS_TOKEN and CSH_SYNC_PAT must be set
