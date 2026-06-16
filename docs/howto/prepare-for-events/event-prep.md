@@ -25,6 +25,11 @@ If the hub that's having an event is running on a shared cluster, then we might 
 Follow the guide at [](features:shared-cluster:dedicated-nodepool) in order to setup a dedicated nodepool before an event.
 ```
 
+## Analyze Grafana workshop dashboard results
+```{warning}
+This is a work in progress.
+```
+
 ## Reduce server startup time
 
 There are two components that we can "pre-warm" before an event, to reduce server startup time and make sure are ready to use right away:
