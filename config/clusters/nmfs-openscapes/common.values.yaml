@@ -297,7 +297,6 @@ jupyterhub:
         - ateucher   # Andy Teucher
         - jules32   # Julia Stewart Lowndes
         - eeholmes   # Eli Holmes
-        - thorntonmm@ornl.gov # Michele Thornton
   scheduling:
     userScheduler:
       enabled: true
