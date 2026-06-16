@@ -17,6 +17,15 @@ basehub:
           enable_auth_state: false
           manage_groups: false
           allow_all: true
+          admin_users:
+          - amfriesz
+          - jules32
+          - erinmr
+          - betolink
+          - ateucher
+          # https://2i2c.freshdesk.com/a/tickets/5763
+          - thorntonmm@ornl.gov # Michele Thornton
+          - michele-ornl #  Michele Thornton GitHub
     singleuser:
       storage:
         extraVolumeMounts:
