@@ -22,6 +22,7 @@ basehub:
             c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
             c.UsageConfig.hub_namespace = "prod"
             c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
+            c.UsageViewer.public_hub_url = "https://geolab.earthscope.cloud/"
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)
