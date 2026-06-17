@@ -264,6 +264,14 @@ hubs:
   - common.values.yaml
   - humboldt.values.yaml
   - enc-humboldt.secret.values.yaml
+- name: iit
+  display_name: Illinois Tech
+  domain: iit.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - iit.values.yaml
+  - enc-iit.secret.values.yaml
 - name: kean
   display_name: Kean University
   domain: kean.cloudbank.2i2c.cloud
