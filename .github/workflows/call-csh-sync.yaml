@@ -8,7 +8,7 @@
 # Prerequisites:
 #   - The org-level secrets ASANA_ACCESS_TOKEN and CSH_SYNC_PAT must be set
 #   - The repo must have a "CSH" label created
-#   - The 2i2c-org/sync-asana repo must exist with the reusable workflow
+#   - The 2i2c-org/data-sync repo must exist with the reusable workflow
 
 name: CSH Sync
 
@@ -23,5 +23,5 @@ jobs:
     if: >-
       (github.event.action == 'labeled' && github.event.label.name == 'CSH')
       || (github.event.action != 'labeled' && contains(toJson(github.event.issue.labels.*.name), 'CSH'))
-    uses: 2i2c-org/sync-asana/.github/workflows/csh-sync.yml@main
+    uses: 2i2c-org/data-sync/.github/workflows/csh-sync.yml@main
     secrets: inherit
