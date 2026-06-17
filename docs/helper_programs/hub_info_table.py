@@ -60,14 +60,6 @@ def get_cluster_console_url(cluster, provider, account, datacentre_loc):
     return cluster_console_url
 
 
-def get_paid_by_us(cluster):
-    # billing lives under the provider key (gcp/aws/azure)
-    # pretty sure kubeconfig means JetStream2, which would mean "No", but
-    # leaving it as "Unknown" for now just to be sure
-    paid = cluster.get(cluster["provider"], {}).get("billing", {}).get("paid_by_us")
-    return {True: "Yes", False: "No"}.get(paid, "Unknown")
-
-
 def build_hub_list_entry(
     cluster, hub, grafana_url, provider, datacentre_loc, account, cluster_console_url
 ):
@@ -80,7 +72,6 @@ def build_hub_list_entry(
         "grafana": grafana_url,
         "cluster": cluster["name"],
         "provider": provider,
-        "2i2c pays cloud": get_paid_by_us(cluster),
         "data center location": datacentre_loc,  # Americanising for you ;)
         "UI console link": (
             f"[Use with **{account}** account]({cluster_console_url})"
