@@ -24,7 +24,7 @@ basehub:
       image:
         # Usage quotas 0.1.2 and fancy-profiles 0.6.0
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 6fba2e9ef475b0c0408b13de4823b9a50a69b292
+        tag: 90c1065209cf89554c2e7e73b7e2120c5d27a167
       extraConfig:
         001-username-claim: |
           import json
@@ -75,7 +75,7 @@ basehub:
       services:
         usage-quota:
           url: http://hub:9000
-          display: false
+          display: true
           oauth_no_confirm: true
           command:
           - python
@@ -89,6 +89,8 @@ basehub:
         usage-quota-service:
           scopes:
           - read:users
+          - list:services
+          - read:services
           services:
           - usage-quota
         metrics-exporter-service:

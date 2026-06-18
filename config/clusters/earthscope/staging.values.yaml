@@ -18,7 +18,6 @@ basehub:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
 
-        # Metrics config
         UsageQuotaManager:
           scope_backup_strategy:
             empty:
@@ -53,6 +52,7 @@ basehub:
             c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
             c.UsageConfig.hub_namespace = "staging"
             c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
+            c.UsageViewer.public_hub_url = "https://staging.geolab.earthscope.cloud/"
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
