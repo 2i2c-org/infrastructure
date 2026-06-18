@@ -23,6 +23,9 @@ basehub:
             c.UsageConfig.hub_namespace = "prod"
             c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
             c.UsageViewer.public_hub_url = "https://geolab.earthscope.cloud/"
+            c.UsageViewer.footer_note = """
+            See the <a href="https://docs.earthscope.org/geolab/">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
+            """
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)
