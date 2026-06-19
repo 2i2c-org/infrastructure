@@ -6,7 +6,7 @@ nfs:
 
 jupyterhub-home-nfs:
   eks:
-    volumeId: vol-063f53806dd18c4a6
+    volumeId: vol-007f600752daee49c
   quotaEnforcer:
     config:
       QuotaManager:
