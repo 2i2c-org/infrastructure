@@ -72,6 +72,14 @@ hubs:
   - common.values.yaml
   - chaffey.values.yaml
   - enc-chaffey.secret.values.yaml
+- name: cau
+  display_name: Clark Atlanta University
+  domain: cau.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - cau.values.yaml
+  - enc-cau.secret.values.yaml
 - name: ccsf
   display_name: City College SF
   domain: ccsf.cloudbank.2i2c.cloud
