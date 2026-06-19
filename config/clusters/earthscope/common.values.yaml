@@ -389,13 +389,6 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
-  jupyterhub-groups-exporter:
-    config:
-      groupsExporter:
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
   binderhub-service:
     enabled: true
     networkPolicy:
