@@ -17,33 +17,48 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
-
+          admin_groups:
+          - geolab-admin
         UsageQuotaManager:
           scope_backup_strategy:
             empty:
               resource: memory
               limit:
-                value: 25
+                value: 2500
                 unit: GiB-hours
-              window: 7
+              window: 30
             intersection: max
           policy:
           - resource: memory
             limit:
-              value: 500
+              value: 5000
               unit: GiB-hours
-            window: 1
+            window: 30
             scope:
               group:
-              - geolab
+              - mem-sm
           - resource: memory
             limit:
-              value: 1000
+              value: 10000
               unit: GiB-hours
-            window: 7
+            window: 30
             scope:
               group:
-              - geolab:dev
+              - mem-md
+          - resource: memory
+            limit:
+              value: 50000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-lg
+      loadRoles:
+        dask-users:
+          scopes:
+          - access:services!service=dask-gateway
+          groups:
+          - dask
       extraFiles:
         usage_quotas_config:
           mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
