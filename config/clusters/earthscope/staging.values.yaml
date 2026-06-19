@@ -19,7 +19,6 @@ basehub:
             audience: https://api.dev.earthscope.org
           admin_groups:
           - geolab-admin
-
         UsageQuotaManager:
           scope_backup_strategy:
             empty:
@@ -54,6 +53,12 @@ basehub:
             scope:
               group:
               - mem-lg
+      loadRoles:
+        dask-users:
+          scopes:
+          - access:services!service=dask-gateway
+          groups:
+          - dask
       extraFiles:
         usage_quotas_config:
           mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
