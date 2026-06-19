@@ -21,14 +21,4 @@ local c = cluster.makeCluster(
   nodeGroupGenerations=['a'],
 );
 
-
-cluster.withNodeGroupConfigOverride(
-  c,
-  kind='notebook',
-  instanceType='r5.4xlarge',
-  hubName='prod',
-  overrides={
-    desiredCapacity: 11,
-    minSize: 11,
-  }
-)
+c
