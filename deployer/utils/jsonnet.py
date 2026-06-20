@@ -53,14 +53,15 @@ def render_jsonnet(
         "--jpath",
         str(jsonnet_file.parent),
         "--ext-str",
-        f"VARS_2I2C_CLUSTER_NAME={cluster_name}",
+        f"VARS_2I2C_CLUSTER_NAME={shlex.quote(cluster_name)}",
     ]
     if hub_name is not None:
-        command += ["--ext-str", f"VARS_2I2C_HUB_NAME={hub_name}"]
+        command += ["--ext-str", f"VARS_2I2C_HUB_NAME={shlex.quote(hub_name)}"]
     if hub_domain is not None:
-        command += ["--ext-str", f"VARS_2I2C_HUB_DOMAIN={hub_domain}"]
-    command += ["--ext-str", f"VARS_2I2C_PROVIDER={provider}"]
-    command += ["--ext-str", f"VARS_2I2C_ACCOUNT_ID={account_id}"]
+        command += ["--ext-str", f"VARS_2I2C_HUB_DOMAIN={shlex.quote(hub_domain)}"]
+    command += ["--ext-str", f"VARS_2I2C_PROVIDER={shlex.quote(provider)}"]
+    if account_id is not None:
+        command += ["--ext-str", f"VARS_2I2C_ACCOUNT_ID={shlex.quote(account_id)}"]
     # Make the jsonnet file passed be an absolute path, but do not *resolve*
     # it - so symlinks are resolved by jsonnet rather than us. This is important
     # for daskhub compatibility.
