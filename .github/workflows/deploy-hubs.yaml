@@ -69,7 +69,7 @@ jobs:
       prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
 
@@ -83,7 +83,7 @@ jobs:
         # this job is re-attempted as part of the same workflow run after
         # succeeding previously.
     - name: Save pip's install cache on job completion
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: ~/.cache/pip
         key: ${{ github.run_id }}
@@ -94,7 +94,7 @@ jobs:
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
     - name: Get merged/open PR labels
-      uses: actions/github-script@v8
+      uses: actions/github-script@v9
       id: pr-labels
       with:
           # Both pull_request and push can have triggered this job to run. A
@@ -246,7 +246,7 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
 
@@ -485,7 +485,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
 
@@ -633,7 +633,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
 
