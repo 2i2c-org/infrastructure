@@ -4,6 +4,9 @@ jupyterhub:
     memory:
       guarantee: 512M
       limit: 1G
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image
+      tag: af7630bccb7f
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
