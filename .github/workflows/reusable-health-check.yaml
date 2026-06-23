@@ -24,7 +24,9 @@ on:
         required: true
         type: string
     secrets:
-      GCP_KMS_DECRYPTOR_KEY:
+      gcp_project_id:
+        required: true
+      gcp_workload_identity_provider:
         required: true
     outputs:
       health_check_output:
@@ -56,7 +58,8 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ inputs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+        gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ inputs.cluster }} ${{ inputs.hub }}
       uses: nick-fields/retry@v4
