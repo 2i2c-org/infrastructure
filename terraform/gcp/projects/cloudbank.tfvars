@@ -31,6 +31,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "boise"
   }
+  "cau" = {
+    size        = 25
+    name_suffix = "cau"
+  }
   "ccsf" = {
     size        = 513
     name_suffix = "ccsf"
@@ -198,6 +202,10 @@ persistent_disks = {
   "ocu" = {
     size        = 25
     name_suffix = "ocu"
+  }
+  "oit" = {
+    size        = 25
+    name_suffix = "oit"
   }
   "palomar" = {
     size        = 40

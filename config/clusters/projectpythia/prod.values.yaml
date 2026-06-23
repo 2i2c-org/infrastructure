@@ -32,7 +32,3 @@ jupyterhub:
                   url: https://github.com/settings/connections/applications/Ov23liWxGyeDz5ETgPF3
                   text: Revoke GitHub Token
                   newBrowserTab: true
-binderhub-service:
-  config:
-    RateLimiter:
-      limit: 3600

@@ -100,6 +100,10 @@ jobs:
       fail-fast: false
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.staging-jobs) }}
+
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
@@ -109,7 +113,12 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
       uses: nick-fields/retry@v4
@@ -121,7 +130,6 @@ jobs:
           echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
           deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
-
 
   upgrade-prod:
     runs-on: ubuntu-latest
@@ -145,7 +153,12 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
       uses: nick-fields/retry@v4

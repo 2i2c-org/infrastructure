@@ -127,6 +127,16 @@ basehub:
           - geolab
           - geolab:dev
           - geolab:power
+          - geolab-admin
+          - mem-sm
+          - mem-md
+          - mem-lg
+          - vm-sm
+          - vm-md
+          - vm-lg
+          - vm-xl
+          - gpu
+          - dask
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
@@ -236,6 +246,7 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
                 kubespawner_override:
                   mem_guarantee: 3902839759
                   mem_limit: 3902839759
@@ -250,6 +261,7 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
                 kubespawner_override:
                   mem_guarantee: 7805679519
                   mem_limit: 7805679519
@@ -264,6 +276,7 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
                 kubespawner_override:
                   mem_guarantee: 15611359038
                   mem_limit: 15611359038
@@ -278,6 +291,7 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
                 kubespawner_override:
                   mem_guarantee: 31222718077
                   mem_limit: 31222718077
@@ -291,6 +305,7 @@ basehub:
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
+                - vm-md
                 kubespawner_override:
                   mem_guarantee: 64020707016
                   mem_limit: 64020707016
@@ -304,6 +319,7 @@ basehub:
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
+                - vm-lg
                 kubespawner_override:
                   mem_guarantee: 128041414033
                   mem_limit: 128041414033
@@ -316,6 +332,7 @@ basehub:
                 description: ~63 CPUs always available
                 allowed_groups:
                 - geolab:power
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 523839830228
                   mem_limit: 523839830228
@@ -329,6 +346,7 @@ basehub:
         allowed_groups:
         - geolab:dev
         - geolab:power
+        - gpu
         profile_options:
           image:
             display_name: Image
@@ -371,13 +389,6 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
-  jupyterhub-groups-exporter:
-    config:
-      groupsExporter:
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
   binderhub-service:
     enabled: true
     networkPolicy:

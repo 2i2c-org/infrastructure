@@ -27,6 +27,9 @@ jobs:
   ensure-uptime-checks:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
 
@@ -38,11 +41,12 @@ jobs:
     - name: Install sops
       uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
-      # Authenticate with the correct KMS key that sops will use.
+        # Authenticate with the correct KMS key that sops will use.
     - name: Setup sops credentials to decrypt repo secrets
       uses: google-github-actions/auth@v3
       with:
-        credentials_json: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: ensure uptime checks are set up
       run: |
