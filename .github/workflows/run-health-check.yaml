@@ -144,8 +144,9 @@ jobs:
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
       with:
-        provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        provider: ${{ matrix.jobs.provider }
+        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+        gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
       uses: nick-fields/retry@v4

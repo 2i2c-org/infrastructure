@@ -485,7 +485,8 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+        gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}}
 
     - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
       run: |
@@ -625,7 +626,8 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+        gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}}
 
     - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
       run: |
