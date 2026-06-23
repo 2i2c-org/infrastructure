@@ -109,7 +109,8 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+        gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
       uses: nick-fields/retry@v4
@@ -121,7 +122,6 @@ jobs:
           echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
           deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
-
 
   upgrade-prod:
     runs-on: ubuntu-latest
