@@ -329,6 +329,7 @@ basehub:
 
               nvidia_l4:
                 allowed_groups:
+                - 2i2c-org:hub-access-for-2i2c-staff
                 - leap-stc:large-gpu
                 display_name: NVIDIA L4 [24GB VRAM], ~16GB RAM, 4 CPUs
                 kubespawner_override:
@@ -344,6 +345,7 @@ basehub:
 
               nvidia_a100:
                 allowed_groups:
+                - 2i2c-org:hub-access-for-2i2c-staff
                 - leap-stc:large-gpu
                 display_name: NVIDIA A100 [40GB VRAM], ~85GB RAM, 12 CPUs
                 kubespawner_override:
