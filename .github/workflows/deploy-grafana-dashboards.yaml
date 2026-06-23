@@ -12,7 +12,7 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Build matrix
       id: matrix
       run: |
@@ -30,7 +30,7 @@ jobs:
         include: ${{fromJson(needs.identify_clusters.outputs.matrix)}}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - uses: actions/setup-python@v6
       with:
@@ -47,7 +47,7 @@ jobs:
             | tar -xvz --one-top-level=$HOME/.local/bin
 
     - name: Install sops
-      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+      uses: mdgreenwald/mozilla-sops-action@v2.0.0
 
     - name: Setup sops credentials to decrypt repo secrets
       uses: google-github-actions/auth@v3

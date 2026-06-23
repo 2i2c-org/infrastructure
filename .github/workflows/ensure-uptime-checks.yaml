@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
       # Uptime checks are set up and managed via terraform
     - uses: hashicorp/setup-terraform@v4
@@ -36,7 +36,7 @@ jobs:
       # We use sops to store encrypted GCP ServiceAccount Key that terraform uses
       # to run, as well as PagerDuty config terraform uses
     - name: Install sops
-      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+      uses: mdgreenwald/mozilla-sops-action@v2.0.0
 
         # Authenticate with the correct KMS key that sops will use.
     - name: Setup sops credentials to decrypt repo secrets

@@ -69,7 +69,7 @@ jobs:
       prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
 
@@ -94,7 +94,7 @@ jobs:
         go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
     - name: Get merged/open PR labels
-      uses: actions/github-script@v8
+      uses: actions/github-script@v9
       id: pr-labels
       with:
           # Both pull_request and push can have triggered this job to run. A
@@ -246,7 +246,7 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
 
@@ -480,7 +480,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
 
@@ -624,7 +624,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
 
