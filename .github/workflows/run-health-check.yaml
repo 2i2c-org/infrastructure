@@ -148,7 +148,7 @@ jobs:
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
       with:
-        provider: ${{ matrix.jobs.provider }
+        provider: ${{ matrix.jobs.provider }}
         gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
         gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}}
 
