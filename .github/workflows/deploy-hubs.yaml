@@ -476,6 +476,9 @@ jobs:
       failure_berkeley_geojupyter_staging: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter_staging }}
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
@@ -616,6 +619,9 @@ jobs:
       fail-fast: false
       matrix:
         jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
+
+    permissions:
+      id-token: write
 
     steps:
     - uses: actions/checkout@v6

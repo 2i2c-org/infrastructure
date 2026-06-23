@@ -36,6 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.health_check.outputs.health_check_output }}
+
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
