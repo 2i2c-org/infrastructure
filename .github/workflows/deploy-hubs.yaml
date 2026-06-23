@@ -250,11 +250,16 @@ jobs:
       with:
         submodules: true
 
-    - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
       run: |
@@ -476,6 +481,9 @@ jobs:
       failure_berkeley_geojupyter_staging: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter_staging }}
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
@@ -485,7 +493,12 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
       run: |
@@ -616,6 +629,9 @@ jobs:
       matrix:
         jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
@@ -625,7 +641,8 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+        gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}}
 
     - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
       run: |

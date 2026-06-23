@@ -29,6 +29,9 @@ jobs:
       matrix:
         include: ${{fromJson(needs.identify_clusters.outputs.matrix)}}
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
 

@@ -32,14 +32,6 @@ inputs:
     description: Cloud provider a cluster runs on
     required: true
     default: gcp
-  gcp_project_id:
-    description: >-
-      The ID of the GCP project used for secret management.
-    required: true
-  gcp_workload_identity_provider:
-    description: >-
-      A Google Cloud Workload Identity Provider resource whose service account has KMS Decryption privileges. This is used to unlock sops-encrypted secrets.
-    required: true
 
 # runs (for composite actions) configuration reference:
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs-for-composite-actions
@@ -132,9 +124,3 @@ runs:
       sudo apt-get update -y
       sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
     shell: bash
-
-  - name: Setup sops credentials to decrypt repo secrets
-    uses: google-github-actions/auth@v3
-    with:
-      project_id: ${{ inputs.gcp_project_id }}
-      workload_identity_provider: ${{ inputs.gcp_workload_identity_provider }}

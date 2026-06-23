@@ -36,6 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.health_check.outputs.health_check_output }}
+
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
@@ -58,8 +62,12 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ inputs.provider }}
-        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
-        gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ inputs.cluster }} ${{ inputs.hub }}
       uses: nick-fields/retry@v4
