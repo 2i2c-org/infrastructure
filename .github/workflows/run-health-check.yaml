@@ -119,16 +119,12 @@ jobs:
         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
-      uses: nick-fields/retry@v4
       id: health_check
-      with:
-        timeout_minutes: 10
-        max_attempts: 3
-        shell: bash -l {0}
-        command: |
-          echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
-          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+      run: |
+        set -euo pipefail
+        echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
+        deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} --attempts 3 --attempt-timeout-s=600 | tee --append "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
 
   upgrade-prod:
     runs-on: ubuntu-latest
@@ -160,13 +156,9 @@ jobs:
         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
-      uses: nick-fields/retry@v4
       id: health_check
-      with:
-        timeout_minutes: 10
-        max_attempts: 3
-        shell: bash -l {0}
-        command: |
-          echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
-          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+      run: |
+        set -euo pipefail
+        echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
+        deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} --attempts 3 --attempt-timeout-s=600 | tee --append "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
