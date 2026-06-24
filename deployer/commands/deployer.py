@@ -186,10 +186,39 @@ def deploy(
                 cleanup_values_schema_json(chart_dir)
 
 
+async def test_health_attempts(
+    hub_url: str,
+    service_api_token: str,
+    hub_type: str,
+    attempts: int,
+    attempt_timeout_s: int,
+):
+    for i in range(attempts):
+        try:
+            async with asyncio.timeout(attempt_timeout_s):
+                await test_hub_healthy(hub_url, service_api_token, hub_type)
+        except asyncio.TimeoutError:
+            print_colour(f"Attempt {i + 1} timed out, retrying", colour="red")
+        except Exception:
+            print_colour(
+                f"An error occurred during attempt {i + 1}, retrying", colour="red"
+            )
+        else:
+            return
+
+    raise RuntimeError("All attempts failed")
+
+
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def run_hub_health_check(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+    attempts: int = typer.Option(
+        3, help="Number of failures before declaring unhealthy"
+    ),
+    attempt_timeout_s: int = typer.Option(
+        600, help="Number of seconds before giving up on an attempt"
+    ),
 ):
     """
     Run a health check on a given hub on a given cluster. Optionally check scaling
@@ -255,4 +284,8 @@ def run_hub_health_check(
             )
         service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
 
-    asyncio.run(test_hub_healthy(hub_url, service_api_token, hub.type))
+    asyncio.run(
+        test_health_attempts(
+            hub_url, service_api_token, hub.type, attempts, attempt_timeout_s
+        )
+    )
