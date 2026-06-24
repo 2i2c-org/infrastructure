@@ -15,7 +15,10 @@ from ruamel.yaml.scanner import ScannerError
 
 yaml = YAML(typ="safe", pure=True)
 
-REPO_ROOT_PATH = Path(__file__).parent.parent.parent
+try:
+    REPO_ROOT_PATH = Path(os.environ["DEPLOYER_ROOT_PATH"])
+except KeyError:
+    REPO_ROOT_PATH = Path(__file__).parent.parent.parent
 HELM_CHARTS_DIR = REPO_ROOT_PATH.joinpath("helm-charts")
 CONFIG_CLUSTERS_PATH = REPO_ROOT_PATH.joinpath("config/clusters")
 
