@@ -65,6 +65,18 @@ basehub:
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon26:devcon26-cuahsi
                   image_pull_policy: Always
+              devcon7: # No longer a devcon image
+                display_name: CIROH Community NextGen Hub
+                slug: devcon7
+                kubespawner_override:
+                  image: quay.io/awiciroh/ngiab-2i2c:v1.2.3
+                  image_pull_policy: Always
+              devcon8: # No longer a devcon image
+                display_name: Community Assets Computation Hub
+                slug: devcon8
+                kubespawner_override:
+                  image: quay.io/2i2c/awi-ciroh-image:symfluence-v0.9.0
+                  image_pull_policy: Always
               devcon1:
                 display_name: Devcon25-USGS Surface Water Tools
                 slug: devcon1
@@ -101,20 +113,8 @@ basehub:
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon25:jmframe_d25
                   image_pull_policy: Always
-              devcon7:
-                display_name: CIROH Community NextGen Hub
-                slug: devcon7
-                kubespawner_override:
-                  image: quay.io/awiciroh/ngiab-2i2c:v1.2.3
-                  image_pull_policy: Always
-              devcon8:
-                display_name: Community Assets Computation Hub
-                slug: devcon8
-                kubespawner_override:
-                  image: quay.io/awiciroh/symfluence:v1.0.0
-                  image_pull_policy: Always
               devcon9:
-                display_name: Symfluence
+                display_name: Devcon25-Symfluence
                 slug: devcon9
                 kubespawner_override:
                   image: quay.io/2i2c/awi-ciroh-image:symfluence-beta
