@@ -216,6 +216,14 @@ hubs:
   - common.values.yaml
   - foothill.values.yaml
   - enc-foothill.secret.values.yaml
+- name: fullertoncc
+  display_name: Fullerton College
+  domain: fullertoncc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - fullertoncc.values.yaml
+  - enc-fullertoncc.secret.values.yaml
 - name: georgetown
   display_name: Georgetown University
   domain: georgetown.cloudbank.2i2c.cloud
@@ -648,6 +656,14 @@ hubs:
   - common.values.yaml
   - weber.values.yaml
   - enc-weber.secret.values.yaml
+- name: willamette
+  display_name: Willamette University
+  domain: willamette.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - willamette.values.yaml
+  - enc-willamette.secret.values.yaml
 - name: wlac
   display_name: West Los Angeles College
   domain: wlac.cloudbank.2i2c.cloud
