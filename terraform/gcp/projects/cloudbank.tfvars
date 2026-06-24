@@ -299,6 +299,10 @@ persistent_disks = {
     size        = 50
     name_suffix = "umd"
   }
+  "unc-chapel-hill" = {
+    size        = 25
+    name_suffix = "unc-chapel-hill"
+  }
   "uncw" = {
     size        = 25
     name_suffix = "uncw"
@@ -310,6 +314,10 @@ persistent_disks = {
   "unr" = {
     size        = 40
     name_suffix = "unr"
+  }
+  "utpb" = {
+    size        = 25
+    name_suffix = "utpb"
   }
   "virginia" = {
     size        = 180

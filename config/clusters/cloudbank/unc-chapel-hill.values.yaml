@@ -4,9 +4,6 @@ jupyterhub:
     memory:
       guarantee: 512M
       limit: 1G
-    image:
-      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image
-      tag: ee7f63c2b8e4
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -23,16 +20,16 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.oit.edu/themes/custom/oregontech/images/logo.png
-          name: Oregon Institute of Technology
-          url: https://www.oit.edu/
+          logo_url: https://www.unc.edu/wp-content/uploads/2025/11/University_Signature_White_Navy_rgb_h.svg
+          name: University of North Carolina at Chapel Hill
+          url: https://www.unc.edu/
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         allowed_idps:
-          http://sso.oit.edu/idp:
+          urn:mace:incommon:unc.edu:
             default: true
             username_derivation:
               username_claim: email
@@ -44,10 +41,10 @@ jupyterhub:
         admin_users:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
-        - malini.nagasundaram@oit.edu
+        - mclean@unc.edu
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-oit
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-unc-chapel-hill
   quotaEnforcer:
     config:
       QuotaManager:

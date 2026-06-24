@@ -592,6 +592,14 @@ hubs:
   - common.values.yaml
   - umd.values.yaml
   - enc-umd.secret.values.yaml
+- name: unc-chapel-hill
+  display_name: University of North Carolina at Chapel Hill
+  domain: unc-chapel-hill.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - unc-chapel-hill.values.yaml
+  - enc-unc-chapel-hill.secret.values.yaml
 - name: uncw
   display_name: University of North Carolina, Wilmington
   domain: uncw.cloudbank.2i2c.cloud
@@ -608,6 +616,14 @@ hubs:
   - common.values.yaml
   - und.values.yaml
   - enc-und.secret.values.yaml
+- name: utpb
+  display_name: University of Texas, Permian Basin
+  domain: utpb.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - utpb.values.yaml
+  - enc-utpb.secret.values.yaml
 - name: virginia
   display_name: University of Virginia
   domain: virginia.cloudbank.2i2c.cloud

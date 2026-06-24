@@ -118,9 +118,12 @@ runs:
   - name: Install gke-gcloud-auth-plugin
     if: inputs.provider == 'gcp'
     run: |
+      # Disable compilation of Python bytecode for perf
+      export CLOUDSDK_SKIP_PY_COMPILATION=1
       echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
       curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 
+      export VER=570.0.0-0
       sudo apt-get update -y
-      sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+      sudo apt-get install -y --allow-downgrades google-cloud-cli=${VER} google-cloud-cli-gke-gcloud-auth-plugin=${VER}
     shell: bash
