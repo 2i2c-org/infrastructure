@@ -2,8 +2,8 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     memory:
-      guarantee: 512M
-      limit: 1G
+      guarantee: 1G
+      limit: 2G
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image
       tag: ee7f63c2b8e4
