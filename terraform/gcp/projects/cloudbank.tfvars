@@ -107,6 +107,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "fresno"
   }
+  "fullertoncc" = {
+    size        = 25
+    name_suffix = "fullertoncc"
+  }
   "georgetown" = {
     size        = 25
     name_suffix = "georgetown"
@@ -330,6 +334,10 @@ persistent_disks = {
   "weber" = {
     size        = 25
     name_suffix = "weber"
+  }
+  "willamette" = {
+    size        = 25
+    name_suffix = "willamette"
   }
   "wlac" = {
     size        = 20
