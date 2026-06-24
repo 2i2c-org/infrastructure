@@ -19,7 +19,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - uses: actions/setup-go@v6
 
           # There will almost never be a cache hit on the cache key when this job is
