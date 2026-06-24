@@ -23,10 +23,6 @@ env:
   TERM: xterm
   USE_GKE_GCLOUD_AUTH_PLUGIN: 'True'
 
-defaults:
-  run:
-    shell: bash -l {0}
-
 jobs:
   generate-jobs:
     runs-on: ubuntu-latest
@@ -40,13 +36,19 @@ jobs:
       with:
         submodules: true
 
-    - name: Setup deploy for ${{ inputs.cluster }} cluster
-      uses: ./.github/actions/setup-deploy
+    - uses: actions/setup-python@v6
       with:
-        provider: ${{ inputs.provider }}
+        python-version: '3.13'
+
+    - uses: actions/setup-go@v6
+
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install --editable .
+        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
     - name: Identify files that have been added or modified
-        # Action repo: https://github.com/dorny/paths-filter
+      # Action repo: https://github.com/dorny/paths-filter
       uses: dorny/paths-filter@v4
       id: changed-files
       with:
@@ -57,15 +59,15 @@ jobs:
             - added|modified: terraform/**
             - added|modified: eksctl/**
 
-        # This step will create a comment-body.txt file containing the jobs to be run in a
-        # Markdown table format to be posted on a Pull Request
+      # This step will create a comment-body.txt file containing the jobs to be run in a
+      # Markdown table format to be posted on a Pull Request
     - name: Generate matrix jobs
       id: generate-jobs
       run: |
         deployer plan-health-check "${{ steps.changed-files.outputs.changed_files }}"
 
-        # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
-        # know the PR number, so we save it to a file to pass to that workflow
+      # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
+      # know the PR number, so we save it to a file to pass to that workflow
     - name: Save Pull Request number to a file
       if: github.event_name == 'pull_request'
       run: |
@@ -119,12 +121,15 @@ jobs:
         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+      uses: nick-fields/retry@v4
       id: health_check
-      run: |
-        set -euo pipefail
-        echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
-        deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} --attempts 3 --attempt-timeout-s=600 | tee --append "$GITHUB_OUTPUT"
-        echo "EOF" >> "$GITHUB_OUTPUT"
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
+          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
   upgrade-prod:
     runs-on: ubuntu-latest
@@ -156,9 +161,12 @@ jobs:
         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+      uses: nick-fields/retry@v4
       id: health_check
-      run: |
-        set -euo pipefail
-        echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
-        deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} --attempts 3 --attempt-timeout-s=600 | tee --append "$GITHUB_OUTPUT"
-        echo "EOF" >> "$GITHUB_OUTPUT"
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
+          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
