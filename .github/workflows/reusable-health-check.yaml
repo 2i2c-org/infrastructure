@@ -65,6 +65,7 @@ jobs:
       with:
         timeout_minutes: 10
         max_attempts: 3
+        shell: bash -l {0}
         command: |
           set -euo pipefail
           echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"

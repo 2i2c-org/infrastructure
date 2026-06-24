@@ -124,6 +124,7 @@ jobs:
       with:
         timeout_minutes: 10
         max_attempts: 3
+        shell: bash -l {0}
         command: |
           echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
           deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
@@ -164,6 +165,7 @@ jobs:
       with:
         timeout_minutes: 10
         max_attempts: 3
+        shell: bash -l {0}
         command: |
           echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
           deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} | tee --append "$GITHUB_OUTPUT"
