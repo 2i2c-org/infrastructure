@@ -51,6 +51,10 @@ env:
   TERM: xterm
   USE_GKE_GCLOUD_AUTH_PLUGIN: 'True'
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
   # which files have been added or modified by recent GitHub activity and parses a list
@@ -73,25 +77,8 @@ jobs:
       with:
         submodules: true
 
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-    - uses: actions/setup-go@v6
-
-        # There will almost never be a cache hit on the cache key when this job is
-        # run, as it is the first of all jobs in this workflow. An exception is if
-        # this job is re-attempted as part of the same workflow run after
-        # succeeding previously.
-    - name: Save pip's install cache on job completion
-      uses: actions/cache@v5
-      with:
-        path: ~/.cache/pip
-        key: ${{ github.run_id }}
-
-    - name: Install deployer script's Python dependencies
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+    - name: Setup deployer
+      uses: ./.github/actions/setup-deploy
 
     - name: Get merged/open PR labels
       uses: actions/github-script@v8
@@ -637,12 +624,16 @@ jobs:
       with:
         submodules: true
 
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
-        gcp_workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}}
 
     - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
       run: |
