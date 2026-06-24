@@ -15,10 +15,14 @@ from ruamel.yaml.scanner import ScannerError
 
 yaml = YAML(typ="safe", pure=True)
 
-try:
+if "DEPLOYER_ROOT_PATH" in os.environ:
     REPO_ROOT_PATH = Path(os.environ["DEPLOYER_ROOT_PATH"])
-except KeyError:
+elif "GITHUB_WORKSPACE" in os.environ:
+    REPO_ROOT_PATH = Path(os.environ["GITHUB_WORKSPACE"])
+else:
     REPO_ROOT_PATH = Path(__file__).parent.parent.parent
+    assert (REPO_ROOT_PATH / "config").is_dir()
+
 HELM_CHARTS_DIR = REPO_ROOT_PATH.joinpath("helm-charts")
 CONFIG_CLUSTERS_PATH = REPO_ROOT_PATH.joinpath("config/clusters")
 
