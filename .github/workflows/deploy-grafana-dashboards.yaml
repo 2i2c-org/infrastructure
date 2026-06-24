@@ -4,7 +4,11 @@ on:
   schedule:
     # Run at 05:00 every day, ref: https://crontab.guru/#0_5_*_*_*
   - cron: 0 5 * * *
-  workflow_dispatch:
+  workflow_dispatch
+
+defaults:
+  run:
+    shell: bash -l {0}:
 
 jobs:
   identify_clusters:
@@ -35,22 +39,10 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
-    - uses: actions/setup-python@v6
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
+      uses: ./.github/actions/setup-deploy
       with:
-        python-version: '3.13'
-
-    - name: Install deployer
-      run: |
-        python3 -m pip install --editable .
-
-    - name: Install jsonnet (go-jsonnet)
-      run: |
-        JSONNET_VERSION=0.20.0
-        wget -qO- https://github.com/google/go-jsonnet/releases/download/v${JSONNET_VERSION}/go-jsonnet_${JSONNET_VERSION}_Linux_x86_64.tar.gz \
-            | tar -xvz --one-top-level=$HOME/.local/bin
-
-    - name: Install sops
-      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+        provider: ${{ matrix.jobs.provider }}
 
     - name: Setup sops credentials to decrypt repo secrets
       uses: google-github-actions/auth@v3
