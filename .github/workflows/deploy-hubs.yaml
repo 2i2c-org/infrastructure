@@ -497,6 +497,7 @@ jobs:
       with:
         timeout_minutes: 10
         max_attempts: 3
+        shell: bash -l {0}
         command: |
           deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
@@ -645,6 +646,7 @@ jobs:
       with:
         timeout_minutes: 10
         max_attempts: 3
+        shell: bash -l {0}
         command: |
           deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
