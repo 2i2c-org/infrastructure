@@ -223,11 +223,11 @@ Make sure to run this command **inside** the `eksctl` directory, otherwise it ca
 ```
 
 ```{note}
-The `--install-nvidia-plugin=false` flag is only required whilst https://github.com/eksctl-io/eksctl/issues/8550 remains unfixed and unreleased.
+`eksctl>=0.221.0` is needed to fix GPU plugin support.
 ```
 
 ```bash
-eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml --install-nvidia-plugin=false 
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml 
 ```
 
 This might take a few minutes.
