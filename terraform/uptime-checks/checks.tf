@@ -176,8 +176,8 @@ resource "google_monitoring_alert_policy" "prometheus_simple_uptime_alert" {
       AND metric.type = "monitoring.googleapis.com/uptime_check/check_passed"
       AND metric.labels.check_id = "${google_monitoring_uptime_check_config.prometheus_simple_uptime_check[each.key].uptime_check_id}"
       EOT
-      # Alert if we have a failure condition for 11 minutes - given we do checks
-      # every 5 minutes, this means we alert if two checks have failed. This shoulod
+      # Alert if we have a failure condition for 31 minutes - given we do checks
+      # every 15 minutes, this means we alert if two checks have failed. This should
       # prevent alerts if the hub is momentarily down during a deployment. All alerts
       # *must* be actionable, so we trade-off some latency here for resiliency.
       duration        = "1860s"
