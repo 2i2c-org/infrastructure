@@ -5,8 +5,6 @@ basehub:
         templateVars:
           # To login to earthscope staging, now use https://staging.geolab.earthscope.cloud/hub/oauth_login
           redirect_to: https://www.earthscope.org/data/geolab/
-    debug:
-      enabled: true
     hub:
       config:
         GenericOAuthenticator:
