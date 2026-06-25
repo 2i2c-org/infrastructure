@@ -3,13 +3,6 @@ nfs:
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
 jupyterhub:
   custom:
     2i2c:
@@ -19,7 +12,7 @@ jupyterhub:
       templateVars:
         org:
           name: bnext-bio
-          logo_url: https://bnext.bio/assets/logo_1752007791752-BRLYypJ5.png
+          logo_url: https://raw.githubusercontent.com/nucleus-eng/nucleus-docs/main/logo.png
           url: https://bnext.bio/
         designed_by:
           name: 2i2c
@@ -136,13 +129,7 @@ binderhub-service:
     # Otherwise we may scale up a larger node than needed
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      node.kubernetes.io/instance-type: r5.xlarge
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        node.kubernetes.io/instance-type: r5.xlarge
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder

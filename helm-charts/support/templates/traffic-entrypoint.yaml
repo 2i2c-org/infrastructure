@@ -7,6 +7,9 @@ metadata:
     app: cluster-entrypoint
 spec:
   type: LoadBalancer
+  # Avoid extra hop and preserve client IP, as JupyterHub
+  # uses that as part of its XSRF check.
+  externalTrafficPolicy: Local
   ports:
     - name: http
       port: 80

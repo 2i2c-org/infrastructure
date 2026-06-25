@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 prometheus:
   server:
     # Bumped as part of https://github.com/2i2c-org/infrastructure/issues/4632

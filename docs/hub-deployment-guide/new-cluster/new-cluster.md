@@ -223,11 +223,11 @@ Make sure to run this command **inside** the `eksctl` directory, otherwise it ca
 ```
 
 ```{note}
-The `--install-nvidia-plugin=false` flag is only required whilst https://github.com/eksctl-io/eksctl/issues/8550 remains unfixed and unreleased.
+`eksctl>=0.221.0` is needed to fix GPU plugin support.
 ```
 
 ```bash
-eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml --install-nvidia-plugin=false 
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml 
 ```
 
 This might take a few minutes.
@@ -354,6 +354,19 @@ An automated deployer command doesn't exist yet, these files need to be manually
   ```
 ````
 `````
+
+## Specify `hubspot_deal_id`
+
+We want to match every cluster we deploy to a particular contract that we have to run it
+for a specific time. We manage contracts on Hubspot, and each contract is associated with
+a "Deal". We specify the id of this deal for each Cluster under `metadata.2i2c.hubspot_deal_id`,
+and it must be specified when creating the cluster. The new hub request issue should have
+a Hubspot deal URL, and you can determine the deal ID by either:
+
+1. Opening the URL, logging into hubspot and looking in the sidebar
+2. Manually just look at the URL - if the URL of the deal looks like
+   https://app-na2.hubspot.com/contacts/242496330/record/0-3/96602996427,
+   the deal ID is the last integer, that comes after `0-3`.
 
 ## Add GPU nodegroup if needed
 

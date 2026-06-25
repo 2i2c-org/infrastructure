@@ -13,7 +13,7 @@ dependencies:
   # cost. If we ever have multiple prometheii on the same cluster, we can
   # reconsider using the operator.
   - name: prometheus
-    version: 28.13.0
+    version: 29.2.1
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
@@ -59,6 +59,6 @@ dependencies:
   # jupyterhub-cost-monitoring, cost reporting for Grafana
   # https://github.com/2i2c-org/jupyterhub-cost-monitoring
   - name: jupyterhub-cost-monitoring
-    version: "v1.1.1"
+    version: "1.1.2"
     repository: https://2i2c.org/jupyterhub-cost-monitoring/
     condition: jupyterhub-cost-monitoring.enabled

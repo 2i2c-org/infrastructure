@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [miracosta.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [miracosta.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -28,7 +23,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://miracosta.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://miracosta.fedgw.com/gateway:
             default: true
@@ -49,6 +43,3 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-miracosta
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.miracosta.svc.cluster.local

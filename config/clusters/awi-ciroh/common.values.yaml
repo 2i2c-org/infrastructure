@@ -3,9 +3,6 @@ basehub:
     enabled: true
     pv:
       enabled: true
-      mountOptions:
-      - soft
-      - noatime
   jupyterhub-home-nfs:
     config:
       groupsExporter:
@@ -13,6 +10,10 @@ basehub:
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         scheduler:
           cores:
@@ -47,7 +48,29 @@ basehub:
       defaultUrl: /lab
       cloudMetadata:
         blockWithIptables: false
+      storage:
+        extraVolumes:
+          002-scratch-session:
+            name: scratch-session
+            emptyDir:
+              # Limit total size, to prevent pod being evicted
+              # with over use by any one user. This can be increased,
+              # but may need to increase the size of the node disk
+              sizeLimit: 10Gi
+        extraVolumeMounts:
+          002-scratch-session:
+            name: scratch-session
+            mountPath: /tmp
     hub:
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+        user:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
       config:
         JupyterHub:
           authenticator_class: github

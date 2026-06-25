@@ -14,6 +14,18 @@
 cluster-autoscaler:
   enabled: false
 
+copyfail:
+  enabled: true
+  image:
+    repository: quay.io/2i2c/copyfail-mitigation
+    tag: main@sha256:8b16afdd1bd74b3aad006d695020408f47966609ff0225c5c666312d7e8e1a9e
+
+dirtyfrag:
+  enabled: true
+  image:
+    repository: quay.io/2i2c/dirtyfrag-mitigation
+    tag: main@sha256:e1510268a125ea3d17663e11f63d4dcfded3e361c5bfccf2cc3d689f0fd0984b
+
 clusterEntrypoint:
   enabled: true
   targetController: ingress-nginx
@@ -101,6 +113,22 @@ ingress-nginx:
 # values ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/values.yaml
 #
 prometheus:
+  configmapReload:
+    reloadUrl: http://$(PROMETHEUS_USERNAME):$(PROMETHEUS_PASSWORD)@127.0.0.1:9090/-/reload
+    env:
+    - name: PROMETHEUS_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: prometheus-auth
+          key: password
+          optional: false
+    - name: PROMETHEUS_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: prometheus-auth
+          key: username
+          optional: false
+
   alertmanager:
     enabled: false
 
@@ -165,20 +193,17 @@ prometheus:
   server:
     retention: 1098d # Keep data for at least 3 years
 
+    extraArgs:
+      web.config.file: /etc/config/web.yml
+
+    global:
+      # node_exporter on some nodes can take upto 15s, so let's increase
+      # the timeout for each scrape
+      scrape_timeout: 30s
+
     ingress:
       ingressClassName: nginx
       annotations:
-        # Annotations required to enable basic authentication for any ingress
-        # into prometheus server from the outside world. This secret is
-        # created via templates/prometheus-ingress-auth/secret.yaml file in the support chart,
-        # and the contents are controlled by config under prometheusIngressAuthSecret.
-        # These annotations set it up for ingress-nginx ingress controller
-        nginx.ingress.kubernetes.io/auth-type: basic
-        nginx.ingress.kubernetes.io/auth-secret: prometheus-ingress-auth-basic
-        nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
-        # These annotations set it up for the nginx-ingress controller
-        nginx.org/basic-auth-secret: prometheus-nginx-ingress-auth-basic
-        nginx.org/auth-realm: "Authentication Required"
         # If we enable external ingress into prometheus, we must secure it with HTTPS
         cert-manager.io/cluster-issuer: letsencrypt-prod
         # Increase timeout for each query made by the grafana frontend to the
@@ -384,19 +409,23 @@ grafana:
   plugins:
     - yesoreyeram-infinity-datasource
 
+  envFromSecret: prometheus-auth
+
   datasources:
     datasources.yaml:
       apiVersion: 1
       datasources:
-        # Automatically add the prometheus server in the same namespace as the grafana as a datasource
         - name: prometheus
           orgId: 1
           type: prometheus
-          # This is the name of the kubernetes service exposed by the prometheus server
           url: http://support-prometheus-server
           access: proxy
           isDefault: false
           editable: false
+          basicAuth: true
+          basicAuthUser: '${username}'
+          secureJsonData:
+            basicAuthPassword: '${password}'
         - name: yesoreyeram-infinity-datasource
           type: yesoreyeram-infinity-datasource
           isDefault: false
@@ -481,9 +510,8 @@ jupyterhub-cost-monitoring:
 # -------------------------------------------------------------------------------
 #
 
-prometheusIngressAuthSecret:
-  enabled: false
-  users: []
+prometheusAuthSecret:
+  enabled: true
 
 redirects:
   rules: []

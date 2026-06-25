@@ -2,20 +2,6 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.14.113
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/victor-prod
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0aa2e34864c248eb2
@@ -24,18 +10,7 @@ basehub:
         QuotaManager:
           hard_quota: 20 # in GiB
   jupyterhub:
-    ingress:
-      hosts: [hub.victorproject.org]
-      tls:
-      - hosts: [hub.victorproject.org]
-        secretName: https-auto-tls
-    hub:
-      config:
-        CILogonOAuthenticator:
-          oauth_callback_url: https://hub.victorproject.org/hub/oauth_callback
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
       profileList:
         # IMPORTANT: Staging and prod's profileList's are meant to be kept
         #            equivalent with the exception that staging adds
@@ -51,15 +26,15 @@ basehub:
                 display_name: Victor Notebook
                 default: true
                 kubespawner_override:
-                  image: quay.io/volcanocyber/victor-notebook:bbedd617d96e
+                  image: quay.io/volcanocyber/victor-notebook:a7c0638733cc
               b-pytorch-notebook:
                 display_name: Pangeo ML Notebook (Pytorch)
                 kubespawner_override:
-                  image: quay.io/pangeo/pytorch-notebook:2024.09.11
+                  image: quay.io/pangeo/pytorch-notebook:2026.04.29
               c-ml-notebook:
                 display_name: Pangeo ML Notebook (Tensorflow)
                 kubespawner_override:
-                  image: quay.io/pangeo/ml-notebook:2024.09.11
+                  image: quay.io/pangeo/ml-notebook:2026.04.29
           resource_allocation:
             display_name: Resource Allocation
             choices:
@@ -69,7 +44,7 @@ basehub:
               # choices(["r5.xlarge:4", "r5.4xlarge:3"], "proportional-memory-strategy", default=True)
               # ]]]
               mem_4_gb:
-                display_name: ~4 GB RAM, ~0.5 CPUs
+                display_name: ~4 GB RAM, ~0.5 CPUs (Recommended for Lighter Models/Scripting)
                 description: Up to ~4 CPUs when available
                 kubespawner_override:
                   mem_guarantee: 3902839759
@@ -80,7 +55,7 @@ basehub:
                     node.kubernetes.io/instance-type: r5.xlarge
                 default: true
               mem_7_gb:
-                display_name: ~7 GB RAM, ~0.9 CPUs
+                display_name: ~7 GB RAM, ~0.9 CPUs (Recommended for Heavier Models/Larger Datasets)
                 description: Up to ~4 CPUs when available
                 kubespawner_override:
                   mem_guarantee: 7805679519
@@ -100,7 +75,7 @@ basehub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_29_gb:
-                display_name: ~29 GB RAM, ~4 CPUs
+                display_name: ~29 GB RAM, ~4 CPUs (Recommended for Some Remote Sensing Workflows)
                 description: ~4 CPUs always available
                 kubespawner_override:
                   mem_guarantee: 31222718077

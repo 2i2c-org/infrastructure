@@ -79,7 +79,13 @@ hub_cloud_permissions = {
               "arn:aws:s3:::csdap-iceye-delivery",
               "arn:aws:s3:::csdap-iceye-delivery/*",
               "arn:aws:s3:::naip-analytic",
-              "arn:aws:s3:::naip-analytic/*"
+              "arn:aws:s3:::naip-analytic/*",
+              "arn:aws:s3:::csdap-planet-skysat-delivery",
+              "arn:aws:s3:::csdap-planet-skysat-delivery/*",
+              "arn:aws:s3:::nasa-disasters-dev",
+              "arn:aws:s3:::nasa-disasters-dev/*",
+              "arn:aws:s3:::nasa-disasters-staging",
+              "arn:aws:s3:::nasa-disasters-staging/*"
             ]
           },
           {
@@ -153,7 +159,13 @@ hub_cloud_permissions = {
               "arn:aws:s3:::csdap-iceye-delivery",
               "arn:aws:s3:::csdap-iceye-delivery/*",
               "arn:aws:s3:::naip-analytic",
-              "arn:aws:s3:::naip-analytic/*"
+              "arn:aws:s3:::naip-analytic/*",
+              "arn:aws:s3:::csdap-planet-skysat-delivery",
+              "arn:aws:s3:::csdap-planet-skysat-delivery/*",
+              "arn:aws:s3:::nasa-disasters-dev",
+              "arn:aws:s3:::nasa-disasters-dev/*",
+              "arn:aws:s3:::nasa-disasters-staging",
+              "arn:aws:s3:::nasa-disasters-staging/*"
             ]
           },
           {
@@ -178,6 +190,7 @@ ebs_volumes = {
     size        = 2500 # 2.5TB
     type        = "gp3"
     name_suffix = "prod"
+    throughput  = 250 # Double the throughput, as we kept getting alerts for throughput consistently
     tags        = { "2i2c:hub-name" : "prod" }
   }
 }

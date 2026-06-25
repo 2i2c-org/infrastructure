@@ -1,10 +1,4 @@
 basehub:
-  nfs:
-    pv:
-      serverIP: storage-quota-home-nfs.staging.svc.cluster.local
-  userServiceAccount:
-    annotations:
-      iam.gke.io/gcp-service-account: awi-ciroh-staging@ciroh-jupyterhub-423218.iam.gserviceaccount.com
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-staging
@@ -13,11 +7,6 @@ basehub:
         QuotaManager:
           hard_quota: 20 # in GiB
   jupyterhub:
-    ingress:
-      hosts: [staging.ciroh.awi.2i2c.cloud]
-      tls:
-      - hosts: [staging.ciroh.awi.2i2c.cloud]
-        secretName: https-auto-tls
     singleuser:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
@@ -142,5 +131,3 @@ basehub:
           # Requested as part of https://2i2c.freshdesk.com/a/tickets/1607, to
           # make it easier to test custom images
           image_pull_policy: Always
-        GitHubOAuthenticator:
-          oauth_callback_url: https://staging.ciroh.awi.2i2c.cloud/hub/oauth_callback

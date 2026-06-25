@@ -18,8 +18,9 @@ yaml = YAML(typ="safe", pure=True)
 UBUNTU_IMAGE = "ubuntu:22.04"
 
 
-@exec_app.command()
+@exec_app.command(context_settings={"allow_extra_args": True})
 def root_homes(
+    ctx: typer.Context,
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
     persist: bool = typer.Option(
@@ -205,6 +206,8 @@ def root_homes(
         "/bin/bash",
         "-l",
     ]
+    if ctx.args:
+        exec_cmd.extend(("-c", " ".join(ctx.args)))
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as tmpf:
         # Dump the pod spec to a temporary file
@@ -269,8 +272,9 @@ def root_homes(
                         subprocess.check_call(["kubectl", "delete", "pv", pv_name])
 
 
-@exec_app.command()
+@exec_app.command(context_settings={"allow_extra_args": True})
 def homes(
+    ctx: typer.Context,
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
 ):
@@ -280,35 +284,20 @@ def homes(
     # Name pod to include hub name so it is displayed as part of the default prompt
     # This makes sure we don't end up deleting the wrong thing
     pod_name = f"{cluster_name}-{hub_name}-shell"
-    pod = {
-        "apiVersion": "v1",
-        "kind": "Pod",
-        "spec": {
-            "terminationGracePeriodSeconds": 1,
-            "automountServiceAccountToken": False,
-            "volumes": [
-                # This PVC is created by basehub
+    overrides = [
+        {
+            "op": "add",
+            "path": "/spec/containers/0/volumeMounts",
+            "value": [{"name": "home", "mountPath": "/home"}],
+        },
+        {
+            "op": "add",
+            "path": "/spec/volumes",
+            "value": [
                 {"name": "home", "persistentVolumeClaim": {"claimName": "home-nfs"}}
             ],
-            "containers": [
-                {
-                    "name": pod_name,
-                    # Use ubuntu image so we get better gnu rm
-                    "image": UBUNTU_IMAGE,
-                    "stdin": True,
-                    "stdinOnce": True,
-                    "tty": True,
-                    "volumeMounts": [
-                        {
-                            "name": "home",
-                            "mountPath": "/home",
-                        }
-                    ],
-                }
-            ],
         },
-    }
-
+    ]
     cmd = [
         "kubectl",
         "-n",
@@ -316,8 +305,14 @@ def homes(
         "run",
         "--rm",  # Deletes the pod when the process completes, successfully or otherwise
         "-it",  # Give us a shell!
+        "--override-type",
+        "json",
         "--overrides",
-        json.dumps(pod),
+        json.dumps(overrides),
+        "--grace-period",
+        "1",
+        "--restart",
+        "Never",
         "--image",
         # Use ubuntu image so we get GNU rm and other tools
         # Should match what we have in our pod definition
@@ -327,14 +322,18 @@ def homes(
         "/bin/bash",
         "-l",
     ]
+    if ctx.args:
+        cmd.extend(("-c", " ".join(ctx.args)))
+
     cluster = Cluster.from_name(cluster_name)
 
     with cluster.auth():
         subprocess.check_call(cmd)
 
 
-@exec_app.command()
+@exec_app.command(context_settings={"allow_extra_args": True})
 def hub(
+    ctx: typer.Context,
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
 ):
@@ -373,11 +372,15 @@ def hub(
             "/bin/bash",
             "-l",
         ]
+        if ctx.args:
+            cmd.extend(("-c", " ".join(ctx.args)))
+
         subprocess.check_call(cmd)
 
 
-@exec_app.command()
+@exec_app.command(context_settings={"allow_extra_args": True})
 def home_nfs_server(
+    ctx: typer.Context,
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
 ):
@@ -416,6 +419,8 @@ def home_nfs_server(
             "/bin/bash",
             "-l",
         ]
+        if ctx.args:
+            cmd.extend(("-c", " ".join(ctx.args)))
         subprocess.check_call(cmd)
 
 

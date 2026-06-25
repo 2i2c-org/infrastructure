@@ -2,41 +2,12 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.29.199
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
   jupyterhub:
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
     hub:
       image:
-        # custom image built to install jupyterhub-fancy-profiles version 0.6.0 for testing
-        tag: 0.0.1-0.dev.git.14502.hff14253da
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
-      loadRoles:
-        binder:
-          services:
-          - binder
-          scopes:
-          - servers
-          - read:users
-        user:
-          scopes:
-          - self
-          - access:services!service=binder
-      services:
-        binder:
-          oauth_client_id: service-binderhub
-          oauth_no_confirm: true
-          oauth_redirect_uri: https://staging.hub.openveda.cloud/services/binder/oauth_callback
-    ingress:
-      hosts: [staging.hub.openveda.cloud]
-      tls:
-      - hosts: [staging.hub.openveda.cloud]
-        secretName: https-auto-tls
+        # custom image built to install jupyterhub-fancy-profiles from commit b63a655d474b45d57cd38adc8e01b7607da2064d
+        # from the PR https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/149 for testing
+        tag: 0.0.1-0.dev.git.15973.hffad58606
     custom:
       homepage:
         gitRepoBranch: staging
@@ -45,28 +16,12 @@ basehub:
   dask-gateway:
     gateway:
       backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
-        worker:
-          extraPodConfig:
-            node_selector:
-              2i2c/hub-name: staging
         imagePullSecrets: [name: image-pull-secret]
 
   binderhub-service:
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: staging
     config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: staging
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-staging-
-        auth_enabled: true
-        hub_url: https://staging.hub.openveda.cloud
     extraEnv:
     - name: JUPYTERHUB_API_URL
       value: https://staging.hub.openveda.cloud/hub/api

@@ -13,7 +13,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://research.temple.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - 2i2c-org:hub-access-for-2i2c-staff
         - TempleDataCompute:administrator
@@ -27,8 +26,6 @@ jupyterhub:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23li8mGZjoYxOom3Gv
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-research-github-push-access
       SCRATCH_BUCKET: s3://temple-scratch-research/$(JUPYTERHUB_USER)
-    nodeSelector:
-      2i2c/hub-name: research
     profileList:
     - display_name: Default
       description: Choose image and resource allocation
@@ -151,18 +148,7 @@ jupyterhub:
           node.kubernetes.io/instance-type: g4dn.xlarge
         extra_resource_limits:
           nvidia.com/gpu: '1'
-  ingress:
-    hosts: [research.temple.2i2c.cloud]
-    tls:
-    - hosts: [research.temple.2i2c.cloud]
-      secretName: https-auto-tls
 binderhub-service:
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: research
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        2i2c/hub-name: research
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-research-

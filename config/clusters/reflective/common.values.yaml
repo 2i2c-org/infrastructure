@@ -3,15 +3,13 @@ nfs:
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
 jupyterhub:
   custom:
     daskhubSetup:
@@ -45,10 +43,19 @@ jupyterhub:
           and we will get back to you.
 
           For more information about using this resource, see our
-          <a href="For more information about using this resource, see our Jupyter-book">
+          <a href="https://reflectivecloud.github.io/Book/intro.html">
             Jupyter-book
           </a>
   hub:
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+      user:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
     config:
       JupyterHub:
         authenticator_class: github

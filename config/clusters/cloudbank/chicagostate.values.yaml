@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [chicagostate.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [chicagostate.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
     memory:
@@ -33,7 +28,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://chicagostate.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
@@ -59,6 +53,3 @@ jupyterhub-home-nfs:
         memory: 500M
       limits:
         memory: 1.5G
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.chicagostate.svc.cluster.local

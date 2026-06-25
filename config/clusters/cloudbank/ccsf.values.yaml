@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [ccsf.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [ccsf.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -37,7 +32,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://ccsf.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
@@ -71,6 +65,3 @@ jupyterhub-home-nfs:
       QuotaManager:
         hard_quota: 15 # in GiB
 
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.ccsf.svc.cluster.local

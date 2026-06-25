@@ -5,16 +5,13 @@ basehub:
       # pv.serverIP is set in each individual staging and prod config file
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         imagePullSecrets: [name: image-pull-secret]
 
@@ -44,10 +41,22 @@ basehub:
             name: NASA ICESat-2 Science Team
             url: https://icesat-2.gsfc.nasa.gov/science_definition_team
     hub:
+      image:
+        # Temporary image with jupyterhub-fancy-profiles 0.6.0
+        tag: 0.0.1-0.dev.git.15540.hbaaa997ce
       allowNamedServers: true
       config:
         JupyterHub:
           authenticator_class: github
+        Spawner:
+          # Scopes granted to the server for the *browser* token
+          # This list was taken from https://jupyterhub.readthedocs.io/en/stable/tutorial/sharing.html#grant-servers-permission-to-share-themselves-admin
+          # and then reduced to _only_ the current server
+          oauth_client_allowed_scopes:
+          - shares!server
+          - servers!server
+          - read:users:name
+          - list:users
         GitHubOAuthenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to populate the teams in the auth state
@@ -72,7 +81,17 @@ basehub:
         user:
           scopes:
           - self
+            # Sharing scopes
           - shares!user
+          - read:users:name
+          - list:users
+          # Access to binder service
+          - access:services!service=binder
+          - access:services!service=dask-gateway
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
     singleuser:
       cloudMetadata:
         blockWithIptables: false
@@ -269,13 +288,7 @@ basehub:
     enabled: true
     # Explicitly specify what nodes we want for our builds
     # Otherwise we may scale up a larger node than needed
-    dockerApi:
-      nodeSelector:
-        node.kubernetes.io/instance-type: r5.xlarge
     config:
-      KubernetesBuildExecutor:
-        node_selector:
-          node.kubernetes.io/instance-type: r5.xlarge
       DockerRegistry:
         url: &url https://quay.io
         username: &username imagebuilding-non-gcp-hubs+image_builder

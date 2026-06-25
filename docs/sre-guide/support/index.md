@@ -10,7 +10,6 @@ There is also a wiki with [per-cluster support notes](https://github.com/2i2c-or
 home-dir
 simple-python-package
 decrypt-age
-build-image-remotely
 credits
 grafana-account
 prometheus-credentials

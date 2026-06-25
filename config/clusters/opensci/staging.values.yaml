@@ -7,13 +7,6 @@ jupyterhub-home-nfs:
 
 
 jupyterhub:
-  ingress:
-    hosts:
-    - staging.opensci.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - staging.opensci.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -34,8 +27,6 @@ jupyterhub:
           name: ''
           url: ''
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: staging
     profileList:
     - display_name: Choose your environment and resources
       slug: only-choice
@@ -56,7 +47,7 @@ jupyterhub:
               display_name: Pangeo Notebook Image
               description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
-                image: pangeo/pangeo-notebook:2023.09.11
+                image: pangeo/pangeo-notebook:2025.01.24
             geospatial:
               display_name: Rocker Geospatial
               description: R image with RStudio, the tidyverse & Geospatial tools
@@ -132,7 +123,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://staging.opensci.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - 2i2c-demo-hub-access
 

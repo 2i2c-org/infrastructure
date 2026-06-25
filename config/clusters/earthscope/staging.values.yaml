@@ -1,97 +1,94 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-staging
-
   jupyterhub:
-    ingress:
-      hosts:
-      - staging.geolab.earthscope.cloud
-      tls:
-      - hosts: [staging.geolab.earthscope.cloud]
-        secretName: https-auto-tls
     custom:
       homepage:
         templateVars:
           # To login to earthscope staging, now use https://staging.geolab.earthscope.cloud/hub/oauth_login
           redirect_to: https://www.earthscope.org/data/geolab/
     hub:
-      image:
-        name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 0.0.1-0.dev.git.15467.h0cadc91ad
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token
           authorize_url: https://login-dev.earthscope.org/authorize
           userdata_url: https://login-dev.earthscope.org/userinfo
           logout_redirect_url: https://login-dev.earthscope.org/v2/logout?client_id=Kn6kSKtw9TqgrSrEmDS0rlBM7Sc69BkL
-          oauth_callback_url: https://staging.geolab.earthscope.cloud/hub/oauth_callback
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
+          admin_groups:
+          - geolab-admin
         UsageQuotaManager:
-          prometheus_scrape_interval: 60
-          prometheus_url: http://support-prometheus-server.support.svc.cluster.local
-          prometheus_usage_metrics:
-            memory: kube_pod_container_resource_requests{resource='memory'}
           scope_backup_strategy:
             empty:
               resource: memory
               limit:
-                value: 1000
+                value: 2500
                 unit: GiB-hours
-              window: 7
+              window: 30
             intersection: max
-      extraConfig:
-        11-enforce-usage-quotas: |
-          from jupyterhub_usage_quotas.manager import SpawnException, UsageQuotaManager
-
-          quota_manager = UsageQuotaManager(config=c)
-
-          async def quota_pre_spawn_hook(spawner):
-              try:
-                  output = await quota_manager.enforce(spawner)
-                  launch_flag = output["allow_server_launch"]
-              except Exception:
-                  raise SpawnException(
-                      status_code=424,
-                      log_message="Spawn failed occurred due to a failed dependency in the usage quota system. Please contact your hub admin for assistance.",
-                  )
-              if launch_flag is False:
-                  raise SpawnException(
-                      status_code=403,
-                      log_message=f"{output['error']['message']}",
-                      html_message=f"<p>Compute {output['quota']['resource']} quota limit exceeded.</p><p style='font-size:100%'>You have used <span style='color:var(--bs-red)'>{output['quota']['used']:.2f}</span> / {output['quota']['limit']['value']:.2f} {output['quota']['limit']['unit']} in the last {output['quota']['window']} days.</p><p style='font-size:100%'>Contact your JupyterHub admin if you need additional quota.</p><i style='font-size:100%;color:var(--bs-gray)'>Last updated: {output["timestamp"]} (UTC).</i>",
-                  )
-          c.KubeSpawner.pre_spawn_hook = quota_pre_spawn_hook                   
+          policy:
+          - resource: memory
+            limit:
+              value: 5000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-sm
+          - resource: memory
+            limit:
+              value: 10000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-md
+          - resource: memory
+            limit:
+              value: 50000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-lg
+      loadRoles:
+        dask-users:
+          scopes:
+          - access:services!service=dask-gateway
+          groups:
+          - dask
+      extraFiles:
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            import os
+            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageConfig.hub_namespace = "staging"
+            c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
+            c.UsageViewer.public_hub_url = "https://staging.geolab.earthscope.cloud/"
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: staging
+    proxy:
+      chp:
+        networkPolicy:
+          egress:
+          - to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: jupyterhub
+                  app.kubernetes.io/component: hub
+            ports:
+            - port: 9000
+
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0eb31cae0bd3ee261
+    quotaEnforcer:
+      config:
+        QuotaManager:
+          hard_quota: 10 # in GiB
 
   nfs:
     pv:
       serverIP: 10.100.35.0
-  binderhub-service:
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: staging
-    config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: staging

@@ -16,12 +16,9 @@ jupyterhub:
       value: present
       effect: NoSchedule
     continuous:
+      # We don't need this right now, and it's causing alert
+      # failures
       enabled: true
-  ingress:
-    hosts: [gpu-demo.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [gpu-demo.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     defaultUrl: /lab
     profileList:
@@ -38,6 +35,11 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
+            00-base-user-image:
+              display_name: Default Image
+              description: RStudio, VS Code, JupyterLab, Python, R
+              kubespawner_override:
+                name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:6d61d3c15d47
             00-slm:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
@@ -143,6 +145,3 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 30 # in GiB
-nfs:
-  pv:
-    serverIP: storage-quota-home-nfs.gpu-demo.svc.cluster.local

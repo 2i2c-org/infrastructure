@@ -9,20 +9,26 @@ jupyterhub-home-nfs:
       QuotaManager:
         hard_quota: 2 # in GiB
 jupyterhub:
-  ingress:
-    hosts: [projectpythia.2i2c.cloud]
-    tls:
-    - hosts: [projectpythia.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
         org:
           name: ProjectPythia
+
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: prod
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://projectpythia.2i2c.cloud/hub/oauth_callback
+    extraFiles:
+      02-menus:
+        mountPath: /srv/conda/envs/notebook/share/jupyter/lab/settings/overrides.json
+
+        data:
+          '@jupyterlab/mainmenu-extension:plugin':
+            menus:
+            - id: jp-mainmenu-help
+              rank: 1001
+              items:
+              - command: help:open
+                rank: 1001
+                args:
+                  url: https://github.com/settings/connections/applications/Ov23liWxGyeDz5ETgPF3
+                  text: Revoke GitHub Token
+                  newBrowserTab: true

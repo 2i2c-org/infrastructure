@@ -183,22 +183,8 @@ class Cluster:
             for values_file in values_files:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
-                    render_args = {
-                        "jsonnet_file": Path(values_file),
-                        "provider": self.spec["provider"],
-                        "cluster_name": (
-                            self.spec["aws"]["clusterName"]
-                            if self.spec["provider"] == "aws"
-                            else self.spec["name"]
-                        ),
-                        "hub_name": None,
-                    }
-                    if self.spec["provider"] == "aws":
-                        render_args["aws_account_id"] = self.spec["aws"]["account"]
-                    else:
-                        render_args["aws_account_id"] = None
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(**render_args)
+                        self.render_jsonnet(Path(values_file))
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:
@@ -444,14 +430,6 @@ class Cluster:
         with open(config_file) as f:
             support_config = yaml.load(f)
 
-        # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
-        if not support_config.get("prometheusIngressAuthSecret", {}).get(
-            "enabled", False
-        ):
-            raise ValueError(
-                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
-            )
-
         tls_config = (
             support_config.get("prometheus", {})
             .get("server", {})
@@ -480,12 +458,36 @@ class Cluster:
                 support_config = yaml.load(f)
 
         # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
-        if "prometheusIngressAuthSecret" not in support_config:
+        auth = support_config.get("prometheusAuthSecret", {})
+        if auth is None:
             raise ValueError(
-                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
+                f"""`prometheusAuthSecret` secret wasn't configured for {self.spec["name"]}"""
             )
 
-        return (
-            support_config["prometheusIngressAuthSecret"]["users"][0]["username"],
-            support_config["prometheusIngressAuthSecret"]["users"][0]["password"],
-        )
+        return (auth["username"], auth["password"])
+
+    @contextmanager
+    def render_jsonnet(self, jsonnet_file: Path, **kwargs):
+        """
+        Render given jsonnet file with context of this cluster.
+
+        Any additional kwargs will be passed through to `utils.jsonnet.render_jsonnet`
+        """
+        render_args = {
+            "jsonnet_file": jsonnet_file,
+            "provider": self.spec["provider"],
+            "cluster_name": (
+                self.spec["aws"]["clusterName"]
+                if self.spec["provider"] == "aws"
+                else self.spec["name"]
+            ),
+        }
+        render_args.update(kwargs)
+        if self.spec["provider"] == "aws":
+            render_args["account_id"] = self.spec["aws"]["account"]
+        elif self.spec["provider"] == "gcp":
+            render_args["account_id"] = self.spec["gcp"]["project"]
+        else:
+            render_args["account_id"] = None
+        with render_jsonnet(**render_args) as rendered_file:
+            yield rendered_file

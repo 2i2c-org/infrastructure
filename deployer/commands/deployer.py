@@ -2,13 +2,11 @@
 Actions available when deploying many JupyterHubs to many Kubernetes clusters
 """
 
+import asyncio
 import base64
-import os
 import subprocess
 import sys
-from contextlib import redirect_stderr, redirect_stdout
 
-import pytest
 import typer
 from ruamel.yaml import YAML
 
@@ -25,6 +23,7 @@ from deployer.commands.validate.config import (
     validate_authenticator_config,
     validate_hub_config,
 )
+from deployer.health_check_tests.test_hub_health import test_hub_healthy
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
@@ -46,7 +45,7 @@ def deploy_support(
     # "kubectl apply" will be done on CRDs but sometimes more is needed.
     #
     cert_manager_version: str = typer.Option(
-        "v1.15.3", help="Version of cert-manager to install"
+        "v1.20.2", help="Version of cert-manager to install"
     ),
     debug: bool = typer.Option(
         False,
@@ -82,15 +81,23 @@ def deploy_support(
             )
 
 
+def determine_dask_gateway_version(chart_dir):
+    # Function to determine what dask-gateway version to install CRDs for
+    # We check the Chart file directly to get this info
+    chart_config = chart_dir / "Chart.yaml"
+    with open(chart_config, "r+") as f:
+        config = yaml.load(f)
+        for dep in config["dependencies"]:
+            if dep["name"] == "dask-gateway":
+                return dep["version"]
+
+
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
         None,
         help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
-    ),
-    dask_gateway_version: str = typer.Option(
-        "2024.1.0", help="Version of dask-gateway to install CRDs for"
     ),
     debug: bool = typer.Option(
         False,
@@ -125,6 +132,7 @@ def deploy(
             default_chart_dir = HELM_CHARTS_DIR / hub.spec["helm_chart"]
             chart_override = hub.spec.get("chart_override", None)
             if chart_override and "/" in chart_override:
+                # It's probably a path relative to the repo root
                 chart_override_path = REPO_ROOT_PATH / chart_override
                 chart_override = chart_override.split("/")[-1]
             else:
@@ -132,8 +140,22 @@ def deploy(
                     hub.cluster.config_dir / chart_override if chart_override else None
                 )
             with get_chart_dir(
-                default_chart_dir, chart_override, chart_override_path
+                default_chart_dir,
+                chart_override,
+                chart_override_path,
+                hub.legacy_daskhub,
             ) as chart_dir:
+                if hub.legacy_daskhub:
+                    dask_gateway_version = determine_dask_gateway_version(
+                        chart_dir.parent / "basehub"
+                    )
+                else:
+                    dask_gateway_version = determine_dask_gateway_version(chart_dir)
+                print_colour(
+                    f"Installing CRDs for dask-gateway version {dask_gateway_version}",
+                    "yellow",
+                )
+
                 if chart_override_path:
                     print_colour(
                         f"Deploying a custom helm chart for a {hub.spec['helm_chart']} from {chart_dir}, for {chart_override_path}",
@@ -164,12 +186,38 @@ def deploy(
                 cleanup_values_schema_json(chart_dir)
 
 
+async def test_health_attempts(
+    hub_url: str,
+    service_api_token: str,
+    hub_type: str,
+    attempts: int,
+    attempt_timeout_s: int,
+):
+    for i in range(attempts):
+        try:
+            async with asyncio.timeout(attempt_timeout_s):
+                await test_hub_healthy(hub_url, service_api_token, hub_type)
+        except asyncio.TimeoutError:
+            print_colour(f"Attempt {i + 1} timed out, retrying", colour="red")
+        except Exception:
+            print_colour(
+                f"An error occurred during attempt {i + 1}, retrying", colour="red"
+            )
+        else:
+            return
+
+    raise RuntimeError("All attempts failed")
+
+
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def run_hub_health_check(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    check_dask_scaling: bool = typer.Option(
-        False, help="Check that dask workers can be scaled"
+    attempts: int = typer.Option(
+        3, help="Number of failures before declaring unhealthy"
+    ),
+    attempt_timeout_s: int = typer.Option(
+        600, help="Number of seconds before giving up on an attempt"
     ),
 ):
     """
@@ -236,32 +284,8 @@ def run_hub_health_check(
             )
         service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
 
-    # On failure, pytest prints out params to the test that failed.
-    # This can contain sensitive info - so we hide stderr
-    # FIXME: Don't use pytest - just call a function instead
-    #
-    # Show errors locally but redirect on CI
-    gh_ci = os.environ.get("CI", "false")
-    pytest_args = [
-        "-q",
-        "deployer/health_check_tests",
-        f"--hub-url={hub_url}",
-        f"--api-token={service_api_token}",
-        f"--hub-type={hub.spec['helm_chart']}",
-    ]
-
-    if hub.type == "daskhub" or check_dask_scaling:
-        pytest_args.append("--check-dask-scaling")
-
-    if gh_ci == "true":
-        print_colour("Testing on CI, not printing output")
-        with open(os.devnull, "w") as dn, redirect_stderr(dn), redirect_stdout(dn):
-            exit_code = pytest.main(pytest_args)
-    else:
-        print_colour("Testing locally, do not redirect output")
-        exit_code = pytest.main(pytest_args)
-    if exit_code != 0:
-        print("Health check failed!", file=sys.stderr)
-        sys.exit(exit_code)
-    else:
-        print_colour("Health check succeeded!")
+    asyncio.run(
+        test_health_attempts(
+            hub_url, service_api_token, hub.type, attempts, attempt_timeout_s
+        )
+    )

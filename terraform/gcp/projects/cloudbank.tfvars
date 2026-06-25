@@ -27,8 +27,16 @@ persistent_disks = {
     size        = 25
     name_suffix = "bmcc"
   }
+  "boise" = {
+    size        = 25
+    name_suffix = "boise"
+  }
+  "cau" = {
+    size        = 25
+    name_suffix = "cau"
+  }
   "ccsf" = {
-    size        = 450
+    size        = 513
     name_suffix = "ccsf"
   }
   "chabot" = {
@@ -42,6 +50,10 @@ persistent_disks = {
   "chicagostate" = {
     size        = 25
     name_suffix = "chicagostate"
+  }
+  "clarku" = {
+    size        = 25
+    name_suffix = "clarku"
   }
   "cmu" = {
     size        = 25
@@ -68,7 +80,7 @@ persistent_disks = {
     name_suffix = "demo"
   }
   "dvc" = {
-    size        = 90
+    size        = 98
     name_suffix = "dvc"
   }
   "elac" = {
@@ -94,6 +106,14 @@ persistent_disks = {
   "fresno" = {
     size        = 60
     name_suffix = "fresno"
+  }
+  "fullertoncc" = {
+    size        = 25
+    name_suffix = "fullertoncc"
+  }
+  "georgetown" = {
+    size        = 25
+    name_suffix = "georgetown"
   }
   "glendale" = {
     size        = 60
@@ -122,6 +142,10 @@ persistent_disks = {
   "humboldt" = {
     size        = 200
     name_suffix = "humboldt"
+  }
+  "iit" = {
+    size        = 25
+    name_suffix = "iit"
   }
   "kean" = {
     size        = 25
@@ -175,6 +199,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "moreno"
   }
+  "nicc" = {
+    size        = 25
+    name_suffix = "nicc"
+  }
   "norco" = {
     size        = 40
     name_suffix = "norco"
@@ -182,6 +210,10 @@ persistent_disks = {
   "ocu" = {
     size        = 25
     name_suffix = "ocu"
+  }
+  "oit" = {
+    size        = 25
+    name_suffix = "oit"
   }
   "palomar" = {
     size        = 40
@@ -219,6 +251,10 @@ persistent_disks = {
     size        = 20
     name_suffix = "sbcc-dev"
   }
+  "shasta" = {
+    size        = 25
+    name_suffix = "shasta"
+  }
   "sierra" = {
     size        = 20
     name_suffix = "sierra"
@@ -232,11 +268,11 @@ persistent_disks = {
     name_suffix = "sjsu"
   }
   "skyline" = {
-    size        = 96
+    size        = 115
     name_suffix = "skyline"
   }
   "sou" = {
-    size        = 25
+    size        = 100
     name_suffix = "sou"
   }
   "spelman" = {
@@ -255,6 +291,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "stanford"
   }
+  "toledo" = {
+    size        = 25
+    name_suffix = "toledo"
+  }
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
@@ -263,13 +303,17 @@ persistent_disks = {
     size        = 20
     name_suffix = "ucsc"
   }
-  "uchicago" = {
-    size        = 25
-    name_suffix = "uchicago"
-  }
   "umd" = {
-    size        = 25
+    size        = 50
     name_suffix = "umd"
+  }
+  "unc-chapel-hill" = {
+    size        = 25
+    name_suffix = "unc-chapel-hill"
+  }
+  "uncw" = {
+    size        = 25
+    name_suffix = "uncw"
   }
   "und" = {
     size        = 25
@@ -279,9 +323,21 @@ persistent_disks = {
     size        = 40
     name_suffix = "unr"
   }
+  "utpb" = {
+    size        = 25
+    name_suffix = "utpb"
+  }
   "virginia" = {
     size        = 180
     name_suffix = "virginia"
+  }
+  "weber" = {
+    size        = 25
+    name_suffix = "weber"
+  }
+  "willamette" = {
+    size        = 25
+    name_suffix = "willamette"
   }
   "wlac" = {
     size        = 20
@@ -297,10 +353,10 @@ k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
-  min_master_version : "1.34.1-gke.3971001",
-  core_nodes_version : "1.34.1-gke.3971001",
-  notebook_nodes_version : "1.34.1-gke.3971001",
-  dask_nodes_version : "1.34.1-gke.3971001",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
+  dask_nodes_version : "1.35.3-gke.1943000",
 }
 
 core_node_machine_type = "n2-highmem-2"
@@ -310,7 +366,22 @@ core_node_max_count   = 40
 enable_network_policy = true
 
 notebook_nodes = {
-  "n2-highmem-4" : {
+  "n2-highmem-4-b" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+    disk_size_gb : 150,
+    node_version : "1.34.4-gke.1193000",
+    taints : [
+      # Prevent new pods from scheduling here.
+      {
+        key : "manual-phaseout"
+        value : "noop"
+        effect : "NO_SCHEDULE"
+      }
+    ],
+  },
+  "n2-highmem-4-a" : {
     min : 2,
     max : 100,
     machine_type : "n2-highmem-4",

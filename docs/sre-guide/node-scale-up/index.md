@@ -1,3 +1,4 @@
+(scaling-nodepools)=
 # Scaling nodepools
 
 When we provision Kubernetes clusters, we setup two, sometimes three, nodepools:

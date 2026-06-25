@@ -1,7 +1,3 @@
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::597746869805:role/nasa-ghg-hub-binder
-
 jupyterhub-home-nfs:
   enabled: false
 jupyterhub:
@@ -27,8 +23,6 @@ jupyterhub:
       templateVars:
         enabled: false
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: binder
     memory:
       guarantee: 1G
       limit: 8G
@@ -91,9 +85,6 @@ binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: binder
   ingress:
     enabled: true
     hosts: [binder.ghg.2i2c.cloud]
@@ -103,12 +94,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        node.kubernetes.io/instance-type: r5.xlarge
-        2i2c/hub-name: binder
     BinderHub:
       base_url: /
       hub_url: https://hub.binder.ghg.2i2c.cloud

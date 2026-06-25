@@ -272,6 +272,7 @@ variable "ebs_volumes" {
     name_suffix = optional(string, null)
     tags        = optional(map(string), {})
     iops        = optional(number, 3000)
+    throughput  = optional(number, 125)
   }))
   default     = {}
   description = <<-EOT
@@ -312,5 +313,13 @@ variable "enable_nfs_backup" {
   default     = false
   description = <<-EOT
   Enable backup of NFS home directories on EBS using Data Lifecycle Manager (DLM).
+  EOT
+}
+
+variable "enable_ebs_alarms" {
+  default     = false
+  type        = bool
+  description = <<-EOT
+  Enable alerts for IOPs and throughput
   EOT
 }

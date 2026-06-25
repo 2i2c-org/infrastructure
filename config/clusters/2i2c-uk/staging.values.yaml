@@ -2,24 +2,15 @@ nfs:
   enabled: true
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    serverIP: storage-quota-home-nfs.staging.svc.cluster.local
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-staging
 
 jupyterhub:
-  ingress:
-    hosts: [staging.uk.2i2c.cloud]
-    tls:
-    - hosts: [staging.uk.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     image:
       name: pangeo/pangeo-notebook
-      tag: 2023.02.27
+      tag: 2025.01.24
     defaultUrl: /lab
   custom:
     2i2c:
@@ -45,7 +36,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://staging.uk.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true

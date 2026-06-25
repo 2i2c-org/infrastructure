@@ -1,7 +1,10 @@
 name: 2i2c
 provider: gcp
 provider_url: https://console.cloud.google.com/kubernetes/clusters/details/us-central1-b/pilot-hubs-cluster/details?project=two-eye-two-see
-tenancy: shared
+metadata:
+  2i2c:
+    # This is just for MTU, as this cluster is just for MTU now
+    hubspot_deal_id: 231111145206
 gcp:
   key: enc-deployer-credentials.secret.json
   project: two-eye-two-see
@@ -23,22 +26,14 @@ hubs:
   domain: staging.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
-  - basehub-common.values.yaml
+  - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-- name: dask-staging
-  display_name: 2i2c dask staging
-  domain: dask-staging.2i2c.cloud
-  helm_chart: daskhub
-  helm_chart_values_files:
-  - daskhub-common.values.yaml
-  - dask-staging.values.yaml
-  - enc-dask-staging.secret.values.yaml
 - name: mtu
   display_name: Michigan Technological University
   domain: mtu.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
-  - basehub-common.values.yaml
+  - common.values.yaml
   - mtu.values.yaml
   - enc-mtu.secret.values.yaml

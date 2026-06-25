@@ -1,11 +1,11 @@
 import os
 from pathlib import Path
 
-import pytest
 from jhub_client.execute import JupyterHubAPI, execute_notebook
 
+from deployer.utils.rendering import print_colour
 
-@pytest.fixture
+
 def notebook_dir(hub_type):
     return (Path(__file__).parent).joinpath("test-notebooks", hub_type)
 
@@ -60,25 +60,24 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             del os.environ["JUPYTERHUB_API_TOKEN"]
 
 
-@pytest.mark.asyncio
-async def test_hub_healthy(hub_url, api_token, notebook_dir, check_dask_scaling):
+async def test_hub_healthy(hub_url, api_token, hub_type):
+    nb_dir = notebook_dir(hub_type)
     try:
-        print(f"Starting hub {hub_url} health validation...")
-        for root, _, files in os.walk(notebook_dir, topdown=False):
+        print_colour(f"Starting hub {hub_url} health validation...", "yellow")
+        for root, _, files in os.walk(nb_dir, topdown=False):
             for _, name in enumerate(files):
                 # We only want to run the "scale_dask_workers.ipynb" file if the
                 # check_dask_scaling variable is true. We continue in the loop if
                 # check_dask_scaling == False when we iterate over this file.
-                print(f"Running {name} test notebook...")
-                if (not check_dask_scaling) and (name == "scale_dask_workers.ipynb"):
-                    continue
+                print_colour(f"Running {name} test notebook...", "yellow")
 
                 test_notebook_path = os.path.join(root, name)
                 await check_hub_health(hub_url, test_notebook_path, api_token)
 
-        print(f"Hub {hub_url} is healthy!")
+        print_colour(f"Hub {hub_url} is healthy!")
     except Exception as e:
-        print(
-            f"Hub {hub_url} not healthy! Stopping further deployments. Exception was {e}."
+        print_colour(
+            f"Hub {hub_url} not healthy! Stopping further deployments. Exception was {e}.",
+            "red",
         )
         raise (e)

@@ -14,6 +14,7 @@ ebs_volumes = {
   "prod" = {
     size        = 5600
     type        = "gp3"
+    throughput  = 375 # Triple the throughput, handling alerts for exceeding throughput consistently
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
   }
@@ -73,6 +74,11 @@ hub_cloud_permissions = {
                   "arn:aws:s3:::ghgc-data-store/*"
 
                 ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": "lambda:InvokeFunction",
+                "Resource": "arn:aws:lambda:us-west-2:429435741471:function:process-morton-cell"
             }
         ]
       }
@@ -107,6 +113,11 @@ hub_cloud_permissions = {
                   "arn:aws:s3:::ghgc-data-store",
                   "arn:aws:s3:::ghgc-data-store/*"
                 ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": "lambda:InvokeFunction",
+                "Resource": "arn:aws:lambda:us-west-2:429435741471:function:process-morton-cell"
             }
         ]
       }

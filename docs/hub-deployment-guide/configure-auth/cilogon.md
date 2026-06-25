@@ -69,7 +69,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
         allowed_idps:
           # Community specific idp - enables community members to authenticate.
           # In this example, all authenticated users are authorized via the idp
@@ -130,7 +129,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
         allowed_idps:
           http://github.com/login/oauth/authorize:
             default: true

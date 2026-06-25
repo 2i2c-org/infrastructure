@@ -1,21 +1,47 @@
 jupyterhub:
   hub:
+    image:
+      name: quay.io/2i2c/pilot-hub-authz-helpers
+      tag: 0.0.1-0.dev.git.15553.h6a0c1c344
+    extraConfig:
+      001-canvas-auth: |
+        from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls
+        canvas_url = "https://utoronto-dev.instructure.com"
+
+        async def auth_state_hook(authenticator, auth_state):
+          if auth_state:
+            access_token = auth_state["access_token"]
+
+            auth_state[authenticator.auth_state_groups_key] = [
+              *await get_course_groups(canvas_url, access_token, "course_code"),
+              *await get_user_groups(canvas_url, access_token),
+            ]
+
+          return auth_state
+
+        cfg = c.GenericOAuthenticator
+        cfg.modify_auth_state_hook = auth_state_hook
+
+        cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(canvas_url)
+
+        # Scopes that this token will need
+        cfg.scope = [*build_auth_urls.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
     config:
       JupyterHub:
         authenticator_class: generic-oauth
       GenericOAuthenticator:
-        token_url: https://utoronto-dev.instructure.com/login/oauth2/token
-        userdata_url: https://utoronto-dev.instructure.com/api/v1/users/self/profile
-        authorize_url: https://utoronto-dev.instructure.com/login/oauth2/auth
         username_claim: sis_user_id
-        scope:
-        - url:GET|/api/v1/users/:user_id/profile
-        - url:GET|/api/v1/users/self/groups
-        - url:GET|/api/v1/courses
+        token_params:
+          replace_tokens: 1
+        admin_groups:
+        - course::2i2c-jupyter::enrollment_type::teacher
         admin_users:
         - holla162
         - pandayuv
         - elenageo
         - wonj202
-        - grahamj
-        - huaani1
+        #- grahamj
+        #- huaani1
+        allow_all: true
+        manage_groups: true
+        auth_state_groups_key: groups

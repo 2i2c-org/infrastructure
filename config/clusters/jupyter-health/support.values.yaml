@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 prometheus:
   server:
     ingress:
@@ -11,7 +8,6 @@ prometheus:
       - secretName: prometheus-tls
         hosts:
         - prometheus.jupyter-health.2i2c.cloud
-
 grafana:
   grafana.ini:
     server:

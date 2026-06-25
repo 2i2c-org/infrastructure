@@ -1,0 +1,31 @@
+jupyterhub:
+  imagePullSecret:
+    create: true
+    registry: &url https://quay.io
+    username: &username imagebuilding-non-gcp-hubs+image_builder
+    password: &fakePassword <set-in-encrypted-values>
+
+binderhub-service:
+  enabled: true
+  networkPolicy:
+    enabled: true
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        # Schedule build pods to run on the user nodes
+        node.kubernetes.io/instance-type: r5.4xlarge
+
+    DockerRegistry:
+      url: *url
+      username: *username
+      password: *fakePassword
+  # The password to the registry is stored encrypted in the hub's encrypted config file
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
+    password: *fakePassword
+
+  dockerApi:
+    nodeSelector:
+      # Schedule dockerApi pods to run on the user nodes
+      node.kubernetes.io/instance-type: r5.4xlarge

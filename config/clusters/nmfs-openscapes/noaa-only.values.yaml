@@ -2,33 +2,10 @@ nfs:
   dirsizeReporter:
     enabled: false
   pv:
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
     serverIP: 10.100.33.250
     shareNameOverride: prod
 jupyterhub-home-nfs:
   enabled: false
-
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-noaa-only
-
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: noaa-only
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: noaa-only
 
 jupyterhub:
   custom:
@@ -36,11 +13,6 @@ jupyterhub:
       add_staff_user_ids_of_type: google
     singleuserAdmin:
       extraVolumeMounts:
-  ingress:
-    hosts: [noaa.nmfs-openscapes.2i2c.cloud]
-    tls:
-    - hosts: [noaa.nmfs-openscapes.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     initContainers: []
     storage:
@@ -61,8 +33,6 @@ jupyterhub:
           mountPath: /home/jovyan/shared-readonly
           subPath: _shared
           readOnly: true
-    nodeSelector:
-      2i2c/hub-name: noaa-only
     extraEnv:
       SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-noaa-only/$(JUPYTERHUB_USER)
       GH_SCOPED_CREDS_CLIENT_ID: Iv23lie5oLneHExwicr2
@@ -273,7 +243,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://noaa.nmfs-openscapes.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:

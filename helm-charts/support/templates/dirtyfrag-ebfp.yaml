@@ -1,0 +1,51 @@
+{{- if .Values.dirtyfrag.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: dirtyfrag-ebpf
+  namespace: kube-system
+  labels:
+    app: dirtyfrag-ebpf
+spec:
+  selector:
+    matchLabels:
+      app: dirtyfrag-ebpf
+  template:
+    metadata:
+      labels:
+        app: dirtyfrag-ebpf
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+      - operator: Exists
+      containers:
+      - name: mitigation
+        image: {{ .Values.dirtyfrag.image.repository }}:{{ .Values.dirtyfrag.image.tag }}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: bpf
+          mountPath: /sys/fs/bpf
+        - name: btf
+          mountPath: /sys/kernel/btf/vmlinux
+          readOnly: true
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 64Mi
+      volumes:
+      - name: bpf
+        hostPath:
+          path: /sys/fs/bpf
+          type: Directory
+      - name: btf
+        hostPath:
+          path: /sys/kernel/btf/vmlinux
+          type: File
+      terminationGracePeriodSeconds: 5
+      priorityClassName: system-node-critical
+{{- end }}

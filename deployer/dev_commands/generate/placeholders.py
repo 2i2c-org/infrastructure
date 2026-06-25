@@ -2,6 +2,8 @@
 Commands for reserving placeholders
 """
 
+from typing import Literal
+
 import typer
 from ruamel.yaml import YAML
 
@@ -12,7 +14,7 @@ yaml = YAML(typ="rt", pure=True)
 
 
 @generate_app.command()
-def replicas(
+def user_replicas(
     cluster_name: str = typer.Argument(
         "2i2c",
         help="Name of cluster for which to reserve capacity",
@@ -23,6 +25,30 @@ def replicas(
     """
     Scale up user placeholders to reserve capacity via N user placeholders
     """
+    patch_replicas(cluster_name, hub_name, replicas, "user")
+
+
+@generate_app.command()
+def node_replicas(
+    cluster_name: str = typer.Argument(
+        "2i2c",
+        help="Name of cluster for which to reserve capacity",
+    ),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+    replicas: int = typer.Argument(...),
+):
+    """
+    Scale up node placeholders to reserve capacity via N node placeholders
+    """
+    patch_replicas(cluster_name, hub_name, replicas, "node")
+
+
+def patch_replicas(
+    cluster_name: str,
+    hub_name: str,
+    replicas: int,
+    kind: Literal["node", "user"],
+):
     cluster = Cluster.from_name(cluster_name)
 
     if replicas < 0:
@@ -46,9 +72,12 @@ def replicas(
     basehub_config = hub_config.get("basehub", hub_config)
 
     try:
-        placeholders = basehub_config["jupyterhub"]["scheduling"]["userPlaceholder"]
+        if kind == "node":
+            placeholders = basehub_config["nodePlaceholder"]
+        else:
+            placeholders = basehub_config["jupyterhub"]["scheduling"]["userPlaceholder"]
     except KeyError as exc:
-        exc.add_note("Could not find userPlaceholders section in hub configuration")
+        exc.add_note(f"Could not find {kind} placeholders section in hub configuration")
         raise
 
     # Scale repliacs

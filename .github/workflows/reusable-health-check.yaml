@@ -24,48 +24,46 @@ on:
         required: true
         type: string
     secrets:
-      GCP_KMS_DECRYPTOR_KEY:
+      gcp_project_id:
+        required: true
+      gcp_workload_identity_provider:
         required: true
     outputs:
       health_check_output:
         value: ${{ jobs.run_health_check.outputs.output1 }}
+
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   run_health_check:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.health_check.outputs.health_check_output }}
+
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
         submodules: true
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-    - name: Save pip's install cache on job completion
-      uses: actions/cache@v5
-      with:
-        path: ~/.cache/pip
-        key: ${{ github.run_id }}
-
-    - name: Install deployer script's Python dependencies
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
 
     - name: Setup deploy for ${{ inputs.cluster }} cluster
       uses: ./.github/actions/setup-deploy
+
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
       with:
-        provider: ${{ inputs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Run health check against ${{ inputs.cluster }} ${{ inputs.hub }}
-      uses: nick-fields/retry@v3
       id: health_check
-      with:
-        timeout_minutes: 10
-        max_attempts: 3
-        command: |
-          set -euo pipefail
-          echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
-          deployer run-hub-health-check ${{ inputs.cluster }} ${{ inputs.hub }} | tee --append "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+      run: |
+        set -euo pipefail
+        echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
+        deployer run-hub-health-check ${{ inputs.cluster }} ${{ inputs.hub }} --attempts 3 --attempt-timeout-s=600 | tee --append "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
+

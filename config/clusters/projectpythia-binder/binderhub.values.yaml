@@ -133,6 +133,7 @@ binderhub-service:
       - ^ktyle/.*$
       - ^DAES433533/.*$
       - ^binder-examples/.*
+      - ^brian-rose/.*$
     BinderHub:
       base_url: /
       hub_url: https://hub.projectpythia.org
@@ -161,8 +162,8 @@ binderhub-service:
     value: service-binder
   - name: JUPYTERHUB_API_URL
     value: https://hub.projectpythia.org/hub/api
-    # Without this, the redirect URL to /hub/api/... gets
-    # appended to binderhub's URL instead of the hub's
+      # Without this, the redirect URL to /hub/api/... gets
+      # appended to binderhub's URL instead of the hub's
   - name: JUPYTERHUB_BASE_URL
     value: https://hub.projectpythia.org/
   # The password to the registry is stored encrypted in the hub's encrypted config file

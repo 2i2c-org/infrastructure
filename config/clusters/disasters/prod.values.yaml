@@ -2,49 +2,18 @@ nfs:
   pv:
     serverIP: 10.100.150.169
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::515966502221:role/disasters-prod
-
-jupyterhub:
-  singleuser:
-    nodeSelector:
-      2i2c/hub-name: prod
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
-      GenericOAuthenticator:
-        oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
-  ingress:
-    hosts: [hub.disasters.2i2c.cloud]
-    tls:
-    - hosts: [hub.disasters.2i2c.cloud]
-      secretName: https-auto-tls
-
 dask-gateway:
   gateway:
     backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
-      worker:
-        extraPodConfig:
-          node_selector:
-            2i2c/hub-name: prod
       imagePullSecrets: [name: image-pull-secret]
 
 binderhub-service:
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: prod
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        2i2c/hub-name: prod
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/disasters-prod-
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: https://hub.disasters.2i2c.cloud/hub/api
 
 jupyterhub-home-nfs:
   eks:
@@ -53,4 +22,3 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 100 # in GiB
-

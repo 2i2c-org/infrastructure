@@ -4,12 +4,34 @@ additionalProperties: false
 required:
 - name
 - provider
+- metadata
 properties:
   name:
     type: string
     description: |
       Name of the cluster, used primarily to identify it in
       the deploy script. This value should match the parent folder name.
+  metadata:
+    type: object
+    description: |
+      Various metadata about the cluster
+    required:
+    - 2i2c
+    properties:
+      2i2c:
+        type: object
+        required:
+        - hubspot_deal_id
+        properties:
+          hubspot_deal_id:
+            type: integer
+            description: |
+              Deal ID of the current contract in hubspot under which
+              this hub is being run.
+
+              If the URL of the deal looks like
+              https://app-na2.hubspot.com/contacts/242496330/record/0-3/96602996427,
+              the deal ID is the last integer, that comes after `0-3`
   support:
     type: object
     additionalProperties: false

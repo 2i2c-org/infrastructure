@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [dubois.2i2c.cloud]
-    tls:
-    - hosts: [dubois.2i2c.cloud]
-      secretName: https-auto-tls
   hub:
     config:
       JupyterHub:

@@ -38,7 +38,6 @@ jupyterhub:
     nodeSelector:
       # Schedule users on the smallest instance
       # https://github.com/2i2c-org/infrastructure/issues/4241
-      2i2c/hub-name: binder
       {% if provider == "gcp" %}
       node.kubernetes.io/instance-type: n2-highmem-4
       {% else %}
@@ -92,12 +91,8 @@ jupyterhub:
         auth_enabled: true
       JupyterHub:
         authenticator_class: {{ authenticator }}
-  {% if authenticator == "github" %}
-      GitHubOAuthenticator:
-        oauth_callback_url: https://{{ jupyterhub_domain }}/hub/oauth_callback
-  {% elif authenticator == "cilogon" %}
+  {% if authenticator == "cilogon" %}
       CILogonOAuthenticator:
-        oauth_callback_url: https://{{ jupyterhub_domain }}/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
@@ -131,16 +126,6 @@ binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      2i2c/hub-name: binder
-      {% if provider == "gcp" %}
-      node.kubernetes.io/instance-type: n2-highmem-4
-      {% else %}
-      node.kubernetes.io/instance-type: r5.xlarge
-      {% endif %}
   ingress:
     enabled: true
     hosts: [{{ binderhub_domain }}]
@@ -150,16 +135,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        2i2c/hub-name: binder
-        {% if provider == "gcp" %}
-        node.kubernetes.io/instance-type: n2-highmem-4
-        {% else %}
-        node.kubernetes.io/instance-type: r5.xlarge
-        {% endif %}
     BinderHub:
       base_url: /
       hub_url: https://{{ jupyterhub_domain }}

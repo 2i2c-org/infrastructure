@@ -1,0 +1,67 @@
+{{- if .Values.copyfail.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: copyfail-ebpf
+  namespace: kube-system
+  labels:
+    app: copyfail-ebpf
+spec:
+  selector:
+    matchLabels:
+      app: copyfail-ebpf
+  template:
+    metadata:
+      labels:
+        app: copyfail-ebpf
+    spec:
+      hostPID: true
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: mitigation
+          image: {{ .Values.copyfail.image.repository }}:{{ .Values.copyfail.image.tag }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: bpffs
+              mountPath: /sys/fs/bpf
+            - name: securityfs
+              mountPath: /sys/kernel/security
+              readOnly: true
+            - name: debugfs
+              mountPath: /sys/kernel/debug
+              readOnly: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - kill
+                  - -SIGTERM
+                  - "1"
+      volumes:
+        - name: bpffs
+          hostPath:
+            path: /sys/fs/bpf
+            type: Directory
+        - name: securityfs
+          hostPath:
+            path: /sys/kernel/security
+            type: Directory
+        - name: debugfs
+          hostPath:
+            path: /sys/kernel/debug
+            type: Directory
+      priorityClassName: system-node-critical
+{{- end }}

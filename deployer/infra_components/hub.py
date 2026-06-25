@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import subprocess
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -17,8 +17,6 @@ from deployer.utils.file_acquisition import (
 )
 from deployer.utils.helm import wait_for_deployments_daemonsets
 from deployer.utils.rendering import print_colour
-
-from ..utils.jsonnet import render_jsonnet
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -160,11 +158,8 @@ class Hub:
 
             # Add on rendered jsonnet values.yaml file for the chart
             rendered_values_path = jsonnet_stack.enter_context(
-                render_jsonnet(
+                self.render_jsonnet(
                     chart_dir / "values.jsonnet",
-                    self.cluster.spec["name"],
-                    self.spec["name"],
-                    self.cluster.spec["provider"],
                 )
             )
 
@@ -181,12 +176,7 @@ class Hub:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(
-                            Path(values_file),
-                            self.cluster.spec["name"],
-                            self.spec["name"],
-                            self.cluster.spec["provider"],
-                        )
+                        self.render_jsonnet(Path(values_file))
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:
@@ -199,3 +189,18 @@ class Hub:
 
         if not dry_run:
             wait_for_deployments_daemonsets(self.spec["name"])
+
+    @contextmanager
+    def render_jsonnet(self, jsonnet_file: Path, **kwargs):
+        """
+        Render given jsonnet file with context of this hub.
+
+        Any additional kwargs will be passed through to `Cluster.render_jsonnet`
+        """
+        with self.cluster.render_jsonnet(
+            jsonnet_file,
+            hub_name=self.spec["name"],
+            hub_domain=self.spec["domain"],
+            **kwargs,
+        ) as rendered_file:
+            yield rendered_file

@@ -201,6 +201,8 @@ kubectl delete svc proxy-public -n <old_prod_namespace>
 This is a disruptive operation, and will make the hub unusable until the remaining steps are performed and the new hub is ready. So make sure you have planned a migration down-time with the hub representatives.
 ```
 
+(backup-hub-db)=
+
 ## 5. Transfer the JupyterHub Database
 
 ```{note}

@@ -3,16 +3,14 @@ nfs:
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
 
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
 
 jupyterhub:
   custom:
@@ -284,6 +282,15 @@ jupyterhub:
 
   hub:
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+      user:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
     config:
       Authenticator:
         admin_users:

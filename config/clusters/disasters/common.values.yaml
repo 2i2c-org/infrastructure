@@ -3,15 +3,13 @@ nfs:
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
 jupyterhub:
   custom:
     daskhubSetup:
@@ -34,7 +32,21 @@ jupyterhub:
           name: NASA
           url: https://www.earthdata.nasa.gov/esds
   hub:
+    image:
+      # Temporary image with jupyterhub-fancy-profiles 0.6.0
+      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+      user:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        # Access to binder service
+        - access:services!service=binder
     config:
       JupyterHub:
         authenticator_class: generic-oauth
@@ -284,16 +296,12 @@ binderhub-service:
     enabled: true
   # Explicitly specify what nodes we want for our builds
   # Otherwise we may scale up a larger node than neededx
-  dockerApi:
-    nodeSelector:
-      node.kubernetes.io/instance-type: r5.xlarge
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        node.kubernetes.io/instance-type: r5.xlarge
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
+    BinderHub:
+      auth_enabled: true
   buildPodsRegistryCredentials:
     server: *url
     username: *username

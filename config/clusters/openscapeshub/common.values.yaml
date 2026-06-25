@@ -4,15 +4,13 @@ basehub:
     pv:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
   dask-gateway:
     enabled: true
+    gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
   jupyterhub:
     custom:
       daskhubSetup:
@@ -72,7 +70,7 @@ basehub:
                 display_name: Python
                 description: Python datascience environment
                 kubespawner_override:
-                  image: openscapes/python:65d6916
+                  image: openscapes/python:998fa91
               02-R:
                 display_name: R + Python Geospatial
                 description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
@@ -161,6 +159,15 @@ basehub:
         enabled: true
     hub:
       allowNamedServers: true
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+        user:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
       config:
         JupyterHub:
           authenticator_class: github

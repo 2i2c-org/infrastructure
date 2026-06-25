@@ -3,12 +3,13 @@ basehub:
     enabled: true
     pv:
       enabled: true
-      mountOptions:
-      - soft
-      - noatime
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         scheduler:
           cores:
@@ -52,25 +53,18 @@ basehub:
         # See https://github.com/2i2c-org/infrastructure/issues/3461
         cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
       allowNamedServers: true
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+        user:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
       config:
         JupyterHub:
           authenticator_class: github
-          # Announcement is a JupyterHub feature to present messages to users in
-          # web pages under the /hub path (JupyterHub responds), but not via the
-          # /user path (single-user server responds).
-          #
-          # ref: https://github.com/2i2c-org/infrastructure/issues/1501
-          # ref: https://jupyterhub.readthedocs.io/en/stable/reference/templates.html#announcement-configuration-variables
-          #
-          # template_vars:
-          #   announcement: >-
-          #     <strong>
-          #     Service maintenance is scheduled Sunday March 12, to Monday 8AM
-          #     EST.
-          #     </strong>
-          #     <br/>
-          #     Running servers may be forcefully stopped and service disruption
-          #     is expected.
         GitHubOAuthenticator:
           allowed_organizations:
           - 2i2c-org:hub-access-for-2i2c-staff
@@ -80,11 +74,10 @@ basehub:
           - leap-stc:climatematch_shared_group
         Authenticator:
           admin_users:
-            # ref: https://2i2c.freshdesk.com/a/tickets/2761
           - RobertPincus
           - SammyAgrawal
-            # ref: https://2i2c.freshdesk.com/a/tickets/3861
           - sarika-debruyn
+          - ilu24
       extraConfig:
         000-volumes-and-volume-mounts-as-dict: |
           # The base jupyterhub config in zero-to-jupyterhub defines
@@ -126,24 +119,10 @@ basehub:
         GH_SCOPED_CREDS_CLIENT_ID: Iv1.0c7df3d4b3191b2f
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
       profileList:
-        # NOTE: About node sharing
-        #
-        #       CPU/Memory requests/limits are actively considered still. This
-        #       profile list is setup to involve node sharing as considered in
-        #       https://github.com/2i2c-org/infrastructure/issues/2121.
-        #
-        #       - Memory requests are different from the description, based on:
-        #         what's found to remain allocate in k8s, subtracting 1GiB
-        #         overhead for misc system pods, and transitioning from GB in
-        #         description to GiB in mem_guarantee.
-        #       - CPU requests are lower than the description, with a factor of
-        #         10%.
-        #
         # NOTE: This is not a standard node sharing setup, don't copy it!
         #
         #       LEAP has explicitly requested the following adjustments from the
         #       standardized "medium" instance.
-        #
         #       - The standardized "medium" instance is declared twice, once for
         #         a github team with base access, and once for a github team with
         #         full access.
@@ -151,19 +130,6 @@ basehub:
         #         description. Expected consequences of this is: significant CPU
         #         under-utilization, OOMKilled processes when limit is reached, no
         #         pod evictions due to node memory pressure.
-        #
-        # FIXME: Erik advocates putting a CPU limit is reconsidered, as its seen
-        #        as almost as a pure loss:
-        #
-        #        - The only win I think of is an possible edge case related to
-        #          inefficient spread CPU workload of workload across CPU cores
-        #          that can only be partially used.
-        #        - The losses I think of are: less performance for users overall,
-        #          fewer users per node without being constrained by the node's
-        #          actual capacity, more frequent need to startup new nodes which
-        #          causes more frequent need to wait on startups, increased cost,
-        #          wasted energy.
-        #
       - display_name: Devs Only
         description: Start a container limited to a chosen share of capacity on a node of this type
         allowed_groups:
@@ -217,7 +183,7 @@ basehub:
                 display_name: LEAP Education Notebook (Testing Prototype)
                 slug: leap_edu
                 kubespawner_override:
-                  image: quay.io/jbusecke/leap-edu-image:fa442ab4851c
+                  image: quay.io/2i2c/leap-edu-image:278370f204a2
         kubespawner_override:
           cpu_limit:
           mem_limit:
@@ -234,29 +200,11 @@ basehub:
         - leap-stc:data-and-compute
         profile_options:
           requests:
-              # NOTE: Node share choices are in active development, see comment
-              #       next to profileList: above.
-              #
               #       This specific setup is not a standard node sharing setup,
               #       don't copy it!
               #
             display_name: Node share
             choices:
-                # mem_1:
-                #   display_name: ~1 GB, ~0.125 CPU
-                #   kubespawner_override:
-                #     mem_guarantee: 0.903G
-                #     cpu_guarantee: 0.013
-                # mem_2:
-                #   display_name: ~2 GB, ~0.25 CPU
-                #   kubespawner_override:
-                #     mem_guarantee: 1.805G
-                #     cpu_guarantee: 0.025
-                # mem_4:
-                #   display_name: ~4 GB, ~0.5 CPU
-                #   kubespawner_override:
-                #     mem_guarantee: 3.611G
-                #     cpu_guarantee: 0.05
               mem_8: &medium_mem_8
                 display_name: ~8 GB, ~1.0 CPU
                 default: true
@@ -325,7 +273,7 @@ basehub:
                 display_name: LEAP Education Notebook (Testing Prototype)
                 slug: leap_edu
                 kubespawner_override:
-                  image: quay.io/jbusecke/leap-edu-image:fa442ab4851c
+                  image: quay.io/2i2c/leap-edu-image:278370f204a2
         kubespawner_override: &medium_kubespawner_override
           cpu_limit:
           mem_limit:
@@ -343,9 +291,6 @@ basehub:
         - leap-stc:leap-pangeo-base-access
         profile_options:
           requests:
-              # NOTE: Node share choices are in active development, see comment
-              #       next to profileList: above.
-              #
               #       This specific setup is not a standard node sharing setup,
               #       don't copy it!
               #
@@ -359,12 +304,61 @@ basehub:
 
       - display_name: GPU
         slug: gpu
-        description: NVIDIA Tesla T4, 24GB RAM, 8 CPUs
+        description: Start a container on a node with a single GPU available.
         allowed_groups:
         - 2i2c-org:hub-access-for-2i2c-staff
         - leap-stc:leap-pangeo-full-access
         - leap-stc:data-and-compute
         profile_options:
+          requests:
+            display_name: GPU type
+            choices:
+              tesla_t4:
+                display_name: NVIDIA Tesla T4 [16GB VRAM], ~30GB RAM, 8 CPUs
+                default: true
+                kubespawner_override:
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-standard-8
+                    cloud.google.com/gke-accelerator: nvidia-tesla-t4
+                  environment:
+                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                  mem_guarantee: 25G
+                  mem_limit: 29G
+                  extra_resource_limits:
+                    nvidia.com/gpu: '1'
+
+              nvidia_l4:
+                allowed_groups:
+                - 2i2c-org:hub-access-for-2i2c-staff
+                - leap-stc:large-gpu
+                display_name: NVIDIA L4 [24GB VRAM], ~16GB RAM, 4 CPUs
+                kubespawner_override:
+                  node_selector:
+                    node.kubernetes.io/instance-type: g2-standard-4
+                    cloud.google.com/gke-accelerator: nvidia-l4
+                  environment:
+                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                  mem_guarantee: 10G
+                  mem_limit: 15G
+                  extra_resource_limits:
+                    nvidia.com/gpu: '1'
+
+              nvidia_a100:
+                allowed_groups:
+                - 2i2c-org:hub-access-for-2i2c-staff
+                - leap-stc:large-gpu
+                display_name: NVIDIA A100 [40GB VRAM], ~85GB RAM, 12 CPUs
+                kubespawner_override:
+                  node_selector:
+                    node.kubernetes.io/instance-type: a2-highgpu-1g
+                    cloud.google.com/gke-accelerator: nvidia-tesla-a100
+                  environment:
+                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                  mem_guarantee: 70G
+                  mem_limit: 82G
+                  extra_resource_limits:
+                    nvidia.com/gpu: '1'
+
           image:
             display_name: Image
             unlisted_choice: *profile_list_unlisted_choice
@@ -379,16 +373,6 @@ basehub:
                 slug: pytorch
                 kubespawner_override:
                   image: pangeo/pytorch-notebook:2025.11.13
-        kubespawner_override:
-          environment:
-            NVIDIA_DRIVER_CAPABILITIES: compute,utility
-          node_selector:
-            node.kubernetes.io/instance-type: n1-standard-8
-            cloud.google.com/gke-accelerator: nvidia-tesla-t4
-          mem_limit: 30G
-          mem_guarantee: 24G
-          extra_resource_limits:
-            nvidia.com/gpu: '1'
   binderhub-service:
     enabled: true
     config:
