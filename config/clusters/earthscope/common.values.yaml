@@ -127,16 +127,6 @@ basehub:
           - geolab
           - geolab:dev
           - geolab:power
-          - geolab-admin
-          - mem-sm
-          - mem-md
-          - mem-lg
-          - vm-sm
-          - vm-md
-          - vm-lg
-          - vm-xl
-          - gpu
-          - dask
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
