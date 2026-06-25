@@ -81,6 +81,7 @@
           terraform
           openstack
           eksctl
+          azure-cli
           # Dev deps
           jq
           yq-go
