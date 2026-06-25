@@ -10,6 +10,8 @@ using the tooling in this repo.
 We'll need a bunch of different tools that are focused around interacting
 with [kubernetes](https://kubernetes.io) and various cloud providers.
 
+These tools can, and preferably should, be installed using our [build `environment.yaml`](https://github.com/2i2c-org/infrastructure/blob/main/build-tools/environment.yaml). Using other package manages is fine, but you should take care to ensure that the versions are compatible with the constraints given in the `environment.yaml`.
+
 ### Kubernetes access tools
 
 We interact with kubernetes a *lot*, and these are the primary tools we use
@@ -18,27 +20,10 @@ to interact with them:
 1. [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 2. [helm](https://helm.sh/)
 
-On a Mac, you can install these easily with `homebrew`:
-
-```bash
-brew install helm kubectl
-```
-
-On other operating systems, the documentation links above should help you find
-ways of installing them.
-
 ### Secret decryption tools
 
 The wonderful [sops](https://github.com/mozilla/sops/) tool is used to encrypt and
 keep secrets *in* our repository.
-
-On a Mac, you can install this easily with `homebrew`:
-
-```bash
-brew install sops
-```
-
-You can download releases for other platforms from [the sops github releases page](https://github.com/mozilla/sops/releases)
 
 ### Cloud provider tools
 
@@ -50,30 +35,19 @@ installed.
 2. [aws](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 3. [az](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
-On a Mac, you can easily install them all with `homebrew`:
-
-```bash
-brew install google-cloud-sdk awscli azure-cli
-```
-
-For other platforms, consult the documentation in the links above to find
-installation methods.
-
 ### Terraform
 
 We use [terraform](https://www.terraform.io/) to manage our infrastructure in the cloud.
 So in order to update existing clusters or add new ones, you'll need to install this tool.
 
-On a Mac, you can easily [install it](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform) with `homebrew`:
-
-```bash
-brew tap hashicorp/tap
-brew install hashicorp/tap/terraform
-```
-
 Checkout this [information about terraform](topic:terraform) for how to configure and use it.
 
-## Step 2: Setup the python environment
+### Jsonnet
+
+We use [go-jsonnet](https://github.com/google/go-jsonnet) in a [number of places](../topic/jsonnet.md). 
+
+
+## Step 2: Setup the Python environment
 
 Our deployment scripts are all written in python, so you'll need to have a recent
 version of Python 3 installed. There are innumerable ways to install python on your
@@ -94,11 +68,7 @@ added you will to run the installation again.
 Remember you need to *activate the environment* you installed these libraries into each
 time you use any of our scripts.
 
-## Step 3: Install `go-jsonnet`
-
-We use [go-jsonnet](https://github.com/google/go-jsonnet) in a [number of places](../topic/jsonnet.md). Install it on a Mac with `brew install go-jsonnet`.
-
-## Step 4: Setup the git pre-commit hooks
+## Step 3: Setup the git pre-commit hooks
 
 Install pre-commit [pre-commit installation instruction](https://pre-commit.com/#introduction)
 
@@ -109,7 +79,7 @@ the local pre-commit hooks.
 pre-commit install --install-hooks
 ```
 
-## Step 5: Authenticate with Google Cloud to decrypt our secret files
+## Step 4: Authenticate with Google Cloud to decrypt our secret files
 
 Permission to decrypt the secret files in this repo is managed via
 Google Cloud's [Key Management Service](https://cloud.google.com/security-key-management),
@@ -125,7 +95,7 @@ your `2i2c.org` Google Account. If you don't have this, please ask a team member
 
 Tada, now you're logged in!
 
-## Step 6: Access kubernetes clusters with the `deployer` module
+## Step 5: Access Kubernetes clusters with the `deployer` module
 
 ```{note}
 You should have already been given access to the `two-eye-two-see` Google Cloud
@@ -140,7 +110,7 @@ subcommand.
 
 1. Look for the cluster you want to access - there is one cluster per directory inside
    `config/clusters`.
-2. Run `deployer use-cluster-credentials CLUSTER_NAME` from the terminal, and this will authenticate you
+2. Run `deployer use-cluster-credentials $CLUSTER_NAME` from the terminal, and this will authenticate you
    to the correct kubernetes cluster!
 
 Test that you've been correctly authenticated by running `kubectl get node`, which should list the nodes in the
