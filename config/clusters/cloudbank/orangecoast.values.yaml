@@ -25,25 +25,17 @@ jupyterhub:
           url: https://orangecoastcollege.edu/
   hub:
     config:
-      JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - cccd.edu
-            - occ.cccd.edu
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: email
-      Authenticator:
-        admin_users:
-        - sean.smorris@berkeley.edu
-        - ericvd@berkeley.edu
-        - malani1@occ.cccd.edu
+JupyterHub:
+  authenticator_class: github
+  GitHubOAuthenticator:
+    allowed_organizations:
+    - OCCData8
+    scope:
+    - read:org
+  Authenticator:
+    admin_users:
+    - sean-morris
+    - mayadaData8
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-orangecoast
