@@ -1715,6 +1715,20 @@ jupyterhub:
 jupyterhub-home-nfs:
   enabled: true
   fullnameOverride: storage-quota
+  nfsServer:
+    extraGaneshaConfig: |
+      QOS_DEFAULT_CONFIG {
+        enable_qos = true;
+        enble_iops_control = true;
+
+        # 32 MiB/s
+        combined_rw_bw_control = true;
+        max_client_combined_bw = 33554432; 
+
+        combined_rw_iops_control = true;
+        max_client_iops = 160;
+
+      }
   autoResizer:
     enabled: true
   nodeExporter:
