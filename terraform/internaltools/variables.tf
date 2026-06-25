@@ -17,6 +17,11 @@ variable "federated_metrics_allowlist" {
       name         = "active-users"
       metric_regex = "jupyterhub_active_users"
       labels_regex = "period|namespace"
+    },
+    {
+      name         = "pod-annotations"
+      metric_regex = "kube_pod_annotations"
+      labels_regex = "annotation_hub_jupyter_org_username|pod|namespace"
     }
   ]
   description = <<-EOT
