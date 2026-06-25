@@ -108,7 +108,7 @@ resource "google_monitoring_alert_policy" "hub_https_certificate_expiry_alert" {
       # prevent alerts if the hub is momentarily down during a deployment. All alerts
       # *must* be actionable, so we trade-off some latency here for resiliency.
       duration        = "1860s"
-      threshold_value = 24 # This is 3 weeks, so we alert if this is less than 3 weeks
+      threshold_value = 3 # This is 3 weeks, so we alert if this is less than 3 weeks
       comparison      = "COMPARISON_LT"
       aggregations {
         group_by_fields = ["resource.label.host"]
