@@ -62,8 +62,10 @@ jobs:
     - name: Run health check against ${{ inputs.cluster }} ${{ inputs.hub }}
       id: health_check
       run: |
-        set -euo pipefail
+        set -uo pipefail
         echo "health_check_output<<EOF" >> "$GITHUB_OUTPUT"
         deployer run-hub-health-check ${{ inputs.cluster }} ${{ inputs.hub }} --attempts 3 --attempt-timeout-s=600 | tee --append "$GITHUB_OUTPUT"
+        status=$?
         echo "EOF" >> "$GITHUB_OUTPUT"
+        exit $status
 
