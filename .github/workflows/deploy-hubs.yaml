@@ -46,6 +46,8 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || 'not-a-pr' }}
   cancel-in-progress: false
+  # Queue deployments in order
+  queue: max
 
 env:
   TERM: xterm
