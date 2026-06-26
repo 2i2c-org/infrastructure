@@ -10,7 +10,7 @@ dependencies:
 - kubernetes-helm=3.17.0.*
 ## Lower bound
 - eksctl>=0.221.*,<0.229.0
-- azure-cli
+#- azure-cli # Out of date / broken
 # Pins to reduce variance
 - go-sops>=3.13.1,<4
 - go-jsonnet>=0.22.0,<0.23
