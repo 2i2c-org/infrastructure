@@ -58,7 +58,7 @@ node_pools = {
       min : 1,
       max : 20,
 
-      kubernetes_version : "1.34.1",  # Add this variable set to the current k8s version
+      kubernetes_version : "1.34.1", # Add this variable set to the current k8s version
     },
     {
       name : "usere8sv5a",
