@@ -35,6 +35,7 @@ jupyterhub:
               username_claim: email
             allowed_domains:
             - cau.edu
+            - morehouse.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
