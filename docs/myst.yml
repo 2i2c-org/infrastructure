@@ -46,35 +46,6 @@ project:
 
     - title: Hub deployment guide
       children:
-        - title: Configure Auth
-          children:
-            - file: hub-deployment-guide/configure-auth/index.md
-            - file: hub-deployment-guide/configure-auth/auth0.md
-            - file: hub-deployment-guide/configure-auth/canvas.md
-            - file: hub-deployment-guide/configure-auth/cilogon.md
-            - file: hub-deployment-guide/configure-auth/github-orgs.md
-            - file: hub-deployment-guide/configure-auth/shared-password.md
-        - title: Deploy Support
-          children:
-            - file: hub-deployment-guide/deploy-support/index.md
-            - file: hub-deployment-guide/deploy-support/configure-support.md
-            - file: hub-deployment-guide/deploy-support/register-central-grafana.md
-            - file: hub-deployment-guide/deploy-support/setup-grafana-dashboards.md
-        - title: Hubs
-          children:
-            - file: hub-deployment-guide/hubs/index.md
-            - file: hub-deployment-guide/hubs/delete-hub.md
-            - file: hub-deployment-guide/hubs/manual-deploy.md
-            - title: Move Hubs
-              children:
-                - file: hub-deployment-guide/hubs/move-hubs/index.md
-                - file: hub-deployment-guide/hubs/move-hubs/across-clusters.md
-                - file: hub-deployment-guide/hubs/move-hubs/new-url.md
-        - title: New Cluster
-          children:
-            - file: hub-deployment-guide/new-cluster/index.md
-            - file: hub-deployment-guide/new-cluster/new-cluster.md
-            - file: hub-deployment-guide/new-cluster/smce.md
         - title: Runbooks
           children:
             - file: hub-deployment-guide/runbooks/index.md
@@ -91,6 +62,37 @@ project:
               children:
                 - file: hub-deployment-guide/runbooks/phase3/index.md
                 - file: hub-deployment-guide/runbooks/phase3/initial-hub-setup.md
+        - title: New Cluster
+          children:
+            - file: hub-deployment-guide/new-cluster/index.md
+            - file: hub-deployment-guide/new-cluster/new-cluster.md
+            - file: hub-deployment-guide/new-cluster/smce.md
+        - title: Deploy Support
+          children:
+            - file: hub-deployment-guide/deploy-support/index.md
+            - file: hub-deployment-guide/deploy-support/configure-support.md
+            - file: hub-deployment-guide/deploy-support/register-central-grafana.md
+            - file: hub-deployment-guide/deploy-support/setup-grafana-dashboards.md
+        - title: Configure Auth
+          children:
+            - file: hub-deployment-guide/configure-auth/index.md
+            - file: hub-deployment-guide/configure-auth/auth0.md
+            - file: hub-deployment-guide/configure-auth/canvas.md
+            - file: hub-deployment-guide/configure-auth/cilogon.md
+            - file: hub-deployment-guide/configure-auth/github-orgs.md
+            - file: hub-deployment-guide/configure-auth/shared-password.md
+
+        - title: Hubs
+          children:
+            - file: hub-deployment-guide/hubs/index.md
+            - file: hub-deployment-guide/hubs/delete-hub.md
+            - file: hub-deployment-guide/hubs/manual-deploy.md
+            - title: Move Hubs
+              children:
+                - file: hub-deployment-guide/hubs/move-hubs/index.md
+                - file: hub-deployment-guide/hubs/move-hubs/across-clusters.md
+                - file: hub-deployment-guide/hubs/move-hubs/new-url.md
+
     - title: How-to guides
       children:
         - file: howto/create-an-alert-triggered-workflow.md
@@ -268,4 +270,3 @@ site:
     logo_dark: images/logo-dark.webp
   # options:
   #   favicon: favicon.ico
-
