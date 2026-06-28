@@ -17,19 +17,6 @@ project:
         - file: tutorials/setup.md
     - title: SRE guide
       children:
-        - file: sre-guide/common-problems-solutions.md
-        - file: sre-guide/prometheus-disk-resize.md
-        - file: sre-guide/upgrade-support-chart-versions.md
-        - title: Manage K8s
-          children:
-            - file: sre-guide/manage-k8s/index.md
-            - file: sre-guide/manage-k8s/culling.md
-            - file: sre-guide/manage-k8s/node-administration.md
-        - title: Node Scale Up
-          children:
-            - file: sre-guide/node-scale-up/index.md
-            - file: sre-guide/node-scale-up/aws.md
-            - file: sre-guide/node-scale-up/azure.md
         - title: Support
           children:
             - file: sre-guide/support/index.md
@@ -43,6 +30,20 @@ project:
             - file: sre-guide/support/reset-hub.md
             - file: sre-guide/support/reset-shared-password.md
             - file: sre-guide/support/simple-python-package.md
+        - title: Manage K8s
+          children:
+            - file: sre-guide/manage-k8s/index.md
+            - file: sre-guide/manage-k8s/culling.md
+            - file: sre-guide/manage-k8s/node-administration.md
+        - title: Node Scale Up
+          children:
+            - file: sre-guide/node-scale-up/index.md
+            - file: sre-guide/node-scale-up/aws.md
+            - file: sre-guide/node-scale-up/azure.md
+        - file: sre-guide/common-problems-solutions.md
+        - file: sre-guide/prometheus-disk-resize.md
+        - file: sre-guide/upgrade-support-chart-versions.md
+
     - title: Hub deployment guide
       children:
         - title: Configure Auth
@@ -267,4 +268,4 @@ site:
     logo_dark: images/logo-dark.webp
   # options:
   #   favicon: favicon.ico
-  #   logo: site_logo.png
+
