@@ -5,10 +5,9 @@ This phase assumes that a cluster to deploy the hub to already exists or it was 
 
 It contains five sub-phases that should be executed in the order listed below.
 
-```{toctree}
-:maxdepth: 1
-initial-hub-setup.md
-```
+:::{toc}
+:context: children
+:::
 
 Phase 3.2: Object storage access
 

@@ -7,12 +7,9 @@ We use [GitHub Actions](https://docs.github.com/en/actions) as our CI/CD vendor 
 
 Longer or more complex workflows are discussed on their own pages (listed in the table of contents), whereas you can find descriptions of simpler or shorter workflows further down this page.
 
-```{toctree}
-:maxdepth: 2
-
-hub-deploy.md
-auto-bumping.md
-```
+:::{toc}
+:context: children
+:::
 
 ## Helm chart values and cluster config validation
 
