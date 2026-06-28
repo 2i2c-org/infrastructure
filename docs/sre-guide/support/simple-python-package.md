@@ -11,7 +11,7 @@ is simple, and if so, complete it.
    truth for determining this, unfortunately - please ask in the `#partnerships` channel if you
    are not sure.
 
-   ```{Note}
+   ```{note}
    If we do not maintain the image for a community, we should have a template response to be
    sent back here.
    ```
