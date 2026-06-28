@@ -1,7 +1,7 @@
 (setup-grafana)=
 # Setup grafana dashboards
 
-Now, we will deploy some specific dashboards to the grafana instance we deployed as part of [](deploy-support-chart).
+Now, we will deploy some specific dashboards to the grafana instance we deployed as part of [](#deploy-support-chart).
 
 ````{seealso}
 It is also possible to [enable logging in with GitHub](grafana-dashboards:github-auth)
@@ -15,7 +15,7 @@ clusters, so the Community Representatives have access to them.
 (setup-grafana:log-in)=
 ## Login to the cluster-specific grafana
 
-Eventually, visiting `GRAFANA_URL` (which we set in [](deploy-support-chart)) will present you with a login page.
+Eventually, visiting `GRAFANA_URL` (which we set in [](#deploy-support-chart)) will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`

@@ -45,7 +45,7 @@ AWS Accounts
 : Collections of services and infrastructure that generated their own bills. Kind-of like `projects` in Google Cloud Platform. For example, the Kubernetes cluster `2i2c-aws-us` runs in a dedicated AWS Account.
 
 AWS Organizations
-: Organizations are basically collections of accounts. They make it easy to group **access** to multiple accounts via things like [AWS Single Sign On](cloud-access:aws-sso). Every AWS Organization has a "Management Account" that defines all of the other accounts in the organization.
+: Organizations are basically collections of accounts. They make it easy to group **access** to multiple accounts via things like [AWS Single Sign On](#cloud-access:aws-sso). Every AWS Organization has a "Management Account" that defines all of the other accounts in the organization.
 
 (cloud-access:aws-management-account)=
 AWS Management Account
@@ -245,7 +245,7 @@ are used to provide access to the AWS account from your terminal.
    expire in 12 hours, and you will need to re-authenticate.
 
 ```{note}
-Currently, the only accounts that enforce MFA are some [individual accounts](cloud-access:aws-individual-accounts) not under 2i2c's organisation SSO.
+Currently, the only accounts that enforce MFA are some [individual accounts](#cloud-access:aws-individual-accounts) not under 2i2c's organisation SSO.
 Though in the future, we may enforce MFA for our organisation as well.
 ```
 

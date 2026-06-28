@@ -10,18 +10,18 @@ There are three kinds of infrastructure needed to add a new hub. In most cases, 
 - **A Kubernetes cluster**.
   Deploying a Kubernetes cluster is specific to the cloud provider. For hubs that do not need to use their own cloud credits, or otherwise are fine running on a cloud project that is not owned by their institution, we can deploy hubs on an already-running Kubernetes Cluster.
   For hubs that require their own cluster, we'll need to set it up on our own.
-  To do so, see [](new-cluster).
+  To do so, see [](#new-cluster).
 - **Support infrastructure**.
   This is a collection of services that run on a Kubernetes Cluster and help us in running and monitoring things.
   There is one set of services running per **cluster**, not per hub.
   This includes things like Grafana, NFS server provisioners, etc.
-  To setup this infrastructure, see [](support-components).
+  To setup this infrastructure, see [](#support-components).
 - **JupyterHubs**.
   When a cluster is up and running, we may then deploy JupyterHubs on top of it using the JupyterHub Helm Chart.
   Configuration that is specific to each JupyterHub is stored in the [`config/clusters`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters) folder.
   A GitHub Action workflow then deploys and updates the hubs on a cluster using this configuration.
   There are some cases where you must manually deploy or modify a hub.
-  See [](hubs:manual-deploy) for more details.
+  See [](#hubs:manual-deploy) for more details.
 
 ## Overview of hub configuration
 

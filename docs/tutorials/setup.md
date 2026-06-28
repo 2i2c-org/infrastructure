@@ -40,7 +40,7 @@ installed.
 We use [terraform](https://www.terraform.io/) to manage our infrastructure in the cloud.
 So in order to update existing clusters or add new ones, you'll need to install this tool.
 
-Checkout this [information about terraform](topic:terraform) for how to configure and use it.
+Checkout this [information about terraform](#topic:terraform) for how to configure and use it.
 
 ### Jsonnet
 

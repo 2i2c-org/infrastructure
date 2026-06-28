@@ -28,7 +28,7 @@ is simple, and if so, complete it.
         i. [jupyter/docker-stacks](https://github.com/jupyter/docker-stacks)
         ii. [pangeo-docker-images](https://github.com/pangeo-data/pangeo-docker-images/)
 
-If *any* of these pre-requisites are not met, go straight to [escalation](sre-guide:support:simple-python-package:escalation).
+If *any* of these pre-requisites are not met, go straight to [escalation](#sre-guide:support:simple-python-package:escalation).
 
 ## Determine if this is a 'simple' package addition
 
@@ -44,7 +44,7 @@ If *any* of these pre-requisites are not met, go straight to [escalation](sre-gu
   environment by just `pip install`ing from their github repo.
 
 - Package is available in a non-conda-forge channel ->
-  [Escalate](sre-guide:support:simple-python-package:escalation) to rest of the
+  [Escalate](#sre-guide:support:simple-python-package:escalation) to rest of the
   team, as mixing conda channels can get messy and complex.
 
 #### Yes
@@ -100,7 +100,7 @@ Yes, this is a *simple* package addition. Proceed to implementation.
 #### No
 
 No, this is not a simple package addition.
-[Escalate](sre-guide:support:simple-python-package:escalation) to the rest of
+[Escalate](#sre-guide:support:simple-python-package:escalation) to the rest of
 the team, to help choose between:
 
 1. Adding ML packages to existing image
@@ -154,7 +154,7 @@ You can self merge the PR and roll it out to staging for the requester to test. 
 
 #### No
 
-[Escalate](sre-guide:support:simple-python-package:escalation) to the whole team
+[Escalate](#sre-guide:support:simple-python-package:escalation) to the whole team
 so this can be debugged. We should communicate this escalation to the requester as well.
 The following template may be used:
 

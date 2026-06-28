@@ -21,7 +21,7 @@
    ```{note}
    Make sure the correct project is selected while enabling these!
    ```
-7. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
+7. [Setup a new cluster](#new-cluster:new-cluster) inside it via Terraform
 
 (hub-deployment-guide:cloud-accounts:gcp-quotas)=
 ## Checking quotas and requesting increases

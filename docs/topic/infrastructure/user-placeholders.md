@@ -22,7 +22,7 @@ In event conditions, we might anticipate a particular rate at which users attemp
 ## Auxiliary considerations
 Simply ensuring that a node is ready to accept user pods is not sufficient to ensure that users do not experience delays when the user node pool is scaled up. In order to start user pods, the cluster needs to pull their respective OCI container images from the container registry. If we do not do this ahead of time, the first user to require a particular image will need to wait for it to be pulled to the cluster, as will all other image users. 
 
-We can anticipate this be pre-pulling the various images required at node startup time, using the continuous image puller (see [](pre-pull-image)). This should only be used on dedicated nodepools in which the number of images is small (as pulling a set of images delays the time until the node is considered available to user pods).
+We can anticipate this be pre-pulling the various images required at node startup time, using the continuous image puller (see [](#pre-pull-image)). This should only be used on dedicated nodepools in which the number of images is small (as pulling a set of images delays the time until the node is considered available to user pods).
 
 An example configuration might look something like
 ```yaml

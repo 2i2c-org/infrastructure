@@ -19,7 +19,7 @@ by default. The configuration is specified directly in `main.tf` for each cloud 
 
 In some cases, we may want to store the state in a different place, primarily so that
 communities can run `terraform apply` themselves without being given access to *every*
-community's terraform state. See [the documentation for community partners](contributing:community-partner:terraform) for more details.
+community's terraform state. See [the documentation for community partners](#contributing:community-partner:terraform) for more details.
 
 ### Backend Initialization
 

@@ -19,13 +19,13 @@ process.
 
 Infrastructure documentation is broken down into these main guides:
 
-- [**Site Reliability Guide.**](sre-guide) This guide covers day-to-day tasks
+- [**Site Reliability Guide.**](#sre-guide) This guide covers day-to-day tasks
   undertaken by engineers as well as tasks that may need to be completed as part
   of the
   [support process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/support.html).
   It is also a place to document common problems and their solutions for future
   reference.
-- [**Hub Deployment Guide.**](hub-deployment-guide) This guide walks an engineer
+- [**Hub Deployment Guide.**](#hub-deployment-guide) This guide walks an engineer
   through the process of deploying a hub, step-by-step. It should document how
   to enable all the features we typically enable during a standard hub deployment.
 
@@ -44,7 +44,7 @@ The remainder of our documentation is organised as such:
   topic, such as "monitoring and alerting". If the topic guide you are writing
   doesn't belong to one of the pre-existing groups, feel free to create a new
   group if you suspect we will generate more documentation for that topic, or
-  create it as a standalone article, such as the [](hub-features) article.
+  create it as a standalone article, such as the [](#hub-features) article.
 - **References** describe in detail parts of our infrastructure and its
   configuration. This should ideally be kept in the code describing our
   infrastructure - for example,

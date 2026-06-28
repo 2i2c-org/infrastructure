@@ -12,7 +12,7 @@ This is made available through cloud-specific filestores.
 
 ## Managed NFS Server setup
 
-[Terraform](topic:terraform) is setup to provision managed NFS server using the following cloud specific implementations.
+[Terraform](#topic:terraform) is setup to provision managed NFS server using the following cloud specific implementations.
 
 * GCP: Google Filestore
 * Azure: Files
@@ -27,7 +27,7 @@ For each hub, there needs to be the components described by the following subsec
 A directory is created under the path defined by the `nfs.pv.baseShareName` cluster config.
 Usually, this is `/homes` - for hubs that use the managed NFS provider for the cloud platform.
 
-Created using the infrastructure described in the [terraform section](topic:terraform).
+Created using the infrastructure described in the [terraform section](#topic:terraform).
 
 
 This the the base directory under which each hub has a directory ([`nfs.pv.baseShareName`](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L21)).

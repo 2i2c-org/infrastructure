@@ -4,7 +4,7 @@
 The JupyterHub Cost Monitoring system consists of the [jupyterhub-cost-monitoring](https://github.com/2i2c-org/jupyterhub-cost-monitoring/) backend and Grafana cloud cost dashboards
 that use the backend as a data source.
 
-Checkout the [topic guide](topic:monitoring-alerting:cost-monitoring) for more information on the system.
+Checkout the [topic guide](#topic:monitoring-alerting:cost-monitoring) for more information on the system.
 
 ## Steps
 
@@ -28,9 +28,9 @@ Activating cost allocation tags is always disabled by default and must be explic
 ````{tab-item} 2i2c SSO
 :sync: member-2i2c
 
-AWS accounts managed by the [2i2c SSO](cloud-access:aws-sso) have cost allocation tags already enabled with the overarching billing account. Cost tags only need to be activated once per AWS organization.
+AWS accounts managed by the [2i2c SSO](#cloud-access:aws-sso) have cost allocation tags already enabled with the overarching billing account. Cost tags only need to be activated once per AWS organization.
 
-See the [topic guide](topic:monitoring-alerting:cost-monitoring) for more information on which cost allocation tags are activated.
+See the [topic guide](#topic:monitoring-alerting:cost-monitoring) for more information on which cost allocation tags are activated.
 ````
 
 ````{tab-item} Standalone + billing access

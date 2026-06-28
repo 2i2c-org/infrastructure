@@ -118,7 +118,7 @@ Run this section on the source cluster.
 ```
 
 1. **Deploy a file-transfer container**  
-   We can add the same image used in [](migrate-external:setup-dst) as an entry of `jupyterhub-home-nfs.extraContainers`. The configuration for the source deployment is shown in [the following code block](migrate-external:values-src), with the specialisations for the source container emphasised:
+   We can add the same image used in [](#migrate-external:setup-dst) as an entry of `jupyterhub-home-nfs.extraContainers`. The configuration for the source deployment is shown in [the following code block](migrate-external:values-src), with the specialisations for the source container emphasised:
 
    ```{code-block} yaml
    :name: migrate-external:values-src
@@ -211,7 +211,7 @@ Once an initial sync of the data has been performed, we can ensure that we've ca
 Stopping user pods is highly disruptive. Unless you're operating inside scheduled down-time, prefer to wait for the cluster activity to fall to zero. You can introduce a maintenance window overnight by disabling the spawner, and allowing existing sessions to terminate.
 ```
 
-Now that we've cordoned off the storage, we can repeat the step performed in [](migrate-external:initial-sync) to copy only the modified files.
+Now that we've cordoned off the storage, we can repeat the step performed in [](#migrate-external:initial-sync) to copy only the modified files.
 
 ## Tearing down the transfer deployments
 
@@ -221,5 +221,5 @@ After copying the files between disks, we now can tear down the migration deploy
    ```shell
    kubectl -n <DST-HUB> delete service/openssh-service
    ```
-2. Then, revert the changes to the JupyterHub `values.yaml` in [](migrate-external:setup-dst) and [](migrate-external:setup-src).
+2. Then, revert the changes to the JupyterHub `values.yaml` in [](#migrate-external:setup-dst) and [](#migrate-external:setup-src).
 3. Finally, re-deploy both hubs.

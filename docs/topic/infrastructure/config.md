@@ -55,7 +55,7 @@ These credential files have the naming convention `enc-deployer-credentials.secr
 
 (Optional) Grafana API Token
 : This token allows us to programmatically create a range of useful dashboards in a cluster's grafana deployment, allowing us to inspect and track the usage of all the JupyterHubs deployed to that cluster.
-See the [](grafana-dashboards) documentation for more information on how this token is used.
+See the [](#grafana-dashboards) documentation for more information on how this token is used.
 These token files have the naming convention `enc-grafana-token.secret.yaml` when encrypted.
 
 Additionally, the cluster folder can contain any number of helm chart values files to describe any individual JupyterHub running on the cluster.

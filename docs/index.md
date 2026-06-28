@@ -59,8 +59,8 @@ hub-deployment-guide/hubs/index.md
 ## How-to guides
 
 How-To guides answer the question 'How do I...?' for a lot of topics.
-These operations do not fall into day-to-day tasks of the [](sre-guide), nor the
-standard operations of [deploying a new hub](hub-deployment-guide), but may be
+These operations do not fall into day-to-day tasks of the [](#sre-guide), nor the
+standard operations of [deploying a new hub](#hub-deployment-guide), but may be
 deployed occasionally as a specific addition.
 
 ```{toctree}

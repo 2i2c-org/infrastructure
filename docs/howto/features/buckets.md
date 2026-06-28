@@ -1,7 +1,7 @@
 (howto:features:storage-buckets)=
 # Setup object storage buckets
 
-See [the relevant topic page](topic:features:cloud:scratch-buckets) for more information
+See [the relevant topic page](#topic:features:cloud:scratch-buckets) for more information
 on why users want this!
 
 1. In the `.tfvars` file for the project in which this hub is based off

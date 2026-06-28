@@ -10,7 +10,7 @@ These are unique strings that are attached to a given credit offer.
 We can apply these codes to any Account in AWS.
 To do so, follow these steps:
 
-1. Log in to the relevant account via [our AWS SSO](cloud-access:aws-sso).
+1. Log in to the relevant account via [our AWS SSO](#cloud-access:aws-sso).
 2. Confirm that you are in the right account! Credits will *only be available for this account*, and unavailable in any other accounts in the 2i2c AWS organization.
    So *make sure you are in the correct account* before applying them.
 3. Go to {guilabel}`AWS Billing` -> {guilabel}`Credits`
