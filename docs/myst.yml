@@ -67,7 +67,7 @@ project:
             - file: hub-deployment-guide/new-cluster/index.md
             - file: hub-deployment-guide/new-cluster/new-cluster.md
             - file: hub-deployment-guide/new-cluster/smce.md
-        - title: Deploy support componentd
+        - title: Deploy support components
           children:
             - file: hub-deployment-guide/deploy-support/index.md
             - file: hub-deployment-guide/deploy-support/configure-support.md
