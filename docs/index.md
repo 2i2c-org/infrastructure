@@ -16,7 +16,8 @@ These sections help you get started working with 2i2c's infrastructure.
 [](structure) provides a high-level guide to this documentation, and our tutorials are step-by-step guides to help you understand and use our infrastructure.
 
 ```{toctree}
-:maxdepth: 1
+:depth: 1
+:context: section
 :caption: Get started
 structure
 tutorials/setup.md
@@ -30,7 +31,8 @@ The SRE guide covers day-to-day tasks undertaken by engineers as well as tasks t
 We also document common problems and their solutions within these sections, where a permanent solution has not been developed (yet).
 
 ```{toctree}
-:maxdepth: 1
+:depth: 1
+:context: section
 :caption: SRE guide
 sre-guide/support/index.md
 sre-guide/manage-k8s/index.md
@@ -47,7 +49,8 @@ sre-guide/upgrade-support-chart-versions.md
 These sections walk an engineer step-by-step through the workflow of setting up a new 2i2c-managed JupyterHub.
 
 ```{toctree}
-:maxdepth: 1
+:depth: 1
+:context: section
 :caption: Hub deployment guide
 hub-deployment-guide/runbooks/index.md
 hub-deployment-guide/new-cluster/index.md
@@ -64,7 +67,8 @@ standard operations of [deploying a new hub](#hub-deployment-guide), but may be
 deployed occasionally as a specific addition.
 
 ```{toctree}
-:maxdepth: 1
+:depth: 1
+:context: section
 :caption: How-to guides
 howto/features/index.md
 howto/upgrade-cluster/k8s-version/index.md
@@ -89,7 +93,8 @@ Topic guides go more in-depth on a particular topic.
 
 ```{toctree}
 :caption: Topic guides
-:maxdepth: 2
+:depth: 2
+:context: section
 topic/new-hub
 topic/access-creds/index.md
 topic/infrastructure/index.md
@@ -108,7 +113,8 @@ Reference information about our infrastructure.
 
 ```{toctree}
 :caption: Reference
-:maxdepth: 1
+:depth: 1
+:context: section
 
 reference/hubs
 reference/ci-cd/index
@@ -122,7 +128,8 @@ Information on contributing to this repository
 
 ```{toctree}
 :caption: Contributing
-:maxdepth: 2
+:depth: 2
+:context: section
 
 contributing/code-review
 contributing/community-partner
