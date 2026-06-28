@@ -168,11 +168,11 @@ The OAuth app will now have the correct permissions to read the org info and hen
 ## Accessing the job matrices generated in CI/CD
 
 ```{seealso}
-Read more about [](cicd)
+Read more about [](#cicd)
 ```
 
 Sometimes we need to inspect the job matrices the deployer generates for correctness.
-We can do this either by [inspecting the deployment plan that is posted to PRs](cicd/hub/pr-comment)
+We can do this either by [inspecting the deployment plan that is posted to PRs](#cicd/hub/pr-comment)
 or by running the `generate helm-upgrade-jobs` command of the deployer [locally](#tutorials:setup).
 
 This will output the same deployment plan that is used in the PR comment, which is

@@ -2,7 +2,7 @@
 # Manage alerts
 
 In addition to [](#uptime-checks), we also have a set of alerts that are configured in support deployments using [](#topic/jsonnet).
-More about these alerts at [](alerting:jsonnet-alerts)
+More about these alerts at [](#alerting:jsonnet-alerts)
 
 ## What to do when an alert fires based on its type and severity
 When an alert fires a person should decide how to handle it based on the type of alert and its severity.

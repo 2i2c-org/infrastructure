@@ -36,7 +36,7 @@ terraform init
 If prior backend data exists in a `terraform.lock.hcl`, you might see an `Error: Backend configuration changed` when trying to initialize that backend. To reconfigure this backend, ignoring any saved configuration, add the `-reconfigure` flag to the init command.
 ```
 
-If you're trying to work on a project that has state stored elsewhere, [follow the docs here](contributing:community-partner:terraform)
+If you're trying to work on a project that has state stored elsewhere, [follow the docs here](#contributing:community-partner:terraform)
 
 (topic:terraform:workspaces)=
 ## Workspaces

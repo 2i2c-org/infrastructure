@@ -48,7 +48,7 @@ Or situation where some specific steps still need some manual intervention.
 
 The following sections cover how to deploy in these situations:
 
-- [General manual deployment process](hubs:manual-deploy)
+- [General manual deployment process](#hubs:manual-deploy)
 
 ```{warning}
 Manual deploys should be avoided when possible.

@@ -10,7 +10,7 @@ More information on these terms can be found in [](#cloud-access:aws).
 
 1. Login at https://2i2c.awsapps.com/start/#
 
-2. Visit the Management Console of `2i2c-sandbox`, the [AWS Management Account](cloud-access:aws-management-account)
+2. Visit the Management Console of `2i2c-sandbox`, the [AWS Management Account](#cloud-access:aws-management-account)
 
 3. Visit the [Organizations Accounts Console](https://us-east-1.console.aws.amazon.com/organizations/v2/home/accounts) and click "Add an AWS account"
 

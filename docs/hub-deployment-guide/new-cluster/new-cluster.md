@@ -86,8 +86,8 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 Depending on whether this project is using AWS SSO or not, you can use the following
 links to figure out how to authenticate to this project from your terminal.
 
-- [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
-- [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
+- [For accounts setup with AWS SSO](#cloud-access:aws-sso:terminal)
+- [For accounts without AWS SSO](#cloud-access:aws-iam:terminal)
 ````
 
 ````{tab-item} Google Cloud
@@ -392,8 +392,8 @@ Our AWS *terraform* code is now used to deploy supporting infrastructure for the
 
 - An IAM identity account for use with our CI/CD system
 - EBS volumes for use with `jupyterhub-home-nfs`
-- Optionally, setup a [shared database](features:shared-db:aws)
-- Optionally, setup [user buckets](howto:features:storage-buckets)
+- Optionally, setup a [shared database](#features:shared-db:aws)
+- Optionally, setup [user buckets](#howto:features:storage-buckets)
 
 The steps above will have created a default `.tfvars` file. This file can either be used as-is or edited to enable the optional features listed above.
 
@@ -642,7 +642,7 @@ should be able to tell you if we are doing cloud costs pass through or not.
    under "Billing Account". It should be of the form `XXXXXX-XXXXXX-XXXXXX`.
 5. Select "Billing export" on the left navigation bar, and you will find the values for `project` and
    `dataset` under "Detailed cost usage".
-6. If "Detailed cost usage" is not set up, you should [enable it](new-gcp-project:billing-export)
+6. If "Detailed cost usage" is not set up, you should [enable it](#new-gcp-project:billing-export)
 ````
 
 ````{tab-item} Azure (kubeconfig)

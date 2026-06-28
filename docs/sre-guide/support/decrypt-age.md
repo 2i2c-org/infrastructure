@@ -12,7 +12,7 @@ rather than the information be tied to a single engineer.
 Before you can decrypt received messages, you need the following pre-requisites setup.
 
 1. [Install age](https://github.com/FiloSottile/age#installation)
-2. [Install sops](tools:sops)
+2. [Install sops](#tools:sops)
 3. [Authenticate with gcloud](#tools:gcloud:auth) so sops can decrypt the private age
    key kept in the repository.
 

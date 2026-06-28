@@ -4,7 +4,7 @@
 Now, we will deploy some specific dashboards to the grafana instance we deployed as part of [](#deploy-support-chart).
 
 ````{seealso}
-It is also possible to [enable logging in with GitHub](grafana-dashboards:github-auth)
+It is also possible to [enable logging in with GitHub](#grafana-dashboards:github-auth)
 to allow Community Representatives and Hub Administrators to access these dashboards as well.
 ```{warning}
 We should enable GitHub login for _all_ Grafana dashboards running on **dedicated**
@@ -74,5 +74,5 @@ Any re-triggering of the workflow after the initial deployment will overwrite an
 
 ## Granting grafana access to the community representative
 
-Once you have setup the grafana instance, you may wish to [](grafana-access:invite-link)
+Once you have setup the grafana instance, you may wish to [](#grafana-access:invite-link)
 **only if the cluster is _dedicated_ to one community**.

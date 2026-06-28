@@ -7,7 +7,7 @@ This section provides information for 2i2c staff about where to find each of 2i2
 
 ```{note}
 For granting access to persons external to 2i2c, e.g. community representatives,
-see [](grafana-access:invite-link)
+see [](#grafana-access:invite-link)
 ```
 
 (grafana-dashboards:access-grafana)=
