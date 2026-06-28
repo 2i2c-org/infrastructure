@@ -14,10 +14,6 @@ it produces, which is an incredibly useful resource when debugging problems.
 For more general tips, see our [Troubleshooting guide](../howto/troubleshoot/index.md)
 ```
 
-```{contents}
-:local:
-```
-
 (troubleshooting/rollback)=
 ## Roll back (revert) a helm deploy
 

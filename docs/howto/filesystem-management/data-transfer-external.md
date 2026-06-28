@@ -109,8 +109,7 @@ Run this section on the destination cluster.
    kubectl -n <DEST-HUB> get service/openssh-service
    ```
 
-   (migrate-external:setup-src)=
-
+(migrate-external:setup-src)=
 ## Setting up the source server
 
 ```{important}

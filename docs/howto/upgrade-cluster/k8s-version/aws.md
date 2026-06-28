@@ -247,7 +247,7 @@ been changed. Make sure you commit this changes after the upgrade is finished.
 
 ### References
 
-[^1]: About Kubernetes' version skew policy: <upgrade-k8s-cluster:k8s-version-skew>
+[^1]: About Kubernetes' version skew policy: <#upgrade-k8s-cluster:k8s-version-skew>
 [^2]: `eksctl`'s cluster upgrade documentation: <https://eksctl.io/usage/cluster-upgrade/>
 
 ## Update ekctl configuration

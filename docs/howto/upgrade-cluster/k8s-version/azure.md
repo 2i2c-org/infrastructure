@@ -238,4 +238,4 @@ Make sure to commit these changes when the upgrade is finished.
 
 ## References
 
-[^1]: About Kubernetes' version skew policy: <upgrade-k8s-cluster:k8s-version-skew>
+[^1]: About Kubernetes' version skew policy: <#upgrade-k8s-cluster:k8s-version-skew>
