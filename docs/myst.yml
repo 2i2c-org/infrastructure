@@ -30,12 +30,12 @@ project:
             - file: sre-guide/support/reset-hub.md
             - file: sre-guide/support/reset-shared-password.md
             - file: sre-guide/support/simple-python-package.md
-        - title: Manage K8s
+        - title: Manage cloud infrastructure
           children:
             - file: sre-guide/manage-k8s/index.md
             - file: sre-guide/manage-k8s/culling.md
             - file: sre-guide/manage-k8s/node-administration.md
-        - title: Node Scale Up
+        - title: Scale nodepools
           children:
             - file: sre-guide/node-scale-up/index.md
             - file: sre-guide/node-scale-up/aws.md
@@ -49,31 +49,31 @@ project:
         - title: Runbooks
           children:
             - file: hub-deployment-guide/runbooks/index.md
-            - title: Phase1
+            - title: "Phase 1: account setup"
               children:
                 - file: hub-deployment-guide/runbooks/phase1/index.md
                 - file: hub-deployment-guide/runbooks/phase1/aws-external-account.md
                 - file: hub-deployment-guide/runbooks/phase1/new-aws-account.md
                 - file: hub-deployment-guide/runbooks/phase1/new-gcp-project.md
-            - title: Phase2
+            - title: "Phase 2: cluster setup"
               children:
                 - file: hub-deployment-guide/runbooks/phase2/index.md
-            - title: Phase3
+            - title: "Phase 3: hub setup"
               children:
                 - file: hub-deployment-guide/runbooks/phase3/index.md
                 - file: hub-deployment-guide/runbooks/phase3/initial-hub-setup.md
-        - title: New Cluster
+        - title: Add Kubernetes clusters
           children:
             - file: hub-deployment-guide/new-cluster/index.md
             - file: hub-deployment-guide/new-cluster/new-cluster.md
             - file: hub-deployment-guide/new-cluster/smce.md
-        - title: Deploy Support
+        - title: Deploy support componentd
           children:
             - file: hub-deployment-guide/deploy-support/index.md
             - file: hub-deployment-guide/deploy-support/configure-support.md
             - file: hub-deployment-guide/deploy-support/register-central-grafana.md
             - file: hub-deployment-guide/deploy-support/setup-grafana-dashboards.md
-        - title: Configure Auth
+        - title: Configure authentication
           children:
             - file: hub-deployment-guide/configure-auth/index.md
             - file: hub-deployment-guide/configure-auth/auth0.md
@@ -82,7 +82,7 @@ project:
             - file: hub-deployment-guide/configure-auth/github-orgs.md
             - file: hub-deployment-guide/configure-auth/shared-password.md
 
-        - title: Hubs
+        - title: Other hub operations
           children:
             - file: hub-deployment-guide/hubs/index.md
             - file: hub-deployment-guide/hubs/delete-hub.md
@@ -100,7 +100,7 @@ project:
         - file: howto/migrate-ingress.md
         - file: howto/regenerate-smce-creds.md
         - file: howto/send-secrets.md
-        - title: Manage budgets and billing
+        - title: Manage budgets & billing
           children:
             - file: howto/budgeting-billing/index.md
             - file: howto/budgeting-billing/bill.md
