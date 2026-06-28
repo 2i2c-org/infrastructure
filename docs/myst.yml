@@ -100,7 +100,7 @@ project:
         - file: howto/migrate-ingress.md
         - file: howto/regenerate-smce-creds.md
         - file: howto/send-secrets.md
-        - title: Budgeting Billing
+        - title: Manage budgets and billing
           children:
             - file: howto/budgeting-billing/index.md
             - file: howto/budgeting-billing/bill.md
@@ -109,7 +109,7 @@ project:
               children:
                 - file: howto/budgeting-billing/cost-monitoring/index.md
                 - file: howto/budgeting-billing/cost-monitoring/aws.md
-        - title: Features
+        - title: Enable specific features
           children:
             - file: howto/features/index.md
             - file: howto/features/allow-unlisted-profile-choice.md
@@ -135,7 +135,7 @@ project:
             - file: howto/features/rocker.md
             - file: howto/features/shared-db.md
             - file: howto/features/storage-quota.md
-        - title: Filesystem Management
+        - title: Manage filesystems
           children:
             - file: howto/filesystem-management/index.md
             - file: howto/filesystem-management/data-transfer-external.md
@@ -148,20 +148,20 @@ project:
                 - file: howto/filesystem-management/filesystem-backups/enable-backups.md
                 - file: >-
                     howto/filesystem-management/filesystem-backups/restore-filesystem.md
-        - title: Image Management
+        - title: Manage images
           children:
             - file: howto/image-management/index.md
             - file: howto/image-management/custom-jupyterhub-image.md
             - file: howto/image-management/pre-pull-user-image.md
             - file: howto/image-management/update-env.md
-        - title: Manage Alerts
+        - title: Manage alerts
           children:
             - file: howto/manage-alerts/index.md
         - title: Manage Domains
           children:
             - file: howto/manage-domains/index.md
             - file: howto/manage-domains/override-domain.md
-        - title: Prepare For Events
+        - title: Prepare for events
           children:
             - file: howto/prepare-for-events/index.md
             - file: howto/prepare-for-events/event-prep.md
@@ -178,7 +178,7 @@ project:
                 - file: howto/troubleshoot/logs/cloud-logs.md
                 - file: howto/troubleshoot/logs/common-errors.md
                 - file: howto/troubleshoot/logs/kubectl-logs.md
-        - title: Upgrade Cluster
+        - title: Upgrade Kubernetes
           children:
             - file: howto/upgrade-cluster/sub-chart-version.md
             - title: K8s Version
