@@ -17,9 +17,8 @@ project:
         - file: tutorials/setup.md
     - title: SRE guide
       children:
-        - title: Support
+        - file: sre-guide/support/index.md
           children:
-            - file: sre-guide/support/index.md
             - file: sre-guide/support/admin-users.md
             - file: sre-guide/support/community-domains.md
             - file: sre-guide/support/credits.md
@@ -30,14 +29,12 @@ project:
             - file: sre-guide/support/reset-hub.md
             - file: sre-guide/support/reset-shared-password.md
             - file: sre-guide/support/simple-python-package.md
-        - title: Manage cloud infrastructure
+        - file: sre-guide/manage-k8s/index.md
           children:
-            - file: sre-guide/manage-k8s/index.md
             - file: sre-guide/manage-k8s/culling.md
             - file: sre-guide/manage-k8s/node-administration.md
-        - title: Scale nodepools
+        - file: sre-guide/node-scale-up/index.md
           children:
-            - file: sre-guide/node-scale-up/index.md
             - file: sre-guide/node-scale-up/aws.md
             - file: sre-guide/node-scale-up/azure.md
         - file: sre-guide/common-problems-solutions.md
@@ -49,47 +46,38 @@ project:
         - title: Runbooks
           children:
             - file: hub-deployment-guide/runbooks/index.md
-            - title: "Phase 1: account setup"
+            - file: hub-deployment-guide/runbooks/phase1/index.md
               children:
-                - file: hub-deployment-guide/runbooks/phase1/index.md
                 - file: hub-deployment-guide/runbooks/phase1/aws-external-account.md
                 - file: hub-deployment-guide/runbooks/phase1/new-aws-account.md
                 - file: hub-deployment-guide/runbooks/phase1/new-gcp-project.md
-            - title: "Phase 2: cluster setup"
+            - file: hub-deployment-guide/runbooks/phase2/index.md
+            - file: hub-deployment-guide/runbooks/phase3/index.md
               children:
-                - file: hub-deployment-guide/runbooks/phase2/index.md
-            - title: "Phase 3: hub setup"
-              children:
-                - file: hub-deployment-guide/runbooks/phase3/index.md
                 - file: hub-deployment-guide/runbooks/phase3/initial-hub-setup.md
-        - title: Add Kubernetes clusters
+        - file: hub-deployment-guide/new-cluster/index.md
           children:
-            - file: hub-deployment-guide/new-cluster/index.md
             - file: hub-deployment-guide/new-cluster/new-cluster.md
             - file: hub-deployment-guide/new-cluster/smce.md
-        - title: Deploy support components
+        - file: hub-deployment-guide/deploy-support/index.md
           children:
-            - file: hub-deployment-guide/deploy-support/index.md
             - file: hub-deployment-guide/deploy-support/configure-support.md
             - file: hub-deployment-guide/deploy-support/register-central-grafana.md
             - file: hub-deployment-guide/deploy-support/setup-grafana-dashboards.md
-        - title: Configure authentication
+        - file: hub-deployment-guide/configure-auth/index.md
           children:
-            - file: hub-deployment-guide/configure-auth/index.md
             - file: hub-deployment-guide/configure-auth/auth0.md
             - file: hub-deployment-guide/configure-auth/canvas.md
             - file: hub-deployment-guide/configure-auth/cilogon.md
             - file: hub-deployment-guide/configure-auth/github-orgs.md
             - file: hub-deployment-guide/configure-auth/shared-password.md
 
-        - title: Other hub operations
+        - file: hub-deployment-guide/hubs/index.md
           children:
-            - file: hub-deployment-guide/hubs/index.md
             - file: hub-deployment-guide/hubs/delete-hub.md
             - file: hub-deployment-guide/hubs/manual-deploy.md
-            - title: Move Hubs
+            - file: hub-deployment-guide/hubs/move-hubs/index.md
               children:
-                - file: hub-deployment-guide/hubs/move-hubs/index.md
                 - file: hub-deployment-guide/hubs/move-hubs/across-clusters.md
                 - file: hub-deployment-guide/hubs/move-hubs/new-url.md
 
@@ -100,18 +88,15 @@ project:
         - file: howto/migrate-ingress.md
         - file: howto/regenerate-smce-creds.md
         - file: howto/send-secrets.md
-        - title: Manage budgets & billing
+        - file: howto/budgeting-billing/index.md
           children:
-            - file: howto/budgeting-billing/index.md
             - file: howto/budgeting-billing/bill.md
             - file: howto/budgeting-billing/budget-alerts.md
-            - title: Cost Monitoring
+            - file: howto/budgeting-billing/cost-monitoring/index.md
               children:
-                - file: howto/budgeting-billing/cost-monitoring/index.md
                 - file: howto/budgeting-billing/cost-monitoring/aws.md
-        - title: Enable specific features
+        - file: howto/features/index.md
           children:
-            - file: howto/features/index.md
             - file: howto/features/allow-unlisted-profile-choice.md
             - file: howto/features/anonymized-usernames.md
             - file: howto/features/binderhub-ui.md
@@ -135,70 +120,58 @@ project:
             - file: howto/features/rocker.md
             - file: howto/features/shared-db.md
             - file: howto/features/storage-quota.md
-        - title: Manage filesystems
+        - file: howto/filesystem-management/index.md
           children:
-            - file: howto/filesystem-management/index.md
             - file: howto/filesystem-management/data-transfer-external.md
             - file: howto/filesystem-management/data-transfer.md
             - file: howto/filesystem-management/decrease-size-gcp-filestore.md
             - file: howto/filesystem-management/increase-disk-size.md
-            - title: Filesystem Backups
+            - file: howto/filesystem-management/filesystem-backups/index.md
               children:
-                - file: howto/filesystem-management/filesystem-backups/index.md
                 - file: howto/filesystem-management/filesystem-backups/enable-backups.md
-                - file: >-
-                    howto/filesystem-management/filesystem-backups/restore-filesystem.md
-        - title: Manage images
+                - file: howto/filesystem-management/filesystem-backups/restore-filesystem.md
+        - file: howto/image-management/index.md
           children:
-            - file: howto/image-management/index.md
             - file: howto/image-management/custom-jupyterhub-image.md
             - file: howto/image-management/pre-pull-user-image.md
             - file: howto/image-management/update-env.md
-        - title: Manage alerts
+        - file: howto/manage-alerts/index.md
+        - file: howto/manage-domains/index.md
           children:
-            - file: howto/manage-alerts/index.md
-        - title: Manage Domains
-          children:
-            - file: howto/manage-domains/index.md
             - file: howto/manage-domains/override-domain.md
-        - title: Prepare for events
+        - file: howto/prepare-for-events/index.md
           children:
-            - file: howto/prepare-for-events/index.md
             - file: howto/prepare-for-events/event-prep.md
             - file: howto/prepare-for-events/exam.md
-        - title: Troubleshoot
+        - file: howto/troubleshoot/index.md
           children:
-            - file: howto/troubleshoot/index.md
             - file: howto/troubleshoot/cilogon-user-accounts.md
             - file: howto/troubleshoot/prometheus.md
             - file: howto/troubleshoot/ssh.md
-            - title: Logs
+            - file: howto/troubleshoot/logs/index.md
               children:
-                - file: howto/troubleshoot/logs/index.md
                 - file: howto/troubleshoot/logs/cloud-logs.md
                 - file: howto/troubleshoot/logs/common-errors.md
                 - file: howto/troubleshoot/logs/kubectl-logs.md
         - title: Upgrade Kubernetes
           children:
-            - file: howto/upgrade-cluster/sub-chart-version.md
-            - title: K8s Version
+            - file: howto/upgrade-cluster/k8s-version/index.md
               children:
-                - file: howto/upgrade-cluster/k8s-version/index.md
                 - file: howto/upgrade-cluster/k8s-version/aws.md
                 - file: howto/upgrade-cluster/k8s-version/azure.md
                 - file: howto/upgrade-cluster/k8s-version/gke.md
                 - file: howto/upgrade-cluster/k8s-version/k8s-version-skew.md
                 - file: howto/upgrade-cluster/k8s-version/node-upgrade-strategies.md
                 - file: howto/upgrade-cluster/k8s-version/upgrade-disruptions.md
+            - file: howto/upgrade-cluster/sub-chart-version.md
 
     - title: Reference
       children:
         - file: reference/cli.md
         #- file: reference/hubs.md
-        #- file: reference/tools.md
-        - title: Ci Cd
+        - file: reference/tools.md
+        - file: reference/ci-cd/index.md
           children:
-            - file: reference/ci-cd/index.md
             - file: reference/ci-cd/auto-bumping.md
             - file: reference/ci-cd/hub-deploy.md
     - title: Topic guides
