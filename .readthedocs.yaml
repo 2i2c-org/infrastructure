@@ -14,7 +14,7 @@ build:
     nodejs: '24'
   commands:
     # Install myst
-  - pip install -r ./requirements.txt
+  - pip install -r ./docs/requirements.txt
     # Build the site
   - jupyter book build --html
     # Copy the output to Read the Docs expected location
