@@ -16,9 +16,9 @@ build:
     # Install myst
   - pip install -r ./docs/requirements.txt
     # Build the site
-  - jupyter book build --html
+  - env -C docs jupyter book build --html
     # Copy the output to Read the Docs expected location
   - mkdir -p $READTHEDOCS_OUTPUT/html/
-  - cp -r _build/html/. "$READTHEDOCS_OUTPUT/html"
+  - cp -r docs/_build/html/. "$READTHEDOCS_OUTPUT/html"
     # Clean up build artifacts
-  - rm -rf _build
+  - rm -rf docs/_build
