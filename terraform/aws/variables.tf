@@ -31,7 +31,7 @@ variable "user_buckets" {
   description = <<-EOT
   S3 Buckets to be created.
 
-  The key for each entry will be prefixed with {var.prefix}- to form
+  The key for each entry will be prefixed with {var.cluster_name}- to form
   the name of the bucket.
 
   The value is a map, with the following accepted keys:
@@ -321,5 +321,36 @@ variable "enable_ebs_alarms" {
   type        = bool
   description = <<-EOT
   Enable alerts for IOPs and throughput
+  EOT
+}
+
+
+variable "k8s_versions" {
+  type = object({
+    min_master_version : optional(string, null),
+    core_nodes_version : optional(string, null),
+    notebook_nodes_version : optional(string, null),
+    dask_nodes_version : optional(string, null),
+  })
+  default     = {}
+  description = <<-EOT
+  Configuration of the k8s cluster's version and node pools' versions. To specify these
+
+  - min_master_nodes is passthrough configuration of https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster#version-1
+  - [core|notebook|dask]_nodes_version is passthrough configuration of https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_node_group#version-2
+  EOT
+}
+
+variable "core_node_machine_type" {
+  type        = string
+  description = <<-EOT
+  Machine type to use for core nodes.
+
+  Core nodes will always be on, and count as 'base cost'
+  for a cluster. We should try to run with as few of them
+  as possible.
+
+  For single-tenant clusters, a single r8i-flex.large node can be
+  enough.
   EOT
 }
