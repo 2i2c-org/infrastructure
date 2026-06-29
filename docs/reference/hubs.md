@@ -17,14 +17,12 @@ Unlike GCP and AWS, Azure does not require the location for authentication and i
 
 A table of all running hubs across all of our clusters.
 
-<div class="full-width hubs-table">
 
 ```{csv-table}
 :header-rows: 1
 :file: ../tmp/hub-table.csv
 ```
 
-</div>
 
 
 ## Community hub statistics
@@ -36,28 +34,3 @@ Summary statistics of the communities we are serving with with hubs, broken down
 :file: ../tmp/hub-stats.csv
 ```
 
-% DataTables config to make the table above look nice
-<link rel="stylesheet"
-      href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-<script type="text/javascript"
-        src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-
-<script>
-$(document).ready( function () {
-    $('.hubs-table table').DataTable( {
-        "order": [[ 0, "template" ]],
-        "pageLength": 25,
-    });
-} );
-</script>
-
-% Make the tables a little bit more compact since there's a lot of text
-<style>
-    table {
-        font-size: .7em;
-    }
-
-    table th, table td {
-        padding: 0;
-    }
-</style>
