@@ -6,11 +6,11 @@ of IAM users in the management account to manage the created member account.
 Like this, we can sign in to manage the member accounts using users defined in
 the `2i2c-sandbox` account.
 
-More information on these terms can be found in [](cloud-access:aws).
+More information on these terms can be found in [](#cloud-access:aws).
 
 1. Login at https://2i2c.awsapps.com/start/#
 
-2. Visit the Management Console of `2i2c-sandbox`, the [AWS Management Account](cloud-access:aws-management-account)
+2. Visit the Management Console of `2i2c-sandbox`, the [AWS Management Account](#cloud-access:aws-management-account)
 
 3. Visit the [Organizations Accounts Console](https://us-east-1.console.aws.amazon.com/organizations/v2/home/accounts) and click "Add an AWS account"
 
@@ -44,7 +44,7 @@ More information on these terms can be found in [](cloud-access:aws).
    * On the "Review and submit assignments" page, click "Submit".
 
 You have successfully created a new AWS account and connected it to our AWS Organization's Management Account!
-Now, [setup a new cluster](new-cluster:new-cluster) inside it via Terraform.
+Now, [setup a new cluster](#new-cluster:new-cluster) inside it via Terraform.
 
 (hub-deployment-guide:cloud-accounts:aws-quotas)=
 ## Checking quotas and requesting increases

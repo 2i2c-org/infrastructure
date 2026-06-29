@@ -7,9 +7,6 @@ This section covers topics in deploying a new Kubernetes Cluster for the major u
 
 The following sections cover how to deploy a Kubernetes cluster.
 
-```{toctree}
-:maxdepth: 1
-:caption: Deploying Kubernetes
-new-cluster.md
-smce.md
-```
+:::{toc}
+:context: children
+:::

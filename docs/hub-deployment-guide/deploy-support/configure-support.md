@@ -7,7 +7,7 @@ These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), 
 This section will walk you through how to deploy the support chart on a cluster.
 
 ```{attention}
-If you ran `deployer generate dedicated-cluster ...` during the [new cluster setup](new-cluster),
+If you ran `deployer generate dedicated-cluster ...` during the [new cluster setup](#new-cluster),
 then a lot of these files will have already been created for you and you do not
 need to recreate them, only update them if required.
 ```
@@ -51,7 +51,7 @@ support:
 ## Deploy the `support` chart via the `deployer`
 
 Use the `deployer` tool to deploy the support chart to the cluster.
-See [](hubs:manual-deploy) for details on how to setup the tool locally.
+See [](#hubs:manual-deploy) for details on how to setup the tool locally.
 
 ```bash
 deployer deploy-support $CLUSTER_NAME

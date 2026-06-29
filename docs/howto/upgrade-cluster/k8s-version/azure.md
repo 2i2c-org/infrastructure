@@ -131,7 +131,7 @@ If you need to upgrade by multiple minor versions, repeat the previous steps unt
 
 ### 5. Upgrade node pools
 
-See [](upgrade-k8s-cluster:node-upgrade-strategies) for strategies employed for upgrading node pools.
+See [](#upgrade-k8s-cluster:node-upgrade-strategies) for strategies employed for upgrading node pools.
 
 1. First upgrade the *core node pool*. We are forced to use a re-creation strategy here.
 1. Then upgrade *user node pools* either with rolling upgrades without using `drain` (preferred), or using re-creation upgrades if they are not running or empty.
@@ -238,4 +238,4 @@ Make sure to commit these changes when the upgrade is finished.
 
 ## References
 
-[^1]: About Kubernetes' version skew policy: <upgrade-k8s-cluster:k8s-version-skew>
+[^1]: About Kubernetes' version skew policy: <#upgrade-k8s-cluster:k8s-version-skew>

@@ -23,7 +23,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 :sync: aws-key
 1. Install `kubectl`, `helm`, `sops`, etc.
 
-   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   In [](#tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 
 2. Install [`aws`](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
@@ -54,7 +54,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 :sync: gcp-key
 1. Install `kubectl`, `helm`, `sops`, etc.
 
-   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   In [](#tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 ````
 
@@ -62,7 +62,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 :sync: azure-key
 1. Install `kubectl`, `helm`, `sops`, etc.
 
-   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   In [](#tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 ````
 
@@ -70,7 +70,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 :sync: jetstream2-key
 1. Install `kubectl`, `helm`, `sops` and pip install `python-openstackclient` and `python-magnumclient`
 
-   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   In [](#tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 ````
 `````
@@ -86,8 +86,8 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 Depending on whether this project is using AWS SSO or not, you can use the following
 links to figure out how to authenticate to this project from your terminal.
 
-- [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
-- [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
+- [For accounts setup with AWS SSO](#cloud-access:aws-sso:terminal)
+- [For accounts without AWS SSO](#cloud-access:aws-iam:terminal)
 ````
 
 ````{tab-item} Google Cloud
@@ -371,7 +371,7 @@ a Hubspot deal URL, and you can determine the deal ID by either:
 ## Add GPU nodegroup if needed
 
 If this cluster is going to have GPUs, you should edit the generated jsonnet file
-to [include a GPU nodegroups](howto:features:gpu).
+to [include a GPU nodegroups](#howto:features:gpu).
 
 ## Initialising Terraform
 
@@ -392,8 +392,8 @@ Our AWS *terraform* code is now used to deploy supporting infrastructure for the
 
 - An IAM identity account for use with our CI/CD system
 - EBS volumes for use with `jupyterhub-home-nfs`
-- Optionally, setup a [shared database](features:shared-db:aws)
-- Optionally, setup [user buckets](howto:features:storage-buckets)
+- Optionally, setup a [shared database](#features:shared-db:aws)
+- Optionally, setup [user buckets](#howto:features:storage-buckets)
 
 The steps above will have created a default `.tfvars` file. This file can either be used as-is or edited to enable the optional features listed above.
 
@@ -446,10 +446,10 @@ If you can't find the workspace you're looking for, double check you've enabled 
 
 ## Setting up Budget Alerts
 
-Follow the instructions in [](howto:setting-up-budget-alerts) to determine if and
+Follow the instructions in [](#howto:setting-up-budget-alerts) to determine if and
 how you should setup budget alerts.
 
-You can learn more about our budget alerts in [](topic:billing:budget-alerts).
+You can learn more about our budget alerts in [](#topic:billing:budget-alerts).
 
 ## Plan and Apply Changes
 
@@ -610,7 +610,7 @@ To begin deploying and operating hubs on your new cluster, we need to export the
 
 ```{seealso}
 We use `cluster.yaml` files to describe a specific cluster and all the hubs deployed onto it.
-See [](config:structure) for more information.
+See [](#config:structure) for more information.
 ```
 
 Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder and populate it with the following info:
@@ -620,13 +620,13 @@ Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder an
 ````{tab-item} AWS
 :sync: aws-key
 
-A `cluster.yaml` file should already have been generated as part of [](new-cluster:generate-cluster-files).
+A `cluster.yaml` file should already have been generated as part of [](#new-cluster:generate-cluster-files).
 ````
 
 ````{tab-item} Google Cloud
 :sync: gcp-key
 
-A `cluster.yaml` file should already have been generated as part of [](new-cluster:generate-cluster-files).
+A `cluster.yaml` file should already have been generated as part of [](#new-cluster:generate-cluster-files).
 
 ### Billing information
 
@@ -642,7 +642,7 @@ should be able to tell you if we are doing cloud costs pass through or not.
    under "Billing Account". It should be of the form `XXXXXX-XXXXXX-XXXXXX`.
 5. Select "Billing export" on the left navigation bar, and you will find the values for `project` and
    `dataset` under "Detailed cost usage".
-6. If "Detailed cost usage" is not set up, you should [enable it](new-gcp-project:billing-export)
+6. If "Detailed cost usage" is not set up, you should [enable it](#new-gcp-project:billing-export)
 ````
 
 ````{tab-item} Azure (kubeconfig)
@@ -765,7 +765,7 @@ parallel to the newer system with access entries:
 
 ```{note}
 You can modify the command output by running `terraform output -raw eksctl_iam_command`
-as described in [](new-cluster:terraform:cluster-credentials).
+as described in [](#new-cluster:terraform:cluster-credentials).
 ```
 
 ```bash

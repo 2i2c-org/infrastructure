@@ -8,7 +8,7 @@
 
 1. *Install/upgrade CLI tools*
 
-   Refer to [](new-cluster:prerequisites) on how to do this.
+   Refer to [](#new-cluster:prerequisites) on how to do this.
 
    ```{important}
    Ensure you have the latest version of `eksctl`, it matters.
@@ -32,7 +32,7 @@
 Start two terminal sessions and set `CLUSTER_NAME=...` in both.
 
 In the first terminal, setup your AWS credentials ([according to this
-documentation](cloud-access:aws)) and change you working directory to the
+documentation](#cloud-access:aws)) and change you working directory to the
 `eksctl` folder.
 
 In the second terminal, setup k8s credentials with `deployer
@@ -127,7 +127,7 @@ starting with the minor version upgrade.
 #### 5. Upgrade node groups
 
 All of the cluster's node groups should be upgraded. Strategies to upgrade nodes
-are introduced in [](upgrade-k8s-cluster:node-upgrade-strategies).
+are introduced in [](#upgrade-k8s-cluster:node-upgrade-strategies).
 
 1. First upgrade *the core node group* with a rolling upgrade using `drain`.
 2. Then upgrade *user node group(s)* with rolling upgrades without using
@@ -247,7 +247,7 @@ been changed. Make sure you commit this changes after the upgrade is finished.
 
 ### References
 
-[^1]: About Kubernetes' version skew policy: <upgrade-k8s-cluster:k8s-version-skew>
+[^1]: About Kubernetes' version skew policy: <#upgrade-k8s-cluster:k8s-version-skew>
 [^2]: `eksctl`'s cluster upgrade documentation: <https://eksctl.io/usage/cluster-upgrade/>
 
 ## Update ekctl configuration

@@ -4,13 +4,13 @@ We have a few alerts configured to notify us when things go wrong and we use Pag
 ## How to manage alerts
 
 ```{important}
-[](howto:alerts) has lots of useful howto guides about how to manage this type of alerts that we have setup.
+[](#howto:alerts) has lots of useful howto guides about how to manage this type of alerts that we have setup.
 ```
 
 ## Severity levels
 When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
 
-Each [alert setup with Jsonnet](alerting:jsonnet-alerts) has a severity level set through the *.jsonnet configuration file. The severity levels are:
+Each [alert setup with Jsonnet](#alerting:jsonnet-alerts) has a severity level set through the *.jsonnet configuration file. The severity levels are:
 
 - `take immediate action`
 - `same day action needed`
@@ -26,7 +26,7 @@ The PagerDuty alerts can have a priority between P1 and P4 or have no priority s
 ### P1 alerts
 - These alerts signal an ongoing community outage! [An outage](https://docs.2i2c.org/admin/reliability/outages/#types-of-outages) is a period of time when a hub is unavailable or its critical services are not functioning as expected and impacting two or more of hub users’ activity
 - The priority is set by:
-   - PagerDuty's Event Orchestration if the alert has a `take immediate action` severity or based on the Service it pertains. (E.g. all [](alerting:hub-health-checks) are P1s)
+   - PagerDuty's Event Orchestration if the alert has a `take immediate action` severity or based on the Service it pertains. (E.g. all [](#alerting:hub-health-checks) are P1s)
    - Manually by the engineer
 
 ````{important}
@@ -43,7 +43,7 @@ If an Alert goes from P1 to another priority number or no number at all, Pagerdu
 
 ### P2 alerts
 - These alerts signal that the community is about to be affected if we don't do something asap. E.g. bumping a hub's home directory when it has less than 10% available.
-- The priority is set by PagerDuty's Event Orchestration if the alert has a `same day action needed` severity or based on the Service it pertains. (E.g. all [](alerting:hub-health-checks) are P1s)
+- The priority is set by PagerDuty's Event Orchestration if the alert has a `same day action needed` severity or based on the Service it pertains. (E.g. all [](#alerting:hub-health-checks) are P1s)
 
 ### P3 alerts
 - Correlate with the `action needed this week` severity level

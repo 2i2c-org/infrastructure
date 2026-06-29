@@ -13,10 +13,9 @@ There are specific scenarios where we would like to avoid this, such as a hub we
 In these scenarios, we often scale-up the nodepools manually before the event so users are not left waiting long periods for their servers.
 These sections document how to manually scale a nodepool for each cloud provider.
 
-```{toctree}
-aws.md
-azure.md
-```
+:::{toc}
+:context: children
+:::
 
 ```{warning}
 Add documentation for how we do this for:

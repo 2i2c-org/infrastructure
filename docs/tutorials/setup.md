@@ -1,4 +1,9 @@
+---
+short_title: Dev environment
+---
+
 (tutorials:setup)=
+
 # Setting up your local environment to work on this repo
 
 This tutorial will guide you through all the steps needed to have a fully
@@ -14,7 +19,7 @@ These tools can, and preferably should, be installed using our [build `environme
 
 ### Kubernetes access tools
 
-We interact with kubernetes a *lot*, and these are the primary tools we use
+We interact with kubernetes a _lot_, and these are the primary tools we use
 to interact with them:
 
 1. [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
@@ -23,7 +28,7 @@ to interact with them:
 ### Secret decryption tools
 
 The wonderful [sops](https://github.com/mozilla/sops/) tool is used to encrypt and
-keep secrets *in* our repository.
+keep secrets _in_ our repository.
 
 ### Cloud provider tools
 
@@ -40,12 +45,11 @@ installed.
 We use [terraform](https://www.terraform.io/) to manage our infrastructure in the cloud.
 So in order to update existing clusters or add new ones, you'll need to install this tool.
 
-Checkout this [information about terraform](topic:terraform) for how to configure and use it.
+Checkout this [information about terraform](#topic:terraform) for how to configure and use it.
 
 ### Jsonnet
 
-We use [go-jsonnet](https://github.com/google/go-jsonnet) in a [number of places](../topic/jsonnet.md). 
-
+We use [go-jsonnet](https://github.com/google/go-jsonnet) in a [number of places](../topic/jsonnet.md).
 
 ## Step 2: Setup the Python environment
 
@@ -65,7 +69,7 @@ required with `pip install -e .[dev]`
 Now you are all ready to use our deployer scripts! Note if dependencies get
 added you will to run the installation again.
 
-Remember you need to *activate the environment* you installed these libraries into each
+Remember you need to _activate the environment_ you installed these libraries into each
 time you use any of our scripts.
 
 ## Step 3: Setup the git pre-commit hooks
@@ -84,7 +88,7 @@ pre-commit install --install-hooks
 Permission to decrypt the secret files in this repo is managed via
 Google Cloud's [Key Management Service](https://cloud.google.com/security-key-management),
 **regardless of the cloud provider running the cluster you are interested in**.
-So to decrypt our secrets, you *must* authenticatie to google cloud via `gcloud`.
+So to decrypt our secrets, you _must_ authenticatie to google cloud via `gcloud`.
 
 You need to already have permissions to the `two-eye-two-see` project via
 your `2i2c.org` Google Account. If you don't have this, please ask a team member.
