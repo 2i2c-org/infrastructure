@@ -122,15 +122,35 @@ resource "aws_iam_role_policy_attachment" "node-AmazonEC2ContainerRegistryReadOn
   role       = aws_iam_role.node.name
 }
 
+resource "aws_launch_template" "core" {
+  name = "${var.cluster-name}-core-machine"
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size = var.core_nodes.disk_size_gb
+      volume_type = var.core_nodes.disk_type
+      iops        = var.core_nodes.disk_iops
+      throughput  = var.core_nodes.disk_throughput
+    }
+  }
+}
+
 resource "aws_eks_node_group" "core" {
   cluster_name    = aws_eks_cluster.cluster.name
   region          = var.region
   node_group_name = "${var.cluster-name}-core-pool"
   node_role_arn   = aws_iam_role.cluster.arn
   subnet_ids      = aws_subnet.public[*].id
+  ami_type        = "AL2023_x86_64_STANDARD"
 
-  ami_type  = "AL2023_x86_64_STANDARD"
-  disk_size = 80
+  launch_template {
+    id = aws_launch_template.core.id
+    # TODO: check this is correct
+    version = aws_launch_template.core.default_version
+  }
+
   node_repair_config {
     enabled = true
   }
@@ -154,11 +174,82 @@ resource "aws_eks_node_group" "core" {
     aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
   ]
 
-  labels = {
+  labels = merge({
     "hub.jupyter.org/node-purpose" = "core",
     "k8s.dask.org/node-purpose"    = "core"
+    }, each.value.labels
+  )
+
+  tags = merge({
+    "ManagedBy" : "2i2c",
+    "2i2c.org/cluster-name" : aws_eks_cluster.cluster.name,
+    "2i2c:node-purpose" : "core",
+    }, each.value.tags
+  )
+}
+
+resource "aws_launch_template" "notebook" {
+  name = "${var.cluster-name}-notebook-machine"
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size = var.notebook_nodes.disk_size_gb
+      volume_type = var.notebook_nodes.disk_type
+      iops        = var.notebook_nodes.disk_iops
+      throughput  = var.notebook_nodes.disk_throughput
+    }
   }
-  kubelet_config {
-    single_process_oom_kill = var.single_process_oom_kill
+}
+
+resource "aws_eks_node_group" "notebook" {
+  cluster_name    = aws_eks_cluster.cluster.name
+  region          = var.region
+  node_group_name = "${var.cluster-name}-notebook-pool"
+  node_role_arn   = aws_iam_role.cluster.arn
+  subnet_ids      = aws_subnet.public[*].id
+  ami_type        = "AL2023_x86_64_STANDARD"
+
+  launch_template {
+    id = aws_launch_template.notebook.id
+    # TODO: check this is correct
+    version = aws_launch_template.notebook.default_version
   }
+
+  node_repair_config {
+    enabled = true
+  }
+  instance_types = [var.notebook_node_machine_type]
+
+  scaling_config {
+    min_size     = 1
+    max_size     = var.notebook_node_max_count
+    desired_size = 1
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
+  # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
+  depends_on = [
+    aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.node-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
+  ]
+
+  labels = merge({
+    "hub.jupyter.org/node-purpose" = "user",
+    "k8s.dask.org/node-purpose"    = "scheduler"
+    }, each.value.labels
+  )
+
+  tags = merge({
+    "ManagedBy" : "2i2c",
+    "2i2c.org/cluster-name" : aws_eks_cluster.cluster.name,
+    "2i2c:node-purpose" : "user",
+    }, each.value.tags
+  )
 }
