@@ -221,7 +221,7 @@ site:
   nav:
   - title: Service Docs
     url: /index
-  - title: infrastructure Guide
+  - title: Infrastructure Guide
     url: https://infrastructure.2i2c.org/en/latest/
   - title: 2i2c Blog
     url: https://2i2c.org/blog
