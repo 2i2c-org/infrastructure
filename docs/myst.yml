@@ -43,9 +43,8 @@ project:
 
   - title: Hub deployment guide
     children:
-    - title: Runbooks
+    - file: hub-deployment-guide/runbooks/index.md
       children:
-      - file: hub-deployment-guide/runbooks/index.md
       - file: hub-deployment-guide/runbooks/phase1/index.md
         children:
         - file: hub-deployment-guide/runbooks/phase1/aws-external-account.md
@@ -182,22 +181,19 @@ project:
     - file: topic/jsonnet.md
     - file: topic/new-hub.md
     - file: topic/resource-allocation.md
-    - title: Access Creds
+    - file: topic/access-creds/index.md
       children:
-      - file: topic/access-creds/index.md
       - file: topic/access-creds/cloud-auth.md
       - file: topic/access-creds/secrets.md
-    - title: Billing
+    - file: topic/billing/index.md
       children:
-      - file: topic/billing/index.md
       - file: topic/billing/accounts.md
       - file: topic/billing/budget-alerts.md
       - file: topic/billing/chargeable-resources.md
       - file: topic/billing/reports.md
       - file: topic/billing/tools.md
-    - title: Infrastructure
+    - file: topic/infrastructure/index.md
       children:
-      - file: topic/infrastructure/index.md
       - file: topic/infrastructure/cluster-design.md
       - file: topic/infrastructure/config.md
       - file: topic/infrastructure/cryptnono.md
@@ -206,9 +202,8 @@ project:
       - file: topic/infrastructure/storage-layer.md
       - file: topic/infrastructure/terraform.md
       - file: topic/infrastructure/user-placeholders.md
-    - title: Monitoring Alerting
+    - file: topic/monitoring-alerting/index.md
       children:
-      - file: topic/monitoring-alerting/index.md
       - file: topic/monitoring-alerting/alerting.md
       - file: topic/monitoring-alerting/cost-monitoring-availability.md
       - file: topic/monitoring-alerting/cost-monitoring-system.md
