@@ -44,6 +44,7 @@ jupyterhub:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
         - lrodriguez2@fullcoll.edu
+        - chanorodrig@gmail.com
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-fullertoncc

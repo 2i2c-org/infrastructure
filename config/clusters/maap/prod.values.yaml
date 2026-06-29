@@ -197,6 +197,14 @@ jupyterhub:
         extra_resource_limits:
           nvidia.com/gpu: '1'
   hub:
+    extraFiles:
+      usage_quotas_config:
+        mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+        stringData: |
+          c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+          c.UsageConfig.hub_namespace = "prod"
+          c.UsageViewer.public_hub_url = "https://hub.maap-project.org/"
+          c.UsageViewer.enable_compute = False
     config:
       GenericOAuthenticator:
         token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token

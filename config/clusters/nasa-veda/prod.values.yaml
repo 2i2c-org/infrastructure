@@ -3,6 +3,15 @@ basehub:
     pv:
       serverIP: 10.100.32.135
   jupyterhub:
+    hub:
+      extraFiles:
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageConfig.hub_namespace = "prod"
+            c.UsageViewer.public_hub_url = "https://hub.openveda.cloud/"
+            c.UsageViewer.enable_compute = False
     custom:
       homepage:
         gitRepoBranch: master

@@ -215,6 +215,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "oit"
   }
+  "orangecoast" = {
+    size        = 25
+    name_suffix = "orangecoast"
+  }
   "palomar" = {
     size        = 40
     name_suffix = "palomar"
