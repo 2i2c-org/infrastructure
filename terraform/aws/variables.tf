@@ -365,3 +365,29 @@ variable "core_nodes" {
   })
   description = "Core node pool to create"
 }
+
+variable "notebook_nodes" {
+  type = map(object({
+    min : number,
+    max : number,
+    machine_type : string,
+    tags : optional(map(string), {}),
+    labels : optional(map(string), {}),
+    taints : optional(list(object({
+      key : string,
+      value : string,
+      effect : string
+    })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "gp3"),
+    disk_size_gb : optional(number, 80),
+    disk_throughput : optional(number, null),
+    disk_iops : optional(number, null),
+    node_version : optional(string, ""),
+  }))
+  description = "Notebook node pools to create"
+  default     = {}
+}

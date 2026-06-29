@@ -125,6 +125,9 @@ resource "aws_iam_role_policy_attachment" "node-AmazonEC2ContainerRegistryReadOn
 resource "aws_launch_template" "core" {
   name = "${var.cluster-name}-core-machine"
 
+  instance_type = var.core_nodes.machine_type
+
+
   block_device_mappings {
     device_name = "/dev/xvda"
 
@@ -154,7 +157,6 @@ resource "aws_eks_node_group" "core" {
   node_repair_config {
     enabled = true
   }
-  instance_types = [var.core_node_machine_type]
 
   scaling_config {
     min_size     = 1
@@ -174,36 +176,58 @@ resource "aws_eks_node_group" "core" {
     aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
   ]
 
+  /**
+  Generate EC2 resource tags representing node taints that cluster autoscaler's autodiscovery understands
+  https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#auto-discovery-setup
+  */
   labels = merge({
-    "hub.jupyter.org/node-purpose" = "core",
-    "k8s.dask.org/node-purpose"    = "core"
-    }, each.value.labels
+    "node.kubernetes.io/instance-type" = "${var.core_nodes.machine_type}",
+    "hub.jupyter.org/node-purpose"     = "core",
+    "k8s.dask.org/node-purpose"        = "core"
+    }, var.core_nodes.labels
   )
 
+  taint = var.core_nodes.taints
+
+  # https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#auto-discovery-setup
   tags = merge({
     "ManagedBy" : "2i2c",
     "2i2c.org/cluster-name" : aws_eks_cluster.cluster.name,
     "2i2c:node-purpose" : "core",
-    }, each.value.tags
+    },
+    var.core_nodes.tags,
+    {
+      for k, v in var.core_nodes.labels :
+      "k8s.io/cluster-autoscaler/node-template/label/${k}" => v
+    },
+    {
+      for k, v in var.core_nodes.taints :
+      "k8s.io/cluster-autoscaler/node-template/taint/${k}" => v
+    }
   )
 }
 
 resource "aws_launch_template" "notebook" {
-  name = "${var.cluster-name}-notebook-machine"
+  for_each = var.notebook_nodes
+  name     = "${var.cluster-name}-notebook-${each.key}"
+
+  instance_type = each.value.machine_type
 
   block_device_mappings {
     device_name = "/dev/xvda"
 
     ebs {
-      volume_size = var.notebook_nodes.disk_size_gb
-      volume_type = var.notebook_nodes.disk_type
-      iops        = var.notebook_nodes.disk_iops
-      throughput  = var.notebook_nodes.disk_throughput
+      volume_size = each.value.disk_size_gb
+      volume_type = each.value.disk_type
+      iops        = each.value.disk_iops
+      throughput  = each.value.disk_throughput
     }
   }
 }
 
 resource "aws_eks_node_group" "notebook" {
+  for_each = var.notebook_nodes
+
   cluster_name    = aws_eks_cluster.cluster.name
   region          = var.region
   node_group_name = "${var.cluster-name}-notebook-pool"
@@ -212,20 +236,20 @@ resource "aws_eks_node_group" "notebook" {
   ami_type        = "AL2023_x86_64_STANDARD"
 
   launch_template {
-    id = aws_launch_template.notebook.id
+    # TODO fixme this seems long winded
+    id = aws_launch_template.notebook["${var.cluster-name}-notebook-${each.key}"].id
     # TODO: check this is correct
-    version = aws_launch_template.notebook.default_version
+    version = aws_launch_template.notebook["${var.cluster-name}-notebook-${each.key}"].default_version
   }
 
   node_repair_config {
     enabled = true
   }
-  instance_types = [var.notebook_node_machine_type]
 
   scaling_config {
-    min_size     = 1
-    max_size     = var.notebook_node_max_count
-    desired_size = 1
+    min_size     = each.value.min
+    max_size     = each.value.max
+    desired_size = each.value.min
   }
 
   update_config {
@@ -241,8 +265,9 @@ resource "aws_eks_node_group" "notebook" {
   ]
 
   labels = merge({
-    "hub.jupyter.org/node-purpose" = "user",
-    "k8s.dask.org/node-purpose"    = "scheduler"
+    "node.kubernetes.io/instance-type" = "${each.value.machine_type}",
+    "hub.jupyter.org/node-purpose"     = "user",
+    "k8s.dask.org/node-purpose"        = "scheduler"
     }, each.value.labels
   )
 
@@ -250,6 +275,15 @@ resource "aws_eks_node_group" "notebook" {
     "ManagedBy" : "2i2c",
     "2i2c.org/cluster-name" : aws_eks_cluster.cluster.name,
     "2i2c:node-purpose" : "user",
-    }, each.value.tags
+    },
+    each.value.tags,
+    {
+      for k, v in each.value.labels :
+      "k8s.io/cluster-autoscaler/node-template/label/${k}" => v
+    },
+    {
+      for k, v in each.value.taints :
+      "k8s.io/cluster-autoscaler/node-template/taint/${k}" => v
+    }
   )
 }
