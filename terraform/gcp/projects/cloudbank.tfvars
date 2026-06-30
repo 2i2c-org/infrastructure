@@ -55,6 +55,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "clarku"
   }
+  "cloud-county" = {
+    size        = 25
+    name_suffix = "cloud-county"
+  }
   "cmu" = {
     size        = 25
     name_suffix = "cmu"
