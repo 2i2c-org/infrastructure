@@ -27,5 +27,4 @@ binderhub-service:
 
 jupyterhub-home-nfs:
   eks:
-    volumeId: vol-0971ad91e7e4e270f
-
+    volumeId: vol-0d3344882a11b2b08
