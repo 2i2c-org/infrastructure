@@ -176,6 +176,13 @@ resource "aws_eks_node_group" "core" {
     aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
   ]
 
+  taint {
+    for_each = each.value.taints
+    key      = each.key
+    effect   = each.value.effect
+    value    = each.value.value
+  }
+
   /**
   Generate EC2 resource tags representing node taints that cluster autoscaler's autodiscovery understands
   https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#auto-discovery-setup
@@ -202,7 +209,7 @@ resource "aws_eks_node_group" "core" {
     },
     {
       for k, v in var.core_nodes.taints :
-      "k8s.io/cluster-autoscaler/node-template/taint/${k}" => v
+      "k8s.io/cluster-autoscaler/node-template/taint/${k}" => "${v.value}:${v.effect}"
     }
   )
 }
@@ -264,6 +271,13 @@ resource "aws_eks_node_group" "notebook" {
     aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
   ]
 
+  taint {
+    for_each = each.value.taints
+    key      = each.key
+    effect   = each.value.effect
+    value    = each.value.value
+  }
+
   labels = merge({
     "node.kubernetes.io/instance-type" = "${each.value.machine_type}",
     "hub.jupyter.org/node-purpose"     = "user",
@@ -283,7 +297,7 @@ resource "aws_eks_node_group" "notebook" {
     },
     {
       for k, v in each.value.taints :
-      "k8s.io/cluster-autoscaler/node-template/taint/${k}" => v
+      "k8s.io/cluster-autoscaler/node-template/taint/${k}" => "${v.value}:${v.effect}"
     }
   )
 }
