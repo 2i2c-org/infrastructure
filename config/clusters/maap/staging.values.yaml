@@ -10,6 +10,11 @@ jupyterhub:
     homepage:
       gitRepoBranch: staging
       gitRepoUrl: https://github.com/MAAP-Project/maap-hub-homepage
+      templateVars:
+        # Direct hub visitors (/hub/login?next=/hub/) are bounced to the universal
+        # sign-up page in its fresh-visitor "Step 1" state; deep links (next=<resource>)
+        # still go straight to oauth_login. The UAT web env pairs with this hub.
+        redirect_to: https://uat.maap-project.org/signup
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
