@@ -230,6 +230,17 @@ resource "aws_launch_template" "notebook" {
       throughput  = each.value.disk_throughput
     }
   }
+
+  user_data = base64encode(<<-EOT
+---
+apiVersion: node.eks.aws/v1alpha1
+kind: NodeConfig
+spec:
+  kubelet:
+    config:
+      singleProcessOOMKill: true
+  EOT
+  )
 }
 
 resource "aws_eks_node_group" "notebook" {
