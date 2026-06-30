@@ -3,7 +3,7 @@ jupyterhub:
     defaultUrl: /lab
     image:
       name: quay.io/jupyter/tensorflow-notebook
-      tag: "2026-06-29"
+      tag: '2026-06-29'
     memory:
       guarantee: 512M
       limit: 1G
