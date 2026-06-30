@@ -23,3 +23,24 @@ ebs_volumes = {
     iops        = 10000
   }
 }
+
+core_nodes = {
+  machine_type : "r8i-flex.large"
+}
+notebook_nodes = {
+  "r5-xlarge" : {
+    min : 0,
+    max : 100,
+    machine_type : "r5.xlarge",
+  },
+  "r5-4xlarge" : {
+    min : 0,
+    max : 100,
+    machine_type : "r5.4xlarge",
+  },
+  "r5-16xlarge" : {
+    min : 0,
+    max : 100,
+    machine_type : "r5.16xlarge",
+  }
+}
