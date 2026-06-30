@@ -19,6 +19,14 @@ variable "cluster_nodes_location" {
   EOT
 }
 
+variable "use_eksctl" {
+  type        = bool
+  description = <<-EOT
+  Use eksctl to provision infra.
+  EOT
+  default     = true
+}
+
 variable "user_buckets" {
   type = map(
     object({
@@ -343,7 +351,7 @@ variable "k8s_versions" {
 
 variable "core_nodes" {
   type = object({
-    min : number,
+    min : optional(number, 1),
     max : number,
     machine_type : string,
     tags : optional(map(string), {}),

@@ -1,16 +1,18 @@
+
 resource "aws_eks_cluster" "cluster" {
-  name   = "${var.cluster_name}-cluster"
-  region = var.region
+  count = var.use_eksctl ? 0 : 1
+
+  name = "${var.cluster_name}-cluster"
 
   access_config {
     authentication_mode = "API"
   }
 
-  role_arn = aws_iam_role.cluster.arn
+  role_arn = aws_iam_role.cluster[0].arn
   version  = var.k8s_versions.min_master_version
 
   vpc_config {
-    subnet_ids = concat(aws_subnet.private[*].id, aws_subnet.public[*].idu)
+    subnet_ids = concat(aws_subnet.private[*].id, aws_subnet.public[*].id)
   }
 
   # Ensure that IAM Role permissions are created before and deleted
@@ -21,7 +23,10 @@ resource "aws_eks_cluster" "cluster" {
   ]
 }
 
+
 resource "aws_iam_role" "cluster" {
+  count = var.use_eksctl ? 0 : 1
+
   name = "${var.cluster_name}-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -41,20 +46,23 @@ resource "aws_iam_role" "cluster" {
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
+  count = var.use_eksctl ? 0 : 1
+
+
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.cluster.name
+  role       = aws_iam_role.cluster[0].name
 }
 
 
 # Declare the data source
 data "aws_availability_zones" "available" {
-  state  = "available"
-  region = var.region
+  state = "available"
 }
 
 
 resource "aws_vpc" "main" {
-  region               = var.region
+  count = var.use_eksctl ? 0 : 1
+
   cidr_block           = "192.168.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
@@ -65,11 +73,10 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "private" {
-  region            = var.region
-  count             = count(aws_availability_zones.available.names)
-  vpc_id            = aws_vpc.main.id
+  count             = var.use_eksctl ? 0 : length(data.aws_availability_zones.available.names)
+  vpc_id            = aws_vpc.main[0].id
   cidr_block        = "192.168.${count.index + 1}.0/24"
-  availability_zone = aws_availability_zones.available.names[count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
     Name                              = "${var.cluster_name}-private-${count.index + 1}"
@@ -78,11 +85,10 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_subnet" "public" {
-  region                  = var.region
-  count                   = count(aws_availability_zones.available.names)
-  vpc_id                  = aws_vpc.main.id
+  count                   = var.use_eksctl ? 0 : length(data.aws_availability_zones.available.names)
+  vpc_id                  = aws_vpc.main[0].id
   cidr_block              = "192.168.${count.index + 10}.0/24"
-  availability_zone       = aws_availability_zones.available.names[count.index]
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
 
   tags = {
@@ -92,7 +98,8 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_iam_role" "node" {
-  name = "${var.cluster_name}-node"
+  count = var.use_eksctl ? 0 : 1
+  name  = "${var.cluster_name}-node"
 
   assume_role_policy = jsonencode({
     Statement = [{
@@ -108,22 +115,26 @@ resource "aws_iam_role" "node" {
 
 # TODO: one role per node group?
 resource "aws_iam_role_policy_attachment" "node-AmazonEKSWorkerNodePolicy" {
+  count      = var.use_eksctl ? 0 : 1
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.node.name
+  role       = aws_iam_role.node[0].name
 }
 
 resource "aws_iam_role_policy_attachment" "node-AmazonEKS_CNI_Policy" {
+  count      = var.use_eksctl ? 0 : 1
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.node.name
+  role       = aws_iam_role.node[0].name
 }
 
 resource "aws_iam_role_policy_attachment" "node-AmazonEC2ContainerRegistryReadOnly" {
+  count      = var.use_eksctl ? 0 : 1
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.node.name
+  role       = aws_iam_role.node[0].name
 }
 
 resource "aws_launch_template" "core" {
-  name = "${var.cluster-name}-core-machine"
+  count = var.use_eksctl ? 0 : 1
+  name  = "${var.cluster_name}-core-machine"
 
   instance_type = var.core_nodes.machine_type
 
@@ -141,17 +152,17 @@ resource "aws_launch_template" "core" {
 }
 
 resource "aws_eks_node_group" "core" {
-  cluster_name    = aws_eks_cluster.cluster.name
-  region          = var.region
-  node_group_name = "${var.cluster-name}-core-pool"
-  node_role_arn   = aws_iam_role.cluster.arn
+  count           = var.use_eksctl ? 0 : 1
+  cluster_name    = aws_eks_cluster.cluster[0].name
+  node_group_name = "${var.cluster_name}-core-pool"
+  node_role_arn   = aws_iam_role.cluster[0].arn
   subnet_ids      = aws_subnet.public[*].id
   ami_type        = "AL2023_x86_64_STANDARD"
 
   launch_template {
-    id = aws_launch_template.core.id
+    id = aws_launch_template.core[0].id
     # TODO: check this is correct
-    version = aws_launch_template.core.default_version
+    version = aws_launch_template.core[0].default_version
   }
 
   node_repair_config {
@@ -159,9 +170,9 @@ resource "aws_eks_node_group" "core" {
   }
 
   scaling_config {
-    min_size     = 1
-    max_size     = var.core_node_max_count
-    desired_size = 1
+    min_size     = var.core_nodes.min
+    max_size     = var.core_nodes.max
+    desired_size = var.core_nodes.min
   }
 
   update_config {
@@ -171,16 +182,18 @@ resource "aws_eks_node_group" "core" {
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
   depends_on = [
-    aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.node-AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy[0],
+    aws_iam_role_policy_attachment.node-AmazonEKS_CNI_Policy[0],
+    aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly[0],
   ]
 
-  taint {
-    for_each = each.value.taints
-    key      = each.key
-    effect   = each.value.effect
-    value    = each.value.value
+  dynamic "taint" {
+    for_each = var.core_nodes.taints
+    content {
+      key    = each.key
+      effect = each.value.effect
+      value  = each.value.value
+    }
   }
 
   /**
@@ -194,12 +207,10 @@ resource "aws_eks_node_group" "core" {
     }, var.core_nodes.labels
   )
 
-  taint = var.core_nodes.taints
-
   # https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#auto-discovery-setup
   tags = merge({
     "ManagedBy" : "2i2c",
-    "2i2c.org/cluster-name" : aws_eks_cluster.cluster.name,
+    "2i2c.org/cluster_name" : aws_eks_cluster.cluster[0].name,
     "2i2c:node-purpose" : "core",
     },
     var.core_nodes.tags,
@@ -215,8 +226,8 @@ resource "aws_eks_node_group" "core" {
 }
 
 resource "aws_launch_template" "notebook" {
-  for_each = var.notebook_nodes
-  name     = "${var.cluster-name}-notebook-${each.key}"
+  for_each = var.use_eksctl ? {} : var.notebook_nodes
+  name     = "${var.cluster_name}-notebook-${each.key}"
 
   instance_type = each.value.machine_type
 
@@ -244,20 +255,19 @@ spec:
 }
 
 resource "aws_eks_node_group" "notebook" {
-  for_each = var.notebook_nodes
+  for_each = var.use_eksctl ? {} : var.notebook_nodes
 
-  cluster_name    = aws_eks_cluster.cluster.name
-  region          = var.region
-  node_group_name = "${var.cluster-name}-notebook-pool"
-  node_role_arn   = aws_iam_role.cluster.arn
+  cluster_name    = aws_eks_cluster.cluster[0].name
+  node_group_name = "${var.cluster_name}-notebook-pool"
+  node_role_arn   = aws_iam_role.cluster[0].arn
   subnet_ids      = aws_subnet.public[*].id
   ami_type        = "AL2023_x86_64_STANDARD"
 
   launch_template {
     # TODO fixme this seems long winded
-    id = aws_launch_template.notebook["${var.cluster-name}-notebook-${each.key}"].id
+    id = aws_launch_template.notebook[each.key].id
     # TODO: check this is correct
-    version = aws_launch_template.notebook["${var.cluster-name}-notebook-${each.key}"].default_version
+    version = aws_launch_template.notebook[each.key].default_version
   }
 
   node_repair_config {
@@ -277,16 +287,18 @@ resource "aws_eks_node_group" "notebook" {
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
   depends_on = [
-    aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.node-AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy[0],
+    aws_iam_role_policy_attachment.node-AmazonEKS_CNI_Policy[0],
+    aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly[0],
   ]
 
-  taint {
+  dynamic "taint" {
     for_each = each.value.taints
-    key      = each.key
-    effect   = each.value.effect
-    value    = each.value.value
+    content {
+      key    = each.key
+      effect = each.value.effect
+      value  = each.value.value
+    }
   }
 
   labels = merge({
@@ -298,7 +310,7 @@ resource "aws_eks_node_group" "notebook" {
 
   tags = merge({
     "ManagedBy" : "2i2c",
-    "2i2c.org/cluster-name" : aws_eks_cluster.cluster.name,
+    "2i2c.org/cluster_name" : aws_eks_cluster.cluster[0].name,
     "2i2c:node-purpose" : "user",
     },
     each.value.tags,

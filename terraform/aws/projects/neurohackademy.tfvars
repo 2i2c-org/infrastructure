@@ -1,6 +1,7 @@
 region                 = "us-west-2"
 cluster_name           = "neurohackademy"
 cluster_nodes_location = "us-west-2a"
+use_eksctl             = false
 
 enable_jupyterhub_cost_monitoring = true
 
@@ -26,6 +27,7 @@ ebs_volumes = {
 
 core_nodes = {
   machine_type : "r8i-flex.large"
+  max : 1
 }
 notebook_nodes = {
   "r5-xlarge" : {
