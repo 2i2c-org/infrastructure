@@ -1,6 +1,9 @@
 name: neurohackademy
 provider: aws
 provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 96841346779
 aws:
   account: 181398284065
   key: enc-deployer-credentials.secret.json

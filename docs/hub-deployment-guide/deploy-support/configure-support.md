@@ -60,14 +60,14 @@ deployer deploy-support $CLUSTER_NAME
 (deploy-support-chart:dns-records)=
 ## Setting DNS records
 
-Once the `support` chart has been successfully deployed, retrieve the external IP address for the `ingress-nginx` load balancer.
+Once the `support` chart has been successfully deployed, retrieve the external IP address for the `cluster-entrypoint` load balancer.
 
 ```bash
 deployer use-cluster-credentials $CLUSTER_NAME
 ```
 
 ```bash
-kubectl --namespace=support get service/support-ingress-nginx-controller  --template='{{$ingress := (index .status.loadBalancer.ingress 0)}}{{or $ingress.hostname $ingress.ip}}'
+kubectl --namespace=support get service/cluster-entrypoint --template='{{$ingress := (index .status.loadBalancer.ingress 0)}}{{or $ingress.hostname $ingress.ip}}'
 ```
 
 Add DNS records for the `2i2c.cloud` domain [under "Advanced DNS" in
