@@ -58,6 +58,10 @@ jupyterhub:
         admin_users:
         - arokem
         - noahbenson
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
   scheduling:
     userScheduler:
       enabled: true

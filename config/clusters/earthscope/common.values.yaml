@@ -103,6 +103,7 @@ basehub:
           - self
           - access:services!service=usage-quota
           - access:services!service=dask-gateway
+          - access:services!service=binder
         server:
           scopes:
           - self

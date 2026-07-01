@@ -32,6 +32,7 @@ jupyterhub:
         - shares!user
         - read:users:name
         - list:users
+        - access:services!service=binder
     config:
       KubeSpawner:
         image_pull_policy: Always

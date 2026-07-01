@@ -45,6 +45,10 @@ jupyterhub:
         admin_users:
         - RobertPincus
         - SammyAgrawal
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
   singleuser:
     initContainers: []
     storage:
@@ -144,3 +148,6 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: https://us-central1-docker.pkg.dev
     username: _json_key
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.public.svc.cluster.local:8081/hub/api

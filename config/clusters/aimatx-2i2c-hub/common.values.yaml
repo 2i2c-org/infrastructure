@@ -159,6 +159,7 @@ jupyterhub:
         scopes:
         - self
         - access:services!service=dask-gateway
+        - access:services!service=binder
     config:
       JupyterHub:
         authenticator_class: github
