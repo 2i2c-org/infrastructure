@@ -49,8 +49,7 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
-        - NeuroHackademy2025:escience-hackathon
-        - NeuroHackademy2025:hubbers
+        - NeuroHackademy2026
         - 2i2c-org:hub-access-for-2i2c-staff
         scope:
         - read:org
@@ -93,7 +92,7 @@ jupyterhub:
                 - name: TARGET_PATH
                   value: curriculum
                 - name: SOURCE_REPO
-                  value: https://github.com/NeuroHackademy2025/curriculum
+                  value: https://github.com/NeuroHackademy2026/curriculum
                 - name: SOURCE_BRANCH
                   value: main
                 volumeMounts:
@@ -104,17 +103,17 @@ jupyterhub:
                   runAsUser: 1000
                   runAsGroup: 1000
           choices:
-            nh2025:
-              display_name: nh2025
+            nh2026:
+              display_name: hub-user-image
               slug: regular-profile
               kubespawner_override:
-                image: quay.io/arokem/nh2025:e355158ea60c
+                image: quay.io/neurohackademy2026/hub-user-image:a6304d25dc4b
                 init_containers: *init_containers
-            nh2025-gpu:
-              display_name: nh2025-gpu
+            nh2026-gpu:
+              display_name: hub-user-image-gpu
               slug: gpu-profile
               kubespawner_override:
-                image: quay.io/arokem/nh2025-gpu:726a3d89f074
+                image: quay.io/neurohackademy2026/hub-user-image-gpu:336246de7c2f
                 init_containers: *init_containers
         requests:
           display_name: Resource Allocation
