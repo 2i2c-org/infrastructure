@@ -11,7 +11,7 @@ on OAuthenticator.
 Communities often want to *selectively* grant access to resources based on
 what *groups* a user belongs to. The most common example being restricted
 access to GPUs, really large resource allocations or the ability to specify
-[arbitrary images to launch](howto:features:unlisted-choice).
+[arbitrary images to launch](#howto:features:unlisted-choice).
 
 We override the [`profile_list`](https://jupyterhub-kubespawner.readthedocs.io/en/latest/spawner.html#kubespawner.KubeSpawner.profile_list)
 feature of KubeSpawner to be able to restrict specific profiles or profile options

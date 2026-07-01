@@ -108,7 +108,7 @@ resource "google_monitoring_alert_policy" "hub_https_certificate_expiry_alert" {
       # prevent alerts if the hub is momentarily down during a deployment. All alerts
       # *must* be actionable, so we trade-off some latency here for resiliency.
       duration        = "1860s"
-      threshold_value = 24 # This is 3 weeks, so we alert if this is less than 3 weeks
+      threshold_value = 3 # This is 3 weeks, so we alert if this is less than 3 weeks
       comparison      = "COMPARISON_LT"
       aggregations {
         group_by_fields = ["resource.label.host"]
@@ -176,8 +176,8 @@ resource "google_monitoring_alert_policy" "prometheus_simple_uptime_alert" {
       AND metric.type = "monitoring.googleapis.com/uptime_check/check_passed"
       AND metric.labels.check_id = "${google_monitoring_uptime_check_config.prometheus_simple_uptime_check[each.key].uptime_check_id}"
       EOT
-      # Alert if we have a failure condition for 11 minutes - given we do checks
-      # every 5 minutes, this means we alert if two checks have failed. This shoulod
+      # Alert if we have a failure condition for 31 minutes - given we do checks
+      # every 15 minutes, this means we alert if two checks have failed. This should
       # prevent alerts if the hub is momentarily down during a deployment. All alerts
       # *must* be actionable, so we trade-off some latency here for resiliency.
       duration        = "1860s"

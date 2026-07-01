@@ -22,7 +22,7 @@ jupyterhub:
 Next, we need to know the Canvas instance's URL. Usually this is of the form <https://some-institution.instructure.com>. We will use the `jupyterhub_oauthenticator_authz_helpers` package to facilitate the basic authentication process:
 
 ```{code-block} yaml
-:emphasize-lines: 7-9, 11-
+:emphasize-lines: 7-9, 11-25
 jupyterhub:
   hub:
     config:
@@ -65,7 +65,7 @@ At a minimum, we need the the `url:GET|/api/v1/users/:user_id/profile` scope tha
 In the encrypted, per-hub config (of form `enc-<hub-name>.secret.values.yaml`), we specify the secret values we received from the community.
 
 ```{code-block} yaml
-:emphasize-lines: 5-
+:emphasize-lines: 5-7
 jupyterhub:
   hub:
     config:

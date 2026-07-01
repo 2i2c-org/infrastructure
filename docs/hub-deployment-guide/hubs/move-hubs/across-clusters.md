@@ -5,7 +5,7 @@ to ensure data is preserved.
 
 ## 1. Setup a new hub
 
-Setup [a new hub](config) in the target cluster, mimicking
+Setup [a new hub](#config) in the target cluster, mimicking
 the config of the old hub as much as possible.
 
 (copy-home-dirs)=
@@ -84,7 +84,7 @@ The filestores must be mounted in order to be accessed.
       sudo mount SERVER_ADDRESS /mnt/filestore
       ```
 
-The user directories can then be transferred in the same manner as [NFS Servers](nfs_servers) with the locations updated to be the following:
+The user directories can then be transferred in the same manner as [NFS Servers](#nfs_servers) with the locations updated to be the following:
 
 ```bash
 <your_scp_or_rsync_command> ubuntu@nfs-source-server-public-IP:/mnt/filestore/<hub-name> /mnt/filestore/<hub-name>
@@ -188,7 +188,7 @@ Tip: You can use [this script](https://github.com/2i2c-org/infrastructure/tree/H
 
 
 ## 3. Set up Grafana Dashboards for the new cluster
-Make sure the new cluster has Grafana Dashboards deployed. If not, follow the steps in [](setup-grafana). Also, verify if the old cluster had Prometheus deployed and whether you also need to migrate that.
+Make sure the new cluster has Grafana Dashboards deployed. If not, follow the steps in [](#setup-grafana). Also, verify if the old cluster had Prometheus deployed and whether you also need to migrate that.
 
 ## 4. Take down the current hub
 Delete the proxy service to make the hub unreachable.

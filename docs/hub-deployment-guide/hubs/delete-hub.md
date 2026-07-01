@@ -15,7 +15,7 @@ The sub-sections below cover both scenarios.
 
 #### 1.1.1 Backup the hub database
 
-[Backup the `jupyterhub.sqlite` database](backup-hub-db) off the hub.
+[Backup the `jupyterhub.sqlite` database](#backup-hub-db) off the hub.
 
 #### 1.1.2. Backup the home directory contents.
 

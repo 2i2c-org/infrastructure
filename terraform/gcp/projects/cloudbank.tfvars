@@ -55,6 +55,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "clarku"
   }
+  "cloud-county" = {
+    size        = 25
+    name_suffix = "cloud-county"
+  }
   "cmu" = {
     size        = 25
     name_suffix = "cmu"
@@ -215,6 +219,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "oit"
   }
+  "orangecoast" = {
+    size        = 25
+    name_suffix = "orangecoast"
+  }
   "palomar" = {
     size        = 40
     name_suffix = "palomar"
@@ -246,10 +254,6 @@ persistent_disks = {
   "sbcc" = {
     size        = 100
     name_suffix = "sbcc"
-  }
-  "sbcc-dev" = {
-    size        = 20
-    name_suffix = "sbcc-dev"
   }
   "shasta" = {
     size        = 25

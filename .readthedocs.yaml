@@ -1,19 +1,26 @@
-# https://docs.readthedocs.io/en/stable/config-file/v2.html
+# Read the Docs configuration file for myst
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+# This file was created automatically with `jupyter book init --readthedocs`
+
+# Required
 version: 2
 
+# Set the OS, Python version, and Node.js version
+# Note: Python is included for executing code in notebooks or using Jupyter Book
 build:
-  os: ubuntu-24.04
+  os: ubuntu-22.04
   tools:
     python: '3.13'
-  jobs:
-    post_checkout:
-    - git fetch --unshallow || true
-
-python:
-  install:
-  - path: .
-  - requirements: docs/requirements.txt
-
-sphinx:
-  configuration: docs/conf.py
-  builder: dirhtml
+    nodejs: '24'
+  commands:
+    # Install myst
+  - pip install -r ./docs/requirements.txt
+    # Generate the hub tables that reference/hubs.md includes
+  - env -C docs python -m helper_programs.hub_info_table
+    # Build the site
+  - env -C docs jupyter book build --html
+    # Copy the output to Read the Docs expected location
+  - mkdir -p $READTHEDOCS_OUTPUT/html/
+  - cp -r docs/_build/html/. "$READTHEDOCS_OUTPUT/html"
+    # Clean up build artifacts
+  - rm -rf docs/_build

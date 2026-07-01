@@ -127,16 +127,6 @@ basehub:
           - geolab
           - geolab:dev
           - geolab:power
-          - geolab-admin
-          - mem-sm
-          - mem-md
-          - mem-lg
-          - vm-sm
-          - vm-md
-          - vm-lg
-          - vm-xl
-          - gpu
-          - dask
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
@@ -247,6 +237,9 @@ basehub:
                 - geolab:dev
                 - geolab:power
                 - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 3902839759
                   mem_limit: 3902839759
@@ -262,6 +255,9 @@ basehub:
                 - geolab:dev
                 - geolab:power
                 - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 7805679519
                   mem_limit: 7805679519
@@ -277,6 +273,9 @@ basehub:
                 - geolab:dev
                 - geolab:power
                 - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 15611359038
                   mem_limit: 15611359038
@@ -292,6 +291,9 @@ basehub:
                 - geolab:dev
                 - geolab:power
                 - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 31222718077
                   mem_limit: 31222718077
@@ -306,6 +308,8 @@ basehub:
                 - geolab:dev
                 - geolab:power
                 - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 64020707016
                   mem_limit: 64020707016
@@ -320,6 +324,7 @@ basehub:
                 - geolab:dev
                 - geolab:power
                 - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 128041414033
                   mem_limit: 128041414033

@@ -3,8 +3,6 @@
 
 This documentation covers tasks related to image management.
 
-```{toctree}
-custom-jupyterhub-image
-update-env
-pre-pull-user-image
-```
+:::{toc}
+:context: children
+:::

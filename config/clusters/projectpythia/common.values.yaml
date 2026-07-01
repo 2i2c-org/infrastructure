@@ -35,9 +35,6 @@ jupyterhub:
         scopes:
         - self
         - admin:auth_state!user
-    image:
-      # Temporary image with jupyterhub-fancy-profiles 0.6.0
-      tag: 0.0.1-0.dev.git.15540.hbaaa997ce
     allowNamedServers: true
     extraConfig:
       00-set-gitconfig.py: |

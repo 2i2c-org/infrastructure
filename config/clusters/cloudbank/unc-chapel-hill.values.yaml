@@ -2,8 +2,8 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     memory:
-      guarantee: 512M
-      limit: 1G
+      guarantee: 2G
+      limit: 4G
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -42,6 +42,7 @@ jupyterhub:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
         - mclean@unc.edu
+        - jamclean@email.unc.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-unc-chapel-hill

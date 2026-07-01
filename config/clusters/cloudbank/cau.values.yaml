@@ -7,8 +7,9 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
-      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_to_admin_users: false
     homepage:
+      gitRepoBranch: unify-logins-2
       templateVars:
         designed_by:
           name: 2i2c
@@ -26,19 +27,11 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - cau.edu
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: email
+        authenticator_class: shared-password
       Authenticator:
+        manage_groups: false
+        # Allow everyone with the shared password to log in
+        allow_all: true
         admin_users:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu

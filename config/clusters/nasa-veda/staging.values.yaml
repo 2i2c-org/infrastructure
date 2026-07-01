@@ -4,10 +4,14 @@ basehub:
       serverIP: 10.100.29.199
   jupyterhub:
     hub:
-      image:
-        # custom image built to install jupyterhub-fancy-profiles from commit b63a655d474b45d57cd38adc8e01b7607da2064d
-        # from the PR https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/149 for testing
-        tag: 0.0.1-0.dev.git.15973.hffad58606
+      extraFiles:
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageConfig.hub_namespace = "staging"
+            c.UsageViewer.public_hub_url = "https://staging.hub.openveda.cloud/"
+            c.UsageViewer.enable_compute = False
     custom:
       homepage:
         gitRepoBranch: staging

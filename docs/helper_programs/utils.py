@@ -26,13 +26,19 @@ def get_cluster_provider(cluster):
     return provider
 
 
-def write_to_json_and_csv_files(info, file_name_prefix):
-    # Convert to a DataFrame and write it to a CSV file that will be read by Sphinx
+def write_json_and_table_files(info, file_name_prefix):
     path_tmp = path_root / "tmp"
     path_static = path_root / "_static"
-
     path_tmp.mkdir(exist_ok=True)
-    path_table = path_tmp / f"{file_name_prefix}.csv"
 
-    info.to_csv(path_table)
+    # NOTE: # Note: as of 2026-06-29 the community-reports repo is the only one that
+    # uses the .json files. If it stops using them, we should just stop
+    # publishing them to reduce the number of sources of truth for this.
     info.to_json(path_static / f"{file_name_prefix}.json", orient="index")
+
+    # mystmd's csv-table can't include .csv files, so write the CSV directive into
+    # a .md file that reference/hubs.md pulls in with {include}.
+    # ref: https://github.com/jupyter-book/mystmd/issues/2573
+    (path_tmp / f"{file_name_prefix}.md").write_text(
+        f"```{{csv-table}}\n:header-rows: 1\n\n{info.to_csv()}```\n"
+    )

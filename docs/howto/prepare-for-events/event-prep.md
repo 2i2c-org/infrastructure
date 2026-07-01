@@ -8,8 +8,8 @@ We must ensure that the quotas from the cloud provider are high-enough to handle
 
 ```{admonition} Action to take
 :class: tip
-- follow the [AWS quota guide](hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in an AWS project
-- follow the [GCP quota guide](hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
+- follow the [AWS quota guide](#hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in an AWS project
+- follow the [GCP quota guide](#hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
 ```
 
 ## Consider dedicated nodepools
@@ -22,7 +22,7 @@ If the hub that's having an event is running on a shared cluster, then we might 
 
 ```{admonition} Action to take
 :class: tip
-Follow the guide at [](features:shared-cluster:dedicated-nodepool) in order to setup a dedicated nodepool before an event.
+Follow the guide at [](#features:shared-cluster:dedicated-nodepool) in order to setup a dedicated nodepool before an event.
 ```
 
 ## Analyze Grafana workshop dashboard results
@@ -51,7 +51,7 @@ This should be considered if either of the following are true:
 
 ```{admonition} Action to take
 :class: tip
-Follow the guide at [](pre-pull-user-images) to enable image pre-pulling.
+Follow the guide at [](#pre-pull-user-images) to enable image pre-pulling.
 ```
 
 ### 2. Pre-warming user nodes
@@ -68,7 +68,7 @@ Specifically for events, the node sharing benefits via profile lists vs. setting
 
   - **no `terraform/eks` infrastructure changes**
 
-    they shouldn't require modifying terraform/eks code in order to change the underlying cluster architecture thanks to [](topic:cluster-design:instance-type) that should cover most usage needs
+    they shouldn't require modifying terraform/eks code in order to change the underlying cluster architecture thanks to [](#topic:cluster-design:instance-type) that should cover most usage needs
 
   - **more cost flexibility**
 
@@ -85,7 +85,7 @@ Specifically for events, the node sharing benefits via profile lists vs. setting
 Currently, this is the recommended way to handle an event on a hub. However, for some communities that don't already use profile lists, setting up one just before an event might be confusing, we might want to consider setting up a minimum node count in this case.
 ```
 
-During events, we want to tilt the balance towards reducing server startup time. The docs at [](topic:resource-allocation) have more information about all the factors that should be considered during resource allocation.
+During events, we want to tilt the balance towards reducing server startup time. The docs at [](#topic:resource-allocation) have more information about all the factors that should be considered during resource allocation.
 
 
 Assuming this hub already has a profile list, you should check the following before an event:
@@ -141,7 +141,7 @@ The `deployer generate resource-allocation`:
 
 ```{admonition} Action to take
 :class: tip
-Follow the guide at [](scaling-nodepools) to on how to set a minimum node count on a specific node pool.
+Follow the guide at [](#scaling-nodepools) to on how to set a minimum node count on a specific node pool.
 ```
 
 ### 3.4 Add user placeholders
@@ -149,7 +149,7 @@ Follow the guide at [](scaling-nodepools) to on how to set a minimum node count 
 This section is a work in progress.
 ```
 
-Checkout [](topic:user-placeholders) to find out more about this topic
+Checkout [](#topic:user-placeholders) to find out more about this topic
 
 ## Evaluate scratch space needs
 

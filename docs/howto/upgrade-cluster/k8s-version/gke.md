@@ -65,7 +65,7 @@ When upgrading the control plane, it is best to upgrade one minor version at a t
 
 ### Upgrading node pools
 
-The process for upgrading the worker node pools is very similar to that for [upgrading the control plane](upgrade-k8s-cluster:gke:control-plane).
+The process for upgrading the worker node pools is very similar to that for [upgrading the control plane](#upgrade-k8s-cluster:gke:control-plane).
 
 First, upgrade the core node pool by updating the `core_nodes_version` variable in the `k8s_versions` block of the cluster's `.tfvars` file, and plan and apply the changes.
 

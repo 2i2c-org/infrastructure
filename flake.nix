@@ -6,11 +6,11 @@
 {
   inputs = {
     nixpkgs-helm.url = "github:NixOS/nixpkgs/9b100cfb67ccb2ff6e723b78d4ae2f9c88654a1c";
-    nixpkgs-gcloud.url = "github:NixOS/nixpkgs/5912c1772a44e31bf1c63c0390b90501e5026886";
     # Perf: use a fixed hash to maximise overlap with other nixpkgs.
     #       nixpkgs _can_ be updated, but no need.
     # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs.url = "github:NixOS/nixpkgs/5912c1772a44e31bf1c63c0390b90501e5026886";
+    nixpkgs-gcloud.url = "github:NixOS/nixpkgs/8c50a710ddca43d7a530fb805ad55bde8d0141c5";
+    nixpkgs.url = "github:NixOS/nixpkgs/8c50a710ddca43d7a530fb805ad55bde8d0141c5";
 
     dev-python = {
       url = "github:agoose77/dev-flakes/v10?dir=python";
@@ -81,6 +81,7 @@
           terraform
           openstack
           eksctl
+          azure-cli
           # Dev deps
           jq
           yq-go
