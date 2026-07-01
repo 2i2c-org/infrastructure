@@ -26,7 +26,7 @@ hubs:
   - staging.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
-  display_name: Neurohackademy 2025
+  display_name: Neurohackademy 2026
   domain: neurohackademy.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
