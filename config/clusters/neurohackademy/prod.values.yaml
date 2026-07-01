@@ -1,0 +1,16 @@
+nfs:
+  pv:
+    serverIP: 10.100.193.222
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/neurohackademy-prod-
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-07a7e98969ef8e8c3
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 50 # in GiB
