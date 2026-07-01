@@ -6,7 +6,7 @@ prometheus:
       requests:
         memory: 5.5Gi
     persistentVolume:
-      size: 750Gi
+      size: 1000Gi
     ingress:
       enabled: true
       hosts:
