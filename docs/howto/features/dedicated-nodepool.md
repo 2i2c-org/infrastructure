@@ -1,5 +1,5 @@
 (features:shared-cluster:dedicated-nodepool)=
-# Setup a dedicated nodepool for a hub on a shared cluster
+# Setup a dedicated nodepool for a hub on a shared GCP cluster
 
 ```{important}
 On AWS, all clusters have dedicated nodepools for each hub.
@@ -11,10 +11,6 @@ Some hubs on shared clusters require dedicated nodepools, for a few reasons:
    without worrying about effects from other hubs on the same cluster.
 2. (In the future) Helpful with cost isolation, as we can track how much a
    nodepool is costing us.
-
-`````{tab-set}
-````{tab-item} GCP
-:sync: gcp-key
 
 1. Setup a new nodepool in terraform, via the `<cluster-name>.tfvars` for the
    cluster. Add the new nodepool to `notebook_nodes`:
@@ -77,13 +73,6 @@ Some hubs on shared clusters require dedicated nodepools, for a few reasons:
 
    This tells JupyterHub to place user pods from this hub on the nodepool we had
    just created!
-````
-
-````{tab-item} AWS
-:sync: aws-key
-On AWS, all clusters have dedicated nodepools for each hub.
-````
-`````
 
 ## Node type and minimum nodepool size considerations
 

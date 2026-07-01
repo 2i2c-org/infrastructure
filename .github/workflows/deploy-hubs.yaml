@@ -46,10 +46,16 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || 'not-a-pr' }}
   cancel-in-progress: false
+  # Queue deployments in order
+  queue: max
 
 env:
   TERM: xterm
   USE_GKE_GCLOUD_AUTH_PLUGIN: 'True'
+
+defaults:
+  run:
+    shell: bash -l {0}
 
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
@@ -73,25 +79,8 @@ jobs:
       with:
         submodules: true
 
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-    - uses: actions/setup-go@v6
-
-        # There will almost never be a cache hit on the cache key when this job is
-        # run, as it is the first of all jobs in this workflow. An exception is if
-        # this job is re-attempted as part of the same workflow run after
-        # succeeding previously.
-    - name: Save pip's install cache on job completion
-      uses: actions/cache@v5
-      with:
-        path: ~/.cache/pip
-        key: ${{ github.run_id }}
-
-    - name: Install deployer script's Python dependencies
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+    - name: Setup deployer
+      uses: ./.github/actions/setup-deploy
 
     - name: Get merged/open PR labels
       uses: actions/github-script@v8
@@ -233,7 +222,6 @@ jobs:
       failure_reflective: ${{ steps.declare-failure.outputs.failure_reflective }}
       failure_utoronto: ${{ steps.declare-failure.outputs.failure_utoronto }}
       failure_victor: ${{ steps.declare-failure.outputs.failure_victor }}
-      failure_berkeley_geojupyter: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter }}
       failure_temple: ${{ steps.declare-failure.outputs.failure_temple }}
 
     if: |
@@ -250,11 +238,16 @@ jobs:
       with:
         submodules: true
 
-    - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
       run: |
@@ -473,8 +466,10 @@ jobs:
       failure_utoronto_staging: ${{ steps.declare-failure.outputs.failure_utoronto_staging }}
       failure_utoronto_r-staging: ${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
-      failure_berkeley_geojupyter_staging: ${{ steps.declare-failure.outputs.failure_berkeley_geojupyter_staging }}
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
+
+    permissions:
+      id-token: write
 
     steps:
     - uses: actions/checkout@v6
@@ -485,20 +480,20 @@ jobs:
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
       run: |
         deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
-        # Retry action: https://github.com/marketplace/actions/retry-step
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-      uses: nick-fields/retry@v4
-      with:
-        timeout_minutes: 10
-        max_attempts: 3
-        command: |
-          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+      run: |
+        deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} --attempts 3 --attempt-timeout-s=600
 
     - name: Declare failure status
       id: declare-failure
@@ -616,29 +611,32 @@ jobs:
       matrix:
         jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
         submodules: true
 
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
-        GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
     - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
       run: |
         deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
-        # Retry action: https://github.com/marketplace/actions/retry-step
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-      uses: nick-fields/retry@v4
-      with:
-        timeout_minutes: 10
-        max_attempts: 3
-        command: |
-          deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+      run: |
+        deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} --attempts 3 --attempt-timeout-s=600
 
         # https://github.com/ravsamhq/notify-slack-action
         # Needs to be added per job

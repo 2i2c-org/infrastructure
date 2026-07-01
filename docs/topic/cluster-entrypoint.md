@@ -14,5 +14,5 @@ zero downtime way to switch ingress controllers (or to a gateway
 controller) in the future, without having to put our users through
 downtime as we wait for DNS to propagate.
 
-We have [additional documentation](howto:migrate-ingress) on
+We have [additional documentation](#howto:migrate-ingress) on
 migrating between ingress controllers.

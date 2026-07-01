@@ -24,7 +24,7 @@ basehub:
       image:
         # Usage quotas 0.1.2 and fancy-profiles 0.6.0
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 6fba2e9ef475b0c0408b13de4823b9a50a69b292
+        tag: 90c1065209cf89554c2e7e73b7e2120c5d27a167
       extraConfig:
         001-username-claim: |
           import json
@@ -75,7 +75,7 @@ basehub:
       services:
         usage-quota:
           url: http://hub:9000
-          display: false
+          display: true
           oauth_no_confirm: true
           command:
           - python
@@ -89,6 +89,8 @@ basehub:
         usage-quota-service:
           scopes:
           - read:users
+          - list:services
+          - read:services
           services:
           - usage-quota
         metrics-exporter-service:
@@ -234,6 +236,10 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 3902839759
                   mem_limit: 3902839759
@@ -248,6 +254,10 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 7805679519
                   mem_limit: 7805679519
@@ -262,6 +272,10 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 15611359038
                   mem_limit: 15611359038
@@ -276,6 +290,10 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 31222718077
                   mem_limit: 31222718077
@@ -289,6 +307,9 @@ basehub:
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 64020707016
                   mem_limit: 64020707016
@@ -302,6 +323,8 @@ basehub:
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 128041414033
                   mem_limit: 128041414033
@@ -314,6 +337,7 @@ basehub:
                 description: ~63 CPUs always available
                 allowed_groups:
                 - geolab:power
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 523839830228
                   mem_limit: 523839830228
@@ -327,6 +351,7 @@ basehub:
         allowed_groups:
         - geolab:dev
         - geolab:power
+        - gpu
         profile_options:
           image:
             display_name: Image
@@ -369,13 +394,6 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
-  jupyterhub-groups-exporter:
-    config:
-      groupsExporter:
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
   binderhub-service:
     enabled: true
     networkPolicy:

@@ -32,7 +32,7 @@ persistent_disks = {
     name_suffix = "staging"
   },
   "prod" = {
-    size        = 4168 # in GB
+    size        = 4650 # in GB
     name_suffix = "prod"
   }
 }
@@ -120,22 +120,6 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-16",
   },
-  "n2-highmem-16" : {
-    # A minimum of one is configured for LEAP to ensure quick startups at all
-    # time. Cost is not a greater concern than optimizing startup times.
-    min : 1,
-    max : 100,
-    machine_type : "n2-highmem-16",
-    node_version : "1.34.4-gke.1130000",
-    taints : [
-      # Prevent new pods from scheduling here.
-      {
-        key : "manual-phaseout"
-        value : "noop"
-        effect : "NO_SCHEDULE"
-      }
-    ],
-  },
   "n2-highmem-64" : {
     min : 0,
     max : 100,
@@ -159,22 +143,13 @@ notebook_nodes = {
       "us-central1-f"
     ]
   },
-  "gpu-t4-b" : {
+  "gpu-l4-a" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-8",
-    node_version : "1.34.4-gke.1130000",
-    taints : [
-      # Prevent new pods from scheduling here.
-      {
-        key : "manual-phaseout"
-        value : "noop"
-        effect : "NO_SCHEDULE"
-      }
-    ],
+    machine_type : "g2-standard-4",
     gpu : {
       enabled : true,
-      type : "nvidia-tesla-t4",
+      type : "nvidia-l4",
       count : 1
     },
     zones : [
@@ -183,10 +158,26 @@ notebook_nodes = {
       "us-central1-a",
       "us-central1-b",
       "us-central1-c",
-      "us-central1-f"
     ]
   },
-}
+  "gpu-a100-a" : {
+    min : 0,
+    max : 100,
+    machine_type : "a2-highgpu-1g",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-a100",
+      count : 1
+    },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f",
+    ]
+}, }
 
 # Setup a single node pool for dask workers.
 #

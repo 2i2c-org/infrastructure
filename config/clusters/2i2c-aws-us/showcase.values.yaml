@@ -13,7 +13,7 @@ basehub:
           jupyterhubServiceName: dask-gateway
   jupyterhub-home-nfs:
     eks:
-      volumeId: vol-0a55e84bbf716b456
+      volumeId: vol-003f4d0acd1ba36ff
     quotaEnforcer:
       config:
         QuotaManager:

@@ -79,11 +79,11 @@ This AWS IAM Role is managed via terraform.
       of the hub and shorten it only if `terraform` complains.
    2. (GCP only) `allow_access_to_external_requester_pays_buckets` enables permissions for user pods and dask worker
       pods to identify as the project while making requests to other Google Cloud Storage
-      buckets, outside of this project, that have 'Requester Pays' enabled. More details [here](topic:features:cloud:gcp:requester-pays).
+      buckets, outside of this project, that have 'Requester Pays' enabled. More details [here](#topic:features:cloud:gcp:requester-pays).
    3. `bucket_admin_access` lists bucket names (as specified in `user_buckets`
       terraform variable) all users on this hub should have full read/write
-      access to. Used along with the [user_buckets](howto:features:storage-buckets)
-      terraform variable to enable the [scratch buckets](topic:features:cloud:scratch-buckets)
+      access to. Used along with the [user_buckets](#howto:features:storage-buckets)
+      terraform variable to enable the [scratch buckets](#topic:features:cloud:scratch-buckets)
       feature.
    5. (GCP only) `hub_namespace` is the full name of the hub, as hubs are put in Kubernetes
       Namespaces that are the same as their names. This is explicitly specified here

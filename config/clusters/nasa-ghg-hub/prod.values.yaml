@@ -5,6 +5,15 @@ basehub:
         gitRepoBranch: bootstrap5-nasa-ghg-prod
         # FIXME: use this repository again, once the changes in the bootstrap5-nasa-ghg-staging branch of 2i2c-org/default-hub-homepage have been ported to it
         # gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
+    hub:
+      extraFiles:
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageConfig.hub_namespace = "prod"
+            c.UsageViewer.public_hub_url = "https://hub.ghg.center/"
+            c.UsageViewer.enable_compute = False
 
   binderhub-service:
     config:

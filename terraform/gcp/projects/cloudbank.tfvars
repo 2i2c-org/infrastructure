@@ -31,6 +31,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "boise"
   }
+  "cau" = {
+    size        = 25
+    name_suffix = "cau"
+  }
   "ccsf" = {
     size        = 513
     name_suffix = "ccsf"
@@ -46,6 +50,14 @@ persistent_disks = {
   "chicagostate" = {
     size        = 25
     name_suffix = "chicagostate"
+  }
+  "clarku" = {
+    size        = 25
+    name_suffix = "clarku"
+  }
+  "cloud-county" = {
+    size        = 25
+    name_suffix = "cloud-county"
   }
   "cmu" = {
     size        = 25
@@ -99,6 +111,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "fresno"
   }
+  "fullertoncc" = {
+    size        = 25
+    name_suffix = "fullertoncc"
+  }
   "georgetown" = {
     size        = 25
     name_suffix = "georgetown"
@@ -130,6 +146,10 @@ persistent_disks = {
   "humboldt" = {
     size        = 200
     name_suffix = "humboldt"
+  }
+  "iit" = {
+    size        = 25
+    name_suffix = "iit"
   }
   "kean" = {
     size        = 25
@@ -195,6 +215,14 @@ persistent_disks = {
     size        = 25
     name_suffix = "ocu"
   }
+  "oit" = {
+    size        = 25
+    name_suffix = "oit"
+  }
+  "orangecoast" = {
+    size        = 25
+    name_suffix = "orangecoast"
+  }
   "palomar" = {
     size        = 40
     name_suffix = "palomar"
@@ -226,10 +254,6 @@ persistent_disks = {
   "sbcc" = {
     size        = 100
     name_suffix = "sbcc"
-  }
-  "sbcc-dev" = {
-    size        = 20
-    name_suffix = "sbcc-dev"
   }
   "shasta" = {
     size        = 25
@@ -287,6 +311,10 @@ persistent_disks = {
     size        = 50
     name_suffix = "umd"
   }
+  "unc-chapel-hill" = {
+    size        = 25
+    name_suffix = "unc-chapel-hill"
+  }
   "uncw" = {
     size        = 25
     name_suffix = "uncw"
@@ -299,9 +327,21 @@ persistent_disks = {
     size        = 40
     name_suffix = "unr"
   }
+  "utpb" = {
+    size        = 25
+    name_suffix = "utpb"
+  }
   "virginia" = {
     size        = 180
     name_suffix = "virginia"
+  }
+  "weber" = {
+    size        = 25
+    name_suffix = "weber"
+  }
+  "willamette" = {
+    size        = 25
+    name_suffix = "willamette"
   }
   "wlac" = {
     size        = 20

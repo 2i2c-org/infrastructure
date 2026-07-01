@@ -5,8 +5,13 @@
 # but its purpose is to get an environment up and running.
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-helm.url = "github:NixOS/nixpkgs/9b100cfb67ccb2ff6e723b78d4ae2f9c88654a1c";
+    # Perf: use a fixed hash to maximise overlap with other nixpkgs.
+    #       nixpkgs _can_ be updated, but no need.
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-gcloud.url = "github:NixOS/nixpkgs/8c50a710ddca43d7a530fb805ad55bde8d0141c5";
+    nixpkgs.url = "github:NixOS/nixpkgs/8c50a710ddca43d7a530fb805ad55bde8d0141c5";
+
     dev-python = {
       url = "github:agoose77/dev-flakes/v10?dir=python";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,23 +21,27 @@
     self,
     nixpkgs,
     nixpkgs-helm,
+    nixpkgs-gcloud,
     dev-python,
   }: let
-    forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+    forAllSystems =
+      nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
   in {
     devShells = forAllSystems (system: let
+      pkgs-helm = import nixpkgs-helm {
+        inherit system;
+      };
+      pkgs-gcloud = import nixpkgs-gcloud {
+        inherit system;
+      };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
-      # Additional nixpkgs for a particular package (helm)
-      pkgs-helm = import nixpkgs-helm {
-        inherit system;
-      };
 
       # Define our interpreter
       python = pkgs.python313;
-      gdk = pkgs.google-cloud-sdk.withExtraComponents (with pkgs.google-cloud-sdk.components; [
+      gdk = pkgs-gcloud.google-cloud-sdk.withExtraComponents (with pkgs-gcloud.google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
       ]);
       # Configure packages that need additional deps
@@ -72,6 +81,7 @@
           terraform
           openstack
           eksctl
+          azure-cli
           # Dev deps
           jq
           yq-go

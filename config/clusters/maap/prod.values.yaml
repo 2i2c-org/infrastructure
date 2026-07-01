@@ -10,6 +10,22 @@ jupyterhub:
     homepage:
       gitRepoBranch: master
       gitRepoUrl: https://github.com/MAAP-Project/maap-hub-homepage
+      # Full-homepage hub: provides the org set. Mutually exclusive with
+      # redirect_to (basehub schema oneOf); staging uses redirect_to instead.
+      templateVars:
+        org:
+          name: The Multi-Mission Algorithm and Analysis Platform (MAAP)Project
+          logo_url: https://maap-project.org/wp-content/uploads/2021/10/nasamaaplogo3.png
+          url: https://maap-project.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: NASA
+          url: https://www.earthdata.nasa.gov/esds
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-prod/$(JUPYTERHUB_USER)
@@ -197,6 +213,14 @@ jupyterhub:
         extra_resource_limits:
           nvidia.com/gpu: '1'
   hub:
+    extraFiles:
+      usage_quotas_config:
+        mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+        stringData: |
+          c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+          c.UsageConfig.hub_namespace = "prod"
+          c.UsageViewer.public_hub_url = "https://hub.maap-project.org/"
+          c.UsageViewer.enable_compute = False
     config:
       GenericOAuthenticator:
         token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token

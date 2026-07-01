@@ -5,7 +5,7 @@ we have deployed, e.g., renaming the previous 'researchdelight' hub to 'showcase
 
 1. Rename config files and update file references
 
-    Our [naming conventions](config) mean that we have config files in the
+    Our [naming conventions](#config) mean that we have config files in the
     form `<hub-name>.values.yaml` and these are explicitly listed as a hub
     entry within the associated `cluster.yaml` file where the hub is
     deployed. These files should be renamed `<old-hub-name>.values.yaml`
@@ -57,5 +57,5 @@ we have deployed, e.g., renaming the previous 'researchdelight' hub to 'showcase
     3. Merge the PR
 
 4. If you also changed the `name` field within the
-   `cluster.yaml` file, [delete the old hub namespace in helm](delete-a-hub). It is recommended to
-   [migrate the data](copy-home-dirs) first.
+   `cluster.yaml` file, [delete the old hub namespace in helm](#delete-a-hub). It is recommended to
+   [migrate the data](#copy-home-dirs) first.

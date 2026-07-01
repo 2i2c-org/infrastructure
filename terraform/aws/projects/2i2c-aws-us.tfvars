@@ -60,13 +60,13 @@ hub_cloud_permissions = {
 
 ebs_volumes = {
   "staging" = {
-    size        = 100 # in GB
+    size        = 10 # in GB
     type        = "gp3"
     name_suffix = "staging"
     tags        = { "2i2c:hub-name" : "staging" }
   }
   "showcase" = {
-    size        = 500 # in GB
+    size        = 100 # in GB
     type        = "gp3"
     name_suffix = "showcase"
     tags        = { "2i2c:hub-name" : "showcase" }
