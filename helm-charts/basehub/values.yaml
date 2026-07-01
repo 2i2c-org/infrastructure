@@ -57,6 +57,7 @@ binderhub-service:
     BinderHub:
       base_url: /services/binder
       use_registry: true
+      auth_enabled: true
     KubernetesBuildExecutor:
       build_image: quay.io/jupyterhub/repo2docker:2025.12.1.dev94-gd3893dba2
       node_selector:
