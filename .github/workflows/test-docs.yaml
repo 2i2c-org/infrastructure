@@ -34,6 +34,10 @@ jobs:
     - name: Install deps
       run: pip install . -r docs/requirements.txt
 
+    - name: Generate hub tables
+      run: python -m helper_programs.hub_info_table
+      working-directory: docs
+
       # linkcheck is done separately from this in doc-links.yml, scheduled to
       # run every day and open/update an issue
     - name: Build docs

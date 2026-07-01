@@ -1,15 +1,15 @@
-"""Pull latest list of hubs served by infrastructure/ and save as a CSV table.
+"""Pull latest list of hubs served by infrastructure/ and write out tables.
 
-This is used in two places:
+This writes two files per dataset:
 
 - docs/_static/hub-table.json is published with the docs and meant for reuse in other parts of 2i2c
-- docs/tmp/hub-table.csv is read by reference/hubs.md to create a list of hubs
+- docs/tmp/hub-table.md wraps the data in a csv-table that reference/hubs.md pulls in with {include}
 """
 
 import pandas as pd
 from yaml import safe_load
 
-from .utils import get_cluster_provider, get_clusters_list, write_to_json_and_csv_files
+from .utils import get_cluster_provider, get_clusters_list, write_json_and_table_files
 
 
 def get_cluster_grafana_url(cluster, cluster_path):
@@ -163,13 +163,12 @@ def main():
                 )
             )
 
-    # Write raw data to CSV and JSON
     df = pd.DataFrame(hub_list)
     community_hubs_by_cluster = build_hub_statistics_df(df)
 
     df.set_index("name", inplace=True)
-    write_to_json_and_csv_files(df, "hub-table")
-    write_to_json_and_csv_files(community_hubs_by_cluster, "hub-stats")
+    write_json_and_table_files(df, "hub-table")
+    write_json_and_table_files(community_hubs_by_cluster, "hub-stats")
 
     print("Finished updating list of hubs and statistics tables...")
 

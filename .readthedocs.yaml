@@ -15,6 +15,8 @@ build:
   commands:
     # Install myst
   - pip install -r ./docs/requirements.txt
+    # Generate the hub tables that reference/hubs.md includes
+  - env -C docs python -m helper_programs.hub_info_table
     # Build the site
   - env -C docs jupyter book build --html
     # Copy the output to Read the Docs expected location

@@ -1,9 +1,6 @@
 jupyterhub:
   singleuser:
     defaultUrl: /lab
-    image:
-      name: quay.io/jupyter/tensorflow-notebook
-      tag: '2026-06-29'
     memory:
       guarantee: 512M
       limit: 1G
@@ -23,9 +20,9 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.utoledo.edu/images/utoledo-logo-horizontal-full-color.svg
-          name: University of Toledo
-          url: https://www.utoledo.edu/
+          logo_url: https://www.cloud.edu/Assets/templates/header/TBird.jpg
+          name: Cloud County Community College
+          url: https://www.cloud.edu/
   hub:
     config:
       JupyterHub:
@@ -37,8 +34,7 @@ jupyterhub:
             username_derivation:
               username_claim: email
             allowed_domains:
-            - utoledo.edu
-            - rockets.utoledo.edu
+            - tbirds.cloud.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
@@ -46,10 +42,10 @@ jupyterhub:
         admin_users:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
-        - anju.gupta@utoledo.edu
+        - rlombard@tbirds.cloud.edu
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-toledo
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-cloud-county
   quotaEnforcer:
     config:
       QuotaManager:
