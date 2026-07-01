@@ -424,6 +424,14 @@ hubs:
   - common.values.yaml
   - norco.values.yaml
   - enc-norco.secret.values.yaml
+- name: nova
+  display_name: Nova Southeastern University
+  domain: nova.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - nova.values.yaml
+  - enc-nova.secret.values.yaml
 - name: ocu
   display_name: Oakland City University
   domain: ocu.cloudbank.2i2c.cloud
