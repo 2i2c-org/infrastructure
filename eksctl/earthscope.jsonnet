@@ -18,11 +18,10 @@ local c = cluster.withNodeGroupConfigOverride(
           // Allow for a range of spot instance types
           [
             'r5.xlarge',
-            'r5.4xlarge',
             'r6i.xlarge',
-            'r6i.4xlarge',
             'r7i.xlarge',
-            'r7i.4xlarge',
+            'r8i.xlarge',
+            'r8i-flex.xlarge',
           ],
         ],
         hubs=['staging', 'prod', 'binder'],
