@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.33.138
+    serverIP: 10.100.193.222
 
 binderhub-service:
   config:
