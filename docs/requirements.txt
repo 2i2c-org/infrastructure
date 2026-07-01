@@ -2,4 +2,4 @@ pandas
 pyyaml
 python-hcl2
 requests
-jupyter-book>=2.0.0
+jupyter-book>=2.1.5
