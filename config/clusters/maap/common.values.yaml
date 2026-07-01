@@ -35,21 +35,9 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
-    homepage:
-      templateVars:
-        org:
-          name: The Multi-Mission Algorithm and Analysis Platform (MAAP)Project
-          logo_url: https://maap-project.org/wp-content/uploads/2021/10/nasamaaplogo3.png
-          url: https://maap-project.org/
-        designed_by:
-          name: 2i2c
-          url: https://2i2c.org
-        operated_by:
-          name: 2i2c
-          url: https://2i2c.org
-        funded_by:
-          name: NASA
-          url: https://www.earthdata.nasa.gov/esds
+    # NOTE: homepage.templateVars is set per-hub (prod = full homepage `org` set;
+    # staging = `redirect_to`). The basehub schema makes the two mutually
+    # exclusive, so it cannot be shared here in common.
   hub:
     image:
       # Usage quotas 0.1.2 and fancy-profiles 0.6.0
