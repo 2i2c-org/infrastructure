@@ -68,12 +68,12 @@ basehub:
           - tsnow03
           - JessicaS11
           - jdmillstein
-          - dfelikson
           - fperez
           - scottyhq
           - jomey
           - rwegener2
           - itcarroll
+          - eeholmes
       loadRoles:
         user:
           scopes:
@@ -160,6 +160,7 @@ basehub:
                 - CryoInTheCloud:CryoCloudAdvanced
                 - CryoInTheCloud:CryoCloudUser
                 - CryoInTheCloud:csdms-2025-workshop
+                - CryoInTheCloud:fish-pace
                 - 2i2c-org:hub-access-for-2i2c-staff
                 kubespawner_override:
                   mem_guarantee: 1951419879
