@@ -133,6 +133,10 @@ jupyterhub:
               username_claim: given_name
             # Don't allow everyone with ORCID to sign in
             allow_all: false
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
   singleuser:
     defaultUrl: /lab
     profileList:
@@ -321,3 +325,6 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: *url
     username: *username
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.orcid-demo.svc.cluster.local:8081/hub/api

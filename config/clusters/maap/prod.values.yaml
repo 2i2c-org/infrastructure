@@ -236,7 +236,7 @@ binderhub-service:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-prod-
   extraEnv:
   - name: JUPYTERHUB_API_URL
-    value: https://hub.maap-project.org/hub/api
+    value: http://hub.prod.svc.cluster.local:8081/hub/api
 
 jupyterhub-home-nfs:
   eks:

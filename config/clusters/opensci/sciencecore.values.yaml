@@ -157,6 +157,10 @@ jupyterhub:
         admin_users:
         - kyttmacmanus   # Kytt MacManus, added as part of https://2i2c.freshdesk.com/a/tickets/1454
 
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
 binderhub-service:
   enabled: true
   networkPolicy:
@@ -168,3 +172,6 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: https://quay.io
     username: imagebuilding-non-gcp-hubs+image_builder
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.sciencecore.svc.cluster.local:8081/hub/api

@@ -38,3 +38,6 @@ jupyterhub-home-nfs:
 
 binderhub-service:
   enabled: false
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.workshop.svc.cluster.local:8081/hub/api

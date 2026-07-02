@@ -19,7 +19,7 @@ basehub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-staging-
     extraEnv:
     - name: JUPYTERHUB_API_URL
-      value: https://staging.ghg.2i2c.cloud/hub/api
+      value: http://hub.staging.svc.cluster.local:8081/hub/api
 
   jupyterhub-home-nfs:
     eks:

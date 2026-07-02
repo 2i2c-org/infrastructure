@@ -5,6 +5,11 @@ jupyterhub:
     username: &username imagebuilding-non-gcp-hubs+image_builder
     password: &fakePassword <set-in-encrypted-values>
 
+  hub:
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
 binderhub-service:
   enabled: true
   networkPolicy:

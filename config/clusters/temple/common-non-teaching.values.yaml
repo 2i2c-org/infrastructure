@@ -64,6 +64,11 @@ jupyterhub:
                 mem_limit: 31222718077
                 cpu_guarantee: 3.6505
                 cpu_limit: 3.6505
+  hub:
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
 binderhub-service:
   enabled: true
     # Explicitly specify what nodes we want for our builds

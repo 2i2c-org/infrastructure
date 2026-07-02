@@ -4,8 +4,16 @@ nfs:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0e89a2ab60575e25a
-jupyterhub: {}
+jupyterhub:
+  hub:
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
 binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-prod-
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.prod.svc.cluster.local:8081/hub/api
