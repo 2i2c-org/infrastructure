@@ -161,7 +161,7 @@ binderhub-service:
   - name: JUPYTERHUB_CLIENT_ID
     value: service-binder
   - name: JUPYTERHUB_API_URL
-    value: https://hub.projectpythia.org/hub/api
+    value: http://hub.binder.svc.cluster.local:8081/hub/api
       # Without this, the redirect URL to /hub/api/... gets
       # appended to binderhub's URL instead of the hub's
   - name: JUPYTERHUB_BASE_URL
