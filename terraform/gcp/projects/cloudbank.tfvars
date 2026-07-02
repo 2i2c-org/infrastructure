@@ -211,6 +211,10 @@ persistent_disks = {
     size        = 40
     name_suffix = "norco"
   }
+  "nova" = {
+    size        = 25
+    name_suffix = "nova"
+  }
   "ocu" = {
     size        = 25
     name_suffix = "ocu"
