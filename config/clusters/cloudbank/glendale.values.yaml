@@ -21,16 +21,12 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - glendale.edu
-            - student.glendale.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_domains:
+        - glendale.edu
+        - student.glendale.edu
       Authenticator:
         admin_users:
         - simon@glendale.edu
