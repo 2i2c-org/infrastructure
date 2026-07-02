@@ -1058,7 +1058,7 @@ jupyterhub:
         # jupyterhub chart will autogenerate a secret with appropriate keys.
         # It's not used if binderhub-service is not enabled.
         # The redirect_url is configured in values.jsonnet
-        oauth_client_id: service-binderhub
+        oauth_client_id: service-binder
         display: false
         url: http://binderhub:8090
         oauth_no_confirm: true
