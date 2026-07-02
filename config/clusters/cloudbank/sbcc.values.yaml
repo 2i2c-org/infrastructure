@@ -21,12 +21,11 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: email
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_domains:
+        - pipeline.sbcc.edu
       OAuthenticator:
         # WARNING: Don't use allow_existing_users with config to allow an
         #          externally managed group of users, such as
