@@ -195,13 +195,8 @@ basehub:
                 display_name: Rocker Geospatial with RStudio
                 description: R environment with many geospatial libraries pre-installed
                 kubespawner_override:
-                  image: rocker/binder:4.4
+                  image: rocker/binder:latest
                   image_pull_policy: Always
-                    # Launch RStudio after the user logs in
-                  default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
               03-qgis:
                 display_name: QGIS on Linux Desktop
                 description: Linux desktop in the browser, with qgis installed
