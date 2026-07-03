@@ -17,11 +17,38 @@ A `enc-support.secret.values.yaml` file is used to provide these secret credenti
 It requires the following configuration:
 
 ```yaml
-prometheusIngressAuthSecret:
-  users:
-    - username: <output of pwgen -s 64 1>
-      password: <output of pwgen -s 64 1>
+prometheus:
+  server:
+    probeHeaders:
+      - name: Authorization
+        value: Basic <USER-PASSWORD>
+  serverFiles:
+    web.yml:
+      basic_auth_users:
+    <USER>: <SALTED>
+prometheusAuthSecret:
+  username: <USER>
+  password: <PASSWORD>
 ```
+where
+`<USER>`
+: The random username
+`<PASSWORD>`
+: The random password
+`<SALTED>`
+: See [Prometheus docs](https://prometheus.io/docs/guides/basic-auth/):
+  ```python
+  import getpass
+  import bcrypt
+  
+  password = getpass.getpass("password: ")
+  hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+  print(hashed_password.decode())  
+  ```
+`<USER-PASSWORD>`
+: ```bash
+  echo -n "<USER>:<PASSWORD>" | base64
+  ```
 
 ```{note}
 We use the [pwgen](https://linux.die.net/man/1/pwgen) program, commonly
