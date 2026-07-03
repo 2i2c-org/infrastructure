@@ -6,6 +6,9 @@
 region                 = "us-west-2"
 cluster_name           = "uw-escience"
 cluster_nodes_location = "us-west-2a"
+default_budget_alert = {
+  enabled : false
+}
 
 # Tip: uncomment and verify any missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
@@ -21,24 +24,24 @@ ebs_volumes = {
   "prod" = {
     name_suffix = "prod",
     type        = "gp3",
-    size        = 10,
+    size        = 100,
     tags        = { "2i2c:hub-name" : "prod" },
   },
 
 }
 enable_nfs_backup = true
 
-#user_buckets = {
+user_buckets = {
+  "scratch-staging" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" },
+  },
 
-#   "scratch-staging" : {
-#     "delete_after" : 7,
-#     "tags" : { "2i2c:hub-name" : "staging" },
-#   },
-
-#   "scratch-prod" : {
-#     "delete_after" : 7,
-#     "tags" : { "2i2c:hub-name" : "prod" },
-#   },
+  "scratch-prod" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "prod" },
+  },
+}
 
 
 # Tip: uncomment and verify any missing info in the lines below if you want
