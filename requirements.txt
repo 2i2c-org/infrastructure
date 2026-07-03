@@ -49,3 +49,5 @@ jmespath
 
 # Used for retry logic
 tenacity
+
+bcrypt
