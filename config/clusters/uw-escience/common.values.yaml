@@ -45,6 +45,9 @@ jupyterhub:
         admin_users:
         - scottyhq
   singleuser:
+    extraEnv:
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23liUgKLAUO3UUsGqx
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/uw-escience-gh-scoped-creds
     profileList:
     - display_name: CPU Only
       default: true
