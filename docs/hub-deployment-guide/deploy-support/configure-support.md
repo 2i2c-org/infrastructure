@@ -73,6 +73,10 @@ kubectl --namespace=support get service/cluster-entrypoint --template='{{$ingres
 Add DNS records for the `2i2c.cloud` domain [under "Advanced DNS" in
 Namecheap.com](https://ap.www.namecheap.com/Domains/DomainControlPanel/2i2c.cloud/advancedns):
 
+```{important}
+TTL for DNS entries should be set to 5m (300s) rather than the default 30m on Namecheap.
+```
+
 1. `<cluster-name>`, used for the primary hub (if it exists).
 2. `*.<cluster-name>`, for all other hubs, grafana and prometheus
    instances.
