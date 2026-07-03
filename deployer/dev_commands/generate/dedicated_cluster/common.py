@@ -1,8 +1,10 @@
+import base64
 import os
 import secrets
 import string
 import subprocess
 
+import bcrypt
 import jinja2
 from git import Repo
 
@@ -106,10 +108,19 @@ def generate_support_files(cluster_config_directory, vars):
     # Generate and encrypt prometheus credentials into `enc-support.secret.values.yaml`
     print_colour("Generating the prometheus credentials encrypted file...", "yellow")
     alphabet = string.ascii_letters + string.digits
+    username = "".join(secrets.choice(alphabet) for i in range(64))
+    password = "".join(secrets.choice(alphabet) for i in range(64))
     credentials = {
-        "username": "".join(secrets.choice(alphabet) for i in range(64)),
-        "password": "".join(secrets.choice(alphabet) for i in range(64)),
+        "username": username,
+        "password": password,
+        "encoded_pair": base64.b64encode(f"{username}:{password}".encode()).decode(
+            "utf-8"
+        ),
+        "salted_password": bcrypt.hashpw(
+            password.encode("utf-8"), bcrypt.gensalt()
+        ).decode(),
     }
+
     with open(
         REPO_ROOT_PATH / "config/clusters/templates/common/support.secret.values.yaml"
     ) as f:
