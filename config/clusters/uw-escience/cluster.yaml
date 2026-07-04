@@ -1,6 +1,6 @@
 name: uw-escience
 provider: aws
-provider_url: https://334807430785.signin.aws.amazon.com/console
+provider_url: https://federation-proxy.cloudbank.org/aws?account=334807430785
 metadata:
   2i2c:
     hubspot_deal_id: 179106877126
