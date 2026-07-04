@@ -47,16 +47,14 @@ user_buckets = {
 # Tip: uncomment and verify any missing info in the lines below if you want
 #       to setup specific cloud permissions for the buckets in this cluster.
 #
-# hub_cloud_permissions = {
-
-#  "staging" : {
-#    bucket_admin_access : ["scratch-staging"],
-#  },
-
-#  "prod" : {
-#    bucket_admin_access : ["scratch-prod"],
-#  },
-
+hub_cloud_permissions = {
+  "staging" : {
+    bucket_admin_access : ["scratch-staging"],
+  },
+  "prod" : {
+    bucket_admin_access : ["scratch-prod"],
+  },
+}
 
 # Uncomment to enable cost monitoring
 # enable_jupyterhub_cost_monitoring = true
