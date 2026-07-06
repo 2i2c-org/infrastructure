@@ -19,3 +19,4 @@ dependencies:
 - terraform>=1.15.6,<1.16.0
 - pip
 - python=3.13.*
+- bcrypt=5.0.*
