@@ -195,7 +195,7 @@ basehub:
                 display_name: Rocker Geospatial with RStudio
                 description: R environment with many geospatial libraries pre-installed
                 kubespawner_override:
-                  image: rocker/binder:latest
+                  image: mas.maap-project.org/root/maap-workspaces/2i2c/r-base:v6.0.0
                   image_pull_policy: Always
               03-qgis:
                 display_name: QGIS on Linux Desktop
