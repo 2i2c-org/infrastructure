@@ -73,12 +73,12 @@ jupyterhub:
               display_name: OGC compliant Rocker Geospatial v6.0.0
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v6.0.0 
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v6.0.0
             06-isce3-ogc:
               display_name: OGC compliant isce3 v6.0.0
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v6.0.0 
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v6.0.0
             07-qgis:
               display_name: QGIS on Linux Desktop
               description: Linux desktop in the browser, with qgis installed
