@@ -1,5 +1,10 @@
 # User access to Prometheus endpoint
 
+:::{warning} Out of date
+
+We now enforce HTTP basic authentication at the Prometheus layer with nginx-ingress. This document is no longer up to date.
+:::
+
 Hub admins may want direct access to their Prometheus from outside the cluster, e.g. as a datasource for their own [AWS CloudWatch dashboards](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_MultiDataSources-Connect.html#MultiDataSources-Prometheus).
 
 We can provision an extra set of credentials to the ingress-nginx [basic auth](https://kubernetes.github.io/ingress-nginx/examples/auth/basic/) and securely distribute these to the community

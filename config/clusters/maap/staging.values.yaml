@@ -19,7 +19,7 @@ jupyterhub:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
       MAAP_API_HOST: api.uat.maap-project.org
-      WORKSPACE_BUCKET: maap-staging-workspace
+      WORKSPACE_BUCKET: maap-uat-workspace
       DOCKERIMAGE_PATH_DEFAULT: mas.dit.maap-project.org/root/maap-workspaces/custom_images/maap_base:develop
       DOCKERIMAGE_PATH_BASE_IMAGE: $(JUPYTER_IMAGE)
     profileList:
@@ -57,7 +57,25 @@ jupyterhub:
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/isce3:develop
                 image_pull_policy: Always
-            04-qgis:
+            04-pangeo-ogc:
+              display_name: OGC compliant Modified Pangeo Notebook
+              description: Pangeo based notebook with a Python environment
+              kubespawner_override:
+                image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/pangeo:v6.0.0
+                image_pull_policy: Always
+            05-rocker-ogc:
+              display_name: OGC compliant Rocker Geospatial
+              description: JupyterHub environment with many R geospatial libraries pre-installed
+              kubespawner_override:
+                image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/r:v6.0.0
+                image_pull_policy: Always
+            06-isce3:
+              display_name: OGC compliant isce3
+              description: Pangeo based notebook with a Python environment and isce3
+              kubespawner_override:
+                image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/isce3:v6.0.0
+                image_pull_policy: Always
+            07-qgis:
               display_name: QGIS on Linux Desktop
               description: Linux desktop in the browser, with qgis installed
               kubespawner_override:
@@ -177,25 +195,37 @@ jupyterhub:
               default: false
               slug: pytorch
               kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2025.12.30
+                image: quay.io/pangeo/pytorch-notebook:2026.06.04
             pytorch-maap:
               display_name: Pangeo PyTorch ML Notebook with MAAP extensions
               default: false
               slug: pytorch
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/pytorch:develop
+            pytorch-maap-ogc:
+              display_name: OGC compliant Pangeo PyTorch ML Notebook with MAAP extensions
+              default: false
+              slug: pytorch
+              kubespawner_override:
+                image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/pytorch:v6.0.0
             tensorflow2:
               display_name: Pangeo Tensorflow2 ML Notebook
               default: false
               slug: tensorflow2
               kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2025.12.30
+                image: quay.io/pangeo/ml-notebook:2026.06.04
             tensorflow2-maap:
               display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
               default: true
               slug: tensorflow2
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:develop
+            tensorflow2-maap-ogc:
+              display_name: OGC compliant Pangeo Tensorflow2 ML Notebook with MAAP extensions
+              default: false
+              slug: tensorflow2
+              kubespawner_override:
+                image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v6.0.0
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
