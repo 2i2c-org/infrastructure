@@ -15,6 +15,7 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
+          refresh_pre_spawn: true
           admin_groups:
           - geolab-admin
         UsageQuotaManager:
