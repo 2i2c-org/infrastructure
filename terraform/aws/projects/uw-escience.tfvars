@@ -38,7 +38,7 @@ user_buckets = {
   },
 
   "scratch-prod" : {
-    "delete_after" : 7,
+    "delete_after" : 30,
     "tags" : { "2i2c:hub-name" : "prod" },
   },
 }
