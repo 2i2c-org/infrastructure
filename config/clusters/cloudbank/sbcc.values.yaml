@@ -24,8 +24,10 @@ jupyterhub:
         authenticator_class: google
       GoogleOAuthenticator:
         username_claim: email
-        allowed_domains:
+        hosted_domain:
         - pipeline.sbcc.edu
+        strip_domain: false
+        allow_all: true
       OAuthenticator:
         # WARNING: Don't use allow_existing_users with config to allow an
         #          externally managed group of users, such as

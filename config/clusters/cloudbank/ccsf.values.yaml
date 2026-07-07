@@ -33,8 +33,10 @@ jupyterhub:
         authenticator_class: google
       GoogleOAuthenticator:
         username_claim: email
-        allowed_domains:
+        hosted_domain:
         - mail.ccsf.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         allowed_users:
         - sonnyzadeh@gmail.com

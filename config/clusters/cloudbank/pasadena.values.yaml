@@ -30,8 +30,10 @@ jupyterhub:
         authenticator_class: google
       GoogleOAuthenticator:
         username_claim: email
-        allowed_domains:
+        hosted_domain:
         - go.pasadena.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         admin_users:
         - yxchang@go.pasadena.edu
