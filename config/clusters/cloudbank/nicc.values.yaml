@@ -29,8 +29,10 @@ jupyterhub:
         authenticator_class: google
       GoogleOAuthenticator:
         username_claim: email
-        allowed_domains:
+        hosted_domain:
         - nicc.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         admin_users:
         - sean.smorris@berkeley.edu
