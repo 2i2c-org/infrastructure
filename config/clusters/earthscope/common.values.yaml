@@ -20,6 +20,17 @@ basehub:
         # This uses custom ids from auth0, so we can't use our default
         # emails as access
         add_staff_user_ids_to_admin_users: false
+    proxy:
+      chp:
+        networkPolicy:
+          egress:
+          - to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: jupyterhub
+                  app.kubernetes.io/component: hub
+            ports:
+            - port: 9000
     hub:
       image:
         # Usage quotas 0.1.2 and fancy-profiles 0.6.0
@@ -157,6 +168,31 @@ basehub:
               window: 30
             intersection: max
           failover_open: true
+          policy:
+          - resource: memory
+            limit:
+              value: 5000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-sm
+          - resource: memory
+            limit:
+              value: 10000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-md
+          - resource: memory
+            limit:
+              value: 50000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-lg
       service:
         extraPorts:
         - port: 9000
