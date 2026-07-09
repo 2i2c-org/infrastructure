@@ -190,12 +190,6 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            pytorch:
-              display_name: Pangeo PyTorch ML Notebook
-              default: false
-              slug: pytorch
-              kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2026.06.04
             pytorch-maap:
               display_name: Pangeo PyTorch ML Notebook with MAAP extensions
               default: false
@@ -208,12 +202,6 @@ jupyterhub:
               slug: pytorch
               kubespawner_override:
                 image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/pytorch:v6.0.0
-            tensorflow2:
-              display_name: Pangeo Tensorflow2 ML Notebook
-              default: false
-              slug: tensorflow2
-              kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2026.06.04
             tensorflow2-maap:
               display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
               default: true
