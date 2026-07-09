@@ -18,40 +18,6 @@ basehub:
           refresh_pre_spawn: true
           admin_groups:
           - geolab-admin
-        UsageQuotaManager:
-          scope_backup_strategy:
-            empty:
-              resource: memory
-              limit:
-                value: 2500
-                unit: GiB-hours
-              window: 30
-            intersection: max
-          policy:
-          - resource: memory
-            limit:
-              value: 5000
-              unit: GiB-hours
-            window: 30
-            scope:
-              group:
-              - mem-sm
-          - resource: memory
-            limit:
-              value: 10000
-              unit: GiB-hours
-            window: 30
-            scope:
-              group:
-              - mem-md
-          - resource: memory
-            limit:
-              value: 50000
-              unit: GiB-hours
-            window: 30
-            scope:
-              group:
-              - mem-lg
       loadRoles:
         dask-users:
           scopes:
@@ -70,17 +36,6 @@ basehub:
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
-    proxy:
-      chp:
-        networkPolicy:
-          egress:
-          - to:
-            - podSelector:
-                matchLabels:
-                  app.kubernetes.io/name: jupyterhub
-                  app.kubernetes.io/component: hub
-            ports:
-            - port: 9000
 
   jupyterhub-home-nfs:
     eks:

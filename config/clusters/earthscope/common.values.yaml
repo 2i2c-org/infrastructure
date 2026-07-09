@@ -20,11 +20,22 @@ basehub:
         # This uses custom ids from auth0, so we can't use our default
         # emails as access
         add_staff_user_ids_to_admin_users: false
+    proxy:
+      chp:
+        networkPolicy:
+          egress:
+          - to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: jupyterhub
+                  app.kubernetes.io/component: hub
+            ports:
+            - port: 9000
     hub:
       image:
         # Usage quotas 0.1.2 and fancy-profiles 0.6.0
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 90c1065209cf89554c2e7e73b7e2120c5d27a167
+        tag: 6ffb330f8f384e1fc97852fb00f4402af33521f6
       extraConfig:
         001-username-claim: |
           import json
@@ -38,7 +49,6 @@ basehub:
             if auth_state:
               url_parts = urlparse(spawner.authenticator.token_url)
               base_url = f"{url_parts.scheme}://{url_parts.netloc}"
-              scope_str = " ".join(spawner.authenticator.scope)
 
               # Bootstrap EarthScope SDK settings
               settings = {
@@ -46,7 +56,7 @@ basehub:
                   "audience": spawner.authenticator.extra_authorize_params.get("audience", ""),
                   "client_id": spawner.authenticator.client_id,
                   "domain": base_url,
-                  "scope": scope_str,
+                  "scope": auth_state.get("scope", ""),
                   "access_token": auth_state.get("access_token", ""),
                   "id_token": auth_state.get("id_token", ""),
                   "refresh_token": auth_state.get("refresh_token", "")
@@ -157,6 +167,31 @@ basehub:
               window: 30
             intersection: max
           failover_open: true
+          policy:
+          - resource: memory
+            limit:
+              value: 5000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-sm
+          - resource: memory
+            limit:
+              value: 10000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-md
+          - resource: memory
+            limit:
+              value: 50000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-lg
       service:
         extraPorts:
         - port: 9000

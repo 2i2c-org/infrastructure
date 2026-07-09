@@ -4,6 +4,11 @@ basehub:
       serverIP: 10.100.29.199
   jupyterhub:
     hub:
+      image:
+        # Usage quotas 0.1.2 and fancy-profiles commit 7ed7d8ce8ec9f76b816ac9ec8afe70d846b3097b from
+        # from https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/158
+        name: quay.io/2i2c/jupyterhub-usage-quotas
+        tag: 0.0.1-0.dev.git.16212.hedfb20e7c
       extraFiles:
         usage_quotas_config:
           mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py

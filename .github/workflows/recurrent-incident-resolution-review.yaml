@@ -2,15 +2,32 @@ name: 'Recurrent Debt: Incident Resolution Review'
 on:
   workflow_dispatch:
   schedule:
-  - cron: 0 4 * * 1
+  - cron: 0 4 * * 3
+
+env:
+  issue_title: Debt - incident report writing
 
 jobs:
   compute-week:
     uses: ./.github/workflows/is-this-sprint-week.yaml
 
+  check-if-issue-already-exists:
+    runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.find-issue.outputs.id }}
+    steps:
+      - uses: benlei/find-issue-by-title@v1
+        id: find-issue
+        with:
+          title: ${{ env.issue_title }}
+          state: open
+          labels: recurrent
+
   create-issue:
-    if: ${{ needs.compute-week.outputs.valid_week == 'True' }}
-    needs: compute-week
+    if: ${{ needs.compute-week.outputs.valid_week == 'True' && (needs.check-if-issue-already-exists.outputs.id == '' || needs.check-if-issue-already-exists.outputs.id == null) }}
+    needs:
+    - compute-week
+    - check-if-issue-already-exists
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -24,7 +41,7 @@ jobs:
     - name: Setup recurrent issue for incident reporting
       uses: ./.github/actions/setup-recurrent-issues
       with:
-        title: Debt - review past outage resolution and actions
+        title: ${{ env.issue_title }}
         assignee: yuvipanda,agoose77,GeorgianaElena
         body: |
           ### Context
@@ -32,7 +49,7 @@ jobs:
           Each sprint, the Team Lead is scheduled to review the resolution and action items of the outages that have happened **between September 1st 2025 and February 10th 2026** until we have paid out all debt.
 
           ### What we need to do
-          - [ ] review the resolution and the action items of a PD postmortem marked as ["Reviewed" in PD postmortems](https://2i2c-org.pagerduty.com/postmortems)
+          - [ ] review the resolution and the action items of a PD postmortem marked as "Reviewed" in [PD postmortems](https://2i2c-org.pagerduty.com/postmortems)
           - [ ] let the team know either in this issue, or the #post-outage-actions Slack channel and ask any clarifying questions
 
           ### Definition of Done
@@ -41,4 +58,4 @@ jobs:
 
         fields: Status,Estimate,End date
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-        values: Up Next,2,${{ env.deadline_as_iso_date }}
+        values: Up Next,1,${{ env.deadline_as_iso_date }}
