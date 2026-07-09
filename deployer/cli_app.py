@@ -37,8 +37,7 @@ app.add_typer(
 app.add_typer(
     generate_app,
     name="generate",
-    help="Generate various types of assets. It currently supports generating files related to billing, "
-    "new dedicated clusters, helm upgrade strategies and resource allocation.",
+    help="Generate various types of assets & information",
     rich_help_panel=DEVELOPMENT,
 )
 app.add_typer(
