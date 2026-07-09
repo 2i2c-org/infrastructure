@@ -5,14 +5,16 @@ on:
   - cron: 0 4 * * 3
 
 jobs:
+  env:
+    issue_title: Debt - incident report writing
+
   compute-week:
     uses: ./.github/workflows/is-this-sprint-week.yaml
 
   check-if-issue-already-exits:
     uses: benlei/find-issue-by-title@v1
-    id: find-issue
     with:
-      title: Debt [engineers] - incident report writing
+      title: ${{ env.issue_title }}
       state: open
       labels: recurrent
 
@@ -32,7 +34,7 @@ jobs:
     - name: Setup recurrent issue for incident reporting
       uses: ./.github/actions/setup-recurrent-issues
       with:
-        title: Debt - incident report writing
+        title: ${{ env.issue_title }}
         assignee: agoose77,GeorgianaElena
         body: |
           ### Context
