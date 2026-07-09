@@ -49,7 +49,6 @@ basehub:
             if auth_state:
               url_parts = urlparse(spawner.authenticator.token_url)
               base_url = f"{url_parts.scheme}://{url_parts.netloc}"
-              scope_str = " ".join(spawner.authenticator.scope)
 
               # Bootstrap EarthScope SDK settings
               settings = {
@@ -57,7 +56,7 @@ basehub:
                   "audience": spawner.authenticator.extra_authorize_params.get("audience", ""),
                   "client_id": spawner.authenticator.client_id,
                   "domain": base_url,
-                  "scope": scope_str,
+                  "scope": auth_state.get("scope", ""),
                   "access_token": auth_state.get("access_token", ""),
                   "id_token": auth_state.get("id_token", ""),
                   "refresh_token": auth_state.get("refresh_token", "")
