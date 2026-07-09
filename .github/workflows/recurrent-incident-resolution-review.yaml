@@ -40,7 +40,7 @@ jobs:
           Each sprint, the Team Lead is scheduled to review the resolution and action items of the outages that have happened **between September 1st 2025 and February 10th 2026** until we have paid out all debt.
 
           ### What we need to do
-          - [ ] review the resolution and the action items of a PD postmortem marked as ["Reviewed" in PD postmortems](https://2i2c-org.pagerduty.com/postmortems)
+          - [ ] review the resolution and the action items of a PD postmortem marked as "Reviewed" in [PD postmortems](https://2i2c-org.pagerduty.com/postmortems)
           - [ ] let the team know either in this issue, or the #post-outage-actions Slack channel and ask any clarifying questions
 
           ### Definition of Done
@@ -49,4 +49,4 @@ jobs:
 
         fields: Status,Estimate,End date
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-        values: Up Next,2,${{ env.deadline_as_iso_date }}
+        values: Up Next,1,${{ env.deadline_as_iso_date }}
