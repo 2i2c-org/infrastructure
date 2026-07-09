@@ -35,7 +35,7 @@ basehub:
       image:
         # Usage quotas 0.1.2 and fancy-profiles 0.6.0
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 90c1065209cf89554c2e7e73b7e2120c5d27a167
+        tag: 6ffb330f8f384e1fc97852fb00f4402af33521f6
       extraConfig:
         001-username-claim: |
           import json
