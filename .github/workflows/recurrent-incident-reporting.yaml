@@ -12,7 +12,7 @@ jobs:
     uses: benlei/find-issue-by-title@v1
     id: find-issue
     with:
-      title: Debt - incident report writing
+      title: Debt [engineers] - incident report writing
       state: open
       labels: recurrent
 

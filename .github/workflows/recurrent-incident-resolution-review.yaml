@@ -32,7 +32,7 @@ jobs:
     - name: Setup recurrent issue for incident reporting
       uses: ./.github/actions/setup-recurrent-issues
       with:
-        title: Debt - review past outage resolution and actions
+        title: Debt [team lead] - review past outage resolution and actions
         assignee: yuvipanda,agoose77,GeorgianaElena
         body: |
           ### Context
