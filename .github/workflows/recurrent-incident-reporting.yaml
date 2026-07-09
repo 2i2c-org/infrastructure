@@ -8,8 +8,16 @@ jobs:
   compute-week:
     uses: ./.github/workflows/is-this-sprint-week.yaml
 
+  check-if-issue-already-exits:
+    uses: benlei/find-issue-by-title@v1
+    id: find-issue
+    with:
+      title: Debt - incident report writing
+      state: open
+      labels: recurrent
+
   create-issue:
-    if: ${{ needs.compute-week.outputs.valid_week == 'True' }}
+    if: ${{ needs.compute-week.outputs.valid_week == 'True' && (needs.check-if-issue-already-exits.outputs.id == '' || needs.check-if-issue-already-exists.outputs.id == null) }}
     needs: compute-week
     runs-on: ubuntu-latest
     permissions:
