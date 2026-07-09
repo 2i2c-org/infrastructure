@@ -10,16 +10,23 @@ jobs:
   compute-week:
     uses: ./.github/workflows/is-this-sprint-week.yaml
 
-  check-if-issue-already-exits:
-    uses: benlei/find-issue-by-title@v1
-    with:
-      title: ${{ env.issue_title }}
-      state: open
-      labels: recurrent
+  check-if-issue-already-exists:
+    runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.find-issue.outputs.id }}
+    steps:
+      - uses: benlei/find-issue-by-title@v1
+        id: find-issue
+        with:
+          title: ${{ env.issue_title }}
+          state: open
+          labels: recurrent
 
   create-issue:
-    if: ${{ needs.compute-week.outputs.valid_week == 'True' && (needs.check-if-issue-already-exits.outputs.id == '' || needs.check-if-issue-already-exists.outputs.id == null) }}
-    needs: compute-week
+    if: ${{ needs.compute-week.outputs.valid_week == 'True' && needs.check-if-issue-already-exists.outputs.id == '' }}
+    needs: 
+    - compute-week
+    - check-if-issue-already-exists
     runs-on: ubuntu-latest
     permissions:
       issues: write
