@@ -4,10 +4,10 @@ on:
   schedule:
   - cron: 0 4 * * 3
 
-jobs:
-  env:
-    issue_title: Debt - incident report writing
+env:
+  issue_title: Debt - incident report writing
 
+jobs:
   compute-week:
     uses: ./.github/workflows/is-this-sprint-week.yaml
 
