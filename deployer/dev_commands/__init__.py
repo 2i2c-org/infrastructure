@@ -8,7 +8,6 @@ import deployer.dev_commands.exec.cost_monitoring.cost_monitoring_app  # noqa: F
 import deployer.dev_commands.exec.get_quota_usage  # noqa: F401
 import deployer.dev_commands.exec.infra_components  # noqa: F401
 import deployer.dev_commands.exec.promql  # noqa: F401
-import deployer.dev_commands.generate.mau  # noqa: F401
 import deployer.dev_commands.generate.cryptnono_config  # noqa: F401
 import deployer.dev_commands.generate.dedicated_cluster.aws  # noqa: F401
 import deployer.dev_commands.generate.dedicated_cluster.gcp  # noqa: F401
