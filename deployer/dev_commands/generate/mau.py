@@ -1,8 +1,6 @@
-from time import timezone
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Optional
 
 from rich import progress
-from rich.console import Console
 from rich.table import Table
 from rich.live import Live
 from deployer.cli_app import generate_app
