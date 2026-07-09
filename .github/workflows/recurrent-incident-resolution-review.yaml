@@ -16,12 +16,12 @@ jobs:
     outputs:
       id: ${{ steps.find-issue.outputs.id }}
     steps:
-      - uses: benlei/find-issue-by-title@v1
-        id: find-issue
-        with:
-          title: ${{ env.issue_title }}
-          state: open
-          labels: recurrent
+    - uses: benlei/find-issue-by-title@v1
+      id: find-issue
+      with:
+        title: ${{ env.issue_title }}
+        state: open
+        labels: recurrent
 
   create-issue:
     if: ${{ needs.compute-week.outputs.valid_week == 'True' && (needs.check-if-issue-already-exists.outputs.id == '' || needs.check-if-issue-already-exists.outputs.id == null) }}
