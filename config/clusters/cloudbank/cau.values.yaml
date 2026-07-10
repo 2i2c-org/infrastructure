@@ -4,6 +4,35 @@ jupyterhub:
     memory:
       guarantee: 512M
       limit: 1G
+    profileList:
+    - display_name: Choose your environment
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-base:
+              display_name: Base Image (JupyterLab)
+              default: true
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:6d61d3c15d47
+            01-rstudio:
+              display_name: RStudio
+              slug: rstudio
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-rstudio-image:82f5f9af2a0c
+                # Launch into RStudio after the user logs in
+                default_url: /rstudio
+                # Ensures container working dir is homedir
+                # https://github.com/2i2c-org/infrastructure/issues/2559
+                working_dir: /home/rstudio
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
