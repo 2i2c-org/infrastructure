@@ -2,8 +2,8 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     memory:
-      guarantee: 512M
-      limit: 1G
+      guarantee: 4G
+      limit: 4G
     profileList:
     - display_name: Choose your environment
       default: true
