@@ -6,6 +6,9 @@ basehub:
           # To login to earthscope staging, now use https://staging.geolab.earthscope.cloud/hub/oauth_login
           redirect_to: https://www.earthscope.org/data/geolab/
     hub:
+      image:
+        # Usage quotas 0.1.2, fancy-profiles 0.6.0 and Kubespawner @19ae3849
+        tag: 19ae3849a538940d8cc46062da247bec392501f0
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token
