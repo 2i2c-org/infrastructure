@@ -397,6 +397,8 @@ jupyterhub:
       # jupyterhub_config.py snippet as declared in hub.extraConfig?
       add_staff_user_ids_to_admin_users: false
       add_staff_user_ids_of_type: ""
+      # Add to list of users to ignore for MAU calculation
+      # in deployer/dev_commands/generate/mau.py when you change this
       staff_github_ids:
         - agoose77
         - choldgraf
