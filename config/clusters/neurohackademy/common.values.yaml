@@ -111,13 +111,13 @@ jupyterhub:
               display_name: hub-user-image
               slug: regular-profile
               kubespawner_override:
-                image: quay.io/neurohackademy2026/hub-user-image:a6304d25dc4b
+                image: quay.io/neurohackademy2026/hub-user-image:1e9cdfe95f02
                 init_containers: *init_containers
             nh2026-gpu:
               display_name: hub-user-image-gpu
               slug: gpu-profile
               kubespawner_override:
-                image: quay.io/neurohackademy2026/hub-user-image-gpu:336246de7c2f
+                image: quay.io/neurohackademy2026/hub-user-image-gpu:de214625beaa
                 init_containers: *init_containers
         requests:
           display_name: Resource Allocation
