@@ -36,6 +36,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 - [ ] Manage existing home directory data (migrate data from the hub or delete it)
 - [ ] Manage existing cloud bucket data (migrate data, or delete it)
+- [ ] Delete the hub's DNS entries from Namecheap (the entries set for the hub can be found [here](https://infrastructure.2i2c.org/hub-deployment-guide/deploy-support/configure-support/#setting-dns-records))
 - [ ] Delete the hub's authentication application on GitHub or CILogon (note CILogon removal requires the hub config in place)
 - [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` files. A complete list of relevant files can be found under the appropriate entry in the associated `cluster.yaml` file.
 - [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
@@ -59,11 +60,8 @@ _This phase is only necessary for single hub clusters._
   - Run `eksctl delete cluster --config-file=$CLUSTER_NAME.eksctl.yaml --disable-nodegroup-eviction`
   - Delete the `eksctl`-related files:
     - The `jsonnet` file under the `eksctl` folder
-    - The public SSH key under the `eksctl/ssh-keys` folder
 - [ ] Remove the associated `config/clusters/<cluster_name>` directory and all its contents
-- Remove the cluster from CI:
-  - [ ] [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
-  - [ ] [`deploy-grafana-dashboards.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-grafana-dashboards.yaml)
+- [ ] Remove the cluster from [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
 - [ ] Remove A record from Namecheap account
 - [ ] Ensure home directory backups are deleted ([EFS](https://repost.aws/knowledge-center/efs-disable-automatic-backups))
 - [ ] Delete the cloud account (where permissions allow it)

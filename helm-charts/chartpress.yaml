@@ -16,14 +16,15 @@ charts:
         valuesPath: jupyterhub.hub.image
         buildArgs:
           REQUIREMENTS_FILE: requirements.txt
-      pkce-experiment:
-        imageName: quay.io/2i2c/pkce-experiment
+      hub-authz-helpers:
+        valuesPath: jupyterhub.hub.image
         buildArgs:
-          REQUIREMENTS_FILE: pkce-requirements.txt
+          REQUIREMENTS_FILE: authz-helpers-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
-  - name: aws-ce-grafana-backend
-    images:
-      aws-ce-grafana-backend:
-        imageName: quay.io/2i2c/aws-ce-grafana-backend
-        valuesPath: image
+      usage-quotas:
+        imageName: quay.io/2i2c/jupyterhub-usage-quotas
+        buildArgs:
+          REQUIREMENTS_FILE: quotas-requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile

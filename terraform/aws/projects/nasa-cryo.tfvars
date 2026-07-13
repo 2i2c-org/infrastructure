@@ -2,7 +2,7 @@ region                 = "us-west-2"
 cluster_name           = "nasa-cryo"
 cluster_nodes_location = "us-west-2a"
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring = true
 
 ebs_volumes = {
   "staging" = {
@@ -12,8 +12,9 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size        = 4750
+    size        = 5600
     type        = "gp3"
+    throughput  = 375 # Triple the throughput, handling alerts for exceeding throughput consistently
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
   }
@@ -73,6 +74,11 @@ hub_cloud_permissions = {
                   "arn:aws:s3:::ghgc-data-store/*"
 
                 ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": "lambda:InvokeFunction",
+                "Resource": "arn:aws:lambda:us-west-2:429435741471:function:process-morton-cell"
             }
         ]
       }
@@ -107,6 +113,11 @@ hub_cloud_permissions = {
                   "arn:aws:s3:::ghgc-data-store",
                   "arn:aws:s3:::ghgc-data-store/*"
                 ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": "lambda:InvokeFunction",
+                "Resource": "arn:aws:lambda:us-west-2:429435741471:function:process-morton-cell"
             }
         ]
       }

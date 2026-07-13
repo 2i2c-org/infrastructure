@@ -1,64 +1,120 @@
 # code-owner: @agoose77
-# This flake sets up an FSH dev-shell that installs all the required
+# This flake sets up a dev-shell that installs all the required
 # packages for running deployer, and then installs the tool in the virtual environment
 # It is not best-practice for the nix-way of distributing this code,
 # but its purpose is to get an environment up and running.
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs-helm.url = "github:NixOS/nixpkgs/9b100cfb67ccb2ff6e723b78d4ae2f9c88654a1c";
+    # Perf: use a fixed hash to maximise overlap with other nixpkgs.
+    #       nixpkgs _can_ be updated, but no need.
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-gcloud.url = "github:NixOS/nixpkgs/8c50a710ddca43d7a530fb805ad55bde8d0141c5";
+    nixpkgs.url = "github:NixOS/nixpkgs/8c50a710ddca43d7a530fb805ad55bde8d0141c5";
+
+    dev-python = {
+      url = "github:agoose77/dev-flakes/v10?dir=python";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,
     nixpkgs,
-    flake-utils,
-  }:
-    flake-utils.lib.eachDefaultSystem (system: let
+    nixpkgs-helm,
+    nixpkgs-gcloud,
+    dev-python,
+  }: let
+    forAllSystems =
+      nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+  in {
+    devShells = forAllSystems (system: let
+      pkgs-helm = import nixpkgs-helm {
+        inherit system;
+      };
+      pkgs-gcloud = import nixpkgs-gcloud {
+        inherit system;
+      };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
-      gdk = pkgs.google-cloud-sdk.withExtraComponents (with pkgs.google-cloud-sdk.components; [
+
+      # Define our interpreter
+      python = pkgs.python313;
+      gdk = pkgs-gcloud.google-cloud-sdk.withExtraComponents (with pkgs-gcloud.google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
       ]);
-      envWithScript = script:
-        (pkgs.buildFHSUserEnv {
-          name = "2i2c-env";
-          targetPkgs = pkgs: (with pkgs; [
-            python313
-            python313Packages.pip
-            python313Packages.virtualenv
-            pythonManylinuxPackages.manylinux2014Package
-            cmake
-            ninja
-            gcc
-            pre-commit
-            # Infra packages
-            go-jsonnet
-            helm
-            kubectl
-            sops
-            gdk
-            awscli2
-            azure-cli
-            terraform
-            eksctl
-          ]);
-          runScript = "${pkgs.writeShellScriptBin "runScript" (''
-              set -e
-              if [[ ! -d .venv ]]; then
-                ${pkgs.python3.interpreter} -m venv .venv
-                source .venv/bin/activate
-                python -m pip install -e .[dev]
-              else
-                source .venv/bin/activate
-              fi
-              set +e
-            ''
-            + script)}/bin/runScript";
+      # Configure packages that need additional deps
+      openstack = python.pkgs.toPythonApplication (
+        python.pkgs.python-openstackclient.overridePythonAttrs (oldAttrs: {
+          dependencies =
+            (oldAttrs.dependencies or [])
+            ++ [python.pkgs.python-magnumclient];
         })
-        .env;
+      );
+      # Configure the hook for enabling venvs
+      # I think there's a way to auto-detect this, but
+      # let's worry about that another time
+      venvHook =
+        dev-python.packages.${system}.nix-ld-venv-hook.override
+        {python = python;};
+      # Define our env packages (including the above)
+      packages =
+        [
+          python
+          venvHook
+        ]
+        ++ (with pkgs; [
+          cmake
+          ninja
+          gcc
+          pre-commit
+          # Infra packages
+          age
+          go-jsonnet
+          pkgs-helm.kubernetes-helm
+          kubectl
+          sops
+          gdk
+          awscli2
+          azure-cli
+          terraform
+          openstack
+          eksctl
+          azure-cli
+          # Dev deps
+          jq
+          yq-go
+        ]);
+      # Unset these unwanted env vars
+      # PYTHONPATH bleeds from Nix Python packages
+      unwantedEnvPreamble = ''
+        unset SOURCE_DATE_EPOCH PYTHONPATH
+      '';
     in {
-      devShell = envWithScript "bash";
+      default = pkgs.mkShell {
+        inherit packages;
+        # Define additional input for patching interpreter
+
+        venvDir = ".venv";
+
+        # Drop bad env vars on activation
+        postShellHook = unwantedEnvPreamble;
+
+        env = {
+          # Disable nested kubeconfigs! This is nearly always a footgun
+          DEPLOYER_NO_NESTED_KUBECONFIG = "1";
+        };
+
+        # Setup venv by patching interpreter with LD_LIBRARY_PATH
+        # This is required because ld does not exist on Nix systems
+        postVenvCreation =
+          # Install package
+          ''
+            ${unwantedEnvPreamble}
+            pip install -e ".[dev]"
+          '';
+      };
     });
+  };
 }

@@ -2,24 +2,11 @@ nfs:
   enabled: true
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    serverIP: 10.103.253.53
-    baseShareName: /
 jupyterhub-home-nfs:
-  enabled: true
   gke:
-    enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
-  quotaEnforcer:
-    hardQuota: '35' # in GB
+
 jupyterhub:
-  ingress:
-    hosts: [ds.lis.2i2c.cloud]
-    tls:
-    - hosts: [ds.lis.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -43,46 +30,55 @@ jupyterhub:
       extraVolumeMounts:
         # /allusers is an extra mount point for admins to access to all users'
         # home dirs, ref: https://2i2c.freshdesk.com/a/tickets/228.
-      - name: home
-        mountPath: /home/jovyan/allusers
-        readOnly: false
-        # mounts below are copied from basehub's values that we override by
-        # specifying extraVolumeMounts (lists get overridden when helm values
-        # are combined)
-      - name: home
-        mountPath: /home/jovyan/shared-readwrite
-        subPath: _shared
-      - name: home
-        mountPath: /home/rstudio/shared-readwrite
-        subPath: _shared
+        1-allusers-volumemount:
+          name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
   singleuser:
-    image:
-      # https://hub.docker.com/r/lisacuk/lishub-base
-      name: lisacuk/lishub-base
-      tag: 364c386
+    defaultUrl: /lab
+
     profileList:
-      # Setup as requested in https://2i2c.freshdesk.com/a/tickets/1348
-    - display_name: Regular Instance
-      description: Provides 512M - 2G of RAM
+    - display_name: Choose your environment and resources
       default: true
-      kubespawner_override:
-        mem_limit: 2G
-        mem_guarantee: 512M
-    - display_name: Large Instance
-        # Requested in https://2i2c.freshdesk.com/a/tickets/1348
-        # FIXME: The </p><p> is a hack for kubespawner to render a new line, maybe there are better ways to do this?
-      description: |
-        Provides 1G - 4G of RAM.
-        ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
-      kubespawner_override:
-        mem_limit: 4G
-        mem_guarantee: 1G
+      profile_options:
+        image:
+          display_name: Environment
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            description: Specify your own docker image (must have Python and JupyterHub installed).
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available Docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            01-default:
+              display_name: Default Image
+              description: Image maintained by LIS
+              default: true
+              kubespawner_override:
+                image: lisacuk/lishub-base:f762e16
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_2_gb:
+              default: true
+              display_name: Regular Instance
+              description: Provides 512M - 2G of RAM.
+              kubespawner_override:
+                mem_limit: 2G
+                mem_guarantee: 512M
+            mem_4_gb:
+              display_name: Large Instance
+              description: Provides 1G - 4G of RAM.
+              kubespawner_override:
+                mem_limit: 4G
+                mem_guarantee: 1G
   hub:
     config:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://ds.lis.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - lisacuk
       Authenticator:

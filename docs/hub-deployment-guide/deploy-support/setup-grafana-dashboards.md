@@ -1,10 +1,10 @@
 (setup-grafana)=
 # Setup grafana dashboards
 
-Now, we will deploy some specific dashboards to the grafana instance we deployed as part of [](deploy-support-chart).
+Now, we will deploy some specific dashboards to the grafana instance we deployed as part of [](#deploy-support-chart).
 
 ````{seealso}
-It is also possible to [enable logging in with GitHub](grafana-dashboards:github-auth)
+It is also possible to [enable logging in with GitHub](#grafana-dashboards:github-auth)
 to allow Community Representatives and Hub Administrators to access these dashboards as well.
 ```{warning}
 We should enable GitHub login for _all_ Grafana dashboards running on **dedicated**
@@ -15,7 +15,7 @@ clusters, so the Community Representatives have access to them.
 (setup-grafana:log-in)=
 ## Login to the cluster-specific grafana
 
-Eventually, visiting `GRAFANA_URL` (which we set in [](deploy-support-chart)) will present you with a login page.
+Eventually, visiting `GRAFANA_URL` (which we set in [](#deploy-support-chart)) will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
@@ -58,14 +58,13 @@ This key will be used by the [`deploy-grafana-dashboards` workflow](https://gith
 You can deploy the dashboards locally using the deployer:
 
 ```bash
-deployer grafana deploy-dashboards $CLUSTER_NAME
+deployer deploy-dashboards $CLUSTER_NAME
 ```
 
 ## Deploying the Grafana Dashboards from CI/CD
 
 Once you've pushed the encrypted `grafana_token` to the GitHub repository, it will be possible to manually trigger the `deploy-grafana-dashboards` workflow using the ["Run workflow" button](https://github.com/2i2c-org/infrastructure/actions/workflows/deploy-grafana-dashboards.yaml) to deploy the dashboards.
 
-You will first need to add the name of the cluster as a matrix entry in the [`deploy-grafana-dashboards.yaml` workflow file](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-grafana-dashboards.yaml#L12) and commit the change to the repo.
 
 ```{note}
 The workflow only runs when manually triggered.
@@ -75,5 +74,5 @@ Any re-triggering of the workflow after the initial deployment will overwrite an
 
 ## Granting grafana access to the community representative
 
-Once you have setup the grafana instance, you may wish to [](grafana-access:invite-link)
+Once you have setup the grafana instance, you may wish to [](#grafana-access:invite-link)
 **only if the cluster is _dedicated_ to one community**.

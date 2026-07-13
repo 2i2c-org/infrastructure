@@ -2,7 +2,7 @@ region                 = "us-west-2"
 cluster_name           = "disasters"
 cluster_nodes_location = "us-west-2a"
 
-enable_aws_ce_grafana_backend_iam = true
+enable_nfs_backup = true
 
 user_buckets = {
   "scratch-staging" : {
@@ -61,7 +61,31 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters",
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::sentinel-s2-l1c",
-              "arn:aws:s3:::sentinel-s2-l1c/*"
+              "arn:aws:s3:::sentinel-s2-l1c/*",
+              "arn:aws:s3:::csda-data-vendor-airbus-optical",
+              "arn:aws:s3:::csda-data-vendor-airbus-optical/*",
+              "arn:aws:s3:::csdap-ghgsat-delivery",
+              "arn:aws:s3:::csdap-ghgsat-delivery/*",
+              "arn:aws:s3:::csda-data-vendor-umbra",
+              "arn:aws:s3:::csda-data-vendor-umbra/*",
+              "arn:aws:s3:::csdap-capellaspace-delivery",
+              "arn:aws:s3:::csdap-capellaspace-delivery/*",
+              "arn:aws:s3:::csdap-airbus-delivery",
+              "arn:aws:s3:::csdap-airbus-delivery/*",
+              "arn:aws:s3:::csdap-blacksky-delivery",
+              "arn:aws:s3:::csdap-blacksky-delivery/*",
+              "arn:aws:s3:::csda-data-vendor-satellogic",
+              "arn:aws:s3:::csda-data-vendor-satellogic/*",
+              "arn:aws:s3:::csdap-iceye-delivery",
+              "arn:aws:s3:::csdap-iceye-delivery/*",
+              "arn:aws:s3:::naip-analytic",
+              "arn:aws:s3:::naip-analytic/*",
+              "arn:aws:s3:::csdap-planet-skysat-delivery",
+              "arn:aws:s3:::csdap-planet-skysat-delivery/*",
+              "arn:aws:s3:::nasa-disasters-dev",
+              "arn:aws:s3:::nasa-disasters-dev/*",
+              "arn:aws:s3:::nasa-disasters-staging",
+              "arn:aws:s3:::nasa-disasters-staging/*"
             ]
           },
           {
@@ -117,7 +141,31 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters",
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::sentinel-s2-l1c",
-              "arn:aws:s3:::sentinel-s2-l1c/*"
+              "arn:aws:s3:::sentinel-s2-l1c/*",
+              "arn:aws:s3:::csda-data-vendor-airbus-optical",
+              "arn:aws:s3:::csda-data-vendor-airbus-optical/*",
+              "arn:aws:s3:::csdap-ghgsat-delivery",
+              "arn:aws:s3:::csdap-ghgsat-delivery/*",
+              "arn:aws:s3:::csda-data-vendor-umbra",
+              "arn:aws:s3:::csda-data-vendor-umbra/*",
+              "arn:aws:s3:::csdap-capellaspace-delivery",
+              "arn:aws:s3:::csdap-capellaspace-delivery/*",
+              "arn:aws:s3:::csdap-airbus-delivery",
+              "arn:aws:s3:::csdap-airbus-delivery/*",
+              "arn:aws:s3:::csdap-blacksky-delivery",
+              "arn:aws:s3:::csdap-blacksky-delivery/*",
+              "arn:aws:s3:::csda-data-vendor-satellogic",
+              "arn:aws:s3:::csda-data-vendor-satellogic/*",
+              "arn:aws:s3:::csdap-iceye-delivery",
+              "arn:aws:s3:::csdap-iceye-delivery/*",
+              "arn:aws:s3:::naip-analytic",
+              "arn:aws:s3:::naip-analytic/*",
+              "arn:aws:s3:::csdap-planet-skysat-delivery",
+              "arn:aws:s3:::csdap-planet-skysat-delivery/*",
+              "arn:aws:s3:::nasa-disasters-dev",
+              "arn:aws:s3:::nasa-disasters-dev/*",
+              "arn:aws:s3:::nasa-disasters-staging",
+              "arn:aws:s3:::nasa-disasters-staging/*"
             ]
           },
           {
@@ -142,8 +190,8 @@ ebs_volumes = {
     size        = 2500 # 2.5TB
     type        = "gp3"
     name_suffix = "prod"
+    throughput  = 250 # Double the throughput, as we kept getting alerts for throughput consistently
     tags        = { "2i2c:hub-name" : "prod" }
   }
 }
 
-enable_nfs_backup = true

@@ -1,14 +1,6 @@
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-binder
+jupyterhub-home-nfs:
+  enabled: false
 jupyterhub:
-  ingress:
-    hosts:
-    - hub.binder.openveda.cloud
-    tls:
-    - hosts:
-      - hub.binder.openveda.cloud
-      secretName: https-auto-tls
   cull:
     every: 300
     # No pods over 12h long
@@ -20,16 +12,12 @@ jupyterhub:
       enabled: true
     2i2c:
       add_staff_user_ids_to_admin_users: false
-    jupyterhubConfigurator:
-      enabled: false
     homepage:
       templateVars:
         enabled: false
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts:
   singleuser:
-    nodeSelector:
-      2i2c/hub-name: binder
     memory:
       guarantee: 1G
       limit: 2G
@@ -37,7 +25,8 @@ jupyterhub:
       limit: 1
     storage:
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
+      extraVolumes:
     initContainers: []
     profileList: []
     cmd:
@@ -91,9 +80,6 @@ binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: binder
   ingress:
     enabled: true
     hosts: [binder.openveda.cloud]
@@ -103,12 +89,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        node.kubernetes.io/instance-type: r5.xlarge
-        2i2c/hub-name: binder
     BinderHub:
       base_url: /
       hub_url: https://hub.binder.openveda.cloud
@@ -128,7 +108,7 @@ binderhub-service:
   - name: JUPYTERHUB_CLIENT_ID
     value: service-binder
   - name: JUPYTERHUB_API_URL
-    value: https://hub.binder.openveda.cloud/hub/api
+    value: http://hub.binder.svc.cluster.local:8081/hub/api
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
   - name: JUPYTERHUB_BASE_URL

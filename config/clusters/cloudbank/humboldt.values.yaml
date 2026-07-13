@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [humboldt.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [humboldt.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   prePuller:
     # hook prePuller shouldn't be enabled when configuring images in any other
     # way than singleuser.image
@@ -21,7 +16,7 @@ jupyterhub:
       templateVars:
         org:
           name: Cal Poly Humboldt
-          logo_url: https://brand.humboldt.edu/sites/default/files/styles/panopoly_image_original/public/primary-logo-for-web_0.png
+          logo_url: https://www.humboldt.edu/sites/default/files/brand/2025-04/logo-for-signature.png
           url: https://www.humboldt.edu/
         designed_by:
           name: 2i2c
@@ -37,7 +32,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://humboldt.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://sso.humboldt.edu/idp/metadata:
             default: true
@@ -63,3 +57,7 @@ jupyterhub:
     timeout: 1800
     # No pods over 12h long
     maxAge: 43200
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-humboldt
+

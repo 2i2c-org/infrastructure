@@ -1,0 +1,55 @@
+{{- if .Values.disableCoredumps.enabled -}}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: disable-coredumps
+  labels:
+    app.kubernetes.io/name: disable-coredumps
+    app.kubernetes.io/component: disable-coredumps
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: disable-coredumps
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: disable-coredumps
+        app.kubernetes.io/component: disable-coredumps
+    spec:
+      hostPID: true # Access the host's PID namespace for sysctl commands
+      tolerations:
+      # Run on GPU nodes too
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      # Tolerate JupyterHub taints
+      - effect: NoSchedule
+        key: hub.jupyter.org/dedicated
+        operator: Equal
+        value: user
+      - effect: NoSchedule
+        key: hub.jupyter.org_dedicated
+        operator: Equal
+        value: user
+      initContainers:
+      - name: disable-coredumps
+        image: {{ .Values.disableCoredumps.initContainer.image }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -euo pipefail
+          echo "Disabling core dumps by setting kernel.core_pattern to |/bin/false"
+          sysctl -w 'kernel.core_pattern=|/bin/false'
+          echo "Successfully set kernel.core_pattern=$(sysctl -n kernel.core_pattern)"
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        resources:
+          {{- toYaml .Values.disableCoredumps.initContainer.resources | nindent 10 }}
+      containers:
+      - name: pause
+        image: {{ .Values.disableCoredumps.pauseContainer.image}}
+{{- end }}

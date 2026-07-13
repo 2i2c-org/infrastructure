@@ -12,7 +12,7 @@ This is made available through cloud-specific filestores.
 
 ## Managed NFS Server setup
 
-[Terraform](topic:terraform) is setup to provision managed NFS server using the following cloud specific implementations.
+[Terraform](#topic:terraform) is setup to provision managed NFS server using the following cloud specific implementations.
 
 * GCP: Google Filestore
 * Azure: Files
@@ -27,7 +27,7 @@ For each hub, there needs to be the components described by the following subsec
 A directory is created under the path defined by the `nfs.pv.baseShareName` cluster config.
 Usually, this is `/homes` - for hubs that use the managed NFS provider for the cloud platform.
 
-Created using the infrastructure described in the [terraform section](topic:terraform).
+Created using the infrastructure described in the [terraform section](#topic:terraform).
 
 
 This the the base directory under which each hub has a directory ([`nfs.pv.baseShareName`](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L21)).
@@ -87,25 +87,16 @@ jupyterhub:
   custom:
     singleuserAdmin:
       extraVolumeMounts:
-        - name: home
+        1-allusers-volumemount:
+          name: home
           mountPath: /home/jovyan/allusers
           # Uncomment the line below to make the directory readonly for admins
           # readOnly: true
-        - name: home
+        2-allusers-rstudio-volumemount:
+          name: home
           mountPath: /home/rstudio/allusers
           # Uncomment the line below to make the directory readonly for admins
           # readOnly: true
-        # mounts below are copied from basehub's values that we override by
-        # specifying extraVolumeMounts (lists get overridden when helm values
-        # are combined)
-        - name: dev-shm
-          mountPath: /dev/shm
-        - name: home
-          mountPath: /home/jovyan/shared-readwrite
-          subPath: _shared
-        - name: home
-          mountPath: /home/rstudio/shared-readwrite
-          subPath: _shared
 ```
 
 #### A `shared-public` directory
@@ -125,32 +116,16 @@ jupyterhub:
   singleuser:
     storage:
       extraVolumeMounts:
-        - name: home
+        1-shared-public-volumemount:
+          name: home
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
-          readOnly: false
-        - name: home
+          readOnly: false 
+        2-shared-public-rstudio-volumemount:
+          name: home
           mountPath: /home/rstudio/shared-public
           subPath: _shared-public
           readOnly: false
-        - name: home
-          mountPath: /home/jovyan/shared
-          subPath: _shared
-          readOnly: true
-        # Mounts below are copied from basehub's values that we override by
-        # specifying singleuser.storage.extraVolumeMounts (lists get overridden when helm values
-        # are combined).
-        # Consider keeping the ones that are relevant for the hub, i.e. if the hub uses RStudio,
-        # then make sure that /home/rstudio and /home/rstudio/shared gets mounted. 
-        - name: dev-shm
-          mountPath: /dev/shm
-        - name: home 
-          mountPath: /home/rstudio
-          subPath: "{escaped_username}"
-        - name: home
-          mountPath: /home/rstudio/shared
-          subPath: _shared
-          readOnly: true
     initContainers:
       - name: volume-mount-ownership-fix
         image: busybox:1.36.1

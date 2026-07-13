@@ -1,6 +1,11 @@
 name: reflective
-provider: aws # https://2i2c.awsapps.com/start#/
+provider: aws
+provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 96807259872
 aws:
+  account: 916143380841
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: reflective

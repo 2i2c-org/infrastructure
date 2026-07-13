@@ -1,53 +1,34 @@
 basehub:
   nfs:
     pv:
-      serverIP: 10.100.52.135
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-prod
+      serverIP: 10.100.32.135
   jupyterhub:
-    ingress:
-      hosts: [hub.openveda.cloud]
-      tls:
-      - hosts: [hub.openveda.cloud]
-        secretName: https-auto-tls
+    hub:
+      extraFiles:
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageConfig.hub_namespace = "prod"
+            c.UsageViewer.public_hub_url = "https://hub.openveda.cloud/"
+            c.UsageViewer.enable_compute = False
     custom:
       homepage:
         gitRepoBranch: master
         gitRepoUrl: https://github.com/NASA-IMPACT/veda-hub-homepage
-    singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://hub.openveda.cloud/hub/oauth_callback
-
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-
   binderhub-service:
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: prod
     config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: prod
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-prod-
+    extraEnv:
+    - name: JUPYTERHUB_API_URL
+      value: http://hub.prod.svc.cluster.local:8081/hub/api
 
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0063ecd342e052ef5
     quotaEnforcer:
-      hardQuota: '200' # in GB
+      config:
+        QuotaManager:
+          # Community-requested value
+          hard_quota: 200 # in GiB

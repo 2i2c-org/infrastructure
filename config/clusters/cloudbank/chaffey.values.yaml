@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [chaffey.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [chaffey.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -11,9 +6,6 @@ jupyterhub:
       guarantee: 384M
       limit: 1.5G
     defaultUrl: /lab
-    image:
-      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: 79e7ee67211e
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -38,7 +30,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://chaffey.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://chaffey.ondemandlogin.com:
             default: true
@@ -53,3 +44,6 @@ jupyterhub:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
         - sharon.solis@chaffey.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-chaffey

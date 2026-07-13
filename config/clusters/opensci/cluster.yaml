@@ -1,6 +1,11 @@
 name: opensci
-provider: aws # https://2i2c.awsapps.com/start#/
+provider: aws
+provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 102945995509
 aws:
+  account: 211125293633
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: opensci

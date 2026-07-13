@@ -1,24 +1,34 @@
 nfs:
   pv:
-    serverIP: 10.100.227.102
-
+    serverIP: 10.100.18.124
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0cdc25a68ca0303ce
   quotaEnforcer:
-    hardQuota: '10' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 2 # in GiB
 jupyterhub:
-  ingress:
-    hosts: [projectpythia.2i2c.cloud]
-    tls:
-    - hosts: [projectpythia.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
         org:
           name: ProjectPythia
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://projectpythia.2i2c.cloud/hub/oauth_callback
+
+  singleuser:
+    extraFiles:
+      02-menus:
+        mountPath: /srv/conda/envs/notebook/share/jupyter/lab/settings/overrides.json
+
+        data:
+          '@jupyterlab/mainmenu-extension:plugin':
+            menus:
+            - id: jp-mainmenu-help
+              rank: 1001
+              items:
+              - command: help:open
+                rank: 1001
+                args:
+                  url: https://github.com/settings/connections/applications/Ov23liWxGyeDz5ETgPF3
+                  text: Revoke GitHub Token
+                  newBrowserTab: true

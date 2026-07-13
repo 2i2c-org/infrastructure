@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [glendale.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [glendale.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -26,19 +21,19 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        oauth_callback_url: https://glendale.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - glendale.edu
-            - student.glendale.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        hosted_domain:
+        - glendale.edu
+        - student.glendale.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         admin_users:
         - simon@glendale.edu
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-glendale

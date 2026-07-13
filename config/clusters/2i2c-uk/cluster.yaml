@@ -1,5 +1,9 @@
 name: 2i2c-uk
-provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/europe-west2/two-eye-two-see-uk-cluster/nodes?project=two-eye-two-see-uk
+provider: gcp
+provider_url: https://console.cloud.google.com/kubernetes/clusters/details/europe-west2/two-eye-two-see-uk-cluster/nodes?project=two-eye-two-see-uk
+metadata:
+  2i2c:
+    hubspot_deal_id: 128809921227
 gcp:
   key: enc-deployer-credentials.secret.json
   project: two-eye-two-see-uk
@@ -30,3 +34,4 @@ hubs:
   helm_chart_values_files:
   - lis.values.yaml
   - enc-lis.secret.values.yaml
+  chart_override: lis-chart.yaml

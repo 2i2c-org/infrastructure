@@ -1,12 +1,5 @@
-myst-parser[linkify]
 pandas
 pyyaml
 python-hcl2
 requests
-sphinx-autobuild
-sphinx-copybutton
-sphinx-design
-git+https://github.com/2i2c-org/sphinx-2i2c-theme
-sphinxcontrib-mermaid
-sphinxcontrib-jquery
-sphinx-last-updated-by-git
+jupyter-book>=2.1.5

@@ -1,27 +1,11 @@
-dex:
-  enabled: false
-  hubHostName: staging.2i2c.cloud
-
-staticWebsite:
-  enabled: false
-  source:
-    git:
-      repo: https://github.com/jupyter/try.jupyter.org
-      branch: gh-pages
-  ingress:
-    host: staging.2i2c.cloud
-    path: /textbook
-  githubAuth:
-    enabled: false
-
 jupyterhub:
-  ingress:
-    hosts:
-    - staging.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - staging.2i2c.cloud
+  scheduling:
+    userPlaceholder:
+      # Keep at least half of a spare node around
+      replicas: 0
+      resources:
+        requests:
+          memory: 16Gi
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -42,24 +26,10 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   hub:
-    # FIXME: dex and oauth2-proxy is commented out to avoid error messages until
-    #        its fixed to work again, it also makes jupyterhub 5.2.0 fail to
-    #        start if it can't connect to this during startup.
-    #
-    # services:
-    #   dex:
-    #     url: http://dex:5556
-    #     oauth_redirect_uri: https://staging.2i2c.cloud/services/dex/callback
-    #     oauth_no_confirm: true
-    #     display: false
-    #   oauth2-proxy:
-    #     url: http://dex:9000
-    #     display: false
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://staging.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
@@ -68,6 +38,7 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-staging
-nfs:
-  pv:
-    serverIP: 10.3.249.107
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 5 # in GiB

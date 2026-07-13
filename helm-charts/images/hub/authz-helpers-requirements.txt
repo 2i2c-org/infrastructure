@@ -1,0 +1,4 @@
+# Image lives at quay.io/2i2c/pilot-hub
+
+jupyterhub-fancy-profiles==0.4.1
+jupyterhub-oauthenticator-authz-helpers==0.0.5

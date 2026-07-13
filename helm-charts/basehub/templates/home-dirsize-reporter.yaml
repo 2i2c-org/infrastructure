@@ -35,7 +35,7 @@ spec:
       containers:
         - name: dirsize-exporter
           # From https://github.com/yuvipanda/prometheus-dirsize-exporter
-          image: quay.io/yuvipanda/prometheus-dirsize-exporter:v3.1
+          image: quay.io/yuvipanda/prometheus-dirsize-exporter:v3.3
           resources:
             # Provide limited resources for this collector, as it can
             # balloon up (especially in CPU) quite easily. We are quite ok with
@@ -53,6 +53,9 @@ spec:
             - "250" # Use only 250 io operations per second at most
             - "120" # Wait 2h between runs
             - --port=8000
+            {{ if not .Values.nfs.dirsizeReporter.reportTotalSize }}
+            - --disable-total-size
+            {{- end }}
           ports:
             - containerPort: 8000
               name: dirsize-metrics

@@ -1,11 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts:
-    - mtu.2i2c.cloud
-    tls:
-    - secretName: https-auto-tls
-      hosts:
-      - mtu.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -29,12 +22,12 @@ jupyterhub:
     image:
       name: quay.io/2i2c/cloudbank-data8-image
       tag: 6286b77ae45c
+    defaultUrl: /lab
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://mtu.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           # Allow MTU to login via Shibboleth
           https://sso.mtu.edu/idp/shibboleth:
@@ -55,7 +48,28 @@ jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-mtu
   quotaEnforcer:
-    hardQuota: '20' # in GB
-nfs:
-  pv:
-    serverIP: 10.3.244.132
+    resources:
+      requests:
+        cpu: 0.001
+        memory: 32Mi
+      limits:
+        cpu: 0.2
+        memory: 256Mi
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 512Mi
+      limits:
+        cpu: 0.1
+        memory: 1Gi
+  nodeExporter:
+    resources:
+      requests:
+        cpu: 0.001
+      limits:
+        cpu: 0.1
+  autoResizer:
+    resources:
+      requests:
+        cpu: 0.001

@@ -6,5 +6,7 @@
 # update basehub's default values to reference the new image.
 chartpress==2.*
 
-# requests is used by scripts in the /extra-scripts folder
+# Used by scripts in the /extra-scripts folder
 requests==2.*
+aiohttp==3.*
+asyncio==4.*

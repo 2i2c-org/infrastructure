@@ -81,7 +81,6 @@ You can remove yourself from the org once you have confirmed that login is worki
           JupyterHub:
             authenticator_class: github
           GitHubOAuthenticator:
-            oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
               - ORG_NAME:TEAM_NAME
               - ORG_NAME
@@ -126,7 +125,7 @@ How to grant org access to an OAuth app on GitHub
 ```
 
 ```{note}
-If you need to reset the permissions of the app for any reason, see [](troubleshooting:reset-github-app).
+If you need to reset the permissions of the app for any reason, see [](#troubleshooting:reset-github-app).
 You will **still** require admin access to the org to carry out those steps.
 ```
 
@@ -140,7 +139,7 @@ server.
 
 In addition, we can allow people access to specific profiles based on their GitHub Teams membership!
 This only works if the hub is already set to allow people only from certain GitHub organizations
-to log in. See [](howto:features:profile-restrict) for more information.
+to log in. See [](#howto:features:profile-restrict) for more information.
 
 ### Enabling team based access on hub with pre-existing users
 

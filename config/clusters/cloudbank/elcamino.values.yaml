@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [elcamino.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [elcamino.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -31,22 +26,21 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        oauth_callback_url: https://elcamino.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - elcamino.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        hosted_domain:
+        - elcamino.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         admin_users:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
         - srussell@elcamino.edu
         - ammartinez@elcamino.edu
+        - jacobquisumbing@berkeley.edu
+        - jedwin321@berkeley.edu
         - jonathanferrari@berkeley.edu
         - arianaghimire27@berkeley.edu
         - bdsomer@berkeley.edu
@@ -54,3 +48,16 @@ jupyterhub:
         - jegeronimo@berkeley.edu
         - mark.barranda@berkeley.edu
         - skompalli@berkeley.edu
+        - waylandla@berkeley.edu
+        - johnll2@berkeley.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-elcamino
+  quotaEnforcer:
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 1G
+      limits:
+        cpu: 0.4
+        memory: 1.2G

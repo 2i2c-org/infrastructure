@@ -6,8 +6,6 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_aws_ce_grafana_backend_iam = true
-
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
@@ -23,6 +21,7 @@ user_buckets = {
 hub_cloud_permissions = {
   "staging" : {
     bucket_admin_access : ["scratch-staging"],
+    max_session_duration : 12 * 60 * 60, # 12 hr max
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
@@ -30,16 +29,11 @@ hub_cloud_permissions = {
           {
             "Effect": "Allow",
             "Action": [
-              "s3:PutObject",
               "s3:GetObject",
-              "s3:ListBucketMultipartUploads",
-              "s3:AbortMultipartUpload",
+              "s3:GetObjectTagging",
               "s3:ListBucketVersions",
-              "s3:CreateBucket",
               "s3:ListBucket",
-              "s3:DeleteObject",
-              "s3:GetBucketLocation",
-              "s3:ListMultipartUploadParts"
+              "s3:GetBucketLocation"
             ],
             "Resource": [
               "arn:aws:s3:::veda-data-store",
@@ -68,8 +62,6 @@ hub_cloud_permissions = {
               "arn:aws:s3:::podaac-ops-cumulus-public/*",
               "arn:aws:s3:::podaac-ops-cumulus-protected",
               "arn:aws:s3:::podaac-ops-cumulus-protected/*",
-              "arn:aws:s3:::maap-ops-workspace",
-              "arn:aws:s3:::maap-ops-workspace/*",
               "arn:aws:s3:::nasa-maap-data-store",
               "arn:aws:s3:::nasa-maap-data-store/*",
               "arn:aws:s3:::sdap-dev-zarr",
@@ -83,7 +75,32 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters",
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::nasa-eodc-scratch",
-              "arn:aws:s3:::nasa-eodc-scratch/*"
+              "arn:aws:s3:::nasa-eodc-scratch/*",
+              "arn:aws:s3:::nasa-veda-scratch",
+              "arn:aws:s3:::nasa-veda-scratch/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:GetObjectVersionTagging",
+              "s3:GetObjectAttributes",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:ListMultipartUploadParts",
+              "s3:ListBucketMultipartUploads",
+              "s3:PutObject",
+              "s3:PutObjectTagging",
+              "s3:DeleteObject",
+              "s3:AbortMultipartUpload",
+              "s3:RestoreObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::maap-uat-workspace",
+              "arn:aws:s3:::maap-uat-workspace/*"
             ]
           },
           {
@@ -97,6 +114,7 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch-prod"],
+    max_session_duration : 12 * 60 * 60, # 12 hr max
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
@@ -105,6 +123,7 @@ hub_cloud_permissions = {
             "Effect": "Allow",
             "Action": [
               "s3:GetObject",
+              "s3:GetObjectTagging",
               "s3:ListBucketVersions",
               "s3:ListBucket",
               "s3:GetBucketLocation"
@@ -149,7 +168,34 @@ hub_cloud_permissions = {
               "arn:aws:s3:::sport-lis",
               "arn:aws:s3:::sport-lis/*",
               "arn:aws:s3:::nasa-disasters",
-              "arn:aws:s3:::nasa-disasters/*"
+              "arn:aws:s3:::nasa-disasters/*",
+              "arn:aws:s3:::nasa-eodc-scratch",
+              "arn:aws:s3:::nasa-eodc-scratch/*",
+              "arn:aws:s3:::nasa-veda-scratch",
+              "arn:aws:s3:::nasa-veda-scratch/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:GetObjectVersionTagging",
+              "s3:GetObjectAttributes",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:ListMultipartUploadParts",
+              "s3:ListBucketMultipartUploads",
+              "s3:PutObject",
+              "s3:PutObjectTagging",
+              "s3:DeleteObject",
+              "s3:AbortMultipartUpload",
+              "s3:RestoreObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::maap-ops-workspace",
+              "arn:aws:s3:::maap-ops-workspace/*"
             ]
           },
           {
@@ -174,8 +220,12 @@ ebs_volumes = {
     size        = 2000 # 2TB
     type        = "gp3"
     name_suffix = "prod"
-    tags        = { "2i2c:hub-name" : "prod" }
+    tags        = { "2i2c:hub-name" : "prod" },
+    iops        = 5000
+    throughput  = 250 # Double the throughput, as we kept getting alerts for throughput consistently
   }
 }
 
 enable_nfs_backup = true
+
+enable_jupyterhub_cost_monitoring = true

@@ -1,50 +1,39 @@
 nfs:
   pv:
-    serverIP: 10.100.165.154
-jupyterhub:
-  singleuser:
-    nodeSelector:
-      2i2c/hub-name: staging
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
-      GenericOAuthenticator:
-        oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
-        token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
-        authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
-  ingress:
-    hosts: [staging.hub.disasters.2i2c.cloud]
-    tls:
-    - hosts: [staging.hub.disasters.2i2c.cloud]
-      secretName: https-auto-tls
+    serverIP: 10.100.200.179
 
+jupyterhub:
+  hub:
+    extraFiles:
+      usage_quotas_config:
+        mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+        stringData: |
+          c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+          c.UsageConfig.hub_namespace = "staging"
+          c.UsageViewer.public_hub_url = "https://staging.hub.disasters.2i2c.cloud/"
+          c.UsageViewer.enable_compute = False
+    config:
+      Authenticator:
+        # Disable for now the authentication token refreshing
+        # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
+        auth_refresh_age: 0
 dask-gateway:
   gateway:
     backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: staging
-      worker:
-        extraPodConfig:
-          node_selector:
-            2i2c/hub-name: staging
       imagePullSecrets: [name: image-pull-secret]
 
 binderhub-service:
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: staging
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        2i2c/hub-name: staging
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/disasters-staging-
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.staging.svc.cluster.local:8081/hub/api
 
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-08f3d124fcfd518b0
   quotaEnforcer:
-    hardQuota: '10' # in GB
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

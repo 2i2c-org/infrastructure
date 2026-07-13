@@ -78,7 +78,7 @@ to store:
 6. For *ephemeral hubs*, their home directories are also stored using the
    same mechanism as (3) - so they take up space on the ephemeral disk as
    well. Most hubs have a *persistent* home directory set up, detailed
-   in the [Home directories section](topic:billing:resources:home).
+   in the [Home directories section](#topic:billing:resources:home).
 
 
 These disks can be fairly small - 100GB at the largest, but we can get away
@@ -298,7 +298,7 @@ in more than one region / zone, set up a hub in each region / zone you have data
 move the compute to where the data is, rather than the other way around.
 
 More information about managing this is present in the [object storage
-section](topic:billing:resources:object-storage) of this guide.
+section](#topic:billing:resources:object-storage) of this guide.
 
 (topic:billing:resources:object-storage)=
 ## Object storage
@@ -357,7 +357,7 @@ Pricing link: [AWS S3](https://aws.amazon.com/s3/pricing/), [GCP GCS](https://cl
 ### Egress fees
 
 As discussed in the [network fees
-section](topic:billing:resources:network-fees), *egress* fees are how cloud
+section](#topic:billing:resources:network-fees), *egress* fees are how cloud
 providers often lock you in. They want you to store all your data in them,
 particularly in their object stores, and charge an inordinate amount of money to
 take that data with you somewhere else. This is egregious enough now that
@@ -547,7 +547,7 @@ the infrastructure:
    their data, and need a dedicated block storage device. One is created
    *for each user* (via [Kubernetes Dynamic Volume Provisioning](https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/)),
    and this can get quite expensive
-   (for reasons outlined in the ["Home Directory Storage" section](topic:billing:resources:home)).
+   (for reasons outlined in the ["Home Directory Storage" section](#topic:billing:resources:home)).
 
 Pricing is primarily dependent on the expected disk performance (measured as throughput and IOPS) as well as the disk size. While there's a lot of
 options available, we'll list what we most commonly use in this table.

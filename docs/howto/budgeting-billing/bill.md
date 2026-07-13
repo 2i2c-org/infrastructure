@@ -27,24 +27,13 @@ before following the steps below. Your 2i2c.org email should give you access.
 
 ## Communities in shared cloud accounts
 
-The procedure for GCP projects and AWS accounts is similar. It is practically
-demonstrated in a ~20 minute [video] working in a [spreadsheet for accounting of
-cost for communities in shared clusters].
-
-The procedure from the video is:
-
-1. Open the [spreadsheet for accounting of cost for communities in shared
-   clusters].
-2. Duplicate the page for the previous month and clear outdated values in green
-   cells.
-3. Use guidance in pink cells to fill in green cells and finally verify a sum.
-4. Protect the page by right clicking on its tab in order to warn users trying
-   to edit it going onwards.
-5. Enter the verified monthly community costs in the [spreadsheet for billing]
-   and double check anything looking odd in relation to previous months' values.
-
-[video]: https://drive.google.com/file/d/1NQAVo3iJuuaDAp5WI0uinY148M9IK1Ty/view?usp=drive_link
-[spreadsheet for accounting of cost for communities in shared clusters]: https://docs.google.com/spreadsheets/d/1tzKlNBkJiqmm_eTO7dqxIYugverZNi_zSlmBWP3Ek5E/edit#gid=120717885
+We used to run hubs on a shared cluster, but we don't anymore. There's only
+one hub remaining on shared clusters - Michigan Tech University. We will
+[migrate it](https://github.com/2i2c-org/infrastructure/issues/5875) to its
+own cluster at some point soon. Until then, since it's the only hub running
+on the `two-eye-two-see` `pilot-hubs` cluster, we can use
+[this report](https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2026-03-01;to=2026-03-31;dateType=INVOICE_DATE;projects=350668521154;labels=goog-k8s-cluster-name:pilot-hubs-cluster;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see)
+to roughly approximate the cloud cost of the MTU hub.
 
 ## Communities with dedicated cloud accounts
 
@@ -111,6 +100,36 @@ Currently this is the recommended way of retrieving the costs from GCP.
 
 [2i2c billing account]: https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2024-01-01;to=2024-01-31;dateType=INVOICE_DATE;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see
 
+
+### Get a community's costs from OVH
+
+We currently have an account on OVH Cloud US, where we pay for a mybinder.org federation
+member for BIDS.
+
+```{warning}
+Currently, all our OVH costs will be billed to BIDS. When we start supporting multiple
+other users on OVH, we will need to handle invoices better.
+```
+
+1. Go to [https://manager.us.ovhcloud.com/#/billing/history](OVH US Billing Console) using
+   credentials provided to you. If you don't have credentials, reach out to Yuvi to get some.
+2. Under filter, select:
+
+   1. "Issue Date" as column
+   2. "is after" as condition
+   3. The start of the month for which we are looking at cloud costs as "Value". For example,
+      if you're looking for cloud costs for January 2026, set this value to 1 Jan 2026. The
+      goal is to make sure we get all the invoices that have been issued since our last time,
+      so verify by looking at the last OVH invoices upload.
+
+3. Under "Actions" click "Export as CSV".
+
+4. Go to the [Cloud Costs Google Drive Folder](https://drive.google.com/drive/folders/1_xXZ2ndEOplZidG_mj6nmUTzsOuxARcL)
+   and upload this CSV. Rename it to `OVH_<starting-year>-<starting-month>-<starting-date>_<ending-year>-<ending-month>-<ending-date>`,
+   based on the first and last entry in the invoice (eg. `OVH_2025-12-01_2026-02-01.csv`)
+
+5. Post a link to this in the `#billing` channel
+
 ## Experimental
 
 We have an unfinished attempt to automate collection of community monthly costs.
@@ -128,7 +147,7 @@ clusters set up on Google Cloud, and tell you how much they cost.
 
 Pre-requisites for running it:
 
-1. You have all [tools required](tutorials:setup) required to work on this repo
+1. You have all [tools required](#tutorials:setup) required to work on this repo
    setup.
 
 2. Run `gcloud application-default auth login`, and authenticate with your `2i2c.org`
@@ -137,7 +156,7 @@ Pre-requisites for running it:
 
 There is a private [Google Sheet](https://docs.google.com/spreadsheets/d/1URYCMap-Lxm4e_pAAC3Esxda7tZzRhCS6d85pxUiVQs/edit#gid=0)
 that has monthly costs for all the clusters that are configured to have
-[bigquery export](new-gcp-project:billing-export).
+[bigquery export](#new-gcp-project:billing-export).
 
 This sheet is currently manually updated. You can update it by running
 `deployer generate cost-table --output 'google-sheet'`. It will by default
@@ -155,7 +174,7 @@ amount of the previous month's costs.
 
 #### Caveats
 
-1. The data comes from [bigquery costs export](new-gcp-project:billing-export), so
+1. The data comes from [bigquery costs export](#new-gcp-project:billing-export), so
    is only available and accurate after that has been enabled. For billing data
    before this was enabled, you need to manually go look in the cloud console.
 

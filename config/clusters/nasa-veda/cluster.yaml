@@ -1,7 +1,11 @@
 name: nasa-veda
-provider: aws # https://smce-veda.signin.aws.amazon.com/console
-account: smce-veda
+provider: aws
+provider_url: https://smce-veda.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 86933236464
 aws:
+  account: 444055461661
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: nasa-veda

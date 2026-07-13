@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 redirects:
   rules:
   - from: r-staging.utoronto.2i2c.cloud
@@ -16,6 +13,8 @@ redirects:
 
 prometheus:
   server:
+    persistentVolume:
+      size: 600Gi
     ingress:
       enabled: true
       hosts:

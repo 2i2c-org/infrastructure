@@ -1,0 +1,130 @@
+jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
+  prePuller:
+    extraTolerations:
+    - key: hub.jupyter.org/dedicated
+      operator: Exists
+      effect: NoSchedule
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: present
+      effect: NoSchedule
+    continuous:
+      enabled: false
+  singleuser:
+    defaultUrl: /lab
+    profileList:
+    - display_name: CPU only
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-base:
+              display_name: Base Image
+              description: Default base user image
+              default: true
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:6d61d3c15d47
+      kubespawner_override:
+        mem_guarantee: 12G
+        mem_limit: 16G
+        cpu_guarantee: 0.22815625
+        cpu_limit: 3.6505
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+        default: true
+    - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
+      description: Up to 3 CPUs when available
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-sml-pytorch:
+              display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: small_models
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:ed76dadfea20
+            01-tensorflow:
+              display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
+              slug: tensorflow
+              kubespawner_override:
+                image: pangeo/ml-notebook:2026.01.30
+            02-pytorch:
+              display_name: Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: pytorch
+              kubespawner_override:
+                image: pangeo/pytorch-notebook:2026.01.30
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_guarantee: 12G
+        mem_limit: 16G
+        cpu_guarantee: 1.5
+        cpu_limit: 3
+        node_selector:
+          node.kubernetes.io/instance-type: n1-highmem-8
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://cdn.clarku.edu/wp-content/themes/jonas/images/clark-logo-w-type-r-logo.svg
+          name: Clark University
+          url: https://www.clarku.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - clarku.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - lhan@clarku.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-clarku
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

@@ -2,19 +2,12 @@ nfs:
   enabled: false
   pv:
     enabled: false
-    mountOptions:
-    - soft
-    - noatime
     serverIP: 10.53.69.162
-    baseShareName: /homes/
-
 jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
-    jupyterhubConfigurator:
-      enabled: false
     homepage:
       templateVars:
         org:
@@ -50,6 +43,7 @@ jupyterhub:
               display_name: Du Bois Jupyter Notebook
               kubespawner_override:
                 image: quay.io/highereddata/du-bois-stem:latest
+                image_pull_policy: Always
           unlisted_choice:
             enabled: true
             display_name: Custom image

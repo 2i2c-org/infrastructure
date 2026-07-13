@@ -1,73 +1,154 @@
-# Manage alerts configured with Jsonnet
+(howto:alerts)=
+# Manage alerts
 
 In addition to [](#uptime-checks), we also have a set of alerts that are configured in support deployments using [](#topic/jsonnet).
+More about these alerts at [](#alerting:jsonnet-alerts)
 
-## Paging
+## What to do when an alert fires based on its type and severity
+When an alert fires a person should decide how to handle it based on the type of alert and its severity.
+The general steps to take for any alert are:
 
-We don't have an on-call rotation currently, and nobody is expected to
-respond outside working hours. Hence, we don't really currently have paging
-alerts.
+1. Validate/invalidate as quickly as possible if we are dealing with an outage
+2. If an outage, then add the P1 priority to the PD incident and follow the incident process
+3. If not an outage, then time-box yourself to 30 min and either debug or fix it if you know how
+4. After 30min, use your judgement to decide if you need to create a follow-up issue to investigate further. It might be that you believe that extra time invested won't bring any light into the root cause. This is ok. Just leave a note in PD.
+5. Close the alert in PD and link to the issue if you created one
 
-However, we may temporarily mark some alerts to page specific people during
-ongoing incidents that have not been resolved yet. This is usually done
-to monitor a temporary fix that may or may not have solved the issue. By
-adding a paging alert, we buy ourselves a little peace of mind - as long
-as the page is not firing, we are doing ok.
+Below are some guidelines on how to handle the different types of alerts we have configured.
 
-Alerts should have a label named `page` that can be set to the pagerduty
-username of whoever should be paged for that alert.
+### Severity and timeline
 
-## Configuration
+When an alert fires, it will create an incident in PagerDuty and notify the `#pagerduty-notifications` channel on the 2i2c Slack.
+Each  alert setup with Jsonnet has a severity level that can be one of:
 
-We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
+- `take immediate action`
+- `same day action needed`
+- `action needed this week`
+- `to be planned in sprint planning`
 
-At the time of writing, we have the following classes of alerts:
+This severity level, together with the priority levels described in [](#alerting:priority-levels) is what determines how quickly you should respond to the alert.
 
-1. when a persistent volume claim (PVC) is approaching full capacity
-2. when a pod has restarted
-3. when a user pod has had an unschedulable status for more than 5 minutes
+### What to do for alerts about JupyterHub not being available
 
-When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
+These alerts are outages and have a P1 priority set by default.
+To resolve this alert:
+- check if another engineer is doing any work/testing/decommissioning of the hub
+- if they are, then resolve the alert in PD and remove its P1 priority (in this order)
+- if they're not, then
+  - validate if the hub is indeed not available
+  - follow the incident response process
 
-## When a PVC is approaching full capacity
+### What to do for alerts on PVC capacity
 
 We monitor the capacity of the following volumes:
-
 - home directories
 - hub database
 - prometheus database
 
-The alert is triggered when the volume is more than 90% full.
+There are two alert types that are triggered based a capacity threshold:
 
-To resolve the alert, follow the guidance below
+- **A P2 alert** at 10%
 
-- [](../../howto/filesystem-management/increase-disk-size.md)
-- To be documented, see [GH issue](https://github.com/2i2c-org/infrastructure/issues/6187)
-- [](../../sre-guide/prometheus-disk-resize.md)
+  It is triggered when the volume has less than 10% of free space remaining and is assigned a `same day action needed`, hence a P2 priority.
+  To resolve the alert, follow the guidance below:
 
-## When a pod has restarted
+  1. Ack the alert in PD
+  2. [](../../howto/filesystem-management/increase-disk-size.md)
+  3. To be documented, see [GH issue](https://github.com/2i2c-org/infrastructure/issues/6187)
+  4. [](../../sre-guide/prometheus-disk-resize.md)
+
+- **A P1 at 0%**
+
+  - It is triggered when the volumes doesn't have any capacity left.
+  - If we respond in time to the P2 alert, this one should never trigger.
+  - This alert is assigned a `take immediate action` severity level and a P1 priority, hence it is an **outage**.
+  - To resolve the alert, use the guides from the bullet above.
+
+### What to do for alerts on pod restarts
 
 We monitor pod restarts for the following services:
 
 - `jupyterhub-groups-exporter`
+- `jupyterhub-home-nfs`
+- `jupyterhub-cost-monitoring`
+- `support-grafana`
+- `support-prometheus-server`
+- `proxy`
 
-If a pod has restarted, it may indicate an issue with the service or its configuration. Check the logs of the pod to identify any errors or issues that may have caused the restart. If necessary, add more error handling to the code, redeploy the service or adjust its configuration to resolve the issue.
+If a pod has restarted, it may indicate an issue with the service or its configuration.
+To resolve the alert:
+  1. Ack the alert in PD
+  2. Check if the pod is running or is restarting infinitely
+  3. Check the logs of the pod to identify any errors or issues that may have caused the restart
+    - If the pod is stable and not restarting anymore, see if the logs present anything useful enough to open a tracking issue. And if not, mark the alert as resolved.
+    - If the pod is still restarting, try getting it in a stable state by redeploying it or adjust its configuration to resolve the issue.
+  4. If you have taken the above actions and the issue persists, then
+    - Open a GitHub issue capturing the details of the problem for consideration by the wider 2i2c team.
+    - Setup a Priority number on the alert
 
-Once the pod is stable, ensure that the alert is resolved by checking whether the pod has been running without restarts, e.g. by running the following command:
+### What to do for alerts on server startup failures
 
-```bash
-$ kubectl -n <namespace> get pod
-NAME                                                 READY   STATUS    RESTARTS      AGE
-staging-groups-exporter-deployment-9b4c6749c-sgfcc   1/1     Running   0   10m
-```
+Any time two consecutive spawns fail in a 30m time window, we trigger an alert. This alert doesn't have a severity lever or a priority level set on it by default because it can be anything. This is why is best to investigate these ASAP.
 
-If you have taken the above actions and the issue persists, then open a GitHub issue capturing the details of the problem for consideration by the wider 2i2c team. See [](#uptime-checks) on how to snooze an alert in the meantime.
+There is additional automation that runs each time an alert like this is triggered. The automation triggers a [GitHub workflow](https://github.com/2i2c-org/infrastructure/blob/main/.github/workflows/pagerduty-triggered-health-check.yaml) that runs a health check for the alerting cluster and hub.
+- A note with the status of this run is left in the PagerDuty incident
+- In addition, if the health check succeeds, the incident is resolved and a message with this status is posted in the `#pagerduty-notifications` Slack channel
+- If the health check fails, then a message, mentioning the channel members, is posted in the `#pagerduty-notifications` Slack channel
+
+### What to do for alerts for application outages
+
+When an application is not working as expected, it is classed as a possible application outage. Similar to the server start alert above, it's best to investigate these ASAP to validate whether this is an outage or not. If it is an outage, follow the incident process as normal.
+
+#### To resolve the alert:
+1. Check if you can spawn a server on that cluster and hub. If not, then is most likely an outage an you must set the P1 priority on this alert and follow the incident response process for outages.
+2. If you can spawn a server, then this is most likely not an outage. But check the list of possible causes above and find the one that matches what you're seeing in the logs.
+  - If logs are not available or not proving any useful info, then you can manually resolve the alert in PD as a mystery. It will likely come back if there's an underlying issue and a pair of eyes will be available to investigate.
+  - If the logs seem suspicious but you cannot put your finger on the issue, then open a tracking GitHub issue to be discussed with the rest of the engineering team.
+
+The causes for this can be varied, and it always requires investigation. Some common causes are:
+1. Node was too slow to spin up. This may be transient - test again, and if this works, it's fine.
+2. The user may try to bring their own image and that image is not available or buggy in some way. There is not much we can do here.
+3. Appropriate nodepools have not been created somehow. Check the autoscaler logs, and examine the pod specification carefully (particularly `affinity` and `nodeSelector`).
+4. The requested resources are too big to fit on the node type that was requested. Our resource generation script is designed to guard against this. Check to see if we are actually using the resource generation script here.
+5. There is not enough quota in the cloud project for node spin up to happen. Check the cloud console to see if this is the case, and request additional quota.
+6. There is a cloud provider outage. Check out their status page.
+7. A mysterious 7th option. Form a mental model of our infrastructure, and poke around. If you find any useful info, 
+
+### What to do for alerts on home directory IOPs or Throughput
+
+Whenever the home directory storage IOPs or Throughput performance is limited (saturated) for an extended period ([defined in Terraform](https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/ebs-volumes.tf) as `datapoints_to_alarm` triggers over `evaluation_periods` evaluation periods), PagerDuty triggers an alert. Triggers can be back-to-back, or distributed over the interval.
+
+Under day-to-day conditions, we should treat this alert as an indication that we might need to increase the performance of the home directory disk. We should periodically analyse the number of times that disk performance has been limited (using the Prometheus metrics) over a month, and consider bumping these if the community needs more headroom.
+
+Under workshop conditions, this alert should be considered early warning that the home disk is under pressure. The consequences of this are typically reduced filesystem performance for all workshop users, which may manifest as slow/laggy user experience in JupyterLab, and poor performance of analysis code running in kernels.
+
+This can be improved by bumping either the `iops` or the `throughput` variables for the home directory disk in Terraform, or by temporarily imperatively modifying these values in the AWS console.
 
 
-## When a user pod has had an unschedulable status for more than 5 minutes
+## How to get useful information about an alert
 
-This alert is triggered when a user pod has been in an unschedulable state for more than 5 minutes based on the value of [`kube_pod_status_unschedulable`](https://docs.cloudera.com/management-console/1.5.4/monitoring-metrics/topics/cdppvc_ds_kube_pod_status_unschedulable_trics.html).
+Each automatic alert will have a title which is formed using the alert name and various labels considered important.
 
-This can happen when there are insufficient resources available in the cluster to schedule the pod, or there are issues with taints and tolerations.
+Example: `[FIRING:1] home-nfs has 10% of space left openscapes prod (same day action needed)`.
 
-Because a user pod usually gets deleted after it failed to get scheduled and start after 10 minutes and the metric would not be available after that, this alert will not self-resolve once the condition is not true anymore and instead requires manual ticking the "Resolve" button after the cause has been addressed.
+- The `FIRING:n` part tracks how many times the alert has been triggered. But because we are not yet grouping alerts, it will always be 1, so it can be ignored.
+- `<disk name> has <limit>% of space left` this is the alert name and it has info about which disk the alert is about and how much space left it has
+- `<cluster-name> <hub-name>` these are labels that provide info about the cluster and hub for which the alert has triggered for
+- `same day action needed` the severity of the alert, which set the timeline when this alert should be handled
+
+Also, clicking on an alert in PagerDuty, gets you all the metadata associated with it, where you can find extra info, like the summary.
+
+## How to add a new alert
+
+1. To add a new alert, you'll have to add it to `/helm-charts/support/values.jsonnet` first after checking out [](#topic/jsonnet).
+2. Then, if this is an alert that doesn't pertain to any of the existing alerting groups as defined in [Alerting - Configuration](#alerting:jsonnet-alerts), you'll have to:
+  - create a new group
+  - create a new Service in Pagerduty for this groups
+  - get the integration key of this service and store it encrypted under a new Pagerduty receiver
+  - write a matcher rule in Alert Manager that will link this group to this new receiver
+4. Configure Slack notifications with the PagerDuty service integrations
+   - Go to the `#pagerduty-notifications` channel in the 2i2c Slack
+   - Make sure your PD account is linked to Slack with the shortcut command `/pd link`
+   - Use `/pd connect` to select the service to connect to the channel and select *Responder* for how you want to be notified
+5. Test it
+6. If you know what the outage condition for this new group is, create a new Orchestration rule for it, so that outage alerts are automatically assigned P1 and shown in the status page

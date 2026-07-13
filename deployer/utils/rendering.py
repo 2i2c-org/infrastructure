@@ -55,7 +55,7 @@ def create_markdown_comment(support_matrix, staging_matrix, prod_matrix):
         "cluster_name": "Cluster Name",
         "provider": "Cloud Provider",
         "hub_name": "Hub Name",
-        "reason_for_redeploy": "Reason for Redeploy",
+        "choice_reason": "Reason for Redeploy",
     }
 
     # === To reliably convert a list of dictionaries into a Markdown table, the keys
@@ -71,7 +71,7 @@ def create_markdown_comment(support_matrix, staging_matrix, prod_matrix):
             formatted_entry = {
                 column_converter["provider"]: entry["provider"],
                 column_converter["cluster_name"]: entry["cluster_name"],
-                column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
+                column_converter["choice_reason"]: entry["choice_reason"],
             }
             formatted_support_matrix.append(formatted_entry)
 
@@ -93,7 +93,7 @@ def create_markdown_comment(support_matrix, staging_matrix, prod_matrix):
                 column_converter["provider"]: entry["provider"],
                 column_converter["cluster_name"]: entry["cluster_name"],
                 column_converter["hub_name"]: entry["hub_name"],
-                column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
+                column_converter["choice_reason"]: entry["choice_reason"],
             }
             formatted_staging_matrix.append(formatted_entry)
 
@@ -115,7 +115,7 @@ def create_markdown_comment(support_matrix, staging_matrix, prod_matrix):
                 column_converter["provider"]: entry["provider"],
                 column_converter["cluster_name"]: entry["cluster_name"],
                 column_converter["hub_name"]: entry["hub_name"],
-                column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
+                column_converter["choice_reason"]: entry["choice_reason"],
             }
             formatted_prod_matrix.append(formatted_entry)
 

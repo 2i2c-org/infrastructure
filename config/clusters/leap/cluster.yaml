@@ -1,5 +1,9 @@
 name: leap
-provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/leap-cluster/nodes?project=leap-pangeo
+provider: gcp
+provider_url: https://console.cloud.google.com/kubernetes/clusters/details/us-central1/leap-cluster/nodes?project=leap-pangeo
+metadata:
+  2i2c:
+    hubspot_deal_id: 96869388000
 gcp:
   key: enc-deployer-credentials.secret.json
   project: leap-pangeo

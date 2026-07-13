@@ -11,13 +11,13 @@ k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
-  min_master_version : "1.32.1-gke.1357001",
-  core_nodes_version : "1.32.1-gke.1357001",
-  notebook_nodes_version : "1.32.1-gke.1357001",
-  dask_nodes_version : "1.32.1-gke.1357001",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
+  dask_nodes_version : "1.35.3-gke.1943000",
 }
 
-core_node_machine_type = "n2-highmem-4"
+core_node_machine_type = "n2-highmem-2"
 enable_network_policy  = true
 
 # Explicitly disabling filestores in favour of persistent disks
@@ -28,33 +28,9 @@ persistent_disks = {
     size        = 5 # in GB
     name_suffix = "staging"
   },
-  "dask-staging" = {
-    size        = 3 # in GB
-    name_suffix = "dask-staging"
-  },
-  "imagebuilding-demo" = {
-    size        = 10 # in GB
-    name_suffix = "imagebuilding-demo"
-  },
-  "demo" = {
-    size        = 2 # in GB
-    name_suffix = "demo"
-  },
   "mtu" = {
-    size        = 75 # in GB
+    size        = 83 # in GB
     name_suffix = "mtu"
-  },
-  "temple" = {
-    size        = 1300 # in GB
-    name_suffix = "temple"
-  },
-  "ucmerced-staging" = {
-    size        = 10 # in GB
-    name_suffix = "ucmerced-staging"
-  },
-  "ucmerced" = {
-    size        = 150 # in GB
-    name_suffix = "ucmerced"
   }
 }
 
@@ -73,7 +49,7 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-  },
+  }
 }
 
 # Setup a single node pool for dask workers.
@@ -89,22 +65,9 @@ dask_nodes = {
   },
 }
 
-user_buckets = {
-  "scratch-dask-staging" : {
-    "delete_after" : 7,
-  },
-}
+user_buckets = {}
 
 
-hub_cloud_permissions = {
-  "dask-staging" : {
-    allow_access_to_external_requester_pays_buckets : true,
-    bucket_admin_access : ["scratch-dask-staging"],
-    hub_namespace : "dask-staging",
-  },
-}
+hub_cloud_permissions = {}
 
-container_repos = [
-  "binder-staging",
-  "binderhub-ui-demo"
-]
+container_repos = []

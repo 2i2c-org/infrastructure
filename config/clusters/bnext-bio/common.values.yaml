@@ -1,0 +1,139 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: bnext-bio
+          logo_url: https://raw.githubusercontent.com/nucleus-eng/nucleus-docs/main/logo.png
+          url: https://bnext.bio/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: b.next
+          url: https://bnext.bio/
+  hub:
+    allowNamedServers: true
+    loadRoles:
+      user:
+        scopes:
+        - self
+        - shares!user
+        - read:users:name
+        - list:users
+        - access:services!service=binder
+    config:
+      KubeSpawner:
+        image_pull_policy: Always
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - nucleus-eng:hub-access
+        - nucleus-eng:devcells-all-nodes
+        - nucleus-eng:devcells-chicago-node
+        - nucleus-eng:devcells-london-node
+        - nucleus-eng:decells-calpoly-node
+        - nucleus-eng:bnext
+        - nucleus-eng:curvenote
+        - nucleus-eng:metapure
+      Authenticator:
+        admin_users:
+        - antonjs
+        - antonrmolina
+      Spawner:
+        # Allow these sharing scopes for oauth tokens issued by the oauth client
+        oauth_client_allowed_scopes:
+        - shares!server
+        - servers!server
+        - read:users:name
+        - list:users
+    extraConfig:
+      000-volumes-and-volume-mounts-as-dict: |
+        # The base jupyterhub config in zero-to-jupyterhub defines
+        # volumes and volume_mounts as lists.
+        # But we can't add new volumes or volume_mounts to the list
+        # as that replaces the entire list.
+        # So we convert them to dictionaries, which allows us to
+        # add new volumes and volume_mounts as needed.
+        if isinstance(c.KubeSpawner.volumes, list):
+          existing_volumes = c.KubeSpawner.volumes
+          c.KubeSpawner.volumes = {}
+          for volume in existing_volumes:
+            c.KubeSpawner.volumes[volume["name"]] = volume
+        if isinstance(c.KubeSpawner.volume_mounts, list):
+          existing_volume_mounts = c.KubeSpawner.volume_mounts
+          c.KubeSpawner.volume_mounts = {}
+          for idx, volume_mount in enumerate(existing_volume_mounts):
+            c.KubeSpawner.volume_mounts[f"{idx}-{volume_mount['name']}"] = volume_mount
+      001-group-shared-directories: |
+        # Allow all <ORG>:<TEAM> entries to have their own shared folders
+
+        # Some overrides for names of directories
+        group_to_path_overrides = {"nucleus-eng:hub-access": "nucleus-eng-hub-access"}
+
+        # Find organization entries that are <ORG>:<TEAM> pairs, and parse them into (group, org, team)
+        assert isinstance(
+            c.GitHubOAuthenticator.allowed_organizations, list
+        ), "Expected list of organizations"
+        group_org_team_entries = [
+            p
+            for p in (
+                # Split "group" of form "team:project" into (team:project, team, project) tuples
+                (g, *g.split(":", 1)) for g in set(c.GitHubOAuthenticator.allowed_organizations)
+            )
+            # Only take (group, org, team) entries (handles groups without "org:team" scheme)
+            if len(p) == 3
+        ]
+
+        c.KubeSpawner.group_overrides = {
+            # Don't worry about escaping — the only requirement is these keys are unique
+            f"{i:0>2}-group-{org}-{team}": {
+                "groups": [group],
+                "spawner_override": {
+                    "volume_mounts": {
+                        f"{i:0>2}-group-{org}-{team}": {
+                            "name": "home",
+                            "mountPath": f"/home/jovyan/projects/{name}",
+                            "subPath": f"_projects/{name}",
+                            "readOnly": False,
+                        }
+                    }
+                },
+            }
+            for i, (group, org, team, name) in enumerate(
+                # Allow renaming of the final path 
+                (group, org, team, group_to_path_overrides.get(group, team))
+                for group, org, team in group_org_team_entries
+            )
+        }
+  scheduling:
+    userScheduler:
+      enabled: true
+  singleuser:
+    defaultUrl: /lab
+binderhub-service:
+  enabled: true
+    # Explicitly specify what nodes we want for our builds
+    # Otherwise we may scale up a larger node than needed
+  networkPolicy:
+    enabled: true
+  config:
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username

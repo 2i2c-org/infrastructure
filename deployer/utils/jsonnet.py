@@ -28,25 +28,39 @@ def validate_jsonnet_version():
 
 
 @contextmanager
-def render_jsonnet(jsonnet_file: Path, cluster_name: str, hub_name: str | None):
+def render_jsonnet(
+    jsonnet_file: Path,
+    cluster_name: str,
+    provider: str,
+    account_id: str | None,
+    hub_domain: str | None = None,
+    hub_name: str | None = None,
+):
     """
     Provide path to rendered json file for given jsonnet file
 
-    cluster_name and hub_name are passed as jsonnet extVars.
-    Be careful in adding more, as that may cause right to replicate issues.
-    """
+    The following global variables are passed as extVars to jsonnet:
+        - cluster_name
+        - provider
+        - account_id
+        - hub_name (optional)
+        - hub_domain (optional)
 
-    # WARNING: Be careful in adding more ext-str arguments, as that may cause
-    # right to replicate issues.
+    Be careful in adding more arguments, as that may cause right to replicate issues.
+    """
     command = [
         "jsonnet",
         "--jpath",
         str(jsonnet_file.parent),
         "--ext-str",
-        f"2I2C_VARS.CLUSTER_NAME={cluster_name}",
+        f"VARS_2I2C_CLUSTER_NAME={cluster_name}",
     ]
     if hub_name is not None:
-        command += ["--ext-str", f"2I2C_VARS.HUB_NAME={hub_name}"]
+        command += ["--ext-str", f"VARS_2I2C_HUB_NAME={hub_name}"]
+    if hub_domain is not None:
+        command += ["--ext-str", f"VARS_2I2C_HUB_DOMAIN={hub_domain}"]
+    command += ["--ext-str", f"VARS_2I2C_PROVIDER={provider}"]
+    command += ["--ext-str", f"VARS_2I2C_ACCOUNT_ID={account_id}"]
     # Make the jsonnet file passed be an absolute path, but do not *resolve*
     # it - so symlinks are resolved by jsonnet rather than us. This is important
     # for daskhub compatibility.

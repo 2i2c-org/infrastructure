@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [riohondo.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [riohondo.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -34,7 +29,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://riohondo.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - RHC-DSCI-100
         scope:
@@ -44,3 +38,7 @@ jupyterhub:
         - sean-morris
         - DrHolbrook
         - bharlowRHC
+        - lydoak
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-riohondo

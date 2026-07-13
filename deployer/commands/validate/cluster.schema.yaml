@@ -1,12 +1,37 @@
 $schema: http://json-schema.org/draft-07/schema#
 type: object
 additionalProperties: false
+required:
+- name
+- provider
+- metadata
 properties:
   name:
     type: string
     description: |
       Name of the cluster, used primarily to identify it in
       the deploy script. This value should match the parent folder name.
+  metadata:
+    type: object
+    description: |
+      Various metadata about the cluster
+    required:
+    - 2i2c
+    properties:
+      2i2c:
+        type: object
+        required:
+        - hubspot_deal_id
+        properties:
+          hubspot_deal_id:
+            type: integer
+            description: |
+              Deal ID of the current contract in hubspot under which
+              this hub is being run.
+
+              If the URL of the deal looks like
+              https://app-na2.hubspot.com/contacts/242496330/record/0-3/96602996427,
+              the deal ID is the last integer, that comes after `0-3`
   support:
     type: object
     additionalProperties: false
@@ -32,6 +57,11 @@ properties:
     - kubeconfig
     - aws
     - azure
+  provider_url:
+    type: string
+    format: uri
+    description: |
+      URL to cloud provider dashboard for this cluster.
   tenancy:
     type: string
     description: |
@@ -40,12 +70,6 @@ properties:
     - dedicated
     - shared
     default: dedicated
-  account:
-    type: string
-    description: |
-      Account used to access the provider console UI. Most often we use our 2i2c accounts for this,
-      but there are a few exceptional clusters and we should mark those.
-      If no account is specified, 2i2c will be assumed.
   kubeconfig:
     type: object
     description: |
@@ -143,6 +167,7 @@ properties:
     type: object
     additionalProperties: false
     required:
+    - account
     - key
     - clusterType
     - clusterName
@@ -152,6 +177,10 @@ properties:
       Configuration to connect to the cluster on AWS.
       Is used when provider is set to `aws`.
     properties:
+      account:
+        type: integer
+        description: |
+          AWS Account ID number (12 digits), not the alias name.
       key:
         type: string
         description: |
@@ -288,3 +317,5 @@ properties:
             helm chart values for a single hub deployment. These filepaths are defined
             RELATIVE to the location of the cluster.yaml file and have the naming
             convention '{{ hub name }}.values.yaml'.
+        chart_override:
+          type: string

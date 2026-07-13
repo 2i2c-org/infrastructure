@@ -1,13 +1,5 @@
 jupyterhub:
-  ingress:
-    hosts: [staging.utoronto.2i2c.cloud]
-    tls:
-    - hosts: [staging.utoronto.2i2c.cloud]
-      secretName: https-auto-tls
   hub:
-    config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://staging.utoronto.2i2c.cloud/hub/oauth_callback
     db:
       pvc:
         # limit was increased because of https://github.com/2i2c-org/infrastructure/issues/2288

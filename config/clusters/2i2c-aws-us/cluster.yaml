@@ -1,6 +1,12 @@
 name: 2i2c-aws-us
-provider: aws # https://2i2c.awsapps.com/start#/ under the two-eye-two-see account
+provider: aws
+# two-eye-two-see
+provider_url: https://2i2c.awsapps.com/start
+metadata:
+  2i2c:
+    hubspot_deal_id: 323519075008
 aws:
+  account: 790657130469
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: 2i2c-aws-us
@@ -17,22 +23,20 @@ hubs:
   domain: staging.aws.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
-  - basehub-common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-- name: dask-staging
-  display_name: 2i2c AWS dask-staging
-  domain: dask-staging.aws.2i2c.cloud
-  helm_chart: daskhub
-  helm_chart_values_files:
-  - daskhub-common.values.yaml
-  - dask-staging.values.yaml
-  - enc-dask-staging.secret.values.yaml
 - name: showcase
   display_name: 2i2c Showcase
   domain: showcase.2i2c.cloud
   helm_chart: daskhub
   helm_chart_values_files:
-  - daskhub-common.values.yaml
   - showcase.values.yaml
   - enc-showcase.secret.values.yaml
+- name: orcid-demo
+  display_name: ORCID Demo
+  domain: orcid-demo.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - enc-common.secret.values.yaml
+  - orcid-demo.values.yaml
+  - enc-orcid-demo.secret.values.yaml

@@ -1,3 +1,5 @@
+jupyterhub-home-nfs:
+  enabled: false
 jupyterhub:
   scheduling:
     corePods:
@@ -21,10 +23,8 @@ jupyterhub:
       enabled: true
     2i2c:
       add_staff_user_ids_to_admin_users: false
-    jupyterhubConfigurator:
-      enabled: false
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts:
     homepage:
       templateVars:
         enabled: false
@@ -38,7 +38,8 @@ jupyterhub:
       capi.stackhpc.com/node-group: user-m3-large
     storage:
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
+      extraVolumes:
     initContainers: []
     profileList: []
     cmd:
@@ -122,12 +123,17 @@ binderhub-service:
     nodeSelector:
       hub.jupyter.org/node-purpose:
       capi.stackhpc.com/node-group: user-m3-large
+    storage:
+      emptyDir:
+        sizeLimit: 15Gi
   config:
     GitHubRepoProvider:
       allowed_specs:
       - ^ProjectPythia/.*$
       - ^ktyle/.*$
+      - ^DAES433533/.*$
       - ^binder-examples/.*
+      - ^brian-rose/.*$
     BinderHub:
       base_url: /
       hub_url: https://hub.projectpythia.org
@@ -155,9 +161,9 @@ binderhub-service:
   - name: JUPYTERHUB_CLIENT_ID
     value: service-binder
   - name: JUPYTERHUB_API_URL
-    value: https://hub.projectpythia.org/hub/api
-    # Without this, the redirect URL to /hub/api/... gets
-    # appended to binderhub's URL instead of the hub's
+    value: http://hub.binderhub.svc.cluster.local:8081/hub/api
+      # Without this, the redirect URL to /hub/api/... gets
+      # appended to binderhub's URL instead of the hub's
   - name: JUPYTERHUB_BASE_URL
     value: https://hub.projectpythia.org/
   # The password to the registry is stored encrypted in the hub's encrypted config file

@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
@@ -33,13 +30,28 @@ prometheus:
         hosts:
         - prometheus.cryointhecloud.2i2c.cloud
 
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: nasa-cryo
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/aws_ce_grafana_backend_iam_role
-
 calico:
   enabled: true
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
+
+nginx-ingress:
+  enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress

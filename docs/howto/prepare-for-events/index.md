@@ -8,8 +8,6 @@ The communities we serve have the responsibility to notify us about an event the
 
 The events might vary in type, so the following list is not complete and does not cover all of them (yet). Most common event types are exams, workshops etc.
 
-```{toctree}
-:maxdepth: 2
-event-prep.md
-exam.md
-```
+:::{toc}
+:context: children
+:::

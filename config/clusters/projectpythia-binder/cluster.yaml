@@ -1,5 +1,9 @@
 name: projectpythia-binder
 provider: kubeconfig # allocation SEE240014_IU in https://js2.jetstream-cloud.org/project/
+provider_url: https://js2.jetstream-cloud.org/project/
+metadata:
+  2i2c:
+    hubspot_deal_id: 102799509217
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:

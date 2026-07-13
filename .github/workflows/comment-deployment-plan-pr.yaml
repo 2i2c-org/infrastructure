@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows:
     - Deploy and test hubs
+    - Run a health check on hubs with modified infrastructure
     types:
     - completed
 
@@ -32,7 +33,7 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: pip install requests
     - run: python extra-scripts/comment-deployment-plan-pr.py
       env:

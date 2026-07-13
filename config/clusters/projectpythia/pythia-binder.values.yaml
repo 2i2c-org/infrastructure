@@ -1,9 +1,6 @@
+jupyterhub-home-nfs:
+  enabled: false
 jupyterhub:
-  ingress:
-    hosts: [hub.binder.pythia.2i2c.cloud]
-    tls:
-    - hosts: [hub.binder.pythia.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: false
@@ -13,15 +10,12 @@ jupyterhub:
     binderhubUI:
       enabled: true
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts:
   singleuser:
-    nodeSelector:
-      # Schedule users on the smallest instance
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
     storage:
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
+      extraVolumes:
     initContainers: []
     # The profile list in the common values files needs to be emptied
     # otherwise the launching will fail
@@ -76,14 +70,6 @@ jupyterhub:
           # observed to be required for non-admin users.
         - access:services!service=binder
 binderhub-service:
-  enabled: true
-  networkPolicy:
-    enabled: true
-  dockerApi:
-    nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
   ingress:
     enabled: true
     hosts: [binder.pythia.2i2c.cloud]
@@ -93,11 +79,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        node.kubernetes.io/instance-type: r5.xlarge
     BinderHub:
       base_url: /
       badge_base_url: https://binder.pythia.2i2c.cloud
@@ -111,9 +92,6 @@ binderhub-service:
       allowed_specs:
       - ^ProjectPythia/.*$
       - binder-examples/requirements
-    DockerRegistry:
-      url: &url https://quay.io
-      username: &username imagebuilding-non-gcp-hubs+image_builder
   extraEnv:
   - name: JUPYTERHUB_API_TOKEN
     valueFrom:
@@ -123,11 +101,8 @@ binderhub-service:
   - name: JUPYTERHUB_CLIENT_ID
     value: service-binder
   - name: JUPYTERHUB_API_URL
-    value: https://hub.binder.pythia.2i2c.cloud/hub/api
+    value: http://hub.pythia-binder.svc.cluster.local:8081/hub/api
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
   - name: JUPYTERHUB_BASE_URL
     value: https://hub.binder.pythia.2i2c.cloud/
-  buildPodsRegistryCredentials:
-    server: *url
-    username: *username

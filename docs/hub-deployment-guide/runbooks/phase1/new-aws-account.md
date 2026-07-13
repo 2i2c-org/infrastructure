@@ -6,11 +6,11 @@ of IAM users in the management account to manage the created member account.
 Like this, we can sign in to manage the member accounts using users defined in
 the `2i2c-sandbox` account.
 
-More information on these terms can be found in [](cloud-access:aws).
+More information on these terms can be found in [](#cloud-access:aws).
 
 1. Login at https://2i2c.awsapps.com/start/#
 
-2. Visit the Management Console of `2i2c-sandbox`, the [AWS Management Account](cloud-access:aws-management-account)
+2. Visit the Management Console of `2i2c-sandbox`, the [AWS Management Account](#cloud-access:aws-management-account)
 
 3. Visit the [Organizations Accounts Console](https://us-east-1.console.aws.amazon.com/organizations/v2/home/accounts) and click "Add an AWS account"
 
@@ -35,7 +35,7 @@ More information on these terms can be found in [](cloud-access:aws).
 7. AWS will send an email to freshdesk about this new account, opening a new ticket. Close
    the ticket in freshdesk to keep our support queue clean.
 
-8. Once the new account is created, visit the [AWS accounts section of the IAM Identity Center](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/organization/accounts)
+8. While still logged in to the `2i2c-sandbox` management account, go to the [AWS accounts section of the IAM Identity Center](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/organization/accounts)
 
 9. To add the new account to our SSO:
    * Select the checkbox next to the new account and then click the "Assign users or groups" button
@@ -44,7 +44,7 @@ More information on these terms can be found in [](cloud-access:aws).
    * On the "Review and submit assignments" page, click "Submit".
 
 You have successfully created a new AWS account and connected it to our AWS Organization's Management Account!
-Now, [setup a new cluster](new-cluster:new-cluster) inside it via Terraform.
+Now, [setup a new cluster](#new-cluster:new-cluster) inside it via Terraform.
 
 (hub-deployment-guide:cloud-accounts:aws-quotas)=
 ## Checking quotas and requesting increases
@@ -58,8 +58,24 @@ When an AWS account is created under our AWS Organization, the default quotas
 that AWS applies to our organization are already set up for for the new account.
 By default, we don't need to request quota increases here.
 
-We typically need to increase three kinds of quotas described below. The values
+We typically need to increase the kinds of quotas described below. The values
 of these are all 'Total CPUs' and hence larger nodes consume more quota.
+
+- **EKS managed node groups quota** (`Managed node groups per cluster`)
+
+  These quotas are required to be able to create up to 100 managed node groups
+  per EKS cluster.
+
+  By default, AWS grants us 30 quota here for both.
+
+  Request an increase here: https://us-west-2.console.aws.amazon.com/servicequotas/home/services/eks/quotas/L-6D54EA21 or run the following AWS CLI command:
+
+  ```bash
+  aws service-quotas request-service-quota-increase \
+   --service-code eks \
+   --quota-code L-6D54EA21 \
+   --desired-value 100
+  ```
 
 - **Standard instance quota** (`Running On-Demand Standard (A, C, D, H, I, M, R, T, Z) instances`)
 

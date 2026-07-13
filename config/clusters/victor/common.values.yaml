@@ -1,27 +1,14 @@
 basehub:
   nfs:
     enabled: true
-    volumeReporter:
-      enabled: false
     pv:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
-      serverIP: fs-00c0183a99b47c9ed.efs.us-west-2.amazonaws.com
-      baseShareName: /
   jupyterhub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: github
-      jupyterhubConfigurator:
-        enabled: false
       homepage:
         gitRepoBranch: victor
         templateVars:

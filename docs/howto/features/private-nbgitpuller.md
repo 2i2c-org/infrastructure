@@ -72,7 +72,11 @@ the app we just created.
    b. If `git` is installed from conda, it will
       *not* read `/etc/gitconfig` (see [bug](https://github.com/conda-forge/git-feedstock/issues/113),
       but `${CONDA_PREFIX}/etc/gitconfig`. So, *if* the image installs `git` from
-      conda-forge, you have to start the image, look for the value of the `${CONDA_PREFIX}` environment variable, and construct `mountPath` to be `${CONDA_PREFIX}/etc/gitconfig`
+      conda-forge, you have to start the image, look for the value of the `${CONDA_PREFIX}` environment variable, and construct `mountPath` to be `<CONDA_PREFIX>/etc/gitconfig`
+
+      ```{important} 
+      The environment variables for the singleuser pod are expanded before the singleuser environment is constructed. This means that the `CONDA_PREFIX` environment variable itself cannot be interpolated from the environment, and you must determine it by-hand from the image.
+      ```
 
    Use the app-id of the GitHub app you just created. This goes in the hub's
    `values.yaml` file. If used for a `daskhub`, next the whole thing under a

@@ -1,8 +1,12 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 prometheus:
   server:
+    resources:
+      limits:
+        memory: 5.5Gi
+      requests:
+        memory: 5.5Gi
+    persistentVolume:
+      size: 1000Gi
     ingress:
       enabled: true
       hosts:
@@ -27,13 +31,20 @@ grafana:
       hosts:
       - grafana.cloudbank.2i2c.cloud
 
-gcpFilestoreBackups:
+nginx-ingress:
   enabled: true
-  filestoreName: cb-homedirs
-  project: cb-1003-1696
-  zone: us-central1-b
-  retentionDays: 2
-  serviceAccount:
-    name: gcp-filestore-backups-sa
-    annotations:
-      iam.gke.io/gcp-service-account: cb-filestore-backup@cb-1003-1696.iam.gserviceaccount.com
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress

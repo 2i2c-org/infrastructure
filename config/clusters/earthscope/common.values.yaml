@@ -1,81 +1,47 @@
 basehub:
   nfs:
     enabled: true
-    volumeReporter:
-      enabled: false
     pv:
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
       serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
-      baseShareName: /
   dask-gateway:
     enabled: true
+    gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
   jupyterhub:
     custom:
       daskhubSetup:
         enabled: true
       2i2c:
-        add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: google
-      jupyterhubConfigurator:
-        enabled: false
+        # This uses custom ids from auth0, so we can't use our default
+        # emails as access
+        add_staff_user_ids_to_admin_users: false
+    proxy:
+      chp:
+        networkPolicy:
+          egress:
+          - to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: jupyterhub
+                  app.kubernetes.io/component: hub
+            ports:
+            - port: 9000
     hub:
+      image:
+        # Usage quotas 0.1.2 and fancy-profiles 0.6.0
+        name: quay.io/2i2c/jupyterhub-usage-quotas
+        tag: 6ffb330f8f384e1fc97852fb00f4402af33521f6
       extraConfig:
         001-username-claim: |
+          import json
           from oauthenticator.generic import GenericOAuthenticator
           from traitlets import List, Unicode
           from urllib.parse import urlparse
-
-          class CustomGenericOAuthenticator(GenericOAuthenticator):
-            # required_scopes functionality comes in from https://github.com/jupyterhub/oauthenticator/pull/719
-            # Can be removed from here once that PR is merged
-            required_scopes = List(
-                Unicode(),
-                config=True,
-                help="""
-                List of scopes that must be granted to allow login.
-
-                All the scopes listed in this config must be present in the OAuth2 grant
-                from the authorizing server to allow the user to login. We request all
-                the scopes listed in the 'scope' config, but only a subset of these may
-                be granted by the authorization server. This may happen if the user does not
-                have permissions to access a requested scope, or has chosen to not give consent
-                for a particular scope. If the scopes listed in this config are not granted,
-                the user will not be allowed to log in.
-
-                See the OAuth documentation of your OAuth provider for various options.
-                """,
-            )
-
-            async def check_allowed(self, username, auth_model):
-              if await super().check_allowed(username, auth_model):
-                  return True
-
-              if self.required_scopes:
-                  granted_scopes = auth_model.get('auth_state', {}).get('scope', [])
-                  missing_scopes = set(self.required_scopes) - set(granted_scopes)
-                  if missing_scopes:
-                      self.log.info(f"Denying access to user {username} - scopes {missing_scopes} were not granted, only {granted_scopes} were granted")
-                      return False
-                  else:
-                      return True
-
-              return False
-
-            async def authenticate(self, *args, **kwargs):
-              resp = await super().authenticate(*args, **kwargs)
-              # Setup groups to be same as list of scopes granted
-              # This can go away after https://github.com/jupyterhub/oauthenticator/pull/735 is
-              # merged
-              resp["groups"] = resp["auth_state"]["scope"]
-              return resp
 
           def populate_token(spawner, auth_state):
             # For our deployment-service-check health check user, there is no auth_state.
@@ -83,28 +49,84 @@ basehub:
             if auth_state:
               url_parts = urlparse(spawner.authenticator.token_url)
               base_url = f"{url_parts.scheme}://{url_parts.netloc}"
-              scope_str = " ".join(spawner.authenticator.scope)
 
-              token_env = {
-                'ES_OAUTH2__AUDIENCE': spawner.authenticator.extra_authorize_params.get("audience", ""),
-                'ES_OAUTH2__CLIENT_ID': spawner.authenticator.client_id,
-                'ES_OAUTH2__DOMAIN': base_url,
-                'ES_OAUTH2__SCOPE': scope_str,
-                'ES_OAUTH2__ACCESS_TOKEN': auth_state.get("access_token", ""),
-                'ES_OAUTH2__ID_TOKEN': auth_state.get("id_token", ""),
-                'ES_OAUTH2__REFRESH_TOKEN': auth_state.get('refresh_token', '')
+              # Bootstrap EarthScope SDK settings
+              settings = {
+                "oauth2": {
+                  "audience": spawner.authenticator.extra_authorize_params.get("audience", ""),
+                  "client_id": spawner.authenticator.client_id,
+                  "domain": base_url,
+                  "scope": auth_state.get("scope", ""),
+                  "access_token": auth_state.get("access_token", ""),
+                  "id_token": auth_state.get("id_token", ""),
+                  "refresh_token": auth_state.get("refresh_token", "")
+                }
               }
-              spawner.environment.update(token_env)
+
+              # The spawner expands environment variables using string.format, so we need to escape braces.
+              settings_str = json.dumps(settings)
+              escaped_settings_str = settings_str.replace("{", "{{").replace("}", "}}")
+
+              spawner.environment.update({
+                "ES_BOOTSTRAP_SETTINGS": escaped_settings_str
+              })
 
           c.Spawner.auth_state_hook = populate_token
-
-          c.JupyterHub.authenticator_class = CustomGenericOAuthenticator
+        11-setup-usage-quotas: |
+          from jupyterhub_usage_quotas import setup_usage_quotas
+          setup_usage_quotas(c)
+      extraEnv:
+        METRICS_EXPORTER_TOKEN:
+          valueFrom:
+            secretKeyRef:
+              name: hub
+              key: hub.services.metrics-exporter.apiToken
+              optional: false
+      services:
+        usage-quota:
+          url: http://hub:9000
+          display: true
+          oauth_no_confirm: true
+          command:
+          - python
+          - -m
+          - jupyterhub_usage_quotas.services.usage_viewer
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
+        metrics-exporter:
+          display: false
+      loadRoles:
+        usage-quota-service:
+          scopes:
+          - read:users
+          - list:services
+          - read:services
+          services:
+          - usage-quota
+        metrics-exporter-service:
+          scopes:
+          - users
+          services:
+          - metrics-exporter
+        user:
+          scopes:
+          - self
+          - access:services!service=usage-quota
+          - access:services!service=dask-gateway
+          - access:services!service=binder
+        server:
+          scopes:
+          - self
+          - users:activity!user
+          - access:services!service=dask-gateway
       config:
-        CustomGenericOAuthenticator:
-          required_scopes:
+        JupyterHub:
+          authenticator_class: generic-oauth
+        GenericOAuthenticator:
+          allowed_scopes:
             # This allows EarthScope to control who can login to the hub
           - geolab
-        GenericOAuthenticator:
+          auth_state_groups_key: scope
           scope:
           - openid
             # This gives us refresh token
@@ -122,17 +144,10 @@ basehub:
           username_claim: sub
           # Convert 'scope' from the OAuth2 response into JupyterHub groups
           manage_groups: true
-        CILogonOAuthenticator:
-          allowed_idps:
-            http://github.com/login/oauth/authorize:
-              default: true
-              username_derivation:
-                username_claim: preferred_username
-            http://google.com/accounts/o8/id:
-              username_derivation:
-                username_claim: email
-        Authenticator:
           enable_auth_state: true
+          # Disable for now the authentication token refreshing
+          # https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.oauth2.html#oauthenticator.oauth2.OAuthenticator.auth_refresh_age
+          auth_refresh_age: 0
           admin_users:
           - google-oauth2|117718799995701713253   #Chad Trabant, https://2i2c.freshdesk.com/a/tickets/1279
           - google-oauth2|117710759588624106233   #Sarah Wilson
@@ -141,9 +156,86 @@ basehub:
           - google-oauth2|108516754518362587599   # Yuvi
           - google-oauth2|117859169473992122769   # Georgiana
           - google-oauth2|117322480787655244438   # Jenny
+          - google-oauth2|107058254054417943477   # Angus
+        UsageQuotaManager:
+          scope_backup_strategy:
+            empty:
+              resource: memory
+              limit:
+                value: 5000
+                unit: GiB-hours
+              window: 30
+            intersection: max
+          failover_open: true
+          policy:
+          - resource: memory
+            limit:
+              value: 5000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-sm
+          - resource: memory
+            limit:
+              value: 10000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-md
+          - resource: memory
+            limit:
+              value: 50000
+              unit: GiB-hours
+            window: 30
+            scope:
+              group:
+              - mem-lg
+      service:
+        extraPorts:
+        - port: 9000
+          targetPort: 9000
+          name: usage-quota
+      networkPolicy:
+        ingress:
+        - ports:
+          - port: 9000
+          from:
+              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
+              # for hub managed services.
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
+              # Allow traffic from the proxy api pod
+          - podSelector:
+              matchLabels:
+                hub.jupyter.org/network-access-hub: 'true'
+        - ports:
+          - port: 8081
+          from:
+              # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
     singleuser:
       cloudMetadata:
         blockWithIptables: false
+      storage:
+        extraVolumes:
+          002-scratch-session:
+            name: scratch-session
+            emptyDir:
+              # Limit total size, to prevent pod being evicted
+              # with over use by any one user. This can be increased,
+              # but may need to increase the size of the node disk
+              sizeLimit: 20Gi
+        extraVolumeMounts:
+          002-scratch-session:
+            name: scratch-session
+            mountPath: /tmp
       profileList:
       - display_name: Choose your environment and resources
         default: true
@@ -162,147 +254,187 @@ basehub:
             choices:
               geolab-general:
                 display_name: GeoLab
-                slug: geolab-general
+                slug: geolab-base
                 kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/geolab_default:extensions-c1c714c1
-              mspass-shortcourse:
-                display_name: MsPASS ShortCourse
-                slug: mspass-shortcourse
+                  image: public.ecr.aws/earthscope/geolab/geolab-base:latest
+              geolab-sfg:
+                display_name: SeaFloor Geodesy
+                slug: geolab-sfg
                 kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/mspass_image:mspass_img_test-6db62782
-              jupyter-scipy:
-                display_name: Jupyter
-                slug: jupyter-scipy
-                kubespawner_override:
-                    # FIXME: use quay.io/ for tags after 2023-10-20
-                  image: jupyter/scipy-notebook:2023-06-27
-              rocker-geospatial:
-                display_name: RStudio
-                slug: rocker-geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
-                    # Launch into RStudio after the user logs in
-                  default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
+                  image: public.ecr.aws/earthscope/sfg-geolab:latest
           resource_allocation:
             display_name: Resource Allocation
             choices:
-              mem_3_7:
-                display_name: 3.7 GB RAM, upto 3.7 CPUs
-                default: true
+              mem_4_gb:
+                display_name: 4 GB RAM, ~0.5 CPUs
+                description: Upto ~4 CPUs when available
                 allowed_groups:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 3982489550
-                  mem_limit: 3982489550
-                  cpu_guarantee: 0.465625
-                  cpu_limit: 3.725
+                  mem_guarantee: 3902839759
+                  mem_limit: 3902839759
+                  cpu_guarantee: 0.4563125
+                  cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
-              mem_7_4:
-                display_name: 7.4 GB RAM, upto 3.7 CPUs
+              mem_7_gb:
+                display_name: 7 GB RAM, ~0.9 CPUs
+                description: Upto ~4 CPUs when available
                 allowed_groups:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 7964979101
-                  mem_limit: 7964979101
-                  cpu_guarantee: 0.93125
-                  cpu_limit: 3.725
+                  mem_guarantee: 7805679519
+                  mem_limit: 7805679519
+                  cpu_guarantee: 0.912625
+                  cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
-              mem_14_8:
-                display_name: 14.8 GB RAM, upto 3.7 CPUs
+              mem_15_gb:
+                display_name: 15 GB RAM, ~1.8 CPUs
+                description: Upto ~4 CPUs when available
                 allowed_groups:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 15929958203
-                  mem_limit: 15929958203
-                  cpu_guarantee: 1.8625
-                  cpu_limit: 3.725
+                  mem_guarantee: 15611359038
+                  mem_limit: 15611359038
+                  cpu_guarantee: 1.82525
+                  cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
-              mem_29_7:
-                display_name: 29.7 GB RAM, upto 3.7 CPUs
+              mem_29_gb:
+                display_name: 29 GB RAM, ~4 CPUs
+                description: ~4 CPUs always available
                 allowed_groups:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 31859916406
-                  mem_limit: 31859916406
-                  cpu_guarantee: 3.725
-                  cpu_limit: 3.725
+                  mem_guarantee: 31222718077
+                  mem_limit: 31222718077
+                  cpu_guarantee: 3.6505
+                  cpu_limit: 3.6505
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
-              mem_60_6:
-                display_name: 60.6 GB RAM, upto 15.6 CPUs
+              mem_60_gb:
+                display_name: 60 GB RAM, ~8 CPUs
+                description: Upto ~15 CPUs when available
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 65094448840
-                  mem_limit: 65094448840
-                  cpu_guarantee: 7.8475
-                  cpu_limit: 15.695
+                  mem_guarantee: 64020707016
+                  mem_limit: 64020707016
+                  cpu_guarantee: 7.69055
+                  cpu_limit: 15.3811
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
-              mem_121_2:
-                display_name: 121.2 GB RAM, upto 15.6 CPUs
+              mem_119_gb:
+                display_name: 119 GB RAM, ~15 CPUs
+                description: ~15 CPUs always available
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 130188897681
-                  mem_limit: 130188897681
-                  cpu_guarantee: 15.695
-                  cpu_limit: 15.695
+                  mem_guarantee: 128041414033
+                  mem_limit: 128041414033
+                  cpu_guarantee: 15.3811
+                  cpu_limit: 15.3811
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
-              mem_489_9:
-                display_name: 489.9 GB RAM, upto 63.5 CPUs
+              mem_488_gb:
+                display_name: 488 GB RAM, ~63 CPUs
+                description: ~63 CPUs always available
                 allowed_groups:
                 - geolab:power
+                - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 525987313876
-                  mem_limit: 525987313876
-                  cpu_guarantee: 63.575
-                  cpu_limit: 63.575
+                  mem_guarantee: 523839830228
+                  mem_limit: 523839830228
+                  cpu_guarantee: 62.575
+                  cpu_limit: 62.575
                   node_selector:
                     node.kubernetes.io/instance-type: r5.16xlarge
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: Start a container on a dedicated node with a GPU
+        slug: gpu
+        allowed_groups:
+        - geolab:dev
+        - geolab:power
+        - gpu
+        profile_options:
+          image:
+            display_name: Image
+            dynamic_image_building:
+              enabled: true
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              geolab-gpu:
+                display_name: GeoLab-GPU
+                slug: geolab-gpu
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope/geolab/geolab-gpu:latest
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook
+                slug: tensorflow
+                kubespawner_override:
+                  image: quay.io/pangeo/ml-notebook:2025.07.09
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                default: true
+                slug: pytorch
+                kubespawner_override:
+                  image: quay.io/pangeo/pytorch-notebook:2025.05.22
+        kubespawner_override:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          mem_limit:
+          mem_guarantee: 14G
+          node_selector:
+            node.kubernetes.io/instance-type: g4dn.xlarge
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
+
     scheduling:
       userScheduler:
         enabled: true
-  jupyterhub-home-nfs:
-    enabled: true
-    eks:
-      enabled: true
-  jupyterhub-groups-exporter:
-    config:
-      groupsExporter:
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
   binderhub-service:
     enabled: true
     networkPolicy:
       enabled: true
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: binder
     config:
-      KubernetesBuildExecutor:
-        node_selector:
-          node.kubernetes.io/instance-type: r5.xlarge
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/earthscope-binder-
       DockerRegistry:

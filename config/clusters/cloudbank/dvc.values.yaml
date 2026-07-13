@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [dvc.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [dvc.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -32,7 +27,6 @@ jupyterhub:
   hub:
     config:
       CILogonOAuthenticator:
-        oauth_callback_url: https://dvc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
@@ -59,3 +53,6 @@ jupyterhub:
         - namato@dvc.edu
         - llo@dvc.edu
         - jazlin.dvc@gmail.com
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-dvc

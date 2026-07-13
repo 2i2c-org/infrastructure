@@ -9,18 +9,7 @@ dask-gateway:
           request: 2G
           limit: 4G
 basehub:
-  nfs:
-    pv:
-      serverIP: 10.3.250.100
-  userServiceAccount:
-    annotations:
-      iam.gke.io/gcp-service-account: leap-prod@leap-pangeo.iam.gserviceaccount.com
   jupyterhub:
-    ingress:
-      hosts: [leap.2i2c.cloud]
-      tls:
-      - hosts: [leap.2i2c.cloud]
-        secretName: https-auto-tls
     proxy:
       chp:
         resources:
@@ -29,7 +18,19 @@ basehub:
             memory: 256Mi
           limits:
             cpu: 1
-            memory: 512Mi
+            memory: 1Gi
+    scheduling:
+      userPlaceholder:
+        # Keep 5 full nodes around
+        replicas: 0
+        resources:
+          requests:
+            # A=122203068Ki allocatable (memory available for pods)
+            # A running node in-practice was using 687865856 (~688Mi) that we'll reserve as R
+            # So given that no profile < 1GiB, let's round to R=1GiB to give some room
+            # Memory of placeholder = A - R = (see below)
+            memory: 124062199808
+
     hub:
       resources:
         requests:
@@ -38,9 +39,6 @@ basehub:
         limits:
           cpu: 1
           memory: 1Gi
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://leap.2i2c.cloud/hub/oauth_callback
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://leap-scratch/$(JUPYTERHUB_USER)
@@ -50,4 +48,13 @@ basehub:
     gke:
       volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-prod
     quotaEnforcer:
-      hardQuota: 120 # in GB
+      config:
+        QuotaManager:
+          hard_quota: 100 # in GiB
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 1G
+      limits:
+        cpu: 0.4
+        memory: 2G

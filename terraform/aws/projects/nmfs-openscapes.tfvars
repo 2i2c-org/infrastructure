@@ -6,7 +6,8 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_aws_ce_grafana_backend_iam = true
+enable_jupyterhub_cost_monitoring = true
+enable_jupyterhub_cost_tags       = true
 
 disable_cluster_wide_filestore = true
 ebs_volumes = {
@@ -58,6 +59,10 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "noaa-only" },
   },
+  "prod-homedirs-archive" : {
+    "archival_storageclass_after" : 3,
+    "delete_after" : 185,
+  }
 }
 
 hub_cloud_permissions = {
@@ -77,11 +82,3 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-noaa-only"],
   },
 }
-
-active_cost_allocation_tags = [
-  "2i2c:hub-name",
-  "2i2c.org/cluster-name",
-  "alpha.eksctl.io/cluster-name",
-  "kubernetes.io/cluster/{var_cluster_name}",
-  "kubernetes.io/created-for/pvc/namespace",
-]

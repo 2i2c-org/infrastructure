@@ -15,7 +15,14 @@ from ruamel.yaml.scanner import ScannerError
 
 yaml = YAML(typ="safe", pure=True)
 
-REPO_ROOT_PATH = Path(__file__).parent.parent.parent
+if "DEPLOYER_ROOT_PATH" in os.environ:
+    REPO_ROOT_PATH = Path(os.environ["DEPLOYER_ROOT_PATH"])
+elif "GITHUB_WORKSPACE" in os.environ:
+    REPO_ROOT_PATH = Path(os.environ["GITHUB_WORKSPACE"])
+else:
+    REPO_ROOT_PATH = Path(__file__).parent.parent.parent
+    assert (REPO_ROOT_PATH / "config").is_dir()
+
 HELM_CHARTS_DIR = REPO_ROOT_PATH.joinpath("helm-charts")
 CONFIG_CLUSTERS_PATH = REPO_ROOT_PATH.joinpath("config/clusters")
 
@@ -29,12 +36,10 @@ def _assert_file_exists(filepath):
         filepath (str): Absolute path to the file that is to be asserted for existence
     """
     if not os.path.isfile(filepath):
-        raise FileNotFoundError(
-            f"""
+        raise FileNotFoundError(f"""
             File Not Found at following location! Have you checked it's the correct path?
             {filepath}
-        """
-        )
+        """)
 
 
 def persist_config_in_encrypted_file(encrypted_file, new_config):

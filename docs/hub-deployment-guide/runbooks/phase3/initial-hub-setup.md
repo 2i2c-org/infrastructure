@@ -139,63 +139,57 @@ All of the following steps must be followed in order to consider phase 3.1 compl
                ```
             - **Setup the relevant Authentication Provider with relevant credentials**
 
-               See [](enable-auth-provider) for steps on how to achieve this.
+               See [](#enable-auth-provider) for steps on how to achieve this.
 
          - **If this will be a binderhub style hub, then run:**
             ```bash
             deployer generate hub-asset binderhub-ui-values-file
             ```
 
-            And continue following the guide at [](features:binderhub-ui-hub).
+            And continue following the guide at [](#features:binderhub-ui-hub).
 
    1. **If the cluster has currently no hubs**
 
       1. **Determine the address of the storage server that a hub on this cluster should use to connect to it**
 
-      `````{tab-set}
-      ````{tab-item} AWS
-      :sync: aws-key
-      Get the address of the storage via terraform and store it as it will be required in a later step.
+          `````{tab-set}
+          ````{tab-item} AWS
+          :sync: aws-key
+          Get the address of the storage via terraform and store it as it will be required in a later step.
 
-      Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
+          Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
 
-      For persistent disks, run:
+          Run:
 
-      ```bash
-      terraform output ebs_volume_id_map
-      ```
+          ```bash
+          terraform output ebs_volume_id_map
+          ```
 
-      For EFS instances, run:
+          ````
 
-      ```bash
-      terraform output nfs_server_dns_map
-      ```
-      ````
+          ````{tab-item} Google Cloud
+          :sync: gcp-key
+          Get the address of the storage via terraform and store it as it will be required in a later step.
 
-      ````{tab-item} Google Cloud
-      :sync: gcp-key
-      Get the address of the storage via terraform and store it as it will be required in a later step.
+          Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
 
-      Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
+          Run:
 
-      For persistent disks, run:
+          ```bash
+          terraform output persistent_disk_id_map
+          ```
 
-      ```bash
-      terraform output persistent_disk_id_map
-      ```
-      
-      For Google FileStore instances, get the IP address from the GCP UI.
-      ````
+          ````
 
-      ````{tab-item} Azure
-      :sync: azure-key
-      tf output azure_fileshare_url
-      ````
-      `````
+          ````{tab-item} Azure
+          :sync: azure-key
+          tf output azure_fileshare_url
+          ````
+          `````
       1. **Run the deployer command below to generate config for the common hubs configuration, passing the admin users one by one:**
-      ```bash
-      deployer generate hub-asset common-values-file --admin-users admin1 --admin-users admin2
-      ```
+          ```bash
+          deployer generate hub-asset common-values-file --admin-users admin1 --admin-users admin2
+          ```
 
       ```{warning}
       If the admin users list is not passed independently as arguments and is instead left to be passed via de prompt with all the other args, then the following error is raised no matter the value passed: `Error: Value must be an iterable.`.
@@ -229,7 +223,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
    Use the info provided in the new hub GitHub issue for the `Dask gateway` section.
    If Dask gateway will be needed, then choose a `basehub`, and follow the guide on
-   [how to enable dask-gateway on an existing hub](howto:features:daskhub).
+   [how to enable dask-gateway on an existing hub](#howto:features:daskhub).
 
 1. **Add the new cluster and staging hub to CI/CD**
 
@@ -253,12 +247,12 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
 1. **Monitor the action to make sure that it completes**
 
-   If something goes wrong and the workflow does not finish, try [deploying locally](hubs:manual-deploy) to access the logs to help understand what is going on.
+   If something goes wrong and the workflow does not finish, try [deploying locally](#hubs:manual-deploy) to access the logs to help understand what is going on.
    It may be necessary to make new changes to the hub's configuration via a Pull Request, or to *revert* the old Pull Request if you cannot determine how to resolve the problem.
 
    ```{attention}
    In order to protect sensitive tokens, our CI/CD pipeline will **not** print testing output to its logs.
-   You will need to run the [health check locally](hubs:manual-deploy:health-check) to inspect these logs.
+   You will need to run the [health check locally](#hubs:manual-deploy:health-check) to inspect these logs.
    ```
 
 1. **Log in to the hub**
@@ -267,3 +261,14 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
 1. **Send a link to the hub's Community Representative(s)**
    So they can confirm that it works from their perspective as well.
+
+   **FreshDesk Usage**
+   1. Create a New Ticket and set the Requester to one of the Community Representatives Description can be 'New Hub'.
+   1. Verify that the Requester is associated a Company. Look at the right hand info screen on FreshDesk. Look for fields:
+      - Community Representatives
+      - Hub
+      - Grafana URL
+   1. If those fields are missing than this Requester is not correctly associated with a Community or the Community is missing these fields. (Yes, this will not generalize fully when a community has more than one hub... we'll get there.)
+   1. Reply to a the ticket and click the 'Canned Response' icon and choose "Your {{ticket.company.name}} hub is now available" and replace the body of the reply.
+   1. Add the required bcc: field manually and edit the response as needed to included additional information (like log on details)
+   1. Click Send

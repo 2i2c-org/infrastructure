@@ -1,13 +1,5 @@
 basehub:
-  userServiceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-prod
   jupyterhub:
-    ingress:
-      hosts: [geolab.earthscope.cloud]
-      tls:
-      - hosts: [geolab.earthscope.cloud]
-        secretName: https-auto-tls
     custom:
       homepage:
         templateVars:
@@ -22,36 +14,29 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org
+      extraFiles:
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            import os
+            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageConfig.hub_namespace = "prod"
+            c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
+            c.UsageViewer.public_hub_url = "https://geolab.earthscope.cloud/"
+            c.UsageViewer.footer_note = """
+            See the <a href="https://docs.earthscope.org/geolab/">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
+            """
     singleuser:
-      nodeSelector:
-        2i2c/hub-name: prod
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: prod
   jupyterhub-home-nfs:
     quotaEnforcer:
-      hardQuota: '150' # in GB
+      config:
+        QuotaManager:
+          # Requested by community
+          hard_quota: 50 # in GiB
     eks:
       volumeId: vol-06f3c3dc2ded0cd06
   nfs:
     pv:
-      serverIP: 10.100.182.228
-
-  binderhub-service:
-    dockerApi:
-      nodeSelector:
-        2i2c/hub-name: prod
-    config:
-      KubernetesBuildExecutor:
-        node_selector:
-          2i2c/hub-name: prod
+      serverIP: 10.100.106.116

@@ -20,7 +20,7 @@ delete the create debugger pod.
 
 ## GCP
 
-1. Make sure you are [authenticated with gcloud](tools:gcloud:auth)
+1. Make sure you are [authenticated with gcloud](#tools:gcloud:auth)
 
 2. Set the `project` we are operating on, so `gcloud` knows where to look:
 

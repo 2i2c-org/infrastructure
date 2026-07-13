@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [dubois.2i2c.cloud]
-    tls:
-    - hosts: [dubois.2i2c.cloud]
-      secretName: https-auto-tls
   hub:
     config:
       JupyterHub:
@@ -13,11 +8,15 @@ jupyterhub:
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
-      extraVolumeMounts: []
+      extraVolumeMounts:
   singleuser:
     initContainers: []
     storage:
       # No persistent storage should be kept to reduce any potential data
       # retention & privacy issues.
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
+      extraVolumes:
+
+jupyterhub-home-nfs:
+  enabled: false

@@ -1,17 +1,10 @@
 nfs:
   enabled: true
+  shareCreator:
+    enabled: false
   pv:
     enabled: true
-    mountOptions:
-    - soft
-    - noatime
-    serverIP: 10.80.94.178
-    # MUST HAVE TRAILING SLASH
-    baseShareName: /homes/homes/
 jupyterhub:
-  custom:
-    jupyterhubConfigurator:
-      enabled: false
   singleuser:
     cpu:
       # Each node has about 4 CPUs total, and if we limit users to no more than
@@ -22,7 +15,36 @@ jupyterhub:
       limit: 2
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: 79e7ee67211e
-    nodeSelector:
-      # Put everything on the most appropriate instance type for these users
-      node.kubernetes.io/instance-type: n2-highmem-4
+      tag: 6d61d3c15d47
+jupyterhub-home-nfs:
+  # Reduce nfs server requests and limits from baseline,
+  # as we have a *lot* of hubs and spend a lot of money on core nodes
+  quotaEnforcer:
+    resources:
+      requests:
+        cpu: 0.001
+        memory: 32Mi
+      limits:
+        cpu: 0.2
+        memory: 256Mi
+    config:
+      QuotaManager:
+        hard_quota: 5 # in GiB
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 512M
+      limits:
+        cpu: 0.1
+        memory: 1.5G
+  nodeExporter:
+    resources:
+      requests:
+        cpu: 0.001
+      limits:
+        cpu: 0.1
+  autoResizer:
+    resources:
+      requests:
+        cpu: 0.001

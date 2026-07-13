@@ -21,19 +21,24 @@ jobs:
   test-docs:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       with:
         python-version: '3.13'
+    - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+      with:
+        node-version: 24
 
     - name: Install deps
-      run: pip install -r docs/requirements.txt
+      run: pip install . -r docs/requirements.txt
+
+    - name: Generate hub tables
+      run: python -m helper_programs.hub_info_table
+      working-directory: docs
 
       # linkcheck is done separately from this in doc-links.yml, scheduled to
       # run every day and open/update an issue
-    - name: make dirhtml
-      run: |
-        cd docs
-        make dirhtml SPHINXOPTS='--color -W --keep-going'
+    - name: Build docs
+      run: jupyter book build --site

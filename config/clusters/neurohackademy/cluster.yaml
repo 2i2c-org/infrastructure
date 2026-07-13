@@ -1,6 +1,11 @@
 name: neurohackademy
-provider: aws # https://2i2c.awsapps.com/start#/
+provider: aws
+provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 96841346779
 aws:
+  account: 181398284065
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: neurohackademy
@@ -21,7 +26,7 @@ hubs:
   - staging.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
-  display_name: Neurohackademy 2025
+  display_name: Neurohackademy 2026
   domain: neurohackademy.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:

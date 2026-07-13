@@ -16,24 +16,27 @@ default_budget_alert = {
 
 ebs_volumes = {
   "staging" = {
-    size        = 1
+    size        = 30
     type        = "gp3"
     name_suffix = "staging"
     tags        = { "2i2c:hub-name" : "staging" }
   },
   "prod" = {
-    size = 1843 # 1.8TiB (rounded from 1843.2)
-    # ref https://github.com/2i2c-org/infrastructure/issues/6278
-    iops        = 10000 # Temporarily have 10k iops for the summer workshop
+    size        = 4096 # 4TiB
     type        = "gp3"
+    iops        = 10000 # Increase to account for heavier usage - see https://2i2c.freshdesk.com/a/tickets/5477
+    throughput  = 1000  # Increase to account for heavier usage - see https://2i2c.freshdesk.com/a/tickets/5477
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
   },
 }
-enable_nfs_backup = true
 
-enable_aws_ce_grafana_backend_iam = true
-disable_cluster_wide_filestore    = true
+enable_jupyterhub_cost_monitoring = true
+
+enable_nfs_backup = true
+enable_ebs_alarms = true
+
+disable_cluster_wide_filestore = true
 
 user_buckets = {
   "scratch-staging" : {

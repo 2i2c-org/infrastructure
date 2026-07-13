@@ -1,0 +1,4 @@
+jupyterhub-usage-quotas @ git+https://github.com/2i2c-org/jupyterhub-usage-quotas@6ffb330f8f384e1fc97852fb00f4402af33521f6
+jupyterhub-fancy-profiles==0.6.0
+jupyterhub-kubespawner @ git+https://github.com/jupyterhub/kubespawner@19ae3849a538940d8cc46062da247bec392501f0
+

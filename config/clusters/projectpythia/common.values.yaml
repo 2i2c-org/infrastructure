@@ -1,36 +1,15 @@
 nfs:
   enabled: true
-  # volumeReporter will report 100% for all hubs as EFS is unbounded, we disable
-  # it to save a limited amount of pods we can allocate per core node
-  volumeReporter:
-    enabled: false
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-    mountOptions:
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
-    - retrans=2
-    - noresvport
     serverIP: fs-0c29370cc50856b5d.efs.us-west-2.amazonaws.com
-    baseShareName: /
-
-jupyterhub-home-nfs:
-  enabled: true
-  eks:
-    enabled: true
-  prometheusExporter:
-    enabled: true
 
 jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
-    jupyterhubConfigurator:
-      enabled: false
     homepage:
       templateVars:
         designed_by:
@@ -44,20 +23,68 @@ jupyterhub:
           url: https://doi.org/10.5281/zenodo.8184298
         org:
           url: https://projectpythia.org/
-          logo_url: https://projectpythia.org/_static/images/logos/pythia_logo-blue-rtext.svg
+          logo_url: https://raw.githubusercontent.com/ProjectPythia/projectpythia.github.io/refs/heads/main/portal/_static/images/logos/pythia_logo-blue-rtext.svg
 
   hub:
+    loadRoles:
+      user:
+        scopes:
+        - self
+        - admin:auth_state!user
+      server:
+        scopes:
+        - self
+        - admin:auth_state!user
     allowNamedServers: true
+    extraConfig:
+      00-set-gitconfig.py: |
+        async def auth_state_hook(spawner, auth_state):
+            if auth_state is None:
+                return None
+
+            try:
+                user = auth_state["github_user"]
+            except KeyError:
+                return auth_state
+
+            raw_environment = {}
+            raw_environment["GITHUB_USER"] = user.get("login")
+            raw_environment["GIT_AUTHOR_NAME"] = raw_environment["GIT_COMMITTER_NAME"] = (
+                user.get("name")
+            )
+            raw_environment["GIT_AUTHOR_EMAIL"] = raw_environment["GIT_COMMITTER_EMAIL"] = (
+                raw_environment["GITHUB_EMAIL"]
+            ) = user.get("email")
+
+            for key, value in raw_environment.items():
+                # Require non-falsey (empty or None) value
+                if value:
+                    spawner.environment[key] = value
+
+            return auth_state
+
+
+        c.Spawner.auth_state_hook = auth_state_hook
+
     config:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
+        scope:
+        - read:org
+        - public_repo
+        - repo
+        - user
         allowed_organizations:
-        - ProjectPythia
+        - ProjectPythia:cookoff2025
+        - ProjectPythia:cookoff2026
       Authenticator:
+        enable_auth_state: true
         admin_users:
         - jmunroe
         - ktyle
+        - erogluorhan
+        - jukent
 
   scheduling:
     userScheduler:
@@ -65,6 +92,80 @@ jupyterhub:
 
   singleuser:
     defaultUrl: /lab
+    extraFiles:
+      00-credential-helper:
+        mountPath: /opt/github-credential-helper
+        stringData: |
+          #!/usr/bin/env python
+          """Modified from https://github.com/yuvipanda/git-credential-helpers/blob/main/git_credential_helpers/github_app.py"""
+          import sys
+          import json
+          import argparse
+          import os
+          import urllib.request
+
+
+          def main(argv=None):
+              argparser = argparse.ArgumentParser()
+              argparser.add_argument(
+                  "operation",
+                  # We don't want to print to stderr when 'store' or 'erase'
+                  # are passed to the script. So we accept all possibilities,
+                  # but only respond to 'get'
+                  choices=["get", "store", "erase"],
+                  help="git credential operation to perform. Only get is supported",
+              )
+              args = argparser.parse_args(args=argv)
+
+              if args.operation != "get":
+                  # This isn't a persistent credential helper, so we don't support store or erase
+                  sys.exit(1)
+
+              hub_token = os.environ["JUPYTERHUB_API_TOKEN"]
+              hub_api_url = os.environ["JUPYTERHUB_API_URL"]
+              hub_user = os.environ["JUPYTERHUB_USER"]
+              user_url = f"{hub_api_url}/users/{hub_user}"
+
+              req = urllib.request.Request(
+                  user_url, headers={"Authorization": f"Bearer {hub_token}"}
+              )
+              with urllib.request.urlopen(req) as resp:
+                  user = json.load(resp)
+              
+              access_token = user["auth_state"]["access_token"]
+
+              print(f"username=x-access-token")
+              print(f"password={access_token}")
+
+          if __name__ == "__main__":
+              main()
+
+        # RXRXRX
+        mode: 0555
+      01-gitconfig:
+        mountPath: /etc/gitconfig
+        # app-id comes from https://github.com/organizations/utoronto-2i2c/settings/apps/utoronto-jupyterhub-private-cloner
+        stringData: |
+          [credential "https://github.com"]
+          helper = !/opt/github-credential-helper
+          useHttpPath = true
+      02-menus:
+        mountPath: /srv/conda/envs/notebook/share/jupyter/lab/settings/overrides.json
+
+        # app-id comes from https://github.com/organizations/utoronto-2i2c/settings/apps/utoronto-jupyterhub-private-cloner
+        data:
+          '@jupyterlab/mainmenu-extension:plugin':
+            menus:
+            - id: jp-mainmenu-help
+              rank: 1001
+              items:
+              - command: help:open
+                rank: 1001
+                args:
+                  url: https://github.com/settings/connections/applications/Ov23liD6D2SAPk4ctcyU
+                  text: Revoke GitHub Token
+                  newBrowserTab: true
+
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liaEC5WLtjKehTtK
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-project-pythia-push-access
@@ -74,6 +175,9 @@ jupyterhub:
       profile_options:
         image:
           display_name: Image
+            # Enables dynamic image building for this profile
+          dynamic_image_building:
+            enabled: true
           unlisted_choice:
             enabled: true
             display_name: Custom image
@@ -90,82 +194,79 @@ jupyterhub:
               default: true
               description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
-                image: pangeo/pangeo-notebook:2024.05.21
+                image: pangeo/pangeo-notebook:2025.07.09
             scipy:
               display_name: Jupyter SciPy Notebook
               slug: scipy
               kubespawner_override:
-                image: quay.io/jupyter/scipy-notebook:2024-04-15
+                image: quay.io/jupyter/scipy-notebook:2025-07-28
+        resources:
+          display_name: Resource Allocation
+          choices:
+            mem_15_2:
+              display_name: 15.2 GB RAM, upto 15.6 CPUs
+              kubespawner_override:
+                mem_guarantee: 16273612210
+                mem_limit: 16273612210
+                cpu_guarantee: 1.961875
+                cpu_limit: 15.695
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+              default: true
+            mem_30_3:
+              display_name: 30.3 GB RAM, upto 15.6 CPUs
+              kubespawner_override:
+                mem_guarantee: 32547224420
+                mem_limit: 32547224420
+                cpu_guarantee: 3.92375
+                cpu_limit: 15.695
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_60_6:
+              display_name: 60.6 GB RAM, upto 15.6 CPUs
+              kubespawner_override:
+                mem_guarantee: 65094448840
+                mem_limit: 65094448840
+                cpu_guarantee: 7.8475
+                cpu_limit: 15.695
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a container on a dedicated node with a GPU
+      slug: gpu
+      profile_options:
+        image:
+          display_name: Image
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
             tensorflow:
               display_name: Pangeo Tensorflow ML Notebook
               slug: tensorflow
               kubespawner_override:
-                image: pangeo/ml-notebook:2024.05.21
+                image: quay.io/pangeo/ml-notebook:2025.07.09
             pytorch:
               display_name: Pangeo PyTorch ML Notebook
+              default: true
               slug: pytorch
               kubespawner_override:
-                image: pangeo/pytorch-notebook:2024.05.21
-        resources:
-          display_name: Resource Allocation
-          choices:
-            mem_1_9:
-              display_name: 1.9 GB RAM, up to 3.7 CPUs
-              kubespawner_override:
-                mem_guarantee: 1991244775
-                mem_limit: 1991244775
-                cpu_guarantee: 0.2328125
-                cpu_limit: 3.725
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-              default: true
-            mem_3_7:
-              display_name: 3.7 GB RAM, up to 3.7 CPUs
-              kubespawner_override:
-                mem_guarantee: 3982489550
-                mem_limit: 3982489550
-                cpu_guarantee: 0.465625
-                cpu_limit: 3.725
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-            mem_7_4:
-              display_name: 7.4 GB RAM, up to 3.7 CPUs
-              kubespawner_override:
-                mem_guarantee: 7964979101
-                mem_limit: 7964979101
-                cpu_guarantee: 0.93125
-                cpu_limit: 3.725
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-            mem_14_8:
-              display_name: 14.8 GB RAM, up to 3.7 CPUs
-              kubespawner_override:
-                mem_guarantee: 15929958203
-                mem_limit: 15929958203
-                cpu_guarantee: 1.8625
-                cpu_limit: 3.725
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-            mem_29_7:
-              display_name: 29.7 GB RAM, up to 3.7 CPUs
-              kubespawner_override:
-                mem_guarantee: 31859916406
-                mem_limit: 31859916406
-                cpu_guarantee: 3.725
-                cpu_limit: 3.725
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-            gpu:
-              display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
-              kubespawner_override:
-                environment:
-                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
-                mem_limit:
-                mem_guarantee: 14G
-                node_selector:
-                  node.kubernetes.io/instance-type: g4dn.xlarge
-                extra_resource_limits:
-                  nvidia.com/gpu: '1'
+                image: quay.io/pangeo/pytorch-notebook:2025.05.22
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
 
 binderhub-service:
   enabled: true
@@ -174,7 +275,3 @@ binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/projectpythia-
-  # The password to the registry is stored encrypted in the hub's encrypted config file
-  buildPodsRegistryCredentials:
-    server: https://quay.io
-    username: imagebuilding-non-gcp-hubs+image_builder

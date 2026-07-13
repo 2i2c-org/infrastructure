@@ -9,18 +9,16 @@ enable_logging         = false
 enable_filestore_backups = true
 filestores               = {}
 
+single_process_oom_kill = false
+
 persistent_disks = {
   "staging" = {
-    size        = 120 # in GiB
+    size        = 165 # in GiB
     name_suffix = "staging"
   }
   "prod" = {
-    size        = 2800 # in GiB
+    size        = 2965 # in GiB
     name_suffix = "prod"
-  }
-  "workshop" = {
-    size        = 1000 # in GiB
-    name_suffix = "workshop"
   }
 }
 
@@ -29,10 +27,10 @@ budget_alert_enabled = false
 billing_account_id   = ""
 
 k8s_versions = {
-  min_master_version : "1.32.1-gke.1200003",
-  core_nodes_version : "1.32.1-gke.1200003",
-  notebook_nodes_version : "1.32.1-gke.1200003",
-  dask_nodes_version : "1.32.1-gke.1200003",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
+  dask_nodes_version : "1.35.3-gke.1943000",
 }
 
 user_buckets = {
@@ -52,10 +50,6 @@ user_buckets = {
     "delete_after" : null,
     "uniform_bucket_level_access_only" : true
   }
-  "scratch-workshop" : {
-    "delete_after" : 7,
-    "uniform_bucket_level_access_only" : true
-  },
 }
 
 # Setup notebook node pools
@@ -65,7 +59,7 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  "n2-highmem-16" : {
+  "n2-highmem-16-a" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
@@ -74,6 +68,18 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
+  },
+  "n2-standard-16" : {
+    min : 0,
+    # Keep the numbers down, for safety!
+    max : 100,
+    machine_type : "n2-standard-16",
+  },
+  "n2-standard-64" : {
+    min : 0,
+    # Keep the numbers down, for safety!
+    max : 20,
+    machine_type : "n2-standard-64",
   },
   "gpu-t4" : {
     min : 0,
@@ -84,6 +90,14 @@ notebook_nodes = {
       type : "nvidia-tesla-t4",
       count : 1,
     },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
 }
 
@@ -110,10 +124,6 @@ hub_cloud_permissions = {
   "prod" : {
     bucket_admin_access : ["scratch", "persistent"],
     hub_namespace : "prod"
-  }
-  "workshop" : {
-    bucket_admin_access : ["scratch-workshop"],
-    hub_namespace : "workshop"
   }
 }
 

@@ -13,15 +13,13 @@ dependencies:
   # cost. If we ever have multiple prometheii on the same cluster, we can
   # reconsider using the operator.
   - name: prometheus
-    # NOTE: CHECK INSTRUCTIONS UNDER prometheus.server.command IN support/values.yaml
-    # EACH TIME THIS VERSION IS BUMPED!
-    version: 27.20.0
+    version: 29.13.0
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 9.2.2
+    version: 10.5.15
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
@@ -29,33 +27,38 @@ dependencies:
   # that references this controller.
   # https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
   - name: ingress-nginx
-    version: 4.12.3
+    version: 4.14.3
     repository: https://kubernetes.github.io/ingress-nginx
+
+  # This is the ingress maintained by nginx, rather than the one maintained by the
+  # kubernetes community. We switch to this to have least potential disruption
+  # possible, until we eventually perhaps move to the Gateway API someday
+  - name: nginx-ingress
+    version: 2.4.4
+    repository: oci://ghcr.io/nginx/charts
+    condition: nginx-ingress.enabled
 
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)
   # https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
+  #
+  # !!! When upgrading this, make sure that the new version is compatible with
+  # the k8s version of all eks clusters
+  # https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#releases
   - name: cluster-autoscaler
-    version: 9.46.6
+    version: 9.58.0
     repository: https://kubernetes.github.io/autoscaler
     condition: cluster-autoscaler.enabled
 
   # cryptnono, counters crypto mining
   # https://github.com/cryptnono/cryptnono/
   - name: cryptnono
-    version: "0.3.2-0.dev.git.156.hdab4ec8"
+    version: "0.3.2-0.dev.git.267.h766bf8f"
     repository: https://cryptnono.github.io/cryptnono/
     condition: cryptnono.enabled
 
-  # aws-ce-grafana-backend, exposes AWS Cost Explorer API info to Grafana
-  # Source code: https://github.com/2i2c/infrastructure/
-  - name: aws-ce-grafana-backend
-    version: "0.0.1-set.by.chartpress"
-    repository: "file://../aws-ce-grafana-backend"
-    condition: aws-ce-grafana-backend.enabled
-
-  # gcpFilestoreBackups runs regular backups of GCP Filestore Instances hosting
-  # home directories within the cloud project.
-  - name: gcpFilestoreBackups
-    version: "0.0.1"
-    repository: https://2i2c.org/gcp-filestore-backups
-    condition: gcpFilestoreBackups.enabled
+  # jupyterhub-cost-monitoring, cost reporting for Grafana
+  # https://github.com/2i2c-org/jupyterhub-cost-monitoring
+  - name: jupyterhub-cost-monitoring
+    version: "1.1.2"
+    repository: https://2i2c.org/jupyterhub-cost-monitoring/
+    condition: jupyterhub-cost-monitoring.enabled

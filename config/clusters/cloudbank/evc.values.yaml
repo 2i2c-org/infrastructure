@@ -1,18 +1,10 @@
 jupyterhub:
-  ingress:
-    hosts: [evc.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [evc.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
       # https://2i2c.freshdesk.com/a/tickets/567
       guarantee: 384M
       limit: 1.5G
-    image:
-      name: quay.io/2i2c/cloudbank-data8-image
-      tag: e0390051a2d9
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -37,7 +29,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://evc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
@@ -48,6 +39,8 @@ jupyterhub:
             - stu.sjcc.edu
             - stu.evc.edu
             - evc.edu
+            - student.sdccd.edu
+            - my.yosemite.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
@@ -59,3 +52,6 @@ jupyterhub:
         - hestrada@evc.edu
         - David.Eisenberg@evc.edu
         - Kathy.Jensen@evc.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-evc

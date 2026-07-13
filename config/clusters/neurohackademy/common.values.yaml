@@ -10,8 +10,6 @@ nfs:
     - soft   # We pick soft over hard, so NFS lockups don't lead to hung processes
     - retrans=2
     - noresvport
-    baseShareName: /
-
 jupyterhub:
   custom:
     2i2c:
@@ -32,6 +30,18 @@ jupyterhub:
         funded_by:
           name: The National Institutes of Health grant 2R25MH112480-06
           url: https://reporter.nih.gov/search/ydTvTwXxk0yd6eGdRznbLQ/project-details/10409452
+    singleuserAdmin:
+      extraVolumeMounts:
+        # /allusers is an extra mount point for admins to access to all users'
+        # home dirs
+        01-allusers-volumemount:
+          name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
+        02-allusers-rstudio-volumemount:
+          name: home
+          mountPath: /home/rstudio/allusers
+          readOnly: false
   hub:
     allowNamedServers: true
     config:
@@ -39,7 +49,7 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
-        - NeuroHackademy2025
+        - NeuroHackademy2026
         - 2i2c-org:hub-access-for-2i2c-staff
         scope:
         - read:org
@@ -47,6 +57,10 @@ jupyterhub:
         admin_users:
         - arokem
         - noahbenson
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
   scheduling:
     userScheduler:
       enabled: true
@@ -68,97 +82,87 @@ jupyterhub:
           display_name: Image
           dynamic_image_building:
             enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+              init_containers: &init_containers
+              - name: jupyterhub-gitpuller-init
+                image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
+                env:
+                - name: TARGET_PATH
+                  value: curriculum
+                - name: SOURCE_REPO
+                  value: https://github.com/NeuroHackademy2026/curriculum
+                - name: SOURCE_BRANCH
+                  value: main
+                volumeMounts:
+                - name: home
+                  mountPath: /home/jovyan
+                  subPath: '{escaped_username}'
+                securityContext:
+                  runAsUser: 1000
+                  runAsGroup: 1000
           choices:
-            nh2024:
-              display_name: arokem/nh2024
+            nh2026:
+              display_name: hub-user-image
               slug: regular-profile
               kubespawner_override:
-                image: quay.io/arokem/nh2024:6a7f72572771
-                init_containers: &init_containers
-                - name: volume-mount-ownership-fix
-                  image: busybox:1.36.1
-                  command:
-                  - sh
-                  - -c
-                  - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
-                  securityContext:
-                    runAsUser: 0
-                  volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: '{escaped_username}'
-                        # Mounted without readonly attribute here,
-                        # so we can chown it appropriately
-                  - name: home
-                    mountPath: /home/jovyan/shared
-                    subPath: _shared
-                    # this container uses nbgitpuller to mount https://github.com/NeuroHackademy2024/curriculum for user pods
-                    # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
-                - name: jupyterhub-gitpuller-init
-                  image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
-                  env:
-                  - name: TARGET_PATH
-                    value: curriculum
-                  - name: SOURCE_REPO
-                    value: https://github.com/NeuroHackademy2024/curriculum
-                  - name: SOURCE_BRANCH
-                    value: main
-                  volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: '{escaped_username}'
-                  securityContext:
-                    runAsUser: 1000
-                    runAsGroup: 1000
-            nh2024-gpu:
-              display_name: arokem/nh2024-gpu
+                image: quay.io/neurohackademy2026/hub-user-image:1e9cdfe95f02
+                init_containers: *init_containers
+            nh2026-gpu:
+              display_name: hub-user-image-gpu
               slug: gpu-profile
               kubespawner_override:
-                image: quay.io/arokem/nh2024-gpu:74cb5cb5c8ad
-                init_containers: *init_containers
-            nh2024-r:
-              display_name: arokem/nh2024-r
-              slug: r-profile
-              kubespawner_override:
-                image: quay.io/arokem/nh2024-r:f36d1dbaa3d7
-                init_containers: *init_containers
-            unlisted_choice:
-              enabled: true
-              display_name: Custom image
-              validation_regex: ^.+:.+$
-              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
-              kubespawner_override:
-                image: '{value}'
+                image: quay.io/neurohackademy2026/hub-user-image-gpu:de214625beaa
                 init_containers: *init_containers
         requests:
           display_name: Resource Allocation
           choices:
             regular:
-              display_name: Regular CPU instance
-              slug: small
-              default: true
+              display_name: ~15 GB RAM, ~1.9 CPUs
+              description: Up to ~15 CPUs when available
               kubespawner_override:
-                cpu_guarantee: 0.5
-                cpu_limit: 14
-                mem_guarantee: 4G
-                mem_limit: 16G
+                mem_guarantee: 16005176754
+                mem_limit: 16005176754
+                cpu_guarantee: 1.9226375
+                cpu_limit: 15.3811
                 node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-                default: true
+                  node.kubernetes.io/instance-type: r5.4xlarge
+              default: true
             gpu:
               display_name: GPU machine
               slug: gpu
               description: Start a container on a dedicated node with a GPU
               kubespawner_override:
-                mem_limit:
-                mem_guarantee: 14G
+                mem_limit: 29G
+                mem_guarantee: 29G
                 environment:
                   NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 node_selector:
-                  node.kubernetes.io/instance-type: g4dn.xlarge
+                  node.kubernetes.io/instance-type: g4dn.2xlarge
                 extra_resource_limits:
                   nvidia.com/gpu: '1'
-
+binderhub-service:
+  enabled: true
+  networkPolicy:
+    enabled: true
+  dockerApi:
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        node.kubernetes.io/instance-type: r5.xlarge
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
 jupyterhub-home-nfs:
   enabled: true
   eks:

@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [tuskegee.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [tuskegee.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -28,7 +23,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://tuskegee.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - TU-CSCI-Data8
         scope:
@@ -37,3 +31,6 @@ jupyterhub:
         admin_users:
         - sean-morris
         - rawajfihy
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-tuskegee

@@ -1,21 +1,15 @@
 nfs:
   pv:
-    serverIP: 10.100.231.167
+    serverIP: 10.100.35.81
 
-jupyterhub:
-  ingress:
-    hosts: [staging.neurohackademy.2i2c.cloud]
-    tls:
-    - hosts: [staging.neurohackademy.2i2c.cloud]
-      secretName: https-auto-tls
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.neurohackademy.2i2c.cloud/hub/oauth_callback
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/neurohackademy-staging-
 
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.staging.svc.cluster.local:8081/hub/api
 jupyterhub-home-nfs:
   eks:
-    volumeId: vol-0971ad91e7e4e270f
-  quotaEnforcer:
-    hardQuota: '1' # in GB
-    path: /export/staging
+    volumeId: vol-0d3344882a11b2b08

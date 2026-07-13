@@ -14,6 +14,18 @@ To enable dask-gateway support on a hub, the following configuration changes nee
       enabled: true
     ```
 
+1. enable authentication with JupyterHub:
+
+    ```yaml
+    dask-gateway:
+      enabled: true
+      gateway:
+        auth:
+          type: jupyterhub
+          jupyterhub:
+            jupyterhubServiceName: dask-gateway
+    ```
+
 1. set `jupyterhub.custom.daskGateway.enabled` to true:
 
     ```yaml
@@ -23,20 +35,42 @@ To enable dask-gateway support on a hub, the following configuration changes nee
           enabled: true
     ```
 
-1. set appropriate tags on worker and scheduler pods in order for the cost allocation system to pick the up accordingly
+
+1. grant some or all Hub users access to the dask-gateway service:
+
+  - all users:
 
     ```yaml
-    dask-gateway:
-      gateway:
-        backend:
-          scheduler:
-            extraPodConfig:
-              nodeSelector:
-                2i2c/hub-name: {{ hub-name }}
-          worker:
-            extraPodConfig:
-              nodeSelector:
-                2i2c/hub-name: {{ hub-name }}
+    jupyterhub:
+      hub:
+        loadRoles:
+          server:
+            scopes:
+            - self
+            - access:services!service=dask-gateway
+          user:
+            scopes:
+            - self
+            - access:services!service=dask-gateway
+    ```
+
+  - some users (eg. only the `dask-access` group and user `user-with-access` will be able access to dask-gateway)
+
+    ```yaml
+    jupyterhub:
+      hub:
+        loadRoles:
+          server:
+            scopes:
+            - self
+            - access:services!service=dask-gateway
+          dask-users:
+            scopes:
+              - access:services!service=dask-gateway
+            groups:
+              - dask-access
+            users:
+              - user-with-access
     ```
 
 1. set `jupyterhub.singleuser.cloudMetadata.blockWithIptables` to false:
@@ -58,7 +92,7 @@ To enable dask-gateway support on a hub, the following configuration changes nee
 1. if binderhub is enabled to work against a private container registry:
 
     Then dask-gateway's scheduler and worker pods need to pull from that
-    registry, so follow the final step in [](howto:features:imagebuilding-hub:configure-binderhub-service-chart)
+    registry, so follow the final step in [](#howto:features:imagebuilding-hub:configure-binderhub-service-chart)
     to set up permissions for that.
 
 (howto:features:daskhub)=

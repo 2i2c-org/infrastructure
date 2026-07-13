@@ -23,7 +23,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 :sync: aws-key
 1. Install `kubectl`, `helm`, `sops`, etc.
 
-   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   In [](#tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 
 2. Install [`aws`](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
@@ -54,7 +54,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 :sync: gcp-key
 1. Install `kubectl`, `helm`, `sops`, etc.
 
-   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   In [](#tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 ````
 
@@ -62,7 +62,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 :sync: azure-key
 1. Install `kubectl`, `helm`, `sops`, etc.
 
-   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   In [](#tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 ````
 
@@ -70,7 +70,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 :sync: jetstream2-key
 1. Install `kubectl`, `helm`, `sops` and pip install `python-openstackclient` and `python-magnumclient`
 
-   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   In [](#tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 ````
 `````
@@ -86,8 +86,8 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 Depending on whether this project is using AWS SSO or not, you can use the following
 links to figure out how to authenticate to this project from your terminal.
 
-- [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
-- [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
+- [For accounts setup with AWS SSO](#cloud-access:aws-sso:terminal)
+- [For accounts without AWS SSO](#cloud-access:aws-iam:terminal)
 ````
 
 ````{tab-item} Google Cloud
@@ -125,13 +125,11 @@ We automatically generate the files required to setup a new cluster:
 ````{tab-item} AWS
 :sync: aws-key
 - A `.jsonnet` file for use with `eksctl`
-- A `sops` encrypted [ssh key](https://eksctl.io/introduction/#ssh-access) that can be used to ssh into the kubernetes nodes.
-- A ssh public key used by `eksctl` to grant access to the private key.
 - A `.tfvars` terraform variables file that will setup most of the non EKS infrastructure.
 - The cluster config directory in `./config/cluster/<new-cluster>`
 - The `cluster.yaml` config file
 - The support values file `support.values.yaml`
-- The the support credentials encrypted file `enc-support.values.yaml` 
+- The the support credentials encrypted file `enc-support.values.yaml`
 ````
 
 ````{tab-item} Google Cloud
@@ -140,7 +138,7 @@ We automatically generate the files required to setup a new cluster:
 - The cluster config directory in `./config/cluster/<new-cluster>`
 - A sample `cluster.yaml` config file
 - The support values file `support.values.yaml`
-- The the support credentials encrypted file `enc-support.values.yaml` 
+- The the support credentials encrypted file `enc-support.values.yaml`
 ````
 
 ````{tab-item} Azure
@@ -167,7 +165,7 @@ You can generate these with:
 ```bash
 export CLUSTER_NAME=<cluster-name>
 export CLUSTER_REGION=<cluster-region-like ca-central-1>
-export ACCOUNT_ID=<declare 2i2c for clusters under 2i2c SSO, otherwise an account id or alias>
+export ACCOUNT_ID=<the 12 digit aws account id>
 ```
 
 ```bash
@@ -224,8 +222,12 @@ Now you're ready to create the cluster!
 Make sure to run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
 ```
 
+```{note}
+`eksctl>=0.221.0` is needed to fix GPU plugin support.
+```
+
 ```bash
-eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml 
 ```
 
 This might take a few minutes.
@@ -247,6 +249,9 @@ you at least one core node running.
 
 ````{tab-item} Google Cloud
 :sync: gcp-key
+```{caution}
+We have encountered resource-exhaustion incidents due to limitations of certain GCP regions. Prefer us-central1 for US-based communities unless _there's a very good reason_, as this decision is hard to change later on.
+```
 ```bash
 export CLUSTER_NAME=<cluster-name>
 export CLUSTER_REGION=<cluster-region-like ca-central-1>
@@ -350,10 +355,23 @@ An automated deployer command doesn't exist yet, these files need to be manually
 ````
 `````
 
+## Specify `hubspot_deal_id`
+
+We want to match every cluster we deploy to a particular contract that we have to run it
+for a specific time. We manage contracts on Hubspot, and each contract is associated with
+a "Deal". We specify the id of this deal for each Cluster under `metadata.2i2c.hubspot_deal_id`,
+and it must be specified when creating the cluster. The new hub request issue should have
+a Hubspot deal URL, and you can determine the deal ID by either:
+
+1. Opening the URL, logging into hubspot and looking in the sidebar
+2. Manually just look at the URL - if the URL of the deal looks like
+   https://app-na2.hubspot.com/contacts/242496330/record/0-3/96602996427,
+   the deal ID is the last integer, that comes after `0-3`.
+
 ## Add GPU nodegroup if needed
 
 If this cluster is going to have GPUs, you should edit the generated jsonnet file
-to [include a GPU nodegroups](howto:features:gpu).
+to [include a GPU nodegroups](#howto:features:gpu).
 
 ## Initialising Terraform
 
@@ -373,9 +391,9 @@ Then you can change into the terraform subdirectory for the appropriate cloud pr
 Our AWS *terraform* code is now used to deploy supporting infrastructure for the EKS cluster, including:
 
 - An IAM identity account for use with our CI/CD system
-- Appropriately networked EFS storage to serve as an NFS server for hub home directories
-- Optionally, setup a [shared database](features:shared-db:aws)
-- Optionally, setup [user buckets](howto:features:storage-buckets)
+- EBS volumes for use with `jupyterhub-home-nfs`
+- Optionally, setup a [shared database](#features:shared-db:aws)
+- Optionally, setup [user buckets](#howto:features:storage-buckets)
 
 The steps above will have created a default `.tfvars` file. This file can either be used as-is or edited to enable the optional features listed above.
 
@@ -428,10 +446,10 @@ If you can't find the workspace you're looking for, double check you've enabled 
 
 ## Setting up Budget Alerts
 
-Follow the instructions in [](howto:setting-up-budget-alerts) to determine if and
+Follow the instructions in [](#howto:setting-up-budget-alerts) to determine if and
 how you should setup budget alerts.
 
-You can learn more about our budget alerts in [](topic:billing:budget-alerts).
+You can learn more about our budget alerts in [](#topic:billing:budget-alerts).
 
 ## Plan and Apply Changes
 
@@ -548,24 +566,21 @@ To begin deploying and operating hubs on your new cluster, we need to export the
     :sync: jetstream2-key
       To access the cluster using kubectl we need to get the kubeconfig with:
       ```bash
-        openstack coe cluster config <cluster-name> --force > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+        openstack coe cluster config <cluster-name> && \
+        mv ./config ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
       ```
       This command will generate a file named config in the cwd with the configuration.
       The --force flag will overwrite this file if it already exists.
-    
+
       Encrypt the kubeconfig file using `sops`:
       ```bash
-      sops --output ./config --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+      sops --output ../../config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.yaml --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
       ```
 
       ```{note}
       You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
       ```
 
-      Delete the config file to avoid committing it by mistake:
-      ```
-      rm ./config
-      ```
     ````
     `````
 
@@ -595,7 +610,7 @@ To begin deploying and operating hubs on your new cluster, we need to export the
 
 ```{seealso}
 We use `cluster.yaml` files to describe a specific cluster and all the hubs deployed onto it.
-See [](config:structure) for more information.
+See [](#config:structure) for more information.
 ```
 
 Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder and populate it with the following info:
@@ -605,13 +620,13 @@ Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder an
 ````{tab-item} AWS
 :sync: aws-key
 
-A `cluster.yaml` file should already have been generated as part of [](new-cluster:generate-cluster-files).
+A `cluster.yaml` file should already have been generated as part of [](#new-cluster:generate-cluster-files).
 ````
 
 ````{tab-item} Google Cloud
 :sync: gcp-key
 
-A `cluster.yaml` file should already have been generated as part of [](new-cluster:generate-cluster-files).
+A `cluster.yaml` file should already have been generated as part of [](#new-cluster:generate-cluster-files).
 
 ### Billing information
 
@@ -627,7 +642,7 @@ should be able to tell you if we are doing cloud costs pass through or not.
    under "Billing Account". It should be of the form `XXXXXX-XXXXXX-XXXXXX`.
 5. Select "Billing export" on the left navigation bar, and you will find the values for `project` and
    `dataset` under "Detailed cost usage".
-6. If "Detailed cost usage" is not set up, you should [enable it](new-gcp-project:billing-export)
+6. If "Detailed cost usage" is not set up, you should [enable it](#new-gcp-project:billing-export)
 ````
 
 ````{tab-item} Azure (kubeconfig)
@@ -750,7 +765,7 @@ parallel to the newer system with access entries:
 
 ```{note}
 You can modify the command output by running `terraform output -raw eksctl_iam_command`
-as described in [](new-cluster:terraform:cluster-credentials).
+as described in [](#new-cluster:terraform:cluster-credentials).
 ```
 
 ```bash

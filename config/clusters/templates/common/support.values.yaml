@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 {% if provider == "gcp" %}
 prometheusStorageClass:
   gke:
@@ -9,6 +6,8 @@ prometheusStorageClass:
 
 prometheus:
   server:
+    persistentVolume:
+      size: 100Gi
     ingress:
       enabled: true
       hosts:
@@ -25,6 +24,9 @@ grafana:
   auth.github:
     enabled: true
     allowed_organizations: 2i2c-org
+  persistence:
+    # We don't need 10Gi on the Grafana persistent directory
+    size: 1Gi
   ingress:
     hosts:
       - grafana.{{ cluster_name }}.2i2c.cloud
@@ -32,15 +34,8 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.{{ cluster_name }}.2i2c.cloud
-{% if provider == "aws" %}
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: {{ cluster_name }}
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: <output of `terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation`>
 
+{% if provider == "aws" %}
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
@@ -49,4 +44,28 @@ cluster-autoscaler:
 
 calico:
   enabled: true
+
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
 {% endif %}
+
+nginx-ingress:
+  enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress

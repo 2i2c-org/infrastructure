@@ -19,6 +19,10 @@ output "latest_supported_k8s_versions" {
   }
 }
 
+locals {
+  core_node_pool = var.node_pools["core"][0]
+}
+
 # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
 resource "azurerm_kubernetes_cluster" "jupyterhub" {
   name                = "hub-cluster"
@@ -70,6 +74,13 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     }
   }
 
+  # Add this because utoronto brought it in from infra changes
+  # The block itself is sticky, but the contents are not.
+  # However, force_upgrade_enabled=false feels like a reasonable setting
+  upgrade_override {
+    force_upgrade_enabled = false
+  }
+
   # default_node_pool must be set, and it must be a node pool of system type
   # that can't scale to zero. Due to that we are forced to use it, and have
   # decided to use it as our core node pool.
@@ -82,22 +93,31 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#temporary_name_for_rotation.
   #
   default_node_pool {
-    name                 = var.node_pools["core"][0].name
-    vm_size              = var.node_pools["core"][0].vm_size
-    os_disk_size_gb      = var.node_pools["core"][0].os_disk_size_gb
-    kubelet_disk_type    = var.node_pools["core"][0].kubelet_disk_type
+    name                 = local.core_node_pool.name
+    vm_size              = local.core_node_pool.vm_size
+    os_disk_size_gb      = local.core_node_pool.os_disk_size_gb
+    kubelet_disk_type    = local.core_node_pool.kubelet_disk_type
+    min_count            = local.core_node_pool.min
+    max_count            = local.core_node_pool.max
     auto_scaling_enabled = true
-    min_count            = var.node_pools["core"][0].min
-    max_count            = var.node_pools["core"][0].max
 
     node_labels = merge({
       "hub.jupyter.org/node-purpose" = "core",
       "k8s.dask.org/node-purpose"    = "core"
     }, var.node_pools["core"][0].labels)
 
-    orchestrator_version = coalesce(var.node_pools["core"][0].kubernetes_version, var.kubernetes_version)
+    orchestrator_version = coalesce(local.core_node_pool.kubernetes_version, var.kubernetes_version)
 
     vnet_subnet_id = azurerm_subnet.node_subnet.id
+
+    temporary_name_for_rotation = "coretemppool"
+    upgrade_settings {
+      # If this is unset, it will force a new resource to be created
+      # This is set to the current value on utoronto
+      drain_timeout_in_minutes = 0
+      # One of max_surge or max_unavailable mst be specified
+      max_surge = "10%"
+    }
   }
 }
 
@@ -125,6 +145,14 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
 
   kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
+
+  upgrade_settings {
+    # If this is unset, it will force a new resource to be created
+    # This is set to the current value on utoronto
+    drain_timeout_in_minutes = 0
+    # One of max_surge or max_unavailable mst be specified
+    max_surge = "10%"
+  }
 }
 
 

@@ -1,22 +1,16 @@
 dask-gateway:
   enabled: true
   gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
     backend:
       imagePullSecrets: [name: image-pull-secret]
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: big-binder
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: big-binder
+
+jupyterhub-home-nfs:
+  enabled: false
 jupyterhub:
-  ingress:
-    hosts: [hub.big.binder.opensci.2i2c.cloud]
-    tls:
-    - hosts: [hub.big.binder.opensci.2i2c.cloud]
-      secretName: https-auto-tls
   custom:
     binderhubUI:
       enabled: true
@@ -51,16 +45,9 @@ jupyterhub:
               with information and we will get back to you!
             </p>
           </div>
-    jupyterhubConfigurator:
-      enabled: false
     singleuserAdmin:
-      extraVolumeMounts: []
+      extraVolumeMounts:
   singleuser:
-    nodeSelector:
-      # Schedule users on the smallest instance
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
-      2i2c/hub-name: big-binder
     cloudMetadata:
       blockWithIptables: false
     cpu:
@@ -70,7 +57,8 @@ jupyterhub:
       guarantee: 8G
     storage:
       type: none
-      extraVolumeMounts: []
+      extraVolumeMounts:
+      extraVolumes:
     initContainers: []
     profileList: []
   hub:
@@ -80,7 +68,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://hub.big.binder.opensci.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
         - 2i2c-ephemeral-hubs:access
 
@@ -89,6 +76,10 @@ jupyterhub:
       binder:
         oauth_redirect_uri: https://big.binder.opensci.2i2c.cloud/oauth_callback
     loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
       binder:
         services:
         - binder
@@ -101,16 +92,12 @@ jupyterhub:
           # Admin users will by default have access:services, so this is only
           # observed to be required for non-admin users.
         - access:services!service=binder
+        - access:services!service=dask-gateway
+
 binderhub-service:
   enabled: true
   networkPolicy:
     enabled: true
-  dockerApi:
-    nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
-      2i2c/hub-name: big-binder
   ingress:
     enabled: true
     hosts: [big.binder.opensci.2i2c.cloud]
@@ -120,12 +107,6 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
-    KubernetesBuildExecutor:
-      node_selector:
-        # Schedule builder pods to run on the smallest user nodes only
-        # https://github.com/2i2c-org/infrastructure/issues/4241
-        node.kubernetes.io/instance-type: r5.xlarge
-        2i2c/hub-name: big-binder
     BinderHub:
       base_url: /
       hub_url: https://hub.big.binder.opensci.2i2c.cloud
@@ -147,7 +128,7 @@ binderhub-service:
   - name: JUPYTERHUB_CLIENT_ID
     value: service-binder
   - name: JUPYTERHUB_API_URL
-    value: https://hub.big.binder.opensci.2i2c.cloud/hub/api
+    value: http://hub.big-binder.svc.cluster.local:8081/hub/api
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
   - name: JUPYTERHUB_BASE_URL

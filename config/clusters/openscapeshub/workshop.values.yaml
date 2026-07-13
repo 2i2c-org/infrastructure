@@ -1,0 +1,34 @@
+basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.130.27
+  jupyterhub:
+    custom:
+      homepage:
+        # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
+        # is merged
+        gitRepoBranch: unify-logins-2
+    hub:
+      allowNamedServers: true
+      config:
+        JupyterHub:
+          authenticator_class: shared-password
+        Authenticator:
+          enable_auth_state: false
+          manage_groups: false
+          allow_all: true
+    singleuser:
+      storage:
+        extraVolumeMounts:
+          1-shared-public-volumemount:
+            name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
+            readOnly: false
+      extraEnv:
+        SCRATCH_BUCKET: s3://openscapeshub-scratch-workshop/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: s3://openscapeshub-persistent-workshop/$(JUPYTERHUB_USER)
+
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-072fbfa88f513edb7

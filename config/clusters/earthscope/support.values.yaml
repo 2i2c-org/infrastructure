@@ -1,12 +1,13 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 redirects:
   rules:
   - from: staging.earthscope.2i2c.cloud
     to: staging.geolab.earthscope.cloud
   - from: earthscope.2i2c.cloud
     to: geolab.earthscope.cloud
+  - from: binder.earthscope.2i2c.cloud
+    to: binder.geolab.earthscope.cloud
+  - from: hub.binder.earthscope.2i2c.cloud
+    to: hub.binder.geolab.earthscope.cloud
 
 prometheus:
   server:
@@ -18,7 +19,332 @@ prometheus:
       - secretName: prometheus-tls
         hosts:
         - prometheus.earthscope.2i2c.cloud
-
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+      - name: PVC available capacity
+        rules:
+        - alert: home-nfs has 10% of space left
+          annotations:
+            summary: 'Home Directory Disk very close to full: cluster:earthscope hub:{{ $labels.namespace }}'
+          expr: |
+            # We use min() here for two reasons:
+            # 1. kubelet_volume_stats_* is reported once per each node the PVC is mounted on, which can be
+            #    multiple nodes if the PVC is ReadWriteMany (like any NFS mount). We only want alerts once per
+            #    PVC, rather than once per node.
+            # 2. This metric has a *ton* of labels, that can be cluttering and hard to use on pagerduty. We use
+            #    min() to select only the labels we care about, which is the namespace it is on.
+            #
+            # We could have used any aggregating function, but use min because we expect the numbers on the
+            # PVC to be the same on all nodes.
+            floor((
+              min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='home-nfs'}) by (namespace)
+              /
+              min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='home-nfs'}) by (namespace)
+            ) * 100) <= 10
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: same day action needed
+        - alert: home-nfs has 0% of space left
+          annotations:
+            summary: 'Home Directory Disk is full: cluster:earthscope hub:{{ $labels.namespace }}'
+          expr: |
+            # We use min() here for two reasons:
+            # 1. kubelet_volume_stats_* is reported once per each node the PVC is mounted on, which can be
+            #    multiple nodes if the PVC is ReadWriteMany (like any NFS mount). We only want alerts once per
+            #    PVC, rather than once per node.
+            # 2. This metric has a *ton* of labels, that can be cluttering and hard to use on pagerduty. We use
+            #    min() to select only the labels we care about, which is the namespace it is on.
+            #
+            # We could have used any aggregating function, but use min because we expect the numbers on the
+            # PVC to be the same on all nodes.
+            floor((
+              min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='home-nfs'}) by (namespace)
+              /
+              min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='home-nfs'}) by (namespace)
+            ) * 100) <= 0
+          for: 1m
+          labels:
+            cluster: earthscope
+            severity: take immediate action
+        - alert: hub-db-dir has 10% of space left
+          annotations:
+            summary: 'Hub Database Disk about to be full: cluster:earthscope hub:{{ $labels.namespace }}'
+          expr: |
+            # We use min() here for two reasons:
+            # 1. kubelet_volume_stats_* is reported once per each node the PVC is mounted on, which can be
+            #    multiple nodes if the PVC is ReadWriteMany (like any NFS mount). We only want alerts once per
+            #    PVC, rather than once per node.
+            # 2. This metric has a *ton* of labels, that can be cluttering and hard to use on pagerduty. We use
+            #    min() to select only the labels we care about, which is the namespace it is on.
+            #
+            # We could have used any aggregating function, but use min because we expect the numbers on the
+            # PVC to be the same on all nodes.
+            floor((
+              min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='hub-db-dir'}) by (namespace)
+              /
+              min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='hub-db-dir'}) by (namespace)
+            ) * 100) <= 10
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: same day action needed
+        - alert: hub-db-dir has 0% of space left
+          annotations:
+            summary: 'Hub Database Disk is full: cluster:earthscope hub:{{ $labels.namespace }}'
+          expr: |
+            # We use min() here for two reasons:
+            # 1. kubelet_volume_stats_* is reported once per each node the PVC is mounted on, which can be
+            #    multiple nodes if the PVC is ReadWriteMany (like any NFS mount). We only want alerts once per
+            #    PVC, rather than once per node.
+            # 2. This metric has a *ton* of labels, that can be cluttering and hard to use on pagerduty. We use
+            #    min() to select only the labels we care about, which is the namespace it is on.
+            #
+            # We could have used any aggregating function, but use min because we expect the numbers on the
+            # PVC to be the same on all nodes.
+            floor((
+              min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='hub-db-dir'}) by (namespace)
+              /
+              min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='hub-db-dir'}) by (namespace)
+            ) * 100) <= 0
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: take immediate action
+        - alert: support-prometheus-server has 10% of space left
+          annotations:
+            summary: 'Prometheus Disk about to be full: cluster:earthscope'
+          expr: |
+            # We use min() here for two reasons:
+            # 1. kubelet_volume_stats_* is reported once per each node the PVC is mounted on, which can be
+            #    multiple nodes if the PVC is ReadWriteMany (like any NFS mount). We only want alerts once per
+            #    PVC, rather than once per node.
+            # 2. This metric has a *ton* of labels, that can be cluttering and hard to use on pagerduty. We use
+            #    min() to select only the labels we care about, which is the namespace it is on.
+            #
+            # We could have used any aggregating function, but use min because we expect the numbers on the
+            # PVC to be the same on all nodes.
+            floor((
+              min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='support-prometheus-server'}) by (namespace)
+              /
+              min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='support-prometheus-server'}) by (namespace)
+            ) * 100) <= 10
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: same day action needed
+        - alert: support-prometheus-server has 0% of space left
+          annotations:
+            summary: 'Prometheus Disk is full: cluster:earthscope'
+          expr: |
+            # We use min() here for two reasons:
+            # 1. kubelet_volume_stats_* is reported once per each node the PVC is mounted on, which can be
+            #    multiple nodes if the PVC is ReadWriteMany (like any NFS mount). We only want alerts once per
+            #    PVC, rather than once per node.
+            # 2. This metric has a *ton* of labels, that can be cluttering and hard to use on pagerduty. We use
+            #    min() to select only the labels we care about, which is the namespace it is on.
+            #
+            # We could have used any aggregating function, but use min because we expect the numbers on the
+            # PVC to be the same on all nodes.
+            floor((
+              min(kubelet_volume_stats_available_bytes{persistentvolumeclaim='support-prometheus-server'}) by (namespace)
+              /
+              min(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim='support-prometheus-server'}) by (namespace)
+            ) * 100) <= 0
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: take immediate action
+      - name: Server Startup Failure
+        rules:
+        - alert: At least two servers failed to start in the last 30m
+          annotations:
+            summary: 'At least two servers have failed to start in the last 30m: cluster earthscope hub:{{ $labels.namespace }}'
+          expr: |
+            changes(
+              (
+                max by (namespace) (
+                  jupyterhub_server_spawn_duration_seconds_count{status="failure"}
+                )
+              )[30m:1m]
+            ) -
+            # Subtract failures from the usage quota system
+            changes(
+              (
+                max by (namespace) (
+                  jupyterhub_request_duration_seconds_count{handler="jupyterhub.handlers.pages.SpawnPendingHandler", code="422"}
+                    or 0*jupyterhub_request_duration_seconds_count # 0 values and absent values are distinct, so we need to 'fill-in' absent values across the time series so that the changes operator acts consistently
+                  )
+                )[30m:1m]
+            ) >= 2
+          for: 0m
+          labels:
+            cluster: cluster=earthscope
+            namespace: hub={{ $labels.namespace }}
+            provider: provider=aws
+            severity: immediate action needed
+      - name: Important Pod Restart
+        rules:
+        - alert: jupyterhub-cost-monitoring pod has restarted
+          annotations:
+            summary: jupyterhub-cost-monitoring pod has restarted on earthscope:{{ $labels.namespace }}
+          expr: "# Count total container restarts with pod name containing 'pod_name_substring'.\n# We sum by pod name (which resets after restart) and namespace, so we don't get all\n# the other labels of the metric in our alert.\n  (\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\".*cost-monitoring.*\"})\n      -\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\".*cost-monitoring.*\"} offset 10m)\n  ) >= 1    \n"
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: action needed this week
+        - alert: jupyterhub-groups-exporter pod has restarted
+          annotations:
+            summary: jupyterhub-groups-exporter pod has restarted on earthscope:{{ $labels.namespace }}
+          expr: "# Count total container restarts with pod name containing 'pod_name_substring'.\n# We sum by pod name (which resets after restart) and namespace, so we don't get all\n# the other labels of the metric in our alert.\n  (\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\".*groups-exporter.*\"})\n      -\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\".*groups-exporter.*\"} offset 10m)\n  ) >= 1    \n"
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: action needed this week
+        - alert: jupyterhub-home-nfs pod has restarted
+          annotations:
+            summary: jupyterhub-home-nfs pod has restarted on earthscope:{{ $labels.namespace }}
+          expr: "# Count total container restarts with pod name containing 'pod_name_substring'.\n# We sum by pod name (which resets after restart) and namespace, so we don't get all\n# the other labels of the metric in our alert.\n  (\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^storage-quota-home-nfs.*\"})\n      -\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^storage-quota-home-nfs.*\"} offset 10m)\n  ) >= 1    \n"
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: same day action needed
+        - alert: support-grafana pod has restarted
+          annotations:
+            summary: support-grafana pod has restarted on earthscope:{{ $labels.namespace }}
+          expr: "# Count total container restarts with pod name containing 'pod_name_substring'.\n# We sum by pod name (which resets after restart) and namespace, so we don't get all\n# the other labels of the metric in our alert.\n  (\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^support-grafana.*\"})\n      -\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^support-grafana.*\"} offset 10m)\n  ) >= 1    \n"
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: action needed this week
+        - alert: proxy pod has restarted
+          annotations:
+            summary: proxy pod has restarted on earthscope:{{ $labels.namespace }}
+          expr: "# Count total container restarts with pod name containing 'pod_name_substring'.\n# We sum by pod name (which resets after restart) and namespace, so we don't get all\n# the other labels of the metric in our alert.\n  (\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^proxy.*\"})\n      -\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^proxy.*\"} offset 10m)\n  ) >= 1    \n"
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: immediate action needed
+        - alert: support-prometheus-server pod has restarted
+          annotations:
+            summary: support-prometheus-server pod has restarted on earthscope:{{ $labels.namespace }}
+          expr: "# Count total container restarts with pod name containing 'pod_name_substring'.\n# We sum by pod name (which resets after restart) and namespace, so we don't get all\n# the other labels of the metric in our alert.\n  (\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^support-prometheus-server.*\"})\n      -\n        sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~\"^support-prometheus-server.*\"} offset 10m)\n  ) >= 1    \n"
+          for: 5m
+          labels:
+            cluster: earthscope
+            severity: immediate action needed
+      - name: Pod stuck in state for too long
+        rules:
+        - alert: Pod stuck in Pending for at least 30m
+          annotations:
+            summary: Pod is stuck in Pending state for a suspicious long time
+          expr: |
+            max by (namespace, pod) (kube_pod_status_phase{phase="Pending"}) > 0
+          for: 30m
+          labels:
+            cluster: earthscope
+            severity: action needed this week
+        - alert: Pod stuck in Terminating for at least 10m
+          annotations:
+            summary: Pod is stuck in Terminating state for a suspicious long time
+          expr: |
+            count(kube_pod_deletion_timestamp) by (namespace, pod) * count(kube_pod_status_reason{reason="NodeLost"} == 0) by (namespace, pod)
+          for: 10m
+          labels:
+            cluster: earthscope
+            severity: action needed this week
+      - name: DiskIO saturation
+        rules:
+        - alert: Disk IO approaching saturation
+          annotations:
+            summary: Disk {{ $labels.device }} on node {{ $labels.node }} is approaching saturation on cluster earthscope
+          expr: |
+            # We calculate the utilization for any given disk on our cluster,
+            # and alert if that goes over 80%. This is primarily here to catch
+            # overutilization of NFS host disk, which may cause serious outages.
+            # https://brian-candler.medium.com/interpreting-prometheus-metrics-for-linux-disk-i-o-utilization-4db53dfedcfc
+            # has helpful explanations for this metric, and why this particular query
+            # is utilization %.
+            sum(
+              rate(
+                node_disk_io_time_seconds_total[5m]
+              )
+            ) by (device, node) > 0.8
+          for: 15m
+          labels:
+            cluster: earthscope
+            severity: action needed this week
+      - name: Possible application outage
+        rules:
+        - alert: Compute usage quotas - At least one fail open detected in the last 30 mins
+          annotations:
+            summary: Compute usage quotas - Fail open detected on cluster earthscope, hub {{ $labels.namespace }} in the last 30m
+          expr: |
+            sum(
+              changes(jupyterhub_usage_quotas_fail_open_total[30m])
+            ) by (namespace) >= 1
+          for: 0m
+          labels:
+            cluster: earthscope
+            namespace: hub={{ $labels.namespace }}
+            severity: immediate action needed
+        - alert: Compute usage quotas - At least one Prometheus error detected  in the last 30m
+          annotations:
+            summary: Compute usage quotas - At least one Prometheus error detected in cluster earthscope in the last 30 mins
+          expr: |
+            sum(
+              changes(jupyterhub_usage_quotas_prometheus_error_total[30m])
+            ) >= 3
+          for: 0m
+          labels:
+            cluster: earthscope
+            severity: immediate action needed
+        - alert: Compute usage quotas - Server launch denied due to exhausted quota in the last 30m # temporary alert during initial rollout monitoring
+          annotations:
+            summary: Compute usage quotas - At least one server launch denied due to exhausted quota in cluster earthscope in the last 30 mins
+          expr: |
+            changes(
+              (
+                max by (namespace) (
+                  jupyterhub_request_duration_seconds_count{handler="jupyterhub.handlers.pages.SpawnPendingHandler", code="422"}
+                    or 0*jupyterhub_request_duration_seconds_count # 0 values and absent values are distinct, so we need to 'fill-in' absent values across the time series so that the changes operator acts consistently
+                  )
+                )[30m:1m]
+            ) >= 1
+          for: 0m
+          labels:
+            cluster: earthscope
+            severity: immediate action needed
+  alertmanager:
+    config:
+      route:
+        routes:
+        - continue: false
+          matchers:
+          - cluster =~ .*
+          - alertname =~ ".*has 0% of space left.*"
+          receiver: known-storage-outage-pager
+        - matchers:
+          - cluster =~ .*
+          - alertname =~ ".*space left.*"
+          receiver: persistent-storage-pager
+        - matchers:
+          - cluster =~ .*
+          - alertname =~ ".*pod has restarted"
+          receiver: pod-restarts-pager
+        - matchers:
+          - cluster =~ .*
+          - alertname =~ ".*failed to start.*"
+          receiver: server-startup-pager
+        - matchers:
+          - cluster =~ .*
+          - alertname =~ ".*stuck in state.*"
+          receiver: pod-stuck-in-state-pager
+        - matchers:
+          - cluster =~ .*
+          - alertname =~ "Compute usage quotas.*"
+          receiver: jupyterhub-usage-quotas
 grafana:
   grafana.ini:
     server:
@@ -40,13 +366,31 @@ cluster-autoscaler:
     clusterName: earthscope
   awsRegion: us-east-2
 
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: earthscope
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/aws_ce_grafana_backend_iam_role
-
 calico:
   enabled: true
+
+jupyterhub-cost-monitoring:
+  enabled: true
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
+
+nginx-ingress:
+  enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress

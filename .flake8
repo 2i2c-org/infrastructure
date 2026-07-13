@@ -9,3 +9,6 @@
 # F841: local variable ... is assigned to but never used
 ignore = E, C, W, I100, I101, D400, F841
 builtins = c
+exclude = 
+  # This is a `.py` file but is encrypted with sops
+  deployer/dev_commands/generate/cryptnono_config/enc-blocklist-generator.secret.py

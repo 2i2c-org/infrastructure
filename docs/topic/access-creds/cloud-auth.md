@@ -45,7 +45,7 @@ AWS Accounts
 : Collections of services and infrastructure that generated their own bills. Kind-of like `projects` in Google Cloud Platform. For example, the Kubernetes cluster `2i2c-aws-us` runs in a dedicated AWS Account.
 
 AWS Organizations
-: Organizations are basically collections of accounts. They make it easy to group **access** to multiple accounts via things like [AWS Single Sign On](cloud-access:aws-sso). Every AWS Organization has a "Management Account" that defines all of the other accounts in the organization.
+: Organizations are basically collections of accounts. They make it easy to group **access** to multiple accounts via things like [AWS Single Sign On](#cloud-access:aws-sso). Every AWS Organization has a "Management Account" that defines all of the other accounts in the organization.
 
 (cloud-access:aws-management-account)=
 AWS Management Account
@@ -83,9 +83,40 @@ check out [Firefox Multi-Account Containers](https://addons.mozilla.org/en-US/fi
 #### Access AWS from your terminal
 
 To use programs like `eksctl`, or `terraform`, you need to get AWS credentials that
-can be accessed from the terminal on your computer. When set up with AWS SSO, the portal
-easily provides access with _time limited_ credentials. These are valid only for **60 minutes**,
-and will need to be refreshed with new sets whenever that time is up.
+can be accessed from the terminal on your computer.
+
+##### Programmatically
+
+1. Configure a SSO profile, named 2i2c for example
+   ```bash
+   aws configure sso --profile 2i2c
+   ```
+
+   1. You will be presented with a prompt asking you info about this SSO profile.
+      The info that **must** be introduced is:
+      - **SSO start URL**: https://2i2c.awsapps.com/start#/
+      - **SSO region:** us-east-1 (this is where global SSO infra is located)
+   2. You will then be presented with a list of accounts available under this SSO.
+      Choose any of them (it is not relevant for this workflow)
+   3. You will then be presented with the roles options.
+      Choose the one appropriate (\*not convinced it's relevant for this workflow)
+   4. Some CLI related info:
+      - **CLI default client Region**: us-east-1
+      - **CLI default output format**: json
+2. Get your creds using the deployer:
+   ```bash
+   deployer exec aws sso-shell 2i2c
+   ```
+   And then you'll be prompted to choose from a list of account names and a list of roles which one to authenticate against.
+3. Optionally, you can also run the deployer passing it all the info and an initial command to be run inside the shell
+   ```bash
+   deployer exec aws sso-shell 2i2c two-eye-two-see AdministratorAccess "eksctl get cluster --region=us-west-2"
+   ```
+
+##### From the Web console
+
+When set up with AWS SSO, the portal easily provides access with _time limited_ credentials.
+These are valid only for **60 minutes**, and will need to be refreshed with new sets whenever that time is up.
 
 1. Log-in at [2i2c.awsapps.com/start#/](https://2i2c.awsapps.com/start#/).
 2. Select an account from the list of displayed options.
@@ -112,7 +143,6 @@ To do so, follow these steps:
    after logging in for current set of IAM users.
 2. Go to the [SSO users](https://console.aws.amazon.com/singlesignon/identity/home?region=us-east-1#!/users)
    page, and create an appropriate entry for the new user.
-
    - Their username should match their `2i2c.org` email address.
    - Use their `2i2c.org` address as email address.
    - Other than email and username, provide as little info as possible. This would be
@@ -128,9 +158,9 @@ To do so, follow these steps:
 In some cases we need to gain root access to an AWS account, e.g. migrating billing responsibility to a client. To do this,
 
 1. Log into the AWS SSO and take note of the Account ID (12 digits) and root user email address that you want to gain root access to. This information is also available by viewing "Organizations" from the [2i2c-sandbox account](https://us-east-1.console.aws.amazon.com/organizations/v2/home/accounts). The root user email address is usually aliased to `support@2i2c.org`.
-1. Sign into AWS and click on {bdg-muted-line}`Sign in using root user email`.
-1. Enter the root user email address and click on {bdg-muted-line}`Next`.
-1. Click on {bdg-muted-line}`Forgot password`.
+1. Sign into AWS and click on {kbd}`Sign in using root user email`.
+1. Enter the root user email address and click on {kbd}`Next`.
+1. Click on {kbd}`Forgot password`.
 1. Complete the CAPTCHA to send a password reset request to the root user email address.
 1. Follow the instructions to reset the password.
 1. Sign in using the root user email address and the new password. You will be prompted to enter a verification code sent to the root user email address.
@@ -190,7 +220,6 @@ are used to provide access to the AWS account from your terminal.
    token from your MFA device. The documentation to do this is here: <https://repost.aws/knowledge-center/authenticate-mfa-cli>.
 
    The two parameters required to login are:
-
    - `arn-of-the-mfa-device` can be found by visiting the 'Security Credentials' page when you're logged into the web console, after
    - `code-from-token` is a 6 digit integer code generated by your MFA device
 
@@ -215,7 +244,7 @@ are used to provide access to the AWS account from your terminal.
    expire in 12 hours, and you will need to re-authenticate.
 
 ```{note}
-Currently, the only accounts that enforce MFA are some [individual accounts](cloud-access:aws-individual-accounts) not under 2i2c's organisation SSO.
+Currently, the only accounts that enforce MFA are some [individual accounts](#cloud-access:aws-individual-accounts) not under 2i2c's organisation SSO.
 Though in the future, we may enforce MFA for our organisation as well.
 ```
 

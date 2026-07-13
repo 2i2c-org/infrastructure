@@ -17,7 +17,7 @@ We call this a `binderhub-ui` style hub and the primary features offered would b
 
 ## Generate a sample initial hub configuration
 
-Directly run the following `deployer` command or follow the steps in the [Initial Hub setup](hub-deployment-guide:runbooks:phase3.1) guide to get started on a very basic hub setup or copy-paste the configuration of a similar hub, then follow the steps below.
+Directly run the following `deployer` command or follow the steps in the [Initial Hub setup](#hub-deployment-guide:runbooks:phase3.1) guide to get started on a very basic hub setup or copy-paste the configuration of a similar hub, then follow the steps below.
 
 ```bash
 deployer generate hub-asset binderhub-ui-values-file
@@ -37,21 +37,21 @@ The following configuration applies to both authenticated and not-authenticated 
 
 Some of the configuration that gets inherited either from the `basehub` defaults or from the cluster's common value file (if that exists) needs to be clear out as not relevant for a binderhub style hub.
 
-- disable `jupyterhub.custom.jupyterhub-configurator`
+- disable `jupyterhub-home-nfs` (no persistent storage)
 
-    ```yaml
-    jupyterhub:
-      custom:
-        jupyterhubConfigurator:
-          enabled: false
-    ```
+  ```yaml
+
+  jupyterhub-home-nfs:
+    enabled: false
+  ```
+
 - disable `jupyterhub.custom.singleuserAdmin.extraVolumeMounts` (no persistent storage so these don't make sense)
 
     ```yaml
     jupyterhub:
       custom:
         singleuserAdmin:
-          extraVolumeMounts: []
+          extraVolumeMounts:
     ```
 - on the singleuser server, disable storage and init containers and profile lists
 
@@ -64,7 +64,8 @@ Some of the configuration that gets inherited either from the `basehub` defaults
       singleuser:
         storage:
           type: none
-          extraVolumeMounts: []
+          extraVolumeMounts:
+          extraVolumes:
         initContainers: []
         profileList: []
     ```
@@ -146,21 +147,18 @@ binderhub-service:
     nodeSelector:
       # Schedule dockerApi pods to run on the smallest user nodes only
       # https://github.com/2i2c-org/infrastructure/issues/4241
-      2i2c/hub-name: binder
       node.kubernetes.io/instance-type: n2-highmem-4
   config:
     KubernetesBuildExecutor:
       node_selector:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
-        2i2c/hub-name: binder
         node.kubernetes.io/instance-type: n2-highmem-4
 jupyterhub:
   singleuser:
     nodeSelector:
       # Schedule users on the smallest instance
       # https://github.com/2i2c-org/infrastructure/issues/4241
-      2i2c/hub-name: binder
       node.kubernetes.io/instance-type: n2-highmem-4
 ```
 
@@ -457,11 +455,11 @@ For clusters running on AWS, you can use the encrypted file located at `config/c
 ```
 ### 1. Setup the image registry
 
-Follow the guide at [](howto:features:imagebuilding-hub:image-registry) of the imagebuilding hub.
+Follow the guide at [](#howto:features:imagebuilding-hub:image-registry) of the imagebuilding hub.
 
 ### 2. Further configure the `binderhub-service` chart
 
-Some more configuration of the `binderhub-service` chart is required by following the guide at [](howto:features:imagebuilding-hub:configure-binderhub-service-chart).
+Some more configuration of the `binderhub-service` chart is required by following the guide at [](#howto:features:imagebuilding-hub:configure-binderhub-service-chart).
 Specifically, we need to:
 
 - **Configure `binderhub-service.config.BinderHub.image_prefix** so that BinderHub knows under which prefix to push the images to the registry

@@ -1,6 +1,11 @@
 name: {{ cluster_name }}
-provider: aws # {{ sign_in_url }}
+provider: aws
+provider_url: {{ sign_in_url }}
+metadata:
+  2i2c:
+    hubspot_deal_id: null
 aws:
+  account: {{ cluster_account_id }}
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: {{ cluster_name }}

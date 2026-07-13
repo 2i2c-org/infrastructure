@@ -11,7 +11,7 @@ repos:
 
   # Autoformat: Python code, syntax patterns are modernized
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.20.0
+  rev: v3.21.2
   hooks:
   - id: pyupgrade
     args:
@@ -19,25 +19,21 @@ repos:
 
   # Autoformat: Python code
 - repo: https://github.com/pycqa/isort
-  rev: 6.0.1
+  rev: 9.0.0a3
   hooks:
   - id: isort
 
   # Autoformat: Python code
-- repo: https://github.com/psf/black
-  rev: 25.1.0
+- repo: https://github.com/psf/black-pre-commit-mirror
+  rev: 26.5.1
   hooks:
   - id: black
-        # This is a `.py` file but is encrypted with sops
-    exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Lint: Python code
 - repo: https://github.com/pycqa/flake8
-  rev: 7.2.0
+  rev: 7.3.0
   hooks:
   - id: flake8
-        # This is a `.py` file but is encrypted with sops
-    exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Run `terraform fmt` on all our terraform files automatically
 - repo: https://github.com/yuvipanda/terraform-bin
@@ -52,11 +48,11 @@ repos:
   hooks:
   - id: sops-encryption
     # Add files here if they contain the word 'secret' but should not be encrypted
-    exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/common/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml|helm-charts/aws-ce-grafana-backend/templates/secret\.yaml
+    exclude: secrets\.md|helm-charts/support/templates/prometheus-auth/secret\.yaml|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/common/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml|helm-charts/aws-ce-grafana-backend/templates/secret\.yaml
 
   # Prevent known typos from being committed
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.4.1
+  rev: v2.4.2
   hooks:
   - id: codespell
     args:
@@ -67,10 +63,18 @@ repos:
 
 # Autoformat jsonnet
 - repo: https://github.com/google/go-jsonnet
-  rev: v0.21.0
+  rev: v0.22.0
   hooks:
   - id: jsonnet-format
     exclude: eksctl/template.jsonnet
+
+- repo: local
+  hooks:
+  - id: disallow-dev-commands
+    name: disallow dev commands in commands
+    language: pygrep
+    entry: \b(from|import)\b.*dev_commands
+    files: ^deployer/commands/.*$
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:

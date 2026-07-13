@@ -6,7 +6,7 @@ jupyterhub:
       secretName: https-auto-tls
   scheduling:
     userPlaceholder:
-      # Keep at least one spare node around
+      # Keep at least two spare nodes around
       replicas: 2
       resources:
         requests:
@@ -22,6 +22,3 @@ jupyterhub:
       pvc:
         # prod stores logs, so let's make it big
         storage: 60Gi
-    config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://jupyter.utoronto.ca/hub/oauth_callback

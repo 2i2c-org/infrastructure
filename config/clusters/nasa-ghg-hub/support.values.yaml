@@ -1,0 +1,52 @@
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: nasa-ghg-hub
+  awsRegion: us-west-2
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.nasa-ghg.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org us-ghg-center
+  ingress:
+    hosts:
+    - grafana.nasa-ghg.2i2c.cloud
+    tls:
+    - secretName: grafana-tls
+      hosts:
+      - grafana.nasa-ghg.2i2c.cloud
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+      - prometheus.nasa-ghg.2i2c.cloud
+      tls:
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.nasa-ghg.2i2c.cloud
+
+nginx-ingress:
+  enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress
+
+calico:
+  enabled: true

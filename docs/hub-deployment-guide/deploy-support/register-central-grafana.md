@@ -1,26 +1,54 @@
 (register-new-cluster-with-central-grafana)=
 # Register the cluster's Prometheus server with the central Grafana
 
-Once you have [deployed the support chart](deploy-support-chart), you must also register this cluster as a datasource for the [central Grafana dashboard](grafana-dashboards:central). This will allow you to visualize cluster statistics not only from the cluster-specific Grafana deployment but also from the central dashboard, that aggregates data from all the clusters.
+Once you have [deployed the support chart](#deploy-support-chart), you must also register this cluster as a datasource for the [central Grafana dashboard](#grafana-dashboards:central). This will allow you to visualize cluster statistics not only from the cluster-specific Grafana deployment but also from the central dashboard, that aggregates data from all the clusters.
 
 ```{attention}
-If you ran `deployer generate dedicated-cluster ...` during the [new cluster setup](new-cluster),
+If you ran `deployer generate dedicated-cluster ...` during the [new cluster setup](#new-cluster),
 then a lot of these files will have already been created for you and you do not
 need to recreate them, only update them if required.
 ```
 
 ## Create a `support.secret.values.yaml` file
 
-Only 2i2c staff and our centralized grafana should be able to access the prometheus data on a cluster from outside the cluster.
+Only 2i2c staff and our centralized grafana should be able to access the prometheus data on a cluster from outside the cluster. If you would like to provision extra credentials for users, please see [User access to Prometheus endpoint](/sre-guide/support/prometheus-credentials.md)
 The [basic auth](https://kubernetes.github.io/ingress-nginx/examples/auth/basic/) feature of nginx-ingress is used to restrict this.
-A `support.secret.values.yaml` file is used to provide these secret credentials, which we create under the relevant `config/clusters/<cluster-name>/` folder.
+A `enc-support.secret.values.yaml` file is used to provide these secret credentials, which we create under the relevant `config/clusters/<cluster-name>/` folder.
 It requires the following configuration:
 
 ```yaml
-prometheusIngressAuthSecret:
-  username: <output of pwgen -s 64 1>
-  password: <output of pwgen -s 64 1>
+prometheus:
+  server:
+    probeHeaders:
+      - name: Authorization
+        value: Basic <USER-PASSWORD>
+  serverFiles:
+    web.yml:
+      basic_auth_users:
+    <USER>: <SALTED>
+prometheusAuthSecret:
+  username: <USER>
+  password: <PASSWORD>
 ```
+where
+`<USER>`
+: The random username
+`<PASSWORD>`
+: The random password
+`<SALTED>`
+: See [Prometheus docs](https://prometheus.io/docs/guides/basic-auth/):
+  ```python
+  import getpass
+  import bcrypt
+  
+  password = getpass.getpass("password: ")
+  hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+  print(hashed_password.decode())  
+  ```
+`<USER-PASSWORD>`
+: ```bash
+  echo -n "<USER>:<PASSWORD>" | base64
+  ```
 
 ```{note}
 We use the [pwgen](https://linux.die.net/man/1/pwgen) program, commonly

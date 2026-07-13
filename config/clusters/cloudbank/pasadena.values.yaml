@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [pasadena.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [pasadena.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -32,16 +27,13 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        oauth_callback_url: https://pasadena.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - go.pasadena.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        hosted_domain:
+        - go.pasadena.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         admin_users:
         - yxchang@go.pasadena.edu
@@ -50,3 +42,6 @@ jupyterhub:
         - ericvd@berkeley.edu
         - k_usovich@berkeley.edu
         - sean.smorris@berkeley.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-pasadena

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import subprocess
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -12,14 +12,11 @@ if TYPE_CHECKING:
     from deployer.infra_components.cluster import Cluster
 
 from deployer.utils.file_acquisition import (
-    HELM_CHARTS_DIR,
     get_decrypted_file,
     get_decrypted_files,
 )
 from deployer.utils.helm import wait_for_deployments_daemonsets
 from deployer.utils.rendering import print_colour
-
-from ..utils.jsonnet import render_jsonnet
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -92,7 +89,7 @@ class Hub:
         elif binderhub_service:
             self.imagebuilding = True
 
-    def deploy(self, dask_gateway_version, debug, dry_run):
+    def deploy(self, chart_dir, dask_gateway_version, debug, dry_run):
         """
         Deploy this hub
         """
@@ -149,7 +146,6 @@ class Hub:
             ExitStack() as jsonnet_stack,
         ):
 
-            chart_dir = HELM_CHARTS_DIR / self.spec["helm_chart"]
             cmd = [
                 "helm",
                 "upgrade",
@@ -162,10 +158,8 @@ class Hub:
 
             # Add on rendered jsonnet values.yaml file for the chart
             rendered_values_path = jsonnet_stack.enter_context(
-                render_jsonnet(
+                self.render_jsonnet(
                     chart_dir / "values.jsonnet",
-                    self.cluster.spec["name"],
-                    self.spec["name"],
                 )
             )
 
@@ -182,11 +176,7 @@ class Hub:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(
-                            Path(values_file),
-                            self.cluster.spec["name"],
-                            self.spec["name"],
-                        )
+                        self.render_jsonnet(Path(values_file))
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:
@@ -199,3 +189,18 @@ class Hub:
 
         if not dry_run:
             wait_for_deployments_daemonsets(self.spec["name"])
+
+    @contextmanager
+    def render_jsonnet(self, jsonnet_file: Path, **kwargs):
+        """
+        Render given jsonnet file with context of this hub.
+
+        Any additional kwargs will be passed through to `Cluster.render_jsonnet`
+        """
+        with self.cluster.render_jsonnet(
+            jsonnet_file,
+            hub_name=self.spec["name"],
+            hub_domain=self.spec["domain"],
+            **kwargs,
+        ) as rendered_file:
+            yield rendered_file

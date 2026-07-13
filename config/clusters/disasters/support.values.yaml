@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 prometheus:
   server:
     ingress:
@@ -27,14 +24,6 @@ grafana:
       hosts:
       - grafana.disasters.2i2c.cloud
 
-aws-ce-grafana-backend:
-  enabled: true
-  envBasedConfig:
-    clusterName: disasters
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::515966502221:role/aws_ce_grafana_backend_iam_role
-
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
@@ -43,3 +32,26 @@ cluster-autoscaler:
 
 calico:
   enabled: true
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
+
+nginx-ingress:
+  enabled: true
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress

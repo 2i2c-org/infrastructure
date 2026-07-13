@@ -12,6 +12,15 @@ resource "google_monitoring_notification_channel" "pagerduty_hubs" {
   }
 }
 
+resource "google_monitoring_notification_channel" "pagerduty_certificates" {
+  project      = var.project_id
+  display_name = "PagerDuty Certificate Renewals service"
+  type         = "pagerduty"
+  sensitive_labels {
+    service_key = data.sops_file.pagerduty_integration_key.data["pagerduty.certificates"]
+  }
+}
+
 resource "google_monitoring_notification_channel" "pagerduty_prometheus" {
   project      = var.project_id
   display_name = "PagerDuty Prometheus services"

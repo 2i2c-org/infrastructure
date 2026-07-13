@@ -42,7 +42,7 @@ We call this an `imagebuilding` style hub and the primary features offered would
                     display_name: Pangeo Notebook Image
                     description: "Python image with scientific, dask and geospatial tools"
                     kubespawner_override:
-                      image: pangeo/pangeo-notebook:2023.09.11
+                      image: pangeo/pangeo-notebook:2026.04.29
                   scipy:
                     display_name: Jupyter SciPy Notebook
                     slug: scipy
@@ -189,4 +189,13 @@ to effectively repeat certain config values below.
         node_selector:
           node.kubernetes.io/instance-type: <e.g. r5.xlarge>
 
+1. Mark the Docker storage volume as ephemeral, and owned by the kubelet:
+
+   ```yaml
+   binderhub-service:
+     dockerApi:
+       storage:
+         emptyDir:
+           sizeLimit: 15Gi
    ```
+   This will ensure that once the volume exceeds the storage limit, the storage is ultimately reclaimed by the node. This is particularly useful for clusters which do not regularly recycle nodes, such as nodepools that do not scale to zero.

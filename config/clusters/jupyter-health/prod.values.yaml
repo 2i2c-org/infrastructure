@@ -1,26 +1,14 @@
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::211125465508:role/jupyter-health-prod
-
 nfs:
   pv:
-    serverIP: 10.100.118.64
-
+    serverIP: 10.100.254.159
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-02741e24417a9c2c2
-  quotaEnforcer:
-    hardQuota: '10' # in GB
+
 jupyterhub:
-  ingress:
-    hosts: [jupyter-health.2i2c.cloud]
-    tls:
-    - hosts: [jupyter-health.2i2c.cloud]
-      secretName: https-auto-tls
   hub:
     config:
       GenericOAuthenticator:
-        oauth_callback_url: https://jupyter-health.2i2c.cloud/hub/oauth_callback
         client_id: bS8rx5PRGM3U3XQm4HBLHhqjNyKQzhKsZchYO0Bd
         authorize_url: https://berkeley-jhe-demo.jupyterhealth.org/o/authorize/
         token_url: https://berkeley-jhe-demo.jupyterhealth.org/o/token/
@@ -31,5 +19,3 @@ jupyterhub:
   singleuser:
     extraEnv:
       JHE_URL: https://berkeley-jhe-demo.jupyterhealth.org
-    nodeSelector:
-      2i2c/hub-name: prod

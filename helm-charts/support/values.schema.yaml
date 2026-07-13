@@ -10,11 +10,11 @@ required:
   - prometheus
   - grafana
   - nvidiaDevicePlugin
-  - prometheusIngressAuthSecret
+  - prometheusAuthSecret
   - cryptnono
   - redirects
-  - gcpFilestoreBackups
-  - aws-ce-grafana-backend
+  - jupyterhub-cost-monitoring
+  - disableCoredumps
   - global
 properties:
   # We don't control validation of dependent charts here
@@ -24,19 +24,19 @@ properties:
   ingress-nginx:
     type: object
     additionalProperties: true
+  nginx-ingress:
+    type: object
+    additionalProperties: true
   prometheus:
     type: object
     additionalProperties: true
   grafana:
     type: object
     additionalProperties: true
-  aws-ce-grafana-backend:
+  jupyterhub-cost-monitoring:
     type: object
     additionalProperties: true
   cryptnono:
-    type: object
-    additionalProperties: true
-  gcpFilestoreBackups:
     type: object
     additionalProperties: true
   global:
@@ -45,6 +45,38 @@ properties:
 
   # These provide values for objects we create, so we validate their schema
   # to the best of our ability.
+  copyfail:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+      image:
+        type: object
+        additionalProperties: false
+        properties:
+          repository:
+            type: string
+          tag:
+            type: string
+  dirtyfrag:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+      image:
+        type: object
+        additionalProperties: false
+        properties:
+          repository:
+            type: string
+          tag:
+            type: string
   redirects:
     type: object
     additionalProperties: false
@@ -75,13 +107,36 @@ properties:
                 Relates to the HTTP Status code to use for the redirect.
 
                 Specify "redirect" for 302 (default), or "permanent" for 301.
+  clusterEntrypoint:
+    type: object
+    additionalProperties: false
+    required:
+    - enabled
+    - targetController
+    properties:
+      enabled:
+        type: boolean
+      targetController:
+        type: string
+        enum:
+        - ingress-nginx
+        - nginx-ingress
   nvidiaDevicePlugin:
     type: object
     additionalProperties: false
     required:
       - azure
+      - aws
     properties:
       azure:
+        type: object
+        additionalProperties: false
+        required:
+          - enabled
+        properties:
+          enabled:
+            type: boolean
+      aws:
         type: object
         additionalProperties: false
         required:
@@ -99,7 +154,7 @@ properties:
       enabled:
         type: boolean
 
-  prometheusIngressAuthSecret:
+  disableCoredumps:
     type: object
     additionalProperties: false
     required:
@@ -107,14 +162,53 @@ properties:
     properties:
       enabled:
         type: boolean
+        description: |
+          Enable DaemonSet to disable core dumps on all nodes.
+          This prevents core dumps from filling up disk storage.
+      pauseContainer:
+        type: object
+        required:
+        - image
+        properties:
+          image:
+            type: string
+            description: |
+              Container image to use for the DaemonSet's pause container
+      initContainer:
+        type: object
+        additionalProperties: false
+        required:
+        - image
+        properties:
+          image:
+            type: string
+            description: |
+              Container image to use for the DaemonSet's initcontainer
+          resources:
+            type: object
+            additionalProperties: true
+            description: |
+              Resources for the init container that sets kernel.core_pattern
+
+  prometheusAuthSecret:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          When enabled, creates a Kubernetes Secret with prometheus
+          username and password credentials.
       username:
         type: string
         description: |
-          Username for basic auth protecting prometheus
+          Username for prometheus authentication.
       password:
         type: string
         description: |
-          Password for basic auth protecting prometheus
+          Password for prometheus authentication.
 
   prometheusStorageClass:
     type: object

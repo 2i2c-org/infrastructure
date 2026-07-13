@@ -115,8 +115,8 @@ it does not, wait for about 15 minutes and try again - DNS propagation may take 
 
 ## Deploying the configuration change
 
-If there is a staging hub in the list of hubs being changed, you can [deploy manually](hubs:manual-deploy)
-to test these changes. To test the redirects manually, you can use the [deploy-support](deploy-support-chart:manual)
+If there is a staging hub in the list of hubs being changed, you can [deploy manually](#hubs:manual-deploy)
+to test these changes. To test the redirects manually, you can use the [deploy-support](#deploy-support-chart:manual)
 command.
 
 ### Determine a possible deployment time window

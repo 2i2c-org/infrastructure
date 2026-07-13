@@ -1,0 +1,23 @@
+nfs:
+  pv:
+    serverIP: 10.100.153.248
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-09652a5540fdbd50f
+jupyterhub:
+  singleuser:
+    extraEnv:
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23libKsm2tlJzjYplj
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-advanced-staging-push
+  hub:
+    loadRoles:
+      user:
+        scopes:
+        - access:services!service=binder
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-staging-
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.staging.svc.cluster.local:8081/hub/api

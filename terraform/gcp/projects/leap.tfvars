@@ -2,17 +2,18 @@ prefix     = "leap"
 project_id = "leap-pangeo"
 # core_node_machine_type is set to n2-highmem-4 instead of n2-highmem-2 because
 # prometheus requires more memory than a n2-highmem-2 can provide.
-core_node_machine_type = "n2-highmem-4"
+core_node_machine_type  = "n2-highmem-4"
+single_process_oom_kill = false
 
 # Cloud costs for this project are not passed through by 2i2c
 budget_alert_enabled = false
 billing_account_id   = ""
 
 k8s_versions = {
-  min_master_version : "1.32.1-gke.1357001",
-  core_nodes_version : "1.32.1-gke.1357001",
-  notebook_nodes_version : "1.32.1-gke.1357001",
-  dask_nodes_version : "1.32.1-gke.1357001",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
+  dask_nodes_version : "1.35.3-gke.1943000",
 }
 
 # GPUs not available in us-central1-b
@@ -22,7 +23,7 @@ region = "us-central1"
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true
 
-# No filestore. Decommissioned in https://github.com/2i2c-org/infrastructure/issues/5476 
+# No filestore. Decommissioned in https://github.com/2i2c-org/infrastructure/issues/5476
 filestores = {}
 
 persistent_disks = {
@@ -31,7 +32,7 @@ persistent_disks = {
     name_suffix = "staging"
   },
   "prod" = {
-    size        = 3500 # in GB
+    size        = 4650 # in GB
     name_suffix = "prod"
   }
 }
@@ -112,7 +113,7 @@ notebook_nodes = {
     },
   }
 
-  "n2-highmem-16-c" : {
+  "n2-highmem-16-a" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
     min : 1,
@@ -124,7 +125,7 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-64"
   },
-  "gpu-t4-b" : {
+  "gpu-t4" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
@@ -142,7 +143,41 @@ notebook_nodes = {
       "us-central1-f"
     ]
   },
-}
+  "gpu-l4-a" : {
+    min : 0,
+    max : 100,
+    machine_type : "g2-standard-4",
+    gpu : {
+      enabled : true,
+      type : "nvidia-l4",
+      count : 1
+    },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+    ]
+  },
+  "gpu-a100-a" : {
+    min : 0,
+    max : 100,
+    machine_type : "a2-highgpu-1g",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-a100",
+      count : 1
+    },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f",
+    ]
+}, }
 
 # Setup a single node pool for dask workers.
 #

@@ -30,6 +30,17 @@ class Cluster:
     """
 
     @classmethod
+    def get_all(cls):
+        """
+        Returns a list of all the clusters currently listed under config/clusters
+        """
+        return [
+            cls.from_name(d.name)
+            for d in CONFIG_CLUSTERS_PATH.iterdir()
+            if d.is_dir() and d.name != "templates"
+        ]
+
+    @classmethod
     def from_name(cls, cluster_name: str) -> Cluster:
         cluster_config_path = CONFIG_CLUSTERS_PATH / cluster_name / "cluster.yaml"
 
@@ -48,99 +59,100 @@ class Cluster:
         self.support = self.spec.get("support", {})
 
     @contextmanager
-    def auth(self):
+    def auth(self, silent=False):
         if self.spec["provider"] == "gcp":
-            yield from self.auth_gcp()
+            yield from self.auth_gcp(silent)
         elif self.spec["provider"] == "aws":
-            yield from self.auth_aws()
+            yield from self.auth_aws(silent)
         elif self.spec["provider"] == "azure":
-            yield from self.auth_azure()
+            yield from self.auth_azure(silent)
         elif self.spec["provider"] == "kubeconfig":
-            yield from self.auth_kubeconfig()
+            yield from self.auth_kubeconfig(silent)
         else:
-            raise ValueError(f'Provider {self.spec["provider"]} not supported')
+            raise ValueError(f"Provider {self.spec['provider']} not supported")
 
-    def deploy_support(self, cert_manager_version, debug):
-        cert_manager_url = "https://charts.jetstack.io"
+    def deploy_support(self, cert_manager_version, debug, skip_crds, dry_run):
+        if not skip_crds:
+            cert_manager_url = "https://charts.jetstack.io"
 
-        print_colour("Provisioning cert-manager...")
-        subprocess.check_call(
-            [
-                "kubectl",
-                "apply",
-                "-f",
-                f"https://github.com/cert-manager/cert-manager/releases/download/{cert_manager_version}/cert-manager.crds.yaml",
-            ]
-        )
-        subprocess.check_call(
-            [
-                "helm",
-                "upgrade",
-                "cert-manager",  # given release name (aka. installation name)
-                "cert-manager",  # helm chart to install
-                f"--repo={cert_manager_url}",
-                "--install",
-                "--create-namespace",
-                "--namespace=cert-manager",
-                f"--version={cert_manager_version}",
-            ]
-        )
-        print_colour("Done!")
-
-        if self.spec["provider"] == "aws":
-            print_colour("Provisioning tigera operator...")
-            # Hardcoded here, as we want to upgrade everywhere together
-            # Ideally this would be a subchart of our support chart,
-            # but helm has made some unfortunate architectural choices
-            # with respect to CRDs and they seem super unreliable when
-            # used as subcharts. So we install it here directly from the
-            # manifests.
-            # We unconditionally install this on all AWS clusters - however,
-            # that doesn't actually turn NetworkPolicy enforcement on. That
-            # requires setting `calico.enabled` to True in `support` so a
-            # calico `Installation` object can be set up.
-            # I deeply loathe the operator *singleton* pattern.
-            tigera_operator_version = "v3.29.3"
+            print_colour("Provisioning cert-manager...")
             subprocess.check_call(
                 [
                     "kubectl",
                     "apply",
-                    "--force-conflicts",  # Remove after https://github.com/2i2c-org/infrastructure/issues/5961
-                    "--server-side",  # https://github.com/projectcalico/calico/issues/7826
                     "-f",
-                    f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml",
+                    f"https://github.com/cert-manager/cert-manager/releases/download/{cert_manager_version}/cert-manager.crds.yaml",
+                ]
+            )
+            subprocess.check_call(
+                [
+                    "helm",
+                    "upgrade",
+                    "cert-manager",  # given release name (aka. installation name)
+                    "cert-manager",  # helm chart to install
+                    f"--repo={cert_manager_url}",
+                    "--install",
+                    "--create-namespace",
+                    "--namespace=cert-manager",
+                    f"--version={cert_manager_version}",
                 ]
             )
             print_colour("Done!")
 
-            # Patch the tigera operator to remove the NoSchedule toleration
-            # otherwise it will schedule on tainted nodes
-            print_colour("Patching tigera operator...")
-            patch_tolerations = {
-                "spec": {
-                    "template": {
-                        "spec": {
-                            "tolerations": [
-                                {"effect": "NoExecute", "operator": "Exists"},
-                            ],
+            if self.spec["provider"] == "aws":
+                print_colour("Provisioning tigera operator...")
+                # Hardcoded here, as we want to upgrade everywhere together
+                # Ideally this would be a subchart of our support chart,
+                # but helm has made some unfortunate architectural choices
+                # with respect to CRDs and they seem super unreliable when
+                # used as subcharts. So we install it here directly from the
+                # manifests.
+                # We unconditionally install this on all AWS clusters - however,
+                # that doesn't actually turn NetworkPolicy enforcement on. That
+                # requires setting `calico.enabled` to True in `support` so a
+                # calico `Installation` object can be set up.
+                # I deeply loathe the operator *singleton* pattern.
+                tigera_operator_version = "v3.29.3"
+                subprocess.check_call(
+                    [
+                        "kubectl",
+                        "apply",
+                        "--force-conflicts",  # This gives ownership to the resource, back to kubectl https://kubernetes.io/docs/reference/using-api/server-side-apply/#conflicts
+                        "--server-side",  # https://github.com/projectcalico/calico/issues/7826
+                        "-f",
+                        f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml",
+                    ]
+                )
+                print_colour("Done!")
+
+                # Patch the tigera operator to remove the NoSchedule toleration
+                # otherwise it will schedule on tainted nodes
+                print_colour("Patching tigera operator...")
+                patch_tolerations = {
+                    "spec": {
+                        "template": {
+                            "spec": {
+                                "tolerations": [
+                                    {"effect": "NoExecute", "operator": "Exists"},
+                                ],
+                            }
                         }
                     }
                 }
-            }
-            patch_tolerations_json = json.dumps(patch_tolerations)
-            subprocess.check_call(
-                [
-                    "kubectl",
-                    "--namespace",
-                    "tigera-operator",
-                    "patch",
-                    "deployment",
-                    "tigera-operator",
-                    "--patch",
-                    patch_tolerations_json,
-                ],
-            )
-            print_colour("Done!")
+                patch_tolerations_json = json.dumps(patch_tolerations)
+                subprocess.check_call(
+                    [
+                        "kubectl",
+                        "--namespace",
+                        "tigera-operator",
+                        "patch",
+                        "deployment",
+                        "tigera-operator",
+                        "--patch",
+                        patch_tolerations_json,
+                    ],
+                )
+                print_colour("Done!")
 
         print_colour("Provisioning support charts...")
 
@@ -172,7 +184,7 @@ class Cluster:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
                     rendered_path = jsonnet_stack.enter_context(
-                        render_jsonnet(Path(values_file), self.spec["name"], None)
+                        self.render_jsonnet(Path(values_file))
                     )
                     cmd.append(f"--values={rendered_path}")
                 else:
@@ -181,13 +193,16 @@ class Cluster:
             if debug:
                 cmd.append("--debug")
 
+            if dry_run:
+                cmd.append("--dry-run")
+
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             subprocess.check_call(cmd)
 
         wait_for_deployments_daemonsets("support")
         print_colour("Done!")
 
-    def auth_kubeconfig(self):
+    def auth_kubeconfig(self, silent: bool):
         """
         Context manager for authenticating with just a kubeconfig file
 
@@ -206,7 +221,7 @@ class Cluster:
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
 
-    def auth_aws(self):
+    def auth_aws(self, silent: bool):
         """
         Reads `aws` nested config and temporarily sets environment variables
         like `KUBECONFIG`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`
@@ -246,12 +261,14 @@ class Cluster:
                     "update-kubeconfig",
                     f"--name={cluster_name}",
                     f"--region={region}",
-                ]
+                ],
+                stdout=subprocess.DEVNULL if silent else None,
+                stderr=subprocess.DEVNULL if silent else None,
             )
 
             yield
 
-    def auth_azure(self):
+    def auth_azure(self, silent: bool):
         """
         Read `azure` nested config, login to Azure with a Service Principal,
         activate the appropriate subscription, then authenticate against the
@@ -285,7 +302,9 @@ class Cluster:
                     f"--username={service_principal['service_principal_id']}",
                     f"--password={service_principal['service_principal_password']}",
                     f"--tenant={service_principal['tenant_id']}",
-                ]
+                ],
+                stdout=subprocess.DEVNULL if silent else None,
+                stderr=subprocess.DEVNULL if silent else None,
             )
 
             # Set the Azure subscription
@@ -295,7 +314,9 @@ class Cluster:
                     "account",
                     "set",
                     f"--subscription={service_principal['subscription_id']}",
-                ]
+                ],
+                stdout=subprocess.DEVNULL if silent else None,
+                stderr=subprocess.DEVNULL if silent else None,
             )
 
             # Get cluster creds
@@ -306,12 +327,14 @@ class Cluster:
                     "get-credentials",
                     f"--name={cluster}",
                     f"--resource-group={resource_group}",
-                ]
+                ],
+                stdout=subprocess.DEVNULL if silent else None,
+                stderr=subprocess.DEVNULL if silent else None,
             )
 
             yield
 
-    def auth_gcp(self):
+    def auth_gcp(self, silent: bool):
         config = self.spec["gcp"]
         key_path = self.config_dir / config["key"]
         project = config["project"]
@@ -340,7 +363,9 @@ class Cluster:
                         f"--project={project}",
                         "get-credentials",
                         cluster,
-                    ]
+                    ],
+                    stdout=subprocess.DEVNULL if silent else None,
+                    stderr=subprocess.DEVNULL if silent else None,
                 )
 
                 yield
@@ -370,7 +395,7 @@ class Cluster:
         )
         if not grafana_tls_config:
             raise ValueError(
-                f'grafana.ingress.tls config for {self.spec["name"]} missing!'
+                f"grafana.ingress.tls config for {self.spec['name']} missing!"
             )
 
         # We only have one tls host right now. Modify this when things change.
@@ -389,7 +414,7 @@ class Cluster:
 
         if "grafana_token" not in config.keys():
             raise ValueError(
-                f'Grafana service account token not found, use `deployer new-grafana-token {self.spec["cluster_name"]}`'
+                f"Grafana service account token not found, use `deployer new-grafana-token {self.spec['cluster_name']}`"
             )
 
         return config["grafana_token"]
@@ -405,14 +430,6 @@ class Cluster:
         with open(config_file) as f:
             support_config = yaml.load(f)
 
-        # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
-        if not support_config.get("prometheusIngressAuthSecret", {}).get(
-            "enabled", False
-        ):
-            raise ValueError(
-                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
-            )
-
         tls_config = (
             support_config.get("prometheus", {})
             .get("server", {})
@@ -422,11 +439,11 @@ class Cluster:
 
         if not tls_config:
             raise ValueError(
-                f'No tls config was found for the prometheus instance of {self.spec["name"]}'
+                f"No tls config was found for the prometheus instance of {self.spec['name']}"
             )
 
         # We only have one tls host right now. Modify this when things change.
-        return f'https://{tls_config[0]["hosts"][0]}'
+        return f"https://{tls_config[0]['hosts'][0]}"
 
     def get_cluster_prometheus_creds(self) -> tuple[str, str]:
         """
@@ -441,12 +458,36 @@ class Cluster:
                 support_config = yaml.load(f)
 
         # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
-        if "prometheusIngressAuthSecret" not in support_config:
+        auth = support_config.get("prometheusAuthSecret", {})
+        if auth is None:
             raise ValueError(
-                f"""`prometheusIngressAuthSecret` wasn't configured for {self.spec["name"]}"""
+                f"""`prometheusAuthSecret` secret wasn't configured for {self.spec["name"]}"""
             )
 
-        return (
-            support_config["prometheusIngressAuthSecret"]["username"],
-            support_config["prometheusIngressAuthSecret"]["password"],
-        )
+        return (auth["username"], auth["password"])
+
+    @contextmanager
+    def render_jsonnet(self, jsonnet_file: Path, **kwargs):
+        """
+        Render given jsonnet file with context of this cluster.
+
+        Any additional kwargs will be passed through to `utils.jsonnet.render_jsonnet`
+        """
+        render_args = {
+            "jsonnet_file": jsonnet_file,
+            "provider": self.spec["provider"],
+            "cluster_name": (
+                self.spec["aws"]["clusterName"]
+                if self.spec["provider"] == "aws"
+                else self.spec["name"]
+            ),
+        }
+        render_args.update(kwargs)
+        if self.spec["provider"] == "aws":
+            render_args["account_id"] = self.spec["aws"]["account"]
+        elif self.spec["provider"] == "gcp":
+            render_args["account_id"] = self.spec["gcp"]["project"]
+        else:
+            render_args["account_id"] = None
+        with render_jsonnet(**render_args) as rendered_file:
+            yield rendered_file

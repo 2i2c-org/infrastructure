@@ -1,9 +1,4 @@
 jupyterhub:
-  ingress:
-    hosts: [reedley.cloudbank.2i2c.cloud]
-    tls:
-    - hosts: [reedley.cloudbank.2i2c.cloud]
-      secretName: https-auto-tls
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts
@@ -34,7 +29,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://reedley.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://idp.scccd.edu/idp/shibboleth:
             default: true
@@ -54,3 +48,6 @@ jupyterhub:
         - ericvd@berkeley.edu
         - k_usovich@berkeley.edu
         - sean.smorris@berkeley.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-reedley

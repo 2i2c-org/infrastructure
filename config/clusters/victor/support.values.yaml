@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: true
-
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
@@ -33,13 +30,23 @@ prometheus:
         hosts:
         - prometheus.victor.2i2c.cloud
 
-aws-ce-grafana-backend:
+nginx-ingress:
   enabled: true
-  envBasedConfig:
-    clusterName: victor
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/aws_ce_grafana_backend_iam_role
+  controller:
+    ingressClass:
+      # Claim the `nginx` ingress class
+      create: true
+
+ingress-nginx:
+  controller:
+    # Turn off this controller
+    replicaCount: 0
+    # Let go of the `nginx` ingress class
+    ingressClassResource:
+      enabled: false
+
+clusterEntrypoint:
+  targetController: nginx-ingress
 
 redirects:
   rules:
@@ -50,3 +57,8 @@ redirects:
 
 calico:
   enabled: true
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
