@@ -74,6 +74,7 @@ project:
       - file: hub-deployment-guide/configure-auth/canvas.md
       - file: hub-deployment-guide/configure-auth/cilogon.md
       - file: hub-deployment-guide/configure-auth/github-orgs.md
+      - file: hub-deployment-guide/configure-auth/google.md
       - file: hub-deployment-guide/configure-auth/shared-password.md
 
     - file: hub-deployment-guide/hubs/index.md
