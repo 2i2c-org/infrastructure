@@ -71,10 +71,6 @@ persistent_disks = {
     size        = 150
     name_suffix = "csm"
   }
-  "csum" = {
-    size        = 25
-    name_suffix = "csum"
-  }
   "deanza" = {
     size        = 60
     name_suffix = "deanza"
@@ -271,10 +267,6 @@ persistent_disks = {
     size        = 30
     name_suffix = "sjcc"
   }
-  "sjsu" = {
-    size        = 20
-    name_suffix = "sjsu"
-  }
   "skyline" = {
     size        = 115
     name_suffix = "skyline"
@@ -306,10 +298,6 @@ persistent_disks = {
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
-  }
-  "ucsc" = {
-    size        = 20
-    name_suffix = "ucsc"
   }
   "umd" = {
     size        = 50
