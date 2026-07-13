@@ -35,7 +35,6 @@ jobs:
     - name: Get Deadline
       id: get_deadline
       run: |
-        echo "deadline=$(date -d '+14 days' +'%B %d')" >> $GITHUB_ENV
         echo "deadline_as_iso_date=$(date -d '+14 days' +"%Y-%m-%d")" >> $GITHUB_ENV
     - name: Setup recurrent issue for incident reporting
       uses: ./.github/actions/setup-recurrent-issues
