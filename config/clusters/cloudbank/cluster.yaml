@@ -248,6 +248,14 @@ hubs:
   - common.values.yaml
   - golden.values.yaml
   - enc-golden.secret.values.yaml
+- name: gssm
+  display_name: Governors School of Science and Math
+  domain: gssm.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - gssm.values.yaml
+  - enc-gssm.secret.values.yaml
 - name: gwu
   display_name: George Washington University
   domain: gwu.cloudbank.2i2c.cloud
