@@ -45,5 +45,7 @@ jmespath
 
 # Used for retry logic
 tenacity
+# Used for spinning up a hub server
+hucl
 
 bcrypt
