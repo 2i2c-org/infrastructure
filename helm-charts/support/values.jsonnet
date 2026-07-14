@@ -126,7 +126,7 @@ local makePodStuckInPendingForTooLongAlert = function(
   severity,
                                              ) {
   alert: 'Pod stuck in Pending for at least 30m',
-  # Ignore continuous image pre-pullers, as on large images it can take more than 30min to pull
+  // Ignore continuous image pre-pullers, as on large images it can take more than 30min to pull
   expr: |||
     max by (namespace, pod) (kube_pod_status_phase{phase="Pending", pod!~"^continuous-image-puller-.*"}) > 0
   |||,
