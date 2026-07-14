@@ -1,16 +1,79 @@
-import os
+import asyncio
+import contextlib
 from pathlib import Path
 
-from jhub_client.execute import JupyterHubAPI, execute_notebook
+import nbformat
+from hucl.flows import (
+    create_user,
+    ensure_api_url,
+    start_server,
+    stop_server,
+)
+from jupyter_kernel_client import KernelClient
 
 from deployer.utils.rendering import print_colour
 
 
-def notebook_dir(hub_type):
-    return (Path(__file__).parent).joinpath("test-notebooks", hub_type)
+def notebook_dir(hub_type: str) -> Path:
+    return Path(__file__).parent.joinpath("test-notebooks", hub_type)
 
 
-async def check_hub_health(hub_url, test_notebook_path, service_api_token):
+def execute_notebook(path: Path, server_url: str, service_api_token: str):
+    """
+    Execute a single notebook under a new kernel.
+    """
+    with path.open() as f:
+        nb = nbformat.read(f, as_version=4)
+
+    # Extract non-empty code cell sources from the notebook
+    code_fragments = (
+        c.source for c in nb.cells if c.cell_type == "code" and c.source.strip()
+    )
+
+    # Start a kernel, and run each fragment serially
+    with KernelClient(
+        server_url=server_url.rstrip("/"), token=service_api_token
+    ) as kernel:
+        for i, fragment in enumerate(code_fragments, start=1):
+            reply = kernel.execute(fragment)
+
+            if reply["execution_count"] != i:
+                raise RuntimeError("Cell was not executed")
+
+            if reply["status"] != "ok":
+                raise RuntimeError("Execution status was not OK")
+
+
+@contextlib.asynccontextmanager
+async def launch_temporary_deployment_server(hub_url: str, service_api_token: str):
+    """
+    Spin up a temporary JupyterHub server under the `deployment-service-check` name.
+    Stop the server after completion.
+    """
+    username = "deployment-service-check"
+
+    # First, ensure we have a user
+    hub_api_url = ensure_api_url(f"{hub_url}/hub/api")
+    await create_user.asyn(
+        api_url=hub_api_url, api_token=service_api_token, user_name=username
+    )
+
+    # Now spin up a server
+    partial_server_url = await start_server.asyn(
+        api_url=hub_api_url, api_token=service_api_token, user_name=username
+    )
+    try:
+        yield f"{hub_url}{partial_server_url}"
+
+    finally:
+        await stop_server.asyn(
+            api_url=hub_api_url,
+            api_token=service_api_token,
+            user_name=username,
+        )
+
+
+async def test_hub_healthy(hub_url, api_token, hub_type):
     """
     After each hub gets deployed, validate that it 'works'.
 
@@ -18,66 +81,24 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
     sure it runs to completion. Stop and delete the test server at the end. If any of these
     steps fail, declare the hub as having failed the health check
     """
-
-    username = "deployment-service-check"
-
-    # Export the hub health check service as an env var so that jhub_client can read it.
-    orig_service_token = os.environ.get("JUPYTERHUB_API_TOKEN", None)
-
+    loop = asyncio.get_running_loop()
+    notebooks_path = notebook_dir(hub_type)
+    print_colour(f"Starting hub {hub_url} health validation...", "yellow")
     try:
-        os.environ["JUPYTERHUB_API_TOKEN"] = service_api_token
-
-        # Cleanup: if the server takes more than 90s to start, then because it's in a `spawn pending` state,
-        # it cannot be deleted. So we delete it in the next iteration, before starting a new one,
-        # so that we don't have more than one running.
-        hub = JupyterHubAPI(hub_url)
-        async with hub:
-            user = await hub.get_user(username)
-            if user:
-                if user["server"] and not user["pending"]:
-                    await hub.ensure_server_deleted(username, 60)
-
-                # If we don't delete the user too, than we won't be able to start a kernel for it.
-                # This is because we would have lost its api token from the previous run.
-                await hub.delete_user(username)
-
-        # Create a new user, start a server and execute a notebook
-        await execute_notebook(
-            hub_url,
-            test_notebook_path,
-            username=username,
-            server_creation_timeout=360,
-            kernel_execution_timeout=360,  # This doesn't do anything yet
-            create_user=True,
-            delete_user=False,  # To be able to delete its server in case of failure
-            stop_server=True,  # If the health check succeeds, this will delete the server
-            validate=False,  # Don't validate notebook outputs. We only care that it runs top-to-bottom without error.
-        )
-    finally:
-        if orig_service_token:
-            os.environ["JUPYTERHUB_API_TOKEN"] = orig_service_token
-        else:
-            del os.environ["JUPYTERHUB_API_TOKEN"]
-
-
-async def test_hub_healthy(hub_url, api_token, hub_type):
-    nb_dir = notebook_dir(hub_type)
-    try:
-        print_colour(f"Starting hub {hub_url} health validation...", "yellow")
-        for root, _, files in os.walk(nb_dir, topdown=False):
-            for _, name in enumerate(files):
-                # We only want to run the "scale_dask_workers.ipynb" file if the
-                # check_dask_scaling variable is true. We continue in the loop if
-                # check_dask_scaling == False when we iterate over this file.
-                print_colour(f"Running {name} test notebook...", "yellow")
-
-                test_notebook_path = os.path.join(root, name)
-                await check_hub_health(hub_url, test_notebook_path, api_token)
-
-        print_colour(f"Hub {hub_url} is healthy!")
+        async with launch_temporary_deployment_server(hub_url, api_token) as server_url:
+            for notebook_path in notebooks_path.glob("*.ipynb"):
+                print_colour(f"Running {notebook_path.name} test notebook...", "yellow")
+                await loop.run_in_executor(
+                    None, execute_notebook, notebook_path, server_url, api_token
+                )
     except Exception as e:
+        import traceback
+
+        traceback.print_exception(e)
         print_colour(
             f"Hub {hub_url} not healthy! Stopping further deployments. Exception was {e}.",
             "red",
         )
         raise (e)
+    else:
+        print_colour(f"Hub {hub_url} is healthy!")
