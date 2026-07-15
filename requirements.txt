@@ -47,5 +47,6 @@ jmespath
 tenacity
 # Used for spinning up a hub server
 hucl
+nbformat
 
 bcrypt
