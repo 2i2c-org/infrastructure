@@ -21,6 +21,7 @@ jobs:
         title: ${{ env.issue_title }}
         state: open
         labels: recurrent
+        fail-on-error: false
 
   create-issue:
     if: ${{ needs.compute-week.outputs.valid_week == 'True' && needs.check-if-issue-already-exists.outputs.id == '' }}
