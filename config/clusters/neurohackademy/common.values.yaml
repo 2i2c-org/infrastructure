@@ -112,7 +112,7 @@ jupyterhub:
               display_name: hub-user-image
               slug: regular-profile
               kubespawner_override:
-                image: quay.io/neurohackademy2026/hub-user-image:13493afc6202
+                image: quay.io/neurohackademy2026/hub-user-image:0e73040851b0
                 init_containers: *init_containers
             nh2026-gpu:
               display_name: hub-user-image-gpu
