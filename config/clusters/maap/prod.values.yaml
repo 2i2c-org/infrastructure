@@ -30,7 +30,7 @@ jupyterhub:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-prod/$(JUPYTERHUB_USER)
       MAAP_API_HOST: api.maap-project.org
-      DOCKERIMAGE_PATH_DEFAULT: mas.maap-project.org/root/maap-workspaces/custom_images/maap_base:v5.0.0
+      DOCKERIMAGE_PATH_DEFAULT: mas.maap-project.org/root/maap-workspaces/custom_images/maap_base:v6.0.0
       DOCKERIMAGE_PATH_BASE_IMAGE: $(JUPYTER_IMAGE)
       WORKSPACE_BUCKET: maap-ops-workspace
     profileList:
@@ -50,20 +50,20 @@ jupyterhub:
               image: '{value}'
           choices:
             01-pangeo:
-              display_name: Modified Pangeo Notebook v5.1.0
+              display_name: Modified Pangeo Notebook v5.2.0
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.1.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.2.0
             02-rocker:
-              display_name: Rocker Geospatial v5.1.0
+              display_name: Rocker Geospatial v5.2.0
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.1.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.2.0
             03-isce3:
-              display_name: isce3 v5.1.0
+              display_name: isce3 v5.2.0
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.1.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.2.0
             04-pangeo-ogc:
               display_name: OGC compliant Modified Pangeo Notebook v6.0.0
               description: Pangeo based notebook with a Python environment
@@ -194,36 +194,24 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            pytorch:
-              display_name: Pangeo PyTorch ML Notebook
-              default: false
-              slug: pytorch
-              kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2026.06.04
             pytorch-maap:
               display_name: Pangeo PyTorch ML Notebook with MAAP extensions
               default: false
               slug: pytorch
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v5.1.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v5.2.0
             pytorch-maap-ogc:
               display_name: OGC compliant Pangeo PyTorch ML Notebook with MAAP extensions
               default: false
               slug: pytorch
               kubespawner_override:
                 image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v6.0.0
-            tensorflow2:
-              display_name: Pangeo Tensorflow2 ML Notebook
-              default: false
-              slug: tensorflow2
-              kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2026.06.04
             tensorflow2-maap:
               display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
               default: true
               slug: tensorflow2
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v5.1.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v5.2.0
             tensorflow2-maap-ogc:
               display_name: OGC compliant Pangeo Tensorflow2 ML Notebook with MAAP extensions
               default: false
