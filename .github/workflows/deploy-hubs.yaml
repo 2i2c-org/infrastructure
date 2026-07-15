@@ -235,6 +235,9 @@ jobs:
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
       with:
