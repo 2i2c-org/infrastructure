@@ -43,7 +43,7 @@ def deploy_support(
     # "kubectl apply" will be done on CRDs but sometimes more is needed.
     #
     cert_manager_version: str = typer.Option(
-        "v1.20.2", help="Version of cert-manager to install"
+        "v1.20.3", help="Version of cert-manager to install"
     ),
     debug: bool = typer.Option(
         False,
