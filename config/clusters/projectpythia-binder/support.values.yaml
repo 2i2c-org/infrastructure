@@ -24,13 +24,6 @@ grafana:
       hosts:
       - grafana.binder-pythia.jetstream2.2i2c.cloud
 
-redirects:
-  rules:
-  - from: binder-pythia.jetstream2.2i2c.cloud
-    to: binder.projectpythia.org
-  - from: hub.binder-pythia.jetstream2.2i2c.cloud
-    to: hub.projectpythia.org
-
 ingress-nginx:
   controller:
     # Turn off controller

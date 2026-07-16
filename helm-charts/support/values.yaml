@@ -513,9 +513,6 @@ jupyterhub-cost-monitoring:
 prometheusAuthSecret:
   enabled: true
 
-redirects:
-  rules: []
-
 # Enable a daemonset to install nvidia device plugin to GPU nodes
 # Not necessary on GCP & AWS don't need this, as it is handled automatically by terraform or eksctl
 # respectively

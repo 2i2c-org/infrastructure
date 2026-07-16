@@ -1,14 +1,3 @@
-redirects:
-  rules:
-  - from: staging.earthscope.2i2c.cloud
-    to: staging.geolab.earthscope.cloud
-  - from: earthscope.2i2c.cloud
-    to: geolab.earthscope.cloud
-  - from: binder.earthscope.2i2c.cloud
-    to: binder.geolab.earthscope.cloud
-  - from: hub.binder.earthscope.2i2c.cloud
-    to: hub.binder.geolab.earthscope.cloud
-
 prometheus:
   server:
     ingress:

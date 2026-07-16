@@ -12,7 +12,6 @@ required:
   - nvidiaDevicePlugin
   - prometheusAuthSecret
   - cryptnono
-  - redirects
   - jupyterhub-cost-monitoring
   - disableCoredumps
   - global
@@ -77,36 +76,6 @@ properties:
             type: string
           tag:
             type: string
-  redirects:
-    type: object
-    additionalProperties: false
-    required:
-      - rules
-    properties:
-      rules:
-        type: array
-        items:
-          type: object
-          additionalProperties: false
-          required:
-            - from
-            - to
-          properties:
-            from:
-              type: string
-              description: |
-                Domain to redirect from
-            to:
-              type: string
-              description: |
-                Domain to redirect to
-            type:
-              type: string
-              enum: ["redirect", "permanent"]
-              description: |
-                Relates to the HTTP Status code to use for the redirect.
-
-                Specify "redirect" for 302 (default), or "permanent" for 301.
   clusterEntrypoint:
     type: object
     additionalProperties: false
