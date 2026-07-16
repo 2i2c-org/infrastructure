@@ -22,6 +22,7 @@ hubs:
   - common-staging.values.yaml
   - default-common.values.yaml
   - default-staging.values.yaml
+  - enc-common-staging.secret.values.yaml
   - enc-default-staging.secret.values.yaml
 - name: prod
   display_name: University of Toronto (prod)
@@ -43,6 +44,7 @@ hubs:
   - common-staging.values.yaml
   - r-common.values.yaml
   - r-staging.values.yaml
+  - enc-common-staging.secret.values.yaml
   - enc-r-staging.secret.values.yaml
 - name: r-prod
   display_name: University of Toronto (R)
