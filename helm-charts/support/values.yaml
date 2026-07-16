@@ -28,11 +28,11 @@ dirtyfrag:
 
 clusterEntrypoint:
   enabled: true
-  targetController: ingress-nginx
+  targetController: nginx-ingress
 
 nginx-ingress:
   # Disable this by default
-  enabled: false
+  enabled: true
   controller:
     reportIngressStatus:
       # Disable leader election — we only have one replica.
@@ -49,7 +49,8 @@ nginx-ingress:
     enableSnippets: true
 
     ingressClass:
-      create: false
+      # Claim the `nginx` ingress class
+      create: true
 
     service:
       type: ClusterIP

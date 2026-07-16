@@ -29,13 +29,3 @@ grafana:
     - secretName: grafana-tls
       hosts:
       - grafana.hhmi.2i2c.cloud
-
-nginx-ingress:
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-clusterEntrypoint:
-  targetController: nginx-ingress

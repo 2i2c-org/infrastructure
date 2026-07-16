@@ -44,14 +44,3 @@ grafana:
       - grafana.pilot.2i2c.cloud
   plugins:
   - grafana-bigquery-datasource
-
-nginx-ingress:
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-clusterEntrypoint:
-  targetController: nginx-ingress
-

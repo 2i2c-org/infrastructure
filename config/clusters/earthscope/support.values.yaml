@@ -365,13 +365,3 @@ jupyterhub-cost-monitoring:
 nvidiaDevicePlugin:
   aws:
     enabled: true
-
-nginx-ingress:
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-clusterEntrypoint:
-  targetController: nginx-ingress
