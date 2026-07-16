@@ -36,14 +36,8 @@ clusterEntrypoint:
   targetController: nginx-ingress
 
 nginx-ingress:
-  # Enable controller
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-    service:
-      annotations:
+  service:
+    annotations:
         # This annotation is a requirement for use in Azure provided
         # LoadBalancer - see https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
-        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
