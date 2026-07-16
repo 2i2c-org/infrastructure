@@ -136,6 +136,7 @@ jupyterhub:
     loadRoles:
       user:
         scopes:
+        - self
         - access:services!service=binder
   singleuser:
     defaultUrl: /lab

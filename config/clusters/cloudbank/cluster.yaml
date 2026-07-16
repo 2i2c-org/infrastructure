@@ -144,14 +144,6 @@ hubs:
   - common.values.yaml
   - csm.values.yaml
   - enc-csm.secret.values.yaml
-- name: csum
-  display_name: Cal Maritime
-  domain: csum.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - csum.values.yaml
-  - enc-csum.secret.values.yaml
 - name: deanza
   display_name: DeAnza College
   domain: deanza.cloudbank.2i2c.cloud
@@ -256,6 +248,14 @@ hubs:
   - common.values.yaml
   - golden.values.yaml
   - enc-golden.secret.values.yaml
+- name: gssm
+  display_name: Governors School of Science and Math
+  domain: gssm.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - gssm.values.yaml
+  - enc-gssm.secret.values.yaml
 - name: gwu
   display_name: George Washington University
   domain: gwu.cloudbank.2i2c.cloud
@@ -544,14 +544,6 @@ hubs:
   - common.values.yaml
   - sjcc.values.yaml
   - enc-sjcc.secret.values.yaml
-- name: sjsu
-  display_name: San Jose State University
-  domain: sjsu.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - sjsu.values.yaml
-  - enc-sjsu.secret.values.yaml
 - name: skyline
   display_name: Skyline College
   domain: skyline.cloudbank.2i2c.cloud
@@ -608,14 +600,6 @@ hubs:
   - common.values.yaml
   - tuskegee.values.yaml
   - enc-tuskegee.secret.values.yaml
-- name: ucsc
-  display_name: University of California, Santa Cruz
-  domain: ucsc.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - ucsc.values.yaml
-  - enc-ucsc.secret.values.yaml
 - name: umd
   display_name: University of Maryland
   domain: umd.cloudbank.2i2c.cloud

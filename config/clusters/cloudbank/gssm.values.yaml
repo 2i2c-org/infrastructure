@@ -5,6 +5,7 @@ jupyterhub:
       # https://2i2c.freshdesk.com/a/tickets/567
       guarantee: 384M
       limit: 1.5G
+    defaultUrl: /lab
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -21,20 +22,21 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://communications.ucsc.edu/wp-content/uploads/2021/04/2021-Logo-Do-2.jpg
-          name: University of California, Santa Cruz
-          url: https://www.ucsc.edu/
+          logo_url: https://www.scgssm.org/themes/custom/scgssm/img/logo-white-text.svg
+          name: Governors School of Science and Math
+          url: https://www.scgssm.org/
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         allowed_idps:
-          urn:mace:incommon:ucsc.edu:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
               username_claim: email
-            allow_all: true
+            allowed_domains:
+            - governors.school
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
@@ -42,8 +44,7 @@ jupyterhub:
         admin_users:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
-        - pmorale5@ucsc.edu
-        - jusimons@ucsc.edu
+        - tbelcher@governors.school
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ucsc
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gssm

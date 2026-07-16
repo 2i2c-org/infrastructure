@@ -191,6 +191,7 @@ basehub:
           - erinmr
           - betolink
           - ateucher
+          - ronnyhdez
   binderhub-service:
     enabled: true
     config:

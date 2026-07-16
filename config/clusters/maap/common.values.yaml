@@ -190,7 +190,9 @@ jupyterhub:
                 return authentication
 
             auth_state = authentication.get("auth_state", {})
-            pgt = f"jwt:{auth_state.get('id_token', '')}"
+            # The access token is required so the API can
+            # retrieve the user's EDL token from the Keycloak broker endpoint.
+            pgt = f"jwt:{auth_state.get('access_token', '')}"
             authenticator.log.info("MAAP post-auth webhook: calling %s/api/members/self", base_url)
 
             await _notify_maap_api(authenticator, base_url, pgt)

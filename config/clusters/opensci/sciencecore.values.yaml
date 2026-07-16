@@ -160,6 +160,7 @@ jupyterhub:
     loadRoles:
       user:
         scopes:
+        - self
         - access:services!service=binder
 binderhub-service:
   enabled: true

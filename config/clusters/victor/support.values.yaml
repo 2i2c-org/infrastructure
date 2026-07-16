@@ -48,13 +48,6 @@ ingress-nginx:
 clusterEntrypoint:
   targetController: nginx-ingress
 
-redirects:
-  rules:
-  - from: victor.2i2c.cloud
-    to: hub.victorproject.org
-  - from: staging.victor.2i2c.cloud
-    to: staging.hub.victorproject.org
-
 calico:
   enabled: true
 

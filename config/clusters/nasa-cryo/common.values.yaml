@@ -61,6 +61,7 @@ basehub:
           - CryoInTheCloud:cryoclouduser
           - CryoInTheCloud:cryocloudadvanced
           - CryoInTheCloud:csdms-2025-workshop
+          - CryoInTheCloud:continuous-dems-workshops
         Authenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to persist auth state
@@ -161,6 +162,7 @@ basehub:
                 - CryoInTheCloud:CryoCloudUser
                 - CryoInTheCloud:csdms-2025-workshop
                 - CryoInTheCloud:fish-pace
+                - CryoInTheCloud:continuous-dems-workshops
                 - 2i2c-org:hub-access-for-2i2c-staff
                 kubespawner_override:
                   mem_guarantee: 1951419879
