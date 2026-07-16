@@ -38,13 +38,5 @@ nginx-ingress:
       # Claim the `nginx` ingress class
       create: true
 
-ingress-nginx:
-  controller:
-    # Turn off this controller
-    replicaCount: 0
-    # Let go of the `nginx` ingress class
-    ingressClassResource:
-      enabled: false
-
 clusterEntrypoint:
   targetController: nginx-ingress

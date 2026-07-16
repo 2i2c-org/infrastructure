@@ -47,15 +47,3 @@ nginx-ingress:
         # This annotation is a requirement for use in Azure provided
         # LoadBalancer - see https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
         service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
-
-ingress-nginx:
-  controller:
-    # Turn off controller
-    replicaCount: 0
-    ingressClassResource:
-      enabled: false
-    service:
-      annotations:
-        # This annotation is a requirement for use in Azure provided
-        # LoadBalancer - see https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
-        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
