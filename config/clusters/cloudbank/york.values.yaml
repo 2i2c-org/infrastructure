@@ -1,13 +1,9 @@
 jupyterhub:
   singleuser:
+    defaultUrl: /lab
     memory:
-      # Increased to help deal with possible kernel restarts
-      # https://2i2c.freshdesk.com/a/tickets/567
-      guarantee: 384M
-      limit: 1.5G
-    image:
-      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: 6d61d3c15d47
+      guarantee: 512M
+      limit: 1G
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -24,9 +20,9 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Evergreen_Valley_College_logo.png/799px-Evergreen_Valley_College_logo.png?20210323212539
-          name: Evergreen Valley College
-          url: https://www.evc.edu/
+          logo_url: https://www.york.cuny.edu/static/media/YORK_co-brand_YC_rk_CUNY_b.d3fe87b2.svg
+          name: York College, CUNY
+          url: https://www.york.cuny.edu/
   hub:
     config:
       JupyterHub:
@@ -38,23 +34,16 @@ jupyterhub:
             username_derivation:
               username_claim: email
             allowed_domains:
-            - sjcc.edu
-            - stu.sjcc.edu
-            - stu.evc.edu
-            - evc.edu
-            - student.sdccd.edu
-            - my.yosemite.edu
+            - york.cuny.edu
+            - stu.york.cuny.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
       Authenticator:
         admin_users:
-        - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
-        - Henry.Estrada@evc.edu
-        - hestrada@evc.edu
-        - David.Eisenberg@evc.edu
-        - Kathy.Jensen@evc.edu
+        - ericvd@berkeley.edu
+        - TSrivatanakul@york.cuny.edu
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-evc
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-york

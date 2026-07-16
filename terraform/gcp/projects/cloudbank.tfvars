@@ -343,6 +343,10 @@ persistent_disks = {
     size        = 20
     name_suffix = "wlac"
   }
+  "york" = {
+    size        = 25
+    name_suffix = "york"
+  }
 }
 
 # Cloud costs for this project are not passed through by 2i2c
