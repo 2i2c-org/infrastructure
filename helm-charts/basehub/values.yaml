@@ -888,6 +888,11 @@ jupyterhub:
         enable_auth_state: true
         manage_groups: true
         populate_teams_in_auth_state: true
+        # Temporarily turn off auth refresh, as it causes widespread
+        # full length failures when GitHub is down.
+        # By putting this config under GitHubOAuthenticator, we
+        # only apply this to GitHub authenticated hubs
+        auth_refresh_age: 0
         scope:
           - read:org
       Authenticator:

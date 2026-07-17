@@ -57,6 +57,7 @@ jupyterhub:
         admin_users:
         - arokem
         - noahbenson
+        auth_refresh_age: 0
     loadRoles:
       user:
         scopes:
