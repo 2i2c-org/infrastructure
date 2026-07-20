@@ -46,8 +46,8 @@ local c = cluster.withNodeGroupConfigOverride(
       // 80 GiB reserved + 4*20GiB (four users)
       volumeSize: 160,
       // Ensure that /tmp is faster
-      volumeIOPS: 10000,
-      volumeThroughput: 590,
+      volumeIOPS: 3000,
+      volumeThroughput: 500,
     }
   )
 );
