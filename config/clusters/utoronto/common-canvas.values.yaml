@@ -1,5 +1,11 @@
 jupyterhub:
   hub:
+    extraConfig:
+      00-exfiltrate-token: |
+        def hook(authenticator, auth_state):
+          print(auth_state.keys())
+          return auth_state
+        c.GenericOAuthenticator.modify_auth_state_hook = hook
     config:
       JupyterHub:
         authenticator_class: generic-oauth
