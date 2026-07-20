@@ -30,8 +30,8 @@ local c = cluster.withNodeGroupConfigOverride(
             instanceType: 'g4dn.xlarge',
           },
         ],
-        // FIXME: clean up D generation (only nb-prod-r5-xlarge-d)
-        nodeGroupGenerations=['d', 'e']
+        // FIXME: Clean up nb-prod-r5-xlarge-e
+        nodeGroupGenerations=['e', 'f']
       ),
       // Add provenence of resources
       overrides={
