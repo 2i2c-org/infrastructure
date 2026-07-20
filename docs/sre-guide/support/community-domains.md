@@ -15,7 +15,7 @@ requests for such custom domains.
   ```{note}
 
   You can verify this by running `kubectl -n support get svc
-  support-ingress-nginx-controller` and looking under the `EXTERNAL IP` column.
+  cluster-entrypoint` and looking under the `EXTERNAL IP` column.
   ```
 
 - **community managed domain**

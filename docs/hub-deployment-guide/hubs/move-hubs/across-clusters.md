@@ -237,10 +237,10 @@ This will catch all the user changes since the last rsync. However long this tak
 
 ## 8. Transfer DNS
 
-Retrieve the external IP address for the `ingress-nginx` load balancer.
+Retrieve the external IP address of the dedicated LoadBalancer service called `cluster-entrypoint`.
 
 ```bash
-kubectl --namespace support get svc support-ingress-nginx-controller
+kubectl --namespace support get svc cluster-entrypoint
 ```
 
 Edit the existing DNS entry in NameCheap that matches the old hub domain and type in this external IP address.
