@@ -55,7 +55,6 @@ nginx-ingress:
     service:
       type: ClusterIP
 
-
 # prometheus is responsible for collecting metrics and informing grafana about
 # the metrics on request. It comes with several dependency charts, where we
 # opt-out of a few.
