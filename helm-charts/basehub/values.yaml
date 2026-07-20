@@ -828,8 +828,8 @@ jupyterhub:
                   name: support
               podSelector:
                 matchLabels:
-                  app.kubernetes.io/name: ingress-nginx
-        # If a hub is using autohttps instead of ingress-nginx, allow traffic
+                  app.kubernetes.io/name: nginx-ingress
+        # If a hub is using autohttps instead of nginx-ingress, allow traffic
         # to the autohttps pod as well
         - to:
             - podSelector:
