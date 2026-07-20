@@ -4,9 +4,9 @@ jupyterhub:
       JupyterHub:
         authenticator_class: generic-oauth
       GenericOAuthenticator:
-        token_url: https://utoronto.instructure.com/login/oauth2/token
-        userdata_url: https://utoronto.instructure.com/api/v1/users/self/profile
-        authorize_url: https://utoronto.instructure.com/login/oauth2/auth
+        token_url: https://utoronto-dev.instructure.com/login/oauth2/token
+        userdata_url: https://utoronto-dev.instructure.com/api/v1/users/self/profile
+        authorize_url: https://utoronto-dev.instructure.com/login/oauth2/auth
         username_claim: sis_user_id
         allow_all: true
         scope:
