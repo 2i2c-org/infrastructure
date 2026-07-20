@@ -19,10 +19,10 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-staging.values.yaml
+  - common-canvas.values.yaml
   - python-common.values.yaml
   - staging.values.yaml
-  - enc-common-staging.secret.values.yaml
+  - enc-common-canvas.secret.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
   display_name: University of Toronto (prod)
@@ -41,10 +41,10 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-staging.values.yaml
+  - common-canvas.values.yaml
   - r-common.values.yaml
   - r-staging.values.yaml
-  - enc-common-staging.secret.values.yaml
+  - enc-common-canvas.secret.values.yaml
   - enc-r-staging.secret.values.yaml
 - name: r-prod
   display_name: University of Toronto (R)
