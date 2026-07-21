@@ -241,13 +241,13 @@ local binderhubServiceConfig = {
         },
       },
     } else {},
-    // For auth
-    extraEnv: [
-      { 
-        name: 'JUPYTERHUB_API_URL',
-        value: 'http://hub.%s.svc.cluster.local:8081/hub/api' % hub_name
-      }
-    ]
+  // For auth
+  extraEnv: [
+    {
+      name: 'JUPYTERHUB_API_URL',
+      value: 'http://hub.%s.svc.cluster.local:8081/hub/api' % hub_name,
+    },
+  ],
 };
 
 // We define a service account that is attached by default to all Jupyter user pods
