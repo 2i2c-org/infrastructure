@@ -76,6 +76,9 @@ prometheus:
           name: prometheus-auth
           key: username
           optional: false
+  scrapeConfigs:
+    prometheus:
+      enabled: false
 
   alertmanager:
     enabled: false
