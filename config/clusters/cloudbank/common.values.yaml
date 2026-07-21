@@ -17,8 +17,6 @@ jupyterhub:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
       tag: be91a6cddfb6
 jupyterhub-home-nfs:
-  # Reduce nfs server requests and limits from baseline,
-  # as we have a *lot* of hubs and spend a lot of money on core nodes
   quotaEnforcer:
     resources:
       requests:
