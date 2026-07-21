@@ -1,3 +1,4 @@
+{{ if eq .Values.clusterEntrypoint.targetController "nginx-ingress" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,3 +20,4 @@ spec:
   selector:
     app.kubernetes.io/instance: support
     app.kubernetes.io/name: nginx-ingress
+{{- end }}

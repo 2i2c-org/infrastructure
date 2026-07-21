@@ -26,6 +26,9 @@ dirtyfrag:
     repository: quay.io/2i2c/dirtyfrag-mitigation
     tag: main@sha256:e1510268a125ea3d17663e11f63d4dcfded3e361c5bfccf2cc3d689f0fd0984b
 
+clusterEntrypoint:
+  targetController: nginx-ingress
+
 nginx-ingress:
   # Disable this by default
   enabled: true
