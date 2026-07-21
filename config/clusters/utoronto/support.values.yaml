@@ -32,9 +32,6 @@ grafana:
       hosts:
       - grafana.utoronto.2i2c.cloud
 
-clusterEntrypoint:
-  targetController: nginx-ingress
-
 nginx-ingress:
   service:
     annotations:
