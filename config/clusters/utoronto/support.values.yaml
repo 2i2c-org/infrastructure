@@ -33,8 +33,8 @@ grafana:
       - grafana.utoronto.2i2c.cloud
 
 nginx-ingress:
-  service:
-    controller:
+  controller:
+    service:
       annotations:
         # This annotation is a requirement for use in Azure provided
         # LoadBalancer - see https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
