@@ -32,3 +32,7 @@ jupyterhub:
                   url: https://github.com/settings/connections/applications/Ov23liWxGyeDz5ETgPF3
                   text: Revoke GitHub Token
                   newBrowserTab: true
+binderhub-service:
+  extraEnv:
+  - name: JUPYTERHUB_API_URL
+    value: http://hub.prod.svc.cluster.local:8081/hub/api
