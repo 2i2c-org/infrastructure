@@ -27,12 +27,11 @@ dirtyfrag:
     tag: main@sha256:e1510268a125ea3d17663e11f63d4dcfded3e361c5bfccf2cc3d689f0fd0984b
 
 clusterEntrypoint:
-  enabled: true
-  targetController: ingress-nginx
+  targetController: nginx-ingress
 
 nginx-ingress:
   # Disable this by default
-  enabled: false
+  enabled: true
   controller:
     reportIngressStatus:
       # Disable leader election — we only have one replica.
@@ -49,62 +48,11 @@ nginx-ingress:
     enableSnippets: true
 
     ingressClass:
-      create: false
+      # Claim the `nginx` ingress class
+      create: true
 
     service:
       type: ClusterIP
-
-# ingress-nginx is responsible for proxying traffic based on k8s Ingress
-# resources defined in the k8s cluster.
-#
-# Typically, all inbound traffic arrives to some ingress-nginx controller pod
-# via a k8s Service that has a public IP, and is thereafter proxied to a k8s
-# Service (a Pod selected by a k8s Service) that doesn't have a public IP.
-#
-# values ref: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
-#
-ingress-nginx:
-  controller:
-    # Enable collecting prometheus metrics
-    metrics:
-      enabled: true
-
-    podAnnotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "10254"
-
-    podLabels:
-      # nginx-ingress controllers need to be allowed proxy traffic onwards to
-      # JupyterHub's proxy pod (and only the proxy pod) in clusters with
-      # NetworkPolicy enforcement enabled. Adding this label on the controller
-      # pod allows that.
-      #
-      # ref: https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
-      #
-      hub.jupyter.org/network-access-proxy-http: "true"
-    resources:
-      requests:
-        cpu: 100m # chart's default is 100m
-        # This pod has been observed at 104-131Mi so far in 2i2c clusters, above
-        # the default request of 90Mi. To protect it from being evicted by using
-        # more memory than requested, we have increased the memory request.
-        memory: 250Mi # chart's default is 90Mi
-    # allowSnippetAnnotations being set to false by default was the result of
-    # the below linked CVE. We should investigate if there are other ways we can
-    # use this type of config.
-    # https://github.com/kubernetes/ingress-nginx/issues/7837
-    allowSnippetAnnotations: true
-    admissionWebhooks:
-      # Disabled as cert-manager in EKS 1.30 ran into the following issue
-      # working with Ingress objects with the webhook not working out, with an
-      # error message including this:
-      #
-      #   err="Internal error occurred: failed calling webhook \"validate.nginx.ingress.kubernetes.io\": failed to call webhook: Post \"https://support-ingress-nginx-controller-admission.support.svc:443/networking/v1/ingresses?timeout=10s\": tls: failed to verify certificate: x509: certificate signed by unknown authority"
-      #
-      # Disabling this shouldn't be an issue, it just helps catch invalid
-      # configurations beyond what the k8s api-server will catch.
-      #
-      enabled: false
 
 # prometheus is responsible for collecting metrics and informing grafana about
 # the metrics on request. It comes with several dependency charts, where we
@@ -214,7 +162,6 @@ prometheus:
         # While grafana in the same cluster does not go through nginx to access
         # prometheus, the central grafana used does go through nginx. So we
         # increase the timeout here as well.
-        nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
         nginx.org/proxy-read-timeout: "120s"
         # Allow cert-manager to edit this ingress
         # as nginx-ingress considers duplicate hosts "host collisions"
@@ -346,18 +293,16 @@ grafana:
     enabled: true
     ingressClassName: nginx
     annotations:
-      # nginx.ingress.kubernetes.io/proxy-body-size increased from the default
+      # body-size increased from the default
       # of 1m to avoid HTTP 413 (Request Entity Too Large) when making POST
       # request (via jupyterhub/grafana-dashboard's deploy script, from a github
       # workflow) to update dashboards with json files representing them.
-      nginx.ingress.kubernetes.io/proxy-body-size: 64m
       nginx.org/client-max-body-size: 64m
       # Increase timeout for each query made by the grafana frontend to the
       # grafana backend to 2min, which is the default timeout for prometheus
       # queries. This also matches the timeout for the dataproxy in grafana,
       # set under `grafana.ini` below. These two timeouts are set together
       # to allow prometheus the best chance of executing queries we care about.
-      nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
       nginx.org/proxy-read-timeout: 120s
       cert-manager.io/cluster-issuer: letsencrypt-prod
       # Allow cert-manager to edit this ingress

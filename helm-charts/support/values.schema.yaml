@@ -6,7 +6,7 @@ type: object
 additionalProperties: false
 required:
   - cluster-autoscaler
-  - ingress-nginx
+  - nginx-ingress
   - prometheus
   - grafana
   - nvidiaDevicePlugin
@@ -18,9 +18,6 @@ required:
 properties:
   # We don't control validation of dependent charts here
   cluster-autoscaler:
-    type: object
-    additionalProperties: true
-  ingress-nginx:
     type: object
     additionalProperties: true
   nginx-ingress:
@@ -80,15 +77,11 @@ properties:
     type: object
     additionalProperties: false
     required:
-    - enabled
     - targetController
     properties:
-      enabled:
-        type: boolean
       targetController:
         type: string
         enum:
-        - ingress-nginx
         - nginx-ingress
   nvidiaDevicePlugin:
     type: object

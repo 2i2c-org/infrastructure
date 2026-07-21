@@ -385,9 +385,7 @@ to get any HTTP(S) traffic into the cluster. This creates a single
 
 After traffic gets into
 the cluster, it is routed to various places via kubernetes [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/)
-objects, backed by
-the community maintained [ingress-nginx](https://github.com/kubernetes/ingress-nginx)
-provider (*not* the VC backed [nginx-ingress](https://docs.nginx.com/nginx-ingress-controller/) provider). So users access JupyterHub,
+objects, backed by [nginx-ingress](https://docs.nginx.com/nginx-ingress-controller/) provider (see [howto:migrate-ingress]). So users access JupyterHub,
 Grafana, as well as any other service through this single endpoint.
 
 Each Load Balancer costs money as long as it exists, and there is a per GB
