@@ -240,6 +240,14 @@ jupyterhub:
       GenericOAuthenticator:
         token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/auth
+      Authenticator:
+        # End the Keycloak SSO session on hub logout. Without this, logout only
+        # clears the hub session; the login page's redirect_to (oauth_login)
+        # then silently re-authenticates via the live Keycloak cookie and the
+        # user lands back on the dashboard still logged in. Requires
+        # https://uat.maap-project.org/* in the jupyterhub-maap client's
+        # "Valid post logout redirect URIs" in Keycloak.
+        logout_redirect_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/logout?client_id=jupyterhub-maap&post_logout_redirect_uri=https%3A%2F%2Fuat.maap-project.org%2F
 
 dask-gateway:
   gateway:
