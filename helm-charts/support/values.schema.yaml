@@ -73,19 +73,6 @@ properties:
             type: string
           tag:
             type: string
-  clusterEntrypoint:
-    type: object
-    additionalProperties: false
-    required:
-    - enabled
-    - targetController
-    properties:
-      enabled:
-        type: boolean
-      targetController:
-        type: string
-        enum:
-        - nginx-ingress
   nvidiaDevicePlugin:
     type: object
     additionalProperties: false
