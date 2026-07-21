@@ -11,10 +11,11 @@ jupyterhub:
       gitRepoBranch: staging
       gitRepoUrl: https://github.com/MAAP-Project/maap-hub-homepage
       templateVars:
-        # Direct hub visitors (/hub/login?next=/hub/) are bounced to the universal
-        # sign-up page in its fresh-visitor "Step 1" state; deep links (next=<resource>)
-        # still go straight to oauth_login. The UAT web env pairs with this hub.
-        redirect_to: https://uat.maap-project.org/signup
+        # Non-logged-in visitors go straight to EDL (oauth_login), matching the
+        # MAAP Console — no sign-up landing first. New/role-less users then hit the
+        # hub's 403 page, which bounces them to /signup?status=pending&from=hub
+        # (the post-auth "in review" state) on the paired UAT web env.
+        redirect_to: https://staging.hub.maap-project.org/hub/oauth_login
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
