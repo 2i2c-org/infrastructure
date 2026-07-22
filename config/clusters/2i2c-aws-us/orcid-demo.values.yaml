@@ -326,6 +326,3 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: *url
     username: *username
-  extraEnv:
-  - name: JUPYTERHUB_API_URL
-    value: http://hub.orcid-demo.svc.cluster.local:8081/hub/api
