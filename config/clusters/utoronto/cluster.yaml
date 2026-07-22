@@ -63,6 +63,8 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-canvas.values.yaml
   - python-common.values.yaml
   - highmem.values.yaml
+  - enc-common-canvas.secret.values.yaml
   - enc-highmem.secret.values.yaml
