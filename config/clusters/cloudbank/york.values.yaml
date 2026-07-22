@@ -36,6 +36,9 @@ jupyterhub:
             allowed_domains:
             - york.cuny.edu
             - stu.york.cuny.edu
+            - stu-mail.york.cuny.edu
+            - login.cuny.edu
+
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
