@@ -23,8 +23,6 @@ on:
       ############ Deployer-related config modified from deploy-hubs.yaml ####
       # Include changes to the deployer script's folder
     - deployer/**
-    - pyproject.toml
-    - requirements.txt
     - '!deployer/README.md'
     - '!deployer/tests/**'
       # Checking that a hub is online should not trigger a deployment
@@ -44,8 +42,6 @@ on:
       ############ Deployer-related config modified from deploy-hubs.yaml ####
       # Include changes to the deployer script's folder
     - deployer/**
-    - pyproject.toml
-    - requirements.txt
     - '!deployer/README.md'
     - '!deployer/tests/**'
       # Checking that a hub is online should not trigger a deployment
