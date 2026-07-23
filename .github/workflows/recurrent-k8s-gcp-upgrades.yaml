@@ -12,7 +12,7 @@ jobs:
     permissions:
       issues: write
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Setup recurrent first round issue
       uses: ./.github/actions/setup-recurrent-issues
       with:
