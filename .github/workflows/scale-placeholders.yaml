@@ -12,6 +12,10 @@ on:
         description: Number of placeholders
         required: true
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   create-scale-pr:
     runs-on: ubuntu-latest
@@ -20,12 +24,6 @@ jobs:
       pull-requests: write
     steps:
     - uses: actions/checkout@v6
-    - uses: actions/setup-go@v6
-
-          # There will almost never be a cache hit on the cache key when this job is
-          # run, as it is the first of all jobs in this workflow. An exception is if
-          # this job is re-attempted as part of the same workflow run after
-          # succeeding previously.
     - name: Setup Git
       run: |
         git config --local user.email "actions@github.com"
@@ -33,13 +31,10 @@ jobs:
     - uses: actions/setup-node@v6
       with:
         node-version: '22'
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-    - name: Install deployer
-      run: |
-        python3 -m pip install -e .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+
+    - name: Setup deploy for ${{ github.event.inputs.cluster }} cluster
+      uses: ./.github/actions/setup-deploy
+
     - name: Apply scale-change
       run: |
         deployer generate node-replicas ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
