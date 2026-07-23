@@ -62,6 +62,9 @@ runs:
   - name: Install deployer
     run: pip install --no-compile .
     shell: bash -l {0}
+  - name: Configure non-dev deployer
+    run: echo "DEPLOYER_ONLY_CORE=1" >> "$GITHUB_ENV"
+    shell: bash -l {0}
   - name: Install gke-gcloud-auth-plugin
     if: inputs.provider == 'gcp'
     run: |

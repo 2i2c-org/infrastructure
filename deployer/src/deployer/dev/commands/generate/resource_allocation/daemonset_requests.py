@@ -21,7 +21,7 @@ def get_k8s_distribution():
     """
     Returns a 2-tuple with the guessed the k8s distribution based on the k8s
     api-server's reported version, either Google's GKE, Amazon's EKS, or Azure's
-    AKS, and the server's reported gitVersion.
+    ASK, and the server's reported gitVersion.
     """
     output = subprocess.check_output(
         [
@@ -37,7 +37,7 @@ def get_k8s_distribution():
         return "gke", server_version_info
     if "eks" in server_version_info:
         return "eks", server_version_info
-    return "aks", server_version_info
+    return "ask", server_version_info
 
 
 def get_daemon_sets_requests():

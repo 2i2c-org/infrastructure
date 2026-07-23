@@ -187,7 +187,7 @@ eks:
     cpu_requests: 170m
     memory_requests: 250Mi
     k8s_version: v1.29.7-eks-2f46c53
-aks:
+ask:
   pchub:
     requesting_daemon_sets: cloud-node-manager,csi-azuredisk-node,csi-azurefile-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: calico-node

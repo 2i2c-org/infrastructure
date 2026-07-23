@@ -272,7 +272,7 @@ class Cluster:
         """
         Read `azure` nested config, login to Azure with a Service Principal,
         activate the appropriate subscription, then authenticate against the
-        cluster using `az aks get-credentials`.
+        cluster using `az ask get-credentials`.
         """
         config = self.spec["azure"]
         key_path = self.config_dir / config["key"]
@@ -323,7 +323,7 @@ class Cluster:
             subprocess.check_call(
                 [
                     "az",
-                    "aks",
+                    "ask",
                     "get-credentials",
                     f"--name={cluster}",
                     f"--resource-group={resource_group}",
