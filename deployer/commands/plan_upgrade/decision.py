@@ -49,7 +49,7 @@ def discover_modified_common_files(modified_paths):
         # Checking that a hub is online should not trigger a deployment
         "deployer/health_check_tests/*",
         # We can ignore dev commands
-        "deployer/dev_commands/*",
+        "deployer.dev.commands/*",
         # We don't want to handle support in this clause
         support_chart_pattern,
     ]
