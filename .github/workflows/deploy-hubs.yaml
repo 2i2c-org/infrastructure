@@ -68,7 +68,7 @@ jobs:
   # to be consumed by the later jobs. They are also pretty-printed in a human-readable format
   # to the logs, and converted into Markdown tables for posting into GitHub comments.
   generate-jobs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     outputs:
       support-jobs: ${{ steps.generate-jobs.outputs.support-jobs }}
       staging-jobs: ${{ steps.generate-jobs.outputs.staging-jobs }}
@@ -185,7 +185,7 @@ jobs:
   # are required. This job needs the `generate-jobs` job to have completed and set
   # an output to the `support-jobs` variable name.
   upgrade-support:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [generate-jobs]
     name: support-${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.provider }}
 
@@ -293,7 +293,7 @@ jobs:
   # This job reduces the initially planned staging-jobs and prod-jobs deployments
   # by filtering out any deployment to a cluster with a failed support job.
   filter-failed-support:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [generate-jobs, upgrade-support]
     if: |
       !cancelled() &&
@@ -368,7 +368,7 @@ jobs:
   # e.g. matrix.jobs: ${{ needs.filter-failed-suport-jobs.outputs.staging-jobs || needs.generate-jobs.outputs.staging-jobs }};
   # therefore, we need to do this logic in another job and pass it along.
   reset-jobs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [generate-jobs, filter-failed-support]
     if: |
       !cancelled() &&
@@ -424,7 +424,7 @@ jobs:
   # for each staging hub that requires an upgrade and didn't have a failed
   # support-upgrade job.
   upgrade-staging:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [reset-jobs]
     name: ${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}
     if: |
@@ -538,7 +538,7 @@ jobs:
   # This job further reduces prod-jobs by filtering out any prod hub deployment
   # to a cluster with a failed staging hub job.
   filter-failed-staging:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [reset-jobs, upgrade-staging]
     if: |
       !cancelled() &&
@@ -605,7 +605,7 @@ jobs:
   # provider, and hub_name for each production hub that requires an upgrade and
   # didn't have a failed staging job.
   upgrade-prod:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [filter-failed-staging]
     name: ${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}
     if: |
