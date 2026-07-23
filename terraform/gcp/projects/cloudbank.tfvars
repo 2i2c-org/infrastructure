@@ -79,10 +79,6 @@ persistent_disks = {
     size        = 35
     name_suffix = "demo"
   }
-  "dvc" = {
-    size        = 98
-    name_suffix = "dvc"
-  }
   "elac" = {
     size        = 40
     name_suffix = "elac"
