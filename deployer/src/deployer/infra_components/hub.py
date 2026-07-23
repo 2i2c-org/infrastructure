@@ -11,10 +11,7 @@ from ruamel.yaml import YAML
 if TYPE_CHECKING:
     from deployer.infra_components.cluster import Cluster
 
-from deployer.utils.file_acquisition import (
-    get_decrypted_file,
-    get_decrypted_files,
-)
+from deployer.utils.file_acquisition import get_decrypted_file, get_decrypted_files
 from deployer.utils.helm import wait_for_deployments_daemonsets
 from deployer.utils.rendering import print_colour
 

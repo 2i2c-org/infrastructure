@@ -25,7 +25,7 @@ jobs:
           - Follow the docs at https://infrastructure.2i2c.org/howto/upgrade-cluster/k8s-version/azure/ to upgrade
 
           ### Definition of Done
-          - [ ] AKS clusters run the latest k8s version
+          - [ ] ASK clusters run the latest k8s version
         label: network-wide
         fields: Status,Estimate
         values: Up Next,3

@@ -132,7 +132,7 @@ Since nodes are often the biggest cloud cost for communities, and the cluster
 autoscaler is the biggest determiner of how / when nodes are used,
 understanding its behavior is very important in understanding cloud costs.
 
-Documentation: [GCP](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler), [AWS](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md), [Azure](https://learn.microsoft.com/en-us/azure/aks/cluster-autoscaler?tabs=azure-cli)
+Documentation: [GCP](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler), [AWS](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md), [Azure](https://learn.microsoft.com/en-us/azure/ask/cluster-autoscaler?tabs=azure-cli)
 
 (topic:billing:resources:home)=
 ## Home directory
@@ -581,7 +581,7 @@ separate from the nodes used to run various things in it. This is usually a *fix
    past and decided against using, for various restrictions it has on
    what kind of workloads it can run.
 
-3. [Azure AKS](https://azure.microsoft.com/en-us/pricing/details/kubernetes-service/)
+3. [Azure ASK](https://azure.microsoft.com/en-us/pricing/details/kubernetes-service/)
 
    Our clusters are currently on the *Free* tier, so don't cost any money.
    Their documentation suggests this is not recommended for clusters with
