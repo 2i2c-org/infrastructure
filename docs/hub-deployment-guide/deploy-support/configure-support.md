@@ -25,7 +25,7 @@ In the `infrastructure` repo, the full filepath should be: `config/clusters/<clu
     service:
       annotations:
           # This annotation is a requirement for use in Azure provided
-          # LoadBalancer - see https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
+          # LoadBalancer - see https://learn.microsoft.com/en-us/azure/ask/ingress-basic?tabs=azure-cli#basic-configuration
         service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
   ```
 

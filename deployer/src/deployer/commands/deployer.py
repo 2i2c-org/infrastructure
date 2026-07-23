@@ -11,9 +11,7 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.app import CONTINUOUS_DEPLOYMENT, app
-from deployer.commands.validate.config import (
-    cleanup_values_schema_json,
-)
+from deployer.commands.validate.config import cleanup_values_schema_json
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.commands.validate.config import get_chart_dir
 from deployer.commands.validate.config import support_config as validate_support_config

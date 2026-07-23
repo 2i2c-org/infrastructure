@@ -28,7 +28,7 @@ some in shared clusters have been announced ahead of time.
    | -                       | -                                         |
    | GKE                     | Part of [GKE's regular release channel]   |
    | EKS                     | [Supported by `eksctl`] and is GKE mature |
-   | AKS                     | Listed as [generally available on AKS]    |
+   | ASK                     | Listed as [generally available on ASK]    |
 3. To upgrade k8s cluster's control plane and node pools at least _twice_ and
    _once_ per year respectively.
 4. To not disrupt user nodes with running users, by instead rolling out new user
@@ -39,7 +39,7 @@ some in shared clusters have been announced ahead of time.
 [official minor k8s versions]: https://kubernetes.io/releases/
 [gke's regular release channel]: https://cloud.google.com/kubernetes-engine/docs/release-notes-regular
 [supported by `eksctl`]: https://eksctl.io/getting-started/#basic-cluster-creation
-[generally available on aks]: https://learn.microsoft.com/en-gb/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar
+[generally available on ask]: https://learn.microsoft.com/en-gb/azure/ask/supported-kubernetes-versions?tabs=azure-cli#ask-kubernetes-release-calendar
 
 :::{toc}
 :context: children
