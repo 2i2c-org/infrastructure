@@ -82,7 +82,7 @@ jupyterhub:
               default: true
               slug: reflective
               kubespawner_override:
-                image: quay.io/2i2c/reflective-image:5cb60c85bbb0
+                image: quay.io/2i2c/reflective-image:5ba270bf5081
             01-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
