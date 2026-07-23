@@ -57,10 +57,10 @@ runs:
     with:
       path: ~/.cache/pip
         # Local wheels are not cached https://pip.pypa.io/en/stable/topics/caching/#locally-built-wheels
-      key: ${{ hashFiles('deployer/pyproject.toml') }}
+      key: ${{ hashFiles('pyproject.toml') }}
 
   - name: Install deployer
-    run: pip install --no-compile ./deployer
+    run: pip install --no-compile .
     shell: bash -l {0}
   - name: Install gke-gcloud-auth-plugin
     if: inputs.provider == 'gcp'

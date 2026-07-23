@@ -20,7 +20,7 @@ if "DEPLOYER_ROOT_PATH" in os.environ:
 elif "GITHUB_WORKSPACE" in os.environ:
     REPO_ROOT_PATH = Path(os.environ["GITHUB_WORKSPACE"])
 else:
-    REPO_ROOT_PATH = Path(__file__).parents[4]
+    REPO_ROOT_PATH = Path(__file__).parents[3]
     assert (REPO_ROOT_PATH / "config").is_dir()
 
 HELM_CHARTS_DIR = REPO_ROOT_PATH.joinpath("helm-charts")
