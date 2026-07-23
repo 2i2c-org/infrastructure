@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "deployer"
 description = "Deploy JupyterHubs for the 2i2c Infrastructure"
 version = "0.0.1"
-readme = "README.md"
+readme = "README.deployer.md"
 license = "BSD-3-Clause"
 requires-python = ">=3.13"
 dependencies = [
