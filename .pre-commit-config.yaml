@@ -73,8 +73,8 @@ repos:
   - id: disallow-dev-commands
     name: disallow dev commands in commands
     language: pygrep
-    entry: \b(from|import)\b.*dev_commands
-    files: ^deployer/commands/.*$
+    entry: \b(from|import)\b.*\bdev\b
+    files: ^deployer/src/deployer/commands/.*$
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:
