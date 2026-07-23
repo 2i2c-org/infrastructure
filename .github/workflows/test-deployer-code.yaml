@@ -6,10 +6,6 @@ on:
     - main
     paths:
     - deployer/**
-    - tests/**
-    - requirements.txt
-    - dev-requirements.txt
-    - pyproject.toml
     tags:
     - '**'
   pull_request:
@@ -17,10 +13,6 @@ on:
     - main
     paths:
     - deployer/**
-    - tests/**
-    - requirements.txt
-    - dev-requirements.txt
-    - pyproject.toml
   workflow_dispatch:
 
 jobs:
@@ -34,7 +26,8 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -U pip
-        pip install --editable .
+        pip install --editable . --group test
+      working-directory: deployer
     - name: Run tests
-      run: |
-        python -m pytest -vvv --color=yes
+      run: python -m pytest -vvv --color=yes
+      working-directory: deployer

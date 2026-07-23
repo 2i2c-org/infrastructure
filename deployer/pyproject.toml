@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling==1.29.*"]
+build-backend = "hatchling.build"
+
+[project]
+name = "deployer"
+description = "Deploy JupyterHubs for the 2i2c Infrastructure"
+version = "0.0.1"
+readme = "README.md"
+license = "BSD-3-Clause"
+requires-python = ">=3.13"
+dependencies = [
+  # ruamel.yaml is used to read and write .yaml files.
+  "ruamel.yaml==0.19.*",
+  # jsonschema is used for validating cluster.yaml configurations
+  "jsonschema==4.*",
+  # rich, py-markdown-table, tabulate are used for pretty printing outputs that would otherwise
+  # be difficult to parse by a human
+  "rich==15.*",
+  "typer==0.26.*",
+  "py-markdown-table==1.3.*",
+  # For health testing
+  "jhub_client"
+]
+
+[project.optional-dependencies]
+dev = [
+  "jinja2==3.*",
+  "escapism==1.*",
+  "pandas",
+  "google-cloud-bigquery[pandas]==3.*",
+  # requests is used by deployer/commands/cilogon.py
+  "requests==2.*",
+  # Used to parse units that kubernetes understands (like GiB)
+  "kubernetes",
+  "tenacity",
+  "bcrypt",
+  "GitPython==3.*"
+]
+
+[project.scripts]
+deployer = "deployer.__main__:main"
+
+[dependency-groups]
+test = ["pytest"]
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = [
+    "./tests",
+]
+
+[tool.codespell]
+skip = '.git,*.pdf,*.svg,*.secret.*,*.key'
+ignore-words-list = 'aks'
+
+[tool.black]
+force-exclude = '''
+deployer/dev/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
+'''

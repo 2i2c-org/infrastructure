@@ -23,13 +23,12 @@ on:
       ############ Deployer-related config modified from deploy-hubs.yaml ####
       # Include changes to the deployer script's folder
     - deployer/**
-    - pyproject.toml
-    - requirements.txt
     - '!deployer/README.md'
+    - '!deployer/tests/**'
       # Checking that a hub is online should not trigger a deployment
-    - '!deployer/health_check_tests/**'
+    - '!deployer/src/deployer/health_check_tests/**'
       # We can ignore dev commands
-    - '!deployer/dev_commands/**'
+    - '!deployer/src/deployer/dev/commands/**'
   push:
     branches:
     - main
@@ -43,13 +42,12 @@ on:
       ############ Deployer-related config modified from deploy-hubs.yaml ####
       # Include changes to the deployer script's folder
     - deployer/**
-    - pyproject.toml
-    - requirements.txt
     - '!deployer/README.md'
+    - '!deployer/tests/**'
       # Checking that a hub is online should not trigger a deployment
-    - '!deployer/health_check_tests/**'
+    - '!deployer/src/deployer/health_check_tests/**'
       # We can ignore dev commands
-    - '!deployer/dev_commands/**'
+    - '!deployer/src/deployer/dev/commands/**'
     tags:
     - '**'
   workflow_dispatch:
@@ -122,7 +120,6 @@ jobs:
             - added|modified: helm-charts/basehub/**
             - added|modified: helm-charts/daskhub/**
             - added|modified: helm-charts/support/**
-            - added|modified: requirements.txt
             - added|modified: .github/workflows/validate-clusters.yaml
           cluster_specific:
             - added|modified: config/clusters/**

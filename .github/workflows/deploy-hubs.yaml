@@ -7,15 +7,14 @@ on:
     paths:
       # Include changes to the deployer script's folder
     - deployer/**
-    - pyproject.toml
-    - requirements.txt
     - helm-charts/**
     - config/clusters/**
     - '!deployer/README.md'
+    - '!deployer/tests/**'
         # Checking that a hub is online should not trigger a deployment
-    - '!deployer/health_check_tests/**'
+    - '!deployer/src/deployer/health_check_tests/**'
         # We can ignore dev commands
-    - '!deployer/dev_commands/**'
+    - '!deployer/src/deployer/dev/commands/**'
         # Exclude the template configuration files
     - '!config/clusters/templates/**'
         ########### Additional includes ##########
@@ -27,15 +26,14 @@ on:
     paths:
       # Include changes to the deployer script's folder
     - deployer/**
-    - pyproject.toml
-    - requirements.txt
     - helm-charts/**
     - config/clusters/**
     - '!deployer/README.md'
+    - '!deployer/tests/**'
         # Checking that a hub is online should not trigger a deployment
-    - '!deployer/health_check_tests/**'
+    - '!deployer/src/deployer/health_check_tests/**'
         # We can ignore dev commands
-    - '!deployer/dev_commands/**'
+    - '!deployer/src/deployer/dev/commands/**'
         # Exclude the template configuration files
     - '!config/clusters/templates/**'
         ########### Additional includes ##########
@@ -127,7 +125,6 @@ jobs:
         filters: |
           changed:
             - added|modified: deployer/**
-            - added|modified: requirements.txt
             - added|modified: .github/actions/setup-deploy/**
             - added|modified: helm-charts/basehub/**
             - added|modified: helm-charts/daskhub/**
