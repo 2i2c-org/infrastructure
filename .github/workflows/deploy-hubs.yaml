@@ -125,7 +125,6 @@ jobs:
         filters: |
           changed:
             - added|modified: deployer/**
-            - added|modified: requirements.txt
             - added|modified: .github/actions/setup-deploy/**
             - added|modified: helm-charts/basehub/**
             - added|modified: helm-charts/daskhub/**
