@@ -11,10 +11,11 @@ jupyterhub:
       gitRepoBranch: staging
       gitRepoUrl: https://github.com/MAAP-Project/maap-hub-homepage
       templateVars:
-        # Direct hub visitors (/hub/login?next=/hub/) are bounced to the universal
-        # sign-up page in its fresh-visitor "Step 1" state; deep links (next=<resource>)
-        # still go straight to oauth_login. The UAT web env pairs with this hub.
-        redirect_to: https://uat.maap-project.org/signup
+        # Non-logged-in visitors go straight to EDL (oauth_login), matching the
+        # MAAP Console — no sign-up landing first. New/role-less users then hit the
+        # hub's 403 page, which bounces them to /signup?status=pending&from=hub
+        # (the post-auth "in review" state) on the paired UAT web env.
+        redirect_to: https://staging.hub.maap-project.org/hub/oauth_login
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
@@ -190,12 +191,6 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            pytorch:
-              display_name: Pangeo PyTorch ML Notebook
-              default: false
-              slug: pytorch
-              kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2026.06.04
             pytorch-maap:
               display_name: Pangeo PyTorch ML Notebook with MAAP extensions
               default: false
@@ -208,12 +203,6 @@ jupyterhub:
               slug: pytorch
               kubespawner_override:
                 image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/pytorch:v6.0.0
-            tensorflow2:
-              display_name: Pangeo Tensorflow2 ML Notebook
-              default: false
-              slug: tensorflow2
-              kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2026.06.04
             tensorflow2-maap:
               display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
               default: true
@@ -251,6 +240,14 @@ jupyterhub:
       GenericOAuthenticator:
         token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/auth
+      Authenticator:
+        # End the Keycloak SSO session on hub logout. Without this, logout only
+        # clears the hub session; the login page's redirect_to (oauth_login)
+        # then silently re-authenticates via the live Keycloak cookie and the
+        # user lands back on the dashboard still logged in. Requires
+        # https://uat.maap-project.org/* in the jupyterhub-maap client's
+        # "Valid post logout redirect URIs" in Keycloak.
+        logout_redirect_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/logout?client_id=jupyterhub-maap&post_logout_redirect_uri=https%3A%2F%2Fuat.maap-project.org%2F
 
 dask-gateway:
   gateway:
@@ -261,10 +258,6 @@ binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-staging-
-  extraEnv:
-  - name: JUPYTERHUB_API_URL
-    value: http://hub.staging.svc.cluster.local:8081/hub/api
-
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-043cd887a98827319

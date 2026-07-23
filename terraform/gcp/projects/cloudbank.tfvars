@@ -327,6 +327,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "utpb"
   }
+  "uwyo" = {
+    size        = 25
+    name_suffix = "uwyo"
+  }
   "virginia" = {
     size        = 180
     name_suffix = "virginia"
@@ -342,6 +346,10 @@ persistent_disks = {
   "wlac" = {
     size        = 20
     name_suffix = "wlac"
+  }
+  "york" = {
+    size        = 25
+    name_suffix = "york"
   }
 }
 

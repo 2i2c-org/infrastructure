@@ -7,9 +7,6 @@ binderhub-service:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/neurohackademy-prod-
 
-  extraEnv:
-  - name: JUPYTERHUB_API_URL
-    value: http://hub.prod.svc.cluster.local:8081/hub/api
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-07a7e98969ef8e8c3

@@ -2,7 +2,7 @@
 # Configure and deploy the `support` chart
 
 The `support` chart is a helm chart maintained by the 2i2c Engineers that consists of common tools used to support JupyterHub deployments in the cloud.
-These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), for controlling ingresses and load balancing; [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retrieved by Prometheus.
+These tools are [official NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/install/helm/open-source/) for controlling ingresses and load balancing; [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retrieved by Prometheus.
 
 This section will walk you through how to deploy the support chart on a cluster.
 
@@ -18,22 +18,15 @@ In the `infrastructure` repo, the full filepath should be: `config/clusters/<clu
 
 1. If the cluster is running on GCP or AWS, the deployer should have been generated this file already.
 
-2. If you are deploying the support chart on an Azure cluster, you **must** manually create such a file using the template at `config/clusters/templates/common/support.values.yaml`. Also, you must set an annotation for `ingress-nginx`'s k8s Service resource by including the following in your `support.values.yaml` file:
+2. If you are deploying the support chart on an Azure cluster, you **must** manually create such a file using the template at `config/clusters/templates/common/support.values.yaml`. Also, you must set an annotation for `nginx-ingress`'s k8s Service resource by including the following in your `support.values.yaml` file:
 
   ```yaml
-  ingress-nginx:
-    controller:
-      service:
-        annotations:
+  nginx-ingress:
+    service:
+      annotations:
           # This annotation is a requirement for use in Azure provided
-          # LoadBalancer.
-          #
-          # ref: https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
-          # ref: https://github.com/Azure/AKS/blob/master/CHANGELOG.md#release-2022-09-11
-          # ref: https://github.com/Azure/AKS/issues/2907#issuecomment-1109759262
-          # ref: https://github.com/kubernetes/ingress-nginx/issues/8501#issuecomment-1108428615
-          #
-          service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+          # LoadBalancer - see https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
+        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
   ```
 
 ## Edit your `cluster.yaml` file
@@ -87,6 +80,6 @@ Use an `A` record when we point to an external IP address (GCP, Azure), and a
 ```{note}
 It may take a while for this configuration to propagate to all devices making
 DNS lookups. After that, cert-manager needs to do its job to acquire HTTPS
-certificates. And finally, the ingress-nginx server that makes use of the HTTPS
+certificates. And finally, the nginx-ingress server that makes use of the HTTPS
 certificates needs to reload to use the acquired certificates.
 ```

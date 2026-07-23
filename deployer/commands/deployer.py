@@ -43,7 +43,7 @@ def deploy_support(
     # "kubectl apply" will be done on CRDs but sometimes more is needed.
     #
     cert_manager_version: str = typer.Option(
-        "v1.20.2", help="Version of cert-manager to install"
+        "v1.20.3", help="Version of cert-manager to install"
     ),
     debug: bool = typer.Option(
         False,
@@ -93,9 +93,9 @@ def determine_dask_gateway_version(chart_dir):
 @app.command(rich_help_panel=CONTINUOUS_DEPLOYMENT)
 def deploy(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(
+    hub_names: list[str] = typer.Argument(
         None,
-        help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
+        help="Name of hub(s) to operate deploy. Omit to deploy all hubs on the cluster",
     ),
     debug: bool = typer.Option(
         False,
@@ -121,8 +121,8 @@ def deploy(
     validate_cluster_config(cluster_name)
     cluster = Cluster.from_name(cluster_name)
     with cluster.auth():
-        if hub_name:
-            hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
+        if hub_names:
+            hubs = [h for h in cluster.hubs if h.spec["name"] in hub_names]
         else:
             hubs = cluster.hubs
         progress_str = ""

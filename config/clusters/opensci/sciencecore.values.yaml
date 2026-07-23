@@ -160,6 +160,7 @@ jupyterhub:
     loadRoles:
       user:
         scopes:
+        - self
         - access:services!service=binder
 binderhub-service:
   enabled: true
@@ -172,6 +173,3 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: https://quay.io
     username: imagebuilding-non-gcp-hubs+image_builder
-  extraEnv:
-  - name: JUPYTERHUB_API_URL
-    value: http://hub.sciencecore.svc.cluster.local:8081/hub/api

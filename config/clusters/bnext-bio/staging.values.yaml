@@ -85,11 +85,12 @@ jupyterhub:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-09363d84917d28027
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 2 # in GiB
 
 binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/bnext-bio-staging-
-  extraEnv:
-  - name: JUPYTERHUB_API_URL
-    value: http://hub.staging.svc.cluster.local:8081/hub/api

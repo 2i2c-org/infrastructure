@@ -76,7 +76,7 @@ jobs:
   # 3. We can also group filters together and hence only need to run the action
   #    step *once* with the 'common' and 'cluster-specific' filters together
   generate-clusters-to-validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       pull-requests: read
     outputs:
@@ -217,7 +217,7 @@ jobs:
   #     i.e., '[]'.
   #
   validate-helm-charts-values-files:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [generate-clusters-to-validate]
     name: validate-${{ matrix.jobs.cluster_name }}
     if: |

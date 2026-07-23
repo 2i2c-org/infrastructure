@@ -1,14 +1,3 @@
-redirects:
-  rules:
-  - from: staging.earthscope.2i2c.cloud
-    to: staging.geolab.earthscope.cloud
-  - from: earthscope.2i2c.cloud
-    to: geolab.earthscope.cloud
-  - from: binder.earthscope.2i2c.cloud
-    to: binder.geolab.earthscope.cloud
-  - from: hub.binder.earthscope.2i2c.cloud
-    to: hub.binder.geolab.earthscope.cloud
-
 prometheus:
   server:
     ingress:
@@ -376,21 +365,3 @@ jupyterhub-cost-monitoring:
 nvidiaDevicePlugin:
   aws:
     enabled: true
-
-nginx-ingress:
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-ingress-nginx:
-  controller:
-    # Turn off this controller
-    replicaCount: 0
-    # Let go of the `nginx` ingress class
-    ingressClassResource:
-      enabled: false
-
-clusterEntrypoint:
-  targetController: nginx-ingress

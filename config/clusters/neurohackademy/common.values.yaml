@@ -57,9 +57,11 @@ jupyterhub:
         admin_users:
         - arokem
         - noahbenson
+        auth_refresh_age: 0
     loadRoles:
       user:
         scopes:
+        - self
         - access:services!service=binder
   scheduling:
     userScheduler:
@@ -111,13 +113,13 @@ jupyterhub:
               display_name: hub-user-image
               slug: regular-profile
               kubespawner_override:
-                image: quay.io/neurohackademy2026/hub-user-image:13493afc6202
+                image: quay.io/neurohackademy2026/hub-user-image:146358848b45
                 init_containers: *init_containers
             nh2026-gpu:
               display_name: hub-user-image-gpu
               slug: gpu-profile
               kubespawner_override:
-                image: quay.io/neurohackademy2026/hub-user-image-gpu:e003fcfa54c8
+                image: quay.io/neurohackademy2026/hub-user-image-gpu:d570c3daaeac
                 init_containers: *init_containers
         requests:
           display_name: Resource Allocation

@@ -5,6 +5,13 @@ to download the markdown content of the deployment plan from a GitHub Actions
 workflow artifact and then post it as a comment on the PR that generated the plan.
 """
 
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   "requests<3"
+# ]
+# ///
+
 import io
 import os
 import re

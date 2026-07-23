@@ -19,19 +19,20 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-staging.values.yaml
-  - default-common.values.yaml
-  - default-staging.values.yaml
-  - enc-default-staging.secret.values.yaml
+  - common-canvas.values.yaml
+  - python-common.values.yaml
+  - staging.values.yaml
+  - enc-common-canvas.secret.values.yaml
+  - enc-staging.secret.values.yaml
 - name: prod
   display_name: University of Toronto (prod)
   domain: jupyter.utoronto.ca
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - default-common.values.yaml
-  - default-prod.values.yaml
-  - enc-default-prod.secret.values.yaml
+  - python-common.values.yaml
+  - prod.values.yaml
+  - enc-prod.secret.values.yaml
 - name: r-staging
   display_name: University of Toronto (r-staging)
     # to access this staging hub, visit this link directly
@@ -40,9 +41,10 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-staging.values.yaml
+  - common-canvas.values.yaml
   - r-common.values.yaml
   - r-staging.values.yaml
+  - enc-common-canvas.secret.values.yaml
   - enc-r-staging.secret.values.yaml
 - name: r-prod
   display_name: University of Toronto (R)
@@ -61,6 +63,8 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - default-common.values.yaml
+  - common-canvas.values.yaml
+  - python-common.values.yaml
   - highmem.values.yaml
+  - enc-common-canvas.secret.values.yaml
   - enc-highmem.secret.values.yaml

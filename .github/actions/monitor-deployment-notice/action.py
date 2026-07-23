@@ -18,6 +18,13 @@ Pull Request number, and the name of the *other* workflow that we want to provid
 a link to.
 """
 
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   "requests<3"
+# ]
+# ///
+
 import os
 import re
 import sys

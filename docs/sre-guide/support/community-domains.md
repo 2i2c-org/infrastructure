@@ -15,7 +15,7 @@ requests for such custom domains.
   ```{note}
 
   You can verify this by running `kubectl -n support get svc
-  support-ingress-nginx-controller` and looking under the `EXTERNAL IP` column.
+  cluster-entrypoint` and looking under the `EXTERNAL IP` column.
   ```
 
 - **community managed domain**
@@ -86,38 +86,22 @@ it does not, wait for about 15 minutes and try again - DNS propagation may take 
 1. In the `<hub-name>.values.yaml` file, change `jupyterhub.ingress.hosts` and
    `jupyterhub.ingress.tls`, replacing the 2i2c domain name with the community
    provided domain name.
-
 2. In `cluster.yaml` file for the cluster the hubs are
    in, change the `domain` field to point to the community managed domain.
-
 3. If Auth0 is being used, change `jupyterhub.hub.config.CustomAuth0OAuthenticator.logout_redirect_to_url`
    to point to the community managed domain.
-
 4. If GitHub Authentication is being used, change the domain used in the URL in
    `jupyterhub.hub.config.GitHubOAuthenticator.oauth_callback_url` to point to the community
    managed domain.
-
 5. If CILogon Authentication is being used, change the domain used in the URL in
    `jupyterhub.hub.config.CILogonOAuthenticator.oauth_callback_url` to point to the community
    managed domain.
-
-6. In the `support.values.yaml` file for the cluster in which the hubs are, we set up redirects
-   so folks who go to the older domains will get redirected to the new domain.
-
-   ```yaml
-   redirects:
-     rules:
-       - from: <2i2c-managed-domain>
-         to: <community-managed-domain>
-   ```
-
-7. Make a PR with your changes.
+6. Make a PR with your changes.
 
 ## Deploying the configuration change
 
 If there is a staging hub in the list of hubs being changed, you can [deploy manually](#hubs:manual-deploy)
-to test these changes. To test the redirects manually, you can use the [deploy-support](#deploy-support-chart:manual)
-command.
+to test these changes.
 
 ### Determine a possible deployment time window
 

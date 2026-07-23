@@ -3,6 +3,14 @@ jupyterhub:
     image:
       name: laserchemist/datascience
       tag: v13
+    storage:
+      extraVolumeMounts:
+        1-shared-public-volumemount:
+          name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+
     # Taken from `deployer generate resource-allocation choices r5.xlarge:5`
     memory:
       guarantee: 1951419879

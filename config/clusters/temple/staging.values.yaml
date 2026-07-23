@@ -13,11 +13,9 @@ jupyterhub:
     loadRoles:
       user:
         scopes:
+        - self
         - access:services!service=binder
 binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/temple-staging-
-  extraEnv:
-  - name: JUPYTERHUB_API_URL
-    value: http://hub.staging.svc.cluster.local:8081/hub/api

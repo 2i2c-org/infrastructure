@@ -36,32 +36,7 @@ cluster-autoscaler:
 calico:
   enabled: true
 
-redirects:
-  rules:
-  - from: staging.hub.maap.2i2c.cloud
-    to: staging.hub.maap-project.org
-  - from: hub.maap.2i2c.cloud
-    to: hub.maap-project.org
-
 # FIXME: remove this once eksctl is fixed
 nvidiaDevicePlugin:
   aws:
     enabled: true
-
-nginx-ingress:
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-ingress-nginx:
-  controller:
-    # Turn off this controller
-    replicaCount: 0
-    # Let go of the `nginx` ingress class
-    ingressClassResource:
-      enabled: false
-
-clusterEntrypoint:
-  targetController: nginx-ingress

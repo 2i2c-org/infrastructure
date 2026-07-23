@@ -19,15 +19,6 @@ grafana:
       hosts:
       - grafana.nasa-veda.2i2c.cloud
 
-redirects:
-  rules:
-    # nasa-veda.2i2c.cloud was the old URL
-    # Moved due to https://github.com/2i2c-org/infrastructure/issues/3029
-  - from: nasa-veda.2i2c.cloud
-    to: hub.openveda.cloud
-  - from: staging.nasa-veda.2i2c.cloud
-    to: staging.hub.openveda.cloud
-
 prometheus:
   server:
     ingress:
@@ -46,21 +37,3 @@ calico:
 nvidiaDevicePlugin:
   aws:
     enabled: true
-
-nginx-ingress:
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-ingress-nginx:
-  controller:
-    # Turn off this controller
-    replicaCount: 0
-    # Let go of the `nginx` ingress class
-    ingressClassResource:
-      enabled: false
-
-clusterEntrypoint:
-  targetController: nginx-ingress

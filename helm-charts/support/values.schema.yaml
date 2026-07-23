@@ -6,22 +6,18 @@ type: object
 additionalProperties: false
 required:
   - cluster-autoscaler
-  - ingress-nginx
+  - nginx-ingress
   - prometheus
   - grafana
   - nvidiaDevicePlugin
   - prometheusAuthSecret
   - cryptnono
-  - redirects
   - jupyterhub-cost-monitoring
   - disableCoredumps
   - global
 properties:
   # We don't control validation of dependent charts here
   cluster-autoscaler:
-    type: object
-    additionalProperties: true
-  ingress-nginx:
     type: object
     additionalProperties: true
   nginx-ingress:
@@ -77,49 +73,15 @@ properties:
             type: string
           tag:
             type: string
-  redirects:
-    type: object
-    additionalProperties: false
-    required:
-      - rules
-    properties:
-      rules:
-        type: array
-        items:
-          type: object
-          additionalProperties: false
-          required:
-            - from
-            - to
-          properties:
-            from:
-              type: string
-              description: |
-                Domain to redirect from
-            to:
-              type: string
-              description: |
-                Domain to redirect to
-            type:
-              type: string
-              enum: ["redirect", "permanent"]
-              description: |
-                Relates to the HTTP Status code to use for the redirect.
-
-                Specify "redirect" for 302 (default), or "permanent" for 301.
   clusterEntrypoint:
     type: object
     additionalProperties: false
     required:
-    - enabled
     - targetController
     properties:
-      enabled:
-        type: boolean
       targetController:
         type: string
         enum:
-        - ingress-nginx
         - nginx-ingress
   nvidiaDevicePlugin:
     type: object

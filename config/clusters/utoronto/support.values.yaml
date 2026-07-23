@@ -1,16 +1,3 @@
-redirects:
-  rules:
-  - from: r-staging.utoronto.2i2c.cloud
-    to: r-staging.datatools.utoronto.ca
-  - from: r.utoronto.2i2c.cloud
-    to: r.datatools.utoronto.ca
-  - from: jupyter-staging.datatools.utoronto.ca
-    to: staging.utoronto.2i2c.cloud
-  - from: jupyter.datatools.utoronto.ca
-    to: jupyter.utoronto.ca
-  - from: highmem.utoronto.2i2c.cloud
-    to: highmem.datatools.utoronto.ca
-
 prometheus:
   server:
     persistentVolume:
@@ -45,28 +32,8 @@ grafana:
       hosts:
       - grafana.utoronto.2i2c.cloud
 
-clusterEntrypoint:
-  targetController: nginx-ingress
-
 nginx-ingress:
-  # Enable controller
-  enabled: true
   controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-    service:
-      annotations:
-        # This annotation is a requirement for use in Azure provided
-        # LoadBalancer - see https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
-        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
-
-ingress-nginx:
-  controller:
-    # Turn off controller
-    replicaCount: 0
-    ingressClassResource:
-      enabled: false
     service:
       annotations:
         # This annotation is a requirement for use in Azure provided
