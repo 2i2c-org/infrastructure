@@ -9,7 +9,7 @@ from pathlib import Path
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import DEVELOPMENT, app
+from deployer.app import DEVELOPMENT, app
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.infra_components.cluster import Cluster
 

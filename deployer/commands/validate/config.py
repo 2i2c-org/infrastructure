@@ -17,7 +17,7 @@ import jsonschema
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import validate_app
+from deployer.app import validate_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,

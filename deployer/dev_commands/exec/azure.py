@@ -11,7 +11,7 @@ from typing import Annotated
 
 import typer
 
-from deployer.cli_app import exec_app
+from deployer.app import exec_app
 
 az = typer.Typer(pretty_exceptions_show_locals=False)
 exec_app.add_typer(

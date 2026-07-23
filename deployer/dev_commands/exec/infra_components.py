@@ -6,7 +6,7 @@ import tempfile
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import exec_app
+from deployer.app import exec_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.rendering import print_colour
 

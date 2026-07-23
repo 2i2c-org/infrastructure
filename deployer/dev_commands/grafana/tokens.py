@@ -17,7 +17,7 @@ import requests
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import grafana_app
+from deployer.app import grafana_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     REPO_ROOT_PATH,

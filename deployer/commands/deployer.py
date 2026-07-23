@@ -10,7 +10,7 @@ import sys
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
+from deployer.app import CONTINUOUS_DEPLOYMENT, app
 from deployer.commands.validate.config import (
     cleanup_values_schema_json,
 )

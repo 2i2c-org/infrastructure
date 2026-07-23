@@ -25,7 +25,7 @@ The deployer has the following directory structure:
 ├── README.md
 ├── __init__.py
 ├── __main__.py
-├── cli_app.py
+├── app.py
 ├── commands
 ├── health_check_tests
 ├── infra_components
@@ -33,9 +33,9 @@ The deployer has the following directory structure:
 └── utils
 ```
 
-### The `cli_app.py` file
+### The `app.py` file
 
-The `cli_app.py` file is the file that contains the main `deployer` typer app and all of the main sub-apps "attached" to it, each corresponding to a `deployer` sub-command. These apps are used throughout the codebase.
+The `app.py` file is the file that contains the main `deployer` typer app and all of the main sub-apps "attached" to it, each corresponding to a `deployer` sub-command. These apps are used throughout the codebase.
 
 ### The `__main__.py` file
 

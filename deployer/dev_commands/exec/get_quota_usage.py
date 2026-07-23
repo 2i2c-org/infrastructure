@@ -6,7 +6,7 @@ import sys
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import exec_app
+from deployer.app import exec_app
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.infra_components.cluster import Cluster
 

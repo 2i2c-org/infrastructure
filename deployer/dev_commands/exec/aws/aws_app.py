@@ -23,7 +23,7 @@ from pathlib import Path
 import typer
 from rich.prompt import Prompt
 
-from deployer.cli_app import exec_app
+from deployer.app import exec_app
 from deployer.utils.rendering import print_colour
 
 aws = typer.Typer(pretty_exceptions_show_locals=False)

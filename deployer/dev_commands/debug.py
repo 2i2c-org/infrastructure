@@ -11,7 +11,7 @@ import escapism
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import debug_app
+from deployer.app import debug_app
 from deployer.infra_components.cluster import Cluster
 
 # Without `pure=True`, I get an exception about str / byte issues

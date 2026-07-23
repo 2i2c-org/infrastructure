@@ -11,7 +11,7 @@ from rich.live import Live
 from rich.table import Table
 from yarl import URL
 
-from deployer.cli_app import generate_app
+from deployer.app import generate_app
 from deployer.infra_components.cluster import Cluster
 
 # Usernames to ignore when calculating MAU

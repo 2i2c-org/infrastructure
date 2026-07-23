@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 import typer
 
-from deployer.cli_app import transform_app
+from deployer.app import transform_app
 from deployer.utils.rendering import print_colour
 
 # Creates a new typer application, which is then nested as a sub-command named

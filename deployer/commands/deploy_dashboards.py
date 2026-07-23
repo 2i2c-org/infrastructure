@@ -4,7 +4,7 @@ import subprocess
 
 import typer
 
-from deployer.cli_app import CONTINUOUS_DEPLOYMENT, app
+from deployer.app import CONTINUOUS_DEPLOYMENT, app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.rendering import print_colour
 
