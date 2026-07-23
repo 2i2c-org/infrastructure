@@ -19,10 +19,7 @@ from ruamel.yaml import YAML
 
 from deployer.dev.app import grafana_app
 from deployer.infra_components.cluster import Cluster
-from deployer.utils.file_acquisition import (
-    REPO_ROOT_PATH,
-    get_decrypted_file,
-)
+from deployer.utils.file_acquisition import REPO_ROOT_PATH, get_decrypted_file
 from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe")
