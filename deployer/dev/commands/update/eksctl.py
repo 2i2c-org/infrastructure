@@ -1,6 +1,6 @@
 import typer
 
-from deployer.app import update_app
+from deployer.dev.app import update_app
 from deployer.dev.commands.generate.dedicated_cluster.aws import generate_eksctl
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.rendering import print_colour

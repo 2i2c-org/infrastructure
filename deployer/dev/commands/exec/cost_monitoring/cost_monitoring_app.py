@@ -9,8 +9,8 @@ import requests
 import typer
 from yarl import URL
 
-from deployer.app import exec_app
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
+from deployer.dev.app import exec_app
 from deployer.dev.commands.exec.aws.aws_app import setup_aws_sts_env
 from deployer.infra_components.cluster import Cluster
 

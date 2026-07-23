@@ -6,7 +6,7 @@ under the `generate` sub-command of the deployer.
 
 import typer
 
-from deployer.app import generate_app
+from deployer.dev.app import generate_app
 
 hub_asset_app = typer.Typer(pretty_exceptions_show_locals=False)
 generate_app.add_typer(

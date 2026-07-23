@@ -15,7 +15,7 @@ from rich.table import Table
 from ruamel.yaml import YAML
 from yarl import URL
 
-from deployer.app import exec_app
+from deployer.dev.app import exec_app
 from deployer.infra_components.cluster import Cluster
 
 # Without `pure=True`, I get an exception about str / byte issues

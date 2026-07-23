@@ -6,8 +6,8 @@ import sys
 import typer
 from ruamel.yaml import YAML
 
-from deployer.app import exec_app
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
+from deployer.dev.app import exec_app
 from deployer.infra_components.cluster import Cluster
 
 # Without `pure=True`, I get an exception about str / byte issues

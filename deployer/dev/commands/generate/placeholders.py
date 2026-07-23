@@ -7,7 +7,7 @@ from typing import Literal
 import typer
 from ruamel.yaml import YAML
 
-from deployer.app import generate_app
+from deployer.dev.app import generate_app
 from deployer.infra_components.cluster import Cluster
 
 yaml = YAML(typ="rt", pure=True)

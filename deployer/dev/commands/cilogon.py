@@ -26,7 +26,7 @@ import typer
 from ruamel.yaml import YAML
 from yarl import URL
 
-from deployer.app import cilogon_client_app
+from deployer.dev.app import cilogon_client_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     get_cluster_names_list,

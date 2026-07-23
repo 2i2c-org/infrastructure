@@ -10,7 +10,7 @@ from contextlib import contextmanager
 
 import typer
 
-from deployer.app import DEVELOPMENT, app
+from deployer.dev.app import DEVELOPMENT, app
 
 
 @contextmanager

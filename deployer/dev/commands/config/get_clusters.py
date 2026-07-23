@@ -3,7 +3,7 @@ import os
 import typer
 from ruamel.yaml import YAML
 
-from deployer.app import config_app
+from deployer.dev.app import config_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import get_all_cluster_yaml_files
 

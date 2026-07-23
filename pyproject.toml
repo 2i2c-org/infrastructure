@@ -25,14 +25,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  # ruamel.yaml is used to read and write .yaml files.
-  "ruamel.yaml==0.19.*",
-  # jsonschema is used for validating cluster.yaml configurations
-  "jsonschema==4.*",
-  # rich, py-markdown-table, tabulate are used for pretty printing outputs that would otherwise
-  "rich==15.*",
   "jinja2==3.*",
-  "typer==0.26.*",
   "escapism==1.*",
   "pandas",
   "google-cloud-bigquery[pandas]==3.*",
@@ -62,5 +55,5 @@ ignore-words-list = 'aks'
 
 [tool.black]
 force-exclude = '''
-deployer/dev_commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
+deployer/dev/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 '''
