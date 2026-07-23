@@ -26,7 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -U pip
-        pip install --editable .
+        pip install --editable . --group test
       working-directory: deployer
     - name: Run tests
       run: python -m pytest -vvv --color=yes

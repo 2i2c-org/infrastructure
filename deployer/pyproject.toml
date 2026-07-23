@@ -41,6 +41,9 @@ dev = [
 [project.scripts]
 deployer = "deployer.__main__:main"
 
+[dependency-groups]
+test = ["pytest"]
+
 [tool.isort]
 profile = "black"
 
