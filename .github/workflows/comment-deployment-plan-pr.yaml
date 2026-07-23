@@ -33,7 +33,7 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Provide comment to track deployment progress
       uses: ./.github/actions/show-deployment-plan

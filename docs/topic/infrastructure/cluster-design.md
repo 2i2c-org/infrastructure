@@ -23,7 +23,7 @@ core nodes has a big effect.
 
 ### CPU and Memory
 
-Kubernetes system Pods on GKE, EKS, and AKS will require different amount of
+Kubernetes system Pods on GKE, EKS, and ASK will require different amount of
 allocatable capacity, and it can differ if we enable various features such as
 network policy enforcement.
 
@@ -121,7 +121,7 @@ The three machine types based on the cloud provider are the following:
   - r5.xlarge
   - r5.4xlarge
   - r5.16xlarge
-- [AKS](https://learn.microsoft.com/en-us/azure/virtual-machines/eav4-easv4-series)
+- [ASK](https://learn.microsoft.com/en-us/azure/virtual-machines/eav4-easv4-series)
   - Standard_E4s_v5
   - Standard_E16s_v5
   - Standard_E64s_v5

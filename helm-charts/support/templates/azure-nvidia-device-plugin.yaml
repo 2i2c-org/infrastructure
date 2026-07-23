@@ -1,6 +1,6 @@
 {{- if .Values.nvidiaDevicePlugin.azure.enabled -}}
-# Below config is from the example in the Azure AKS docs
-# https://docs.microsoft.com/en-us/azure/aks/gpu-cluster#manually-install-the-nvidia-device-plugin
+# Below config is from the example in the Azure ASK docs
+# https://docs.microsoft.com/en-us/azure/ask/gpu-cluster#manually-install-the-nvidia-device-plugin
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
