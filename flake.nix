@@ -112,7 +112,7 @@
           # Install package
           ''
             ${unwantedEnvPreamble}
-            pip install -e ".[dev]"
+            pip install -e "deployer[dev]"
           '';
       };
     });

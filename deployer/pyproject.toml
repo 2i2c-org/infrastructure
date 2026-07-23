@@ -35,6 +35,7 @@ dev = [
   "kubernetes",
   "tenacity",
   "bcrypt",
+  "GitPython==3.*"
 ]
 
 [project.scripts]
