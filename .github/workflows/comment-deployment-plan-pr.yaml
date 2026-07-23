@@ -38,4 +38,4 @@ jobs:
     - name: Provide comment to track deployment progress
       uses: ./.github/actions/show-deployment-plan
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
