@@ -54,7 +54,7 @@ variable "kubernetes_version" {
   description = <<-EOT
   Version of kubernetes the cluster should use.
 
-  `az aks get-versions --location westus2 -o table` will
+  `az ask get-versions --location westus2 -o table` will
   display the list of available versions. Or the terraform
   output called latest_supported_k8s_versions if running against
   an existing cluster.
@@ -115,7 +115,7 @@ variable "cluster_sku_tier" {
   description = <<-EOT
   Support tier to be used for this cluster
 
-  https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers
+  https://learn.microsoft.com/en-us/azure/ask/free-standard-pricing-tiers
   has more information.
 
   Can be one of "Free" | "Standard" | "Premium".

@@ -57,7 +57,7 @@ A new scaling decision happens after a scale up/down event is triggered.
 So, because we usually want nodes to be ready and waiting before an event,
 and not wait for a scale up/down event, we need to temporarily disable the autoscaler.
 
-More about the Azure autoscaler in the docs [here](https://learn.microsoft.com/en-us/azure/aks/hybrid/work-with-autoscaler-profiles#notes-on-autoscaler-configuration).
+More about the Azure autoscaler in the docs [here](https://learn.microsoft.com/en-us/azure/ask/hybrid/work-with-autoscaler-profiles#notes-on-autoscaler-configuration).
 ```
 
 ## Terraform instructions

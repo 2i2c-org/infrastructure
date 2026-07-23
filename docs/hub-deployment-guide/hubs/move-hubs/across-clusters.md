@@ -139,7 +139,7 @@ AzureFile needs to be mounted in the source NFS VM in order to copy the data.
       * If the desired context doesn't show up in the list above, then authenticate using:
 
         ```bash
-        az aks get-credentials --name CLUSTER_NAME --resource-group RESOURCE_GROUP_NAME
+        az ask get-credentials --name CLUSTER_NAME --resource-group RESOURCE_GROUP_NAME
         ```
 
       * Switch to using the desired context
