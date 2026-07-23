@@ -60,7 +60,7 @@ Each sub-commands's functions are stored:
 
 The `deployer.py` file is the main file, that contains all of the commands registered directly on the `deployer` main typer app, that could not or were not yet categorized in sub-commands.
 
-### The `dev_commands` directory
+### The `dev/commands` directory
 
 This directory has the same purpose as `commands`, except commands here are intended to be run outside of CD. As such, changes to this directory will not trigger a deployment.
 

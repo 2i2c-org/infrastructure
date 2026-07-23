@@ -26,10 +26,11 @@ on:
     - pyproject.toml
     - requirements.txt
     - '!deployer/README.md'
+    - '!deployer/tests/**'
       # Checking that a hub is online should not trigger a deployment
-    - '!deployer/health_check_tests/**'
+    - '!deployer/src/deployer/health_check_tests/**'
       # We can ignore dev commands
-    - '!deployer/dev_commands/**'
+    - '!deployer/src/deployer/dev/commands/**'
   push:
     branches:
     - main
@@ -46,10 +47,11 @@ on:
     - pyproject.toml
     - requirements.txt
     - '!deployer/README.md'
+    - '!deployer/tests/**'
       # Checking that a hub is online should not trigger a deployment
-    - '!deployer/health_check_tests/**'
+    - '!deployer/src/deployer/health_check_tests/**'
       # We can ignore dev commands
-    - '!deployer/dev_commands/**'
+    - '!deployer/src/deployer/dev/commands/**'
     tags:
     - '**'
   workflow_dispatch:

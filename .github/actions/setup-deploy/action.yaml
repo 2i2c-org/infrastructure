@@ -57,7 +57,7 @@ runs:
     with:
       path: ~/.cache/pip
         # Local wheels are not cached https://pip.pypa.io/en/stable/topics/caching/#locally-built-wheels
-      key: ${{ hashFiles('requirements.txt', 'dev-requirements.txt') }}
+      key: ${{ hashFiles('deployer/pyproject.toml') }}
 
   - name: Install deployer
     run: pip install --no-compile .
