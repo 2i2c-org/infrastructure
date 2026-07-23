@@ -19,10 +19,7 @@ from ruamel.yaml import YAML
 
 from deployer.app import validate_app
 from deployer.infra_components.cluster import Cluster
-from deployer.utils.file_acquisition import (
-    HELM_CHARTS_DIR,
-    REPO_ROOT_PATH,
-)
+from deployer.utils.file_acquisition import HELM_CHARTS_DIR, REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)

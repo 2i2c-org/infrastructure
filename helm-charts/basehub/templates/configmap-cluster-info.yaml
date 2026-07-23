@@ -14,6 +14,6 @@ data:
   {{- else if (.Capabilities.KubeVersion.Version | contains "eks") }}
   {{- $k8s_dist = "eks" }}
   {{- else }}
-  {{- $k8s_dist = "aks" }}
+  {{- $k8s_dist = "ask" }}
   {{- end }}
   K8S_DIST: {{ $k8s_dist }}

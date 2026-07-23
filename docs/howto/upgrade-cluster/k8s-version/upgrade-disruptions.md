@@ -8,7 +8,7 @@ disruptions, this text provides an overview of them.
 ## Kubernetes api-server disruption
 
 K8s clusters' control plane (api-server etc.) can be either highly available
-(HA) or not. EKS clusters, AKS clusters, and "regional" GKE clusters are HA, but
+(HA) or not. EKS clusters, ASK clusters, and "regional" GKE clusters are HA, but
 "zonal" GKE clusters are not. A few of our GKE clusters are zonal still, but as
 the cost savings are minimal we only create for regional clusters now.
 
