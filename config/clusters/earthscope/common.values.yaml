@@ -33,9 +33,9 @@ basehub:
             - port: 9000
     hub:
       image:
-        # Usage quotas 0.1.2 and fancy-profiles 0.6.0
+        # Usage quotas 0.1.3, fancy-profiles 0.6.0 and Kubespawner @19ae3849
         name: quay.io/2i2c/jupyterhub-usage-quotas
-        tag: 6ffb330f8f384e1fc97852fb00f4402af33521f6
+        tag: 0.1.3
       extraConfig:
         001-username-claim: |
           import json
@@ -158,36 +158,28 @@ basehub:
           - google-oauth2|117322480787655244438   # Jenny
           - google-oauth2|107058254054417943477   # Angus
         UsageQuotaManager:
-          scope_backup_strategy:
+          scope_fallback_strategy:
             empty:
               resource: memory
-              limit:
-                value: 5000
-                unit: GiB-hours
+              limit: 5000G
               window: 30
             intersection: max
           failover_open: true
           policy:
           - resource: memory
-            limit:
-              value: 5000
-              unit: GiB-hours
+            limit: 5000G
             window: 30
             scope:
               group:
               - mem-sm
           - resource: memory
-            limit:
-              value: 10000
-              unit: GiB-hours
+            limit: 10000G
             window: 30
             scope:
               group:
               - mem-md
           - resource: memory
-            limit:
-              value: 50000
-              unit: GiB-hours
+            limit: 50000G
             window: 30
             scope:
               group:

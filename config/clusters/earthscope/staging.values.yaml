@@ -6,9 +6,6 @@ basehub:
           # To login to earthscope staging, now use https://staging.geolab.earthscope.cloud/hub/oauth_login
           redirect_to: https://www.earthscope.org/data/geolab/
     hub:
-      image:
-        # Usage quotas 0.1.2, fancy-profiles 0.6.0 and Kubespawner @19ae3849
-        tag: 19ae3849a538940d8cc46062da247bec392501f0
       config:
         GenericOAuthenticator:
           token_url: https://login-dev.earthscope.org/oauth/token
@@ -32,9 +29,11 @@ basehub:
           mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
           stringData: |
             import os
-            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
-            c.UsageConfig.hub_namespace = "staging"
             c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
+            c.UsageQuotaManager.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageViewer.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageQuotaManager.hub_namespace = "staging"
+            c.UsageViewer.hub_namespace = "staging"
             c.UsageViewer.public_hub_url = "https://staging.geolab.earthscope.cloud/"
     singleuser:
       extraEnv:
