@@ -36,7 +36,6 @@ basehub:
         # Usage quotas 0.1.3, fancy-profiles 0.6.0 and Kubespawner @19ae3849
         name: quay.io/2i2c/jupyterhub-usage-quotas
         tag: 0.1.3
-        pullPolicy: Always
       extraConfig:
         001-username-claim: |
           import json
