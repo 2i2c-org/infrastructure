@@ -19,6 +19,14 @@ variable "cluster_nodes_location" {
   EOT
 }
 
+variable "use_eksctl" {
+  type        = bool
+  description = <<-EOT
+  Use eksctl to provision infra.
+  EOT
+  default     = true
+}
+
 variable "user_buckets" {
   type = map(
     object({
@@ -31,7 +39,7 @@ variable "user_buckets" {
   description = <<-EOT
   S3 Buckets to be created.
 
-  The key for each entry will be prefixed with {var.prefix}- to form
+  The key for each entry will be prefixed with {var.cluster_name}- to form
   the name of the bucket.
 
   The value is a map, with the following accepted keys:
@@ -322,4 +330,72 @@ variable "enable_ebs_alarms" {
   description = <<-EOT
   Enable alerts for IOPs and throughput
   EOT
+}
+
+
+variable "k8s_versions" {
+  type = object({
+    min_master_version : optional(string, null),
+    core_nodes_version : optional(string, null),
+    notebook_nodes_version : optional(string, null),
+    dask_nodes_version : optional(string, null),
+  })
+  default     = {}
+  description = <<-EOT
+  Configuration of the k8s cluster's version and node pools' versions. To specify these
+
+  - min_master_nodes is passthrough configuration of https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster#version-1
+  - [core|notebook|dask]_nodes_version is passthrough configuration of https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_node_group#version-2
+  EOT
+}
+
+variable "core_nodes" {
+  type = object({
+    min : optional(number, 1),
+    max : number,
+    machine_type : string,
+    tags : optional(map(string), {}),
+    labels : optional(map(string), {}),
+    taints : optional(list(object({
+      key : string,
+      value : string,
+      effect : string
+    })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "gp3"),
+    disk_size_gb : optional(number, 80),
+    disk_throughput : optional(number, null),
+    disk_iops : optional(number, null),
+    node_version : optional(string, ""),
+  })
+  description = "Core node pool to create"
+}
+
+variable "notebook_nodes" {
+  type = map(object({
+    min : number,
+    max : number,
+    machine_type : string,
+    tags : optional(map(string), {}),
+    labels : optional(map(string), {}),
+    taints : optional(list(object({
+      key : string,
+      value : string,
+      effect : string
+    })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "gp3"),
+    disk_size_gb : optional(number, 80),
+    disk_throughput : optional(number, null),
+    disk_iops : optional(number, null),
+    node_version : optional(string, ""),
+  }))
+  description = "Notebook node pools to create"
+  default     = {}
 }
