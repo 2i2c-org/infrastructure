@@ -72,6 +72,14 @@ hubs:
   - common.values.yaml
   - chaffey.values.yaml
   - enc-chaffey.secret.values.yaml
+- name: carrollu
+  display_name: Carroll University
+  domain: carrollu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - carrollu.values.yaml
+  - enc-carrollu.secret.values.yaml
 - name: cau
   display_name: Clark Atlanta University
   domain: cau.cloudbank.2i2c.cloud
