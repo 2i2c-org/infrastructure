@@ -39,7 +39,7 @@ jupyterhub:
               display_name: Default Image
               description: RStudio, VS Code, JupyterLab, Python, R
               kubespawner_override:
-                name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:6d61d3c15d47
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:bde8b3293fd2
             00-slm:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
