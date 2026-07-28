@@ -72,16 +72,6 @@ basehub:
               })
 
           c.Spawner.auth_state_hook = populate_token
-        user:
-          scopes:
-          - self
-          - access:services!service=dask-gateway
-          - access:services!service=binder
-        server:
-          scopes:
-          - self
-          - users:activity!user
-          - access:services!service=dask-gateway
       config:
         JupyterHub:
           authenticator_class: generic-oauth
