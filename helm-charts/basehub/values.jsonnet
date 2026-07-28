@@ -208,6 +208,12 @@ local daskGatewayConfig =
     },
   } else {};
 
+local nodePlaceholderConfig = {
+  nodeSelector: {
+    '2i2c/hub-name': hub_name,
+  },
+};
+
 local binderhubServiceConfig = {
   // Schedule builder pods to run on the default smallest user nodes
   // https://github.com/2i2c-org/infrastructure/issues/4241
@@ -279,5 +285,6 @@ emitDaskHubCompatibleConfig(
     userServiceAccount: userServiceAccountConfig,
     'dask-gateway': daskGatewayConfig,
     'binderhub-service': binderhubServiceConfig,
+    nodePlaceholder: nodePlaceholderConfig,
   }
 )
