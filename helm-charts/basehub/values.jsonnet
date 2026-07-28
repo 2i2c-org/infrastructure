@@ -105,9 +105,9 @@ local jupyterhubUsageQuotaExtraFilesConfig = {
       c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
       c.UsageQuotaManager.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
       c.UsageViewer.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
-      c.UsageQuotaManager.hub_namespace = '%s',
-      c.UsageViewer.hub_namespace = '%s',
-      c.UsageViewer.public_hub_url = 'https://%s',
+      c.UsageQuotaManager.hub_namespace = '%s'
+      c.UsageViewer.hub_namespace = '%s'
+      c.UsageViewer.public_hub_url = 'https://%s'
     ||| % [hub_name, hub_name, hub_domain],
   },
 };
