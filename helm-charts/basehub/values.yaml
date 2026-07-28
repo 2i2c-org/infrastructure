@@ -1140,8 +1140,7 @@ jupyterhub:
         - ports:
           - port: 9000
           from:
-              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
-              # for hub managed services.
+              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks for hub managed services.
           - podSelector:
               matchLabels:
                 app.kubernetes.io/component: hub
