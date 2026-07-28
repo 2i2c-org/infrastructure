@@ -15,7 +15,7 @@ jupyterhub:
       limit: 2
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: be91a6cddfb6
+      tag: bde8b3293fd2
 jupyterhub-home-nfs:
   quotaEnforcer:
     resources:
