@@ -107,7 +107,7 @@ local jupyterhubUsageQuotaExtraFilesConfig = {
       c.UsageViewer.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
       c.UsageQuotaManager.hub_namespace = '%s'
       c.UsageViewer.hub_namespace = '%s'
-      c.UsageViewer.public_hub_url = 'https://%s'
+      c.UsageViewer.public_hub_url = 'https://%s/'
     ||| % [hub_name, hub_name, hub_domain],
   },
 };
