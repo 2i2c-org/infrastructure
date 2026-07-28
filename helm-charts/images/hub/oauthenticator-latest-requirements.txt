@@ -1,0 +1,2 @@
+jupyterhub-fancy-profiles==0.6.0
+git+https://github.com/jupyterhub/oauthenticator.git@7d80b0000d8b11e639f3fe0f63d0711e057a15df
