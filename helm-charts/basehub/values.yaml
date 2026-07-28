@@ -910,7 +910,7 @@ jupyterhub:
             KubeSpawner.image:
               type: string
               title: User docker image
-              description: Determines languages, libraries and interfaces
+              description: Determines languages, libraries and interfaces 
                 available
               help: Leave this blank to use the default
             Spawner.default_url:
@@ -1078,7 +1078,7 @@ jupyterhub:
           - groups
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.15540.hbaaa997ce"
+      tag: "0.0.1-0.dev.git.16526.h92ffc2704"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
