@@ -28,6 +28,9 @@ jupyterhub:
           logo_url: http://skylinecollege.edu/mcpr/images/logos/png/skyline_logo_horiz_cmyk.png
           url: https://www.skylinecollege.edu/
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: "0.0.1-0.dev.git.16543.h8ea1d8b9f"
     config:
       JupyterHub:
         authenticator_class: google
