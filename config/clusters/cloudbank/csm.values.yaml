@@ -34,7 +34,7 @@ jupyterhub:
         authenticator_class: google
       GoogleOAuthenticator:
         username_claim: email
-        hosted_domain:
+        allowed_hosted_domains:
         - my.smccd.edu
         - smccd.edu
         strip_domain: false

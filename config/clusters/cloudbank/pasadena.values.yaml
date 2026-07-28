@@ -33,7 +33,7 @@ jupyterhub:
         authenticator_class: google
       GoogleOAuthenticator:
         username_claim: email
-        hosted_domain:
+        allowed_hosted_domains:
         - go.pasadena.edu
         strip_domain: false
         allow_all: true
