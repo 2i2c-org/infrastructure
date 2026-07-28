@@ -2,8 +2,11 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     memory:
-      guarantee: 512M
-      limit: 1G
+      guarantee: 2G
+      limit: 6G
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/cloudbank-etsu-image
+      tag: 48152a00cc04
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
