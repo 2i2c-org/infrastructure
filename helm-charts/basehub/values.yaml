@@ -900,6 +900,14 @@ jupyterhub:
         # Ref: https://github.com/2i2c-org/meta/issues/321
         blocked_users:
           - deployment-service-check
+      UsageQuotaManager:
+        prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local'
+        scope_fallback_strategy: 
+          intersection: 'min'
+        failover_open: true
+      UsageViewer:
+        prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local'
+        enable_compute: false
     extraFiles:
       configurator-schema-default:
         mountPath: /usr/local/etc/jupyterhub-configurator/00-default.schema.json
