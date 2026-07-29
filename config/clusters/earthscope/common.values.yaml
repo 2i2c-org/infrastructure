@@ -137,21 +137,15 @@ basehub:
             scope:
               group:
               - mem-lg
-      services:
-        usage-quota:
-          url: http://hub:9000
-          display: true
-          oauth_no_confirm: true
-          command:
-          - python
-          - -m
-          - jupyterhub_usage_quotas.services.usage_viewer
-          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
-          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
+        UsageViewer:
+          enable_compute: true
+          footer_note: |
+            See the <a href="https://docs.earthscope.org/geolab/">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
       loadRoles:
         server:
           scopes:
           - self
+          - users:activity!user
           - access:services!service=dask-gateway
     singleuser:
       cloudMetadata:
