@@ -28,6 +28,12 @@ basehub:
             c.UsageViewer.footer_note = """
             See the <a href="https://docs.earthscope.org/geolab/">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
             """
+      loadRoles:
+        user:
+          scopes:
+          - self
+          - access:services!service=usage-quota
+          - access:services!service=dask-gateway
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)
