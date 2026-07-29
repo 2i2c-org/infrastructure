@@ -32,6 +32,10 @@ basehub:
             ports:
             - port: 9000
     hub:
+      image:
+        # Usage quotas 0.1.3, fancy-profiles 0.6.0 and Kubespawner @19ae3849
+        name: quay.io/2i2c/jupyterhub-usage-quotas
+        tag: 0.0.1-0.dev.git.16538.hb055b381d
       extraConfig:
         001-username-claim: |
           import json
@@ -144,6 +148,11 @@ basehub:
           - jupyterhub_usage_quotas.services.usage_viewer
           - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
           - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
     singleuser:
       cloudMetadata:
         blockWithIptables: false
