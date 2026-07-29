@@ -1111,13 +1111,10 @@ jupyterhub:
         scopes:
         - self
         - access:services!service=usage-quota
-        - access:services!service=dask-gateway
-        - access:services!service=binder
       server:
         scopes:
         - self
         - users:activity!user
-        - access:services!service=dask-gateway
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.16526.h92ffc2704"
