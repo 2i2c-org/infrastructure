@@ -12,3 +12,6 @@ data:
     c.UsageViewer.hub_namespace = {{ .Values.jupyterhub.hub.config.UsageViewer.hub_namespace | quote}}
     c.UsageViewer.public_hub_url = {{ .Values.jupyterhub.hub.config.UsageViewer.public_hub_url | quote }}
     c.UsageViewer.prometheus_url = {{ .Values.jupyterhub.hub.config.UsageViewer.prometheus_url | quote }}
+    {{- if .Values.jupyterhub.hub.config.UsageViewer.footer_note }}
+    c.UsageViewer.footer_note = {{ .Values.jupyterhub.hub.config.UsageViewer.footer_note | quote }}
+    {{- end }}
