@@ -8,10 +8,8 @@ data:
   jupyterhub_usage_quotas_config.py: |
     import os
     c.UsageQuotaManager.metrics_exporter_token = os.environ.get('JUPYTERHUB_USAGE_QUOTAS_METRICS_TOKEN')
-    c.UsageViewer.enable_compute = {{ ternary "True" "False" .Values.jupyterhub.hub.config.UsageViewer.enable_compute }}
-    c.UsageViewer.hub_namespace = {{ .Values.jupyterhub.hub.config.UsageViewer.hub_namespace | quote}}
-    c.UsageViewer.public_hub_url = {{ .Values.jupyterhub.hub.config.UsageViewer.public_hub_url | quote }}
-    c.UsageViewer.prometheus_url = {{ .Values.jupyterhub.hub.config.UsageViewer.prometheus_url | quote }}
-    {{- if .Values.jupyterhub.hub.config.UsageViewer.footer_note }}
-    c.UsageViewer.footer_note = {{ .Values.jupyterhub.hub.config.UsageViewer.footer_note | quote }}
+    {{- range $name, $value := .Values.jupyterhub.hub.config.UsageViewer }}
+    {{- if ne $value nil }}
+    c.UsageViewer.{{ $name }} = {{ include "python.literal" $value }}
+    {{- end }}
     {{- end }}
