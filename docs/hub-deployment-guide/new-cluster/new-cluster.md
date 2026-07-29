@@ -254,7 +254,7 @@ We have encountered resource-exhaustion incidents due to limitations of certain 
 ```
 ```bash
 export CLUSTER_NAME=<cluster-name>
-export CLUSTER_REGION=<cluster-region-like ca-central-1>
+export CLUSTER_REGION=<cluster-region-like us-central1>
 export PROJECT_ID=<gcp-project-id>
 ```
 
