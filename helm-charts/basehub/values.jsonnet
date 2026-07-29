@@ -93,22 +93,14 @@ local jupyterhubUsageQuotasHubConfig = {
         intersection: 'min',
       },
       failover_open: true,
+      prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local',
+      hub_namespace: '%s' % hub_name,
     },
-  },
-};
-
-local jupyterhubUsageQuotaExtraFilesConfig = {
-  usage_quotas_config: {
-    mountPath: '/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py',
-    stringData: |||
-      import os
-      c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
-      c.UsageQuotaManager.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
-      c.UsageViewer.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
-      c.UsageQuotaManager.hub_namespace = '%s'
-      c.UsageViewer.hub_namespace = '%s'
-      c.UsageViewer.public_hub_url = 'https://%s/'
-    ||| % [hub_name, hub_name, hub_domain],
+    UsageViewer: {
+      prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local',
+      hub_namespace: '%s' % hub_name,
+      public_hub_url: 'https://%s/' % hub_domain,
+    },
   },
 };
 
@@ -194,7 +186,6 @@ local jupyterhubConfig =
           oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
         },
       } + jupyterhubUsageQuotasHubConfig.config,
-      extraFiles: jupyterhubUsageQuotaExtraFilesConfig,
     },
   } +
   if provider == 'aws' then {
