@@ -10,6 +10,7 @@ jupyterhub:
       JupyterHub:
         authenticator_class: generic-oauth
       GenericOAuthenticator:
+        allow_existing_users: false
         token_url: https://utoronto.instructure.com/login/oauth2/token
         userdata_url: https://utoronto.instructure.com/api/v1/users/self/profile
         authorize_url: https://utoronto.instructure.com/login/oauth2/auth
