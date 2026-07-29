@@ -13,22 +13,13 @@ region = "us-central1"
 
 # Config required to enable automatic budget alerts to be sent to support@2i2c.org
 budget_alert_enabled = false
-billing_account_id   = ""
+billing_account_id   = "0157F7-E3EA8C-25AC3C"
 
-# TODO: Before applying this, identify a k8s version to specify. Pick the latest
-#       k8s version from GKE's regular release channel. Look at the output
-#       called `regular_channel_latest_k8s_versions` as seen when using
-#       `terraform plan -var-file=projects/ucec.tfvars`.
-#
-#       Then use that version to explicitly set all k8s versions below, and
-#       finally decomment the k8s_versions section and removing this comment.
-#
-#k8s_versions = {
-#  min_master_version : "",
-#  core_nodes_version : "",
-#  notebook_nodes_version : "",
-#  dask_nodes_version : "", # if this cluster will host daskhubs
-#}
+k8s_versions = {
+  min_master_version : "1.34.8-gke.1278000",
+  core_nodes_version : "1.34.8-gke.1278000",
+  notebook_nodes_version : "1.34.8-gke.1278000",
+}
 
 core_node_machine_type = "n2-highmem-2"
 
@@ -38,27 +29,16 @@ core_node_machine_type = "n2-highmem-2"
 #
 enable_network_policy = true
 
-# Tip: uncomment and fill the missing info in the lines below if you want
-#       to setup scratch buckets for the hubs on this cluster.
-#
-#user_buckets = {
-#  "scratch-staging" : {
-#    "delete_after" : 7,
-#  },
-#  # Tip: add more scratch buckets below, if this cluster will be multi-tenant
-#}
-
-# Tip: uncomment and fill the missing info in the lines below if you want
-#       to setup specific cloud permissions for the buckets in this cluster.
-#
-#hub_cloud_permissions = {
-#  "staging" : {
-#    allow_access_to_external_requester_pays_buckets : false,
-#    bucket_admin_access : ["scratch-staging"],
-#    hub_namespace : "staging",
-#  },
-#  # Tip: add more namespaces below, if this cluster will be multi-tenant
-#}
+persistent_disks = {
+  "staging" = {
+    size        = 1 # in GB
+    name_suffix = "staging"
+  },
+  "prod" = {
+    size        = 100 # in GB
+    name_suffix = "prod"
+  }
+}
 
 notebook_nodes = {
   "n2-highmem-4" : {
@@ -75,20 +55,55 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-  }
+  },
+  "gpu-t4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 1
+    },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
+  },
 }
 
 
 
-filestores = {}
+user_buckets = {
+  "scratch-staging" : {
+    "delete_after" : 7,
+    "usage_logs" : true,
+  },
+  "scratch" : {
+    "delete_after" : 7,
+    "usage_logs" : true,
+  }
+  "persistent" : {
+    "delete_after" : null,
+    "usage_logs" : true,
+  },
+  "persistent-staging" : {
+    "delete_after" : null,
+    "usage_logs" : true,
+  }
+}
 
-persistent_disks = {
-  "staging" = {
-    size        = 5 # in GB
-    name_suffix = "staging"
+hub_cloud_permissions = {
+  "staging" : {
+    bucket_admin_access : ["scratch-staging", "persistent-staging"],
+    hub_namespace : "staging"
   },
-  "prod" = {
-    size        = 50 # in GB
-    name_suffix = "staging"
-  },
+  "prod" : {
+    bucket_admin_access : ["scratch", "persistent"],
+    hub_namespace : "prod"
+  }
 }
