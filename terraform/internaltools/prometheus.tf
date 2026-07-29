@@ -175,7 +175,8 @@ locals {
         enabled : true,
         ingressClassName : "nginx",
         annotations : {
-          "cert-manager.io/cluster-issuer" : "letsencrypt-prod"
+          "cert-manager.io/cluster-issuer" : "letsencrypt-prod",
+          "acme.cert-manager.io/http01-edit-in-place" : "true"
         },
         hosts : ["federated-prometheus.internaltools.2i2c.org"],
         tls : [{
