@@ -944,7 +944,7 @@ jupyterhub:
           configMapKeyRef:
             name: basehub-cluster-info
             key: K8S_DIST
-      METRICS_EXPORTER_TOKEN:
+      JUPYTERHUB_USAGE_QUOTAS_METRICS_TOKEN:
         valueFrom:
           secretKeyRef:
             name: hub
@@ -1041,6 +1041,9 @@ jupyterhub:
     extraVolumes:
       - name: custom-templates
         emptyDir: {}
+      - name: usage-quotas
+        configMap:
+          name: usage-quotas-config
     extraVolumeMounts:
       - mountPath: /usr/local/share/jupyterhub/custom_templates
         name: custom-templates
@@ -1048,6 +1051,9 @@ jupyterhub:
       - mountPath: /usr/local/share/jupyterhub/static/extra-assets
         name: custom-templates
         subPath: repo/extra-assets
+      - mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+        name: usage-quotas
+        subPath: jupyterhub_usage_quotas_config.py
     services:
       # hub-health service helps us run health checks from the deployer script.
       # The JupyterHub Helm chart will automatically generate an API token for
@@ -1080,12 +1086,11 @@ jupyterhub:
         display: true
         oauth_no_confirm: true
         command:
-        - python
-        - -m
-        - jupyterhub_usage_quotas.services.usage_viewer
-        - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
-        - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
-        - --UsageViewer.enable_compute=False
+          - python
+          - -m
+          - jupyterhub_usage_quotas.services.usage_viewer
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
       metrics-exporter:
         display: false
     loadRoles:
@@ -1097,33 +1102,33 @@ jupyterhub:
           - groups
       usage-quota-service:
         scopes:
-        - read:users
-        - list:services
-        - read:services
+          - read:users
+          - list:services
+          - read:services
         services:
-        - usage-quota
+          - usage-quota
       metrics-exporter-service:
         scopes:
-        - users
+          - users
         services:
-        - metrics-exporter
+          - metrics-exporter
       user:
         scopes:
-        - self
-        - access:services!service=usage-quota
+          - self
+          - access:services!service=usage-quota
       server:
         scopes:
-        - self
-        - users:activity!user
+          - self
+          - users:activity!user
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.16526.h92ffc2704"
     service:
       # Usage quota dashboard
       extraPorts:
-      - port: 9000
-        targetPort: 9000
-        name: usage-quota
+        - port: 9000
+          targetPort: 9000
+          name: usage-quota
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -1143,25 +1148,25 @@ jupyterhub:
             - port: 8081
               protocol: TCP
         - ports:
-          - port: 9000
+            - port: 9000
           from:
               # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks for hub managed services.
-          - podSelector:
-              matchLabels:
-                app.kubernetes.io/component: hub
-                app.kubernetes.io/name: jupyterhub
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/component: hub
+                  app.kubernetes.io/name: jupyterhub
               # Allow traffic from the proxy api pod
-          - podSelector:
-              matchLabels:
-                hub.jupyter.org/network-access-hub: 'true'
+            - podSelector:
+                matchLabels:
+                  hub.jupyter.org/network-access-hub: 'true'
         - ports:
-          - port: 8081
+            - port: 8081
           from:
               # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
-          - podSelector:
-              matchLabels:
-                app.kubernetes.io/component: hub
-                app.kubernetes.io/name: jupyterhub
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/component: hub
+                  app.kubernetes.io/name: jupyterhub
     # FIXME: We should think about these resource requests/limits, see
     #        https://github.com/2i2c-org/infrastructure/issues/2127.
     #
