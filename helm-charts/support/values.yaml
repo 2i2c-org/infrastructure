@@ -30,7 +30,6 @@ clusterEntrypoint:
   targetController: nginx-ingress
 
 nginx-ingress:
-  # Disable this by default
   enabled: true
   controller:
     reportIngressStatus:
