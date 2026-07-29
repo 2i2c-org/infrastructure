@@ -664,6 +664,14 @@ hubs:
   - common.values.yaml
   - weber.values.yaml
   - enc-weber.secret.values.yaml
+- name: whitman
+  display_name: Whitman College
+  domain: whitman.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - whitman.values.yaml
+  - enc-whitman.secret.values.yaml
 - name: willamette
   display_name: Willamette University
   domain: willamette.cloudbank.2i2c.cloud
