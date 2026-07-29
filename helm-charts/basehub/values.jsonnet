@@ -89,15 +89,9 @@ local jupyterhubHomeNFSConfig = {
 local jupyterhubUsageQuotasHubConfig = {
   config: {
     UsageQuotaManager: {
-      scope_fallback_strategy: {
-        intersection: 'min',
-      },
-      failover_open: true,
-      prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local',
       hub_namespace: '%s' % hub_name,
     },
     UsageViewer: {
-      prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local',
       hub_namespace: '%s' % hub_name,
       public_hub_url: 'https://%s/' % hub_domain,
     },
