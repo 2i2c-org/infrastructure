@@ -2,6 +2,7 @@
 version: 1
 extends:
 - https://raw.githubusercontent.com/2i2c-org/team-compass/refs/heads/main/shared.yml
+- ./toc.yml
 project:
   id: bffaf558-ddf2-4025-9435-e0ca3c82b4fd
   # title:
