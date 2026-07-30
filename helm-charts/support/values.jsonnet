@@ -158,6 +158,71 @@ local makePodStuckInTerminatingForTooLongAlert = function(
   },
 };
 
+local makeUsageQuotasFailOpenAlert = function(
+  summary,
+  severity,
+                                     ) {
+  alert: 'Compute usage quotas - At least one fail open detected in the last 30 mins',
+  expr: |||
+    sum(
+      changes(jupyterhub_usage_quotas_fail_open_total[30m])
+    ) by (namespace) >= 1
+  |||,
+  'for': '0m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
+local makeUsageQuotasPrometheusErrorAlert = function(
+  summary,
+  severity,
+                                            ) {
+  alert: 'Compute usage quotas - At least one Prometheus error detected  in the last 30m',
+  expr: |||
+    sum(
+      changes(jupyterhub_usage_quotas_prometheus_error_total[30m])
+    ) >= 3
+  |||,
+  'for': '0m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
+local makeUsageQuotasServerDeniedAlert = function(
+  summary,
+  severity,
+                                         ) {
+  alert: 'Compute usage quotas - At least one server launch denied due to exhausted quota in cluster ' + cluster_name + ' in the last 30 mins',
+  expr: |||
+    changes(
+      (
+        max by (namespace) (
+          jupyterhub_request_duration_seconds_count{handler="jupyterhub.handlers.pages.SpawnPendingHandler", code="422"}
+            or 0*jupyterhub_request_duration_seconds_count # 0 values and absent values are distinct, so we need to 'fill-in' absent values across the time series so that the changes operator acts consistently
+          )
+        )[30m:1m]
+    ) >= 1
+  |||,
+  'for': '0m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
 local configCostMonitoring = {
   enabled: true,
   extraEnv: [
@@ -173,7 +238,6 @@ local configCostMonitoring = {
     },
   },
 };
-
 
 {
   grafana: {
@@ -357,6 +421,24 @@ local configCostMonitoring = {
             rules: [
               diskIOApproachingSaturation(
                 'Disk IO approaching saturation',
+                'action needed this week'
+              ),
+            ],
+          },
+          {
+            name: 'Possible application outage',
+            rules: [
+              makeUsageQuotasFailOpenAlert(
+                'Compute usage quotas - Fail open detected on %s:{{ $labels.namespace }} in the last 30 mins' % [cluster_name],
+                'same day action needed'
+              ),
+              makeUsageQuotasPrometheusErrorAlert(
+                'Compute usage quotas - At least one Prometheus error detected in %s in the last 30 mins' % [cluster_name],
+                'same day action needed'
+              ),
+              // Temporary alert during initial rollout period
+              makeUsageQuotasServerDeniedAlert(
+                'Compute usage quotas - Server launch denied on %s:{{ $labels.namespace }} due to exhausted quota in the last 30 mins' % [cluster_name],
                 'action needed this week'
               ),
             ],
