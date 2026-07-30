@@ -42,7 +42,7 @@ persistent_disks = {
 notebook_nodes = {
   "n2-highmem-4" : {
     min : 0,
-    max : 8,
+    max : 100,
     machine_type : "n2-highmem-4",
   },
   "n2-highmem-16" : {
@@ -58,7 +58,7 @@ notebook_nodes = {
   "gpu-t4" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-8",
+    machine_type : "n1-highmem-8",
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
@@ -82,11 +82,11 @@ user_buckets = {
     "delete_after" : 7,
     "usage_logs" : true,
   },
-  "scratch" : {
+  "scratch-seamap" : {
     "delete_after" : 7,
     "usage_logs" : true,
   }
-  "persistent" : {
+  "persistent-seamap" : {
     "delete_after" : null,
     "usage_logs" : true,
   },
@@ -101,8 +101,8 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
     hub_namespace : "staging"
   },
-  "prod" : {
-    bucket_admin_access : ["scratch", "persistent"],
-    hub_namespace : "prod"
+  "seamap" : {
+    bucket_admin_access : ["scratch-seamap", "persistent-seamap"],
+    hub_namespace : "seamap"
   }
 }

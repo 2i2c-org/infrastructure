@@ -1,0 +1,41 @@
+#If the hub is a daskhub, please indent everything under a basehub key
+#basehub:
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    mountOptions:
+    - soft
+    - noatime
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: US Caribbean EBFM COP
+          # logo_url: no-url
+          # url: no-url
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: Caribbean Fisheries Management Council
+          url: https://caribbeanfmc.com/
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      Authenticator:
+        admin_users: []
+
+  scheduling:
+    userScheduler:
+      enabled: true
