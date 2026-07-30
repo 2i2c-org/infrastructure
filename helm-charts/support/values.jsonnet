@@ -304,6 +304,13 @@ local configCostMonitoring = {
                 'alertname =~ ".*stuck in state.*"',
               ],
             },
+            {
+              receiver: 'jupyterhub-usage-quotas',
+              matchers: [
+                'cluster =~ .*',
+                'alertname =~ "Compute usage quotas.*"',
+              ],
+            },
           ],
         },
       },
