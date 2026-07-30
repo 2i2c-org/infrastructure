@@ -86,10 +86,12 @@ basehub:
           # Access to binder service
           - access:services!service=binder
           - access:services!service=dask-gateway
+          - access:services!service=usage-quota
         server:
           scopes:
           - self
           - access:services!service=dask-gateway
+          - users:activity!user
     singleuser:
       cloudMetadata:
         blockWithIptables: false
