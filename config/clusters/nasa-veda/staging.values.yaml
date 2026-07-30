@@ -5,25 +5,18 @@ basehub:
   jupyterhub:
     hub:
       image:
-        # custom image built to install jupyterhub-fancy-profiles from commit 9754f2188e337cd34cc5c533080583fe92fd47ca
-        # from the PR https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/149 for testing
-        tag: 0.0.1-0.dev.git.15561.hd27897dad
-      loadRoles:
-        binder:
-          services:
-          - binder
-          scopes:
-          - servers
-          - read:users
-        user:
-          scopes:
-          - self
-          - access:services!service=binder
-      services:
-        binder:
-          oauth_client_id: service-binderhub
-          oauth_no_confirm: true
-          oauth_redirect_uri: https://staging.hub.openveda.cloud/services/binder/oauth_callback
+        # Usage quotas 0.1.2 and fancy-profiles commit 7ed7d8ce8ec9f76b816ac9ec8afe70d846b3097b from
+        # from https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/158
+        name: quay.io/2i2c/jupyterhub-usage-quotas
+        tag: 0.0.1-0.dev.git.16212.hedfb20e7c
+      extraFiles:
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageConfig.hub_namespace = "staging"
+            c.UsageViewer.public_hub_url = "https://staging.hub.openveda.cloud/"
+            c.UsageViewer.enable_compute = False
     custom:
       homepage:
         gitRepoBranch: staging
@@ -38,8 +31,6 @@ basehub:
     config:
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-staging-
-        auth_enabled: true
-        hub_url: https://staging.hub.openveda.cloud
     extraEnv:
     - name: JUPYTERHUB_API_URL
       value: https://staging.hub.openveda.cloud/hub/api

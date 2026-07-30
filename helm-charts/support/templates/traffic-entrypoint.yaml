@@ -1,4 +1,4 @@
-{{ if .Values.clusterEntrypoint.enabled }}
+{{ if eq .Values.clusterEntrypoint.targetController "nginx-ingress" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,12 +18,6 @@ spec:
       port: 443
       targetPort: 443
   selector:
-    {{ if eq .Values.clusterEntrypoint.targetController "nginx-ingress" }}
     app.kubernetes.io/instance: support
     app.kubernetes.io/name: nginx-ingress
-    {{ else }}
-    app.kubernetes.io/component: controller
-    app.kubernetes.io/instance: support
-    app.kubernetes.io/name: ingress-nginx
-    {{ end }}
 {{- end }}

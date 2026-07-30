@@ -1,6 +1,9 @@
 name: nmfs-openscapes
 provider: aws
 provider_url: https://891612562472.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 96602996427
 aws:
   account: 891612562472
   key: enc-deployer-credentials.secret.json

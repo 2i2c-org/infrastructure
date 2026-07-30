@@ -1,6 +1,9 @@
 name: ucmerced
 provider: aws
 provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 104040436473
 aws:
   account: 596308305316
   key: enc-deployer-credentials.secret.json

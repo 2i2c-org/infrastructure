@@ -25,18 +25,19 @@ jupyterhub:
           name: Saddleback College
           url: https://www.saddleback.edu/
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: 0.0.1-0.dev.git.16543.h8ea1d8b9f
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - saddleback.edu
-            - ivc.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - saddleback.edu
+        - ivc.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         admin_users:
         - ericvd@berkeley.edu

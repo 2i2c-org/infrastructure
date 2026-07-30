@@ -4,7 +4,7 @@
 
 ## Enable and configure the JupyterHub CILogonOAuthenticator for a hub
 
-The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar with the ones for enabling [GitHubOAuthenticator](auth:github-orgs):
+The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar with the ones for enabling [GitHubOAuthenticator](#auth:github-orgs):
 
 ### Create a CILogon OAuth client
 This can be achieved by using the `deployer cilogon-client create` command.

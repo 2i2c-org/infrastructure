@@ -4,13 +4,13 @@ We have a few alerts configured to notify us when things go wrong and we use Pag
 ## How to manage alerts
 
 ```{important}
-[](howto:alerts) has lots of useful howto guides about how to manage this type of alerts that we have setup.
+[](#howto:alerts) has lots of useful howto guides about how to manage this type of alerts that we have setup.
 ```
 
 ## Severity levels
 When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
 
-Each [alert setup with Jsonnet](alerting:jsonnet-alerts) has a severity level set through the *.jsonnet configuration file. The severity levels are:
+Each [alert setup with Jsonnet](#alerting:jsonnet-alerts) has a severity level set through the *.jsonnet configuration file. The severity levels are:
 
 - `take immediate action`
 - `same day action needed`
@@ -26,7 +26,7 @@ The PagerDuty alerts can have a priority between P1 and P4 or have no priority s
 ### P1 alerts
 - These alerts signal an ongoing community outage! [An outage](https://docs.2i2c.org/admin/reliability/outages/#types-of-outages) is a period of time when a hub is unavailable or its critical services are not functioning as expected and impacting two or more of hub users’ activity
 - The priority is set by:
-   - PagerDuty's Event Orchestration if the alert has a `take immediate action` severity or based on the Service it pertains. (E.g. all [](alerting:hub-health-checks) are P1s)
+   - PagerDuty's Event Orchestration if the alert has a `take immediate action` severity or based on the Service it pertains. (E.g. all [](#alerting:hub-health-checks) are P1s)
    - Manually by the engineer
 
 ````{important}
@@ -43,7 +43,7 @@ If an Alert goes from P1 to another priority number or no number at all, Pagerdu
 
 ### P2 alerts
 - These alerts signal that the community is about to be affected if we don't do something asap. E.g. bumping a hub's home directory when it has less than 10% available.
-- The priority is set by PagerDuty's Event Orchestration if the alert has a `same day action needed` severity or based on the Service it pertains. (E.g. all [](alerting:hub-health-checks) are P1s)
+- The priority is set by PagerDuty's Event Orchestration if the alert has a `same day action needed` severity or based on the Service it pertains. (E.g. all [](#alerting:hub-health-checks) are P1s)
 
 ### P3 alerts
 - Correlate with the `action needed this week` severity level
@@ -53,12 +53,11 @@ If an Alert goes from P1 to another priority number or no number at all, Pagerdu
 - Correlate `to be planned in sprint planning` severity level
 - Community not necessarily affected on a specific timeline, but we must take some action into the committed column of next sprint
 
-
 (alerting:jsonnet-alerts)=
 ## Alerts configured with Jsonnet
 Certain alerts are configured in support deployments using [](#topic/jsonnet).
 
-(alerting:configuration)=
+(alerting:jsonnet:configuration)=
 ### Configuration
 We use the [Prometheus alert manager](https://prometheus.io/docs/alerting/latest/overview/) to set up alerts that are defined in the `helm-charts/support/values.jsonnet` file.
 
@@ -74,12 +73,18 @@ At the time of writing, we have the following [alerting rules groups](https://pr
    For when a pod has restarted, with the following alerts:
    - `jupyterhub-groups-exporter` restart
    - `jupyterhub-home-nfs` restart
+   - `jupyterhub-cost-monitoring` restart
+   - `support-grafana` restart
+   - `support-prometheus-server` restart
+   - `proxy` restart
 3. **Server Startup Failure**
    For when a user server has failed to start.
 4. **DiskIO saturation**
    For when a disk is approaching IO saturation
 5. **Pods stuck in an undesirable state for too long**
    For when there's a pod that's stuck in `Pending` for more than 15m or a pod stuck in `Terminating` for more than 10m.
+6. **Possible application outage**
+   For when an application is not working as expected.
 
 Each of these alerts is integrated with a **Pagerduty Service**. And these services can then be grouped under **Pagerduty Business Services** that can be presented on the status page.
 
@@ -91,8 +96,7 @@ You can find the existing Services under [Service Directory](https://2i2c-org.pa
 ## Alerts configured with Terraform
 Some alerts are configured at the infrastructure using Terraform.
 
-
-(alerting:configuration)=
+(alerting:terraform:configuration)=
 ### Configuration
 
 1. **AWS NFS Home Directory IOPs & Throughput**

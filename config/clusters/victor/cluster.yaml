@@ -1,6 +1,9 @@
 name: victor
 provider: aws
 provider_url: https://129856558350.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 128809917128
 aws:
   account: 129856558350
   key: enc-deployer-credentials.secret.json

@@ -100,6 +100,8 @@ variable "notebook_nodes" {
     # Faster disks provide faster image pulls!
     disk_type : optional(string, "pd-balanced"),
     disk_size_gb : optional(number, 100),
+    disk_throughput : optional(number, null),
+    disk_iops : optional(number, null),
     gpu : optional(
       object({
         enabled : optional(bool, false),
@@ -212,6 +214,19 @@ variable "zone" {
   Even with a regional cluster, all the cluster nodes will
   be on a single zone. NFS and supporting VMs will need to
   be in this zone as well.
+  EOT
+}
+
+variable "core_node_boot_disk" {
+  type = object({
+    type       = optional(string, null)
+    size_gb    = optional(number, 30)
+    iops       = optional(number, 3000)
+    throughput = optional(number, 140)
+  })
+  default     = {}
+  description = <<-EOT
+  Configure core node boot disk type.
   EOT
 }
 

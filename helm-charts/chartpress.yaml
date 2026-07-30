@@ -28,3 +28,9 @@ charts:
           REQUIREMENTS_FILE: quotas-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
+      oauthenticator-latest:
+        imageName: quay.io/2i2c/oauthenticator-latest
+        buildArgs:
+          REQUIREMENTS_FILE: oauthenticator-latest-requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile

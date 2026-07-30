@@ -126,8 +126,9 @@ local makePodStuckInPendingForTooLongAlert = function(
   severity,
                                              ) {
   alert: 'Pod stuck in Pending for at least 30m',
+  // Ignore continuous image pre-pullers, as on large images it can take more than 30min to pull
   expr: |||
-    max by (namespace, pod) (kube_pod_status_phase{phase="Pending"}) > 0
+    max by (namespace, pod) (kube_pod_status_phase{phase="Pending", pod!~"^continuous-image-puller-.*"}) > 0
   |||,
   'for': '30m',
   labels: {
@@ -179,6 +180,8 @@ local configCostMonitoring = {
     serviceAccount: {
       annotations: if provider_name == 'aws' then {
         'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_grafana_cloudwatch' % account_id,
+      } else if provider_name == 'gcp' then {
+        'iam.gke.io/gcp-service-account': 'grafana-2i2c-sa@%s.iam.gserviceaccount.com' % account_id,
       } else {},
     },
   },
@@ -327,6 +330,12 @@ local configCostMonitoring = {
                 'proxy pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
                 '^proxy.*',
                 'immediate action needed'
+              ),
+              makePodRestartAlert(
+                'support-prometheus-server',
+                'support-prometheus-server pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
+                '^proxy.*',
+                'same day action needed'
               ),
             ],
           },

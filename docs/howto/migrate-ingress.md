@@ -1,5 +1,5 @@
 (howto:migrate-ingress)=
-# Migrate from one ingress controller to another
+# Migrate from one ingress controller to another or to Gateway API
 
 ## Why migrate ingress controllers?
 
@@ -14,30 +14,16 @@ Naively using the provided LoadBalancer (LB) from each ingress controller requir
 When migrating between controllers, we also want to avoid re-issuing TLS certificates, which are a "costly" resource.
 ```
 
-## How to migrate from Ingress NGINX Controller
+## How to migrate from an existing Controller to another
 
-To facilitate zero downtime migration between controllers, we have introduced a new LoadBalancer ingress service. The purpose of this service is to provide a static external IP address that lives independently of the ingress controller. Consequently, we no longer need ingress controllers to create their own LBs — we can use simple clusterIP services.
-
-For clusters that are still running Ingress NGINX Controller, the existing DNS records point to the controller-managed LoadBalancer service external IP. To migrate between two ingress controllers `ingress-nginx` and `nginx-ingress`, we must perform two separate migrations:
-
-(migrate-ingress:migrate-dns)=
-### Migrate DNS records to dedicated LoadBalancer service
-
-We recently updated the support chart to enable the LoadBalancer service on all hubs. In this phase, we must migrate the DNS records for the cluster to the `cluster-entrypoint` LoadBalancer external IP. We can easily lookup the LB hostname with:
-
-```bash
-kubectl --namespace=support get service/cluster-entrypoint  --template='{{$ingress := (index .status.loadBalancer.ingress 0)}}{{or $ingress.hostname $ingress.ip}}'
-```
-
-We must migrate the DNS records for the domain to point to this external IP. During the migration, both the "new" LB and existing ingress-nginx owned LB must be available.
-
+To facilitate zero downtime migration between controllers, we have introduced a new [LoadBalancer ingress service](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/support/templates/traffic-entrypoint.yaml). The purpose of this service is to provide a static external IP address that lives independently of the ingress controller. Consequently, we no longer need ingress controllers to create their own LBs — we can use simple clusterIP services.
 
 (migrate-ingress:switch-controller)=
-### Switch to official `nginx-ingress` controller
+### Switch to another nginx controller
 
-Once the DNS records have been updated to point to the `cluster-entrypoint` LB, we can safely transition to the official `ingress-nginx` service:
+Since the DNS records are pointing to the dedicated `cluster-entrypoint` LB service, we can safely transition to the new `ingress` service:
 
-1. Enable the `nginx-ingress` service in the support chart with
+1. Enable the new ingress (in this case `nginx-ingress`) service in the support chart with
    ```{code-block} yaml
    nginx-ingress:
      # Enable controller
@@ -47,7 +33,7 @@ Once the DNS records have been updated to point to the `cluster-entrypoint` LB, 
          # Claim the `nginx` ingress class
          create: true
    ```
-1. Disable the `ingress-nginx` controller:
+1. Disable original controller (in this case `ingress-nginx`):
    ```{code-block} yaml
    ingress-nginx:
      controller:
@@ -57,13 +43,14 @@ Once the DNS records have been updated to point to the `cluster-entrypoint` LB, 
        ingressClassResource:
          enabled: false
    ```
-1. Point the `cluster-entrypoint` LB to the new `nginx-ingress` service:
+1. Point the `cluster-entrypoint` LB to the new ingress service (in this case `nginx-ingress` ):
    ```{code-block} yaml
    clusterEntrypoint:
      targetController: nginx-ingress
    ```
 
-## How to handle future migrations
+   *Make sure to modify the `cluster-entrypoint` service to conditionally set the correct annotations, depending on which targetController is set.
 
-Once all clusters are using the `cluster-entrypoint` LB for their DNS records, it should be trivial to migrate to a new ingress controller or Gateway that establishes a clusterIP service. Once a new controller/gateway is introduced, simply point the `cluster-entrypoint` LB at the new service pods.
+## Switch to Gateway API
 
+It should be trivial to migrate to a new ingress controller or Gateway that establishes a clusterIP service. Once a new controller/gateway is introduced, simply point the `cluster-entrypoint` LB at the new service pods.

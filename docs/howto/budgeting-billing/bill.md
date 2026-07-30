@@ -147,7 +147,7 @@ clusters set up on Google Cloud, and tell you how much they cost.
 
 Pre-requisites for running it:
 
-1. You have all [tools required](tutorials:setup) required to work on this repo
+1. You have all [tools required](#tutorials:setup) required to work on this repo
    setup.
 
 2. Run `gcloud application-default auth login`, and authenticate with your `2i2c.org`
@@ -156,7 +156,7 @@ Pre-requisites for running it:
 
 There is a private [Google Sheet](https://docs.google.com/spreadsheets/d/1URYCMap-Lxm4e_pAAC3Esxda7tZzRhCS6d85pxUiVQs/edit#gid=0)
 that has monthly costs for all the clusters that are configured to have
-[bigquery export](new-gcp-project:billing-export).
+[bigquery export](#new-gcp-project:billing-export).
 
 This sheet is currently manually updated. You can update it by running
 `deployer generate cost-table --output 'google-sheet'`. It will by default
@@ -174,7 +174,7 @@ amount of the previous month's costs.
 
 #### Caveats
 
-1. The data comes from [bigquery costs export](new-gcp-project:billing-export), so
+1. The data comes from [bigquery costs export](#new-gcp-project:billing-export), so
    is only available and accurate after that has been enabled. For billing data
    before this was enabled, you need to manually go look in the cloud console.
 

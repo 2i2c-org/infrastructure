@@ -35,7 +35,7 @@ resource "aws_sns_topic_subscription" "volume_metric_exceeded_https_target" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
-  for_each                  = aws_ebs_volume.nfs_home_dirs
+  for_each                  = var.enable_ebs_alarms ? aws_ebs_volume.nfs_home_dirs : {}
   alarm_name                = "Throughput Limit Exceeded for ${each.value.tags["Name"]} (${var.cluster_name})"
   evaluation_periods        = 5
   datapoints_to_alarm       = 3
@@ -62,7 +62,7 @@ resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_iops_alarm" {
-  for_each                  = aws_ebs_volume.nfs_home_dirs
+  for_each                  = var.enable_ebs_alarms ? aws_ebs_volume.nfs_home_dirs : {}
   alarm_name                = "IOPs Limit Exceeded for ${each.value.tags["Name"]} (${var.cluster_name})"
   evaluation_periods        = 5
   datapoints_to_alarm       = 3

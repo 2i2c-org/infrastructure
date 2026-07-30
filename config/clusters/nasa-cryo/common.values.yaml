@@ -8,6 +8,10 @@ basehub:
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         imagePullSecrets: [name: image-pull-secret]
 
@@ -57,6 +61,7 @@ basehub:
           - CryoInTheCloud:cryoclouduser
           - CryoInTheCloud:cryocloudadvanced
           - CryoInTheCloud:csdms-2025-workshop
+          - CryoInTheCloud:continuous-dems-workshops
         Authenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to persist auth state
@@ -64,12 +69,12 @@ basehub:
           - tsnow03
           - JessicaS11
           - jdmillstein
-          - dfelikson
           - fperez
           - scottyhq
           - jomey
           - rwegener2
           - itcarroll
+          - eeholmes
       loadRoles:
         user:
           scopes:
@@ -78,6 +83,13 @@ basehub:
           - shares!user
           - read:users:name
           - list:users
+          # Access to binder service
+          - access:services!service=binder
+          - access:services!service=dask-gateway
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
     singleuser:
       cloudMetadata:
         blockWithIptables: false
@@ -149,6 +161,8 @@ basehub:
                 - CryoInTheCloud:CryoCloudAdvanced
                 - CryoInTheCloud:CryoCloudUser
                 - CryoInTheCloud:csdms-2025-workshop
+                - CryoInTheCloud:fish-pace
+                - CryoInTheCloud:continuous-dems-workshops
                 - 2i2c-org:hub-access-for-2i2c-staff
                 kubespawner_override:
                   mem_guarantee: 1951419879

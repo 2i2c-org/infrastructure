@@ -7,11 +7,11 @@ or a community's GitHub organisation.
 
 ```{note}
 This is the default authentication method for 2i2c staff wanting to visualise the
-dashboards on [](grafana-dashboards:central). However, we can also offer this
+dashboards on [](#grafana-dashboards:central). However, we can also offer this
 method of authentication to communities on their cluster-specific Grafana instance
 _only_ if they want to give `Viewer` access to a _whole_ GitHub organisation and
 they are on a _dedicated_ cluster. Otherwise, the default method to provide access
-to a community representative is to [generate an invite link](grafana-access:invite-link).
+to a community representative is to [generate an invite link](#grafana-access:invite-link).
 ```
 
 To enable logging into Grafana using GitHub Organisations, follow these steps:

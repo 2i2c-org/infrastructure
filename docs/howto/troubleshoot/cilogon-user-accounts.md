@@ -21,7 +21,7 @@ This means that you'll automatically reuse the same institutional and user accou
 4. They can now choose **another Identity Provider** via CILogon.
 
 ```{note}
-If the user choses the same Identity Provider, then they will be automatically logged in with the same user account they've used before. To change the user account, see [](troubleshoot:cilogon:switch-user-accounts).
+If the user choses the same Identity Provider, then they will be automatically logged in with the same user account they've used before. To change the user account, see [](#troubleshoot:cilogon:switch-user-accounts).
 ```
 
 (troubleshoot:cilogon:switch-user-accounts)=
@@ -42,4 +42,4 @@ If you see a 403 error page, this means that the account you were using to login
 
 If you think this is an error, and the account should have been allowed, then contact the hub administrator/s.
 
-If you used the wrong user account, you can log in using another account by following the steps in [](troubleshoot:cilogon:switch-user-accounts).
+If you used the wrong user account, you can log in using another account by following the steps in [](#troubleshoot:cilogon:switch-user-accounts).

@@ -27,6 +27,18 @@ persistent_disks = {
     size        = 25
     name_suffix = "bmcc"
   }
+  "boise" = {
+    size        = 25
+    name_suffix = "boise"
+  }
+  "carrollu" = {
+    size        = 25
+    name_suffix = "carrollu"
+  }
+  "cau" = {
+    size        = 25
+    name_suffix = "cau"
+  }
   "ccsf" = {
     size        = 513
     name_suffix = "ccsf"
@@ -43,6 +55,14 @@ persistent_disks = {
     size        = 25
     name_suffix = "chicagostate"
   }
+  "clarku" = {
+    size        = 25
+    name_suffix = "clarku"
+  }
+  "cloud-county" = {
+    size        = 25
+    name_suffix = "cloud-county"
+  }
   "cmu" = {
     size        = 25
     name_suffix = "cmu"
@@ -55,10 +75,6 @@ persistent_disks = {
     size        = 150
     name_suffix = "csm"
   }
-  "csum" = {
-    size        = 25
-    name_suffix = "csum"
-  }
   "deanza" = {
     size        = 60
     name_suffix = "deanza"
@@ -66,10 +82,6 @@ persistent_disks = {
   "demo" = {
     size        = 35
     name_suffix = "demo"
-  }
-  "dvc" = {
-    size        = 98
-    name_suffix = "dvc"
   }
   "elac" = {
     size        = 40
@@ -95,6 +107,14 @@ persistent_disks = {
     size        = 60
     name_suffix = "fresno"
   }
+  "fullertoncc" = {
+    size        = 25
+    name_suffix = "fullertoncc"
+  }
+  "georgetown" = {
+    size        = 25
+    name_suffix = "georgetown"
+  }
   "glendale" = {
     size        = 60
     name_suffix = "glendale"
@@ -106,6 +126,10 @@ persistent_disks = {
   "gpu-demo" = {
     size        = 500
     name_suffix = "gpu-demo"
+  }
+  "gssm" = {
+    size        = 25
+    name_suffix = "gssm"
   }
   "gwu" = {
     size        = 300
@@ -122,6 +146,10 @@ persistent_disks = {
   "humboldt" = {
     size        = 200
     name_suffix = "humboldt"
+  }
+  "iit" = {
+    size        = 25
+    name_suffix = "iit"
   }
   "kean" = {
     size        = 25
@@ -175,13 +203,29 @@ persistent_disks = {
     size        = 60
     name_suffix = "moreno"
   }
+  "nicc" = {
+    size        = 25
+    name_suffix = "nicc"
+  }
   "norco" = {
     size        = 40
     name_suffix = "norco"
   }
+  "nova" = {
+    size        = 25
+    name_suffix = "nova"
+  }
   "ocu" = {
     size        = 25
     name_suffix = "ocu"
+  }
+  "oit" = {
+    size        = 25
+    name_suffix = "oit"
+  }
+  "orangecoast" = {
+    size        = 25
+    name_suffix = "orangecoast"
   }
   "palomar" = {
     size        = 40
@@ -215,9 +259,9 @@ persistent_disks = {
     size        = 100
     name_suffix = "sbcc"
   }
-  "sbcc-dev" = {
-    size        = 20
-    name_suffix = "sbcc-dev"
+  "shasta" = {
+    size        = 25
+    name_suffix = "shasta"
   }
   "sierra" = {
     size        = 20
@@ -226,10 +270,6 @@ persistent_disks = {
   "sjcc" = {
     size        = 30
     name_suffix = "sjcc"
-  }
-  "sjsu" = {
-    size        = 20
-    name_suffix = "sjsu"
   }
   "skyline" = {
     size        = 115
@@ -255,17 +295,25 @@ persistent_disks = {
     size        = 25
     name_suffix = "stanford"
   }
+  "toledo" = {
+    size        = 25
+    name_suffix = "toledo"
+  }
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
   }
-  "ucsc" = {
-    size        = 20
-    name_suffix = "ucsc"
-  }
   "umd" = {
     size        = 50
     name_suffix = "umd"
+  }
+  "unc-chapel-hill" = {
+    size        = 25
+    name_suffix = "unc-chapel-hill"
+  }
+  "uncw" = {
+    size        = 25
+    name_suffix = "uncw"
   }
   "und" = {
     size        = 25
@@ -275,13 +323,37 @@ persistent_disks = {
     size        = 40
     name_suffix = "unr"
   }
+  "utpb" = {
+    size        = 25
+    name_suffix = "utpb"
+  }
+  "uwyo" = {
+    size        = 25
+    name_suffix = "uwyo"
+  }
   "virginia" = {
     size        = 180
     name_suffix = "virginia"
   }
+  "weber" = {
+    size        = 25
+    name_suffix = "weber"
+  }
+  "whitman" = {
+    size        = 25
+    name_suffix = "whitman"
+  }
+  "willamette" = {
+    size        = 25
+    name_suffix = "willamette"
+  }
   "wlac" = {
     size        = 20
     name_suffix = "wlac"
+  }
+  "york" = {
+    size        = 25
+    name_suffix = "york"
   }
 }
 

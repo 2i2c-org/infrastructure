@@ -19,14 +19,18 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: 0.0.1-0.dev.git.16543.h8ea1d8b9f
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: email
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - pipeline.sbcc.edu
+        strip_domain: false
+        allow_all: true
       OAuthenticator:
         # WARNING: Don't use allow_existing_users with config to allow an
         #          externally managed group of users, such as

@@ -23,6 +23,7 @@ Update `docs/csv/cost-monitoring.csv` used to generate this table by running `ex
 ```
 
 % DataTables config to make the table above look nice
+
 <link rel="stylesheet"
       href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 <script type="text/javascript"
@@ -43,4 +44,5 @@ $(document).ready( function () {
     table th, table td {
         padding: 0;
     }
+
 </style>

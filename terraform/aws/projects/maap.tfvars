@@ -222,6 +222,7 @@ ebs_volumes = {
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" },
     iops        = 5000
+    throughput  = 250 # Double the throughput, as we kept getting alerts for throughput consistently
   }
 }
 

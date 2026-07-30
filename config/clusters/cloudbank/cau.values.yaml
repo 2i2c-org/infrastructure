@@ -1,0 +1,74 @@
+jupyterhub:
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 4G
+      limit: 4G
+    profileList:
+    - display_name: Choose your environment
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-base:
+              display_name: Base Image (JupyterLab)
+              default: true
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:6d61d3c15d47
+            01-rstudio:
+              display_name: RStudio
+              slug: rstudio
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-rstudio-image:82f5f9af2a0c
+                # Launch into RStudio after the user logs in
+                default_url: /rstudio
+                # Ensures container working dir is homedir
+                # https://github.com/2i2c-org/infrastructure/issues/2559
+                working_dir: /home/rstudio
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: false
+    homepage:
+      gitRepoBranch: unify-logins-2
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.cau.edu/themes/custom/idfive_accelerator/idfive-component-library/public/images/logo-horizontal.svg
+          name: Clark Atlanta University
+          url: https://www.cau.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: shared-password
+      Authenticator:
+        manage_groups: false
+        # Allow everyone with the shared password to log in
+        allow_all: true
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - ooyerinde@cau.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-cau
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

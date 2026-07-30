@@ -150,6 +150,16 @@ jupyterhub:
           url: https://aimatx.ai/
   hub:
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+      user:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        - access:services!service=binder
     config:
       JupyterHub:
         authenticator_class: github
@@ -171,6 +181,10 @@ jupyterhub:
 dask-gateway:
   enabled: true
   gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
     backend:
       imagePullSecrets: [name: image-pull-secret]
 

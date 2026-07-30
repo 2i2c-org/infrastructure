@@ -18,7 +18,7 @@ jupyterhub:
     continuous:
       # We don't need this right now, and it's causing alert
       # failures
-      enabled: false
+      enabled: true
   singleuser:
     defaultUrl: /lab
     profileList:
@@ -35,6 +35,11 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
+            00-base-user-image:
+              display_name: Default Image
+              description: RStudio, VS Code, JupyterLab, Python, R
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:bde8b3293fd2
             00-slm:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages

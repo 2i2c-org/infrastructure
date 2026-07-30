@@ -155,6 +155,12 @@ local jupyterhubConfig =
   {
     ingress: hubIngressConfig,
     hub: {
+      services: {
+        binder: {
+          // dynamically configure redirect_uri for binderhub service, so we don't have to do that in each hub
+          oauth_redirect_uri: 'https://%s/services/binder/oauth_callback' % [hub_domain],
+        },
+      },
       config: {
         OAuthenticator: {
           // Always set oauth callback URL, to prevent it from being
@@ -202,6 +208,12 @@ local daskGatewayConfig =
     },
   } else {};
 
+local nodePlaceholderConfig = {
+  nodeSelector: {
+    '2i2c/hub-name': hub_name,
+  },
+};
+
 local binderhubServiceConfig = {
   // Schedule builder pods to run on the default smallest user nodes
   // https://github.com/2i2c-org/infrastructure/issues/4241
@@ -222,15 +234,26 @@ local binderhubServiceConfig = {
     {} +
     if provider == 'aws' then {
       KubernetesBuildExecutor: {
-        '2i2c/hub-name': hub_name,
-        'node.kubernetes.io/instance-type': 'r5.xlarge',
+        node_selector: {
+          '2i2c/hub-name': hub_name,
+          'node.kubernetes.io/instance-type': 'r5.xlarge',
+        },
       },
     }
     else if provider == 'gcp' then {
       KubernetesBuildExecutor: {
-        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+        node_selector: {
+          'node.kubernetes.io/instance-type': 'n2-highmem-4',
+        },
       },
     } else {},
+  // For auth
+  extraEnv: [
+    {
+      name: 'JUPYTERHUB_API_URL',
+      value: 'http://hub.%s.svc.cluster.local:8081/hub/api' % hub_name,
+    },
+  ],
 };
 
 // We define a service account that is attached by default to all Jupyter user pods
@@ -262,5 +285,6 @@ emitDaskHubCompatibleConfig(
     userServiceAccount: userServiceAccountConfig,
     'dask-gateway': daskGatewayConfig,
     'binderhub-service': binderhubServiceConfig,
+    nodePlaceholder: nodePlaceholderConfig,
   }
 )

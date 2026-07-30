@@ -13,7 +13,7 @@ These docs also cover:
 
 ```{note}
 For more information on `cryptnono`, it's use, and the detectors, please see
-[](topic:cryptnono) and <https://github.com/cryptnono/cryptnono>.
+[](#topic:cryptnono) and <https://github.com/cryptnono/cryptnono>.
 ```
 
 ## Testing the `execwhacker` detector
