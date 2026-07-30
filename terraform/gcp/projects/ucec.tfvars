@@ -8,26 +8,25 @@
 prefix     = "ucec"
 project_id = "ucec-503914"
 
-zone   = "us-central1-a"
+zone   = "us-central1-b"
 region = "us-central1"
 
+filestores = {}
+
 # Config required to enable automatic budget alerts to be sent to support@2i2c.org
-budget_alert_enabled = false
+budget_alert_enabled = true
 billing_account_id   = "0157F7-E3EA8C-25AC3C"
 
+single_process_oom_kill = false
+
 k8s_versions = {
-  min_master_version : "1.34.8-gke.1278000",
-  core_nodes_version : "1.34.8-gke.1278000",
-  notebook_nodes_version : "1.34.8-gke.1278000",
+  min_master_version : "1.35.3-gke.1943000",
+  core_nodes_version : "1.35.3-gke.1943000",
+  notebook_nodes_version : "1.35.3-gke.1943000",
 }
 
 core_node_machine_type = "n2-highmem-2"
-
-# Tip: comment the line below if this cluster won't be multi-tenant.
-#       Network policy is required to enforce separation between hubs on
-#       multi-tenant clusters.
-#
-enable_network_policy = true
+enable_network_policy  = true
 
 persistent_disks = {
   "staging" = {
@@ -43,37 +42,37 @@ persistent_disks = {
 notebook_nodes = {
   "n2-highmem-4" : {
     min : 0,
-    max : 100,
+    max : 8,
     machine_type : "n2-highmem-4",
   },
-  "n2-highmem-16" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-16",
-  },
-  "n2-highmem-64" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-64",
-  },
-  "gpu-t4" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-8",
-    gpu : {
-      enabled : true,
-      type : "nvidia-tesla-t4",
-      count : 1
-    },
-    zones : [
-      # Get GPUs wherever they are available, as sometimes a single
-      # zone might be out of GPUs.
-      "us-central1-a",
-      "us-central1-b",
-      "us-central1-c",
-      "us-central1-f"
-    ]
-  },
+  #  "n2-highmem-16" : {
+  #    min : 0,
+  #    max : 100,
+  #    machine_type : "n2-highmem-16",
+  #  },
+  #  "n2-highmem-64" : {
+  #    min : 0,
+  #    max : 100,
+  #    machine_type : "n2-highmem-64",
+  #  },
+  #  "gpu-t4" : {
+  #    min : 0,
+  #    max : 100,
+  #    machine_type : "n1-standard-8",
+  #    gpu : {
+  #      enabled : true,
+  #      type : "nvidia-tesla-t4",
+  #      count : 1
+  #    },
+  #    zones : [
+  #      # Get GPUs wherever they are available, as sometimes a single
+  #      # zone might be out of GPUs.
+  #      "us-central1-a",
+  #      "us-central1-b",
+  #      "us-central1-c",
+  #      "us-central1-f"
+  #    ]
+  #  },
 }
 
 
