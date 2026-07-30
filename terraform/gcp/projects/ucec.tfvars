@@ -45,34 +45,34 @@ notebook_nodes = {
     max : 8,
     machine_type : "n2-highmem-4",
   },
-  #  "n2-highmem-16" : {
-  #    min : 0,
-  #    max : 100,
-  #    machine_type : "n2-highmem-16",
-  #  },
-  #  "n2-highmem-64" : {
-  #    min : 0,
-  #    max : 100,
-  #    machine_type : "n2-highmem-64",
-  #  },
-  #  "gpu-t4" : {
-  #    min : 0,
-  #    max : 100,
-  #    machine_type : "n1-standard-8",
-  #    gpu : {
-  #      enabled : true,
-  #      type : "nvidia-tesla-t4",
-  #      count : 1
-  #    },
-  #    zones : [
-  #      # Get GPUs wherever they are available, as sometimes a single
-  #      # zone might be out of GPUs.
-  #      "us-central1-a",
-  #      "us-central1-b",
-  #      "us-central1-c",
-  #      "us-central1-f"
-  #    ]
-  #  },
+  "n2-highmem-16" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
+  },
+  "n2-highmem-64" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
+  },
+  "gpu-t4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 1
+    },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
+  },
 }
 
 
