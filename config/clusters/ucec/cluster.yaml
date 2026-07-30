@@ -37,6 +37,15 @@ hubs:
   - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
+- name: ebfm
+    # Tip: consider changing this to something more human friendly
+  display_name: EBFM
+  domain: ebf,.ucec.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ebfm.values.yaml
+  - enc-ebfm.secret.values.yaml
 - name: seamap
     # Tip: consider changing this to something more human friendly
   display_name: SeaMap
