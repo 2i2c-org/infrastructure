@@ -33,9 +33,9 @@ persistent_disks = {
     size        = 1 # in GB
     name_suffix = "staging"
   },
-  "prod" = {
+  "seamap" = {
     size        = 100 # in GB
-    name_suffix = "prod"
+    name_suffix = "seamap"
   }
 }
 

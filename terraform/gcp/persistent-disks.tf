@@ -11,7 +11,7 @@ resource "google_compute_disk" "nfs_homedirs" {
   labels = each.value.tags
 
   lifecycle {
-    prevent_destroy = true
+    # prevent_destroy = true
   }
 }
 

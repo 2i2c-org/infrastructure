@@ -17,8 +17,8 @@ jupyterhub:
       templateVars:
         org:
           name: US Caribbean EBFM COP
-          # logo_url: no-url
-          # url: no-url
+          logo_url: http://2i2c.org
+          url: https://2i2c.org
         designed_by:
           name: 2i2c
           url: https://2i2c.org

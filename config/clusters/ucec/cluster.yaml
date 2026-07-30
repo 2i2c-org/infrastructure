@@ -28,6 +28,15 @@ support:
   - support.values.yaml
   - enc-support.secret.values.yaml
 hubs:
+- name: staging
+    # Tip: consider changing this to something more human friendly
+  display_name: UCEC Staging
+  domain: staging.ucec.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
 - name: seamap
     # Tip: consider changing this to something more human friendly
   display_name: SeaMap
