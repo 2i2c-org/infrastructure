@@ -1089,16 +1089,6 @@ jupyterhub:
         url: http://binderhub:8090
         oauth_no_confirm: true
       jupyterhub-groups-exporter: {}
-      usage-quota:
-        url: http://hub:9000
-        display: true
-        oauth_no_confirm: true
-        command:
-          - python
-          - -m
-          - jupyterhub_usage_quotas.services.usage_viewer
-          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
-          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
       metrics-exporter:
         display: false
     loadRoles:
@@ -1108,13 +1098,6 @@ jupyterhub:
         scopes:
           - users
           - groups
-      usage-quota-service:
-        scopes:
-          - read:users
-          - list:services
-          - read:services
-        services:
-          - usage-quota
       metrics-exporter-service:
         scopes:
           - users
