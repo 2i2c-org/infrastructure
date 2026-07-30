@@ -36,6 +36,10 @@ persistent_disks = {
   "seamap" = {
     size        = 100 # in GB
     name_suffix = "seamap"
+  },
+  "ebfm" = {
+    size        = 100 # in GB
+    name_suffix = "ebfm"
   }
 }
 
@@ -82,18 +86,26 @@ user_buckets = {
     "delete_after" : 7,
     "usage_logs" : true,
   },
-  "scratch-seamap" : {
-    "delete_after" : 7,
+  "persistent-staging" : {
+    "delete_after" : null,
     "usage_logs" : true,
-  }
+  },
   "persistent-seamap" : {
     "delete_after" : null,
     "usage_logs" : true,
   },
-  "persistent-staging" : {
+  "scratch-seamap" : {
+    "delete_after" : 7,
+    "usage_logs" : true,
+  },
+  "persistent-ebfm" : {
     "delete_after" : null,
     "usage_logs" : true,
-  }
+  },
+  "scratch-ebfm" : {
+    "delete_after" : 7,
+    "usage_logs" : true,
+  },
 }
 
 hub_cloud_permissions = {
@@ -104,5 +116,9 @@ hub_cloud_permissions = {
   "seamap" : {
     bucket_admin_access : ["scratch-seamap", "persistent-seamap"],
     hub_namespace : "seamap"
+  },
+  "ebfm" : {
+    bucket_admin_access : ["scratch-ebfm", "persistent-ebfm"],
+    hub_namespace : "ebfm"
   }
 }
