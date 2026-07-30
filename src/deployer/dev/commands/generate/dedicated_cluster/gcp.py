@@ -47,7 +47,7 @@ def generate_terraform_file(vars):
 
     print_colour("Generating the terraform infrastructure file...", "yellow")
     tfvars_file_path = (
-        REPO_ROOT_PATH / "terraform/gcp/projects" / f'{vars["cluster_name"]}.tfvars'
+        REPO_ROOT_PATH / "terraform/gcp/projects" / f"{vars['cluster_name']}.tfvars"
     )
     with open(tfvars_file_path, "w") as f:
         f.write(tfvars_template.render(**vars))
@@ -59,6 +59,9 @@ def gcp(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
     cluster_region: str = typer.Option(
         ..., prompt="The region where to deploy the cluster"
+    ),
+    cluster_zone: str = typer.Option(
+        "b", prompt="The zone where to deploy the cluster zonal resources"
     ),
     project_id: str = typer.Option(
         ..., prompt="Please insert the Project ID of the GCP project"
@@ -86,6 +89,7 @@ def gcp(
         "dask_nodes": dask_nodes,
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
+        "cluster_zone": f"{cluster_region}-{cluster_zone}",
         "project_id": project_id,
     }
 

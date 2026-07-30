@@ -13,11 +13,16 @@
    created project
 7. GCP requires you to explicitly [enable APIs](https://cloud.google.com/apis/docs/getting-started#enabling_apis)
    before they can be used. Enable the following APIs:
-   1. [GKE](https://console.cloud.google.com/apis/library/container.googleapis.com)
-   2. [Compute Engine](https://console.cloud.google.com/apis/api/compute.googleapis.com/overview)
-   3. [Artifact Registry](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com)
-   4. [Filestore](https://console.cloud.google.com/apis/api/file.googleapis.com/overview)
 
+   :::{important} GCP APIs
+   :label: gcp-apis
+   1. [GKE](https://console.cloud.google.com/apis/api/container.googleapis.com/overview)
+   2. [Compute Engine](https://console.cloud.google.com/apis/api/compute.googleapis.com/overview)
+   3. [Artifact Registry](https://console.cloud.google.com/apis/api/artifactregistry.googleapis.com/overview)
+   4. [Filestore](https://console.cloud.google.com/apis/api/file.googleapis.com/overview)
+   5. [Cloud Resource Manager](https://console.cloud.google.com/apis/api/cloudresourcemanager.googleapis.com/overview)
+   6. [Cloud Billing API](https://console.cloud.google.com/apis/api/billingbudgets.googleapis.com/overview)
+   :::
    ```{note}
    Make sure the correct project is selected while enabling these!
    ```
