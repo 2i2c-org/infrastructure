@@ -219,6 +219,7 @@ jobs:
       failure_victor: ${{ steps.declare-failure.outputs.failure_victor }}
       failure_temple: ${{ steps.declare-failure.outputs.failure_temple }}
       failure_uw-escience: ${{ steps.declare-failure.outputs.failure_uw-escience }}
+      failure_ucec: ${{ steps.declare-failure.outputs.failure_ucec }}
 
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -468,6 +469,7 @@ jobs:
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
       failure_uw-escience_staging: ${{ steps.declare-failure.outputs.failure_uw-escience_staging }}
+      failure_ucec_staging: ${{ steps.declare-failure.outputs.failure_ucec_staging }}
 
     permissions:
       id-token: write
