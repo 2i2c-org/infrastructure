@@ -54,3 +54,7 @@ dependencies:
     version: "1.1.2"
     repository: https://2i2c.org/jupyterhub-cost-monitoring/
     condition: jupyterhub-cost-monitoring.enabled
+
+  - name: reflector
+    version: "10.0.61"
+    repository: oci://ghcr.io/emberstack/helm-charts
