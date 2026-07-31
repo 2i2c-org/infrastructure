@@ -54,8 +54,10 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-canvas.values.yaml
   - r-common.values.yaml
   - r-prod.values.yaml
+  - enc-common-canvas.secret.values.yaml
   - enc-r-prod.secret.values.yaml
 - name: highmem
   display_name: University of Toronto (highmem)
