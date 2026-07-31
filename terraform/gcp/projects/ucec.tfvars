@@ -33,16 +33,20 @@ persistent_disks = {
     size        = 1 # in GB
     name_suffix = "staging"
   },
-  "prod" = {
+  "seamap" = {
     size        = 100 # in GB
-    name_suffix = "prod"
+    name_suffix = "seamap"
+  },
+  "ebfm" = {
+    size        = 100 # in GB
+    name_suffix = "ebfm"
   }
 }
 
 notebook_nodes = {
   "n2-highmem-4" : {
     min : 0,
-    max : 8,
+    max : 100,
     machine_type : "n2-highmem-4",
   },
   "n2-highmem-16" : {
@@ -58,7 +62,7 @@ notebook_nodes = {
   "gpu-t4" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-8",
+    machine_type : "n1-highmem-8",
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
@@ -82,18 +86,26 @@ user_buckets = {
     "delete_after" : 7,
     "usage_logs" : true,
   },
-  "scratch" : {
-    "delete_after" : 7,
-    "usage_logs" : true,
-  }
-  "persistent" : {
-    "delete_after" : null,
-    "usage_logs" : true,
-  },
   "persistent-staging" : {
     "delete_after" : null,
     "usage_logs" : true,
-  }
+  },
+  "persistent-seamap" : {
+    "delete_after" : null,
+    "usage_logs" : true,
+  },
+  "scratch-seamap" : {
+    "delete_after" : 7,
+    "usage_logs" : true,
+  },
+  "persistent-ebfm" : {
+    "delete_after" : null,
+    "usage_logs" : true,
+  },
+  "scratch-ebfm" : {
+    "delete_after" : 7,
+    "usage_logs" : true,
+  },
 }
 
 hub_cloud_permissions = {
@@ -101,8 +113,12 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
     hub_namespace : "staging"
   },
-  "prod" : {
-    bucket_admin_access : ["scratch", "persistent"],
-    hub_namespace : "prod"
+  "seamap" : {
+    bucket_admin_access : ["scratch-seamap", "persistent-seamap"],
+    hub_namespace : "seamap"
+  },
+  "ebfm" : {
+    bucket_admin_access : ["scratch-ebfm", "persistent-ebfm"],
+    hub_namespace : "ebfm"
   }
 }
