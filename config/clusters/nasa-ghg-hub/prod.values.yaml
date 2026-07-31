@@ -10,8 +10,10 @@ basehub:
         usage_quotas_config:
           mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
           stringData: |
-            c.UsageConfig.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
-            c.UsageConfig.hub_namespace = "prod"
+            c.UsageQuotaManager.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageViewer.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageQuotaManager.hub_namespace = "prod"
+            c.UsageViewer.hub_namespace = "prod"
             c.UsageViewer.public_hub_url = "https://hub.ghg.center/"
             c.UsageViewer.enable_compute = False
 
