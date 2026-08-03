@@ -17,6 +17,11 @@ jupyterhub:
         manage_groups: false
         enable_auth_state: false
         allow_all: true
+        admin_users:
+        - ateucher   # Andy Teucher
+        - jules32   # Julia Stewart Lowndes
+        - eeholmes   # Eli Holmes
+        - camante # Christopher.Amante@colorado.edu
   singleuser:
     storage:
       extraVolumeMounts:
