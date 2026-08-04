@@ -163,14 +163,19 @@ jupyterhub:
                 })
 
         c.Spawner.auth_state_hook = populate_token
-      # Post auth API endpoint maintained by the MAAP Platform team
-      002-post-auth-webhook: |
-        import asyncio
+      # MAAP member-sync webhook maintained by the MAAP Platform team.
+      # Runs via modify_auth_state_hook, which fires during authenticate()
+      # BEFORE the allowed-groups check — so a member record is auto-created
+      # for every authenticated user, including brand-new pending/role-less
+      # users who are then rejected from the hub and redirected to the sign-up
+      # page. (A post_auth_hook only runs for already-allowed users, so it can
+      # never create the pending record an admin needs to review.)
+      002-member-sync-webhook: |
         from tornado.httpclient import AsyncHTTPClient
         from z2jh import get_config
 
         async def _notify_maap_api(authenticator, base_url, pgt):
-            """Fire-and-forget call to MAAP REST API."""
+            """Call the MAAP REST API so it registers/refreshes the member."""
             http_client = AsyncHTTPClient()
             try:
                 await http_client.fetch(
@@ -180,26 +185,27 @@ jupyterhub:
                     request_timeout=5.0,
                 )
             except Exception as e:
-                authenticator.log.exception("MAAP post-auth webhook failed: %s", e)
+                authenticator.log.exception("MAAP member-sync webhook failed: %s", e)
 
-        async def maap_post_auth_hook(authenticator, handler, authentication):
-            """Notify MAAP REST API after successful login (non-blocking)."""
+        async def maap_modify_auth_state_hook(authenticator, auth_state):
+            """Notify the MAAP REST API during authentication (before the
+            allowed-groups check) so pending users are auto-created."""
             base_url = get_config("custom.maap.apiBaseUrl", "")
-            authenticator.log.info("MAAP post-auth webhook: base_url=%s", base_url)
-            if not base_url:
-                return authentication
+            authenticator.log.info("MAAP member-sync webhook: base_url=%s", base_url)
+            if not base_url or not auth_state:
+                return auth_state
 
-            auth_state = authentication.get("auth_state", {})
-            # The access token is required so the API can
-            # retrieve the user's EDL token from the Keycloak broker endpoint.
+            # The access token carries the jupyterhub-maap audience the MAAP API
+            # requires, and lets the API retrieve the user's EDL token from the
+            # Keycloak broker endpoint.
             pgt = f"jwt:{auth_state.get('access_token', '')}"
-            authenticator.log.info("MAAP post-auth webhook: calling %s/api/members/self", base_url)
+            authenticator.log.info("MAAP member-sync webhook: calling %s/api/members/self", base_url)
 
             await _notify_maap_api(authenticator, base_url, pgt)
 
-            return authentication
+            return auth_state
 
-        c.GenericOAuthenticator.post_auth_hook = maap_post_auth_hook
+        c.GenericOAuthenticator.modify_auth_state_hook = maap_modify_auth_state_hook
   singleuser:
     cloudMetadata:
       blockWithIptables: false
