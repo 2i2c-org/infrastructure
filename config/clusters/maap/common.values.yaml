@@ -40,9 +40,9 @@ jupyterhub:
     # exclusive, so it cannot be shared here in common.
   hub:
     image:
-      # Usage quotas 0.1.2 and fancy-profiles 0.6.0
+        # Usage quotas 0.1.3, fancy-profiles 0.6.0 and Kubespawner @19ae3849
       name: quay.io/2i2c/jupyterhub-usage-quotas
-      tag: 90c1065209cf89554c2e7e73b7e2120c5d27a167
+      tag: 0.0.1-0.dev.git.16538.hb055b381d
     services:
       usage-quota:
         url: http://hub:9000
