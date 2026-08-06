@@ -29,6 +29,7 @@ jupyterhub:
         - e1im
         - mmacferrin
         - matth-love
+        - georgianaelena
   singleuser:
     storage:
       extraVolumeMounts:
