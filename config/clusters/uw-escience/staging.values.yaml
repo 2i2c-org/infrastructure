@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.66.111
+    serverIP: 10.100.215.21
 jupyterhub:
   singleuser:
     extraEnv:
@@ -8,5 +8,5 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   eks:
-    volumeId: vol-0027f2b7dc07df273
+    volumeId: vol-061c43dc309660f3d
 
