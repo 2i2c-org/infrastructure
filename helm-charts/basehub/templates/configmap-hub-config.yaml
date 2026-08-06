@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hub-custom-config-files
+  labels:
+    app: jupyterhub
+data:
+  {{- (.Files.Glob "config/*").AsConfig | nindent 2 }}
