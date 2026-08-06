@@ -8,6 +8,12 @@ jupyterhub:
       # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
       # is merged
       gitRepoBranch: unify-logins-2
+    singleuserAdmin:
+      extraVolumeMounts:
+        001-shared-readwrite-volumemount:
+          name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
   hub:
     allowNamedServers: true
     config:
@@ -27,6 +33,7 @@ jupyterhub:
         - e1im
         - mmacferrin
         - matth-love
+        - georgianaelena
   singleuser:
     storage:
       extraVolumeMounts:
