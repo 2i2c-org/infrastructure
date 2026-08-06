@@ -20,7 +20,8 @@ dependencies = [
   "typer==0.26.*",
   "py-markdown-table==1.3.*",
   # For health testing
-  "jhub_client"
+  "hucl",
+  "nbformat"
 ]
 
 [project.optional-dependencies]
