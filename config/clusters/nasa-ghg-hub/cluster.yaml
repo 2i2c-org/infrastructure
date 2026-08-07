@@ -1,6 +1,6 @@
 name: nasa-ghg-hub
 provider: aws
-provider_url: https://smce-ghg-center.signin.aws.amazon.com/console
+provider_url: https://d-9067c5bbc5.awsapps.com/start/
 metadata:
   2i2c:
     hubspot_deal_id: 86933236464
