@@ -56,11 +56,19 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: shared-password
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - cau.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
       Authenticator:
-        manage_groups: false
-        # Allow everyone with the shared password to log in
-        allow_all: true
         admin_users:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu

@@ -11,6 +11,9 @@ jupyterhub:
     - key: hub.jupyter.org/dedicated
       operator: Exists
       effect: NoSchedule
+    - key: hub.jupyter.org_dedicated
+      operator: Exists
+      effect: NoSchedule
     - key: nvidia.com/gpu
       operator: Equal
       value: present
@@ -20,6 +23,17 @@ jupyterhub:
       # failures
       enabled: true
   singleuser:
+    # Null out the shared values.jsonnet default of
+    # {instance-type: n2-highmem-4}: that hardcodes the image-puller
+    # DaemonSet (which can't be profile-aware like KubeSpawner) to
+    # CPU-only nodes, so it can never pre-pull onto the GPU node pool.
+    # (Setting nodeSelector: {} is a no-op under Helm's deep-merge --
+    # the specific key must be nulled to actually remove it.)
+    # Each profile below sets its own node_selector via
+    # kubespawner_override, which still correctly targets the right
+    # node type at actual spawn time.
+    nodeSelector:
+      node.kubernetes.io/instance-type:
     defaultUrl: /lab
     profileList:
     - display_name: CPU only
