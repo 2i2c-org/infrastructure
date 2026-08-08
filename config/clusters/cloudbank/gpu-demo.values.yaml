@@ -33,7 +33,7 @@ jupyterhub:
     # kubespawner_override, which still correctly targets the right
     # node type at actual spawn time.
     nodeSelector:
-      node.kubernetes.io/instance-type: null
+      node.kubernetes.io/instance-type:
     defaultUrl: /lab
     profileList:
     - display_name: CPU only
