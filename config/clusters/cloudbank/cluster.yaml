@@ -400,6 +400,14 @@ hubs:
   - common.values.yaml
   - mission.values.yaml
   - enc-mission.secret.values.yaml
+- name: monmouth
+  display_name: Monmouth University
+  domain: monmouth.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - monmouth.values.yaml
+  - enc-monmouth.secret.values.yaml
 - name: moreno
   display_name: Moreno Valley College
   domain: moreno.cloudbank.2i2c.cloud
@@ -456,6 +464,14 @@ hubs:
   - common.values.yaml
   - orangecoast.values.yaml
   - enc-orangecoast.secret.values.yaml
+- name: ornl
+  display_name: Oak Ridge National Laboratory
+  domain: ornl.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ornl.values.yaml
+  - enc-ornl.secret.values.yaml
 - name: palomar
   display_name: Palomar Community College
   domain: palomar.cloudbank.2i2c.cloud
@@ -472,6 +488,14 @@ hubs:
   - common.values.yaml
   - pasadena.values.yaml
   - enc-pasadena.secret.values.yaml
+- name: psu
+  display_name: Pennsylvania State University
+  domain: psu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - psu.values.yaml
+  - enc-psu.secret.values.yaml
 - name: redwoods
   display_name: College of the Redwoods
   domain: redwoods.cloudbank.2i2c.cloud
@@ -584,6 +608,22 @@ hubs:
   - common.values.yaml
   - srjc.values.yaml
   - enc-srjc.secret.values.yaml
+- name: tiffin
+  display_name: Tiffin University
+  domain: tiffin.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - tiffin.values.yaml
+  - enc-tiffin.secret.values.yaml
+- name: tntech
+  display_name: Tennessee Technological University
+  domain: tntech.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - tntech.values.yaml
+  - enc-tntech.secret.values.yaml
 - name: toledo
   display_name: University of Toledo
   domain: toledo.cloudbank.2i2c.cloud
@@ -600,6 +640,14 @@ hubs:
   - common.values.yaml
   - tuskegee.values.yaml
   - enc-tuskegee.secret.values.yaml
+- name: uams
+  display_name: University of Arkansas for Medical Sciences
+  domain: uams.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - uams.values.yaml
+  - enc-uams.secret.values.yaml
 - name: umd
   display_name: University of Maryland
   domain: umd.cloudbank.2i2c.cloud
@@ -656,6 +704,14 @@ hubs:
   - common.values.yaml
   - virginia.values.yaml
   - enc-virginia.secret.values.yaml
+- name: wcu
+  display_name: Western Carolina University
+  domain: wcu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - wcu.values.yaml
+  - enc-wcu.secret.values.yaml
 - name: weber
   display_name: Weber State University
   domain: weber.cloudbank.2i2c.cloud
