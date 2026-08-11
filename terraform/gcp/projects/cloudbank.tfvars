@@ -199,6 +199,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "mission"
   }
+  "monmouth" = {
+    size        = 25
+    name_suffix = "monmouth"
+  }
   "moreno" = {
     size        = 60
     name_suffix = "moreno"
@@ -227,6 +231,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "orangecoast"
   }
+  "ornl" = {
+    size        = 25
+    name_suffix = "ornl"
+  }
   "palomar" = {
     size        = 40
     name_suffix = "palomar"
@@ -234,6 +242,10 @@ persistent_disks = {
   "pasadena" = {
     size        = 140
     name_suffix = "pasadena"
+  }
+  "psu" = {
+    size        = 25
+    name_suffix = "psu"
   }
   "redwoods" = {
     size        = 40
@@ -295,6 +307,14 @@ persistent_disks = {
     size        = 25
     name_suffix = "stanford"
   }
+  "tiffin" = {
+    size        = 25
+    name_suffix = "tiffin"
+  }
+  "tntech" = {
+    size        = 25
+    name_suffix = "tntech"
+  }
   "toledo" = {
     size        = 25
     name_suffix = "toledo"
@@ -302,6 +322,10 @@ persistent_disks = {
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
+  }
+  "uams" = {
+    size        = 25
+    name_suffix = "uams"
   }
   "umd" = {
     size        = 50
@@ -334,6 +358,10 @@ persistent_disks = {
   "virginia" = {
     size        = 180
     name_suffix = "virginia"
+  }
+  "wcu" = {
+    size        = 25
+    name_suffix = "wcu"
   }
   "weber" = {
     size        = 25
