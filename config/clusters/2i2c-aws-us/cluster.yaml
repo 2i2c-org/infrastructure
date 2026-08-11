@@ -25,7 +25,6 @@ hubs:
   helm_chart_values_files:
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-  chart_override: chart.yaml
 - name: showcase
   display_name: 2i2c Showcase
   domain: showcase.2i2c.cloud
