@@ -46,6 +46,19 @@ jupyterhub:
         - scottyhq
   singleuser:
     defaultUrl: /lab
+    storage:
+      extraVolumes:
+        002-scratch-session:
+          name: scratch-session
+          emptyDir:
+            # Limit total size, to prevent pod being evicted
+            # with over use by any one user. This can be increased,
+            # but may need to increase the size of the node disk
+            sizeLimit: 100Gi
+      extraVolumeMounts:
+        002-scratch-session:
+          name: scratch-session
+          mountPath: /tmp
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liUgKLAUO3UUsGqx
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/uw-escience-gh-scoped-creds
