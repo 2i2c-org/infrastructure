@@ -34,7 +34,18 @@ jupyterhub:
         - georgianaelena
   singleuser:
     storage:
+      extraVolumes:
+        01-scratch-session:
+          name: scratch-session
+          emptyDir:
+            # Limit total size, to prevent pod being evicted
+            # with over use by any one user. This can be increased,
+            # but may need to increase the size of the node disk
+            sizeLimit: 15Gi
       extraVolumeMounts:
+        01-scratch-session:
+          name: scratch-session
+          mountPath: /tmp
         1-shared-public-volumemount:
           name: home
           mountPath: /home/jovyan/shared-public
@@ -75,25 +86,15 @@ jupyterhub:
           display_name: Resource Allocation
           choices:
             mem_7_gb:
-              display_name: ~7 GB RAM, ~1.0 CPUs
-              description: Up to ~15 CPUs when available
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              description: Up to ~4 CPUs when available
               kubespawner_override:
-                mem_guarantee: 8002588377
-                mem_limit: 8002588377
-                cpu_guarantee: 0.96131875
-                cpu_limit: 15.3811
+                mem_guarantee: 7805679519
+                mem_limit: 7805679519
+                cpu_guarantee: 0.912625
+                cpu_limit: 3.6505
                 node_selector:
-                  node.kubernetes.io/instance-type: r5.4xlarge
-            mem_15_gb:
-              display_name: ~15 GB RAM, ~1.9 CPUs
-              description: Up to ~15 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 16005176754
-                mem_limit: 16005176754
-                cpu_guarantee: 1.9226375
-                cpu_limit: 15.3811
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.4xlarge
+                  node.kubernetes.io/instance-type: r5.xlarge
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-07154b7def3b80b96

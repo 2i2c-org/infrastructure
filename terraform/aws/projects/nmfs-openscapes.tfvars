@@ -24,10 +24,12 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "prod" }
   },
   "workshop" = {
-    size        = 128
+    size        = 200
     type        = "gp3"
     name_suffix = "workshop"
     tags        = { "2i2c:hub-name" : "workshop" }
+    iops        = 10000
+    throughput  = 1000
   },
 }
 enable_nfs_backup = true
