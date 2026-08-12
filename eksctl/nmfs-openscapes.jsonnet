@@ -33,6 +33,7 @@ local c = cluster.withNodeGroupConfigOverride(
     overrides={ maxSize: 2 }
   ),
   kind='notebook',
+  hubName='workshop',
   overrides={
     // 80 GiB reserved + 4*15GiB (4 users/node)
     volumeSize: 140,
