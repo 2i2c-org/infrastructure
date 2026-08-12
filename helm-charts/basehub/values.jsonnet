@@ -103,6 +103,19 @@ local jupyterhubUsageQuotasHubConfig = {
       public_hub_url: 'https://%s/' % hub_domain,
     },
   },
+  extraConfig: {
+    '11-setup-usage-quotas': |||
+      import os
+      from jupyterhub_usage_quotas import setup_usage_quotas
+      setup_usage_quotas(c)
+      for service in c.JupyterHub.services:
+        if service["name"] == "usage-quota":
+          service["environment"] = {
+            "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME"),
+            "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD")
+          }
+    |||,
+  },
 };
 
 local jupyterhubUsageQuotasServicesConfig = {
@@ -219,7 +232,10 @@ local jupyterhubConfig =
            } + jupyterhubUsageQuotasHubConfig.config,
          } +
          if is_usage_quotas_hub then
-           { loadRoles: jupyterhubUsageQuotasRolesConfig }
+           {
+             loadRoles: jupyterhubUsageQuotasRolesConfig,
+             extraConfig: jupyterhubUsageQuotasHubConfig.extraConfig,
+           }
          else {},
   } +
   if provider == 'aws' then {
