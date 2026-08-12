@@ -27,13 +27,14 @@ local c = cluster.withNodeGroupConfigOverride(
           instanceType: 'g4dn.xlarge',
         },
       ],
-      nodeGroupGenerations=['c'],
+      nodeGroupGenerations=['c', 'd'],
     ),
     kind='core',
     overrides={ maxSize: 2 }
   ),
   kind='notebook',
   hubName='workshop',
+  generation='d',
   overrides={
     // 80 GiB reserved + 4*15GiB (4 users/node)
     volumeSize: 140,
