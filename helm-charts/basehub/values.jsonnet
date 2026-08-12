@@ -115,7 +115,6 @@ local jupyterhubUsageQuotasServicesConfig = {
       '-m',
       'jupyterhub_usage_quotas.services.usage_viewer',
       '--config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py',
-      '--config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py',
     ],
   },
 };
