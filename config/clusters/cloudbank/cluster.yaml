@@ -576,6 +576,14 @@ hubs:
   - common.values.yaml
   - skyline.values.yaml
   - enc-skyline.secret.values.yaml
+- name: smc
+  display_name: Santa Monica College
+  domain: smc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - smc.values.yaml
+  - enc-smc.secret.values.yaml
 - name: sou
   display_name: Southern Oregon University
   domain: sou.cloudbank.2i2c.cloud
