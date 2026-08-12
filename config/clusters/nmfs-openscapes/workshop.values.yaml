@@ -34,7 +34,18 @@ jupyterhub:
         - georgianaelena
   singleuser:
     storage:
+      extraVolumes:
+        01-scratch-session:
+          name: scratch-session
+          emptyDir:
+            # Limit total size, to prevent pod being evicted
+            # with over use by any one user. This can be increased,
+            # but may need to increase the size of the node disk
+            sizeLimit: 15Gi
       extraVolumeMounts:
+        01-scratch-session:
+          name: scratch-session
+          mountPath: /tmp
         1-shared-public-volumemount:
           name: home
           mountPath: /home/jovyan/shared-public
