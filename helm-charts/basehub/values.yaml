@@ -902,7 +902,7 @@ jupyterhub:
           - deployment-service-check
       UsageQuotaManager:
         prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local'
-        scope_fallback_strategy: 
+        scope_fallback_strategy:
           intersection: 'min'
         failover_open: true
       UsageViewer:
@@ -1071,7 +1071,8 @@ jupyterhub:
       - mountPath: /usr/local/share/jupyterhub/static/extra-assets
         name: custom-templates
         subPath: repo/extra-assets
-      - mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+      - mountPath: 
+          /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
         name: usage-quotas
         subPath: jupyterhub_usage_quotas_config.py
     services:
@@ -1125,7 +1126,7 @@ jupyterhub:
           - users:activity!user
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.16526.h92ffc2704"
+      tag: "0.0.1-0.dev.git.16609.hb23fbd448"
     service:
       # Usage quota dashboard
       extraPorts:
