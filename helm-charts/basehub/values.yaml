@@ -958,6 +958,18 @@ jupyterhub:
             name: hub
             key: hub.services.metrics-exporter.apiToken
             optional: false
+      JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: prometheus-auth
+            key: username
+            optional: false
+      JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: prometheus-auth
+            key: password
+            optional: false
     initContainers:
       - name: templates-clone
         image: alpine/git:2.40.1
@@ -1716,9 +1728,15 @@ jupyterhub:
 
         c.OAuthenticator.refresh_user_hook = refresh_user_hook
       11-setup-usage-quotas: |
+        import os
         from jupyterhub_usage_quotas import setup_usage_quotas
         setup_usage_quotas(c)
-
+        for service in c.JupyterHub.services:
+          if service["name"] == "usage-quota":
+            service["environment"] = {
+              "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME"),
+              "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD")
+            }
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
         # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
