@@ -22,6 +22,12 @@ charts:
           REQUIREMENTS_FILE: authz-helpers-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
+      usage-quotas:
+        imageName: quay.io/2i2c/jupyterhub-usage-quotas
+        buildArgs:
+          REQUIREMENTS_FILE: quotas-requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile
       oauthenticator-latest:
         imageName: quay.io/2i2c/oauthenticator-latest
         buildArgs:

@@ -67,12 +67,10 @@ basehub:
           scopes:
           - self
           - access:services!service=dask-gateway
-          - users:activity!user
         user:
           scopes:
           - self
           - access:services!service=dask-gateway
-          - access:services!service=usage-quota
       config:
         JupyterHub:
           authenticator_class: github
