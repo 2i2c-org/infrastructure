@@ -34,6 +34,12 @@ jupyterhub:
             username_derivation:
               username_claim: email
             allow_all: true
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - subr.edu
+            - sus.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
@@ -42,6 +48,7 @@ jupyterhub:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
         - abrahams@ornl.gov
+        - Mary.beals@sus.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ornl
