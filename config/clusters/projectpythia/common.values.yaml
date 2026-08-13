@@ -31,12 +31,10 @@ jupyterhub:
         scopes:
         - self
         - admin:auth_state!user
-        - access:services!service=usage-quota
       server:
         scopes:
         - self
         - admin:auth_state!user
-        - users:activity!user
     allowNamedServers: true
     extraConfig:
       00-set-gitconfig.py: |

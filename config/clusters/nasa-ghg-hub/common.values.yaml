@@ -64,7 +64,6 @@ basehub:
           scopes:
           - self
           - access:services!service=dask-gateway
-          - users:activity!user
         user:
           scopes:
           - self

@@ -14,13 +14,20 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org
-      loadRoles:
-        user:
-          scopes:
-          - self
-          - users:activity!user
-          - access:services!service=usage-quota
-          - access:services!service=dask-gateway
+      extraFiles:
+        usage_quotas_config:
+          mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          stringData: |
+            import os
+            c.UsageQuotaManager.metrics_exporter_token = os.environ.get("METRICS_EXPORTER_TOKEN")
+            c.UsageQuotaManager.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageViewer.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
+            c.UsageQuotaManager.hub_namespace = "prod"
+            c.UsageViewer.hub_namespace = "prod"
+            c.UsageViewer.public_hub_url = "https://geolab.earthscope.cloud/"
+            c.UsageViewer.footer_note = """
+            See the <a href="https://docs.earthscope.org/geolab/">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
+            """
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)

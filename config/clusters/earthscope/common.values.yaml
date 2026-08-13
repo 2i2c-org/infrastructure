@@ -32,6 +32,10 @@ basehub:
             ports:
             - port: 9000
     hub:
+      image:
+        # Usage quotas 0.1.3, fancy-profiles 0.6.0 and Kubespawner @19ae3849
+        name: quay.io/2i2c/jupyterhub-usage-quotas
+        tag: 0.1.3
       extraConfig:
         001-username-claim: |
           import json
@@ -68,6 +72,53 @@ basehub:
               })
 
           c.Spawner.auth_state_hook = populate_token
+        11-setup-usage-quotas: |
+          from jupyterhub_usage_quotas import setup_usage_quotas
+          setup_usage_quotas(c)
+      extraEnv:
+        METRICS_EXPORTER_TOKEN:
+          valueFrom:
+            secretKeyRef:
+              name: hub
+              key: hub.services.metrics-exporter.apiToken
+              optional: false
+      services:
+        usage-quota:
+          url: http://hub:9000
+          display: true
+          oauth_no_confirm: true
+          command:
+          - python
+          - -m
+          - jupyterhub_usage_quotas.services.usage_viewer
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+          - --config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py
+        metrics-exporter:
+          display: false
+      loadRoles:
+        usage-quota-service:
+          scopes:
+          - read:users
+          - list:services
+          - read:services
+          services:
+          - usage-quota
+        metrics-exporter-service:
+          scopes:
+          - users
+          services:
+          - metrics-exporter
+        user:
+          scopes:
+          - self
+          - access:services!service=usage-quota
+          - access:services!service=dask-gateway
+          - access:services!service=binder
+        server:
+          scopes:
+          - self
+          - users:activity!user
+          - access:services!service=dask-gateway
       config:
         JupyterHub:
           authenticator_class: generic-oauth
@@ -133,16 +184,34 @@ basehub:
             scope:
               group:
               - mem-lg
-        UsageViewer:
-          enable_compute: true
-          footer_note: |
-            See the <a href="https://docs.earthscope.org/geolab/">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
-      loadRoles:
-        server:
-          scopes:
-          - self
-          - users:activity!user
-          - access:services!service=dask-gateway
+      service:
+        extraPorts:
+        - port: 9000
+          targetPort: 9000
+          name: usage-quota
+      networkPolicy:
+        ingress:
+        - ports:
+          - port: 9000
+          from:
+              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks
+              # for hub managed services.
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
+              # Allow traffic from the proxy api pod
+          - podSelector:
+              matchLabels:
+                hub.jupyter.org/network-access-hub: 'true'
+        - ports:
+          - port: 8081
+          from:
+              # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/component: hub
+                app.kubernetes.io/name: jupyterhub
     singleuser:
       cloudMetadata:
         blockWithIptables: false
