@@ -108,7 +108,7 @@ hub_cloud_permissions = {
               "arn:aws:s3:::csdap-planet-skysat-delivery"
             ],
             "Condition": {
-              "StringLike": {"s3:prefix": ["disasters/*", "disasters]}
+              "StringLike": {"s3:prefix": ["disasters/*", "disasters"]}
             }
           }
         ]
@@ -206,7 +206,7 @@ hub_cloud_permissions = {
               "arn:aws:s3:::csdap-planet-skysat-delivery"
             ],
             "Condition": {
-              "StringLike": {"s3:prefix": ["disasters/*", "disasters]}
+              "StringLike": {"s3:prefix": ["disasters/*", "disasters"]}
             }
           }
         ]
