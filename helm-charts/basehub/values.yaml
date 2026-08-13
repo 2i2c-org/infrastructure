@@ -900,6 +900,14 @@ jupyterhub:
         # Ref: https://github.com/2i2c-org/meta/issues/321
         blocked_users:
           - deployment-service-check
+      UsageQuotaManager:
+        prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local'
+        scope_fallback_strategy:
+          intersection: 'min'
+        failover_open: true
+      UsageViewer:
+        prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local'
+        enable_compute: false
     extraFiles:
       configurator-schema-default:
         mountPath: /usr/local/etc/jupyterhub-configurator/00-default.schema.json
@@ -910,7 +918,7 @@ jupyterhub:
             KubeSpawner.image:
               type: string
               title: User docker image
-              description: Determines languages, libraries and interfaces
+              description: Determines languages, libraries and interfaces 
                 available
               help: Leave this blank to use the default
             Spawner.default_url:
@@ -944,6 +952,24 @@ jupyterhub:
           configMapKeyRef:
             name: basehub-cluster-info
             key: K8S_DIST
+      JUPYTERHUB_USAGE_QUOTAS_METRICS_TOKEN:
+        valueFrom:
+          secretKeyRef:
+            name: hub
+            key: hub.services.metrics-exporter.apiToken
+            optional: false
+      JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: prometheus-auth
+            key: username
+            optional: false
+      JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: prometheus-auth
+            key: password
+            optional: false
     initContainers:
       - name: templates-clone
         image: alpine/git:2.40.1
@@ -1035,6 +1061,9 @@ jupyterhub:
     extraVolumes:
       - name: custom-templates
         emptyDir: {}
+      - name: usage-quotas
+        configMap:
+          name: usage-quotas-config
     extraVolumeMounts:
       - mountPath: /usr/local/share/jupyterhub/custom_templates
         name: custom-templates
@@ -1042,6 +1071,10 @@ jupyterhub:
       - mountPath: /usr/local/share/jupyterhub/static/extra-assets
         name: custom-templates
         subPath: repo/extra-assets
+      - mountPath: 
+          /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
+        name: usage-quotas
+        subPath: jupyterhub_usage_quotas_config.py
     services:
       # hub-health service helps us run health checks from the deployer script.
       # The JupyterHub Helm chart will automatically generate an API token for
@@ -1069,6 +1102,8 @@ jupyterhub:
         url: http://binderhub:8090
         oauth_no_confirm: true
       jupyterhub-groups-exporter: {}
+      metrics-exporter:
+        display: false
     loadRoles:
       jupyterhub-groups-exporter:
         services:
@@ -1076,9 +1111,28 @@ jupyterhub:
         scopes:
           - users
           - groups
+      metrics-exporter-service:
+        scopes:
+          - users
+        services:
+          - metrics-exporter
+      user:
+        scopes:
+          - self
+          - access:services!service=usage-quota
+      server:
+        scopes:
+          - self
+          - users:activity!user
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.15540.hbaaa997ce"
+      tag: "0.0.1-0.dev.git.16609.hb23fbd448"
+    service:
+      # Usage quota dashboard
+      extraPorts:
+        - port: 9000
+          targetPort: 9000
+          name: usage-quota
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -1097,6 +1151,26 @@ jupyterhub:
           ports:
             - port: 8081
               protocol: TCP
+        - ports:
+            - port: 9000
+          from:
+              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks for hub managed services.
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/component: hub
+                  app.kubernetes.io/name: jupyterhub
+              # Allow traffic from the proxy api pod
+            - podSelector:
+                matchLabels:
+                  hub.jupyter.org/network-access-hub: 'true'
+        - ports:
+            - port: 8081
+          from:
+              # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/component: hub
+                  app.kubernetes.io/name: jupyterhub
     # FIXME: We should think about these resource requests/limits, see
     #        https://github.com/2i2c-org/infrastructure/issues/2127.
     #
@@ -1654,7 +1728,6 @@ jupyterhub:
             return None
 
         c.OAuthenticator.refresh_user_hook = refresh_user_hook
-
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
         # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
