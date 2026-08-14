@@ -28,8 +28,6 @@ ebs_volumes = {
     type        = "gp3"
     name_suffix = "workshop"
     tags        = { "2i2c:hub-name" : "workshop" }
-    iops        = 10000
-    throughput  = 1000
   },
 }
 enable_nfs_backup = true
