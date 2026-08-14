@@ -65,9 +65,9 @@ basehub:
               # ANTHROPIC_API_KEY intentionally omitted —
               # each user supplies their own personal token (see below)
             availableModels:
-              - haiku
-              - sonnet
-              - opus
+            - haiku
+            - sonnet
+            - opus
             enforceAvailableModels: true
             theme: auto
   jupyterhub-home-nfs:
