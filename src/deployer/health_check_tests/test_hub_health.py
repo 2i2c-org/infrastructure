@@ -1,4 +1,5 @@
 import os
+import traceback
 from pathlib import Path
 
 from jhub_client.execute import JupyterHubAPI, execute_notebook
@@ -47,7 +48,7 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             test_notebook_path,
             username=username,
             server_creation_timeout=360,
-            kernel_execution_timeout=360,  # This doesn't do anything yet
+            kernel_execution_timeout=600,  # This doesn't do anything yet
             create_user=True,
             delete_user=False,  # To be able to delete its server in case of failure
             stop_server=True,  # If the health check succeeds, this will delete the server
@@ -60,7 +61,7 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             del os.environ["JUPYTERHUB_API_TOKEN"]
 
 
-async def test_hub_healthy(hub_url, api_token, hub_type):
+async def test_hub_healthy(hub_url, api_token, hub_type, verbose):
     nb_dir = notebook_dir(hub_type)
     try:
         print_colour(f"Starting hub {hub_url} health validation...", "yellow")
@@ -80,4 +81,6 @@ async def test_hub_healthy(hub_url, api_token, hub_type):
             f"Hub {hub_url} not healthy! Stopping further deployments. Exception was {e}.",
             "red",
         )
+        if verbose:
+            print_colour(traceback.format_exc(), None)
         raise (e)
