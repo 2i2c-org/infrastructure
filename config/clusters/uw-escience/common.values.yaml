@@ -77,19 +77,25 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            01-scipy:
+            01-go-bgc:
+              display_name: GO-BGC 2026 Workshop
+              description: GO-BGC Float Data Workshop
+              slug: go-bgc-2026
+              default: true
+              kubespawner_override:
+                image: quay.io/winghouw/gobgc2026:v1.0.0
+            02-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
               slug: scipy
-              default: true
               kubespawner_override:
                 image: quay.io/jupyter/scipy-notebook:2026-06-29
-            02-pangeo:
+            03-pangeo:
               display_name: Pangeo Notebook Image
               description: Python image with scientific, dask and geospatial tools
               kubespawner_override:
                 image: pangeo/pangeo-notebook:2026-06-29
-            03-rocker:
+            04-rocker:
               display_name: Rocker Geospatial with RStudio
               description: R environment with many geospatial libraries pre-installed
               kubespawner_override:
@@ -103,27 +109,6 @@ jupyterhub:
         resource_allocation:
           display_name: Resource Allocation
           choices:
-            mem_2_gb:
-              display_name: ~2 GB RAM, ~0.2 CPUs
-              description: Up to ~4 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 1951419879
-                mem_limit: 1951419879
-                cpu_guarantee: 0.22815625
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
-                default: true
-            mem_4_gb:
-              display_name: ~4 GB RAM, ~0.5 CPUs
-              description: Up to ~4 CPUs when available
-              kubespawner_override:
-                mem_guarantee: 3902839759
-                mem_limit: 3902839759
-                cpu_guarantee: 0.4563125
-                cpu_limit: 3.6505
-                node_selector:
-                  node.kubernetes.io/instance-type: r5.xlarge
             mem_7_gb:
               display_name: ~7 GB RAM, ~0.9 CPUs
               description: Up to ~4 CPUs when available
@@ -134,6 +119,7 @@ jupyterhub:
                 cpu_limit: 3.6505
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
+                default: true
             mem_15_gb:
               display_name: ~15 GB RAM, ~1.8 CPUs
               description: Up to ~4 CPUs when available
