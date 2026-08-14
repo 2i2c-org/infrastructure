@@ -77,7 +77,7 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            01-GO-BGC:
+            01-go-bgc:
               display_name: GO-BGC 2026 Workshop
               description: GO-BGC Float Data Workshop
               slug: go-bgc-2026
@@ -119,6 +119,7 @@ jupyterhub:
                 cpu_limit: 3.6505
                 node_selector:
                   node.kubernetes.io/instance-type: r5.xlarge
+                default: true
             mem_15_gb:
               display_name: ~15 GB RAM, ~1.8 CPUs
               description: Up to ~4 CPUs when available
