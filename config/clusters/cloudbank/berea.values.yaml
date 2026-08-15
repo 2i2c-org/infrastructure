@@ -55,7 +55,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://login.berea.edu/img/bc_logo.png
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/2/20/Berea_college_full_logo.png
           name: Berea College
           url: https://www.berea.edu/
   hub:
