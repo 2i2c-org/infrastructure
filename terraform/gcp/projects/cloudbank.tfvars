@@ -23,6 +23,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "bcc"
   }
+  "berea" = {
+    size        = 25
+    name_suffix = "berea"
+  }
   "bmcc" = {
     size        = 25
     name_suffix = "bmcc"
