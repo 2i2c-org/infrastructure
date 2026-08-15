@@ -1,12 +1,83 @@
 jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
+  prePuller:
+    extraTolerations:
+    - key: hub.jupyter.org/dedicated
+      operator: Exists
+      effect: NoSchedule
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: present
+      effect: NoSchedule
+    continuous:
+      enabled: true
   singleuser:
     defaultUrl: /lab
-    memory:
-      guarantee: 2G
-      limit: 4G
-    image:
-      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image
-      tag: gui-demo
+    profileList:
+    - display_name: CPU-enabled
+      default: true
+      slug: cpu
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-base-user-image:
+              display_name: Default Image
+              description: RStudio, VS Code, JupyterLab, Python, R
+              default: true
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:fbab22cbce38
+            01-c-sharp-user-image:
+              display_name: C# Image
+              description: RStudio, VS Code, JupyterLab, Python, R, C#
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image:gui-demo
+      kubespawner_override:
+        mem_guarantee: 2G
+        mem_limit: 4G
+        cpu_guarantee: 0.1
+        cpu_limit: 2
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+        default: true
+    - display_name: GPU-enabled (NVIDIA Tesla T4)
+      description: Upto 3 CPUs when available
+      slug: gpu
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-default:
+              display_name: Small Models and Pangeo PyTorch ML Notebook
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:ed76dadfea20
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_guarantee: 12G
+        mem_limit: 16G
+        cpu_guarantee: 1.5
+        cpu_limit: 3
+        node_selector:
+          node.kubernetes.io/instance-type: n1-highmem-8
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -45,6 +116,7 @@ jupyterhub:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
         - malini.nagasundaram@oit.edu
+        - manish.nalluri@oit.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-oit
