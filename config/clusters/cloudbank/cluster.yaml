@@ -312,6 +312,14 @@ hubs:
   - common.values.yaml
   - iit.values.yaml
   - enc-iit.secret.values.yaml
+- name: ivytech
+  display_name: Ivy Tech Community College of Indiana
+  domain: ivytech.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ivytech.values.yaml
+  - enc-ivytech.secret.values.yaml
 - name: kean
   display_name: Kean University
   domain: kean.cloudbank.2i2c.cloud
