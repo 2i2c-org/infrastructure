@@ -5,6 +5,9 @@ nfs:
   pv:
     enabled: true
 jupyterhub:
+  cull:
+    users: true
+    timeout: 43200 # 12 hours in seconds
   singleuser:
     cpu:
       # Each node has about 4 CPUs total, and if we limit users to no more than
