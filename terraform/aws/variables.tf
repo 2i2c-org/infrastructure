@@ -299,6 +299,15 @@ variable "enable_jupyterhub_cost_tags" {
   EOT
 }
 
+variable "enable_k8s_event_exporter" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Create an IAM role letting the support chart's fluent-bit deployment write
+  Kubernetes Events to CloudWatch Logs.
+  EOT
+}
+
 variable "enable_efs_backup" {
   type        = bool
   default     = true

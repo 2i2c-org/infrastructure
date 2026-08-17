@@ -109,7 +109,7 @@ local makePodRestartAlert = function(
             sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~"%s"})
           -
             sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~"%s"} offset 10m)
-      ) >= 1    
+      ) >= 1
   ||| % [pod_name_regex, pod_name_regex],
   'for': '5m',
   labels: {
@@ -236,6 +236,15 @@ local configCostMonitoring = {
       // See terraform/aws/cost-monitoring.tf
       'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_cost_monitoring_iam_role' % account_id,
     },
+  },
+};
+
+local configFluentBit = {
+  serviceAccount: {
+    annotations: if provider_name == 'aws' then {
+      // See terraform/aws/k8s-event-exporter.tf
+      'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/k8s_event_exporter_cloudwatch' % account_id,
+    } else {},
   },
 };
 
@@ -455,4 +464,5 @@ local configCostMonitoring = {
     },
   },
   'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
+  'fluent-bit': configFluentBit,
 }
