@@ -190,11 +190,12 @@ async def test_health_attempts(
     hub_type: str,
     attempts: int,
     attempt_timeout_s: int,
+    verbose: bool,
 ):
     for i in range(attempts):
         try:
             async with asyncio.timeout(attempt_timeout_s):
-                await test_hub_healthy(hub_url, service_api_token, hub_type)
+                await test_hub_healthy(hub_url, service_api_token, hub_type, verbose)
         except asyncio.TimeoutError:
             print_colour(f"Attempt {i + 1} timed out, retrying", colour="red")
         except Exception:
@@ -217,6 +218,7 @@ def run_hub_health_check(
     attempt_timeout_s: int = typer.Option(
         600, help="Number of seconds before giving up on an attempt"
     ),
+    verbose: bool = typer.Option(False, help="Print traceback on error"),
 ):
     """
     Run a health check on a given hub on a given cluster. Optionally check scaling
@@ -284,6 +286,6 @@ def run_hub_health_check(
 
     asyncio.run(
         test_health_attempts(
-            hub_url, service_api_token, hub.type, attempts, attempt_timeout_s
+            hub_url, service_api_token, hub.type, attempts, attempt_timeout_s, verbose
         )
     )

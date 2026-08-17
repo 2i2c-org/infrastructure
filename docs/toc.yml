@@ -112,6 +112,7 @@ project:
       - file: howto/features/rocker.md
       - file: howto/features/shared-db.md
       - file: howto/features/storage-quota.md
+      - file: howto/features/compute-quota.md
     - file: howto/filesystem-management/index.md
       children:
       - file: howto/filesystem-management/data-transfer-external.md

@@ -2,19 +2,6 @@ nfs:
   pv:
     serverIP: 10.100.150.169
 
-jupyterhub:
-  hub:
-    extraFiles:
-      usage_quotas_config:
-        mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
-        stringData: |
-          c.UsageQuotaManager.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
-          c.UsageViewer.prometheus_url = "http://support-prometheus-server.support.svc.cluster.local"
-          c.UsageQuotaManager.hub_namespace = "prod"
-          c.UsageViewer.hub_namespace = "prod"
-          c.UsageViewer.public_hub_url = "https://hub.disasters.2i2c.cloud/"
-          c.UsageViewer.enable_compute = False
-
 dask-gateway:
   gateway:
     backend:

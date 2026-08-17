@@ -47,6 +47,7 @@ To enable dask-gateway support on a hub, the following configuration changes nee
           server:
             scopes:
             - self
+            - users:activity!user
             - access:services!service=dask-gateway
           user:
             scopes:
@@ -63,6 +64,7 @@ To enable dask-gateway support on a hub, the following configuration changes nee
           server:
             scopes:
             - self
+            - users:activity!user
             - access:services!service=dask-gateway
           dask-users:
             scopes:

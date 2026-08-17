@@ -23,6 +23,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "bcc"
   }
+  "berea" = {
+    size        = 25
+    name_suffix = "berea"
+  }
   "bmcc" = {
     size        = 25
     name_suffix = "bmcc"
@@ -150,6 +154,10 @@ persistent_disks = {
   "iit" = {
     size        = 25
     name_suffix = "iit"
+  }
+  "ivytech" = {
+    size        = 25
+    name_suffix = "ivytech"
   }
   "kean" = {
     size        = 25
