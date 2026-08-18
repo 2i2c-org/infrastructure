@@ -58,3 +58,10 @@ dependencies:
   - name: reflector
     version: "10.0.61"
     repository: oci://ghcr.io/emberstack/helm-charts
+
+  # fluent-bit, used to ship Kubernetes Events to CloudWatch Logs so we have a
+  # durable record of pod scheduling / image pull / container start timings.
+  - name: fluent-bit
+    version: "0.57.9"
+    repository: https://fluent.github.io/helm-charts
+    condition: fluent-bit.enabled

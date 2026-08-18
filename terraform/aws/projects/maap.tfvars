@@ -229,3 +229,5 @@ ebs_volumes = {
 enable_nfs_backup = true
 
 enable_jupyterhub_cost_monitoring = true
+
+enable_k8s_event_exporter = true

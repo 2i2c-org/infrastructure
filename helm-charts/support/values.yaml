@@ -453,6 +453,49 @@ jupyterhub-cost-monitoring:
     cpu: 5m
     memory: 100Mi
 
+# fluent-bit ships Kubernetes Events to CloudWatch Logs, giving us a durable
+# record of pod scheduling, image pulls and container start times.
+#
+# A cluster enabling this must also
+# provide `config.outputs` (the cloudwatch_logs block, which needs the region
+# and log group name), and needs the IAM role from
+# terraform/aws/k8s-event-exporter.tf. The role-arn annotation itself is set in
+# values.jsonnet, as it needs the AWS account id.
+#
+# values ref: https://github.com/fluent/helm-charts/blob/main/charts/fluent-bit/values.yaml
+#
+fluent-bit:
+  enabled: false
+  # Note: Events come from the k8s API rather than from files on each node like for logs,
+  # so this is a Deployment and not the chart's default DaemonSet. It must stay at
+  # exactly one replica to avoid sending duplicate events from multiple replicas.
+  kind: Deployment
+  replicaCount: 1
+  rbac:
+    eventsAccess: true
+  resources:
+    requests:
+      cpu: 5m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  config:
+    # These are strings rather than maps, so anything set here replaces the
+    # chart's default entirely rather than merging with it.
+    #
+    # The chart defaults to a `tail` input for pod logs plus a `systemd` input
+    # for kubelet logs. Whereas we're only after Events for now.
+    inputs: |
+      [INPUT]
+          Name kubernetes_events
+          Tag k8s_events
+
+    # The chart's default is a `kubernetes` filter, which enriches records by
+    # looking up the pod a log line came from. That's meaningless for Events
+    # (they're API objects, not pod output), so we blank it out.
+    filters: ""
+
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
 #
