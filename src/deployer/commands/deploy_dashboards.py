@@ -14,7 +14,7 @@ def deploy_dashboards(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     dashboard_type: str = typer.Option(
         None,
-        help="(Optional) Choose 'default' or 'cost' dashboards to deploy. Deploys both types if `None`.",
+        help="(Optional) Choose 'default', 'cost' or 'custom' dashboards to deploy. Deploys 'default' and 'cost' types if `None`.",
     ),
     dashboard_dir_default: str = typer.Option(
         "dashboards",
@@ -26,6 +26,13 @@ def deploy_dashboards(
     dashboard_dir_cost: str = typer.Option(
         "../jupyterhub-cost-monitoring/dashboards",
         help="""(Optional) ./deploy.py script accepts manual override where cloud cost dashboards are defined. Path is relative to jupyterhub-grafana-dashboards/deploy.py script.
+        
+        Warning: you should manually delete dashboards deployed this way, since they are not cleaned up in the CI/CD.
+        """,
+    ),
+    dashboard_dir_custom: str = typer.Option(
+        "../dashboards",
+        help="""(Optional) ./deploy.py script accepts manual override where custom dashboards are defined. Path is relative to jupyterhub-grafana-dashboards/deploy.py script.
         
         Warning: you should manually delete dashboards deployed this way, since they are not cleaned up in the CI/CD.
         """,
@@ -42,6 +49,8 @@ def deploy_dashboards(
 
     The cost monitoring dashboards are maintained in https://github.com/2i2c-org/jupyterhub-cost-monitoring and currently available on AWS clusters only.
 
+    The custom dashboard are found in the dashboards/ directory in the top-level of this repo.
+
     The Grafonnet library needs to be cloned separately, even though jupyterhub/grafana-dashboards includes this as a submodule, because the library also needs to be accessed by 2i2c-org/jupyterhub-cost-monitoring too.
     """
     cluster = Cluster.from_name(cluster_name)
@@ -52,7 +61,7 @@ def deploy_dashboards(
     deploy_script_env = os.environ.copy()
     deploy_script_env.update({"GRAFANA_TOKEN": grafana_token})
 
-    allowed_types = [None, "default", "cost"]
+    allowed_types = [None, "default", "cost", "custom"]
     if dashboard_type not in allowed_types:
         raise typer.BadParameter(
             f"Only values {', '.join([str(v) for v in allowed_types])} are allowed."
@@ -123,6 +132,19 @@ def deploy_dashboards(
                 cwd="jupyterhub-grafana-dashboards",
             )
             print_colour(f"Done! Cost dashboards deployed to {grafana_url}.")
+        if dashboard_type == "custom":
+            print_colour(f"Deploying custom dashboard to {cluster_name}...")
+            subprocess.check_call(
+                [
+                    "./deploy.py",
+                    grafana_url,
+                    f"--dashboards-dir={dashboard_dir_custom}",
+                    "--folder-name=2i2c dashboards",
+                    "--folder-uid=custom-dashboards",
+                ],
+                env=deploy_script_env,
+                cwd="jupyterhub-grafana-dashboards",
+            )
     finally:
         shutil.rmtree("jupyterhub-grafana-dashboards", ignore_errors=True)
         shutil.rmtree("jupyterhub-cost-monitoring", ignore_errors=True)
