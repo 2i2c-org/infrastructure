@@ -10,6 +10,9 @@ basehub:
         PERSISTENT_BUCKET: s3://nasa-cryo-persistent/$(JUPYTERHUB_USER)
         OPENCODE_CONFIG: /etc/opencode-default/opencode.json
       extraFiles:
+        # Opencode config for the NRP model provider.
+        # opencode itself is installed by the CryoCloud AI image, I think that's here:
+        # https://github.com/CryoInTheCloud/image-cryo-python-AI/blob/e80c8f17fbfcac53ddf1cd1c51f515915b31441c/appendix#L26-L29
         opencode:
           mountPath: /etc/opencode-default/opencode.json
           data:
