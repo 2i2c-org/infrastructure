@@ -208,7 +208,7 @@ persistent_disks = {
     name_suffix = "mission"
   }
   "monmouth" = {
-    size        = 25
+    size        = 100
     name_suffix = "monmouth"
   }
   "moreno" = {
