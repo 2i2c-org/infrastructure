@@ -30,4 +30,4 @@ hub:
 
 ## Grafana Dashboards
 
-The general grafonnet code to define the usage quotas Grafana dashboard is a work-in-progress, however you can [manually export](https://grafana.com/docs/grafana/latest/visualizations/dashboards/share-dashboards-panels/#export-a-dashboard-as-code) the prototype dashboard definition from the Earthscope Grafana instance and import this into another Grafana instance.
+The general grafonnet code to define the usage quotas Grafana dashboard is can be found in `/dashboards/usage-quotas.jsonnet`. See [Manually deploy dashboards](../manage-grafana/grafana-custom-dashboards.md#manually-deploy-dashboards) for how to deploy this to communities with compute usage quotas enabled.
