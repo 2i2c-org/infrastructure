@@ -15,6 +15,7 @@ required:
   - jupyterhub-cost-monitoring
   - disableCoredumps
   - global
+  - fluent-bit
 properties:
   # We don't control validation of dependent charts here
   cluster-autoscaler:
@@ -39,6 +40,9 @@ properties:
     type: object
     additionalProperties: true
   reflector:
+    type: object
+    additionalProperties: true
+  fluent-bit:
     type: object
     additionalProperties: true
 
