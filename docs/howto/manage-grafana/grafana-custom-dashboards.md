@@ -17,7 +17,7 @@ This [workflow file](https://github.com/2i2c-org/infrastructure/blob/main/.githu
 
 ### Prerequisites
 
-1. Install `go-jsonnet` (the Grafonnet library is already vendored in with `jsonnet-builder`).
+1. Install `go-jsonnet` (the [Grafonnet library](https://github.com/grafana/grafonnet) is vendored with the `jsonnet-builder`).
 
 ### Dashboards as code
 
