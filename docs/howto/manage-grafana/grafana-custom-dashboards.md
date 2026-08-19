@@ -47,7 +47,7 @@ The [Grafonnet documentation](https://grafana.github.io/grafonnet/index.html) is
 You can check your work is valid Jsonnet as you develop by running
 
 ```{code} bash
-jsonnet dashboards/<dashboard-name>.jsonnet
+jsonnet -J dashboards/vendor dashboards/<dashboard-name>.jsonnet
 ```
 
 ````{tip} Example: Usage Quotas Dashboard as Grafonnet
