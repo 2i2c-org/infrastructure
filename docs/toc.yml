@@ -76,7 +76,6 @@ project:
   - title: How-to guides
     children:
     - file: howto/create-an-alert-triggered-workflow.md
-    - file: howto/grafana-github-auth.md
     - file: howto/migrate-ingress.md
     - file: howto/regenerate-smce-creds.md
     - file: howto/send-secrets.md
@@ -95,6 +94,7 @@ project:
       - file: howto/features/buckets.md
       - file: howto/features/cloud-access.md
       - file: howto/features/community-docs.md
+      - file: howto/features/compute-quota.md
       - file: howto/features/cryptnono.md
       - file: howto/features/dask.md
       - file: howto/features/dedicated-nodepool.md
@@ -112,7 +112,6 @@ project:
       - file: howto/features/rocker.md
       - file: howto/features/shared-db.md
       - file: howto/features/storage-quota.md
-      - file: howto/features/compute-quota.md
     - file: howto/filesystem-management/index.md
       children:
       - file: howto/filesystem-management/data-transfer-external.md
@@ -123,6 +122,10 @@ project:
         children:
         - file: howto/filesystem-management/filesystem-backups/enable-backups.md
         - file: howto/filesystem-management/filesystem-backups/restore-filesystem.md
+    - file: howto/manage-grafana/index.md
+      children:
+      - file: howto/manage-grafana/grafana-github-auth.md
+      - file: howto/manage-grafana/grafana-custom-dashboards.md
     - file: howto/image-management/index.md
       children:
       - file: howto/image-management/custom-jupyterhub-image.md
