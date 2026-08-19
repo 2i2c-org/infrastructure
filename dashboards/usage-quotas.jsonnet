@@ -1,6 +1,7 @@
 local grafonnet = import 'github.com/grafana/grafonnet/gen/grafonnet-v11.1.0/main.libsonnet';
 local dashboard = grafonnet.dashboard;
 local ts = grafonnet.panel.timeSeries;
+local tb = grafonnet.panel.table;
 local prometheus = grafonnet.query.prometheus;
 local var = grafonnet.dashboard.variable;
 local link = grafonnet.dashboard.link;
@@ -11,6 +12,7 @@ local windowVar =
   var.query.new('window')
   + var.query.queryTypes.withLabelValues('window', 'jupyterhub_memory_usage_byte_hours_total')
   + var.query.withDatasourceFromVariable(common.variables.prometheus)
+  + var.query.generalOptions.withDescription('Rolling window (days) quota policy is applied over.')
 ;
 
 local computeUsage =
@@ -26,7 +28,7 @@ local computeUsage =
     prometheus.new(
       '$PROMETHEUS_DS',
       |||
-        max(jupyterhub_memory_usage_byte_hours_total{namespace=~"$hub", policy_group!="", username=~"$user"}) by (namespace, username, policy_group, window) / 2^30
+        max(jupyterhub_memory_usage_byte_hours_total{namespace=~"$hub", policy_group!="", username=~"$user", window=~"$window"}) by (namespace, username, policy_group, window) / 2^30
       |||
     )
     + prometheus.withLegendFormat(
@@ -45,24 +47,56 @@ local computeUsage =
   + ts.standardOptions.withUnit('GiB-hr')
 ;
 
-local failOpens =
-  common.tsOptions
-  + ts.new('Monitoring - Fail opens')
-  + ts.panelOptions.withDescription(
+local computeLimits =
+  tb.new('Compute usage policies')
+  + tb.panelOptions.withDescription(
     |||
-      This happens when a user server is allowed to launch when the usage quota system is unavailable.
+      Compute usage quota limits individually applied to policy group members.
     |||
   )
-  + ts.panelOptions.withGridPos(h=8, w=12, x=0, y=13)
-  + ts.queryOptions.withTargets([
+  + tb.panelOptions.withGridPos(h=8, w=10, x=0, y=13)
+  + tb.queryOptions.withTargets([
     prometheus.new(
       '$PROMETHEUS_DS',
       |||
-        sum by (namespace) (changes(jupyterhub_usage_quotas_fail_open_total[30m]))
+        avg(jupyterhub_memory_limit_byte_hours_total{namespace=~"$hub", window=~"$window"}) by (namespace, window, policy_group) / 2^30
       |||
-    ),
+    )
+    + prometheus.withInstant()
+    + prometheus.withLegendFormat('{{policy_group}} ({{namespace}}) – {{window}} day window'),
   ])
-  + ts.options.legend.withShowLegend(false)
+  + tb.queryOptions.withTransformations([
+    tb.queryOptions.transformation.withId('reduce')
+    + tb.queryOptions.transformation.withOptions({
+      labelsToFields: false,
+      reducers: [
+        'lastNotNull',
+      ],
+    }),
+    tb.queryOptions.transformation.withId('organize')
+    + tb.queryOptions.transformation.withOptions({
+      renameByName: {
+        Field: 'policy group',
+        'Last *': 'quota limit (GiB-hr)',
+      },
+    }),
+  ])
+  + tb.standardOptions.withOverrides(
+    [
+      {
+        matcher: {
+          id: 'byName',
+          options: 'policy group',
+        },
+        properties: [
+          {
+            id: 'custom.width',
+            value: 293,
+          },
+        ],
+      },
+    ]
+  )
 ;
 
 local deniedServer =
@@ -73,7 +107,7 @@ local deniedServer =
       Server launch denied due to user exceeding compute quota limit.
     |||
   )
-  + ts.panelOptions.withGridPos(h=8, w=12, x=12, y=13)
+  + ts.panelOptions.withGridPos(h=8, w=7, x=10, y=13)
   + ts.queryOptions.withTargets([
     prometheus.new(
       '$PROMETHEUS_DS',
@@ -83,6 +117,26 @@ local deniedServer =
     )
     + prometheus.withLegendFormat('__auto'),
   ])
+;
+
+local failOpens =
+  common.tsOptions
+  + ts.new('Monitoring - Fail opens')
+  + ts.panelOptions.withDescription(
+    |||
+      This happens when a user server is allowed to launch when the usage quota system is unavailable.
+    |||
+  )
+  + ts.panelOptions.withGridPos(h=8, w=7, x=17, y=13)
+  + ts.queryOptions.withTargets([
+    prometheus.new(
+      '$PROMETHEUS_DS',
+      |||
+        sum by (namespace) (changes(jupyterhub_usage_quotas_fail_open_total[30m]))
+      |||
+    ),
+  ])
+  + ts.options.legend.withShowLegend(false)
 ;
 
 dashboard.new('Usage Quotas')
@@ -102,7 +156,8 @@ dashboard.new('Usage Quotas')
 + dashboard.withPanels(
   [
     computeUsage,
-    failOpens,
+    computeLimits,
     deniedServer,
+    failOpens,
   ],
 )
