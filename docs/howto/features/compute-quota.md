@@ -30,4 +30,4 @@ hub:
 
 ## Grafana Dashboards
 
-The general grafonnet code to define the usage quotas Grafana dashboard is can be found in `/dashboards/usage-quotas.jsonnet`. See [Manually deploy dashboards](../manage-grafana/grafana-custom-dashboards.md#manually-deploy-dashboards) for how to deploy this to communities with compute usage quotas enabled.
+The general grafonnet code to define the usage quotas Grafana dashboard can be found in `/dashboards/usage-quotas.jsonnet`. See [Manually deploy dashboards](../manage-grafana/grafana-custom-dashboards.md#manually-deploy-dashboards) for how to deploy this to communities with compute usage quotas enabled.
