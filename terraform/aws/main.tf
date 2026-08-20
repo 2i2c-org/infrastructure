@@ -47,5 +47,5 @@ provider "aws" {
 
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster
 data "aws_eks_cluster" "cluster" {
-  name = var.cluster_name
+  name = var.use_eksctl ? var.cluster_name : aws_eks_cluster.cluster[0].id
 }
