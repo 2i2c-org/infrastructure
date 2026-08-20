@@ -95,6 +95,14 @@ persistent_disks = {
     size        = 350
     name_suffix = "elcamino"
   }
+  "emich" = {
+    size        = 25
+    name_suffix = "emich"
+  }
+  "epcc" = {
+    size        = 25
+    name_suffix = "epcc"
+  }
   "evc" = {
     size        = 200
     name_suffix = "evc"
