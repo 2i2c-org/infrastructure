@@ -19,21 +19,26 @@ jupyterhub:
       value: present
       effect: NoSchedule
     continuous:
-      # We don't need this right now, and it's causing alert
-      # failures
       enabled: true
+    # CPU images are small and shared by nearly every hub (cache warms
+    # fast from real usage); GPU images are large and slow. Target the
+    # continuous-image-puller at GPU nodes instead of CPU ones, and
+    # pull every profileList image (CPU-profile images end up cached
+    # here too, but GPU node disk has plenty of headroom for that).
+    pullProfileListImages: false
+    extraImages:
+          00-sml-pytorch:
+            name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
+            tag: '98c145168e64'
+          01-tensorflow:
+            name: pangeo/ml-notebook
+            tag: '2026.01.30'
+          02-pytorch:
+            name: pangeo/pytorch-notebook
+            tag: '2026.01.30'
   singleuser:
-    # Null out the shared values.jsonnet default of
-    # {instance-type: n2-highmem-4}: that hardcodes the image-puller
-    # DaemonSet (which can't be profile-aware like KubeSpawner) to
-    # CPU-only nodes, so it can never pre-pull onto the GPU node pool.
-    # (Setting nodeSelector: {} is a no-op under Helm's deep-merge --
-    # the specific key must be nulled to actually remove it.)
-    # Each profile below sets its own node_selector via
-    # kubespawner_override, which still correctly targets the right
-    # node type at actual spawn time.
     nodeSelector:
-      node.kubernetes.io/instance-type:
+      node.kubernetes.io/instance-type: n1-highmem-8
     defaultUrl: /lab
     profileList:
     - display_name: CPU only

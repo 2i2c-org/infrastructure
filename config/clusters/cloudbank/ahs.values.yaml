@@ -12,8 +12,26 @@ jupyterhub:
       value: present
       effect: NoSchedule
     continuous:
-      enabled: false
+      enabled: true
+    # CPU images are small and shared by nearly every hub (cache warms
+    # fast from real usage); GPU images are large and slow. Target the
+    # continuous-image-puller at GPU nodes instead of CPU ones, and
+    # pull every profileList image (CPU-profile images end up cached
+    # here too, but GPU node disk has plenty of headroom for that).
+    pullProfileListImages: false
+    extraImages:
+          00-sml-pytorch:
+            name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
+            tag: '98c145168e64'
+          01-tensorflow:
+            name: pangeo/ml-notebook
+            tag: '2026.01.30'
+          02-pytorch:
+            name: pangeo/pytorch-notebook
+            tag: '2026.01.30'
   singleuser:
+    nodeSelector:
+      node.kubernetes.io/instance-type: n1-highmem-8
     defaultUrl: /lab
     profileList:
     - display_name: CPU only
@@ -34,7 +52,7 @@ jupyterhub:
               description: Please pick this image for normal workloads
               default: true
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:6d61d3c15d47
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/jupytutor-user-image:b55c6922dc52
             01-slm:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
