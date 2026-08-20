@@ -192,6 +192,22 @@ hubs:
   - common.values.yaml
   - elcamino.values.yaml
   - enc-elcamino.secret.values.yaml
+- name: emich
+  display_name: Eastern Michigan University
+  domain: emich.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - emich.values.yaml
+  - enc-emich.secret.values.yaml
+- name: epcc
+  display_name: El Paso Community College
+  domain: epcc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - epcc.values.yaml
+  - enc-epcc.secret.values.yaml
 - name: evc
   display_name: Evergreen Valley College
   domain: evc.cloudbank.2i2c.cloud
