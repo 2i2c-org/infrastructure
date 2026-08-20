@@ -20,9 +20,9 @@ jupyterhub:
     # here too, but GPU node disk has plenty of headroom for that).
     pullProfileListImages: false
     extraImages:
-          00-default:
-            name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-            tag: 'ed76dadfea20'
+      00-default:
+        name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
+        tag: ed76dadfea20
   singleuser:
     nodeSelector:
       node.kubernetes.io/instance-type: n1-highmem-8
