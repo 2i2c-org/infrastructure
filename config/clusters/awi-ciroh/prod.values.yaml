@@ -48,17 +48,6 @@ basehub:
                 slug: new
                 kubespawner_override:
                   image: quay.io/2i2c/awi-ciroh-image:d86a62ae0b85
-              rkernel:
-                display_name: Notebook with R and Python kernel
-                slug: rkernel
-                kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:f7f6aa41555b
-              preprocessor:
-                display_name: NGIAB Data Preprocessor
-                kubespawner_override:
-                    # From  https://github.com/CIROH-UA/NGIAB_data_preprocess
-                  image: quay.io/awiciroh/devcon25:ngiab_datapreprocess
-                  image_pull_policy: Always
               devcon15: # Repurposed for Summer Institute '26
                 display_name: Summer Institute Bootcamp
                 slug: devcon15
@@ -82,42 +71,6 @@ basehub:
                 slug: devcon1
                 kubespawner_override:
                   image: quay.io/awiciroh/devcon25:devcon25-usgs
-                  image_pull_policy: Always
-              devcon2:
-                display_name: Devcon25-SHAP for ML Interpretation
-                slug: devcon2
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-shap
-                  image_pull_policy: Always
-              devcon3:
-                display_name: Devcon25-TEVA for Feature Selection
-                slug: devcon3
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-teva
-                  image_pull_policy: Always
-              devcon4:
-                display_name: Devcon25-LightGBM for Forecast
-                slug: devcon4
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-forecasting
-                  image_pull_policy: Always
-              devcon5:
-                display_name: Devcon25-ML for Hydro Model Outputs
-                slug: devcon5
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:sneisary_d25
-                  image_pull_policy: Always
-              devcon6:
-                display_name: Devcon25-HydroGeoSpatial Modeling
-                slug: devcon6
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:jmframe_d25
-                  image_pull_policy: Always
-              devcon9:
-                display_name: Devcon25-Symfluence
-                slug: devcon9
-                kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:symfluence-beta
                   image_pull_policy: Always
               devcon10:
                 display_name: Devcon26-INFLECT FIM
