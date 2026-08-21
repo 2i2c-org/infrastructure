@@ -24,14 +24,6 @@ hubs:
   - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-- name: ahs
-  display_name: Albany High School
-  domain: ahs.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - ahs.values.yaml
-  - enc-ahs.secret.values.yaml
 - name: authoring
   display_name: Authoring Hub
   domain: authoring.cloudbank.2i2c.cloud
@@ -624,14 +616,6 @@ hubs:
   - common.values.yaml
   - sou.values.yaml
   - enc-sou.secret.values.yaml
-- name: stanford
-  display_name: Stanford University
-  domain: stanford.cloudbank.2i2c.cloud
-  helm_chart: basehub
-  helm_chart_values_files:
-  - common.values.yaml
-  - stanford.values.yaml
-  - enc-stanford.secret.values.yaml
 - name: spelman
   display_name: Spelman College
   domain: spelman.cloudbank.2i2c.cloud

@@ -11,10 +11,6 @@ filestores               = {}
 single_process_oom_kill  = false
 
 persistent_disks = {
-  "ahs" = {
-    size        = 100
-    name_suffix = "ahs"
-  }
   "authoring" = {
     size        = 25
     name_suffix = "authoring"
@@ -322,10 +318,6 @@ persistent_disks = {
   "staging" = {
     size        = 2
     name_suffix = "staging"
-  }
-  "stanford" = {
-    size        = 25
-    name_suffix = "stanford"
   }
   "tiffin" = {
     size        = 25
