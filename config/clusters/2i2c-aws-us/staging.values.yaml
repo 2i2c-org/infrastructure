@@ -12,19 +12,11 @@ jupyterhub-home-nfs:
       QuotaManager:
         hard_quota: 10 # in GiB
   nfsServer:
-    extraGaneshaConfig: |
-      QOS_DEFAULT_CONFIG {
-        enable_qos = true;
-        enable_bw_control = true;
-        enable_iops_control = true;
-        # Assume the BW of the disk is Read + Write
-        combined_rw_bw_control = true;
-        # We only use Ganesha with one export, 
-        # so only set this on client vs. per_export_per_client
-        qos_type = "Per_Client";
-        # 10000 (bytes?) per second
-        max_client_combined_bw = 32768;
-      }
+    qos:
+      enabled: true
+      bandwidth:
+        enabled: true
+        combined: 10485760
 
 jupyterhub:
   scheduling:
