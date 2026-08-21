@@ -13,11 +13,6 @@ jupyterhub:
       effect: NoSchedule
     continuous:
       enabled: true
-    # CPU images are small and shared by nearly every hub (cache warms
-    # fast from real usage); GPU images are large and slow. Target the
-    # continuous-image-puller at GPU nodes instead of CPU ones, and
-    # pull every profileList image (CPU-profile images end up cached
-    # here too, but GPU node disk has plenty of headroom for that).
     pullProfileListImages: false
     extraImages:
       00-sml-pytorch:
