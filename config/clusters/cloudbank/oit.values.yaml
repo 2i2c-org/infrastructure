@@ -12,12 +12,15 @@ jupyterhub:
       value: present
       effect: NoSchedule
     continuous:
-      # Disabled: with no working nodeSelector/extraImages targeting,
-      # this pulls every profileList image -- including large GPU
-      # images -- onto the CPU node pool. Re-enable only alongside a
-      # proper GPU-node targeting fix.
-      enabled: false
+      enabled: true
+    pullProfileListImages: false
+    extraImages:
+      00-default:
+        name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
+        tag: ed76dadfea20
   singleuser:
+    nodeSelector:
+      node.kubernetes.io/instance-type: n1-highmem-8
     defaultUrl: /lab
     profileList:
     - display_name: CPU-enabled

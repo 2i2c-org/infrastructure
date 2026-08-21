@@ -19,23 +19,21 @@ jupyterhub:
       value: present
       effect: NoSchedule
     continuous:
-      # Disabled: with no working nodeSelector/extraImages targeting,
-      # this pulls every profileList image -- including large GPU
-      # images -- onto the CPU node pool. Re-enable only alongside a
-      # proper GPU-node targeting fix.
-      enabled: false
+      enabled: true
+    pullProfileListImages: false
+    extraImages:
+      00-sml-pytorch:
+        name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
+        tag: ed76dadfea20
+      01-tensorflow:
+        name: pangeo/ml-notebook
+        tag: 2026.01.30
+      02-pytorch:
+        name: pangeo/pytorch-notebook
+        tag: 2026.01.30
   singleuser:
-    # Null out the shared values.jsonnet default of
-    # {instance-type: n2-highmem-4}: that hardcodes the image-puller
-    # DaemonSet (which can't be profile-aware like KubeSpawner) to
-    # CPU-only nodes, so it can never pre-pull onto the GPU node pool.
-    # (Setting nodeSelector: {} is a no-op under Helm's deep-merge --
-    # the specific key must be nulled to actually remove it.)
-    # Each profile below sets its own node_selector via
-    # kubespawner_override, which still correctly targets the right
-    # node type at actual spawn time.
     nodeSelector:
-      node.kubernetes.io/instance-type:
+      node.kubernetes.io/instance-type: n1-highmem-8
     defaultUrl: /lab
     profileList:
     - display_name: CPU only
@@ -97,7 +95,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:98c145168e64
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:ed76dadfea20
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
