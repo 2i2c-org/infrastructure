@@ -216,7 +216,7 @@ persistent_disks = {
     name_suffix = "mission"
   }
   "monmouth" = {
-    size        = 25
+    size        = 100
     name_suffix = "monmouth"
   }
   "moreno" = {
@@ -332,7 +332,7 @@ persistent_disks = {
     name_suffix = "tiffin"
   }
   "tntech" = {
-    size        = 25
+    size        = 100
     name_suffix = "tntech"
   }
   "toledo" = {
