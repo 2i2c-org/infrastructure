@@ -6,7 +6,6 @@ nfs:
     enabled: true
 jupyterhub:
   cull:
-    users: true
     timeout: 3600 # 1 hour of no activity, in seconds
     maxAge: 43200 # 12 hour hard cap regardless of activity, in seconds
   singleuser:
