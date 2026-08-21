@@ -136,7 +136,7 @@ basehub:
         UsageViewer:
           enable_compute: true
           footer_note: |
-            See the <a href="https://docs.earthscope.org/geolab/">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
+            See the <a href="https://docs.earthscope.org/geolab/getting-started/quotas">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
       loadRoles:
         server:
           scopes:
