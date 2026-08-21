@@ -19,9 +19,11 @@ jupyterhub:
       value: present
       effect: NoSchedule
     continuous:
-      # We don't need this right now, and it's causing alert
-      # failures
-      enabled: true
+      # Disabled: with no working nodeSelector/extraImages targeting,
+      # this pulls every profileList image -- including large GPU
+      # images -- onto the CPU node pool. Re-enable only alongside a
+      # proper GPU-node targeting fix.
+      enabled: false
   singleuser:
     # Null out the shared values.jsonnet default of
     # {instance-type: n2-highmem-4}: that hardcodes the image-puller

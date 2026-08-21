@@ -12,7 +12,11 @@ jupyterhub:
       value: present
       effect: NoSchedule
     continuous:
-      enabled: true
+      # Disabled: with no working nodeSelector/extraImages targeting,
+      # this pulls every profileList image -- including large GPU
+      # images -- onto the CPU node pool. Re-enable only alongside a
+      # proper GPU-node targeting fix.
+      enabled: false
   singleuser:
     defaultUrl: /lab
     profileList:
