@@ -6,6 +6,9 @@ jupyterhub:
       guarantee: 384M
       limit: 1.5G
     defaultUrl: /lab
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 56f7ed667544
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
