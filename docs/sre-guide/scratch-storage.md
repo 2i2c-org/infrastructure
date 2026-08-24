@@ -5,9 +5,9 @@ Because the hub home storage is based on NFS, it's only supposed to be used for 
 
 This guide covers how to setup a scratch storage in `/tmp` using an `emptyDir` volume and how to reason about choosing the right performance and size.
 
-`````{tab-set}
 ## Choosing the right disk size
 
+`````{tab-set}
 ````{tab-item} AWS
 :sync: aws-key
 
@@ -18,9 +18,11 @@ If we were to know that a user is going to need about 10GB of scratch storage, t
 
 Let's say we have 4 users per node, then the total disk size should be 80GB + 10GB * 4 = 120GB. This is the value that should be set in the `volumeSize` field of the node's type.
 ````
+`````
 
 ## Choosing the right disk performance
 
+`````{tab-set}
 ````{tab-item} AWS
 :sync: aws-key
 
@@ -39,9 +41,11 @@ Checkout https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html 
 So, for an `r5.4xlarge` that can fit 4 users, the maximum throughput we can set is 590 MB/s. If we were to need a higher throughput, we would have to consider using a different instance type and/or a different node packing strategy.
 
 ````
+`````
 
 ## Setting up the disk size and performance
 
+`````{tab-set}
 ````{tab-item} AWS
 :sync: aws-key
 
