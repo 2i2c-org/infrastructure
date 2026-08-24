@@ -6,10 +6,10 @@ Because the hub home storage is based on NFS, it's only supposed to be used for 
 This guide covers how to setup a scratch storage in `/tmp` using an `emptyDir` volume and how to reason about choosing the right performance and size.
 
 `````{tab-set}
-````{tab-item} ## AWS
+````{tab-item} AWS
 :sync: aws-key
 
-### Choosing the right disk size
+## Choosing the right disk size
 
 By default, we size [the node's root disk to 80GB](https://github.com/2i2c-org/infrastructure/blob/befc7c85d998e6e712873fdd0c972312bc5802dc/eksctl/libsonnet/cluster.jsonnet#L76) to make sure we can fit the OS, container images and any kubelet data, with enough headroom to avoid node DiskPressure.
 
@@ -17,7 +17,7 @@ If we were to know that a user is going to need about 10GB of scratch storage, t
 
 Let's say we have 4 users per node, then the total disk size should be 80GB + 10GB * 4 = 120GB. This is the value that should be set in the `volumeSize` field of the node's type.
 
-### Choosing the right disk performance
+## Choosing the right disk performance
 
 In addition to the disk size, there are two more metrics that we care about and we can configure:
 the volume IOPS and the volume throughput.
@@ -33,7 +33,7 @@ Checkout https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html 
 
 So, for an `r5.4xlarge` that can fit 4 users, the maximum throughput we can set is 590 MB/s. If we were to need a higher throughput, we would have to consider using a different instance type and/or a different node packing strategy.
 
-### Setup the disk size and performance
+## Setting up the disk size and performance
 
 Inside the cluster's `jsonnet` configuration, configure the root EBS volume size and performance (volume IOPS, volume throughput).
 
@@ -58,7 +58,7 @@ cluster.withNodeGroupConfigOverride(
 ````
 `````
 
-## Setup the singleuser scratch storage with emptyDir
+## Configure user's scratch storage with emptyDir
 
 For each user, mount this scratch storage at `/tmp` using an `emptyDir` volume and setup a quota to prevent users from using too much of the node's disk space, causing other pods to be evicted.
 
