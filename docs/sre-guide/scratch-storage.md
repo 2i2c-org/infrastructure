@@ -32,7 +32,7 @@ the volume IOPS and the volume throughput.
 By default, with an EBS gp3 volume, we get 3,000 IOPS and 125 MB/s throughput at no additional cost. For an additional fee, these defaults can be configured up to 80,000 IOPS and 2,000 MB/s throughput for a gp3 volume per https://aws.amazon.com/ebs/general-purpose.
 
 ```{important}
-*However**, the overall performance of an EBS volume is bounded by the instance type's performance limits, or the aggregated performance of its attached volumes, whichever is smaller.
+**However**, the overall performance of an EBS volume is bounded by the instance type's performance limits, or the aggregated performance of its attached volumes, whichever is smaller.
 
 This means that the actual max IOPS and throughput that we can configure will depend on the node's instance type.
 Checkout https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html for more information on the instance type's performance limits.
