@@ -1,3 +1,10 @@
+nodePlaceholder:
+  enabled: true
+  nodeSelector:
+    node.kubernetes.io/instance-type: n2-highmem-4
+  # Control number of nodes required to run
+  # Reserves baseline capacity, not surge capacity
+  replicas: 0
 jupyterhub:
   singleuser:
     defaultUrl: /lab
