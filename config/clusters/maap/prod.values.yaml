@@ -10,22 +10,13 @@ jupyterhub:
     homepage:
       gitRepoBranch: master
       gitRepoUrl: https://github.com/MAAP-Project/maap-hub-homepage
-      # Full-homepage hub: provides the org set. Mutually exclusive with
-      # redirect_to (basehub schema oneOf); staging uses redirect_to instead.
       templateVars:
-        org:
-          name: The Multi-Mission Algorithm and Analysis Platform (MAAP)Project
-          logo_url: https://maap-project.org/wp-content/uploads/2021/10/nasamaaplogo3.png
-          url: https://maap-project.org/
-        designed_by:
-          name: 2i2c
-          url: https://2i2c.org
-        operated_by:
-          name: 2i2c
-          url: https://2i2c.org
-        funded_by:
-          name: NASA
-          url: https://www.earthdata.nasa.gov/esds
+        # Non-logged-in visitors go straight to EDL (oauth_login), matching the
+        # MAAP Console — no sign-up landing first. New/role-less users then hit the
+        # hub's 403 page, which bounces them to /signup?status=pending&from=hub
+        # (the post-auth "in review" state) on the paired UAT web env.
+        redirect_to: https://hub.maap-project.org/hub/oauth_login
+
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-prod/$(JUPYTERHUB_USER)
@@ -232,6 +223,15 @@ jupyterhub:
       GenericOAuthenticator:
         token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token
         authorize_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/auth
+      Authenticator:
+        # End the Keycloak SSO session on hub logout. Without this, logout only
+        # clears the hub session; the login page's redirect_to (oauth_login)
+        # then silently re-authenticates via the live Keycloak cookie and the
+        # user lands back on the dashboard still logged in. Requires
+        # https://www.maap-project.org/* in the jupyterhub-maap client's
+        # "Valid post logout redirect URIs" in Keycloak.
+        logout_redirect_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/logout?client_id=jupyterhub-maap&post_logout_redirect_uri=https%3A%2F%2Fwww.maap-project.org%2F
+
 dask-gateway:
   gateway:
     backend:
