@@ -29,7 +29,7 @@ Let's say we have 4 users per node, then the total disk size should be 80GB + 10
 In addition to the disk size, there are two more metrics that we care about and we can configure:
 the volume IOPS and the volume throughput.
 
-By default, with an EBS gp3 volume, we get 3,000 IOPS and 125 MB/s throughput at no additional cost. For an additional fee, these defaults can be configured up to 80,000 IOPS and 2,000 MB/s throughput for a gp3volume per https://aws.amazon.com/ebs/general-purpose.
+By default, with an EBS gp3 volume, we get 3,000 IOPS and 125 MB/s throughput at no additional cost. For an additional fee, these defaults can be configured up to 80,000 IOPS and 2,000 MB/s throughput for a gp3 volume per https://aws.amazon.com/ebs/general-purpose.
 
 ```{important}
 HOWEVER, the overall performance of an EBS volume is bounded by the instance type's performance limits, or the aggregated performance of its attached volumes, whichever is smaller.
@@ -38,7 +38,7 @@ This means that the actual max IOPS and throughput that we can configure will de
 Checkout https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html for more information on the instance type's performance limits.
 ```
 
-So, for an `r5.4xlarge` that can fit 4 users, the maximum throughput we can set is 590 MB/s. If we were to need a higher throughput, we would have to consider using a different instance type and/or a different node packing strategy.
+So, for an `r5.4xlarge` that can fit four users, the maximum throughput we can set is 590 MB/s. If we were to need a higher throughput, we would have to consider using a different instance type and/or a different node packing strategy.
 
 ::::
 
