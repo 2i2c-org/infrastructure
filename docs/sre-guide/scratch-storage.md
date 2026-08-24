@@ -58,7 +58,7 @@ cluster.withNodeGroupConfigOverride(
 ````
 `````
 
-## Setup de singleuser scratch storage with emptyDir
+## Setup the singleuser scratch storage with emptyDir
 
 For each user, mount this scratch storage at `/tmp` using an `emptyDir` volume and setup a quota to prevent users from using too much of the node's disk space, causing other pods to be evicted.
 
