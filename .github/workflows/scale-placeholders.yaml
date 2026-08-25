@@ -6,7 +6,7 @@ on:
         description: Name of cluster
         required: true
       hub:
-        description: Name of cluster
+        description: Name of hub
         required: true
       replicas:
         description: Number of placeholders
