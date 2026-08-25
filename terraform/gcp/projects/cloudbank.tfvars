@@ -107,6 +107,10 @@ persistent_disks = {
     size        = 100
     name_suffix = "etsu"
   }
+  "fgcu" = {
+    size        = 25
+    name_suffix = "fgcu"
+  }
   "foothill" = {
     size        = 200
     name_suffix = "foothill"
@@ -186,6 +190,10 @@ persistent_disks = {
   "lbcc" = {
     size        = 25
     name_suffix = "lbcc"
+  }
+  "maine" = {
+    size        = 25
+    name_suffix = "maine"
   }
   "mendocino" = {
     size        = 40
