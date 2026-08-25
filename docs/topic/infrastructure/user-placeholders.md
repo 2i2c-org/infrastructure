@@ -11,7 +11,9 @@ To illustrate this, consider a hub with a dedicated user nodepool. Each node can
 - For the next 32 users that join, no scaling up will occur, and once all of the users have joined, the node will be "full" with 32 users and 32 placeholders.
 - Once the 33rd user joins, one of the user placeholders will be evicted, triggering a scale up to maintain the 32 user-node replica requirement.
 
+:::{danger #user-placeholder-warn} Placeholders are wonky
 Conventionally, one might imaging that the 34th user (and the 35th, etc.) will immediately be able to spawn their server pod, as the scheduler continues to evict pods. In practice this is not what happens. Instead, once the first placeholder pod is evicted and the autoscaler triggers a scale up, subsequent user pods are directly scheduled on the not-yet-ready node. This introduces head-of-line blocking for 31 of these 32 subsequent users.
+:::
 
 ## Choosing placeholder resources
 
