@@ -200,6 +200,7 @@ project:
       - file: topic/infrastructure/storage-layer.md
       - file: topic/infrastructure/terraform.md
       - file: topic/infrastructure/user-placeholders.md
+      - file: topic/infrastructure/node-placeholders.md
     - file: topic/monitoring-alerting/index.md
       children:
       - file: topic/monitoring-alerting/alerting.md
