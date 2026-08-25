@@ -367,6 +367,10 @@ persistent_disks = {
     size        = 40
     name_suffix = "unr"
   }
+  "uta" = {
+    size        = 25
+    name_suffix = "uta"
+  }
   "utpb" = {
     size        = 25
     name_suffix = "utpb"
