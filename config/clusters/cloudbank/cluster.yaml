@@ -216,6 +216,14 @@ hubs:
   - common.values.yaml
   - etsu.values.yaml
   - enc-etsu.secret.values.yaml
+- name: fgcu
+  display_name: Florida Gulf Coast University
+  domain: fgcu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - fgcu.values.yaml
+  - enc-fgcu.secret.values.yaml
 - name: fresno
   display_name: Fresno City College
   domain: fresno.cloudbank.2i2c.cloud
@@ -376,6 +384,14 @@ hubs:
   - common.values.yaml
   - lbcc.values.yaml
   - enc-lbcc.secret.values.yaml
+- name: maine
+  display_name: University of Maine
+  domain: maine.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - maine.values.yaml
+  - enc-maine.secret.values.yaml
 - name: mendocino
   display_name: Mendocino College
   domain: mendocino.cloudbank.2i2c.cloud
