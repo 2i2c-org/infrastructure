@@ -22,14 +22,11 @@ on:
 
       ############ Deployer-related config modified from deploy-hubs.yaml ####
       # Include changes to the deployer script's folder
-    - deployer/**
-    - pyproject.toml
-    - requirements.txt
-    - '!deployer/README.md'
+    - src/**
       # Checking that a hub is online should not trigger a deployment
-    - '!deployer/health_check_tests/**'
+    - '!src/deployer/health_check_tests/**'
       # We can ignore dev commands
-    - '!deployer/dev_commands/**'
+    - '!src/deployer/dev/commands/**'
   push:
     branches:
     - main
@@ -42,20 +39,21 @@ on:
     - .github/workflows/validate-clusters.yaml
       ############ Deployer-related config modified from deploy-hubs.yaml ####
       # Include changes to the deployer script's folder
-    - deployer/**
-    - pyproject.toml
-    - requirements.txt
-    - '!deployer/README.md'
+    - src/**
       # Checking that a hub is online should not trigger a deployment
-    - '!deployer/health_check_tests/**'
+    - '!src/deployer/health_check_tests/**'
       # We can ignore dev commands
-    - '!deployer/dev_commands/**'
+    - '!src/deployer/dev/commands/**'
     tags:
     - '**'
   workflow_dispatch:
 
 permissions:
   packages: read
+
+defaults:
+  run:
+    shell: bash -l {0}
 
 jobs:
   # This job inspects changed files in order to determine which cluster files
@@ -76,7 +74,7 @@ jobs:
   # 3. We can also group filters together and hence only need to run the action
   #    step *once* with the 'common' and 'cluster-specific' filters together
   generate-clusters-to-validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       pull-requests: read
     outputs:
@@ -114,11 +112,11 @@ jobs:
         list-files: csv
         filters: |
           common:
-            - added|modified: deployer/**
+            - added|modified: src/**
+            - added|modified: pyproject.toml
             - added|modified: helm-charts/basehub/**
             - added|modified: helm-charts/daskhub/**
             - added|modified: helm-charts/support/**
-            - added|modified: requirements.txt
             - added|modified: .github/workflows/validate-clusters.yaml
           cluster_specific:
             - added|modified: config/clusters/**
@@ -217,7 +215,7 @@ jobs:
   #     i.e., '[]'.
   #
   validate-helm-charts-values-files:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [generate-clusters-to-validate]
     name: validate-${{ matrix.jobs.cluster_name }}
     if: |
@@ -232,15 +230,9 @@ jobs:
     - uses: actions/checkout@v6
       with:
         submodules: true
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-    - uses: actions/setup-go@v6
 
-    - name: Install deployer module dependencies
-      run: |
-        pip install --editable .
-        go install github.com/google/go-jsonnet/cmd/jsonnet@v0.20.0
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
+      uses: ./.github/actions/setup-deploy
 
     - name: 'Validate cluster: ${{ matrix.jobs.cluster_name }}'
       env:

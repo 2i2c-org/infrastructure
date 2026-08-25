@@ -4,23 +4,16 @@ on:
   push:
     branches:
     - main
-    paths:
-    - deployer/**
+    paths: &paths
+    - src/**
     - tests/**
-    - requirements.txt
-    - dev-requirements.txt
     - pyproject.toml
     tags:
     - '**'
   pull_request:
     branches:
     - main
-    paths:
-    - deployer/**
-    - tests/**
-    - requirements.txt
-    - dev-requirements.txt
-    - pyproject.toml
+    paths: *paths
   workflow_dispatch:
 
 jobs:
@@ -34,7 +27,6 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -U pip
-        pip install --editable .
+        pip install --editable . --group test
     - name: Run tests
-      run: |
-        python -m pytest -vvv --color=yes
+      run: python -m pytest -vvv --color=yes

@@ -41,13 +41,6 @@ some in shared clusters have been announced ahead of time.
 [supported by `eksctl`]: https://eksctl.io/getting-started/#basic-cluster-creation
 [generally available on aks]: https://learn.microsoft.com/en-gb/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar
 
-```{toctree}
-:maxdepth: 1
-:caption: Upgrading K8s version of clusters
-upgrade-disruptions.md
-node-upgrade-strategies.md
-k8s-version-skew.md
-aws.md
-azure.md
-gke.md
-```
+:::{toc}
+:context: children
+:::

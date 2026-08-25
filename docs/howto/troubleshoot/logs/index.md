@@ -7,9 +7,6 @@ are reported.
 This page describes how to look at various logs in different cloud providers or
 by using cloud-agnostic kubectl and deployer commands.
 
-```{toctree}
-:maxdepth: 2
-cloud-logs
-kubectl-logs
-common-errors
-```
+:::{toc}
+:context: children
+:::

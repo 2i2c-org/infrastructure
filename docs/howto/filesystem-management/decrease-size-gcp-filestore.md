@@ -41,14 +41,14 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 ```{note}
 If filestore backups are enabled for this cluster, don't forget to add the name
 of the new filestore to the cluster's support values file, following
-[the instructions](howto:filesystem-backups:enable:gcp).
+[the instructions](#howto:filesystem-backups:enable:gcp).
 ```
 
 Open a PR and merge these changes so that other engineers cannot accidentally overwrite them.
 
 ## Migrating the data and switching to the new filestore
 
-See [](migrate-data) for instructions on how to perform these steps.
+See [](#migrate-data) for instructions on how to perform these steps.
 
 ## Decommission the previous filestore
 

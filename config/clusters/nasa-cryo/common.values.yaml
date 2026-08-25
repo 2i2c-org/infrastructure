@@ -8,6 +8,10 @@ basehub:
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         imagePullSecrets: [name: image-pull-secret]
 
@@ -57,6 +61,10 @@ basehub:
           - CryoInTheCloud:cryoclouduser
           - CryoInTheCloud:cryocloudadvanced
           - CryoInTheCloud:csdms-2025-workshop
+          - CryoInTheCloud:fish-pace
+          - CryoInTheCloud:continuous-dems-workshops
+          - oceanhackweek:ohw26-organizers-fellows-mentors
+          - oceanhackweek:ohw26-participants
         Authenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to persist auth state
@@ -64,12 +72,12 @@ basehub:
           - tsnow03
           - JessicaS11
           - jdmillstein
-          - dfelikson
           - fperez
           - scottyhq
           - jomey
           - rwegener2
           - itcarroll
+          - eeholmes
       loadRoles:
         user:
           scopes:
@@ -78,6 +86,15 @@ basehub:
           - shares!user
           - read:users:name
           - list:users
+          # Access to binder service
+          - access:services!service=binder
+          - access:services!service=dask-gateway
+          - access:services!service=usage-quota
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+          - users:activity!user
     singleuser:
       cloudMetadata:
         blockWithIptables: false
@@ -139,6 +156,11 @@ basehub:
                 kubespawner_override:
                   # From https://2i2c.freshdesk.com/a/tickets/1537
                   image: openscapes/matlab:latest
+              06-oceanhackweek:
+                display_name: OceanHackWeek Python Image
+                description: OceanHackWeek environment with many geospatial libraries for tutorials and projects
+                kubespawner_override:
+                  image: ghcr.io/oceanhackweek/python:latest
           resource_allocation:
             display_name: Resource Allocation
             choices:
@@ -149,7 +171,11 @@ basehub:
                 - CryoInTheCloud:CryoCloudAdvanced
                 - CryoInTheCloud:CryoCloudUser
                 - CryoInTheCloud:csdms-2025-workshop
+                - CryoInTheCloud:fish-pace
+                - CryoInTheCloud:continuous-dems-workshops
                 - 2i2c-org:hub-access-for-2i2c-staff
+                - oceanhackweek:ohw26-organizers-fellows-mentors
+                - oceanhackweek:ohw26-participants
                 kubespawner_override:
                   mem_guarantee: 1951419879
                   mem_limit: 1951419879

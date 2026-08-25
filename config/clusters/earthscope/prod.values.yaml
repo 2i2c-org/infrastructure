@@ -14,6 +14,13 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org
+      loadRoles:
+        user:
+          scopes:
+          - self
+          - users:activity!user
+          - access:services!service=usage-quota
+          - access:services!service=dask-gateway
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)
@@ -22,7 +29,7 @@ basehub:
       config:
         QuotaManager:
           # Requested by community
-          hard_quota: 100 # in GiB
+          hard_quota: 50 # in GiB
     eks:
       volumeId: vol-06f3c3dc2ded0cd06
   nfs:

@@ -1,6 +1,9 @@
 name: bnext-bio
 provider: aws
 provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 107252426460
 aws:
   account: 882437028641
   key: enc-deployer-credentials.secret.json

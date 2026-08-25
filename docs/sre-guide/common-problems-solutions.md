@@ -14,10 +14,6 @@ it produces, which is an incredibly useful resource when debugging problems.
 For more general tips, see our [Troubleshooting guide](../howto/troubleshoot/index.md)
 ```
 
-```{contents}
-:local:
-```
-
 (troubleshooting/rollback)=
 ## Roll back (revert) a helm deploy
 
@@ -71,7 +67,7 @@ Then make a Pull Request with your updated config.
 (troubleshooting/validation-webhook)=
 ## Failure calling validation webhook for `support` components
 
-After addressing [](troubleshooting/prometheus-oom), you may see the following error when redeploying the support chart:
+After addressing [](#troubleshooting/prometheus-oom), you may see the following error when redeploying the support chart:
 
 ```bash
 Error: UPGRADE FAILED: cannot patch "support-prometheus-server" with kind Ingress: Internal error occurred: failed calling webhook "validate.nginx.ingress.kubernetes.io": Post "https://support-ingress-nginx-controller-admission.support.svc:443/networking/v1beta1/ingresses?timeout=10s": x509: certificate signed by unknown authority
@@ -142,7 +138,7 @@ If you don't have these privileges, ask the Community Representative to grant th
 You can remove yourself from the org after establishing that the problem has been rectified.
 ```
 
-When we setup authentication to use [GitHub orgs or teams](auth:github-orgs), we create an OAuth app in the 2i2c org, regardless of which org we are authenticating with.
+When we setup authentication to use [GitHub orgs or teams](#auth:github-orgs), we create an OAuth app in the 2i2c org, regardless of which org we are authenticating with.
 Upon the first login, the admins of the _target_ org need to grant permissions to this app to read their org info.
 If they don't do this correctly, all users will report a `403 Forbidden` error when they try to login.
 
@@ -168,12 +164,12 @@ The OAuth app will now have the correct permissions to read the org info and hen
 ## Accessing the job matrices generated in CI/CD
 
 ```{seealso}
-Read more about [](cicd)
+Read more about [](#cicd)
 ```
 
 Sometimes we need to inspect the job matrices the deployer generates for correctness.
-We can do this either by [inspecting the deployment plan that is posted to PRs](cicd/hub/pr-comment)
-or by running the `generate helm-upgrade-jobs` command of the deployer [locally](tutorials:setup).
+We can do this either by [inspecting the deployment plan that is posted to PRs](#cicd/hub/pr-comment)
+or by running the `generate helm-upgrade-jobs` command of the deployer [locally](#tutorials:setup).
 
 This will output the same deployment plan that is used in the PR comment, which is
 a table formatted by [`rich`](https://rich.readthedocs.io). However, we sometimes

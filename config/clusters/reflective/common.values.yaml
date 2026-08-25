@@ -5,6 +5,11 @@ nfs:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
 jupyterhub:
   custom:
     daskhubSetup:
@@ -42,6 +47,17 @@ jupyterhub:
             Jupyter-book
           </a>
   hub:
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        - users:activity!user
+      user:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        - access:services!service=usage-quota
     config:
       JupyterHub:
         authenticator_class: github
@@ -162,6 +178,8 @@ jupyterhub:
             mem_60_gb:
               display_name: ~60 GB RAM, ~8 CPUs
               description: Up to ~15 CPUs when available
+              allowed_groups:
+              - ReflectiveCloud:power-user
               kubespawner_override:
                 mem_guarantee: 64020707016
                 mem_limit: 64020707016
@@ -179,4 +197,5 @@ jupyterhub:
                 cpu_limit: 15.3811
                 node_selector:
                   node.kubernetes.io/instance-type: r5.4xlarge
-
+              allowed_groups:
+              - ReflectiveCloud:power-user

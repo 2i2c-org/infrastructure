@@ -8,6 +8,13 @@ local account_id = std.extVar('VARS_2I2C_ACCOUNT_ID');
 // name of the hub.
 local is_staging = std.member(hub_name, 'staging');
 
+// Return False if hub_name contains ['binder', 'spyglass', 'public', 'ephemeral'] for rolling out compute usage quotas
+local hub_types = ['binder', 'spyglass', 'public', 'ephemeral'];
+local is_usage_quotas_hub = !std.any([
+  std.length(std.findSubstr(pattern, hub_name)) > 0
+  for pattern in hub_types
+]);
+
 local emitDaskHubCompatibleConfig(basehubConfig) =
   // Handle legacy 'daskhub' type hubs
   // Note: This relies on `jsonnet` being called with absolute path to
@@ -86,6 +93,58 @@ local jupyterhubHomeNFSConfig = {
   },
 } + if is_staging then {} else jupyterhubHomeNFSResources;
 
+local jupyterhubUsageQuotasHubConfig = {
+  config: {
+    UsageQuotaManager: {
+      hub_namespace: '%s' % hub_name,
+    },
+    UsageViewer: {
+      hub_namespace: '%s' % hub_name,
+      public_hub_url: 'https://%s/' % hub_domain,
+    },
+  },
+  extraConfig: {
+    '11-setup-usage-quotas': |||
+      import os
+      from jupyterhub_usage_quotas import setup_usage_quotas
+      setup_usage_quotas(c)
+      for service in c.JupyterHub.services:
+        if service["name"] == "usage-quota":
+          service["environment"] = {
+            "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME"),
+            "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD")
+          }
+    |||,
+  },
+};
+
+local jupyterhubUsageQuotasServicesConfig = {
+  'usage-quota': {
+    url: 'http://hub:9000',
+    display: true,
+    oauth_no_confirm: true,
+    command: [
+      'python',
+      '-m',
+      'jupyterhub_usage_quotas.services.usage_viewer',
+      '--config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py',
+    ],
+  },
+};
+
+local jupyterhubUsageQuotasRolesConfig = {
+  'usage-quota-service': {
+    scopes: [
+      'read:users',
+      'list:services',
+      'read:services',
+    ],
+    services: [
+      'usage-quota',
+    ],
+  },
+};
+
 local jupyterhubGroupsExporterConfig = {
   // Config values
   config: {
@@ -155,14 +214,29 @@ local jupyterhubConfig =
   {
     ingress: hubIngressConfig,
     hub: {
-      config: {
-        OAuthenticator: {
-          // Always set oauth callback URL, to prevent it from being
-          // guessed 'wrong'.
-          oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
-        },
-      },
-    },
+           services: {
+                       binder: {
+                         // dynamically configure redirect_uri for binderhub service, so we don't have to do that in each hub
+                         oauth_redirect_uri: 'https://%s/services/binder/oauth_callback' % [hub_domain],
+                       },
+                     } +
+                     if is_usage_quotas_hub then
+                       jupyterhubUsageQuotasServicesConfig
+                     else {},
+           config: {
+             OAuthenticator: {
+               // Always set oauth callback URL, to prevent it from being
+               // guessed 'wrong'.
+               oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
+             },
+           } + jupyterhubUsageQuotasHubConfig.config,
+         } +
+         if is_usage_quotas_hub then
+           {
+             loadRoles: jupyterhubUsageQuotasRolesConfig,
+             extraConfig: jupyterhubUsageQuotasHubConfig.extraConfig,
+           }
+         else {},
   } +
   if provider == 'aws' then {
     singleuser: {
@@ -202,6 +276,12 @@ local daskGatewayConfig =
     },
   } else {};
 
+local nodePlaceholderConfig = {
+  nodeSelector: {
+    '2i2c/hub-name': hub_name,
+  },
+};
+
 local binderhubServiceConfig = {
   // Schedule builder pods to run on the default smallest user nodes
   // https://github.com/2i2c-org/infrastructure/issues/4241
@@ -222,15 +302,26 @@ local binderhubServiceConfig = {
     {} +
     if provider == 'aws' then {
       KubernetesBuildExecutor: {
-        '2i2c/hub-name': hub_name,
-        'node.kubernetes.io/instance-type': 'r5.xlarge',
+        node_selector: {
+          '2i2c/hub-name': hub_name,
+          'node.kubernetes.io/instance-type': 'r5.xlarge',
+        },
       },
     }
     else if provider == 'gcp' then {
       KubernetesBuildExecutor: {
-        'node.kubernetes.io/instance-type': 'n2-highmem-4',
+        node_selector: {
+          'node.kubernetes.io/instance-type': 'n2-highmem-4',
+        },
       },
     } else {},
+  // For auth
+  extraEnv: [
+    {
+      name: 'JUPYTERHUB_API_URL',
+      value: 'http://hub.%s.svc.cluster.local:8081/hub/api' % hub_name,
+    },
+  ],
 };
 
 // We define a service account that is attached by default to all Jupyter user pods
@@ -262,5 +353,6 @@ emitDaskHubCompatibleConfig(
     userServiceAccount: userServiceAccountConfig,
     'dask-gateway': daskGatewayConfig,
     'binderhub-service': binderhubServiceConfig,
+    nodePlaceholder: nodePlaceholderConfig,
   }
 )

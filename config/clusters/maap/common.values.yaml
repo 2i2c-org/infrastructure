@@ -5,6 +5,12 @@ nfs:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
+
 jupyterhub:
 
   prePuller:
@@ -29,23 +35,24 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
-    homepage:
-      templateVars:
-        org:
-          name: The Multi-Mission Algorithm and Analysis Platform (MAAP)Project
-          logo_url: https://maap-project.org/wp-content/uploads/2021/10/nasamaaplogo3.png
-          url: https://maap-project.org/
-        designed_by:
-          name: 2i2c
-          url: https://2i2c.org
-        operated_by:
-          name: 2i2c
-          url: https://2i2c.org
-        funded_by:
-          name: NASA
-          url: https://www.earthdata.nasa.gov/esds
+    # NOTE: homepage.templateVars is set per-hub (prod = full homepage `org` set;
+    # staging = `redirect_to`). The basehub schema makes the two mutually
+    # exclusive, so it cannot be shared here in common.
   hub:
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        - users:activity!user
+      user:
+        scopes:
+        - self
+        - access:services!service=usage-quota
+        - access:services!service=dask-gateway
+        # Access to binder service
+        - access:services!service=binder
     config:
       JupyterHub:
         authenticator_class: generic-oauth
@@ -107,14 +114,19 @@ jupyterhub:
                 })
 
         c.Spawner.auth_state_hook = populate_token
-      # Post auth API endpoint maintained by the MAAP Platform team
-      002-post-auth-webhook: |
-        import asyncio
+      # MAAP member-sync webhook maintained by the MAAP Platform team.
+      # Runs via modify_auth_state_hook, which fires during authenticate()
+      # BEFORE the allowed-groups check — so a member record is auto-created
+      # for every authenticated user, including brand-new pending/role-less
+      # users who are then rejected from the hub and redirected to the sign-up
+      # page. (A post_auth_hook only runs for already-allowed users, so it can
+      # never create the pending record an admin needs to review.)
+      002-member-sync-webhook: |
         from tornado.httpclient import AsyncHTTPClient
         from z2jh import get_config
 
         async def _notify_maap_api(authenticator, base_url, pgt):
-            """Fire-and-forget call to MAAP REST API."""
+            """Call the MAAP REST API so it registers/refreshes the member."""
             http_client = AsyncHTTPClient()
             try:
                 await http_client.fetch(
@@ -124,29 +136,28 @@ jupyterhub:
                     request_timeout=5.0,
                 )
             except Exception as e:
-                authenticator.log.exception("MAAP post-auth webhook failed: %s", e)
+                authenticator.log.exception("MAAP member-sync webhook failed: %s", e)
 
-        async def maap_post_auth_hook(authenticator, handler, authentication):
-            """Notify MAAP REST API after successful login (non-blocking)."""
+        async def maap_modify_auth_state_hook(authenticator, auth_state):
+            """Notify the MAAP REST API during authentication (before the
+            allowed-groups check) so pending users are auto-created."""
             base_url = get_config("custom.maap.apiBaseUrl", "")
-            if not base_url:
-                return authentication
+            authenticator.log.info("MAAP member-sync webhook: base_url=%s", base_url)
+            if not base_url or not auth_state:
+                return auth_state
 
-            auth_state = authentication.get("auth_state", {})
-            pgt = f"jwt:{auth_state.get('id_token', '')}"
+            # The access token carries the jupyterhub-maap audience the MAAP API
+            # requires, and lets the API retrieve the user's EDL token from the
+            # Keycloak broker endpoint.
+            pgt = f"jwt:{auth_state.get('access_token', '')}"
+            authenticator.log.info("MAAP member-sync webhook: calling %s/api/members/self", base_url)
 
-            asyncio.ensure_future(_notify_maap_api(authenticator, base_url, pgt))
+            await _notify_maap_api(authenticator, base_url, pgt)
 
-            return authentication
+            return auth_state
 
-        c.GenericOAuthenticator.post_auth_hook = maap_post_auth_hook
+        c.GenericOAuthenticator.modify_auth_state_hook = maap_modify_auth_state_hook
   singleuser:
-    extraFiles:
-      jupyter_server_config.json:
-        data:
-          FileContentsManager:
-            # Allow deleting full directories
-            always_delete_dir: true
     cloudMetadata:
       blockWithIptables: false
     defaultUrl: /lab
@@ -263,6 +274,8 @@ binderhub-service:
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
+    BinderHub:
+      auth_enabled: true
   buildPodsRegistryCredentials:
     server: *url
     username: *username

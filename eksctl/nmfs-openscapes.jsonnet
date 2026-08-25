@@ -1,35 +1,44 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
 local c = cluster.withNodeGroupConfigOverride(
-  cluster.makeCluster(
-    name='nmfs-openscapes',
-    region='us-west-2',
-    nodeAz='us-west-2b',
-    version='1.34',
-    coreNodeInstanceType='r8i-flex.large',
-    notebookCPUInstanceTypes=[
-      'r5.xlarge',
-      'r5.4xlarge',
-      'r5.16xlarge',
-    ],
-    daskInstanceTypes=[
-      [
-        // Allow for a range of spot instance types
+  cluster.withNodeGroupConfigOverride(
+    cluster.makeCluster(
+      name='nmfs-openscapes',
+      region='us-west-2',
+      nodeAz='us-west-2b',
+      version='1.34',
+      coreNodeInstanceType='r8i-flex.large',
+      notebookCPUInstanceTypes=[
+        'r5.xlarge',
         'r5.4xlarge',
-        'r7i.4xlarge',
-        'r6i.4xlarge',
+        'r5.16xlarge',
       ],
-    ],
-    hubs=['staging', 'prod', 'workshop', 'noaa-only'],
-    notebookGPUNodeGroups=[
-      {
-        instanceType: 'g4dn.xlarge',
-      },
-    ],
-    nodeGroupGenerations=['c'],
+      daskInstanceTypes=[
+        [
+          // Allow for a range of spot instance types
+          'r5.4xlarge',
+          'r7i.4xlarge',
+          'r6i.4xlarge',
+        ],
+      ],
+      hubs=['staging', 'prod', 'workshop', 'noaa-only'],
+      notebookGPUNodeGroups=[
+        {
+          instanceType: 'g4dn.xlarge',
+        },
+      ],
+      // From generation 'g' there are only workshop nodes
+      nodeGroupGenerations=['c', 'h'],
+    ),
+    kind='core',
+    overrides={ maxSize: 2 }
   ),
-  kind='core',
-  overrides={ maxSize: 2 }
+  kind='notebook',
+  hubName='workshop',
+  generation='h',
+  overrides={
+    volumeSize: 55,
+  }
 );
 
 c

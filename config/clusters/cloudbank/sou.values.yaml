@@ -52,10 +52,12 @@ jupyterhub:
               kubespawner_override:
                 image: pangeo/pangeo-notebook:2025.01.24
       kubespawner_override:
-        mem_guarantee: 12G
-        mem_limit: 16G
-        cpu_guarantee: 0.22815625
-        cpu_limit: 3.6505
+        # Increased to help deal with possible kernel restarts
+        # https://2i2c.freshdesk.com/a/tickets/567
+        mem_guarantee: 384M
+        mem_limit: 1.5G
+        cpu_guarantee: 0.1
+        cpu_limit: 2
         node_selector:
           node.kubernetes.io/instance-type: n2-highmem-4
         default: true
@@ -118,17 +120,18 @@ jupyterhub:
           name: Southern University Oregon
           url: https://sou.edu/
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: 0.0.1-0.dev.git.16666.h2707c010b
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - sou.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - sou.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         admin_users:
         - ericvd@berkeley.edu

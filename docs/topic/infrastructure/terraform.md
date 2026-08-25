@@ -19,7 +19,7 @@ by default. The configuration is specified directly in `main.tf` for each cloud 
 
 In some cases, we may want to store the state in a different place, primarily so that
 communities can run `terraform apply` themselves without being given access to *every*
-community's terraform state. See [the documentation for community partners](contributing:community-partner:terraform) for more details.
+community's terraform state. See [the documentation for community partners](#contributing:community-partner:terraform) for more details.
 
 ### Backend Initialization
 
@@ -36,7 +36,7 @@ terraform init
 If prior backend data exists in a `terraform.lock.hcl`, you might see an `Error: Backend configuration changed` when trying to initialize that backend. To reconfigure this backend, ignoring any saved configuration, add the `-reconfigure` flag to the init command.
 ```
 
-If you're trying to work on a project that has state stored elsewhere, [follow the docs here](contributing:community-partner:terraform)
+If you're trying to work on a project that has state stored elsewhere, [follow the docs here](#contributing:community-partner:terraform)
 
 (topic:terraform:workspaces)=
 ## Workspaces

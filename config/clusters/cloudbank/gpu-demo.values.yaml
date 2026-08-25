@@ -11,15 +11,31 @@ jupyterhub:
     - key: hub.jupyter.org/dedicated
       operator: Exists
       effect: NoSchedule
+    - key: hub.jupyter.org_dedicated
+      operator: Exists
+      effect: NoSchedule
     - key: nvidia.com/gpu
       operator: Equal
       value: present
       effect: NoSchedule
     continuous:
-      # We don't need this right now, and it's causing alert
-      # failures
+      # Disabled: with no working nodeSelector/extraImages targeting,
+      # this pulls every profileList image -- including large GPU
+      # images -- onto the CPU node pool. Re-enable only alongside a
+      # proper GPU-node targeting fix.
       enabled: false
   singleuser:
+    # Null out the shared values.jsonnet default of
+    # {instance-type: n2-highmem-4}: that hardcodes the image-puller
+    # DaemonSet (which can't be profile-aware like KubeSpawner) to
+    # CPU-only nodes, so it can never pre-pull onto the GPU node pool.
+    # (Setting nodeSelector: {} is a no-op under Helm's deep-merge --
+    # the specific key must be nulled to actually remove it.)
+    # Each profile below sets its own node_selector via
+    # kubespawner_override, which still correctly targets the right
+    # node type at actual spawn time.
+    nodeSelector:
+      node.kubernetes.io/instance-type:
     defaultUrl: /lab
     profileList:
     - display_name: CPU only
@@ -35,6 +51,11 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
+            00-base-user-image:
+              display_name: Default Image
+              description: RStudio, VS Code, JupyterLab, Python, R
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:bde8b3293fd2
             00-slm:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
@@ -57,7 +78,7 @@ jupyterhub:
         cpu_guarantee: 0.22815625
         cpu_limit: 3.6505
         node_selector:
-          node.kubernetes.io/instance-type: n2-highmem-4
+          node.kubernetes.io/instance-type: n2-highmem-16
         default: true
     - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
       description: Upto 3 CPUs when available
@@ -76,7 +97,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:98c145168e64
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:ed76dadfea20
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow

@@ -16,3 +16,6 @@ basehub:
     config:
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-cryo-staging-
+    extraEnv:
+    - name: JUPYTERHUB_API_URL
+      value: http://hub.staging.svc.cluster.local:8081/hub/api

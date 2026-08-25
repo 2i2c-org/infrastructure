@@ -23,18 +23,22 @@ jupyterhub:
     memory:
       limit: 3G
       guarantee: 3G
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 6d61d3c15d47
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: 0.0.1-0.dev.git.16666.h2707c010b
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - elcamino.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - elcamino.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         admin_users:
         - ericvd@berkeley.edu

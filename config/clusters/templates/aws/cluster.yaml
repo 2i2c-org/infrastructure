@@ -1,6 +1,9 @@
 name: {{ cluster_name }}
 provider: aws
 provider_url: {{ sign_in_url }}
+metadata:
+  2i2c:
+    hubspot_deal_id: null
 aws:
   account: {{ cluster_account_id }}
   key: enc-deployer-credentials.secret.json

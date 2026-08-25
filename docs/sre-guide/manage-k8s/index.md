@@ -9,17 +9,14 @@ These sections cover how to do this.
 First off, you'll need to gain access to the Kubernetes cluster.
 See the following section for instructions on how to do so.
 
-```{toctree}
-:maxdepth: 2
-/topic/access-creds/cloud-auth.md
-```
+:::{toc}
+:context: children
+:::
 
 ## Common operations with Kubernetes
 
 The following sections cover common things that you might need to do using Kubernetes directly.
 
-```{toctree}
-:maxdepth: 2
-node-administration.md
-culling.md
-```
+:::{toc}
+:context: children
+:::

@@ -1,6 +1,9 @@
 name: projectpythia
 provider: aws
 provider_url: https://590183926898.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 102799509217
 aws:
   account: 590183926898
   key: enc-deployer-credentials.secret.json
@@ -19,8 +22,10 @@ hubs:
   domain: staging.projectpythia.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
+  - binderhub-service-common.values.yaml
   - common.values.yaml
   - staging.values.yaml
+  - enc-binderhub-service-common.secret.values.yaml
   - enc-common.secret.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
@@ -28,8 +33,10 @@ hubs:
   domain: projectpythia.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
+  - binderhub-service-common.values.yaml
   - common.values.yaml
   - prod.values.yaml
+  - enc-binderhub-service-common.secret.values.yaml
   - enc-common.secret.values.yaml
   - enc-prod.secret.values.yaml
 - name: pythia-binder
@@ -37,5 +44,7 @@ hubs:
   domain: hub.binder.pythia.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
+  - binderhub-service-common.values.yaml
   - pythia-binder.values.yaml
+  - enc-binderhub-service-common.secret.values.yaml
   - enc-pythia-binder.secret.values.yaml

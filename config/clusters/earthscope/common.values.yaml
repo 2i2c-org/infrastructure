@@ -7,6 +7,11 @@ basehub:
       serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
   dask-gateway:
     enabled: true
+    gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
   jupyterhub:
     custom:
       daskhubSetup:
@@ -15,10 +20,18 @@ basehub:
         # This uses custom ids from auth0, so we can't use our default
         # emails as access
         add_staff_user_ids_to_admin_users: false
+    proxy:
+      chp:
+        networkPolicy:
+          egress:
+          - to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: jupyterhub
+                  app.kubernetes.io/component: hub
+            ports:
+            - port: 9000
     hub:
-      image:
-        # Temporarily add latest fancy profiles to pilot-hub image
-        tag: 0.0.1-0.dev.git.15540.hbaaa997ce
       extraConfig:
         001-username-claim: |
           import json
@@ -32,7 +45,6 @@ basehub:
             if auth_state:
               url_parts = urlparse(spawner.authenticator.token_url)
               base_url = f"{url_parts.scheme}://{url_parts.netloc}"
-              scope_str = " ".join(spawner.authenticator.scope)
 
               # Bootstrap EarthScope SDK settings
               settings = {
@@ -40,7 +52,7 @@ basehub:
                   "audience": spawner.authenticator.extra_authorize_params.get("audience", ""),
                   "client_id": spawner.authenticator.client_id,
                   "domain": base_url,
-                  "scope": scope_str,
+                  "scope": auth_state.get("scope", ""),
                   "access_token": auth_state.get("access_token", ""),
                   "id_token": auth_state.get("id_token", ""),
                   "refresh_token": auth_state.get("refresh_token", "")
@@ -56,7 +68,6 @@ basehub:
               })
 
           c.Spawner.auth_state_hook = populate_token
-
       config:
         JupyterHub:
           authenticator_class: generic-oauth
@@ -95,9 +106,59 @@ basehub:
           - google-oauth2|117859169473992122769   # Georgiana
           - google-oauth2|117322480787655244438   # Jenny
           - google-oauth2|107058254054417943477   # Angus
+        UsageQuotaManager:
+          scope_fallback_strategy:
+            empty:
+              resource: memory
+              limit: 5000G
+              window: 30
+            intersection: max
+          failover_open: true
+          policy:
+          - resource: memory
+            limit: 5000G
+            window: 30
+            scope:
+              group:
+              - mem-sm
+          - resource: memory
+            limit: 10000G
+            window: 30
+            scope:
+              group:
+              - mem-md
+          - resource: memory
+            limit: 50000G
+            window: 30
+            scope:
+              group:
+              - mem-lg
+        UsageViewer:
+          enable_compute: true
+          footer_note: |
+            See the <a href="https://docs.earthscope.org/geolab/getting-started/quotas">GeoLab Documentation</a> for more information. If you need technical support, contact the <a href="https://support.center.earthscope.org/servicedesk/customer/portal/4/group/5?groupId=5">GeoLab Help Desk</a> for assistance.
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - users:activity!user
+          - access:services!service=dask-gateway
     singleuser:
       cloudMetadata:
         blockWithIptables: false
+      storage:
+        extraVolumes:
+          002-scratch-session:
+            name: scratch-session
+            emptyDir:
+              # Limit total size, to prevent pod being evicted
+              # with over use by any one user. This can be increased,
+              # but may need to increase the size of the node disk
+              sizeLimit: 20Gi
+        extraVolumeMounts:
+          002-scratch-session:
+            name: scratch-session
+            mountPath: /tmp
       profileList:
       - display_name: Choose your environment and resources
         default: true
@@ -116,36 +177,14 @@ basehub:
             choices:
               geolab-general:
                 display_name: GeoLab
-                slug: geolab-general
+                slug: geolab-base
                 kubespawner_override:
-                  image: public.ecr.aws/earthscope/geolab/geolab-default:latest
+                  image: public.ecr.aws/earthscope/geolab/geolab-base:latest
               geolab-sfg:
                 display_name: SeaFloor Geodesy
                 slug: geolab-sfg
                 kubespawner_override:
                   image: public.ecr.aws/earthscope/sfg-geolab:latest
-              mspass-shortcourse:
-                display_name: MsPASS ShortCourse
-                slug: mspass-shortcourse
-                kubespawner_override:
-                  image: public.ecr.aws/earthscope-dev/mspass_image:mspass_img_test-6db62782
-              jupyter-scipy:
-                display_name: Jupyter
-                slug: jupyter-scipy
-                kubespawner_override:
-                    # FIXME: use quay.io/ for tags after 2023-10-20
-                  image: jupyter/scipy-notebook:2023-06-27
-              rocker-geospatial:
-                display_name: RStudio
-                slug: rocker-geospatial
-                kubespawner_override:
-                  image: rocker/binder:4.3
-                  image_pull_policy: Always
-                    # Launch into RStudio after the user logs in
-                  default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
           resource_allocation:
             display_name: Resource Allocation
             choices:
@@ -156,6 +195,10 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 3902839759
                   mem_limit: 3902839759
@@ -170,6 +213,10 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 7805679519
                   mem_limit: 7805679519
@@ -184,6 +231,10 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 15611359038
                   mem_limit: 15611359038
@@ -198,6 +249,10 @@ basehub:
                 - geolab
                 - geolab:dev
                 - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 31222718077
                   mem_limit: 31222718077
@@ -211,6 +266,9 @@ basehub:
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
+                - vm-md
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 64020707016
                   mem_limit: 64020707016
@@ -224,6 +282,8 @@ basehub:
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
+                - vm-lg
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 128041414033
                   mem_limit: 128041414033
@@ -236,6 +296,7 @@ basehub:
                 description: ~63 CPUs always available
                 allowed_groups:
                 - geolab:power
+                - vm-xl
                 kubespawner_override:
                   mem_guarantee: 523839830228
                   mem_limit: 523839830228
@@ -249,6 +310,7 @@ basehub:
         allowed_groups:
         - geolab:dev
         - geolab:power
+        - gpu
         profile_options:
           image:
             display_name: Image
@@ -291,13 +353,6 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
-  jupyterhub-groups-exporter:
-    config:
-      groupsExporter:
-        allowed_groups:
-        - geolab
-        - geolab:dev
-        - geolab:power
   binderhub-service:
     enabled: true
     networkPolicy:

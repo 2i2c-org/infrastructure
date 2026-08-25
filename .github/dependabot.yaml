@@ -55,9 +55,9 @@ updates:
     dependency-name: '*'     # Match all packages
   reviewers:
   - 2i2c-org/engineering
-  # Maintain dependencies for pip defined in project root (deployer module)
+  # Maintain dependencies for pip defined in deployer (deployer module)
 - package-ecosystem: pip
-  directory: /
+  directory: /deployer
   schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
     interval: monthly

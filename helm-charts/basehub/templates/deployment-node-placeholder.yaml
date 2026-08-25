@@ -1,0 +1,63 @@
+{{- if .Values.nodePlaceholder.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-placeholder
+  labels:
+    app: jupyterhub
+    component: node-placeholder
+spec:
+  replicas: {{ .Values.nodePlaceholder.replicas }}
+  selector:
+    matchLabels:
+      app: jupyterhub
+      component: node-placeholder
+  {{- if .Values.nodePlaceholder.wait }}
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 100%
+      maxSurge: 0
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: jupyterhub
+        component: node-placeholder
+    spec:
+      {{- with .Values.nodePlaceholder.nodeSelector }}
+      nodeSelector:
+        {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      {{- with concat .Values.nodePlaceholder.tolerations .Values.nodePlaceholder.extraTolerations }}
+      tolerations:
+        {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      affinity:
+        # Require that pods run on user nodes only
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: hub.jupyter.org/node-purpose
+                  operator: In
+                  values: [user]
+        # Require that pods should not run in the same topology
+        podAntiAffinity:
+          # Enforce this at scheduling time
+          requiredDuringSchedulingIgnoredDuringExecution:
+            # Nodes with same host name are considered part of the same topology
+          - topologyKey: kubernetes.io/hostname
+            # Find matching pods to determine multiplicity per topology domain
+            labelSelector:
+              matchLabels:
+                app: jupyterhub
+                component: node-placeholder
+
+      containers:
+      - name: pause
+        image: {{ .Values.nodePlaceholder.pauseContainer.image}}
+        securityContext:
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+{{- end }}

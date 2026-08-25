@@ -30,6 +30,13 @@ The following escalation policies are defined [in PagerDuty](https://2i2c-org.pa
 - This policy doesn't include the Technical Lead's schedule
 - This policy assigns incidents to the on-call users in a Round Robin fashion, escalating to the next user if the incident is not acknowledged within 12h.
 
+3. **Application outage or possible outage**
+
+- This escalation policy is connected to the following services in our [Service Directory][1]:
+  - JupyterHub Usage Quotas
+- The alerts triggered under these services signal that there is potentially a P1 outage for the application
+- It makes use of all **app engineers'** schedules in a Round Robin fashion (choosing from the users that are on-call, in the moment the incident is triggered), escalating to the next user if the incident is not acknowledged within 4h.
+
 ## Paging
 **TBD**
 

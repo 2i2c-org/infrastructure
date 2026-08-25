@@ -6,6 +6,10 @@ on:
   - cron: 0 5 * * *
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   identify_clusters:
     runs-on: ubuntu-22.04
@@ -29,30 +33,22 @@ jobs:
       matrix:
         include: ${{fromJson(needs.identify_clusters.outputs.matrix)}}
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@v6
 
-    - uses: actions/setup-python@v6
+    - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
+      uses: ./.github/actions/setup-deploy
       with:
-        python-version: '3.13'
-
-    - name: Install deployer
-      run: |
-        python3 -m pip install --editable .
-
-    - name: Install jsonnet (go-jsonnet)
-      run: |
-        JSONNET_VERSION=0.20.0
-        wget -qO- https://github.com/google/go-jsonnet/releases/download/v${JSONNET_VERSION}/go-jsonnet_${JSONNET_VERSION}_Linux_x86_64.tar.gz \
-            | tar -xvz --one-top-level=$HOME/.local/bin
-
-    - name: Install sops
-      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+        provider: ${{ matrix.jobs.provider }}
 
     - name: Setup sops credentials to decrypt repo secrets
       uses: google-github-actions/auth@v3
       with:
-        credentials_json: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
       run: |

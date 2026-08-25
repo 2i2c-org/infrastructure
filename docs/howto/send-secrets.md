@@ -1,3 +1,4 @@
+(how-to:send-secrets)=
 # Sending Secrets to communities
 
 Sometimes we may want to send secret keys or other sensitive information to our

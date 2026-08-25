@@ -12,7 +12,7 @@ This is made available through cloud-specific filestores.
 
 ## Managed NFS Server setup
 
-[Terraform](topic:terraform) is setup to provision managed NFS server using the following cloud specific implementations.
+[Terraform](#topic:terraform) is setup to provision managed NFS server using the following cloud specific implementations.
 
 * GCP: Google Filestore
 * Azure: Files
@@ -27,7 +27,7 @@ For each hub, there needs to be the components described by the following subsec
 A directory is created under the path defined by the `nfs.pv.baseShareName` cluster config.
 Usually, this is `/homes` - for hubs that use the managed NFS provider for the cloud platform.
 
-Created using the infrastructure described in the [terraform section](topic:terraform).
+Created using the infrastructure described in the [terraform section](#topic:terraform).
 
 
 This the the base directory under which each hub has a directory ([`nfs.pv.baseShareName`](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L21)).
@@ -109,7 +109,8 @@ All users can see all other users' contents, modify and delete them!
 Use this with a lot of caution.
 ```
 
-A `shared-public` directory needs to be mounted on all home directories, and we need to modify our `initContainer` to make sure this is owned by the appropriate user.
+
+A `shared-public` directory needs to be mounted on all home directories, and for hubs that don't use `jupyterhub-home-nfs`, we need to modify our `initContainer` to make sure this is owned by the appropriate user.
 
 ```yaml
 jupyterhub:
@@ -121,11 +122,13 @@ jupyterhub:
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
           readOnly: false 
+        # If the hub has RStudio, mount the shared-public directory for RStudio as well
         2-shared-public-rstudio-volumemount:
           name: home
           mountPath: /home/rstudio/shared-public
           subPath: _shared-public
           readOnly: false
+    # If the hub doesn't use jupyterhub-home-nfs
     initContainers:
       - name: volume-mount-ownership-fix
         image: busybox:1.36.1

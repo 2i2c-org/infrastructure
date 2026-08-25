@@ -4,7 +4,13 @@ nfs:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0e89a2ab60575e25a
-jupyterhub: {}
+jupyterhub:
+  hub:
+    loadRoles:
+      user:
+        scopes:
+        - self
+        - access:services!service=binder
 binderhub-service:
   config:
     BinderHub:

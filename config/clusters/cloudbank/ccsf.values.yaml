@@ -7,7 +7,7 @@ jupyterhub:
       limit: 1.5G
     image:
       name: quay.io/ccsf/jupyterhub
-      tag: sp26.3
+      tag: fa26
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -28,17 +28,18 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: 0.0.1-0.dev.git.16666.h2707c010b
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - mail.ccsf.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - mail.ccsf.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         allowed_users:
         - sonnyzadeh@gmail.com
