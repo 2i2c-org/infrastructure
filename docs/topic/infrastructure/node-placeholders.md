@@ -41,6 +41,8 @@ By default, the placeholder pods will schedule to any _user_ node. Typically we 
 By default, the node placeholder deployment targets nodes belonging to the current hub. If nodepools are shared across hubs, then the `2i2c/hub-name` selector should be set to `null`.
 :::
 
+Once nodes have started, you may wish to enable image pulling to ensure that the images required by users are available. See @enable-continuous-image-puller for details.
+
 ## Controlling replicas from CI
 In GitHub Actions, we have [a workflow](https://github.com/2i2c-org/infrastructure/actions/workflows/scale-placeholders.yaml) for scaling the placeholders of a hub with the appropriate [placeholder configuration](#placeholder-selector). The `Run workflow` button can be used to trigger a CI-driven change to the placeholders of the cluster.
 
