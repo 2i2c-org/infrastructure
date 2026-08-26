@@ -230,7 +230,7 @@ jobs:
       env:
         SLACK_GITHUB_USERNAME_MAPPING_JSON: ${{ secrets.SLACK_GITHUB_USERNAME_MAPPING_JSON }}
       run: |
-        GH_USERNAME="${{ github.event.pusher.username }}"
+        GH_USERNAME="${{ github.event.head_commit.author.name }}"
         SLACK_ID=$(echo "$SLACK_GITHUB_USERNAME_MAPPING_JSON" | jq -r --arg user "$GH_USERNAME" '.[$user] // ""')
         echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
 
@@ -454,7 +454,7 @@ jobs:
       env:
         SLACK_GITHUB_USERNAME_MAPPING_JSON: ${{ secrets.SLACK_GITHUB_USERNAME_MAPPING_JSON }}
       run: |
-        GH_USERNAME="${{ github.event.pusher.username }}"
+        GH_USERNAME="${{ github.event.head_commit.author.name }}"
         SLACK_ID=$(echo "$SLACK_GITHUB_USERNAME_MAPPING_JSON" | jq -r --arg user "$GH_USERNAME" '.[$user] // ""')
         echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
 
@@ -593,7 +593,7 @@ jobs:
       env:
         SLACK_GITHUB_USERNAME_MAPPING_JSON: ${{ secrets.SLACK_GITHUB_USERNAME_MAPPING_JSON }}
       run: |
-        GH_USERNAME="${{ github.event.pusher.username }}"
+        GH_USERNAME="${{ github.event.head_commit.author.name }}"
         SLACK_ID=$(echo "$SLACK_GITHUB_USERNAME_MAPPING_JSON" | jq -r --arg user "$GH_USERNAME" '.[$user] // ""')
         echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
 
