@@ -20,7 +20,7 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       ( !github.event.workflow_run.head_repository.fork ) 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Generate a token
       id: generate-token
       uses: actions/create-github-app-token@v3

@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
     - name: Report Status
