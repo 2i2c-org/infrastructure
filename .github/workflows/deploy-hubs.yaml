@@ -161,19 +161,6 @@ jobs:
         # Needs to be added per job
         # When https://github.com/integrations/slack/issues/1563 gets implemented,
         # we can use that instead
-    - name: Report Status
-      if: always()
-      uses: ravsamhq/notify-slack-action@v2
-      with:
-          # Warning: there are multiple "Report Status" steps in this file (one per job).
-          # Make sure they are all updated
-        notify_when: failure
-        status: ${{ job.status }} # required
-            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-        footer: <{run_url}|Failing Run>
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades the support chart for clusters in parallel, if those upgrades
   # are required. This job needs the `generate-jobs` job to have completed and set
@@ -238,6 +225,15 @@ jobs:
       with:
         submodules: true
 
+    - name: Resolve GitHub username to Slack user ID
+      id: slack_user
+      env:
+        SLACK_GITHUB_USERNAME_MAPPING_JSON: ${{ secrets.SLACK_GITHUB_USERNAME_MAPPING_JSON }}
+      run: |
+        GH_USERNAME="${{ github.event.pusher.username }}"
+        SLACK_ID=$(echo "$SLACK_GITHUB_USERNAME_MAPPING_JSON" | jq -r --arg user "$GH_USERNAME" '.[$user] // ""')
+        echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
+
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
       with:
@@ -271,17 +267,16 @@ jobs:
         # Needs to be added per job
         # FIXME: when https://github.com/integrations/slack/issues/1563 gets implemented,
         # we can use that instead
+
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
-          # Warning: there are multiple "Report Status" steps in this file (one per job).
-          # Make sure they are all updated
       with:
         notify_when: failure
-        status: ${{ job.status }} # required
-            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-        footer: <{run_url}|Failing Run>
+        status: ${{ job.status }}
+        notification_title: Failed support chart upgrade on cluster ${{ matrix.jobs.cluster_name }}
+        mention_users: ${{ steps.slack_user.outputs.slack_id }}
+        message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
@@ -343,19 +338,6 @@ jobs:
         # Needs to be added per job
         # When https://github.com/integrations/slack/issues/1563 gets implemented,
         # we can use that instead
-    - name: Report Status
-      if: always()
-      uses: ravsamhq/notify-slack-action@v2
-      with:
-          # Warning: there are multiple "Report Status" steps in this file (one per job).
-          # Make sure they are all updated
-        notify_when: failure
-        status: ${{ job.status }} # required
-            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-        footer: <{run_url}|Failing Run>
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # We need to run this job because if there are no support jobs executed, then
   # filter-failed-support won't produce an output. We cannot use logic in a
@@ -399,19 +381,6 @@ jobs:
         # Needs to be added per job
         # When https://github.com/integrations/slack/issues/1563 gets implemented,
         # we can use that instead
-    - name: Report Status
-      if: always()
-      uses: ravsamhq/notify-slack-action@v2
-      with:
-          # Warning: there are multiple "Report Status" steps in this file (one per job).
-          # Make sure they are all updated
-        notify_when: failure
-        status: ${{ job.status }} # required
-            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-        footer: <{run_url}|Failing Run>
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades staging hubs on clusters in parallel, if required. This
   # job needs the `reset-jobs` to have completed to provide its output `staging-jobs`.
@@ -479,6 +448,15 @@ jobs:
       with:
         submodules: true
 
+    - name: Resolve GitHub username to Slack user ID
+      id: slack_user
+      env:
+        SLACK_GITHUB_USERNAME_MAPPING_JSON: ${{ secrets.SLACK_GITHUB_USERNAME_MAPPING_JSON }}
+      run: |
+        GH_USERNAME="${{ github.event.pusher.username }}"
+        SLACK_ID=$(echo "$SLACK_GITHUB_USERNAME_MAPPING_JSON" | jq -r --arg user "$GH_USERNAME" '.[$user] // ""')
+        echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
+
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
       uses: ./.github/actions/setup-deploy
       with:
@@ -517,17 +495,16 @@ jobs:
         # Needs to be added per job
         # When https://github.com/integrations/slack/issues/1563 gets implemented,
         # we can use that instead
+
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
       with:
-          # Warning: there are multiple "Report Status" steps in this file (one per job).
-          # Make sure they are all updated
         notify_when: failure
-        status: ${{ job.status }} # required
-            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-        footer: <{run_url}|Failing Run>
+        status: ${{ job.status }}
+        notification_title: Failed staging hub deployment on cluster ${{ matrix.jobs.cluster_name }}
+        mention_users: ${{ steps.slack_user.outputs.slack_id }}
+        message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
@@ -581,19 +558,6 @@ jobs:
         # Needs to be added per job
         # When https://github.com/integrations/slack/issues/1563 gets implemented,
         # we can use that instead
-    - name: Report Status
-      if: always()
-      uses: ravsamhq/notify-slack-action@v2
-      with:
-          # Warning: there are multiple "Report Status" steps in this file (one per job).
-          # Make sure they are all updated
-        notify_when: failure
-        status: ${{ job.status }} # required
-            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-        footer: <{run_url}|Failing Run>
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades production hubs on clusters in parallel, if required. This
   # job needs the `filter-failed-staging` to have completed to provide its
@@ -622,6 +586,15 @@ jobs:
       with:
         submodules: true
 
+    - name: Resolve GitHub username to Slack user ID
+      id: slack_user
+      env:
+        SLACK_GITHUB_USERNAME_MAPPING_JSON: ${{ secrets.SLACK_GITHUB_USERNAME_MAPPING_JSON }}
+      run: |
+        GH_USERNAME="${{ github.event.pusher.username }}"
+        SLACK_ID=$(echo "$SLACK_GITHUB_USERNAME_MAPPING_JSON" | jq -r --arg user "$GH_USERNAME" '.[$user] // ""')
+        echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
+
     - name: Setup sops credentials to decrypt repo secrets
       uses: google-github-actions/auth@v3
       with:
@@ -649,12 +622,10 @@ jobs:
       if: always()
       uses: ravsamhq/notify-slack-action@v2
       with:
-          # Warning: there are multiple "Report Status" steps in this file (one per job).
-          # Make sure they are all updated
         notify_when: failure
-        status: ${{ job.status }} # required
-            # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
-        message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
-        footer: <{run_url}|Failing Run>
+        status: ${{ job.status }}
+        notification_title: Failed ${{ matrix.jobs.hub_name }} hub deployment on cluster ${{ matrix.jobs.cluster_name }}
+        mention_users: ${{ steps.slack_user.outputs.slack_id }}
+        message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
