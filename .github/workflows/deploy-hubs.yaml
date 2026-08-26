@@ -276,7 +276,8 @@ jobs:
         status: ${{ job.status }}
         notification_title: Failed support chart upgrade on cluster ${{ matrix.jobs.cluster_name }}
         mention_users: ${{ steps.slack_user.outputs.slack_id }}
-        message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
+        mention_users_when: failure
+        footer: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
@@ -504,7 +505,8 @@ jobs:
         status: ${{ job.status }}
         notification_title: Failed staging hub deployment on cluster ${{ matrix.jobs.cluster_name }}
         mention_users: ${{ steps.slack_user.outputs.slack_id }}
-        message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
+        mention_users_when: failure
+        footer: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
@@ -626,6 +628,7 @@ jobs:
         status: ${{ job.status }}
         notification_title: Failed ${{ matrix.jobs.hub_name }} hub deployment on cluster ${{ matrix.jobs.cluster_name }}
         mention_users: ${{ steps.slack_user.outputs.slack_id }}
-        message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
+        mention_users_when: failure
+        footer: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
