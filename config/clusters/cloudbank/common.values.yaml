@@ -8,6 +8,14 @@ jupyterhub:
   cull:
     timeout: 3600 # 1 hour of no activity, in seconds
     maxAge: 43200 # 12 hour hard cap regardless of activity, in seconds
+  hub:
+    loadRoles:
+      cloudbank-pilot-hub-users:
+        services:
+          - cloudbank-pilot-hub-users
+        scopes:
+          - list:users
+          - read:users
   singleuser:
     cpu:
       # Each node has about 4 CPUs total, and if we limit users to no more than
