@@ -12,10 +12,10 @@ jupyterhub:
     loadRoles:
       cloudbank-pilot-hub-users:
         services:
-          - cloudbank-pilot-hub-users
+        - cloudbank-pilot-hub-users
         scopes:
-          - list:users
-          - read:users
+        - list:users
+        - read:users
   singleuser:
     cpu:
       # Each node has about 4 CPUs total, and if we limit users to no more than
