@@ -280,7 +280,7 @@ jobs:
         message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
         footer: Please investigate what happened
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        SLACK_WEBHOOK_URL: ${{ matrix.jobs.cluster_name == 'cloudbank' && secrets.SLACK_CLOUDBANK_DEPLOYMENT_FAILURES || secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job reduces the initially planned staging-jobs and prod-jobs deployments
   # by filtering out any deployment to a cluster with a failed support job.
@@ -510,7 +510,7 @@ jobs:
         message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
         footer: Please investigate what happened
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        SLACK_WEBHOOK_URL: ${{ matrix.jobs.cluster_name == 'cloudbank' && secrets.SLACK_CLOUDBANK_DEPLOYMENT_FAILURES || secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job further reduces prod-jobs by filtering out any prod hub deployment
   # to a cluster with a failed staging hub job.
@@ -634,4 +634,4 @@ jobs:
         message_format: <{commit_url}|Merge commit {commit_sha}> | <{run_url}|View GitHub run>
         footer: Please investigate what happened
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+        SLACK_WEBHOOK_URL: ${{ matrix.jobs.cluster_name == 'cloudbank' && secrets.SLACK_CLOUDBANK_DEPLOYMENT_FAILURES || secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
