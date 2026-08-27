@@ -7,6 +7,9 @@ nodePlaceholder:
   # Reserves baseline capacity, not surge capacity
   replicas: 0
 jupyterhub:
+  prePuller:
+    continuous:
+      enabled: true
   singleuser:
     defaultUrl: /lab
     memory:
