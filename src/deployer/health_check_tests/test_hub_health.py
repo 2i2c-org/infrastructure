@@ -78,7 +78,7 @@ async def test_hub_healthy(hub_url, api_token, hub_type, verbose):
         print_colour(f"Hub {hub_url} is healthy!")
     except Exception as e:
         print_colour(
-            f"Hub {hub_url} not healthy! Stopping further deployments. Exception was {e}.",
+            f"{type(e)}: {e.code}, {e.message}",
             "red",
         )
         if verbose:
