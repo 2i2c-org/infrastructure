@@ -308,7 +308,7 @@ persistent_disks = {
     name_suffix = "sjcc"
   }
   "skyline" = {
-    size        = 115
+    size        = 122
     name_suffix = "skyline"
   }
   "smc" = {
