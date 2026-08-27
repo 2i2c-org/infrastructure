@@ -7,7 +7,7 @@ jupyterhub:
       limit: 1.5G
     image:
       name: quay.io/ccsf/jupyterhub
-      tag: fa26
+      tag: fa26.1
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -15,7 +15,7 @@ jupyterhub:
     homepage:
       templateVars:
         org:
-          name: City College SF
+          name: City College San Francisco
           logo_url: https://www.ccsf.edu/sites/default/files/inline-images/CCSF%20LOGO.png
           url: https://www.ccsf.edu/
         designed_by:
@@ -43,21 +43,14 @@ jupyterhub:
       Authenticator:
         allowed_users:
         - sonnyzadeh@gmail.com
-        - clare.alice.heimer@gmail.com
-          # Below are UC Berkeley tutors for spring semester 2024
-        - k_usovich@berkeley.edu
-        - bellajzhang@berkeley.edu
-        - freddygoh21@berkeley.edu
-        - knnebedum@berkeley.edu
-        - kingsun@berkeley.edu
         admin_users:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
-        - shawn.wiggins@mail.ccsf.edu
-        - craig.persiko@mail.ccsf.edu
-        - efuchs@mail.ccsf.edu
-        - amy.mclanahan@mail.ccsf.edu
         - vsoon129@berkeley.edu
+        - shawn.wiggins@mail.ccsf.edu
+        - sonnyzadeh@gmail.com
+        - ronald.pageii@mail.ccsf.edu
+        - craig.persiko@mail.ccsf.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ccsf
