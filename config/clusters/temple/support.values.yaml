@@ -1,7 +1,7 @@
 prometheus:
   server:
     persistentVolume:
-      size: 100Gi
+      size: 120Gi
     ingress:
       enabled: true
       hosts:
