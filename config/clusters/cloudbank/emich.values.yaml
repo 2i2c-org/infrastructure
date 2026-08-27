@@ -17,7 +17,7 @@ jupyterhub:
     extraImages:
       00-sml-pytorch:
         name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-        tag: ed76dadfea20
+        tag: b663a88f6217
       01-tensorflow:
         name: pangeo/ml-notebook
         tag: 2026.01.30
