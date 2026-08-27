@@ -190,6 +190,7 @@ async def test_health_attempts(
     hub_type: str,
     attempts: int,
     attempt_timeout_s: int,
+    attempt_wait_time_s: int,
     verbose: bool,
 ):
     for i in range(attempts):
@@ -217,6 +218,9 @@ def run_hub_health_check(
     ),
     attempt_timeout_s: int = typer.Option(
         600, help="Number of seconds before giving up on an attempt"
+    ),
+    attempt_wait_time_s: int = typer.Option(
+        10, help="Number of seconds to wait between trying the next attempt"
     ),
     verbose: bool = typer.Option(False, help="Print traceback on error"),
 ):
@@ -286,6 +290,12 @@ def run_hub_health_check(
 
     asyncio.run(
         test_health_attempts(
-            hub_url, service_api_token, hub.type, attempts, attempt_timeout_s, verbose
+            hub_url,
+            service_api_token,
+            hub.type,
+            attempts,
+            attempt_timeout_s,
+            attempt_wait_time_s,
+            verbose,
         )
     )
