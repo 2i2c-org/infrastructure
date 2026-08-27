@@ -35,10 +35,6 @@ jupyterhub:
         # while we don't have refresh tokens enabled
         cookie_max_age_days: 1
       GenericOAuthenticator:
-        client_id: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
-        authorize_url: https://jhe.fly.dev/o/authorize/
-        token_url: https://jhe.fly.dev/o/token/
-        userdata_url: https://jhe.fly.dev/api/v1/users/profile
         username_claim: email
         login_service: JupyterHealth Exchange
         scope:
@@ -50,13 +46,6 @@ jupyterhub:
         - rylo@berkeley.edu
         manage_groups: true
         auth_state_groups_key: organizations
-        allowed_groups:
-        - '20013'   # BIDS (~all users are here)
-        - '20014'   # 2i2c
-        - '20008'   # Yaffe Lab
-        - '20005'   # Moslehi Lab
-        - '20006'   # Olgin Lab
-        - '20026'   # BIDS - URAP
     extraConfig:
       # get organization membership for managed groups:
       managed_organizations.py: |
