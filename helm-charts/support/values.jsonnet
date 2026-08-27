@@ -277,6 +277,14 @@ local configFluentBit = {
           repeat_interval: '3h',
           routes: [
             {
+              receiver: 'cloudbank-pager',
+              matchers: [
+                'cluster =~ cloudbank',
+              ],
+              // if this one matches, don't check sub-sequent routes
+              continue: false,
+            },
+            {
               receiver: 'known-storage-outage-pager',
               matchers: [
                 'cluster =~ .*',
