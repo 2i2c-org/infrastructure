@@ -2,7 +2,7 @@ nodePlaceholder:
   enabled: true
   nodeSelector: &selector
     node.kubernetes.io/instance-type: r5.2xlarge
-  replicas: 1
+  replicas: 8
 
 jupyterhub:
   prePuller:
