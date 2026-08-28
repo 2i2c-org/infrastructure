@@ -2,9 +2,12 @@ nodePlaceholder:
   enabled: true
   nodeSelector: &selector
     node.kubernetes.io/instance-type: r5.2xlarge
-  replicas: 8
+  replicas: 1
 
 jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
   prePuller:
     continuous:
       enabled: true
