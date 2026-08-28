@@ -10,6 +10,8 @@ import typer
 
 # Category for tools that are required in CI/CD
 CONTINUOUS_DEPLOYMENT = "Continuous Deployment"
+PATCH = "Patch"
+
 # The typer app to which all subcommands are attached
 # Disable 'pretty' exception handling
 app = typer.Typer(rich_markup_mode="markdown", pretty_exceptions_show_locals=False)
