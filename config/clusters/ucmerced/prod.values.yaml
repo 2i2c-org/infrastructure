@@ -1,20 +1,18 @@
+nodePlaceholder:
+  enabled: true
+  nodeSelector: &selector
+    node.kubernetes.io/instance-type: r5.2xlarge
+  replicas: 8
+
 jupyterhub:
   prePuller:
     continuous:
       enabled: true
-  scheduling:
-    userPlaceholder:
-      # Keep at least half of a spare node around
-      replicas: 1
-      resources:
-        requests:
-          memory: 32Gi
   singleuser:
     # [CUSTOM] jupyterhub.singleuser.nodeSelector
     #
     # Used by userPlaceholder (and profiles)
-    nodeSelector:
-      node.kubernetes.io/instance-type: r5.2xlarge
+    nodeSelector: *selector
     profileList:
     - display_name: Python
       description: Start a Python server with JupyterLab and scientific Python stack
