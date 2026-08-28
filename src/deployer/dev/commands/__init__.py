@@ -14,7 +14,6 @@ import deployer.dev.commands.generate.dedicated_cluster.gcp  # noqa: F401
 import deployer.dev.commands.generate.hub_asset.cluster_entry  # noqa: F401
 import deployer.dev.commands.generate.hub_asset.hub_files  # noqa: F401
 import deployer.dev.commands.generate.mau  # noqa: F401
-import deployer.dev.commands.generate.placeholders  # noqa: F401
 import deployer.dev.commands.generate.resource_allocation.daemonset_requests  # noqa: F401
 import deployer.dev.commands.generate.resource_allocation.generate_choices  # noqa: F401
 import deployer.dev.commands.generate.resource_allocation.instance_capacities  # noqa: F401

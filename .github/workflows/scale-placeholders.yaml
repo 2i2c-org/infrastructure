@@ -37,7 +37,7 @@ jobs:
 
     - name: Apply scale-change
       run: |
-        deployer generate node-replicas ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
+        deployer patch-node-replicas ${{ github.event.inputs.cluster }} ${{ github.event.inputs.hub }} ${{ github.event.inputs.replicas }}
     - name: Commit change
       run: |
         # Store branch name

@@ -7,14 +7,14 @@ from typing import Literal
 import typer
 from ruamel.yaml import YAML
 
-from deployer.dev.app import generate_app
+from deployer.app import PATCH, app
 from deployer.infra_components.cluster import Cluster
 
 yaml = YAML(typ="rt", pure=True)
 
 
-@generate_app.command()
-def user_replicas(
+@app.command(rich_help_panel=PATCH)
+def patch_user_replicas(
     cluster_name: str = typer.Argument(
         "2i2c",
         help="Name of cluster for which to reserve capacity",
@@ -28,8 +28,8 @@ def user_replicas(
     patch_replicas(cluster_name, hub_name, replicas, "user")
 
 
-@generate_app.command()
-def node_replicas(
+@app.command(rich_help_panel=PATCH)
+def patch_node_replicas(
     cluster_name: str = typer.Argument(
         "2i2c",
         help="Name of cluster for which to reserve capacity",
