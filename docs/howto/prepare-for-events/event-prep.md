@@ -1,18 +1,9 @@
 # Event infrastructure preparation checklist
 
-Main aspects to consider adjusting on a hub to prepare it for an event:
+As part of https://docs.2i2c.org/admin/community/events, the community hosting the event might have already provided some useful information.
+Main aspects to consider adjusting:
 
-## Quotas
-
-We must ensure that the quotas from the cloud provider are high-enough to handle expected usage. It might be that the number of users attending the event is very big, or their expected resource usage is big, or both. Either way, we need to check the the existing quotas will accommodate the new numbers.
-
-```{admonition} Action to take
-:class: tip
-- follow the [AWS quota guide](#hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in an AWS project
-- follow the [GCP quota guide](#hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
-```
-
-## Consider dedicated nodepools
+## Where not setup, consider dedicated nodepools
 
 ```{important}
 On AWS, clusters already have dedicated nodepools for each hub.
@@ -25,9 +16,41 @@ If the hub that's having an event is running on a shared cluster, then we might 
 Follow the guide at [](#features:shared-cluster:dedicated-nodepool) in order to setup a dedicated nodepool before an event.
 ```
 
-## Analyze Grafana workshop dashboard results
+## Update the quotas
+
+We must ensure that the following quotas are high enough to handle expected usage:
+- cloud provider quotas
+- home storage quota
+
+It might be that the number of users attending the event is very big, or their expected resource usage is big, or both. Either way, we need to check the existing quotas will accommodate the new numbers.
+
+```{admonition} Action to take
+:class: tip
+- follow the [AWS quota guide](#hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in an AWS project
+- follow the [GCP quota guide](#hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
+- follow the [Storage Quota Configuration](#howto:configure-storage-quota) guide
+```
+
+## Analyze the Grafana workshop prep dashboard results
 ```{warning}
 This is a work in progress.
+```
+
+If the Grafana workshop dashboard has not yet been deployed to the cluster hosting the event, you might want to consider deploying it. This is especially important for communities hosting a certain event type for the first time on their hub.
+
+Once the community has shared all the relevant information about what time interval and what user to watch, look at the panels in the dashboard.
+Then, analyze whether the hub's current infrastructure setup, would handle the same usage pattern for all N expected event users.
+
+Pay special attention to:
+
+1. Filesystem access (are they reading or writing data?)
+2. Size of the datasets they are reading as this affects memory usage and potentially disk usage
+3. Multiprocessing / CPU intensive work
+
+```{tip} Useful tips
+  - If they are storing and reading large amounts of data from the home directory, suggest storing it in a cloud bucket instead.
+  - If they are writing large amounts of data in the home directory, suggest [](#sre-guid:scratch-storage).
+  - Choose the instance type based on observed memory usage and the performance needed to answer the two questions above. Disk performance depends on the instance it's attached to, as well as the performance of the instance running the NFS server (the core node).
 ```
 
 ## Reduce server startup time
