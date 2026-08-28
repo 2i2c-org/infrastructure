@@ -1,4 +1,4 @@
-(scratch-storage)=
+(sre-guid:scratch-storage)=
 # Setting up scratch storage with emptyDir
 
 Because the hub home storage is based on NFS, it's only supposed to be used for storing small data and code. Storing large datasets is not recommended because it can get expensive and inefficient pretty quickly. Instead, we recommend using cloud object storage combined with scratch storage that is local to the node where the notebook server is running.
