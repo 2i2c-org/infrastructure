@@ -2,17 +2,8 @@ jupyterhub:
   prePuller:
     continuous:
       enabled: true
-    # Only the true default choice is pre-pulled, not every profileList
-    # image choice: pullProfileListImages: true would walk every choice in
-    # every profile_options.<option>.choices (5 CPU + 3 GPU today), pinning
-    # all of them on whatever pool the puller lands on (see nodeSelector
-    # comment below). That's exactly the failure mode from the whitman
-    # disk-pressure incident (2026-08-19): an unscoped puller pinning large
-    # ML images that GC can't reclaim. Only the GPU default is listed here,
-    # not the CPU default -- the puller's nodeSelector below only reaches
-    # the GPU pool, so pre-pulling the CPU image there would burn GPU-node
-    # disk for zero benefit (CPU-profile pods always land on n2-highmem-4
-    # regardless, via their own kubespawner_override.node_selector).
+    # pullProfileListImages: true pulls every profile in list
+    # -- so set it to false and set the extraImages to what you want pre-pulled
     pullProfileListImages: false
     extraImages:
       00-sml-pytorch:
@@ -27,11 +18,9 @@ jupyterhub:
       value: present
       effect: NoSchedule
   singleuser:
-    # This nodeSelector only targets the continuous-image-puller DaemonSet
-    # (KubeSpawner can't be profile-aware here) -- it makes the puller land
-    # on the GPU pool by default. Each profile below sets its own
-    # kubespawner_override.node_selector, which is what actually controls
-    # where real user pods land, unaffected by this key.
+    # This nodeSelector is referenced by the continuous-image-puller
+    # we need a PR in the spawner to conditionally pre-pull images based on 
+    # machine type
     nodeSelector:
       node.kubernetes.io/instance-type: n1-highmem-8
     defaultUrl: /lab
