@@ -1,11 +1,4 @@
 jupyterhub:
-  hub:
-    config:
-      Spawner:
-        # 600s isn't enough for a cold nb-gpu-t4 node: the NVIDIA
-        # driver install takes a chunk of time and then we get problems at 600s
-        # timeouts.
-        start_timeout: 1200
   prePuller:
     continuous:
       enabled: true
@@ -26,10 +19,15 @@ jupyterhub:
       effect: NoSchedule
   singleuser:
     # This nodeSelector is referenced by the continuous-image-puller
-    # we need a PR in the spawner to conditionally pre-pull images based on 
+    # we need a PR in the spawner to conditionally pre-pull images based on
     # machine type
     nodeSelector:
       node.kubernetes.io/instance-type: n1-highmem-8
+    # 600s default isn't enough for a cold nb-gpu-t4 node (driver install
+    # alone takes 3-12+ min). This is the key the chart actually reads --
+    # hub.config.Spawner.start_timeout doesn't work, KubeSpawner is more
+    # specific and wins.
+    startTimeout: 1200
     defaultUrl: /lab
     profileList:
     - display_name: CPU only
