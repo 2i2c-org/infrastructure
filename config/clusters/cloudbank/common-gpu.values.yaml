@@ -2,7 +2,22 @@ jupyterhub:
   prePuller:
     continuous:
       enabled: true
-    pullProfileListImages: true
+    # Only the true default choice is pre-pulled, not every profileList
+    # image choice: pullProfileListImages: true would walk every choice in
+    # every profile_options.<option>.choices (5 CPU + 3 GPU today), pinning
+    # all of them on whatever pool the puller lands on (see nodeSelector
+    # comment below). That's exactly the failure mode from the whitman
+    # disk-pressure incident (2026-08-19): an unscoped puller pinning large
+    # ML images that GC can't reclaim. Only the GPU default is listed here,
+    # not the CPU default -- the puller's nodeSelector below only reaches
+    # the GPU pool, so pre-pulling the CPU image there would burn GPU-node
+    # disk for zero benefit (CPU-profile pods always land on n2-highmem-4
+    # regardless, via their own kubespawner_override.node_selector).
+    pullProfileListImages: false
+    extraImages:
+      00-sml-pytorch:
+        name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
+        tag: b663a88f6217
     extraTolerations:
     - key: hub.jupyter.org/dedicated
       operator: Exists
