@@ -2,31 +2,7 @@ jupyterhub:
   scheduling:
     userScheduler:
       enabled: true
-  prePuller:
-    extraTolerations:
-    - key: hub.jupyter.org/dedicated
-      operator: Exists
-      effect: NoSchedule
-    - key: nvidia.com/gpu
-      operator: Equal
-      value: present
-      effect: NoSchedule
-    continuous:
-      enabled: true
-    pullProfileListImages: false
-    extraImages:
-      00-sml-pytorch:
-        name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-        tag: b663a88f6217
-      01-tensorflow:
-        name: pangeo/ml-notebook
-        tag: 2026.01.30
-      02-pytorch:
-        name: pangeo/pytorch-notebook
-        tag: 2026.01.30
   singleuser:
-    nodeSelector:
-      node.kubernetes.io/instance-type: n1-highmem-8
     defaultUrl: /lab
     profileList:
     - display_name: CPU only

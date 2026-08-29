@@ -2,21 +2,6 @@ jupyterhub:
   scheduling:
     userScheduler:
       enabled: true
-  prePuller:
-    extraTolerations:
-    - key: hub.jupyter.org/dedicated
-      operator: Exists
-      effect: NoSchedule
-    - key: nvidia.com/gpu
-      operator: Equal
-      value: present
-      effect: NoSchedule
-    continuous:
-      # Disabled: with no working nodeSelector/extraImages targeting,
-      # this pulls every profileList image -- including large GPU
-      # images -- onto the CPU node pool. Re-enable only alongside a
-      # proper GPU-node targeting fix.
-      enabled: false
   singleuser:
     defaultUrl: /lab
     profileList:
