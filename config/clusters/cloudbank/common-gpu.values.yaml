@@ -1,4 +1,11 @@
 jupyterhub:
+  hub:
+    config:
+      Spawner:
+        # 600s isn't enough for a cold nb-gpu-t4 node: the NVIDIA
+        # driver install takes a chunk of time and then we get problems at 600s
+        # timeouts.
+        start_timeout: 1200
   prePuller:
     continuous:
       enabled: true
