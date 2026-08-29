@@ -12,21 +12,94 @@ jupyterhub:
       value: present
       effect: NoSchedule
   singleuser:
+    # This nodeSelector only targets the continuous-image-puller DaemonSet
+    # (KubeSpawner can't be profile-aware here) -- it makes the puller land
+    # on the GPU pool by default. Each profile below sets its own
+    # kubespawner_override.node_selector, which is what actually controls
+    # where real user pods land, unaffected by this key.
     nodeSelector:
       node.kubernetes.io/instance-type: n1-highmem-8
+    defaultUrl: /lab
     profileList:
     - display_name: CPU only
       default: true
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-base:
+              display_name: Default Image
+              description: RStudio, VS Code, JupyterLab, Python, R
+              default: true
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:e42c967c281c
+            01-slm:
+              display_name: Small Language Models - Workshop hub
+              description: Python typical DS plus SLM packages
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:f6f187f86979
+            02-scipy:
+              display_name: Jupyter SciPy Notebook
+              description: Scientific Python image
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2025-01-06
+            03-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2025.01.24
+            04-c-sharp-user-image:
+              display_name: C# Image
+              description: RStudio, VS Code, JupyterLab, Python, R, C#
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image:gui-demo
       kubespawner_override:
-        image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:e42c967c281c
+        # mem_limit bumped from the original 1G to help deal with possible
+        # kernel restarts, per https://2i2c.freshdesk.com/a/tickets/567
         mem_guarantee: 512M
-        mem_limit: 1G
+        mem_limit: 1.5G
         cpu_guarantee: 0.1
         cpu_limit: 2
-    - display_name: GPU (NVIDIA T4)
-      description: Shared T4 GPU, ~1.5 CPU guaranteed (up to 3 when available)
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+        default: true
+    - display_name: 0.5 NVIDIA Tesla T4, ~1.5 CPU (~8 GB CPU RAM)
+      description: Up to 3 CPUs when available
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-sml-pytorch:
+              display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: small_models
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:b663a88f6217
+            01-tensorflow:
+              display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
+              slug: tensorflow
+              kubespawner_override:
+                image: pangeo/ml-notebook:2026.01.30
+            02-pytorch:
+              display_name: Pangeo PyTorch ML Notebook (2026.01.30)
+              slug: pytorch
+              kubespawner_override:
+                image: pangeo/pytorch-notebook:2026.01.30
       kubespawner_override:
-        image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:b663a88f6217
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
         mem_guarantee: 12G
