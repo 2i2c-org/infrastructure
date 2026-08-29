@@ -567,6 +567,15 @@ hubs:
   - common.values.yaml
   - reedley.values.yaml
   - enc-reedley.secret.values.yaml
+- name: ric
+  display_name: Rhode Island College
+  domain: ric.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - common-gpu.values.yaml
+  - ric.values.yaml
+  - enc-ric.secret.values.yaml
 - name: riohondo
   display_name: Rio Hondo Community College
   domain: riohondo.cloudbank.2i2c.cloud
