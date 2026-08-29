@@ -298,6 +298,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - gpu-demo.values.yaml
   - enc-gpu-demo.secret.values.yaml
 - name: high

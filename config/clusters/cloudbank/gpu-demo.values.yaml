@@ -6,29 +6,15 @@ jupyterhub:
       # default optimizing scheduler. Let's run our own scheduler
       # which is much faster. This is anecdotal information
       enabled: true
-  prePuller:
-    extraTolerations:
-    - key: hub.jupyter.org/dedicated
-      operator: Exists
-      effect: NoSchedule
-    - key: hub.jupyter.org_dedicated
-      operator: Exists
-      effect: NoSchedule
-    - key: nvidia.com/gpu
-      operator: Equal
-      value: present
-      effect: NoSchedule
-    continuous:
-      # Disabled: with no working nodeSelector/extraImages targeting,
-      # this pulls every profileList image -- including large GPU
-      # images -- onto the CPU node pool. Re-enable only alongside a
-      # proper GPU-node targeting fix.
-      enabled: false
   singleuser:
-    # Null out the shared values.jsonnet default of
-    # {instance-type: n2-highmem-4}: that hardcodes the image-puller
-    # DaemonSet (which can't be profile-aware like KubeSpawner) to
-    # CPU-only nodes, so it can never pre-pull onto the GPU node pool.
+    # Null out the instance-type key that common-gpu.values.yaml (and the
+    # shared values.jsonnet default) would otherwise set: this hub's CPU
+    # profile runs on n2-highmem-16 (not the standard n2-highmem-4), so no
+    # single instance-type is correct for the image-puller DaemonSet here.
+    # Nulling it means the puller runs on every node type and pulls every
+    # profileList image everywhere via pullProfileListImages (inherited
+    # from common-gpu.values.yaml) -- more disk use than a targeted
+    # nodeSelector, acceptable for a low-traffic demo hub.
     # (Setting nodeSelector: {} is a no-op under Helm's deep-merge --
     # the specific key must be nulled to actually remove it.)
     # Each profile below sets its own node_selector via
