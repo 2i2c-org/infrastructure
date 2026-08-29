@@ -118,6 +118,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - clarku.values.yaml
   - enc-clarku.secret.values.yaml
 - name: cloud-county
@@ -190,6 +191,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - emich.values.yaml
   - enc-emich.secret.values.yaml
 - name: epcc
@@ -198,6 +200,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - epcc.values.yaml
   - enc-epcc.secret.values.yaml
 - name: evc
@@ -222,6 +225,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - fgcu.values.yaml
   - enc-fgcu.secret.values.yaml
 - name: fresno
@@ -294,6 +298,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - gpu-demo.values.yaml
   - enc-gpu-demo.secret.values.yaml
 - name: high
@@ -454,6 +459,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - monmouth.values.yaml
   - enc-monmouth.secret.values.yaml
 - name: moreno
@@ -502,6 +508,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - oit.values.yaml
   - enc-oit.secret.values.yaml
 - name: orangecoast
@@ -630,6 +637,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - smc.values.yaml
   - enc-smc.secret.values.yaml
 - name: sou
@@ -638,6 +646,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - sou.values.yaml
   - enc-sou.secret.values.yaml
 - name: spelman
@@ -670,6 +679,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - tntech.values.yaml
   - enc-tntech.secret.values.yaml
 - name: toledo
@@ -694,6 +704,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - uams.values.yaml
   - enc-uams.secret.values.yaml
 - name: umd
@@ -766,6 +777,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - wcu.values.yaml
   - enc-wcu.secret.values.yaml
 - name: weber
@@ -806,5 +818,6 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
+  - common-gpu.values.yaml
   - york.values.yaml
   - enc-york.secret.values.yaml
