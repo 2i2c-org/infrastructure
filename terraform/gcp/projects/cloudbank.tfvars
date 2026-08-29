@@ -279,6 +279,10 @@ persistent_disks = {
     size        = 40
     name_suffix = "reedley"
   }
+  "ric" = {
+    size        = 25
+    name_suffix = "ric"
+  }
   "riohondo" = {
     size        = 20
     name_suffix = "riohondo"
