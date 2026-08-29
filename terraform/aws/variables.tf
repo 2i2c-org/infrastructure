@@ -24,6 +24,7 @@ variable "user_buckets" {
     object({
       delete_after : optional(number, null),
       archival_storageclass_after : optional(number, null),
+      bucket_policy : optional(string, null),
       tags : optional(map(string), {}),
     })
   )
@@ -41,7 +42,10 @@ variable "user_buckets" {
   2. `archival_storageclass_after` - number of days after *creation* an
      object in this bucket will be automatically transitioned to a cheaper,
      slower storageclass for cost savings. Set to null to not transition.
-  3. `tags` - bucket specific tags to be merged into the general tags variable.
+  3. `bucket_policy` - optional AWS IAM policy document JSON to be merged into
+     this bucket's policy. __BUCKET_ARN__ in the policy will be string replaced
+     with the actual arn of the bucket.
+  4. `tags` - bucket specific tags to be merged into the general tags variable.
   EOT
 }
 
