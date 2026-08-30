@@ -4,6 +4,13 @@ jupyterhub:
     memory:
       guarantee: 384M
       limit: 1.5G
+    # TEMPORARY: pin ahead of common.values.yaml to try the base-user-image
+    # build that adds the xeus-cling C++ kernel (cal-icor/base-user-image#165).
+    # Once we've confirmed it works here, pull this back out and let UTA pick
+    # up the tag from common.values.yaml again.
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 9c41867fcb95
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
