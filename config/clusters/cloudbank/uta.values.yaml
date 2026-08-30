@@ -10,7 +10,7 @@ jupyterhub:
     # up the tag from common.values.yaml again.
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: 9c41867fcb95
+      tag: c70771325780
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
