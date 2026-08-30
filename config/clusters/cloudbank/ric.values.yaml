@@ -18,8 +18,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          # TODO: fill in RIC's actual logo URL before going live
-          logo_url: TODO_LOGO_URL
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/a/a3/Rhodeisland_college_logo.svg
           name: Rhode Island College
           url: https://www.ric.edu/
   hub:
