@@ -471,6 +471,10 @@ fluent-bit:
   # exactly one replica to avoid sending duplicate events from multiple replicas.
   kind: Deployment
   replicaCount: 1
+  # Using `Recreate` instead of the default `RollingUpdate` strategy to avoid
+  # multiple replicas during an upgrade which could send duplicate events.
+  updateStrategy:
+    type: Recreate
   rbac:
     eventsAccess: true
   resources:
@@ -486,15 +490,31 @@ fluent-bit:
     #
     # The chart defaults to a `tail` input for pod logs plus a `systemd` input
     # for kubelet logs. Whereas we're only after Events for now.
+    #
+    # Note: we are using `DB` to make sure we don't ship duplicate events by
+    # keeping a record of what we've already sent. But since we're using
+    # `emptyDir` to store the DB, we will lose this record on pod replacement
+    # and ship some duplicate events for a short period.
+    # However, since events have a `uid`, we can deduplicate them downstream as needed.
+    # We can move to using a persistent volume to avoid this if we face issues in
+    # the future.
     inputs: |
       [INPUT]
           Name kubernetes_events
           Tag k8s_events
+          DB /var/lib/fluent-bit/kube_events.db
 
     # The chart's default is a `kubernetes` filter, which enriches records by
     # looking up the pod a log line came from. That's meaningless for Events
     # (they're API objects, not pod output), so we blank it out.
     filters: ""
+  extraVolumes:
+    - name: state
+      emptyDir:
+        sizeLimit: 1Gi
+  extraVolumeMounts:
+    - name: state
+      mountPath: /var/lib/fluent-bit
 
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
