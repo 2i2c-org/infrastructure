@@ -61,8 +61,7 @@ jobs:
         mention_groups_when: failure
         footer: <{run_url}|GitHub Run>
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PD_NOTIFICATIONS_WEBHOOK_URL }}
-        URL: https://2i2c-org.pagerduty.com/incidents/${{ github.event.client_payload.id }}
+        SLACK_WEBHOOK_URL: ${{ needs.get_incident_details.outputs.cluster == 'cloudbank' && secrets.SLACK_CLOUDBANK_PD_NOTIFICATIONS_WEBHOOK_URL || secrets.SLACK_PD_NOTIFICATIONS_WEBHOOK_URL }}
 
     - name: Set note content
       id: note
