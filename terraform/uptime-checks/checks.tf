@@ -89,7 +89,9 @@ resource "google_monitoring_alert_policy" "hub_simple_uptime_alert" {
   project = var.project_id
 
   # Send a notification to our PagerDuty channel when this is triggered
-  notification_channels = [google_monitoring_notification_channel.pagerduty_hubs.name]
+  notification_channels = each.value.cluster == "cloudbank" ? [google_monitoring_notification_channel.pagerduty_cloudbank.name] : [
+    google_monitoring_notification_channel.pagerduty_hubs.name
+  ]
 }
 
 resource "google_monitoring_alert_policy" "hub_https_certificate_expiry_alert" {
@@ -198,5 +200,7 @@ resource "google_monitoring_alert_policy" "prometheus_simple_uptime_alert" {
   project = var.project_id
 
   # Send a notification to our PagerDuty channel when this is triggered
-  notification_channels = [google_monitoring_notification_channel.pagerduty_prometheus.name]
+  notification_channels = each.value.cluster == "cloudbank" ? [google_monitoring_notification_channel.pagerduty_cloudbank.name] : [
+    google_monitoring_notification_channel.pagerduty_prometheus.name
+  ]
 }

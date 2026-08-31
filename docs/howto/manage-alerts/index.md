@@ -18,7 +18,7 @@ Below are some guidelines on how to handle the different types of alerts we have
 
 ### Severity and timeline
 
-When an alert fires, it will create an incident in PagerDuty and notify the `#pagerduty-notifications` channel on the 2i2c Slack.
+When an alert fires, it will create an incident in PagerDuty and notify the relevant `#alerts-*` channel on the 2i2c Slack.
 Each  alert setup with Jsonnet has a severity level that can be one of:
 
 - `take immediate action`
@@ -92,8 +92,8 @@ Any time two consecutive spawns fail in a 30m time window, we trigger an alert. 
 
 There is additional automation that runs each time an alert like this is triggered. The automation triggers a [GitHub workflow](https://github.com/2i2c-org/infrastructure/blob/main/.github/workflows/pagerduty-triggered-health-check.yaml) that runs a health check for the alerting cluster and hub.
 - A note with the status of this run is left in the PagerDuty incident
-- In addition, if the health check succeeds, the incident is resolved and a message with this status is posted in the `#pagerduty-notifications` Slack channel
-- If the health check fails, then a message, mentioning the channel members, is posted in the `#pagerduty-notifications` Slack channel
+- In addition, if the health check succeeds, the incident is resolved and a message with this status is posted in the relevant `#alerts-*` Slack channel
+- If the health check fails, then a message, mentioning the channel members, is posted in the relevant `#alerts-*` Slack channel
 
 ### What to do for alerts for application outages
 
@@ -147,7 +147,7 @@ Also, clicking on an alert in PagerDuty, gets you all the metadata associated wi
   - get the integration key of this service and store it encrypted under a new Pagerduty receiver
   - write a matcher rule in Alert Manager that will link this group to this new receiver
 4. Configure Slack notifications with the PagerDuty service integrations
-   - Go to the `#pagerduty-notifications` channel in the 2i2c Slack
+   - Go to the relevant channel in the 2i2c Slack
    - Make sure your PD account is linked to Slack with the shortcut command `/pd link`
    - Use `/pd connect` to select the service to connect to the channel and select *Responder* for how you want to be notified
 5. Test it

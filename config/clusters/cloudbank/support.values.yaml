@@ -2,10 +2,10 @@ prometheus:
   server:
     resources:
       limits:
-        memory: 6Gi
+        memory: 12Gi
       requests:
         # See https://github.com/2i2c-org/infrastructure/pull/1906
-        memory: 12Gi
+        memory: 6Gi
     persistentVolume:
       size: 1000Gi
     ingress:
