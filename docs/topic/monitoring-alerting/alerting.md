@@ -8,14 +8,14 @@ We have a few alerts configured to notify us when things go wrong and we use Pag
 ```
 
 ## Severity levels
-When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the `#pagerduty-notifications` channel on the 2i2c Slack.
+When an alert threshold is crossed, an automatic notification is sent to PagerDuty and the relevant `#alerts-*` channel on the 2i2c Slack.
 
 Each [alert setup with Jsonnet](#alerting:jsonnet-alerts) has a severity level set through the *.jsonnet configuration file. The severity levels are:
 
-- `take immediate action`
-- `same day action needed`
-- `action needed this week`
-- `to be planned in sprint planning`
+- `take immediate action`: sent to `#alerts-to-action-now`
+- `same day action needed`: sent to `#alerts-to-action-today`
+- `action needed this week`: sent to `#alerts-to-investigate`
+- `to be planned in sprint planning`: sent to `#alerts-to-investigate`
 
 This level is what determines how quickly you should respond to the alert and translates into the priority of the incident created in PagerDuty. It does this by running an [Event Orchestration](https://support.pagerduty.com/main/docs/event-orchestration) after an incident is created. This Event Orchestration is what sets a priority based on the severity label.
 

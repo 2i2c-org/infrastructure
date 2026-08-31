@@ -51,6 +51,6 @@ The placeholder user will only get an email immediately after the incident is as
 This email will go to the support email address.
 ```
 
-The `#pagerduty-notifications` channel on Slack will get notified of when an incident is escalated, i.e. it wasn't acknowledged by the person assigned to it by the escalation policy. This way we reduce the number of interruptions the team is exposed to.
+The `#alerts-*` channel on Slack will get notified of when an incident is escalated, i.e. it wasn't acknowledged by the person assigned to it by the escalation policy. This way we reduce the number of interruptions the team is exposed to.
 
 [1]: https://2i2c-org.pagerduty.com/service-directory
