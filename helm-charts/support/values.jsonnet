@@ -280,6 +280,7 @@ local configFluentBit = {
               receiver: 'cloudbank-pager',
               matchers: [
                 'cluster =~ cloudbank',
+                'alertname =~ .*',
               ],
               // if this one matches, don't check sub-sequent routes
               continue: false,
