@@ -901,6 +901,7 @@ jupyterhub:
         blocked_users:
           - deployment-service-check
       UsageQuotaManager:
+        prometheus_emit_interval: 600
         prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local'
         scope_fallback_strategy:
           intersection: 'min'
