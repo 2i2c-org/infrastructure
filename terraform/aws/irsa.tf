@@ -94,3 +94,40 @@ output "kubernetes_sa_annotations" {
   in case of daskhub) on a values file created specifically for that hub.
   EOT
 }
+
+resource "aws_kms_key" "ebs-snapshot-key" {
+  description = "A KMS Key for EBS snapshots and cross-account sharing"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "ebs-snapshot-key-1"
+    Statement = [
+      {
+        Sid    = "Enable IAM User Permissions for current account"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        },
+        Action   = "kms:*"
+        Resource = "*"
+      },
+      {
+        Sid    = "Allow External Account to Decrypt"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${var.external_consumer_account_id}:root"
+        }
+        # The external account needs to decrypt the secret payload
+        Action = [
+          "kms:Decrypt",
+          "kms:DescribeKey"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_kms_alias" "ebs-snapshot-key" {
+  name          = "alias/ebs-snapshot"
+  target_key_id = aws_kms_key.ebs-snapshot-key.key_id
+}
