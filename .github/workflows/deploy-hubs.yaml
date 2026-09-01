@@ -622,6 +622,27 @@ jobs:
         # Needs to be added per job
         # When https://github.com/integrations/slack/issues/1563 gets implemented,
         # we can use that instead
+
+    - name: Declare failure status
+      id: declare-failure
+      if: always()
+      shell: python
+      run: |
+        import os
+
+        cluster_name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
+        hub_name = "${{ matrix.jobs.hub_name }}".replace(".", "-")
+        failure = "${{ job.status == 'failure' }}"
+
+        output_file = os.getenv("GITHUB_OUTPUT")
+        with open(output_file, "a") as f:
+            f.write(f"failure_{cluster_name}_{hub_name}={failure}\n")
+
+        # https://github.com/ravsamhq/notify-slack-action
+        # Needs to be added per job
+        # When https://github.com/integrations/slack/issues/1563 gets implemented,
+        # we can use that instead
+
     - name: Report Status
       if: always()
       uses: ravsamhq/notify-slack-action@v2
