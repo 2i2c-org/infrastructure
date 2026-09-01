@@ -557,8 +557,7 @@ def load_events_from_cloudwatch(
         results.put(sentinel)
 
     threads = [
-        threading.Thread(target=worker, args=(lo, hi), daemon=True)
-        for lo, hi in bounds
+        threading.Thread(target=worker, args=(lo, hi), daemon=True) for lo, hi in bounds
     ]
     for t in threads:
         t.start()
@@ -574,8 +573,7 @@ def load_events_from_cloudwatch(
             if progress:
                 _print_fetch_progress(counters, concurrency, started, live)
             continue
-        for event in item:
-            yield event
+        yield from item
         if live and (time.monotonic() - last_print) > 0.25:
             _print_fetch_progress(counters, concurrency, started, live)
             last_print = time.monotonic()
@@ -728,7 +726,9 @@ def report_stats(records, metric_names, group_by, percentiles, out_path):
     """
     pcols = [f"p{p:g}" for p in percentiles]
     # `share` sits right after `n` when grouping.
-    stat_cols = (["n", "share"] if group_by else ["n"]) + ["min", "mean"] + pcols + ["max"]
+    stat_cols = (
+        (["n", "share"] if group_by else ["n"]) + ["min", "mean"] + pcols + ["max"]
+    )
 
     def group_label(value):
         return "(none)" if value is None else str(value)
@@ -876,7 +876,9 @@ def resolve_stats_options(metric, group_by, percentiles, where):
 @click.option("--from-file", help="File of events, one JSON object per line")
 @click.option("--log-group", help="Override the derived /2i2c/<cluster>/k8s-events")
 @click.option("--region", default="us-west-2", show_default=True)
-@click.option("--hours", type=int, default=24, show_default=True, help="How far back to look")
+@click.option(
+    "--hours", type=int, default=24, show_default=True, help="How far back to look"
+)
 @click.option(
     "--concurrency",
     type=int,
