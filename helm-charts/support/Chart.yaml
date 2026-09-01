@@ -55,6 +55,7 @@ dependencies:
     repository: https://2i2c.org/jupyterhub-cost-monitoring/
     condition: jupyterhub-cost-monitoring.enabled
 
+  # reflector, for mirroring k8s secrets across namespaces
   - name: reflector
     version: "10.0.61"
     repository: oci://ghcr.io/emberstack/helm-charts
@@ -65,3 +66,10 @@ dependencies:
     version: "0.57.9"
     repository: https://fluent.github.io/helm-charts
     condition: fluent-bit.enabled
+
+  # k8s-node-controller, scale k8s cluster ahead of time with plugins.
+  # https://github.com/2i2c-org/k8s-node-controller
+  - name: k8s-node-controller
+    version: "0.0.1-0.dev.git.23.h61dccbd"
+    repository: https://2i2c.org/k8s-node-controller/
+    condition: k8s-node-controller.enabled

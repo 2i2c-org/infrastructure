@@ -39,3 +39,8 @@ calico:
 nvidiaDevicePlugin:
   aws:
     enabled: true
+
+k8s-node-controller:
+  enabled: true
+  nameOverride: node-controller
+  fullnameOverride: node-controller
