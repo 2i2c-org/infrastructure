@@ -95,11 +95,11 @@ output "kubernetes_sa_annotations" {
   EOT
 }
 
-resource "aws_kms_key" "ebs-snapshot-key" {
+resource "aws_kms_key" "cross-account-ebs-snapshot-key" {
   description = "A KMS Key for EBS snapshots and cross-account sharing"
   policy = jsonencode({
     Version = "2012-10-17"
-    Id      = "ebs-snapshot-key-1"
+    Id      = "cross-account-ebs-snapshot-key-1"
     Statement = [
       {
         Sid    = "Enable IAM User Permissions for current account"
@@ -127,7 +127,7 @@ resource "aws_kms_key" "ebs-snapshot-key" {
   })
 }
 
-resource "aws_kms_alias" "ebs-snapshot-key" {
-  name          = "alias/ebs-snapshot"
-  target_key_id = aws_kms_key.ebs-snapshot-key.key_id
+resource "aws_kms_alias" "cross-account-ebs-snapshot-alias" {
+  name          = "alias/cross-account-snapshot-key"
+  target_key_id = aws_kms_key.cross-account-ebs-snapshot-key.key_id
 }

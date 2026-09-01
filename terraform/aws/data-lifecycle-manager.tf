@@ -80,6 +80,7 @@ resource "aws_dlm_lifecycle_policy" "nfs_backup" {
       }
 
       copy_tags = true
+
     }
 
     target_tags = {
