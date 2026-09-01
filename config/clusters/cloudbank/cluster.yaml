@@ -725,7 +725,6 @@ hubs:
   helm_chart_values_files:
   - common.values.yaml
   - enc-common.secret.values.yaml
-  - common-gpu.values.yaml
   - smc.values.yaml
   - enc-smc.secret.values.yaml
 - name: sou
