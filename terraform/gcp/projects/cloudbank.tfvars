@@ -236,7 +236,7 @@ persistent_disks = {
     name_suffix = "nicc"
   }
   "norco" = {
-    size        = 40
+    size        = 50
     name_suffix = "norco"
   }
   "nova" = {
@@ -450,7 +450,7 @@ notebook_nodes = {
     ],
   },
   "n2-highmem-4-a" : {
-    min : 2,
+    min : 16,
     max : 100,
     machine_type : "n2-highmem-4",
     disk_size_gb : 150,
