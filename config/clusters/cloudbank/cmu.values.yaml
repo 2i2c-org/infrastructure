@@ -1,9 +1,7 @@
 jupyterhub:
-  singleuser:
-    defaultUrl: /lab
-    memory:
-      guarantee: 512M
-      limit: 1G
+  scheduling:
+    userScheduler:
+      enabled: true
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -46,6 +44,7 @@ jupyterhub:
         - aramchal@andrew.cmu.edu
         - daphneh@andrew.cmu.edu
         - jslackma@andrew.cmu.edu
+        - ray@andrew.cmu.edu
 
 jupyterhub-home-nfs:
   gke:

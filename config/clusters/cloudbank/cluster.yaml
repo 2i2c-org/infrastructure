@@ -150,6 +150,7 @@ hubs:
   helm_chart_values_files:
   - common.values.yaml
   - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
   - cmu.values.yaml
   - enc-cmu.secret.values.yaml
 - name: cra
