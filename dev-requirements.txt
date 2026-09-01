@@ -10,3 +10,7 @@ chartpress==2.*
 requests==2.*
 aiohttp==3.*
 asyncio==4.*
+# analyze-spawn-timing.py builds its CLI with click, and uses boto3 for its
+# reading events from CloudWatch
+click==8.*
+boto3==1.*
