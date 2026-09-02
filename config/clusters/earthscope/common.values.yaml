@@ -180,6 +180,11 @@ basehub:
                 slug: geolab-base
                 kubespawner_override:
                   image: public.ecr.aws/earthscope/geolab/geolab-base:latest
+              geolab-gmt:
+                display_name: GMT Course
+                slug: gmt-course
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope-dev/geolab/gmt:latest
               geolab-sfg:
                 display_name: SeaFloor Geodesy
                 slug: geolab-sfg
