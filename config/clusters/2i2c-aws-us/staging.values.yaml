@@ -26,6 +26,9 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
+    image:
+      name: quay.io/2i2c/jupyterhub-6
+      tag: 0.0.1-0.dev.git.16862.h30ff76114
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
