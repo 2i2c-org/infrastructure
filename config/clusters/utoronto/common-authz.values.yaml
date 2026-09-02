@@ -18,6 +18,7 @@ jupyterhub:
             *await get_course_groups(canvas_url, access_token, "course_code"),
             *await get_user_groups(canvas_url, access_token),
           ]
+          print(auth_state)
 
           return auth_state
 
@@ -30,6 +31,11 @@ jupyterhub:
         cfg.scope = [*build_auth_urls.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
     config:
       GenericOAuthenticator:
-        admin_groups: []
+        allow_all: false
+        admin_users: []
+        admin_groups:
+        - course::2i2c-jupyter-test::enrollment_type::teacher
+        allowed_groups:
+        - course::2i2c-jupyter-test
         manage_groups: true
         auth_state_groups_key: canvas-groups
