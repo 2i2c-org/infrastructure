@@ -21,4 +21,4 @@ jupyterhub:
     db:
       pvc:
         # prod stores logs, so let's make it big
-        storage: 60Gi
+        storage: 80Gi
