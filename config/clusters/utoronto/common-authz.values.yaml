@@ -22,8 +22,7 @@ jupyterhub:
             groups = auth_state[authenticator.auth_state_groups_key]
             login_id = auth_state['login_id']
             with open("/srv/jupyterhub/scopes.txt", "a") as f:
-              line = f"{login_id}: {groups}"
-              f.write(line)
+              f.write(f"{login_id}: {groups}\n")
           
           except:
             print("Error while logging groups")
