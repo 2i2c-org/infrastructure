@@ -22,6 +22,7 @@ hubs:
   - common-canvas.values.yaml
   - python-common.values.yaml
   - staging.values.yaml
+  - common-authz.values.yaml
   - enc-common-canvas.secret.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
@@ -46,6 +47,7 @@ hubs:
   - common-canvas.values.yaml
   - r-common.values.yaml
   - r-staging.values.yaml
+  - common-authz.values.yaml
   - enc-common-canvas.secret.values.yaml
   - enc-r-staging.secret.values.yaml
 - name: r-prod
