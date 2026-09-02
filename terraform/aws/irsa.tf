@@ -96,7 +96,7 @@ output "kubernetes_sa_annotations" {
 }
 
 resource "aws_kms_key" "cross-account-ebs-snapshot-key" {
-  count       = var.external_consumer_account_id ? 1 : 0
+  count       = var.external_consumer_account_id == "" ? 0 : 1
   description = "A KMS Key for EBS snapshots and cross-account sharing"
 
   policy = jsonencode({
@@ -127,9 +127,4 @@ resource "aws_kms_key" "cross-account-ebs-snapshot-key" {
       }
     ]
   })
-}
-
-resource "aws_kms_alias" "cross-account-ebs-snapshot-alias" {
-  name          = "alias/cross-account-snapshot-key"
-  target_key_id = aws_kms_key.cross-account-ebs-snapshot-key.key_id
 }
