@@ -2,7 +2,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/pilot-hub-authz-helpers
-      tag: 0.0.1-0.dev.git.16863.h21fe9dd9c
+      tag: 0.0.1-0.dev.git.16863.ha51c52cdd
     extraConfig:
       001-canvas-auth: |
         from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls
@@ -18,7 +18,14 @@ jupyterhub:
             *await get_course_groups(canvas_url, access_token, "course_code"),
             *await get_user_groups(canvas_url, access_token),
           ]
-          print(auth_state)
+          try:
+            groups = auth_state[authenticator.auth_state_groups_key]
+            login_id = auth_state['login_id']
+            with open("/srv/jupyterhub/scopes.txt", "a") as f:
+              f.write(f"{login_id}: {groups}\n")
+          
+          except:
+            print("Error while logging groups")
 
           return auth_state
 
