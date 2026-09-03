@@ -18,7 +18,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.epcc.edu/Style%20Library/epcc/images/EPCC_Logo_Mobile.png
+          logo_url: https://www.epcc.edu/Media/NewsImages/EPCC_logo.jpg
           name: El Paso Community College
           url: https://www.epcc.edu/
   hub:
@@ -34,6 +34,7 @@ jupyterhub:
             allowed_domains:
             - epcc.edu
             - my.epcc.edu
+            - miners.utep.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
