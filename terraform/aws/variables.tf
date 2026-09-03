@@ -24,7 +24,8 @@ variable "user_buckets" {
     object({
       delete_after : optional(number, null),
       archival_storageclass_after : optional(number, null),
-      bucket_policy : optional(string, null),
+      extra_read_only_principals : optional(list(string), []),
+      extra_full_principals : optional(list(string), []),
       tags : optional(map(string), {}),
     })
   )
