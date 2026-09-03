@@ -44,6 +44,7 @@ jupyterhub:
             - evc.edu
             - student.sdccd.edu
             - my.yosemite.edu
+            - insite.4cd.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
