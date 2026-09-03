@@ -9,7 +9,7 @@ prometheus:
         hosts:
         - prometheus.leap.2i2c.cloud
     persistentVolume:
-      size: 500Gi
+      size: 550Gi
     resources:
       requests:
         memory: 20Gi
