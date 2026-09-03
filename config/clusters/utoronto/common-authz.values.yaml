@@ -2,7 +2,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/pilot-hub-authz-helpers
-      tag: 0.0.1-0.dev.git.16863.ha51c52cdd
+      tag: 0.0.1-0.dev.git.16870.he6ccf5a8f
     extraConfig:
       001-canvas-auth: |
         from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls
@@ -15,7 +15,7 @@ jupyterhub:
           access_token = auth_state["access_token"]
 
           auth_state[authenticator.auth_state_groups_key] = [
-            *await get_course_groups(canvas_url, access_token, "course_code"),
+            *await get_course_groups(canvas_url, access_token, canvas_course_key="course_code"),
             *await get_user_groups(canvas_url, access_token),
           ]
           try:

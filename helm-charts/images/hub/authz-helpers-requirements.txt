@@ -2,4 +2,4 @@
 
 jupyterhub-fancy-profiles==0.6.0
 jupyterhub-usage-quotas==0.1.4
-jupyterhub-oauthenticator-authz-helpers==0.0.6
+jupyterhub-oauthenticator-authz-helpers==0.0.7
