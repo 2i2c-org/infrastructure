@@ -159,20 +159,16 @@ def shell(
     )
 
 
-def find_valid_cache_file(profile: str):
+def find_valid_cache_file(session: str):
     # Get the start_url of the profile
     config_path = Path(os.environ.get("AWS_CONFIG_FILE", "~/.aws/config")).expanduser()
     cache_path = Path.home() / ".aws" / "sso" / "cache"
 
     parser = configparser.ConfigParser()
     parser.read(config_path)
-    profile_config = parser[f"profile {profile}"]
-    try:
-        sso_start_url = profile_config["sso_start_url"]
-    except KeyError:
-        sso_session_name = profile_config["sso_session"]
-        sso_session_config = parser[f"sso-session {sso_session_name}"]
-        sso_start_url = sso_session_config["sso_start_url"]
+
+    sso_session_config = parser[f"sso-session {session}"]
+    sso_start_url = sso_session_config["sso_start_url"]
 
     try:
         latest_cache_file = max(cache_path.glob("*.json"), key=os.path.getctime)
@@ -201,7 +197,7 @@ def find_valid_cache_file(profile: str):
 @aws.command(context_settings={"allow_extra_args": True})
 def sso_shell(
     ctx: typer.Context,
-    profile: str = typer.Argument(..., help="Name of AWS SSO profile to login into"),
+    session: str = typer.Argument(..., help="Name of AWS SSO session to login into"),
     account_name: str = typer.Argument(
         "",
         help="The name of the account under SSO that you want to login into",
@@ -213,15 +209,15 @@ def sso_shell(
     """
 
     # Get the access token from th cached file
-    cache_file = find_valid_cache_file(profile)
+    cache_file = find_valid_cache_file(session)
     if cache_file is None:
         print_colour(
             "SSO token expired or missing. Running 'aws sso login'...", "yellow"
         )
-        subprocess.check_call(["aws", "sso", "login", "--profile", profile])
+        subprocess.check_call(["aws", "sso", "login", "--sso-session", session])
         print_colour("Login complete")
 
-        cache_file = find_valid_cache_file(profile)
+        cache_file = find_valid_cache_file(session)
         if cache_file is None:
             print_colour("No SSO cache after login. Check SSO config.", "red")
             return
