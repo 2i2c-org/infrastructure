@@ -11,13 +11,14 @@ from typing import Annotated
 
 import typer
 
-from deployer.dev.app import exec_app
+from deployer.dev.app import CLOUD, app
 
 az = typer.Typer(pretty_exceptions_show_locals=False)
-exec_app.add_typer(
+app.add_typer(
     az,
     name="az",
-    help="Helper methods for commandline access to Azure.",
+    rich_help_panel=CLOUD,
+    help="Azure helpers.",
 )
 
 

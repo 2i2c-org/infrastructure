@@ -23,14 +23,15 @@ from pathlib import Path
 import typer
 from rich.prompt import Prompt
 
-from deployer.dev.app import exec_app
+from deployer.dev.app import CLOUD, app
 from deployer.utils.rendering import print_colour
 
 aws = typer.Typer(pretty_exceptions_show_locals=False)
-exec_app.add_typer(
+app.add_typer(
     aws,
     name="aws",
-    help="Helper methods for commandline access to AWS.",
+    rich_help_panel=CLOUD,
+    help="AWS helpers.",
 )
 
 

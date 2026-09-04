@@ -1,9 +1,9 @@
+import deployer.dev.commands.aws  # noqa: F401
+import deployer.dev.commands.azure  # noqa: F401
 import deployer.dev.commands.cilogon  # noqa: F401
 import deployer.dev.commands.config.get_clusters  # noqa: F401
 import deployer.dev.commands.debug  # noqa: F401
 import deployer.dev.commands.develop.use_cluster_credentials  # noqa: F401
-import deployer.dev.commands.exec.aws.aws_app  # noqa: F401
-import deployer.dev.commands.exec.azure  # noqa: F401
 import deployer.dev.commands.exec.cost_monitoring.cost_monitoring_app  # noqa: F401
 import deployer.dev.commands.exec.get_quota_usage  # noqa: F401
 import deployer.dev.commands.exec.infra_components  # noqa: F401
