@@ -332,3 +332,9 @@ variable "enable_ebs_alarms" {
   Enable alerts for IOPs and throughput
   EOT
 }
+
+variable "external_consumer_account_id" {
+  default     = ""
+  type        = string
+  description = "The AWS Account ID that needs access to EBS snapshots"
+}
