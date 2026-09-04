@@ -87,23 +87,16 @@ can be accessed from the terminal on your computer.
 
 ##### Programmatically
 
-1. Configure a SSO profile, named 2i2c for example
+1. Configure a SSO session, named 2i2c for example
    ```bash
-   aws configure sso --profile 2i2c
+   aws configure sso-session
    ```
-
-   1. You will be presented with a prompt asking you info about this SSO profile.
-      The info that **must** be introduced is:
+   1. You will be presented with a prompt asking you info about this SSO session.
+      Each of the fields is required and should be chosen for your SSO app, e.g.:
+      - **SSO session name**: 2i2c
       - **SSO start URL**: https://2i2c.awsapps.com/start#/
       - **SSO region:** us-east-1 (this is where global SSO infra is located)
-   2. You will then be presented with a list of accounts available under this SSO.
-      Choose any of them (it is not relevant for this workflow)
-   3. You will then be presented with the roles options.
-      Choose the one appropriate (\*not convinced it's relevant for this workflow)
-   4. Some CLI related info:
-      - **CLI default client Region**: us-east-1
-      - **CLI default output format**: json
-2. Get your creds using the deployer:
+   2. Get your creds using the deployer:
    ```bash
    deployer aws sso-shell 2i2c
    ```
