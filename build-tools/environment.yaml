@@ -7,7 +7,7 @@ dependencies:
 # Pins by compatibility
 ## Upper bound / hard pins
 - google-cloud-sdk=570.*
-- kubernetes-helm=3.17.0.*
+- kubernetes-helm>=4.0.0,<4.3.0
 ## Lower bound
 - eksctl>=0.221.*,<0.229.0
 #- azure-cli # Out of date / broken
