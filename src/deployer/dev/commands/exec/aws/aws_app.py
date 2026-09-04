@@ -158,6 +158,45 @@ def shell(
     )
 
 
+def find_valid_cache_file(profile: str):
+    # Get the start_url of the profile
+    config_path = Path(os.environ.get("AWS_CONFIG_FILE", "~/.aws/config")).expanduser()
+    cache_path = Path.home() / ".aws" / "sso" / "cache"
+
+    parser = configparser.ConfigParser()
+    parser.read(config_path)
+    profile_config = parser[f"profile {profile}"]
+    try:
+        sso_start_url = profile_config["sso_start_url"]
+    except KeyError:
+        sso_session_name = profile_config["sso_session"]
+        sso_session_config = parser[f"sso-session {sso_session_name}"]
+        sso_start_url = sso_session_config["sso_start_url"]
+
+    try:
+        latest_cache_file = max(cache_path.glob("*.json"), key=os.path.getctime)
+    except ValueError:
+        return None
+
+    try:
+        with open(latest_cache_file) as f:
+            data = json.load(f)
+        expires_at_str = data.get("expiresAt")
+        url = data.get("startUrl")
+        if url != sso_start_url:
+            return None
+        if not expires_at_str:
+            return None
+
+        # Verify if the cached token has expired
+        expires_at = datetime.fromisoformat(expires_at_str)
+        if datetime.now(expires_at.tzinfo) >= expires_at:
+            return None
+        return latest_cache_file
+    except Exception:
+        return None
+
+
 @aws.command(context_settings={"allow_extra_args": True})
 def sso_shell(
     ctx: typer.Context,
@@ -172,55 +211,21 @@ def sso_shell(
     Exec into a shell with appropriate AWS credentials for an account under SSO
     """
 
-    cache_dir = Path.home() / ".aws" / "sso" / "cache"
-    cache_files = list(cache_dir.glob("*.json"))
-
-    # Get the start_url of the profile
-    config_path = Path(os.environ.get("AWS_CONFIG_FILE", "~/.aws/config")).expanduser()
-    parser = configparser.ConfigParser()
-    parser.read(config_path)
-    profile_config = parser[f"profile {profile}"]
-    try:
-        sso_start_url = profile_config["sso_start_url"]
-    except KeyError:
-        sso_session_name = profile_config["sso_session"]
-        sso_session_config = parser[f"sso-session {sso_session_name}"]
-        sso_start_url = sso_session_config["sso_start_url"]
-
-    def needs_sso_login():
-        if not cache_files:
-            return True
-        latest_cache_file = max(cache_files, key=os.path.getctime)
-        try:
-            with open(latest_cache_file) as f:
-                data = json.load(f)
-            expires_at_str = data.get("expiresAt")
-            url = data.get("startUrl")
-            if url != sso_start_url:
-                return True
-            if not expires_at_str:
-                return True
-
-            # Verify if the cached token has expired
-            expires_at = datetime.fromisoformat(expires_at_str)
-            return datetime.now(expires_at.tzinfo) >= expires_at
-        except Exception:
-            return True
-
     # Get the access token from th cached file
-    if needs_sso_login():
+    cache_file = find_valid_cache_file(profile)
+    if cache_file is None:
         print_colour(
             "SSO token expired or missing. Running 'aws sso login'...", "yellow"
         )
         subprocess.check_call(["aws", "sso", "login", "--profile", profile])
         print_colour("Login complete")
 
-    if not cache_files:
-        print_colour("No SSO cache after login. Check SSO config.", "red")
-        return
+        cache_file = find_valid_cache_file(profile)
+        if cache_file is None:
+            print_colour("No SSO cache after login. Check SSO config.", "red")
+            return
 
-    latest_cache_file = max(cache_files, key=os.path.getctime)
-    with open(latest_cache_file) as f:
+    with open(cache_file) as f:
         data = json.load(f)
 
     access_token = data.get("accessToken", "")
