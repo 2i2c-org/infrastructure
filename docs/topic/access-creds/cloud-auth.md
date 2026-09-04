@@ -87,24 +87,32 @@ can be accessed from the terminal on your computer.
 
 ##### Programmatically
 
-1. Configure a SSO session, named 2i2c for example
-   ```bash
-   aws configure sso-session
-   ```
-   1. You will be presented with a prompt asking you info about this SSO session.
-      Each of the fields is required and should be chosen for your SSO app, e.g.:
-      - **SSO session name**: 2i2c
-      - **SSO start URL**: https://2i2c.awsapps.com/start#/
-      - **SSO region:** us-east-1 (this is where global SSO infra is located)
-   2. Get your creds using the deployer:
-   ```bash
-   deployer aws sso-shell 2i2c
-   ```
-   And then you'll be prompted to choose from a list of account names and a list of roles which one to authenticate against.
-3. Optionally, you can also run the deployer passing it all the info and an initial command to be run inside the shell
-   ```bash
-   deployer aws sso-shell 2i2c two-eye-two-see AdministratorAccess -- eksctl get cluster --region=us-west-2
-   ```
+You will need to set up an AWS _profile_ for each AWS account under a particular SSO portal.
+
+```bash
+aws configure sso
+```
+
+1. You will be presented with a prompt asking you for various SSO details. If you've run this step for another AWS account under this SSO provider, use **the same session name** and you'll be taken to step (2). Otherwise, fill in the following details.
+   - **SSO session name** — a unique name of the SSO session that provides access to this account. 
+   - **SSO start URL** — the SSO app URL, e.g. https://2i2c.awsapps.com/start#/
+   - **SSO region** — the region of the SSO, typically `us-east-1` 
+   - **SSO registration scopes** — leave default.
+2. Now grant access to the sign-in request launched by the application
+3. Select the appropriate AWS account from a list of available AWS accounts.
+4. Select the appropriate role. For accounts with a single role, this role will automatically be selected for you.
+5. Chose the default region. Unlike the SSO region, this is the CLI region of the account e.g. `us-west-2`
+6. Specify the CLI default format (or leave default)
+7. Name the profile. This should preferably match the account, e.g. `2i2c-sandbox`.
+
+Now that you've created a profile, test it by  your creds using the deployer:
+```bash
+deployer aws shell <PROFILE>
+```
+Optionally, you can also pass a single command to be run inside the shell
+```bash
+deployer aws shell <PROFILE> -- eksctl get cluster --region=us-west-2
+```
 
 ##### From the Web console
 
