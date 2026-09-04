@@ -64,7 +64,7 @@ def setup_aws_sts_env(profile, mfa_device_id, auth_token) -> dict[str, str]:
     return env
 
 
-def list_sso_accounts(profile, access_token):
+def list_sso_accounts(region, access_token):
     accounts_list_json = subprocess.check_output(
         [
             "aws",
@@ -72,8 +72,8 @@ def list_sso_accounts(profile, access_token):
             "list-accounts",
             "--access-token",
             access_token,
-            "--profile",
-            profile,
+            "--region",
+            region,
             "--output",
             "json",
         ]
@@ -85,7 +85,7 @@ def list_sso_accounts(profile, access_token):
     return {acc["accountName"]: acc["accountId"] for acc in accounts_list}
 
 
-def list_account_roles(profile, account_id, access_token):
+def list_account_roles(region, access_token, account_id):
     roles = json.loads(
         subprocess.check_output(
             [
@@ -96,8 +96,8 @@ def list_account_roles(profile, account_id, access_token):
                 access_token,
                 "--account-id",
                 account_id,
-                "--profile",
-                profile,
+                "--region",
+                region,
                 "--output",
                 "json",
             ]
@@ -106,7 +106,7 @@ def list_account_roles(profile, account_id, access_token):
     return {role["roleName"] for role in roles}
 
 
-def get_role_creds_as_env(profile, account_id, role, access_token):
+def get_role_creds_as_env(region, access_token, account_id, role):
     creds_json = subprocess.check_output(
         [
             "aws",
@@ -118,8 +118,8 @@ def get_role_creds_as_env(profile, account_id, role, access_token):
             role,
             "--access-token",
             access_token,
-            "--profile",
-            profile,
+            "--region",
+            region,
             "--output",
             "json",
         ]
@@ -229,12 +229,20 @@ def sso_shell(
     with open(cache_file) as f:
         data = json.load(f)
 
-    access_token = data.get("accessToken", "")
-    if not access_token:
+    try:
+        access_token = data["accessToken"]
+    except KeyError:
         print_colour("Token is missing from the cache file. Aborting...", "red")
+        return
+
+    try:
+        region = data["region"]
+    except KeyError:
+        print_colour("Region is missing from the cache file. Aborting...", "red")
+        return
 
     # Resolve account name to ID
-    accounts = list_sso_accounts(profile, access_token)
+    accounts = list_sso_accounts(region, access_token)
     if not account_name:
         account_name = Prompt.ask(
             ":point_right: What account name do you want to access?",
@@ -251,7 +259,7 @@ def sso_shell(
     account_id = accounts[account_name]
     print_colour(f"Resolved '{account_name}' to account ID {account_id}")
 
-    roles = list_account_roles(profile, account_id, access_token)
+    roles = list_account_roles(region, access_token, account_id)
     if not role:
         role = Prompt.ask(
             f":point_right: What role do you want to assume in {account_name}",
@@ -262,7 +270,7 @@ def sso_shell(
     print_colour(
         f"Fetching credentials for account {account_id}, role {role}...", "yellow"
     )
-    env = get_role_creds_as_env(profile, account_id, role, access_token)
+    env = get_role_creds_as_env(region, access_token, account_id, role)
 
     print_colour(
         f"✅ New shell ready for account {account_name}:{account_id}, role {role}"
