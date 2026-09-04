@@ -35,7 +35,7 @@ app.add_typer(
 class STSEnvSetupError(RuntimeError): ...
 
 
-def setup_aws_sts_env(profile, mfa_arn, mfa_code) -> dict[str, str]:
+def setup_aws_sts_env(profile: str, mfa_arn: str, mfa_code: str) -> dict[str, str]:
     env = os.environ | {
         "AWS_ACCESS_KEY_ID": "",
         "AWS_SECRET_ACCESS_KEY": "",
@@ -51,7 +51,7 @@ def setup_aws_sts_env(profile, mfa_arn, mfa_code) -> dict[str, str]:
                 "--serial-number",
                 mfa_arn,
                 "--token-code",
-                str(mfa_code),
+                mfa_code,
                 "--profile",
                 profile,
             ],
