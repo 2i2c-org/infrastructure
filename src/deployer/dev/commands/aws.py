@@ -35,23 +35,23 @@ app.add_typer(
 class STSEnvSetupError(RuntimeError): ...
 
 
-def setup_aws_sts_env(profile, mfa_device_id, auth_token) -> dict[str, str]:
+def setup_aws_sts_env(profile, mfa_arn, mfa_code) -> dict[str, str]:
     env = os.environ | {
         "AWS_ACCESS_KEY_ID": "",
         "AWS_SECRET_ACCESS_KEY": "",
         "AWS_SESSION_TOKEN": "",
         "AWS_PROFILE": profile,
     }
-    if mfa_device_id and auth_token:
+    if mfa_arn and mfa_code:
         result = subprocess.run(
             [
                 "aws",
                 "sts",
                 "get-session-token",
                 "--serial-number",
-                mfa_device_id,
+                mfa_arn,
                 "--token-code",
-                str(auth_token),
+                str(mfa_code),
                 "--profile",
                 profile,
             ],
@@ -117,11 +117,11 @@ def setup_aws_sts_env(profile, mfa_device_id, auth_token) -> dict[str, str]:
 def shell(
     ctx: typer.Context,
     profile: str = typer.Argument(..., help="Name of AWS profile to operate on"),
-    mfa_device_id: str = typer.Argument(
+    mfa_arn: str = typer.Option(
         None,
         help="Full ARN of MFA Device the code is from (leave empty if not using MFA, e.g if using SSO)",
     ),
-    auth_token: str = typer.Argument(
+    mfa_code: str = typer.Option(
         None,
         help="6 digit 2 factor authentication code from the MFA device (leave empty if not using MFA)",
     ),
@@ -130,7 +130,7 @@ def shell(
     Exec into a shell with appropriate AWS credentials (including MFA)
     """
     try:
-        env = setup_aws_sts_env(profile, mfa_device_id, auth_token)
+        env = setup_aws_sts_env(profile, mfa_arn, mfa_code)
     except STSEnvSetupError as err:
         raise SystemExit(*err.args)
 
