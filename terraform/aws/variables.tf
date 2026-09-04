@@ -24,6 +24,8 @@ variable "user_buckets" {
     object({
       delete_after : optional(number, null),
       archival_storageclass_after : optional(number, null),
+      extra_read_only_principals : optional(list(string), []),
+      extra_full_principals : optional(list(string), []),
       tags : optional(map(string), {}),
     })
   )
@@ -41,7 +43,11 @@ variable "user_buckets" {
   2. `archival_storageclass_after` - number of days after *creation* an
      object in this bucket will be automatically transitioned to a cheaper,
      slower storageclass for cost savings. Set to null to not transition.
-  3. `tags` - bucket specific tags to be merged into the general tags variable.
+  3. `extra_read_only_principals` - optional AWS IAM principals that are 
+     granted RO access to the bucket.
+  4. `extra_full_principals` - optional AWS IAM principals that are 
+     granted full RW access to the bucket.
+  5. `tags` - bucket specific tags to be merged into the general tags variable.
   EOT
 }
 

@@ -57,14 +57,42 @@ locals {
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document
 data "aws_iam_policy_document" "bucket_access" {
   for_each = { for bp in local.bucket_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
+
+  # Read only
+  dynamic "statement" {
+    for_each = length(var.user_buckets[each.value.bucket_name].extra_read_only_principals) == 0 ? [] : [1]
+    content {
+      effect = "Allow"
+      actions = [
+        "s3:Get*",
+        "s3:List*",
+        "s3:Describe*",
+        "s3-object-lambda:Get*",
+        "s3-object-lambda:List*"
+      ]
+      principals {
+        type        = "AWS"
+        identifiers = var.user_buckets[each.value.bucket_name].extra_read_only_principals
+      }
+      resources = [
+        # Grant access only to the bucket and its contents
+        aws_s3_bucket.user_buckets[each.value.bucket_name].arn,
+        "${aws_s3_bucket.user_buckets[each.value.bucket_name].arn}/*"
+      ]
+    }
+  }
+
   statement {
     effect  = "Allow"
     actions = ["s3:*"]
     principals {
       type = "AWS"
-      identifiers = [
+      identifiers = concat([
         aws_iam_role.irsa_role[each.value.hub_name].arn
-      ]
+        ],
+        var.user_buckets[each.value.bucket_name].extra_full_principals
+
+      )
     }
     resources = [
       # Grant access only to the bucket and its contents

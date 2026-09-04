@@ -13,6 +13,7 @@ user_buckets = {
   },
   "scratch" : {
     "delete_after" : 7,
+    "extra_read_only_principals" : ["arn:aws:iam::916098889494:role/maap-staging", "arn:aws:iam::916098889494:role/maap-prod"],
     "tags" : { "2i2c:hub-name" : "prod" },
   },
   "scratch-binder" : {
