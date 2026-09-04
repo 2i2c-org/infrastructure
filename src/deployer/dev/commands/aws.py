@@ -9,141 +9,119 @@ Google Cloud's `gcloud` is more user friendly than AWS's `aws`,
 so we have some augmented methods here primarily for AWS use.
 """
 
-import configparser
 import json
 import os
+import re
 import secrets
 import string
 import subprocess
 import tempfile
 import textwrap
-from datetime import datetime
-from pathlib import Path
 
 import typer
-from rich.prompt import Prompt
 
-from deployer.dev.app import exec_app
+from deployer.dev.app import CLOUD, app
 from deployer.utils.rendering import print_colour
 
 aws = typer.Typer(pretty_exceptions_show_locals=False)
-exec_app.add_typer(
+app.add_typer(
     aws,
     name="aws",
-    help="Helper methods for commandline access to AWS.",
+    rich_help_panel=CLOUD,
+    help="AWS helpers.",
 )
 
 
-def setup_aws_sts_env(profile, mfa_device_id, auth_token) -> dict[str, str]:
+class STSEnvSetupError(RuntimeError): ...
+
+
+def setup_aws_sts_env(profile: str, mfa_arn: str, mfa_code: str) -> dict[str, str]:
     env = os.environ | {
         "AWS_ACCESS_KEY_ID": "",
         "AWS_SECRET_ACCESS_KEY": "",
         "AWS_SESSION_TOKEN": "",
         "AWS_PROFILE": profile,
     }
-    if mfa_device_id and auth_token:
-        creds = json.loads(
-            subprocess.check_output(
-                [
-                    "aws",
-                    "sts",
-                    "get-session-token",
-                    "--serial-number",
-                    mfa_device_id,
-                    "--token-code",
-                    str(auth_token),
-                    "--profile",
-                    profile,
-                ]
-            ).decode()
+    if mfa_arn and mfa_code:
+        result = subprocess.run(
+            [
+                "aws",
+                "sts",
+                "get-session-token",
+                "--serial-number",
+                mfa_arn,
+                "--token-code",
+                mfa_code,
+                "--profile",
+                profile,
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
         )
+        if result.returncode:
+            raise STSEnvSetupError(result.stderr)
+
+        creds = json.loads(result.stdout)
         env["AWS_ACCESS_KEY_ID"] = creds["Credentials"]["AccessKeyId"]
         env["AWS_SECRET_ACCESS_KEY"] = creds["Credentials"]["SecretAccessKey"]
         env["AWS_SESSION_TOKEN"] = creds["Credentials"]["SessionToken"]
+        return env
+
+    # Help caller by checking the session is valid
+    result = subprocess.run(
+        ["aws", "sts", "get-caller-identity", "--profile", profile],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    # Valid login
+    if not result.returncode:
+        return env
+
+    # Not an SSO log-in problem, throw an error
+    if not re.search(
+        r"Error loading SSO Token|SSO session associated with this profile has expired or is otherwise invalid",
+        result.stderr,
+    ):
+        raise STSEnvSetupError(result.stderr)
+
+    # SSO log-in problem, try and log-in
+    result = subprocess.run(
+        ["aws", "sso", "login", "--profile", profile],
+        text=True,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode:
+        raise STSEnvSetupError(result.stderr)
+
+    # Ensure log-in is valid (log-in does not test SSO role)
+    result = subprocess.run(
+        ["aws", "sts", "get-caller-identity", "--profile", profile],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode:
+        raise STSEnvSetupError(result.stderr)
+
+    # Successful login
     return env
 
 
-def list_sso_accounts(profile, access_token):
-    accounts_list_json = subprocess.check_output(
-        [
-            "aws",
-            "sso",
-            "list-accounts",
-            "--access-token",
-            access_token,
-            "--profile",
-            profile,
-            "--output",
-            "json",
-        ]
-    )
-
-    accounts_list = json.loads(accounts_list_json).get("accountList", "")
-    if not accounts_list:
-        print_colour("No accountList in aws response. Aborting...", "red")
-    return {acc["accountName"]: acc["accountId"] for acc in accounts_list}
+# Invalid login without SSO
 
 
-def list_account_roles(profile, account_id, access_token):
-    roles = json.loads(
-        subprocess.check_output(
-            [
-                "aws",
-                "sso",
-                "list-account-roles",
-                "--access-token",
-                access_token,
-                "--account-id",
-                account_id,
-                "--profile",
-                profile,
-                "--output",
-                "json",
-            ]
-        )
-    ).get("roleList", "")
-    return {role["roleName"] for role in roles}
-
-
-def get_role_creds_as_env(profile, account_id, role, access_token):
-    creds_json = subprocess.check_output(
-        [
-            "aws",
-            "sso",
-            "get-role-credentials",
-            "--account-id",
-            account_id,
-            "--role-name",
-            role,
-            "--access-token",
-            access_token,
-            "--profile",
-            profile,
-            "--output",
-            "json",
-        ]
-    )
-
-    creds = json.loads(creds_json).get("roleCredentials", "")
-    if not creds:
-        print_colour("No role credentials in aws response. Aborting...", "red")
-        return
-
-    return os.environ | {
-        "AWS_ACCESS_KEY_ID": creds["accessKeyId"],
-        "AWS_SECRET_ACCESS_KEY": creds["secretAccessKey"],
-        "AWS_SESSION_TOKEN": creds["sessionToken"],
-    }
-
-
-@aws.command()
+@aws.command(context_settings={"allow_extra_args": True})
 def shell(
+    ctx: typer.Context,
     profile: str = typer.Argument(..., help="Name of AWS profile to operate on"),
-    mfa_device_id: str = typer.Argument(
+    mfa_arn: str = typer.Option(
         None,
-        help="Full ARN of MFA Device the code is from (leave empty if not using MFA)",
+        help="Full ARN of MFA Device the code is from (leave empty if not using MFA, e.g if using SSO)",
     ),
-    auth_token: str = typer.Argument(
+    mfa_code: str = typer.Option(
         None,
         help="6 digit 2 factor authentication code from the MFA device (leave empty if not using MFA)",
     ),
@@ -151,119 +129,10 @@ def shell(
     """
     Exec into a shell with appropriate AWS credentials (including MFA)
     """
-
-    subprocess.check_call(
-        [os.environ["SHELL"], "-l"],
-        env=setup_aws_sts_env(profile, mfa_device_id, auth_token),
-    )
-
-
-@aws.command(context_settings={"allow_extra_args": True})
-def sso_shell(
-    ctx: typer.Context,
-    profile: str = typer.Argument(..., help="Name of AWS SSO profile to login into"),
-    account_name: str = typer.Argument(
-        "",
-        help="The name of the account under SSO that you want to login into",
-    ),
-    role: str = typer.Argument("", help="What role to assume"),
-):
-    """
-    Exec into a shell with appropriate AWS credentials for an account under SSO
-    """
-
-    cache_dir = Path.home() / ".aws" / "sso" / "cache"
-    cache_files = list(cache_dir.glob("*.json"))
-
-    # Get the start_url of the profile
-    config_path = Path(os.environ.get("AWS_CONFIG_FILE", "~/.aws/config")).expanduser()
-    parser = configparser.ConfigParser()
-    parser.read(config_path)
-    profile_config = parser[f"profile {profile}"]
     try:
-        sso_start_url = profile_config["sso_start_url"]
-    except KeyError:
-        sso_session_name = profile_config["sso_session"]
-        sso_session_config = parser[f"sso-session {sso_session_name}"]
-        sso_start_url = sso_session_config["sso_start_url"]
-
-    def needs_sso_login():
-        if not cache_files:
-            return True
-        latest_cache_file = max(cache_files, key=os.path.getctime)
-        try:
-            with open(latest_cache_file) as f:
-                data = json.load(f)
-            expires_at_str = data.get("expiresAt")
-            url = data.get("startUrl")
-            if url != sso_start_url:
-                return True
-            if not expires_at_str:
-                return True
-
-            # Verify if the cached token has expired
-            expires_at = datetime.fromisoformat(expires_at_str)
-            return datetime.now(expires_at.tzinfo) >= expires_at
-        except Exception:
-            return True
-
-    # Get the access token from th cached file
-    if needs_sso_login():
-        print_colour(
-            "SSO token expired or missing. Running 'aws sso login'...", "yellow"
-        )
-        subprocess.check_call(["aws", "sso", "login", "--profile", profile])
-        print_colour("Login complete")
-
-    if not cache_files:
-        print_colour("No SSO cache after login. Check SSO config.", "red")
-        return
-
-    latest_cache_file = max(cache_files, key=os.path.getctime)
-    with open(latest_cache_file) as f:
-        data = json.load(f)
-
-    access_token = data.get("accessToken", "")
-    if not access_token:
-        print_colour("Token is missing from the cache file. Aborting...", "red")
-
-    # Resolve account name to ID
-    accounts = list_sso_accounts(profile, access_token)
-    if not account_name:
-        account_name = Prompt.ask(
-            ":point_right: What account name do you want to access?",
-            choices=accounts.keys(),
-        )
-
-    if account_name not in accounts:
-        print_colour(
-            f"Account '{account_name}' not found. Available: {list(accounts.keys())}",
-            "yellow",
-        )
-        return
-
-    account_id = accounts[account_name]
-    print_colour(f"Resolved '{account_name}' to account ID {account_id}")
-
-    roles = list_account_roles(profile, account_id, access_token)
-    if not role:
-        role = Prompt.ask(
-            f":point_right: What role do you want to assume in {account_name}",
-            choices=roles,
-        )
-
-    # Get role credentials
-    print_colour(
-        f"Fetching credentials for account {account_id}, role {role}...", "yellow"
-    )
-    env = get_role_creds_as_env(profile, account_id, role, access_token)
-
-    print_colour(
-        f"✅ New shell ready for account {account_name}:{account_id}, role {role}"
-    )
-    print_colour(
-        "💡 Run 'eksctl get cluster --region=<cluster_region>' to verify", "yellow"
-    )
+        env = setup_aws_sts_env(profile, mfa_arn, mfa_code)
+    except STSEnvSetupError as err:
+        raise SystemExit(*err.args)
 
     args = [os.environ["SHELL"], "-l"]
     if ctx.args:

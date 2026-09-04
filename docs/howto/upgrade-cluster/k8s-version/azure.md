@@ -13,7 +13,7 @@ terraform plan projects/$CLUSTER_NAME.tfvars
 ```
 prefix the command with the following deployer command:
 ```bash
-deployer exec az with-storage-rule \
+deployer az with-storage-rule \
   <SHARE-NAME> <IP-ADDRESS> -- \
   terraform plan projects/$CLUSTER_NAME.tfvars
 ```

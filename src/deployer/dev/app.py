@@ -2,8 +2,9 @@ import typer
 
 from deployer.app import app
 
-# Category for local developmen tools
+# Category for local development tools
 DEVELOPMENT = "Development"
+CLOUD = "Cloud"
 
 
 generate_app = typer.Typer(pretty_exceptions_show_locals=False)

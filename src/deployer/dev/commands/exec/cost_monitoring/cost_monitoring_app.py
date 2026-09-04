@@ -11,7 +11,7 @@ from yarl import URL
 
 from deployer.commands.validate.config import cluster_config as validate_cluster_config
 from deployer.dev.app import exec_app
-from deployer.dev.commands.exec.aws.aws_app import setup_aws_sts_env
+from deployer.dev.commands.aws import setup_aws_sts_env
 from deployer.infra_components.cluster import Cluster
 
 cost_monitoring = typer.Typer(pretty_exceptions_show_locals=False)
@@ -125,11 +125,11 @@ def query(cluster_name: str, subpath: str, verbose: bool = True):
 @cost_monitoring.command()
 def list_active_tags(
     cluster_name: str = typer.Argument(help="Name of cluster/AWS profile."),
-    mfa_device_id: str = typer.Argument(
+    mfa_arn: str = typer.Option(
         None,
         help="Full ARN of MFA Device the code is from (leave empty if not using MFA)",
     ),
-    auth_token: str = typer.Argument(
+    mfa_code: str = typer.Option(
         None,
         help="6 digit 2 factor authentication code from the MFA device (leave empty if not using MFA)",
     ),
@@ -144,7 +144,8 @@ def list_active_tags(
         raise ValueError(
             f"'{cluster_name}' is not on AWS, therefore the cost monitoring service is unavailable for this cluster at this time."
         )
-    env = setup_aws_sts_env(cluster_name, mfa_device_id, auth_token)
-    subprocess.run(
-        ["aws", "ce", "list-cost-allocation-tags", "--status=Active"], env=env
+    env = setup_aws_sts_env(cluster_name, mfa_arn, mfa_code)
+    subprocess.check_call(
+        ["aws", "ce", "list-cost-allocation-tags", "--status=Active"],
+        env=env,
     )
