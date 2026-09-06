@@ -38,6 +38,8 @@ jupyterhub:
               username_claim: email
             allowed_domains:
             - gapps.smc.edu
+            - smc.edu
+            - student.smc.edu
       Authenticator:
         admin_users:
         - sean.smorris@berkeley.edu
