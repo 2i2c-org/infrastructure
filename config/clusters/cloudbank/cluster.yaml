@@ -171,6 +171,16 @@ hubs:
   - enc-common.secret.values.yaml
   - csm.values.yaml
   - enc-csm.secret.values.yaml
+- name: csusm
+  display_name: California State University, San Marcos
+  domain: csusm.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
+  - csusm.values.yaml
+  - enc-csusm.secret.values.yaml
 - name: deanza
   display_name: DeAnza College
   domain: deanza.cloudbank.2i2c.cloud
