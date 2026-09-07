@@ -20,7 +20,7 @@ jupyterhub:
       enabled: true
 
     extraImages:
-      # Keep up to date with the init container used for pulling in docs, under initContainers
+      # Keep up to date with the container used for pulling in docs, under extraContainers
       nbgitpuller:
         name: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init
         tag: 97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -96,14 +96,14 @@ jupyterhub:
           # For our deployment-service-check health check user, there is no auth_state.
           if auth_state:
             pgt = f"jwt:{auth_state.get('id_token', '')}"
-            
+
             spawner.environment.update({
               "MAAP_PGT": pgt,
               "KC_ACCESS_TOKEN": auth_state.get("access_token", ""),
               "KC_ID_TOKEN": auth_state.get("id_token", ""),
               "KC_REFRESH_TOKEN": auth_state.get("refresh_token", "")
             })
-            
+
             # Inject MAAP_PGT into the s3fs sidecar container
             for container in spawner.extra_containers:
               if container.get("name") == "s3fs":
@@ -207,22 +207,6 @@ jupyterhub:
           subPath: my-team-buckets
           mountPropagation: HostToContainer
           readOnly: false
-    initContainers:
-    - name: jupyterhub-gitpuller-init
-      # Keep this up to date with `prePuller.extraImages`
-      image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-      env:
-      - name: TARGET_PATH
-        value: veda-docs
-      - name: SOURCE_REPO
-        value: https://github.com/NASA-IMPACT/veda-docs
-      volumeMounts:
-      - name: home
-        mountPath: /home/jovyan
-        subPath: '{escaped_username}'
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
     extraContainers:
     - name: s3fs
       image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
@@ -259,6 +243,40 @@ jupyterhub:
         mountPath: /my-team-buckets
         subPath: my-team-buckets
         mountPropagation: Bidirectional
+    # Running gitpuller as a regular container rather than an init container
+    # so that neither its image pull nor the repo pull blocks the notebook
+    # container from starting.
+    - name: jupyterhub-gitpuller-init
+      # Keep this up to date with `prePuller.extraImages`
+      image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+      # The image's CMD clones and then exits 0, which is correct for an init
+      # container but not here. We're adding `sleep infinity` to run indefinitely
+      command:
+      - /bin/bash
+      - -c
+      - |
+        bash /opt/k8s-init-gitpuller.sh
+        exec sleep infinity
+      resources:
+        limits:
+          memory: 256Mi
+          cpu: 0.5
+        requests:
+          # set some tiny requests
+          memory: 32Mi
+          cpu: 0.01
+      env:
+      - name: TARGET_PATH
+        value: veda-docs
+      - name: SOURCE_REPO
+        value: https://github.com/NASA-IMPACT/veda-docs
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
 
   scheduling:
     userScheduler:
