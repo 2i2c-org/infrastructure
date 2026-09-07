@@ -34,7 +34,7 @@ The tool prints a distribution of where boot time goes. The components are:
 
     total: the total boot time
     node_wait: time waiting for the node to be ready
-    image_pull: time pulling the Docker image
+    image_pull: time pulling images, including time queued behind other pulls
     other: everything else
 
 
@@ -101,6 +101,7 @@ progress line so a long scan doesn't look hung. Raise it for a 30-day pull
 (e.g. `--hours 720 --concurrency 8`), lower it if we hit throttling.
 """
 
+import contextlib
 import csv
 import json
 import re
@@ -262,21 +263,19 @@ def event_time(event):
     answer. `eventTime` comes first because it is a single occurrence with
     microseconds; for a series event it is also the first observation.
     """
-    for key in ("eventTime", "firstTimestamp", "lastTimestamp"):
-        value = event.get(key)
-        if value:
-            # Kubernetes uses RFC3339 with a trailing Z, and eventTime carries
-            # microseconds.
-            try:
-                return datetime.fromisoformat(value.replace("Z", "+00:00"))
-            except ValueError:
-                continue
-    creation = event.get("metadata", {}).get("creationTimestamp")
-    if creation:
+    candidates = [
+        event.get(key) for key in ("eventTime", "firstTimestamp", "lastTimestamp")
+    ]
+    candidates.append(event.get("metadata", {}).get("creationTimestamp"))
+    for value in candidates:
+        if not value:
+            continue
+        # Kubernetes uses RFC3339 with a trailing Z, and eventTime carries
+        # microseconds.
         try:
-            return datetime.fromisoformat(creation.replace("Z", "+00:00"))
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
         except ValueError:
-            pass
+            continue
     return None
 
 
@@ -321,6 +320,20 @@ def spawn_key(event):
     return f"{involved.get('namespace')}/{involved.get('name')}"
 
 
+def _union_seconds(intervals):
+    """Total seconds covered by (start, end) intervals, overlap counted once."""
+    total = 0.0
+    covered_to = None
+    for start, end in sorted(intervals):
+        if covered_to is None or start > covered_to:
+            total += (end - start).total_seconds()
+        elif end > covered_to:
+            total += (end - covered_to).total_seconds()
+        if covered_to is None or end > covered_to:
+            covered_to = end
+    return total
+
+
 def summarise_spawn(events):
     """Build one summary row from all the events for a single pod."""
     events = sorted(events, key=lambda e: e["_ts"])
@@ -358,16 +371,27 @@ def summarise_spawn(events):
             if match:
                 node = match.group("node")
         elif reason == "Pulled":
-            match = _PULLED_RE.search(message)
+            match = _PULLED_RE.search(message) or _CACHED_RE.search(message)
             if match:
-                duration = parse_go_duration(match.group("duration"))
-                size = match.group("size")
+                cached = "duration" not in match.groupdict()
+                duration = 0.0 if cached else parse_go_duration(match.group("duration"))
+                size = None if cached else match.group("size")
+                # kubelet serializes pulls by default and reports the queue
+                # time separately: "in 10s (1m50s including waiting)". The
+                # inclusive figure is how long the spawn actually waited.
+                waited = duration
+                if not cached and match.group("including_waiting"):
+                    waited = (
+                        parse_go_duration(match.group("including_waiting")) or duration
+                    )
                 pulls.append(
                     {
                         "image": match.group("image"),
-                        "duration_s": duration,
+                        "duration_s": (
+                            round(duration, 3) if duration is not None else None
+                        ),
                         "size_bytes": int(size) if size else None,
-                        "cached": False,
+                        "cached": cached,
                         # The event fires when the pull finishes, so we can
                         # recover the start even if we missed the Pulling event.
                         "finished_at": ts,
@@ -376,21 +400,9 @@ def summarise_spawn(events):
                             if duration is not None
                             else None
                         ),
+                        "_waited_s": waited,
                     }
                 )
-            else:
-                match = _CACHED_RE.search(message)
-                if match:
-                    pulls.append(
-                        {
-                            "image": match.group("image"),
-                            "duration_s": 0.0,
-                            "size_bytes": None,
-                            "cached": True,
-                            "finished_at": ts,
-                            "started_at": ts,
-                        }
-                    )
         elif reason == "Started":
             match = _STARTED_RE.search(message)
             container = match.group("container") if match else message
@@ -404,7 +416,15 @@ def summarise_spawn(events):
     for pull in pulls:
         pull["instance_type"] = instance_type
 
-    pull_total = sum(p["duration_s"] or 0.0 for p in pulls)
+    # Wall-clock time this spawn spent blocked on image pulls. Take the union
+    # of each pull's waiting-inclusive window rather than summing durations:
+    # bare durations would drop the pull-queue wait into `other`, while
+    # summing the inclusive figures would double count overlapping waits.
+    pull_total = _union_seconds(
+        (p["finished_at"] - timedelta(seconds=p["_waited_s"]), p["finished_at"])
+        for p in pulls
+        if p["_waited_s"]
+    )
     cold_pulls = [p for p in pulls if not p["cached"]]
 
     # Time from the pod first being noticed to it being placed on a node. When
@@ -449,6 +469,48 @@ def summarise_spawn(events):
     }
 
 
+def reconstruct_spawns(events, namespace=None):
+    """Filter, dedup, and group raw events into one summary row per spawn.
+
+    Returns (spawns, counts). `counts` carries the ingest diagnostics: "seen"
+    events fetched, "kept" after the user-pod/namespace filters, "duplicates"
+    dropped by dedup, and "pods" grouped into.
+    """
+    grouped = defaultdict(list)
+    counts = {"seen": 0, "kept": 0, "duplicates": 0}
+    seen_events = set()
+    for event in events:
+        counts["seen"] += 1
+        involved = event.get("involvedObject", {})
+        if not USER_POD_RE.match(involved.get("name") or ""):
+            continue
+        if namespace and involved.get("namespace") != namespace:
+            continue
+        counts["kept"] += 1
+        key = dedup_key(event)
+        if key in seen_events:
+            counts["duplicates"] += 1
+            continue
+        seen_events.add(key)
+        ts = event_time(event)
+        if ts is None:
+            continue
+        event["_ts"] = ts
+        grouped[spawn_key(event)].append(event)
+    counts["pods"] = len(grouped)
+
+    spawns = [summarise_spawn(evts) for evts in grouped.values()]
+    # Drop spawns we only caught part of. Without a Scheduled event
+    # (node_wait_s) and a first container start (total_s) both inside the
+    # window we can't say where the time went - and a truncated spawn, or an
+    # old pod restarting a container, would read as an implausibly fast boot.
+    spawns = [
+        s for s in spawns if s["total_s"] is not None and s["node_wait_s"] is not None
+    ]
+    spawns.sort(key=lambda s: s["started_at"] or "")
+    return spawns, counts
+
+
 def load_events_from_file(path):
     with open(path) as f:
         for line in f:
@@ -464,8 +526,6 @@ def cloudwatch_filter_pattern(namespace):
     scaling, both hub namespaces - and user server spawns are a small part of
     that. Selecting server-side means CloudWatch does the discarding, rather
     than us paging the whole group over the network to drop most of it.
-
-    Returns None if there is nothing to narrow by.
     """
     terms = ['$.involvedObject.name = "jupyter-*"']
     if namespace:
@@ -476,9 +536,9 @@ def cloudwatch_filter_pattern(namespace):
 def shard_bounds(start_ms, end_ms, k):
     """Split [start_ms, end_ms) into k contiguous, non-overlapping windows.
 
-    CloudWatch's startTime is inclusive and endTime exclusive, so contiguous
-    edges give an exact partition of the range - no duplicated or dropped
-    events at the seams.
+    CloudWatch treats both startTime and endTime as inclusive, so an event
+    stamped exactly on a shard edge can come back from two shards; the dedup
+    pass drops the extra copy.
     """
     step = (end_ms - start_ms) / k
     edges = [int(start_ms + i * step) for i in range(k)] + [end_ms]
@@ -512,71 +572,70 @@ def load_events_from_cloudwatch(
 
     The filter pattern makes CloudWatch scan the whole log group server-side, so
     a wide window is slow to first byte. Splitting the window into `concurrency`
-    shards fetched on separate threads scans smaller ranges in parallel, and a
-    progress line reports as each shard's pages arrive.
+    shards fetched on a thread pool scans smaller ranges in parallel, and a
+    progress line reports as each shard's pages arrive. An error in any shard -
+    throttling that outlasts boto3's retries, bad credentials, a wrong log
+    group - propagates to the caller instead of hanging the fetch.
     """
-    import queue
     import threading
     import time
+    from concurrent.futures import ThreadPoolExecutor
 
-    now_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
-    start_ms = int(
-        (datetime.now(timezone.utc) - timedelta(hours=hours)).timestamp() * 1000
-    )
+    now = datetime.now(timezone.utc)
+    end_ms = int(now.timestamp() * 1000)
+    start_ms = int((now - timedelta(hours=hours)).timestamp() * 1000)
     concurrency = max(1, concurrency)
-    bounds = shard_bounds(start_ms, now_ms, concurrency)
 
-    results = queue.Queue(maxsize=1000)
-    sentinel = object()
-    counters = {"events": 0, "shards_done": 0}
+    live = progress and sys.stderr.isatty()
+    started = time.monotonic()
+    counters = {"events": 0, "shards_done": 0, "last_print": 0.0}
     lock = threading.Lock()
+    # Lets an abandoned iterator (--inspect stops after one event) tell the
+    # workers to wind down at their next page boundary.
+    stop = threading.Event()
 
-    def worker(lo, hi):
+    def fetch_shard(bound):
         # A client per thread: boto3 clients aren't guaranteed thread-safe to
         # share, but one-per-thread is cheap and safe.
         import boto3
 
         client = boto3.client("logs", region_name=region)
-        kwargs = {"logGroupName": log_group, "startTime": lo, "endTime": hi}
+        kwargs = {"logGroupName": log_group, "startTime": bound[0], "endTime": bound[1]}
         if filter_pattern:
             kwargs["filterPattern"] = filter_pattern
-        paginator = client.get_paginator("filter_log_events")
-        for page in paginator.paginate(**kwargs):
-            batch = []
+        shard_events = []
+        for page in client.get_paginator("filter_log_events").paginate(**kwargs):
+            if stop.is_set():
+                break
+            batch = 0
             for entry in page.get("events", []):
                 try:
-                    batch.append(json.loads(entry["message"]))
+                    shard_events.append(json.loads(entry["message"]))
+                    batch += 1
                 except json.JSONDecodeError:
                     continue
-            if batch:
-                with lock:
-                    counters["events"] += len(batch)
-                results.put(batch)
+            with lock:
+                counters["events"] += batch
+                if live and (time.monotonic() - counters["last_print"]) > 0.25:
+                    counters["last_print"] = time.monotonic()
+                    _print_fetch_progress(counters, concurrency, started, live)
         with lock:
             counters["shards_done"] += 1
-        results.put(sentinel)
-
-    threads = [
-        threading.Thread(target=worker, args=(lo, hi), daemon=True) for lo, hi in bounds
-    ]
-    for t in threads:
-        t.start()
-
-    live = progress and sys.stderr.isatty()
-    started = time.monotonic()
-    last_print = 0.0
-    finished = 0
-    while finished < concurrency:
-        item = results.get()
-        if item is sentinel:
-            finished += 1
             if progress:
                 _print_fetch_progress(counters, concurrency, started, live)
-            continue
-        yield from item
-        if live and (time.monotonic() - last_print) > 0.25:
-            _print_fetch_progress(counters, concurrency, started, live)
-            last_print = time.monotonic()
+        return shard_events
+
+    pool = ThreadPoolExecutor(max_workers=concurrency)
+    try:
+        for shard_events in pool.map(
+            fetch_shard, shard_bounds(start_ms, end_ms, concurrency)
+        ):
+            yield from shard_events
+    finally:
+        # Set stop before waiting on the pool, so bailing out early doesn't
+        # sit through the remaining shards' full fetches.
+        stop.set()
+        pool.shutdown()
     if progress:
         _print_fetch_progress(counters, concurrency, started, live, final=True)
 
@@ -718,6 +777,21 @@ def _format_table(headers, rows):
     return "\n".join(line(row) for row in [headers] + rows)
 
 
+def write_csv(rows, fieldnames, path=None):
+    """Write dict rows as CSV to `path` (reported on stderr), or to stdout.
+
+    Extra keys on a row are ignored, so callers can pass richer dicts than the
+    columns they want written.
+    """
+    f = open(path, "w", newline="") if path else sys.stdout
+    with f if path else contextlib.nullcontext():
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
+    if path:
+        print(f"wrote {path}", file=sys.stderr)
+
+
 def report_stats(records, metric_names, group_by, percentiles, out_path):
     """Print the stats table(s) to stderr, and optionally write them as CSV.
 
@@ -752,13 +826,11 @@ def report_stats(records, metric_names, group_by, percentiles, out_path):
         print(_format_table(headers, table), file=sys.stderr)
 
     if out_path:
-        with open(out_path, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(["metric", "group"] + stat_cols)
-            for r in records:
-                group = "" if r["group"] is None else r["group"]
-                writer.writerow([r["metric"], group] + [r[c] for c in stat_cols])
-        print(f"wrote {out_path}", file=sys.stderr)
+        write_csv(
+            ({**r, "group": "" if r["group"] is None else r["group"]} for r in records),
+            ["metric", "group"] + stat_cols,
+            out_path,
+        )
 
 
 def collect_extremes(spawns, metric_names, n, where=()):
@@ -860,8 +932,10 @@ def resolve_stats_options(metric, group_by, percentiles, where):
             raise click.UsageError(
                 f"unknown --where key {key!r}; choose from {', '.join(WHERE_DIMS)}"
             )
+        # The key has to exist on every selected metric's rows, or it would
+        # silently filter one grain's rows down to nothing.
         key_grain = WHERE_DIMS[key][0]
-        if key_grain != "both" and key_grain not in metric_grains:
+        if key_grain != "both" and metric_grains != {key_grain}:
             raise click.UsageError(
                 f"--where {key} is a {key_grain}-level field but the selected "
                 f"metric(s) are {'/'.join(sorted(metric_grains))}-level"
@@ -995,48 +1069,23 @@ def main(
         print("No events found", file=sys.stderr)
         return
 
-    grouped = defaultdict(list)
-    total_seen = 0
-    seen_events = set()
-    duplicates = 0
-    for event in events:
-        total_seen += 1
-        involved = event.get("involvedObject", {})
-        name = involved.get("name") or ""
-        if not USER_POD_RE.match(name):
-            continue
-        if namespace and involved.get("namespace") != namespace:
-            continue
-        key = dedup_key(event)
-        if key in seen_events:
-            duplicates += 1
-            continue
-        seen_events.add(key)
-        ts = event_time(event)
-        if ts is None:
-            continue
-        event["_ts"] = ts
-        grouped[spawn_key(event)].append(event)
-
-    spawns = [summarise_spawn(evts) for evts in grouped.values()]
-    # Drop spawns we only caught the tail of - without a Scheduled event we
-    # can't say anything useful about where the time went.
-    spawns = [s for s in spawns if s["total_s"] is not None]
-    spawns.sort(key=lambda s: s["started_at"] or "")
+    spawns, counts = reconstruct_spawns(events, namespace)
 
     print(
-        f"{total_seen} events -> {len(grouped)} user pods -> {len(spawns)} complete spawns",
+        f"{counts['seen']} events -> {counts['pods']} user pods -> "
+        f"{len(spawns)} complete spawns",
         file=sys.stderr,
     )
-    if duplicates:
+    if counts["duplicates"]:
         print(
-            f"dropped {duplicates} duplicate events "
-            f"({duplicates / total_seen:.0%} of what we fetched). Around half "
+            f"dropped {counts['duplicates']} duplicate events "
+            f"({counts['duplicates'] / counts['kept']:.0%} of the user-pod "
+            f"events we fetched). Around half "
             f"means the collector is re-shipping: check that fluent-bit's "
             f"kubernetes_events input has DB set",
             file=sys.stderr,
         )
-    if total_seen == 0 and not from_file and not no_server_filter:
+    if counts["seen"] == 0 and not from_file and not no_server_filter:
         # A pattern that doesn't match the stored shape looks exactly like an
         # idle cluster, so say which one we can't tell apart.
         print(
@@ -1049,51 +1098,28 @@ def main(
         return
 
     columns = [c for c in spawns[0] if not c.startswith("_")]
-    if out:
-        with open(out, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=columns)
-            writer.writeheader()
-            for spawn in spawns:
-                writer.writerow({c: spawn[c] for c in columns})
-        print(f"wrote {out}", file=sys.stderr)
-    else:
-        writer = csv.DictWriter(sys.stdout, fieldnames=columns)
-        writer.writeheader()
-        for spawn in spawns:
-            writer.writerow({c: spawn[c] for c in columns})
+    write_csv(spawns, columns, out)
 
     if per_image:
-        with open(per_image, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(
-                [
-                    "pod",
-                    "started_at",
-                    "instance_type",
-                    "image",
-                    "duration_s",
-                    "size_bytes",
-                    "cached",
-                ]
-            )
-            for spawn in spawns:
-                for pull in spawn["_pulls"]:
-                    writer.writerow(
-                        [
-                            spawn["pod"],
-                            spawn["started_at"],
-                            spawn["instance_type"],
-                            pull["image"],
-                            (
-                                round(pull["duration_s"], 3)
-                                if pull["duration_s"] is not None
-                                else None
-                            ),
-                            pull["size_bytes"],
-                            pull["cached"],
-                        ]
-                    )
-        print(f"wrote {per_image}", file=sys.stderr)
+        write_csv(
+            (
+                # The pull's own started_at is a datetime; the CSV carries the
+                # spawn's ISO timestamp instead, like it does for spawn rows.
+                {**pull, "pod": spawn["pod"], "started_at": spawn["started_at"]}
+                for spawn in spawns
+                for pull in spawn["_pulls"]
+            ),
+            [
+                "pod",
+                "started_at",
+                "instance_type",
+                "image",
+                "duration_s",
+                "size_bytes",
+                "cached",
+            ],
+            per_image,
+        )
 
     # Everything above wrote out every spawn we reconstructed. What we
     # summarise below can be narrower, so an implausible row doesn't decide what
