@@ -304,7 +304,7 @@ persistent_disks = {
     name_suffix = "shasta"
   }
   "sierra" = {
-    size        = 20
+    size        = 30
     name_suffix = "sierra"
   }
   "sjcc" = {
@@ -450,7 +450,7 @@ notebook_nodes = {
     ],
   },
   "n2-highmem-4-a" : {
-    min : 16,
+    min : 2,
     max : 100,
     machine_type : "n2-highmem-4",
     disk_size_gb : 150,
