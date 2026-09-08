@@ -26,23 +26,19 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - ivytech.edu
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: email
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - ITCC-CloudBank-Access
+        scope:
+        - read:org
       Authenticator:
         admin_users:
-        - sean.smorris@berkeley.edu
-        - ericvd@berkeley.edu
-        - zwilson37@ivytech.edu
+        - sean-morris
+        - ericvd-ucb
+        # TODO: zwilson37@ivytech.edu — GitHub username needed. Under CILogon the
+        # admin list was email addresses; GitHub auth matches on GitHub handle, so
+        # this admin loses access until their handle is filled in.
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ivytech
