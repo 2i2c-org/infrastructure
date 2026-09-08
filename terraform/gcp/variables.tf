@@ -500,3 +500,12 @@ variable "enable_logging" {
   access policy.
   EOT
 }
+
+// https://github.com/2i2c-org/k8s-node-operator
+variable "enable_k8s_node_operator" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Conditionally enable k8s node operator to scale nodes ahead of time.
+  EOT
+}

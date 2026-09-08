@@ -505,3 +505,6 @@ dask_nodes = {
 }
 
 user_buckets = {}
+
+# Enable k8s-node-operator https://github.com/2i2c-org/k8s-node-operator
+enable_k8s_node_operator = true
