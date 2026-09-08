@@ -19,7 +19,7 @@ resource "google_project_iam_member" "node_operator_sa_roles" {
 resource "google_service_account_iam_binding" "node_operator_sa_binding" {
   count              = var.enable_k8s_node_operator ? 1 : 0
   service_account_id = google_service_account.node_operator_sa[count.index].name
-  role               = "roles/iam.serviceAccountUser"
+  role               = "roles/iam.workloadIdentityUser"
   members = [
     "serviceAccount:${var.project_id}.svc.id.goog[support/support-k8s-node-operator]"
   ]
