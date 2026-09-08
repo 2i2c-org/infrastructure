@@ -75,6 +75,10 @@ persistent_disks = {
     size        = 150
     name_suffix = "csm"
   }
+  "csusm" = {
+    size        = 25
+    name_suffix = "csusm"
+  }
   "deanza" = {
     size        = 60
     name_suffix = "deanza"
