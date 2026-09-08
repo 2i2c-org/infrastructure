@@ -36,9 +36,7 @@ jupyterhub:
         admin_users:
         - sean-morris
         - ericvd-ucb
-        # TODO: zwilson37@ivytech.edu — GitHub username needed. Under CILogon the
-        # admin list was email addresses; GitHub auth matches on GitHub handle, so
-        # this admin loses access until their handle is filled in.
+        - zachwilson-ivytech
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ivytech
