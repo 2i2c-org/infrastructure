@@ -68,8 +68,8 @@ dependencies:
     condition: fluent-bit.enabled
 
   # k8s-node-controller, scale k8s cluster ahead of time with plugins.
-  # https://github.com/2i2c-org/k8s-node-controller
-  - name: k8s-node-controller
-    version: "0.0.1-0.dev.git.23.h61dccbd"
-    repository: https://2i2c.org/k8s-node-controller/
-    condition: k8s-node-controller.enabled
+  # https://github.com/2i2c-org/k8s-node-operator
+  - name: k8s-node-operator
+    version: "0.0.1-0.dev.git.52.hd0e1917"
+    repository: https://2i2c.org/k8s-node-operator/
+    condition: k8s-node-operator.enabled
