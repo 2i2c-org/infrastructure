@@ -31,3 +31,20 @@ grafana:
     - secretName: grafana-tls
       hosts:
       - grafana.cloudbank.2i2c.cloud
+
+k8s-node-operator:
+  enabled: true
+  extraEnv:
+  - name: GCP_CLUSTER
+    value: cb-cluster
+  - name: GCP_MACHINE_TYPE
+    value: e2-medium
+  - name: GCP_PROJECT_ID
+    value: cb-1003-1696
+  - name: GCP_ZONE
+    value: us-central1-b
+  - name: GCP_NODEPOOL
+    value: test-pool
+  serviceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: cb-node-operator@cb-1003-1696.iam.gserviceaccount.com

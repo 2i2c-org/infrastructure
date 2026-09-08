@@ -516,6 +516,9 @@ fluent-bit:
     - name: state
       mountPath: /var/lib/fluent-bit
 
+k8s-node-operator:
+  enabled: false
+
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
 #

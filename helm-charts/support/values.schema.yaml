@@ -16,7 +16,7 @@ required:
   - disableCoredumps
   - global
   - fluent-bit
-  - k8s-node-controller
+  - k8s-node-operator
 properties:
   # We don't control validation of dependent charts here
   cluster-autoscaler:
@@ -46,7 +46,7 @@ properties:
   fluent-bit:
     type: object
     additionalProperties: true
-  k8s-node-controller:
+  k8s-node-operator:
     type: object
     additionalProperties: true
 
