@@ -70,6 +70,6 @@ dependencies:
   # k8s-node-controller, scale k8s cluster ahead of time with plugins.
   # https://github.com/2i2c-org/k8s-node-operator
   - name: k8s-node-operator
-    version: "0.0.1-0.dev.git.52.hd0e1917"
+    version: "0.0.1-0.dev.git.54.h9080f36"
     repository: https://2i2c.org/k8s-node-operator/
     condition: k8s-node-operator.enabled
