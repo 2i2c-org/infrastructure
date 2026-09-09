@@ -46,6 +46,23 @@ def get_chart_yaml_filepath(hub):
     return chart_override_path
 
 
+def turn_data_into_table(title, columns, highlight_idx, threshold, data):
+    table = Table(title=title, header_style="bold cyan")
+
+    for idx, col in enumerate(columns):
+        if idx != highlight_idx:
+            table.add_column(col, style="white", no_wrap=True)
+        else:
+            table.add_column(col, style="green", justify="right")
+
+    for cluster, hubs in sorted(data.items()):
+        for hub, version in sorted(hubs.items()):
+            version_style = "bold yellow" if version != threshold else "green"
+            table.add_row(cluster, hub, f"[{version_style}]{version}[/]")
+
+    return table
+
+
 @progress_matrix_app.command()
 def get_z2jh_version(
     cluster_name: str = typer.Argument(None, help="Name of cluster to operate on"),
@@ -53,7 +70,7 @@ def get_z2jh_version(
         None,
         help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
     ),
-    threshold: str = typer.Argument(
+    threshold: str = typer.Option(
         None,
         help="Versions different than this will be highlighted",
     ),
@@ -64,8 +81,8 @@ def get_z2jh_version(
     z2jh_version = {}
 
     for c_name in clusters:
-        z2jh_version[c_name] = {}
         try:
+            z2jh_version[c_name] = {}
             cluster = Cluster.from_name(c_name)
             hubs = cluster.hubs
             if hub_name:
@@ -78,16 +95,14 @@ def get_z2jh_version(
         except FileNotFoundError:
             continue
 
-    table = Table(title="Z2JH versions", header_style="bold cyan")
-    table.add_column("Cluster", style="white", no_wrap=True)
-    table.add_column("Hub", style="white", no_wrap=True)
-    table.add_column("Z2JH version", style="green", justify="right")
-
-    for cluster, hubs in sorted(z2jh_version.items()):
-        for hub, version in sorted(hubs.items()):
-            # Highlight non-standard versions
-            version_style = "bold yellow" if version != threshold else "green"
-            table.add_row(cluster, hub, f"[{version_style}]{version}[/]")
+    columns = ["Cluster", "Hub", "Z2JH version"]
+    table = turn_data_into_table(
+        title="Z2JH versions",
+        columns=columns,
+        highlight_idx=3,
+        threshold=threshold,
+        data=z2jh_version,
+    )
 
     console.print(table)
     return z2jh_version
