@@ -49,5 +49,6 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   singleuser:
+    profileList: {}
     extraEnv:
       SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-staging/$(JUPYTERHUB_USER)
