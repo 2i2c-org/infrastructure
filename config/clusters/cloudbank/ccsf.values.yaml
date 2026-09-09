@@ -7,7 +7,7 @@ jupyterhub:
       limit: 1.5G
     image:
       name: quay.io/ccsf/jupyterhub
-      tag: fa26.1
+      tag: fa26.2
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -15,9 +15,9 @@ jupyterhub:
     homepage:
       templateVars:
         org:
-          name: City College San Francisco
+          name: City College of San Francisco
           logo_url: https://www.ccsf.edu/sites/default/files/inline-images/CCSF%20LOGO.png
-          url: https://www.ccsf.edu/
+          url: https://ccsf-math.github.io/jupyterhub/
         designed_by:
           name: 2i2c
           url: https://2i2c.org
