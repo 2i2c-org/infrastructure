@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+from typing import Any
 
 import typer
 from rich.console import Console
@@ -15,21 +17,20 @@ from deployer.utils.file_acquisition import (
 from .progress_matrix_app import progress_matrix_app
 
 yaml = YAML(typ="safe", pure=True)
-
 console = Console()
 
 
-def determine_dask_z2jh_version(chart_file):
+def determine_dask_z2jh_version(chart_file: Path) -> str | None:
     # Function to determine what z2jh version
     # a hub is deploying
     with open(chart_file, "r+") as f:
         config = yaml.load(f)
         for dep in config["dependencies"]:
-            if dep["name"] == "jupyterhub":
-                return dep["version"]
+            if dep.get("name", "") == "jupyterhub":
+                return dep.get("version")
 
 
-def get_chart_yaml_filepath(hub):
+def get_chart_yaml_filepath(hub) -> Path | None:
     chart_override = hub.spec.get("chart_override", None)
     if chart_override:
         if "/" in chart_override:
@@ -46,7 +47,7 @@ def get_chart_yaml_filepath(hub):
     return chart_override_path
 
 
-def turn_data_into_table(title, columns, highlight_idx, threshold, data):
+def turn_data_into_table(title, columns, highlight_idx, threshold, data) -> Any:
     table = Table(title=title, header_style="bold cyan")
 
     for idx, col in enumerate(columns):
@@ -74,7 +75,7 @@ def get_z2jh_version(
         None,
         help="Versions different than this will be highlighted",
     ),
-):
+) -> dict:
     clusters = os.listdir(CONFIG_CLUSTERS_PATH)
     if cluster_name:
         clusters = [cluster_name]
