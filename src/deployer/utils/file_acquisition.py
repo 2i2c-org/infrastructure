@@ -208,21 +208,3 @@ def get_cluster_names_list():
         for d, _, _ in os.walk(CONFIG_CLUSTERS_PATH)
         if "templates" not in d
     ]
-
-
-def get_config(values_files_list, config_dir, config_key, legacy_daskhub):
-    # config_key is of form "jupyterhub.hub.config"
-    keys = config_key.split(".")
-
-    for values_file_name in values_files_list:
-        if "secret" not in os.path.basename(values_file_name):
-            values_file = config_dir / values_file_name
-            config = yaml.load(values_file)
-            if legacy_daskhub:
-                config = config.get("basehub", {})
-
-            for key in keys:
-                new_config = config.get(key, {})
-                config = new_config
-
-            return config

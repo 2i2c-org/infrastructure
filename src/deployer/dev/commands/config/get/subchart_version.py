@@ -14,7 +14,7 @@ from deployer.utils.file_acquisition import (
     REPO_ROOT_PATH,
 )
 
-from .progress_matrix_app import progress_matrix_app
+from .app import get_app
 
 yaml = YAML(typ="safe", pure=True)
 console = Console()
@@ -64,8 +64,8 @@ def turn_data_into_table(title, columns, highlight_idx, threshold, data) -> Any:
     return table
 
 
-@progress_matrix_app.command()
-def get_z2jh_version(
+@get_app.command()
+def z2jh_version(
     cluster_name: str = typer.Argument(None, help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
         None,

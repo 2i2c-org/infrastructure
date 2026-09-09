@@ -1,7 +1,9 @@
 import deployer.dev.commands.aws  # noqa: F401
 import deployer.dev.commands.azure  # noqa: F401
 import deployer.dev.commands.cilogon  # noqa: F401
-import deployer.dev.commands.config.get_clusters  # noqa: F401
+import deployer.dev.commands.config.get.clusters  # noqa: F401
+import deployer.dev.commands.config.get.k8s_version  # noqa: F401
+import deployer.dev.commands.config.get.subchart_version  # noqa: F401
 import deployer.dev.commands.debug  # noqa: F401
 import deployer.dev.commands.develop.use_cluster_credentials  # noqa: F401
 import deployer.dev.commands.exec.cost_monitoring.cost_monitoring_app  # noqa: F401
@@ -14,8 +16,6 @@ import deployer.dev.commands.generate.dedicated_cluster.gcp  # noqa: F401
 import deployer.dev.commands.generate.hub_asset.cluster_entry  # noqa: F401
 import deployer.dev.commands.generate.hub_asset.hub_files  # noqa: F401
 import deployer.dev.commands.generate.mau  # noqa: F401
-import deployer.dev.commands.generate.progress_matrix.k8s_version  # noqa: F401
-import deployer.dev.commands.generate.progress_matrix.subchart_version  # noqa: F401
 import deployer.dev.commands.generate.resource_allocation.daemonset_requests  # noqa: F401
 import deployer.dev.commands.generate.resource_allocation.generate_choices  # noqa: F401
 import deployer.dev.commands.generate.resource_allocation.instance_capacities  # noqa: F401

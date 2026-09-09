@@ -8,7 +8,7 @@ import typer
 from rich.console import Console
 from ruamel.yaml import YAML
 
-from deployer.dev.commands.generate.progress_matrix.subchart_version import (
+from deployer.dev.commands.config.get.subchart_version import (
     turn_data_into_table,
 )
 from deployer.infra_components.cluster import Cluster
@@ -17,7 +17,7 @@ from deployer.utils.file_acquisition import (
     REPO_ROOT_PATH,
 )
 
-from .progress_matrix_app import progress_matrix_app
+from .app import get_app
 
 yaml = YAML(typ="safe", pure=True)
 console = Console()
@@ -100,8 +100,8 @@ def get_k8s_version_for_cluster(cluster_name: str) -> str:
         return "NOT AVAILABLE"
 
 
-@progress_matrix_app.command()
-def get_k8s_version(
+@get_app.command()
+def k8s_version(
     cluster_name: str = typer.Argument(None, help="Name of cluster to operate on"),
     threshold: str = typer.Option(
         None,
