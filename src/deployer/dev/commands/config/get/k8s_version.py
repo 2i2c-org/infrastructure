@@ -8,7 +8,7 @@ import typer
 from rich.console import Console
 from ruamel.yaml import YAML
 
-from deployer.dev.commands.config.get.subchart_version import (
+from deployer.dev.commands.config.get.utils import (
     turn_data_into_table,
 )
 from deployer.infra_components.cluster import Cluster
@@ -100,19 +100,12 @@ def get_k8s_version_for_cluster(cluster_name: str) -> str:
         return "NOT AVAILABLE"
 
 
-@get_app.command()
-def k8s_version(
-    cluster_name: str = typer.Argument(None, help="Name of cluster to operate on"),
-    threshold: str = typer.Option(
-        None,
-        help="Versions different than this will be highlighted",
-    ),
-):
+def compute_k8s_versions(cluster_name: str | None = None) -> dict:
     clusters = os.listdir(CONFIG_CLUSTERS_PATH)
     if cluster_name:
         clusters = [cluster_name]
 
-    k8_versions: dict[str, dict[str, str]] = {}
+    k8_versions = {}
 
     for c_name in clusters:
         try:
@@ -122,6 +115,21 @@ def k8s_version(
             k8_versions[c_name] = {hub.spec["name"]: version for hub in cluster.hubs}
         except FileNotFoundError:
             continue
+    return k8_versions
+
+
+@get_app.command()
+def k8s_version(
+    cluster_name: str = typer.Argument(
+        None,
+        help="Name of cluster to operate on. If left empty will run for all clusters.",
+    ),
+    threshold: str = typer.Option(
+        None,
+        help="Versions different than this will be highlighted",
+    ),
+):
+    k8_versions = compute_k8s_versions(cluster_name)
 
     columns = ["Cluster", "Hub", "K8s version"]
     table = turn_data_into_table(

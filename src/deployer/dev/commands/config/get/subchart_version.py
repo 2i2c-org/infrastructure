@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
-from typing import Any
 
 import typer
 from rich.console import Console
-from rich.table import Table
 from ruamel.yaml import YAML
 
+from deployer.dev.commands.config.get.utils import (
+    turn_data_into_table,
+)
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     CONFIG_CLUSTERS_PATH,
@@ -47,26 +48,45 @@ def get_chart_yaml_filepath(hub) -> Path | None:
     return chart_override_path
 
 
-def turn_data_into_table(title, columns, highlight_idx, threshold, data) -> Any:
-    table = Table(title=title, header_style="bold cyan")
+def compute_z2jh_versions(
+    cluster_name: str | None = None,
+    hub_name: str | None = None,
+) -> dict:
+    """
+    Compute Z2JH versions for clusters/hubs.
 
-    for idx, col in enumerate(columns):
-        if idx != highlight_idx:
-            table.add_column(col, style="white", no_wrap=True)
-        else:
-            table.add_column(col, style="green", justify="right")
+    - If cluster_name is None, all clusters are processed.
+    - If hub_name is None, all hubs on each cluster are processed.
+    - If hub_name is provided, only hubs with that exact name are included.
+    """
+    clusters = os.listdir(CONFIG_CLUSTERS_PATH)
+    if cluster_name:
+        clusters = [cluster_name]
+    z2jh_versions = {}
 
-    for cluster, hubs in sorted(data.items()):
-        for hub, version in sorted(hubs.items()):
-            version_style = "bold yellow" if version != threshold else "green"
-            table.add_row(cluster, hub, f"[{version_style}]{version}[/]")
+    for c_name in clusters:
+        try:
+            z2jh_versions[c_name] = {}
+            cluster = Cluster.from_name(c_name)
+            hubs = cluster.hubs
+            if hub_name:
+                hubs = [h for h in cluster.hubs if h.spec["name"] in hub_name]
 
-    return table
+            for hub in hubs:
+                z2jh_versions[c_name][hub.spec["name"]] = determine_dask_z2jh_version(
+                    get_chart_yaml_filepath(hub)
+                )
+        except FileNotFoundError:
+            continue
+    return z2jh_versions
 
 
 @get_app.command()
 def z2jh_version(
-    cluster_name: str = typer.Argument(None, help="Name of cluster to operate on"),
+    cluster_name: str = typer.Argument(
+        None,
+        help="Name of cluster to operate on. If left empty will run for all clusters.",
+    ),
     hub_name: str = typer.Argument(
         None,
         help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
@@ -76,25 +96,7 @@ def z2jh_version(
         help="Versions different than this will be highlighted",
     ),
 ) -> dict:
-    clusters = os.listdir(CONFIG_CLUSTERS_PATH)
-    if cluster_name:
-        clusters = [cluster_name]
-    z2jh_version = {}
-
-    for c_name in clusters:
-        try:
-            z2jh_version[c_name] = {}
-            cluster = Cluster.from_name(c_name)
-            hubs = cluster.hubs
-            if hub_name:
-                hubs = [h for h in cluster.hubs if h.spec["name"] in hub_name]
-
-            for hub in hubs:
-                z2jh_version[c_name][hub.spec["name"]] = determine_dask_z2jh_version(
-                    get_chart_yaml_filepath(hub)
-                )
-        except FileNotFoundError:
-            continue
+    z2jh_versions = compute_z2jh_versions(cluster_name, hub_name)
 
     columns = ["Cluster", "Hub", "Z2JH version"]
     table = turn_data_into_table(
@@ -102,7 +104,7 @@ def z2jh_version(
         columns=columns,
         highlight_idx=3,
         threshold=threshold,
-        data=z2jh_version,
+        data=z2jh_versions,
     )
 
     console.print(table)
