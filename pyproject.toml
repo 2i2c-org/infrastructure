@@ -35,7 +35,9 @@ dev = [
   "kubernetes",
   "tenacity",
   "bcrypt",
-  "GitPython==3.*"
+  "GitPython==3.*",
+  "python-hcl2",
+  "jsonnet",
 ]
 
 [project.scripts]

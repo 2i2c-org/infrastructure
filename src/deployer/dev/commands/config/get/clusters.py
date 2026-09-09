@@ -3,16 +3,19 @@ import os
 import typer
 from ruamel.yaml import YAML
 
-from deployer.dev.app import config_app
 from deployer.infra_components.cluster import Cluster
-from deployer.utils.file_acquisition import get_all_cluster_yaml_files
+from deployer.utils.file_acquisition import (
+    get_all_cluster_yaml_files,
+)
+
+from .app import get_app
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
 
 
-@config_app.command()
-def get_clusters(
+@get_app.command()
+def clusters(
     provider: str = typer.Option(
         "", help="(Optional) Filter results to clusters with this provider specified."
     ),

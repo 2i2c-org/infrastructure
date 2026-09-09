@@ -1,7 +1,10 @@
 import deployer.dev.commands.aws  # noqa: F401
 import deployer.dev.commands.azure  # noqa: F401
 import deployer.dev.commands.cilogon  # noqa: F401
-import deployer.dev.commands.config.get_clusters  # noqa: F401
+import deployer.dev.commands.config.get.clusters  # noqa: F401
+import deployer.dev.commands.config.get.k8s_version  # noqa: F401
+import deployer.dev.commands.config.get.rollout_state  # noqa: F401
+import deployer.dev.commands.config.get.subchart_version  # noqa: F401
 import deployer.dev.commands.debug  # noqa: F401
 import deployer.dev.commands.develop.use_cluster_credentials  # noqa: F401
 import deployer.dev.commands.exec.cost_monitoring.cost_monitoring_app  # noqa: F401
