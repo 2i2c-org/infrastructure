@@ -31,6 +31,6 @@ charts:
       jupyterhub6:
         imageName: quay.io/2i2c/jupyterhub-6
         buildArgs:
-          REQUIREMENTS_FILE: "requirements.txt"
+          REQUIREMENTS_FILE: "latest-usage-quotas-requirements.txt"
         contextPath: "images/hub"
         dockerfilePath: images/hub/Dockerfile-jupyterhub6
