@@ -225,12 +225,168 @@ local makeUsageQuotasServerDeniedAlert = function(
 
 local configCostMonitoring = {
   enabled: true,
-  extraEnv: [
-    {
-      name: 'CLUSTER_NAME',
-      value: cluster_name,
-    },
-  ],
+  config: {
+    AWSCostExplorer: {
+      hub_name_tag: "2i2c:hub-name",
+      home_storage_costs_filter: {
+        "Tags": {
+          "Key": "2i2c:volume-purpose",
+          "Values": ["home-nfs"],
+          "MatchOptions": ["EQUALS"]
+        }
+      },
+      attributable_costs_filter: {
+          "Or": [
+              {
+                  "Tags": {
+                      "Key": "alpha.eksctl.io/cluster-name",
+                      "Values": [cluster_name],
+                      "MatchOptions": ["EQUALS"],
+                  },
+              },
+              {
+                  "Tags": {
+                      "Key": "kubernetes.io/cluster/%s" % [cluster_name],
+                      "Values": ["owned"],
+                      "MatchOptions": ["EQUALS"],
+                  },
+              },
+              {
+                  "Tags": {
+                      "Key": "2i2c.org/cluster-name",
+                      "Values": [cluster_name],
+                      "MatchOptions": ["EQUALS"],
+                  },
+              },
+              # FIXME to the FIXME: The FIXME comment underneath does not make any sense
+              # to me, so we should investigate what the intent was and remove it.
+              # FIXME: The inclusion of tags 2i2c:hub-name and 2i2c:node-purpose below
+              #        in this filter is a patch to capture openscapes data from 1st
+              #        July and up to 24th September 2024, and can be removed once
+              #        that date range is considered irrelevant.
+              {
+                  "Not": {
+                      "Tags": {
+                          "Key": "2i2c:hub-name",
+                          "MatchOptions": ["ABSENT"],
+                      },
+                  },
+              },
+              {
+                  "Not": {
+                      "Tags": {
+                          "Key": "2i2c:node-purpose",
+                          "MatchOptions": ["ABSENT"],
+                      },
+                  },
+              },
+          ]
+      },
+      core_costs_filter: {
+            "Or": [
+                # Core node storage
+                {
+                    "And": [
+                        {
+                            "Dimensions": {
+                                "Key": "SERVICE",
+                                "Values": ["EC2 - Other"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                        {
+                            "Tags": {
+                                "Key": "2i2c:node-purpose",
+                                "Values": ["core"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                    ]
+                },
+                # Core node compute
+                {
+                    "And": [
+                        {
+                            "Dimensions": {
+                                "Key": "SERVICE",
+                                "Values": ["Amazon Elastic Compute Cloud - Compute"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                        {
+                            "Tags": {
+                                "Key": "2i2c:node-purpose",
+                                "Values": ["core"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                    ]
+                },
+                # Cluster NAT gateway - common for all hubs
+                {
+                    "And": [
+                        {
+                            "Dimensions": {
+                                "Key": "SERVICE",
+                                "Values": ["EC2 - Other"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                        {
+                            "Dimensions": {
+                                "Key": "USAGE_TYPE_GROUP",
+                                "Values": [
+                                    "EC2: NAT Gateway - Running Hours",
+                                    "EC2: NAT Gateway - Data Processed",
+                                ],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                    ]
+                },
+                # Hub database storage
+                {
+                    "And": [
+                        {
+                            "Dimensions": {
+                                "Key": "SERVICE",
+                                "Values": ["EC2 - Other"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                        {
+                            "Tags": {
+                                "Key": "kubernetes.io/created-for/pvc/name",
+                                "Values": ["hub-db-dir"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                    ]
+                },
+                # Support components storage (Prometheus, Grafana, Alertmanager)
+                {
+                    "And": [
+                        {
+                            "Dimensions": {
+                                "Key": "SERVICE",
+                                "Values": ["EC2 - Other"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                        {
+                            "Tags": {
+                                "Key": "kubernetes.io/created-for/pvc/namespace",
+                                "Values": ["support"],
+                                "MatchOptions": ["EQUALS"],
+                            },
+                        },
+                    ]
+                },
+            ]
+        }
+    }
+
+  },
   serviceAccount: {
     annotations: {
       // See terraform/aws/cost-monitoring.tf
