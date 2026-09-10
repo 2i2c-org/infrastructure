@@ -9,6 +9,9 @@ jupyterhub:
     timeout: 3600 # 1 hour of no activity, in seconds
     maxAge: 43200 # 12 hour hard cap regardless of activity, in seconds
   hub:
+    image:
+      name: quay.io/2i2c/jupyterhub-6
+      tag: 0.0.1-0.dev.git.16914.h6b64c8e2c
     services:
       cloudbank-pilot-hub-users: {}
     loadRoles:
