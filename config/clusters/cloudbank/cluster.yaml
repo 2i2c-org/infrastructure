@@ -25,6 +25,7 @@ hubs:
   - enc-common.secret.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: authoring
   display_name: Authoring Hub
   domain: authoring.cloudbank.2i2c.cloud
@@ -34,6 +35,7 @@ hubs:
   - enc-common.secret.values.yaml
   - authoring.values.yaml
   - enc-authoring.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: bcc
   display_name: Berkeley City College
   domain: bcc.cloudbank.2i2c.cloud
@@ -43,6 +45,7 @@ hubs:
   - enc-common.secret.values.yaml
   - bcc.values.yaml
   - enc-bcc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: boise
   display_name: Boise State University
   domain: boise.cloudbank.2i2c.cloud
@@ -52,6 +55,7 @@ hubs:
   - enc-common.secret.values.yaml
   - boise.values.yaml
   - enc-boise.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: bmcc
   display_name: Borough of Manhattan Community College, CUNY
   domain: bmcc.cloudbank.2i2c.cloud
@@ -61,6 +65,7 @@ hubs:
   - enc-common.secret.values.yaml
   - bmcc.values.yaml
   - enc-bmcc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: berea
   display_name: Berea College
   domain: berea.cloudbank.2i2c.cloud
@@ -70,6 +75,7 @@ hubs:
   - enc-common.secret.values.yaml
   - berea.values.yaml
   - enc-berea.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: chaffey
   display_name: Chaffey College
   domain: chaffey.cloudbank.2i2c.cloud
@@ -79,6 +85,7 @@ hubs:
   - enc-common.secret.values.yaml
   - chaffey.values.yaml
   - enc-chaffey.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: carrollu
   display_name: Carroll University
   domain: carrollu.cloudbank.2i2c.cloud
@@ -88,6 +95,7 @@ hubs:
   - enc-common.secret.values.yaml
   - carrollu.values.yaml
   - enc-carrollu.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: cau
   display_name: Clark Atlanta University
   domain: cau.cloudbank.2i2c.cloud
@@ -97,6 +105,7 @@ hubs:
   - enc-common.secret.values.yaml
   - cau.values.yaml
   - enc-cau.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: ccsf
   display_name: City College SF
   domain: ccsf.cloudbank.2i2c.cloud
@@ -106,6 +115,7 @@ hubs:
   - enc-common.secret.values.yaml
   - ccsf.values.yaml
   - enc-ccsf.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: chabot
   display_name: Chabot College
   domain: chabot.cloudbank.2i2c.cloud
@@ -115,6 +125,7 @@ hubs:
   - enc-common.secret.values.yaml
   - chabot.values.yaml
   - enc-chabot.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: chicagostate
   display_name: Chicago State University
   domain: chicagostate.cloudbank.2i2c.cloud
@@ -124,6 +135,7 @@ hubs:
   - enc-common.secret.values.yaml
   - chicagostate.values.yaml
   - enc-chicagostate.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: clarku
   display_name: Clark University
   domain: clarku.cloudbank.2i2c.cloud
@@ -134,6 +146,7 @@ hubs:
   - common-gpu.values.yaml
   - clarku.values.yaml
   - enc-clarku.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: cloud-county
   display_name: Cloud County Community College
   domain: cloud-county.cloudbank.2i2c.cloud
@@ -143,6 +156,7 @@ hubs:
   - enc-common.secret.values.yaml
   - cloud-county.values.yaml
   - enc-cloud-county.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: cmu
   display_name: Carnegie Mellon University
   domain: cmu.cloudbank.2i2c.cloud
@@ -153,6 +167,7 @@ hubs:
   - common-gpu.values.yaml
   - cmu.values.yaml
   - enc-cmu.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: cra
   display_name: Computing Research Association
   domain: cra.cloudbank.2i2c.cloud
@@ -162,6 +177,7 @@ hubs:
   - enc-common.secret.values.yaml
   - cra.values.yaml
   - enc-cra.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: csm
   display_name: College of San Mateo
   domain: csm.cloudbank.2i2c.cloud
@@ -171,6 +187,7 @@ hubs:
   - enc-common.secret.values.yaml
   - csm.values.yaml
   - enc-csm.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: csusm
   display_name: California State University, San Marcos
   domain: csusm.cloudbank.2i2c.cloud
@@ -181,6 +198,7 @@ hubs:
   - common-gpu.values.yaml
   - csusm.values.yaml
   - enc-csusm.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: deanza
   display_name: DeAnza College
   domain: deanza.cloudbank.2i2c.cloud
@@ -190,6 +208,7 @@ hubs:
   - enc-common.secret.values.yaml
   - deanza.values.yaml
   - enc-deanza.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: demo
   display_name: Cloudbank demo
   domain: demo.cloudbank.2i2c.cloud
@@ -199,6 +218,7 @@ hubs:
   - enc-common.secret.values.yaml
   - demo.values.yaml
   - enc-demo-git.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: elac
   display_name: East Los Angeles College
   domain: elac.cloudbank.2i2c.cloud
@@ -208,6 +228,7 @@ hubs:
   - enc-common.secret.values.yaml
   - elac.values.yaml
   - enc-elac.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: elcamino
   display_name: El Camino College
   domain: elcamino.cloudbank.2i2c.cloud
@@ -217,6 +238,7 @@ hubs:
   - enc-common.secret.values.yaml
   - elcamino.values.yaml
   - enc-elcamino.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: emich
   display_name: Eastern Michigan University
   domain: emich.cloudbank.2i2c.cloud
@@ -227,6 +249,7 @@ hubs:
   - common-gpu.values.yaml
   - emich.values.yaml
   - enc-emich.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: epcc
   display_name: El Paso Community College
   domain: epcc.cloudbank.2i2c.cloud
@@ -237,6 +260,7 @@ hubs:
   - common-gpu.values.yaml
   - epcc.values.yaml
   - enc-epcc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: evc
   display_name: Evergreen Valley College
   domain: evc.cloudbank.2i2c.cloud
@@ -246,6 +270,7 @@ hubs:
   - enc-common.secret.values.yaml
   - evc.values.yaml
   - enc-evc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: etsu
   display_name: East Tennessee State University
   domain: etsu.cloudbank.2i2c.cloud
@@ -255,6 +280,7 @@ hubs:
   - enc-common.secret.values.yaml
   - etsu.values.yaml
   - enc-etsu.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: fgcu
   display_name: Florida Gulf Coast University
   domain: fgcu.cloudbank.2i2c.cloud
@@ -265,6 +291,7 @@ hubs:
   - common-gpu.values.yaml
   - fgcu.values.yaml
   - enc-fgcu.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: fresno
   display_name: Fresno City College
   domain: fresno.cloudbank.2i2c.cloud
@@ -274,6 +301,7 @@ hubs:
   - enc-common.secret.values.yaml
   - fresno.values.yaml
   - enc-fresno.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: foothill
   display_name: Foothill College
   domain: foothill.cloudbank.2i2c.cloud
@@ -283,6 +311,7 @@ hubs:
   - enc-common.secret.values.yaml
   - foothill.values.yaml
   - enc-foothill.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: fullertoncc
   display_name: Fullerton College
   domain: fullertoncc.cloudbank.2i2c.cloud
@@ -292,6 +321,7 @@ hubs:
   - enc-common.secret.values.yaml
   - fullertoncc.values.yaml
   - enc-fullertoncc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: georgetown
   display_name: Georgetown University
   domain: georgetown.cloudbank.2i2c.cloud
@@ -301,6 +331,7 @@ hubs:
   - enc-common.secret.values.yaml
   - georgetown.values.yaml
   - enc-georgetown.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: glendale
   display_name: Glendale Community College
   domain: glendale.cloudbank.2i2c.cloud
@@ -310,6 +341,7 @@ hubs:
   - enc-common.secret.values.yaml
   - glendale.values.yaml
   - enc-glendale.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: golden
   display_name: Golden West College
   domain: golden.cloudbank.2i2c.cloud
@@ -319,6 +351,7 @@ hubs:
   - enc-common.secret.values.yaml
   - golden.values.yaml
   - enc-golden.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: gssm
   display_name: Governors School of Science and Math
   domain: gssm.cloudbank.2i2c.cloud
@@ -328,6 +361,7 @@ hubs:
   - enc-common.secret.values.yaml
   - gssm.values.yaml
   - enc-gssm.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: gwu
   display_name: George Washington University
   domain: gwu.cloudbank.2i2c.cloud
@@ -337,6 +371,7 @@ hubs:
   - enc-common.secret.values.yaml
   - gwu.values.yaml
   - enc-gwu.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: gpu-demo
   display_name: CloudBank Classroom - GPU Demo
   domain: gpu-demo.cloudbank.2i2c.cloud
@@ -347,6 +382,7 @@ hubs:
   - common-gpu.values.yaml
   - gpu-demo.values.yaml
   - enc-gpu-demo.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: high
   display_name: High School Experimental Hub
   domain: high.cloudbank.2i2c.cloud
@@ -356,6 +392,7 @@ hubs:
   - enc-common.secret.values.yaml
   - high.values.yaml
   - enc-high.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: hmc
   display_name: Harvey Mudd College
   domain: hmc.cloudbank.2i2c.cloud
@@ -365,6 +402,7 @@ hubs:
   - enc-common.secret.values.yaml
   - hmc.values.yaml
   - enc-hmc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: howard
   display_name: Howard University
   domain: howard.cloudbank.2i2c.cloud
@@ -374,6 +412,7 @@ hubs:
   - enc-common.secret.values.yaml
   - howard.values.yaml
   - enc-howard.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: humboldt
   display_name: Cal Poly Humboldt
   domain: humboldt.cloudbank.2i2c.cloud
@@ -383,6 +422,7 @@ hubs:
   - enc-common.secret.values.yaml
   - humboldt.values.yaml
   - enc-humboldt.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: iit
   display_name: Illinois Tech
   domain: iit.cloudbank.2i2c.cloud
@@ -392,6 +432,7 @@ hubs:
   - enc-common.secret.values.yaml
   - iit.values.yaml
   - enc-iit.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: ivytech
   display_name: Ivy Tech Community College of Indiana
   domain: ivytech.cloudbank.2i2c.cloud
@@ -401,6 +442,7 @@ hubs:
   - enc-common.secret.values.yaml
   - ivytech.values.yaml
   - enc-ivytech.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: kean
   display_name: Kean University
   domain: kean.cloudbank.2i2c.cloud
@@ -410,6 +452,7 @@ hubs:
   - enc-common.secret.values.yaml
   - kean.values.yaml
   - enc-kean.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: lacc
   display_name: Los Angeles City College
   domain: lacc.cloudbank.2i2c.cloud
@@ -419,6 +462,7 @@ hubs:
   - enc-common.secret.values.yaml
   - lacc.values.yaml
   - enc-lacc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: lahc
   display_name: Los Angeles Harbor College
   domain: lahc.cloudbank.2i2c.cloud
@@ -428,6 +472,7 @@ hubs:
   - enc-common.secret.values.yaml
   - lahc.values.yaml
   - enc-lahc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: laney
   display_name: Laney College
   domain: laney.cloudbank.2i2c.cloud
@@ -437,6 +482,7 @@ hubs:
   - enc-common.secret.values.yaml
   - laney.values.yaml
   - enc-laney.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: lavc
   display_name: Los Angeles Valley College
   domain: lavc.cloudbank.2i2c.cloud
@@ -446,6 +492,7 @@ hubs:
   - enc-common.secret.values.yaml
   - lavc.values.yaml
   - enc-lavc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: lbcc
   display_name: Long Beach City College
   domain: lbcc.cloudbank.2i2c.cloud
@@ -455,6 +502,7 @@ hubs:
   - enc-common.secret.values.yaml
   - lbcc.values.yaml
   - enc-lbcc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: maine
   display_name: University of Maine
   domain: maine.cloudbank.2i2c.cloud
@@ -464,6 +512,7 @@ hubs:
   - enc-common.secret.values.yaml
   - maine.values.yaml
   - enc-maine.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: mendocino
   display_name: Mendocino College
   domain: mendocino.cloudbank.2i2c.cloud
@@ -473,6 +522,7 @@ hubs:
   - enc-common.secret.values.yaml
   - mendocino.values.yaml
   - enc-mendocino.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: merced
   display_name: Merced College
   domain: merced.cloudbank.2i2c.cloud
@@ -482,6 +532,7 @@ hubs:
   - enc-common.secret.values.yaml
   - merced.values.yaml
   - enc-merced.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: merritt
   display_name: Merritt College
   domain: merritt.cloudbank.2i2c.cloud
@@ -491,6 +542,7 @@ hubs:
   - enc-common.secret.values.yaml
   - merritt.values.yaml
   - enc-merritt.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: mmc
   display_name: Meharry Medical College
   domain: mmc.cloudbank.2i2c.cloud
@@ -500,6 +552,7 @@ hubs:
   - enc-common.secret.values.yaml
   - mmc.values.yaml
   - enc-mmc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: miracosta
   display_name: MiraCosta College
   domain: miracosta.cloudbank.2i2c.cloud
@@ -509,6 +562,7 @@ hubs:
   - enc-common.secret.values.yaml
   - miracosta.values.yaml
   - enc-miracosta.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: mission
   display_name: Mission College Santa Clara
   domain: mission.cloudbank.2i2c.cloud
@@ -518,6 +572,7 @@ hubs:
   - enc-common.secret.values.yaml
   - mission.values.yaml
   - enc-mission.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: monmouth
   display_name: Monmouth University
   domain: monmouth.cloudbank.2i2c.cloud
@@ -528,6 +583,7 @@ hubs:
   - common-gpu.values.yaml
   - monmouth.values.yaml
   - enc-monmouth.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: moreno
   display_name: Moreno Valley College
   domain: moreno.cloudbank.2i2c.cloud
@@ -537,6 +593,7 @@ hubs:
   - enc-common.secret.values.yaml
   - moreno.values.yaml
   - enc-moreno.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: nicc
   display_name: Northeast Iowa Community College
   domain: nicc.cloudbank.2i2c.cloud
@@ -546,6 +603,7 @@ hubs:
   - enc-common.secret.values.yaml
   - nicc.values.yaml
   - enc-nicc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: norco
   display_name: Norco College
   domain: norco.cloudbank.2i2c.cloud
@@ -555,6 +613,7 @@ hubs:
   - enc-common.secret.values.yaml
   - norco.values.yaml
   - enc-norco.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: nova
   display_name: Nova Southeastern University
   domain: nova.cloudbank.2i2c.cloud
@@ -564,6 +623,7 @@ hubs:
   - enc-common.secret.values.yaml
   - nova.values.yaml
   - enc-nova.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: ocu
   display_name: Oakland City University
   domain: ocu.cloudbank.2i2c.cloud
@@ -573,6 +633,7 @@ hubs:
   - enc-common.secret.values.yaml
   - ocu.values.yaml
   - enc-ocu.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: oit
   display_name: Oregon Institute of Technology
   domain: oit.cloudbank.2i2c.cloud
@@ -583,6 +644,7 @@ hubs:
   - common-gpu.values.yaml
   - oit.values.yaml
   - enc-oit.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: orangecoast
   display_name: Orange Coast College
   domain: orangecoast.cloudbank.2i2c.cloud
@@ -592,6 +654,7 @@ hubs:
   - enc-common.secret.values.yaml
   - orangecoast.values.yaml
   - enc-orangecoast.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: ornl
   display_name: Oak Ridge National Laboratory
   domain: ornl.cloudbank.2i2c.cloud
@@ -601,6 +664,7 @@ hubs:
   - enc-common.secret.values.yaml
   - ornl.values.yaml
   - enc-ornl.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: palomar
   display_name: Palomar Community College
   domain: palomar.cloudbank.2i2c.cloud
@@ -610,6 +674,7 @@ hubs:
   - enc-common.secret.values.yaml
   - palomar.values.yaml
   - enc-palomar.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: pasadena
   display_name: Pasadena City College
   domain: pasadena.cloudbank.2i2c.cloud
@@ -619,6 +684,7 @@ hubs:
   - enc-common.secret.values.yaml
   - pasadena.values.yaml
   - enc-pasadena.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: psu
   display_name: Pennsylvania State University
   domain: psu.cloudbank.2i2c.cloud
@@ -628,6 +694,7 @@ hubs:
   - enc-common.secret.values.yaml
   - psu.values.yaml
   - enc-psu.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: redwoods
   display_name: College of the Redwoods
   domain: redwoods.cloudbank.2i2c.cloud
@@ -637,6 +704,7 @@ hubs:
   - enc-common.secret.values.yaml
   - redwoods.values.yaml
   - enc-redwoods.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: reedley
   display_name: Reedley College
   domain: reedley.cloudbank.2i2c.cloud
@@ -646,6 +714,7 @@ hubs:
   - enc-common.secret.values.yaml
   - reedley.values.yaml
   - enc-reedley.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: ric
   display_name: Rhode Island College
   domain: ric.cloudbank.2i2c.cloud
@@ -656,6 +725,7 @@ hubs:
   - common-gpu.values.yaml
   - ric.values.yaml
   - enc-ric.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: riohondo
   display_name: Rio Hondo Community College
   domain: riohondo.cloudbank.2i2c.cloud
@@ -665,6 +735,7 @@ hubs:
   - enc-common.secret.values.yaml
   - riohondo.values.yaml
   - enc-riohondo.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: saddleback
   display_name: Saddleback College
   domain: saddleback.cloudbank.2i2c.cloud
@@ -674,6 +745,7 @@ hubs:
   - enc-common.secret.values.yaml
   - saddleback.values.yaml
   - enc-saddleback.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: santiago
   display_name: Santiago Canyon College
   domain: santiago.cloudbank.2i2c.cloud
@@ -683,6 +755,7 @@ hubs:
   - enc-common.secret.values.yaml
   - santiago.values.yaml
   - enc-santiago.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: sbcc
   display_name: Santa Barbara City College
   domain: sbcc.cloudbank.2i2c.cloud
@@ -692,6 +765,7 @@ hubs:
   - enc-common.secret.values.yaml
   - sbcc.values.yaml
   - enc-sbcc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: shasta
   display_name: Shasta College
   domain: shasta.cloudbank.2i2c.cloud
@@ -701,6 +775,7 @@ hubs:
   - enc-common.secret.values.yaml
   - shasta.values.yaml
   - enc-shasta.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: sierra
   display_name: Sierra College
   domain: sierra.cloudbank.2i2c.cloud
@@ -710,6 +785,7 @@ hubs:
   - enc-common.secret.values.yaml
   - sierra.values.yaml
   - enc-sierra.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: sjcc
   display_name: San Jose Community College
   domain: sjcc.cloudbank.2i2c.cloud
@@ -719,6 +795,7 @@ hubs:
   - enc-common.secret.values.yaml
   - sjcc.values.yaml
   - enc-sjcc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: skyline
   display_name: Skyline College
   domain: skyline.cloudbank.2i2c.cloud
@@ -728,6 +805,7 @@ hubs:
   - enc-common.secret.values.yaml
   - skyline.values.yaml
   - enc-skyline.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: smc
   display_name: Santa Monica College
   domain: smc.cloudbank.2i2c.cloud
@@ -737,6 +815,7 @@ hubs:
   - enc-common.secret.values.yaml
   - smc.values.yaml
   - enc-smc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: sou
   display_name: Southern Oregon University
   domain: sou.cloudbank.2i2c.cloud
@@ -747,6 +826,7 @@ hubs:
   - common-gpu.values.yaml
   - sou.values.yaml
   - enc-sou.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: spelman
   display_name: Spelman College
   domain: spelman.cloudbank.2i2c.cloud
@@ -756,6 +836,7 @@ hubs:
   - enc-common.secret.values.yaml
   - spelman.values.yaml
   - enc-spelman.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: srjc
   display_name: Santa Rosa Junior College
   domain: srjc.cloudbank.2i2c.cloud
@@ -765,6 +846,7 @@ hubs:
   - enc-common.secret.values.yaml
   - srjc.values.yaml
   - enc-srjc.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: tiffin
   display_name: Tiffin University
   domain: tiffin.cloudbank.2i2c.cloud
@@ -774,6 +856,7 @@ hubs:
   - enc-common.secret.values.yaml
   - tiffin.values.yaml
   - enc-tiffin.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: tntech
   display_name: Tennessee Technological University
   domain: tntech.cloudbank.2i2c.cloud
@@ -784,6 +867,7 @@ hubs:
   - common-gpu.values.yaml
   - tntech.values.yaml
   - enc-tntech.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: toledo
   display_name: University of Toledo
   domain: toledo.cloudbank.2i2c.cloud
@@ -793,6 +877,7 @@ hubs:
   - enc-common.secret.values.yaml
   - toledo.values.yaml
   - enc-toledo.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: tuskegee
   display_name: Tuskegee University
   domain: tuskegee.cloudbank.2i2c.cloud
@@ -802,6 +887,7 @@ hubs:
   - enc-common.secret.values.yaml
   - tuskegee.values.yaml
   - enc-tuskegee.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: uams
   display_name: University of Arkansas for Medical Sciences
   domain: uams.cloudbank.2i2c.cloud
@@ -812,6 +898,7 @@ hubs:
   - common-gpu.values.yaml
   - uams.values.yaml
   - enc-uams.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: umd
   display_name: University of Maryland
   domain: umd.cloudbank.2i2c.cloud
@@ -821,6 +908,7 @@ hubs:
   - enc-common.secret.values.yaml
   - umd.values.yaml
   - enc-umd.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: unc-chapel-hill
   display_name: University of North Carolina at Chapel Hill
   domain: unc-chapel-hill.cloudbank.2i2c.cloud
@@ -830,6 +918,7 @@ hubs:
   - enc-common.secret.values.yaml
   - unc-chapel-hill.values.yaml
   - enc-unc-chapel-hill.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: uncw
   display_name: University of North Carolina, Wilmington
   domain: uncw.cloudbank.2i2c.cloud
@@ -839,6 +928,7 @@ hubs:
   - enc-common.secret.values.yaml
   - uncw.values.yaml
   - enc-uncw.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: und
   display_name: University of North Dakota
   domain: und.cloudbank.2i2c.cloud
@@ -848,6 +938,7 @@ hubs:
   - enc-common.secret.values.yaml
   - und.values.yaml
   - enc-und.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: uta
   display_name: University of Texas at Arlington
   domain: uta.cloudbank.2i2c.cloud
@@ -857,6 +948,7 @@ hubs:
   - enc-common.secret.values.yaml
   - uta.values.yaml
   - enc-uta.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: utpb
   display_name: University of Texas, Permian Basin
   domain: utpb.cloudbank.2i2c.cloud
@@ -866,6 +958,7 @@ hubs:
   - enc-common.secret.values.yaml
   - utpb.values.yaml
   - enc-utpb.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: uwyo
   display_name: University of Wyoming
   domain: uwyo.cloudbank.2i2c.cloud
@@ -875,6 +968,7 @@ hubs:
   - enc-common.secret.values.yaml
   - uwyo.values.yaml
   - enc-uwyo.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: virginia
   display_name: University of Virginia
   domain: virginia.cloudbank.2i2c.cloud
@@ -884,6 +978,7 @@ hubs:
   - enc-common.secret.values.yaml
   - virginia.values.yaml
   - enc-virginia.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: wcu
   display_name: Western Carolina University
   domain: wcu.cloudbank.2i2c.cloud
@@ -894,6 +989,7 @@ hubs:
   - common-gpu.values.yaml
   - wcu.values.yaml
   - enc-wcu.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: weber
   display_name: Weber State University
   domain: weber.cloudbank.2i2c.cloud
@@ -903,6 +999,7 @@ hubs:
   - enc-common.secret.values.yaml
   - weber.values.yaml
   - enc-weber.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: whitman
   display_name: Whitman College
   domain: whitman.cloudbank.2i2c.cloud
@@ -912,6 +1009,7 @@ hubs:
   - enc-common.secret.values.yaml
   - whitman.values.yaml
   - enc-whitman.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: willamette
   display_name: Willamette University
   domain: willamette.cloudbank.2i2c.cloud
@@ -921,6 +1019,7 @@ hubs:
   - enc-common.secret.values.yaml
   - willamette.values.yaml
   - enc-willamette.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: wlac
   display_name: West Los Angeles College
   domain: wlac.cloudbank.2i2c.cloud
@@ -930,6 +1029,7 @@ hubs:
   - enc-common.secret.values.yaml
   - wlac.values.yaml
   - enc-wlac.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: york
   display_name: York College, CUNY
   domain: york.cloudbank.2i2c.cloud
@@ -940,3 +1040,4 @@ hubs:
   - common-gpu.values.yaml
   - york.values.yaml
   - enc-york.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
