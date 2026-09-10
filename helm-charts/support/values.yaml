@@ -445,6 +445,10 @@ cryptnono:
 
 jupyterhub-cost-monitoring:
   enabled: false
+
+  prometheusAuth:
+    envFromSecret: prometheus-auth
+
   resources:
   limits:
     cpu: 800m
