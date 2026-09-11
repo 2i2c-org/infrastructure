@@ -90,6 +90,35 @@ jupyterhub:
         - CPU:XXL
         - CPU:XXXL
         - GPU:T4
+      UsageQuotaManager:
+        scope_fallback_strategy:
+          intersection: max
+        failover_open: true
+        # https://github.com/NASA-IMPACT/veda-jupyterhub/issues/135#issuecomment-5572240704
+        policy:
+        - resource: memory
+          limit: 11520G
+          window: 30
+          scope:
+            group:
+            - CPU:XS
+            - CPU:M
+            - CPU:L
+        - resource: memory
+          limit: 92160G
+          window: 30
+          scope:
+            group:
+            - CPU:XS
+            - CPU:S
+            - CPU:M
+            - CPU:L
+            - CPU:XL
+            - CPU:XXL
+            - CPU:XXL
+            - CPU:XXXL
+      UsageViewer:
+        enable_compute: true
     extraConfig:
       001-username-claim: |
         def populate_token(spawner, auth_state):
