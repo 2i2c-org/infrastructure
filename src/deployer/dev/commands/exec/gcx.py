@@ -2,14 +2,16 @@ import os
 import subprocess
 
 import typer
-from ....infra_components.cluster import Cluster
+
 from deployer.dev.app import exec_app
+
+from ....infra_components.cluster import Cluster
 
 
 @exec_app.command()
 def gcx(
     cluster_name: str = typer.Argument("Name of cluster whose grafana we target"),
-    gcx_command: list[str] = typer.Argument("GCX command to execute")
+    gcx_command: list[str] = typer.Argument("GCX command to execute"),
 ):
     """
     Execute arbitrary grafana control (gcx) commands against a particular grafana
