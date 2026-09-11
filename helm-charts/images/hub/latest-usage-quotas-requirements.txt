@@ -1,0 +1,2 @@
+jupyterhub-fancy-profiles==0.6.0
+jupyterhub-usage-quotas==0.2.0
