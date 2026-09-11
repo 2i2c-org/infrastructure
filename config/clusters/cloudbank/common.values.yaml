@@ -22,6 +22,7 @@ jupyterhub:
         - list:users
         - read:users
   singleuser:
+    profileList: {}
     cpu:
       # Each node has about 4 CPUs total, and if we limit users to no more than
       # 2, no single user can take down a full node by themselves. We have to
