@@ -377,6 +377,7 @@ grafana:
           type: yesoreyeram-infinity-datasource
           isDefault: false
           editable: true
+          url: http://jupyterhub-cost-monitoring
 
 # cryptnono kills processes attempting to mine the cryptocurrency Monero in the
 # k8s cluster.
@@ -445,6 +446,10 @@ cryptnono:
 
 jupyterhub-cost-monitoring:
   enabled: false
+
+  prometheusAuth:
+    envFromSecret: prometheus-auth
+
   resources:
   limits:
     cpu: 800m
