@@ -1,5 +1,4 @@
 import os
-import shutil
 import subprocess
 from tempfile import TemporaryDirectory
 
@@ -118,7 +117,7 @@ def deploy_dashboards(
                 [
                     deploy_py_path,
                     grafana_url,
-                    f"--dashboards-dir=.",
+                    "--dashboards-dir=.",
                     "--folder-name=Cloud cost dashboards",
                     "--folder-uid=cloud-cost",
                 ],
