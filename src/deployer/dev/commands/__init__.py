@@ -8,6 +8,7 @@ import deployer.dev.commands.config.get.subchart_version  # noqa: F401
 import deployer.dev.commands.debug  # noqa: F401
 import deployer.dev.commands.develop.use_cluster_credentials  # noqa: F401
 import deployer.dev.commands.exec.cost_monitoring.cost_monitoring_app  # noqa: F401
+import deployer.dev.commands.exec.gcx  # noqa: F401
 import deployer.dev.commands.exec.get_quota_usage  # noqa: F401
 import deployer.dev.commands.exec.infra_components  # noqa: F401
 import deployer.dev.commands.exec.promql  # noqa: F401
