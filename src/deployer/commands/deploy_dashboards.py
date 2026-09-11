@@ -82,7 +82,7 @@ def deploy_dashboards(
                 "https://github.com/jupyterhub/grafana-dashboards",
                 "jupyterhub-grafana-dashboards",
             ],
-            cwd=d
+            cwd=d,
         )
 
         deploy_py_path = f"{d}/jupyterhub-grafana-dashboards/deploy.py"
@@ -98,7 +98,7 @@ def deploy_dashboards(
                     f"--dashboards-dir={dashboard_dir_default}",
                 ],
                 env=deploy_script_env,
-                cwd=f"{d}/jupyterhub-grafana-dashboards"
+                cwd=f"{d}/jupyterhub-grafana-dashboards",
             )
         if dashboard_type == None or dashboard_type == "cost":
             print_colour(
@@ -111,7 +111,7 @@ def deploy_dashboards(
                     "https://github.com/2i2c-org/jupyterhub-cost-monitoring",
                     "jupyterhub-cost-monitoring",
                 ],
-                cwd=d
+                cwd=d,
             )
             subprocess.check_call(
                 [
