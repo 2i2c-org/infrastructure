@@ -8,7 +8,7 @@ jupyterhub:
     extraImages:
       00-sml-pytorch:
         name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-        tag: b663a88f6217
+        tag: b7e26a5353c3
     extraTolerations:
     - key: hub.jupyter.org/dedicated
       operator: Exists
@@ -97,7 +97,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:b663a88f6217
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:b7e26a5353c3
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
