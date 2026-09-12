@@ -47,7 +47,7 @@ fluent-bit:
           log_group_name /2i2c/maap/k8s-events
           log_stream_name events
           auto_create_group On
-          log_retention_days 30
+          log_retention_days 90
 
 # FIXME: remove this once eksctl is fixed
 nvidiaDevicePlugin:
