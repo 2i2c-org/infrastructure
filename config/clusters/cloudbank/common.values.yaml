@@ -8,6 +8,7 @@ jupyterhub:
   cull:
     timeout: 3600 # 1 hour of no activity, in seconds
     maxAge: 43200 # 12 hour hard cap regardless of activity, in seconds
+  hub:
     services:
       cloudbank-pilot-hub-users: {}
     loadRoles:
