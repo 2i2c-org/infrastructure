@@ -111,6 +111,7 @@ project:
       - file: howto/features/private-nbgitpuller.md
       - file: howto/features/profile-list-restrict.md
       - file: howto/features/rocker.md
+      - file: howto/features/shared-token.md
       - file: howto/features/shared-db.md
       - file: howto/features/storage-quota.md
     - file: howto/filesystem-management/index.md
