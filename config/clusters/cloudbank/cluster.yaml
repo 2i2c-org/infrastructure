@@ -25,7 +25,7 @@ hubs:
   - enc-common.secret.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
-  #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: authoring
   display_name: Authoring Hub
   domain: authoring.cloudbank.2i2c.cloud
@@ -382,7 +382,7 @@ hubs:
   - common-gpu.values.yaml
   - gpu-demo.values.yaml
   - enc-gpu-demo.secret.values.yaml
-  #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: high
   display_name: High School Experimental Hub
   domain: high.cloudbank.2i2c.cloud

@@ -27,6 +27,9 @@ jupyterhub:
           name: CloudBank Classroom - GPU Demo
           url: https://www.cloudbank.org/
   hub:
+    image:
+      name: quay.io/2i2c/jupyterhub-6
+      tag: 0.0.1-0.dev.git.16914.h6b64c8e2c
     allowNamedServers: true
     config:
       JupyterHub:
