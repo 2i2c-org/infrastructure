@@ -25,52 +25,199 @@ jupyterhub:
       DOCKERIMAGE_PATH_BASE_IMAGE: $(JUPYTER_IMAGE)
       WORKSPACE_BUCKET: maap-ops-workspace
     profileList:
-      choose:
-        profile_options:
-          image:
-            choices:
-              01-pangeo:
-                display_name: Modified Pangeo Notebook v5.2.0
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.2.0
-              02-rocker:
-                display_name: Rocker Geospatial v5.2.0
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.2.0
-              03-isce3:
-                display_name: isce3 v5.2.0
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.2.0
-              04-pangeo-ogc:
-                display_name: OGC compliant Modified Pangeo Notebook v6.0.0
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v6.0.0
-              05-rocker-ogc:
-                display_name: OGC compliant Rocker Geospatial v6.0.0
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v6.0.0
-              06-isce3-ogc:
-                display_name: OGC compliant isce3 v6.0.0
-                description: Pangeo based notebook with a Python environment and isce3
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v6.0.0
-      nvidia:
-        profile_options:
-          image:
-            choices:
-              pytorch-maap:
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v5.2.0
-              pytorch-maap-ogc:
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v6.0.0
-              tensorflow2-maap:
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v5.2.0
-              tensorflow2-maap-ogc:
-                slug: tensorflow2
-                kubespawner_override:
-                  image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v6.0.0
+    - display_name: Choose your environment and resources
+      default: true
+      profile_options:
+        image:
+          display_name: Environment
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            01-pangeo:
+              display_name: Modified Pangeo Notebook v5.2.0
+              description: Pangeo based notebook with a Python environment
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.2.0
+            02-rocker:
+              display_name: Rocker Geospatial v5.2.0
+              description: JupyterHub environment with many R geospatial libraries pre-installed
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.2.0
+            03-isce3:
+              display_name: isce3 v5.2.0
+              description: Pangeo based notebook with a Python environment and isce3
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.2.0
+            04-pangeo-ogc:
+              display_name: OGC compliant Modified Pangeo Notebook v6.0.0
+              description: Pangeo based notebook with a Python environment
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v6.0.0
+            05-rocker-ogc:
+              display_name: OGC compliant Rocker Geospatial v6.0.0
+              description: JupyterHub environment with many R geospatial libraries pre-installed
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v6.0.0
+            06-isce3-ogc:
+              display_name: OGC compliant isce3 v6.0.0
+              description: Pangeo based notebook with a Python environment and isce3
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v6.0.0
+            07-qgis:
+              display_name: QGIS on Linux Desktop
+              description: Linux desktop in the browser, with qgis installed
+              kubespawner_override:
+                  # Launch people directly into the Linux desktop when they start
+                default_url: /desktop
+                  # Built from https://github.com/2i2c-org/nasa-qgis-image
+                image: quay.io/2i2c/nasa-qgis-image:2725f26348ba
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_2_gb:
+              display_name: ~2 GB RAM, ~0.2 CPUs
+              allowed_groups:
+              - CPU:XS
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 1951419879
+                mem_limit: 1951419879
+                cpu_guarantee: 0.22815625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_4_gb:
+              display_name: ~4 GB RAM, ~0.5 CPUs
+              allowed_groups:
+              - CPU:S
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 3902839759
+                mem_limit: 3902839759
+                cpu_guarantee: 0.4563125
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              allowed_groups:
+              - CPU:M
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7805679519
+                mem_limit: 7805679519
+                cpu_guarantee: 0.912625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_15_gb:
+              display_name: ~15 GB RAM, ~1.9 CPUs
+              description: Up to ~15 CPUs when available
+              default: true
+              allowed_groups:
+              - CPU:L
+              kubespawner_override:
+                mem_guarantee: 16005176754
+                mem_limit: 16005176754
+                cpu_guarantee: 1.9226375
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_30_gb:
+              display_name: ~30 GB RAM, ~4 CPUs
+              description: Up to ~15 CPUs when available
+              allowed_groups:
+              - CPU:XL
+              kubespawner_override:
+                mem_guarantee: 32010353508
+                mem_limit: 32010353508
+                cpu_guarantee: 3.845275
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_60_gb:
+              display_name: ~60 GB RAM, ~8 CPUs
+              description: Up to ~15 CPUs when available
+
+              allowed_groups:
+              - CPU:XXL
+              kubespawner_override:
+                mem_guarantee: 64020707016
+                mem_limit: 64020707016
+                cpu_guarantee: 7.69055
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+            mem_119_gb:
+              display_name: ~119 GB RAM, ~15 CPUs
+              description: ~15 CPUs always available
+              allowed_groups:
+              - CPU:XXXL
+              kubespawner_override:
+                mem_guarantee: 128041414033
+                mem_limit: 128041414033
+                cpu_guarantee: 15.3811
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a container on a dedicated node with a GPU
+      slug: gpu
+      allowed_groups:
+      - GPU:T4
+      profile_options:
+        image:
+          display_name: Environment
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pytorch-maap:
+              display_name: Pangeo PyTorch ML Notebook with MAAP extensions
+              default: false
+              slug: pytorch
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v5.2.0
+            pytorch-maap-ogc:
+              display_name: OGC compliant Pangeo PyTorch ML Notebook with MAAP extensions
+              default: false
+              slug: pytorch
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v6.0.0
+            tensorflow2-maap:
+              display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
+              default: true
+              slug: tensorflow2
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v5.2.0
+            tensorflow2-maap-ogc:
+              display_name: OGC compliant Pangeo Tensorflow2 ML Notebook with MAAP extensions
+              default: false
+              slug: tensorflow2
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v6.0.0
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: g4dn.xlarge
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
   hub:
     config:
       GenericOAuthenticator:
