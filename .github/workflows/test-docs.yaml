@@ -27,18 +27,7 @@ jobs:
     - uses: actions/setup-python@v7
       with:
         python-version: '3.13'
-    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
-      with:
-        node-version: 24
-
-    - name: Install deps
-      run: pip install . -r docs/requirements.txt
-
-    - name: Generate hub tables
-      run: python -m helper_programs.hub_info_table
-      working-directory: docs
-
-      # linkcheck is done separately from this in doc-links.yml, scheduled to
-      # run every day and open/update an issue
     - name: Build docs
-      run: jupyter book build --site
+      run: |
+        pip install nox
+        nox -s docs

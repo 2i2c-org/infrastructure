@@ -6,7 +6,8 @@ See [the infrastructure documentation](https://infrastructure.2i2c.org) for more
 
 ## Building the documentation
 
-The documentation is built with [the Sphinx documentation engine](https://sphinx-doc.org).
+The documentation is built with [the MyST Document Engine](https://mystmd.org).
+Configuration lives in `docs/myst.yml` and the table of contents in `docs/toc.yml`.
 
 ### Automatically with `nox`
 
@@ -27,53 +28,23 @@ To do so, follow these steps:
    $ nox -s docs
    ```
 
-This should create a local environment in a `.nox` folder, build the documentation (as specified in the `noxfile.py` configuration), and the output will be in `docs/_build/dirhtml`.
+This should create a local environment in a `.nox` folder, build the documentation (as specified in the `noxfile.py` configuration), and the output will be in `docs/_build/html`.
 
-To build live documentation that updates when you update local files, run the following command:
+To start a live server that updates when you change local files:
 
 ```console
-$ nox -s docs -- live
+$ nox -s docs:live
 ```
 
-### Manually with `conda`
+### Manually
 
-If you wish to manually build the documentation, you can use `conda` to do so.
-
-1. Create a `conda` environment to build the documentation.
-
-   ```bash
-   conda env create -f docs/environment.yml -n infrastructure-docs
-   ```
-
-2. Activate the new environment:
-
-   ```bash
-   conda activate infrastructure-docs
-   ```
-
-3. Build the documentation:
-
-   ```bash
-   make html
-   ```
-
-This will generate the HTML for the documentation in the `docs/_build/dirhtml` folder.
-You may preview the documentation by opening any of the `.html` files inside.
-
-### Build the documentation with a live server
-
-You can optionally build the documentation with a **live server** to automatically preview the changes as you build the docs. To use this, run `make live` instead of `make html`.
-
-### Check for broken links
-
-You can check for broken links in our documentation with the [Sphinx linkcheck builder](https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-the-linkcheck-builder).
-This will build the documentation and test every link to make sure that it resolves properly.
-We use a GitHub Action to check this in our CI/CD, so this generally shouldn't be needed unless you want to manually test something.
-To check our documentation for broken links, run the following command from the `docs/` folder:
+If you wish to build the documentation yourself, install the Python dependencies (MyST installs its own Node.js), then run it from the `docs/` folder:
 
 ```bash
-make linkcheck
+pip install -r docs/requirements.txt
+cd docs
+python -m helper_programs.hub_info_table  # generates the hub tables
+myst start                                # or `myst build --html`
 ```
 
-This will build the documentation, reporting broken links as it goes.
-It will output a summary of all links in a file at `docs/_build/linkcheck/output.txt`.
+This is the same set of steps that Read the Docs runs (see `.readthedocs.yaml`).
