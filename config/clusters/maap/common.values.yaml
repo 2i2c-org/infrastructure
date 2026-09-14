@@ -39,6 +39,9 @@ jupyterhub:
     # staging = `redirect_to`). The basehub schema makes the two mutually
     # exclusive, so it cannot be shared here in common.
   hub:
+    image:
+      name: quay.io/2i2c/jupyterhub-6
+      tag: 0.0.1-0.dev.git.16914.h6b64c8e2c
     allowNamedServers: true
     loadRoles:
       server:
