@@ -50,10 +50,15 @@ async def main():
         )
     df = pd.json_normalize(avail_list)
     filename = Path(__file__).parent.parent.joinpath(
-        "docs", "csv", "cost-monitoring.csv"
+        "docs", "csv", "cost-monitoring.txt"
     )
-    df.to_csv(filename, index=False)
-    print(f"Saved CSV to {filename}")
+    # mystmd's csv-table can't read a .csv file, so wrap the CSV in the directive
+    # and let the docs {include} this file.
+    # ref: https://github.com/jupyter-book/mystmd/issues/2573
+    filename.write_text(
+        f"```{{csv-table}}\n:header-rows: 1\n\n{df.to_csv(index=False)}```\n"
+    )
+    print(f"Saved table to {filename}")
 
 
 if __name__ == "__main__":
