@@ -452,12 +452,26 @@ notebook_nodes = {
         effect : "NO_SCHEDULE"
       }
     ],
+    zones : [
+      # Span multiple zones to account for zonal resource exhaustion
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
   "n2-highmem-4-a" : {
     min : 2,
     max : 100,
     machine_type : "n2-highmem-4",
     disk_size_gb : 150,
+    zones : [
+      # Span multiple zones to account for zonal resource exhaustion
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
   "gpu-t4" : {
     min : 0,
