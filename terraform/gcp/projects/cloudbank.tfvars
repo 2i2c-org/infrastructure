@@ -56,7 +56,7 @@ persistent_disks = {
     name_suffix = "chicagostate"
   }
   "clarku" = {
-    size        = 25
+    size        = 30
     name_suffix = "clarku"
   }
   "cloud-county" = {
