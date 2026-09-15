@@ -458,6 +458,12 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
     disk_size_gb : 150,
+    zones : [
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
   "gpu-t4" : {
     min : 0,
