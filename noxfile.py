@@ -7,48 +7,38 @@ Config reference: https://nox.thea.codes/en/stable/config.html#noxfile
 
 Common tasks:
 - Install nox:                        pip install nox
-- Start a live reloading docs server: nox -- live
+- List commands to run:               nox -l
+- Run a command                       nox -s <command>
 """
 
 import nox
 
 nox.options.reuse_existing_virtualenvs = True
 
-BUILD_COMMAND = ["-b", "dirhtml", "docs", "docs/_build/dirhtml"]
 
-
-@nox.session(venv_backend="conda")
-def docs(session):
-    """Build the documentation. Use `-- live` for a live server to preview changes."""
+def _setup(session):
+    """Install dependencies and generate the hub tables, then cd into docs/."""
     session.install("-r", "docs/requirements.txt")
+    # Let mystmd install its own Node.js (via nodeenv) without prompting
+    session.env["MYSTMD_ALLOW_NODEENV"] = "1"
+    session.chdir("docs")
+    # Generate the hub tables that reference/hubs.md includes
+    session.run("python", "-m", "helper_programs.hub_info_table")
 
-    if "live" in session.posargs:
-        session.posargs.pop(session.posargs.index("live"))
 
-        # Add folders to ignore
-        # keep this in sync with Makefile
-        AUTOBUILD_IGNORE_DIRS = [
-            "_build",
-            "tmp",
-        ]
-        # Add files to ignore
-        # keep this in sync with Makefile
-        AUTOBUILD_IGNORE_FILES = [
-            "*.json",
-            "*.csv",
-        ]
+@nox.session()
+def docs(session):
+    """Build the documentation."""
+    _setup(session)
+    session.run("myst", "build", "--execute", "--html", *session.posargs)
 
-        cmd = ["sphinx-autobuild"]
-        for folder in AUTOBUILD_IGNORE_DIRS:
-            cmd.extend(["--ignore", f"*/{folder}/*"])
-        for file in AUTOBUILD_IGNORE_FILES:
-            cmd.extend(["--ignore", f"*/{file}"])
 
-        # Find an open port to serve on
-        cmd.extend(["--port", "0"])
-
-    else:
-        cmd = ["sphinx-build"]
-
-    cmd.extend(BUILD_COMMAND + session.posargs)
-    session.run(*cmd)
+# Supporting docs-live is for historical reasons...docs:live is more consistent w/ JS
+# workflows but historically it has been docs-live.
+# We can probably remove the docs-live pattern after 2027-01-01.
+@nox.session(name="docs-live")
+@nox.session(name="docs:live")
+def docs_live(session):
+    """Start a live server to preview changes to the documentation."""
+    _setup(session)
+    session.run("myst", "start", "--execute", *session.posargs)

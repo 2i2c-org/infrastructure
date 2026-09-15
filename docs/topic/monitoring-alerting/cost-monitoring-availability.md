@@ -13,36 +13,16 @@ The [Cost Monitoring System](./cost-monitoring-system.md) is available on select
 
 ## Reference table
 
-```{note}
-Update `docs/csv/cost-monitoring.csv` used to generate this table by running `extra-scripts/cost-monitoring-availability.py` in your local dev environment.
+A list of clusters with cost monitoring enabled[^1].
+
+[^1]: This is here via `{include}` and the source is at: `docs/csv/cost-monitoring.txt`.
+    The `.txt` file is auto-generated if you build the docs with `nox -s docs`.
+
+:::{tabulator}
+:pagination:
+:page-size: 25
+:search:
+:::
+
+```{include} ../../csv/cost-monitoring.txt
 ```
-
-```{csv-table}
-:header-rows: 1
-:file: ../../csv/cost-monitoring.csv
-```
-
-% DataTables config to make the table above look nice
-
-<link rel="stylesheet"
-      href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-<script type="text/javascript"
-        src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready( function () {
-    $('.table').DataTable( {
-        "order": [[ 0, "asc" ]],
-        "pageLength": 25,
-    });
-} );
-</script>
-<style>
-    table {
-        font-size: .7em;
-    }
-
-    table th, table td {
-        padding: 0;
-    }
-
-</style>

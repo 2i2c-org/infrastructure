@@ -214,3 +214,6 @@ cloudbank_hub_setup_guide.md
 
 # A documentation file with 'secrets' is hard
 !send-secrets.md
+
+# Generated at build time by nox -s docs
+docs/csv/cost-monitoring.txt
