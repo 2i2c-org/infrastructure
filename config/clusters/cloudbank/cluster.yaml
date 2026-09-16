@@ -96,6 +96,16 @@ hubs:
   - carrollu.values.yaml
   - enc-carrollu.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: calpolyslo
+  display_name: California Polytechnic State University, San Luis Obispo
+  domain: calpolyslo.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
+  - calpolyslo.values.yaml
+  - enc-calpolyslo.secret.values.yaml
 - name: cau
   display_name: Clark Atlanta University
   domain: cau.cloudbank.2i2c.cloud
