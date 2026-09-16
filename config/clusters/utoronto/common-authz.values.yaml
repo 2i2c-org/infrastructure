@@ -14,10 +14,14 @@ jupyterhub:
 
           access_token = auth_state["access_token"]
 
-          auth_state[authenticator.auth_state_groups_key] = [
+          groups = {
             *await get_course_groups(canvas_url, access_token, canvas_course_key="course_code"),
             *await get_user_groups(canvas_url, access_token),
-          ]
+          }
+
+          # Only register recognised groups
+          auth_state[authenticator.auth_state_groups_key] = groups & (authenticator.allowed_groups | authenticator.admin_groups)
+
           try:
             groups = auth_state[authenticator.auth_state_groups_key]
             login_id = auth_state['login_id']
