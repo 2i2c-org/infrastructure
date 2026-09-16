@@ -20,7 +20,7 @@ jupyterhub:
           }
 
           # Only register recognised groups
-          auth_state[authenticator.auth_state_groups_key] = groups & authenticator.allowed_groups
+          auth_state[authenticator.auth_state_groups_key] = groups & (authenticator.allowed_groups | authenticator.admin_groups)
 
           try:
             groups = auth_state[authenticator.auth_state_groups_key]
