@@ -73,8 +73,8 @@ jupyterhub:
       kubespawner_override:
         # mem_limit bumped from the original 1G to help deal with possible
         # kernel restarts, per https://2i2c.freshdesk.com/a/tickets/567
-        mem_guarantee: 512M
-        mem_limit: 1.5G
+        mem_guarantee: 1G
+        mem_limit: 4G
         cpu_guarantee: 0.1
         cpu_limit: 2
         node_selector:

@@ -96,6 +96,16 @@ hubs:
   - carrollu.values.yaml
   - enc-carrollu.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: calpolyslo
+  display_name: California Polytechnic State University, San Luis Obispo
+  domain: calpolyslo.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
+  - calpolyslo.values.yaml
+  - enc-calpolyslo.secret.values.yaml
 - name: cau
   display_name: Clark Atlanta University
   domain: cau.cloudbank.2i2c.cloud
@@ -236,6 +246,7 @@ hubs:
   helm_chart_values_files:
   - common.values.yaml
   - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
   - elcamino.values.yaml
   - enc-elcamino.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
@@ -433,6 +444,15 @@ hubs:
   - iit.values.yaml
   - enc-iit.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: iub
+  display_name: Indiana University Bloomington
+  domain: iub.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - iub.values.yaml
+  - enc-iub.secret.values.yaml
 - name: ivytech
   display_name: Ivy Tech Community College of Indiana
   domain: ivytech.cloudbank.2i2c.cloud
@@ -621,6 +641,7 @@ hubs:
   helm_chart_values_files:
   - common.values.yaml
   - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
   - nova.values.yaml
   - enc-nova.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
