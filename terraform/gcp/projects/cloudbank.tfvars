@@ -167,6 +167,10 @@ persistent_disks = {
     size        = 200
     name_suffix = "humboldt"
   }
+  "iub" = {
+    size        = 25
+    name_suffix = "iub"
+  }
   "iit" = {
     size        = 25
     name_suffix = "iit"
