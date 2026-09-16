@@ -257,7 +257,7 @@ jobs:
         import os
 
         name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
-        failure = "${{ job.status == 'failure' || cancelled() }}"
+        failure = "${{ job.status == 'failure' || job.status == 'cancelled' }}"
 
         output_file = os.getenv("GITHUB_OUTPUT")
         with open(output_file, "a") as f:
@@ -487,7 +487,7 @@ jobs:
 
         cluster_name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
         hub_name = "${{ matrix.jobs.hub_name }}".replace(".", "-")
-        failure = "${{ job.status == 'failure' || cancelled() }}"
+        failure = "${{ job.status == 'failure' || job.status == 'cancelled' }}"
 
         output_file = os.getenv("GITHUB_OUTPUT")
         with open(output_file, "a") as f:
@@ -632,7 +632,7 @@ jobs:
 
         cluster_name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
         hub_name = "${{ matrix.jobs.hub_name }}".replace(".", "-")
-        failure = "${{ job.status == 'failure' || cancelled() }}"
+        failure = "${{ job.status == 'failure' || job.status == 'cancelled' }}"
 
         output_file = os.getenv("GITHUB_OUTPUT")
         with open(output_file, "a") as f:
