@@ -227,6 +227,11 @@ hubs:
   - common.values.yaml
   - enc-common.secret.values.yaml
   - demo.values.yaml
+  # Holds SharedPasswordAuthenticator.user_password (and the unused CILogon
+  # creds). enc-demo-git below keeps the GitHub OAuth client id/secret so the
+  # previous auth scheme can be restored by uncommenting the block in
+  # demo.values.yaml -- leave it listed even though it is inert right now.
+  - enc-demo.secret.values.yaml
   - enc-demo-git.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: elac
