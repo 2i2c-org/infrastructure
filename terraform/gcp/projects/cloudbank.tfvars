@@ -51,6 +51,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "chabot"
   }
+  "chaminade" = {
+    size        = 25
+    name_suffix = "chaminade"
+  }
   "chaffey" = {
     size        = 25
     name_suffix = "chaffey"
@@ -198,6 +202,10 @@ persistent_disks = {
   "laney" = {
     size        = 200
     name_suffix = "laney"
+  }
+  "laspositas" = {
+    size        = 25
+    name_suffix = "laspositas"
   }
   "lavc" = {
     size        = 25
