@@ -19,6 +19,13 @@ jupyterhub:
           name: Chaminade University of Honolulu
           url: https://chaminade.edu/
   hub:
+    db:
+      pvc:
+        # Default SC 'standard' is Immediate-binding, so it provisions the
+        # disk before scheduling and can land outside us-central1-b, where
+        # core-pool lives -- leaving the hub pod permanently unschedulable.
+        # standard-rwo is WaitForFirstConsumer, so the disk follows the pod.
+        storageClassName: standard-rwo
     config:
       JupyterHub:
         authenticator_class: cilogon
