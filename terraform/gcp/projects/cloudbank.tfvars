@@ -203,6 +203,10 @@ persistent_disks = {
     size        = 200
     name_suffix = "laney"
   }
+  "laspositas" = {
+    size        = 25
+    name_suffix = "laspositas"
+  }
   "lavc" = {
     size        = 25
     name_suffix = "lavc"

@@ -517,6 +517,16 @@ hubs:
   - laney.values.yaml
   - enc-laney.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: laspositas
+  display_name: Las Positas College
+  domain: laspositas.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
+  - laspositas.values.yaml
+  - enc-laspositas.secret.values.yaml
 - name: lavc
   display_name: Los Angeles Valley College
   domain: lavc.cloudbank.2i2c.cloud
