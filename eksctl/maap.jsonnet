@@ -28,14 +28,14 @@ local c = cluster.makeCluster(
   nodeGroupGenerations=['d', 'e'],
 );
 
-# jsonnet doesn't like it when we re-use variable
-# names, so let's define new variables for each override
+// jsonnet doesn't like it when we reuse variable
+// names, so let's define new variables for each override
 
-# We want larger `/tmp` for larger instances,
-# simply as a way to have larger tmp under some
-# circumstances. This is hopefully a temporary workaround,
-# until we figure out a more permanent way to get larger
-# scratch spaces to some users.
+// We want larger `/tmp` for larger instances,
+// simply as a way to have larger tmp under some
+// circumstances. This is hopefully a temporary workaround,
+// until we figure out a more permanent way to get larger
+// scratch spaces to some users.
 local c1 = cluster.withNodeGroupConfigOverride(
   c,
   instanceType='r5.xlarge',
@@ -50,7 +50,7 @@ local c2 = cluster.withNodeGroupConfigOverride(
   c1,
   instanceType='r5.4xlarge',
   overrides={
-    volumeSize: 400
+    volumeSize: 400,
   }
 );
 
@@ -59,6 +59,6 @@ cluster.withNodeGroupConfigOverride(
   c2,
   instanceType='r5.16xlarge',
   overrides={
-    volumeSize: 800
+    volumeSize: 800,
   }
 )
