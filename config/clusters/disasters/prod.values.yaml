@@ -2,7 +2,6 @@ nfs:
   pv:
     serverIP: 10.100.150.169
 
-jupyterhub: {}
 dask-gateway:
   gateway:
     backend:
@@ -12,7 +11,6 @@ binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/disasters-prod-
-
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-00174260142d50e1b
@@ -20,4 +18,3 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 100 # in GiB
-

@@ -157,6 +157,11 @@ jupyterhub:
         admin_users:
         - kyttmacmanus   # Kytt MacManus, added as part of https://2i2c.freshdesk.com/a/tickets/1454
 
+    loadRoles:
+      user:
+        scopes:
+        - self
+        - access:services!service=binder
 binderhub-service:
   enabled: true
   networkPolicy:

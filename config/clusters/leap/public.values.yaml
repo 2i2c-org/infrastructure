@@ -45,6 +45,11 @@ jupyterhub:
         admin_users:
         - RobertPincus
         - SammyAgrawal
+    loadRoles:
+      user:
+        scopes:
+        - self
+        - access:services!service=binder
   singleuser:
     initContainers: []
     storage:

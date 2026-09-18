@@ -1,0 +1,149 @@
+jupyterhub:
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations: 2i2c-org
+
+  singleuser:
+    defaultUrl: /lab
+    profileList:
+    - display_name: Choose your environment and resources
+      default: true
+      profile_options:
+        image:
+          display_name: Environment
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            display_name_in_choices: Bring your own image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            01-scipy:
+              default: true
+              display_name: Jupyter SciPy Notebook
+              description: Scientific Python image
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2026-07-28
+            02-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2026.06.04
+            03-rocker:
+              display_name: Rocker Geospatial with RStudio
+              description: R environment with many geospatial libraries pre-installed
+              kubespawner_override:
+                image: rocker/binder:4.4
+                image_pull_policy: Always
+                    # Launch RStudio after the user logs in
+                default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                working_dir: /home/rstudio
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_3_gb:
+              default: true
+              display_name: ~3 GB RAM, ~0.4 CPUs
+              description: Up to ~3 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 3548507348
+                mem_limit: 3548507348
+                cpu_guarantee: 0.42262500000000003
+                cpu_limit: 3.3810000000000002
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-4
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~0.8 CPUs
+              description: Up to ~3 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7097014697
+                mem_limit: 7097014697
+                cpu_guarantee: 0.8452500000000001
+                cpu_limit: 3.3810000000000002
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-4
+            mem_13_gb:
+              display_name: ~13 GB RAM, ~1.7 CPUs
+              description: Up to ~3 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 14194029394
+                mem_limit: 14194029394
+                cpu_guarantee: 1.6905000000000001
+                cpu_limit: 3.3810000000000002
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-4
+            mem_26_gb:
+              display_name: ~26 GB RAM, ~3 CPUs
+              description: ~3 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 28388058789
+                mem_limit: 28388058789
+                cpu_guarantee: 3.3810000000000002
+                cpu_limit: 3.3810000000000002
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-4
+            mem_57_gb:
+              display_name: ~57 GB RAM, ~8 CPUs
+              description: Up to ~15 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 61149773824
+                mem_limit: 61149773824
+                cpu_guarantee: 7.554819999999999
+                cpu_limit: 15.109639999999999
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-16
+            mem_114_gb:
+              display_name: ~114 GB RAM, ~15 CPUs
+              description: ~15 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 122299547648
+                mem_limit: 122299547648
+                cpu_guarantee: 15.109639999999999
+                cpu_limit: 15.109639999999999
+                node_selector:
+                  node.kubernetes.io/instance-type: n2-highmem-16
+
+    - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+      description: Start a container on a dedicated node with a GPU
+      profile_options:
+        image:
+          display_name: Image
+          choices:
+            tensorflow:
+              display_name: Pangeo Tensorflow ML Notebook
+              slug: tensorflow
+              kubespawner_override:
+                image: pangeo/ml-notebook:2026.06.04
+            pytorch:
+              display_name: Pangeo PyTorch ML Notebook
+              default: true
+              slug: pytorch
+              kubespawner_override:
+                image: pangeo/pytorch-notebook:2026.06.04
+      kubespawner_override:
+        environment:
+          NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        mem_limit:
+        mem_guarantee: 14G
+        node_selector:
+          node.kubernetes.io/instance-type: n1-highmem-8
+        extra_resource_limits:
+          nvidia.com/gpu: '1'
+    extraEnv:
+      SCRATCH_BUCKET: gs://seamap-scratch/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: gs://seamap-persistent/$(JUPYTERHUB_USER)
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/ucec-503914/zones/us-central1-b/disks/hub-nfs-homedirs-seamap
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

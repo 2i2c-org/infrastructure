@@ -48,7 +48,7 @@ jobs:
         fields: Status,Unplanned,Iteration
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
-        values: In progress,Emergency,Iteration ${{ needs.compute-iteration.outputs.iteration }}
+        values: In Progress,Emergency,Iteration ${{ needs.compute-iteration.outputs.iteration }}
         resource_url: ${{ env.tracking_issue }}
 
     - name: Create incident report issue

@@ -55,7 +55,7 @@ jupyterhub:
   singleuser:
     image:
       name: pangeo/pangeo-notebook
-      tag: "2020.12.08"
+      tag: "2026.04.29"
 ```
 
 This can be any image name & tag available in a public container registry.

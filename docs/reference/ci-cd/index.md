@@ -7,12 +7,9 @@ We use [GitHub Actions](https://docs.github.com/en/actions) as our CI/CD vendor 
 
 Longer or more complex workflows are discussed on their own pages (listed in the table of contents), whereas you can find descriptions of simpler or shorter workflows further down this page.
 
-```{toctree}
-:maxdepth: 2
-
-hub-deploy.md
-auto-bumping.md
-```
+:::{toc}
+:context: children
+:::
 
 ## Helm chart values and cluster config validation
 
@@ -29,7 +26,7 @@ This workflow is only triggered when related configuration has changed.
 
 GitHub's UI is slightly confusing for distinguishing between _workflows that ran on a Pull Request_ and _workflows that ran on the merge commit to the default branch_.
 
-To help contributors to our `infrastructure` repository find the right workflow run, we have a GitHub Actions workflow that [posts a comment on a just merged Pull Request](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/comment-test-link-merged-pr.yaml) with a link to the GitHub Actions run of the `deploy-hubs.yaml` workflow (described in [](cicd/hub)) that the merge triggered.
+To help contributors to our `infrastructure` repository find the right workflow run, we have a GitHub Actions workflow that [posts a comment on a just merged Pull Request](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/comment-test-link-merged-pr.yaml) with a link to the GitHub Actions run of the `deploy-hubs.yaml` workflow (described in [](#cicd/hub)) that the merge triggered.
 Hence, it should be much easier to find the current deployments caused by merges than just following GitHub's UI.
 
 ## Required workflows and author auto-assignment

@@ -133,7 +133,7 @@ resource.type="k8s_container"
 resource.labels.container_name="dask-worker" OR resource.labels.container_name="distributed.nanny"
 ```
 
-You must pass the [escaped username](howto:troubleshoot:logs:username) to the
+You must pass the [escaped username](#howto:troubleshoot:logs:username) to the
 query.
 
 #### Full-text search across logs

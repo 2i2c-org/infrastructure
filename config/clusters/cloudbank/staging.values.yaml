@@ -1,14 +1,12 @@
 jupyterhub:
   singleuser:
+    profileList: {}
     defaultUrl: /lab
     memory:
       # Increased to help deal with possible kernel restarts
       # https://2i2c.freshdesk.com/a/tickets/567
       guarantee: 384M
       limit: 1.5G
-    image:
-      name: quay.io/ccsf/jupyterhub
-      tag: sp26.6
     storage:
       extraVolumeMounts:
         1-submit-volumemount:
@@ -41,6 +39,9 @@ jupyterhub:
           mountPath: /home/jovyan/collect
           subPath: _shared-private
   hub:
+    image:
+      name: quay.io/2i2c/jupyterhub-6
+      tag: 0.0.1-0.dev.git.16914.h6b64c8e2c
     config:
       JupyterHub:
         authenticator_class: cilogon

@@ -1,15 +1,13 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
 prometheus:
   server:
     resources:
       limits:
-        memory: 5.5Gi
+        memory: 12Gi
       requests:
-        memory: 5.5Gi
+        # See https://github.com/2i2c-org/infrastructure/pull/1906
+        memory: 6Gi
     persistentVolume:
-      size: 750Gi
+      size: 1000Gi
     ingress:
       enabled: true
       hosts:
@@ -19,8 +17,6 @@ prometheus:
         hosts:
         - prometheus.cloudbank.2i2c.cloud
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:
@@ -36,20 +32,19 @@ grafana:
       hosts:
       - grafana.cloudbank.2i2c.cloud
 
-nginx-ingress:
+k8s-node-operator:
   enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-ingress-nginx:
-  controller:
-    # Turn off this controller
-    replicaCount: 0
-    # Let go of the `nginx` ingress class
-    ingressClassResource:
-      enabled: false
-
-clusterEntrypoint:
-  targetController: nginx-ingress
+  extraEnv:
+  - name: GCP_CLUSTER
+    value: cb-cluster
+  - name: GCP_MACHINE_TYPE
+    value: e2-medium
+  - name: GCP_PROJECT_ID
+    value: cb-1003-1696
+  - name: GCP_ZONE
+    value: us-central1-b
+  - name: GCP_NODEPOOL
+    value: test-pool
+  serviceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: cb-node-operator@cb-1003-1696.iam.gserviceaccount.com

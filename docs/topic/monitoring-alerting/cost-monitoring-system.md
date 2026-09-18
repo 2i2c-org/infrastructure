@@ -7,7 +7,7 @@ infrastructure costs to 2i2c hub deployments. This system integrates with the
 API](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-api.html)
 to provide detailed cost insights from a hub's Grafana dashboard.
 
-For details on how to enable the cost monitoring system, see the [how-to guide](howto:cost-monitoring:enable-aws).
+For details on how to enable the cost monitoring system, see the [how-to guide](#howto:cost-monitoring:enable-aws).
 
 :::{note}
 See [Cost Monitoring Availability](cost-monitoring-availability.md) for a description of which clusters the Cost Monitoring System is available.

@@ -1,0 +1,45 @@
+jupyterhub:
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://orangecoastcollege.edu/assets/images/logo.png
+          name: Orange Coast College
+          url: https://orangecoastcollege.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - OCCData8
+        scope:
+        - read:org
+      Authenticator:
+        admin_users:
+        - sean-morris
+        - mayadaData8
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-orangecoast
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

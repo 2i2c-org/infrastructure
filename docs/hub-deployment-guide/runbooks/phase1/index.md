@@ -33,9 +33,6 @@ No file assets will be generated at the end of this phase.
 
 Based on the information provided, choose one of the following runbooks to follow.
 
-```{toctree}
-:maxdepth: 1
-new-gcp-project
-new-aws-account
-aws-external-account
-```
+:::{toc}
+:context: children
+:::

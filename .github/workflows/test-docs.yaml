@@ -21,19 +21,13 @@ jobs:
   test-docs:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
-    - uses: actions/setup-python@v6
+    - uses: actions/setup-python@v7
       with:
         python-version: '3.13'
-
-    - name: Install deps
-      run: pip install . -r docs/requirements.txt
-
-      # linkcheck is done separately from this in doc-links.yml, scheduled to
-      # run every day and open/update an issue
-    - name: make dirhtml
+    - name: Build docs
       run: |
-        cd docs
-        make dirhtml SPHINXOPTS='--color -W --keep-going'
+        pip install nox
+        nox -s docs

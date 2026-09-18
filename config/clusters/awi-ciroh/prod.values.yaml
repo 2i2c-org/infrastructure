@@ -48,70 +48,65 @@ basehub:
                 slug: new
                 kubespawner_override:
                   image: quay.io/2i2c/awi-ciroh-image:d86a62ae0b85
-              rkernel:
-                display_name: Notebook with R and Python kernel
-                slug: rkernel
+              devcon15: # Repurposed for Summer Institute '26
+                display_name: Summer Institute Bootcamp
+                slug: devcon15
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:f7f6aa41555b
-              preprocessor:
-                display_name: NGIAB Data Preprocessor
-                kubespawner_override:
-                    # From  https://github.com/CIROH-UA/NGIAB_data_preprocess
-                  image: quay.io/awiciroh/devcon25:ngiab_datapreprocess
+                  image: quay.io/awiciroh/devcon26:devcon26-cuahsi
                   image_pull_policy: Always
-              devcon1:
-                display_name: USGS Surface Water Tools
-                slug: devcon1
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-usgs
-                  image_pull_policy: Always
-              devcon2:
-                display_name: SHAP for ML Interpretation
-                slug: devcon2
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-shap
-                  image_pull_policy: Always
-              devcon3:
-                display_name: TEVA for Feature Selection
-                slug: devcon3
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-teva
-                  image_pull_policy: Always
-              devcon4:
-                display_name: LightGBM for Forecast
-                slug: devcon4
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:devcon25-forecasting
-                  image_pull_policy: Always
-              devcon5:
-                display_name: ML for Hydro Model Outputs
-                slug: devcon5
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:sneisary_d25
-                  image_pull_policy: Always
-              devcon6:
-                display_name: HydroGeoSpatial Modeling
-                slug: devcon6
-                kubespawner_override:
-                  image: quay.io/awiciroh/devcon25:jmframe_d25
-                  image_pull_policy: Always
-              devcon7:
+              devcon7: # No longer a devcon image
                 display_name: CIROH Community NextGen Hub
                 slug: devcon7
                 kubespawner_override:
                   image: quay.io/awiciroh/ngiab-2i2c:v1.2.3
                   image_pull_policy: Always
-              devcon8:
+              devcon8: # No longer a devcon image
                 display_name: Community Assets Computation Hub
                 slug: devcon8
                 kubespawner_override:
-                  image: quay.io/awiciroh/symfluence:v1.0.0
+                  image: quay.io/2i2c/awi-ciroh-image:symfluence-v0.9.2
                   image_pull_policy: Always
-              devcon9:
-                display_name: Symfluence
-                slug: devcon9
+              devcon1:
+                display_name: Devcon25-USGS Surface Water Tools
+                slug: devcon1
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:symfluence-beta
+                  image: quay.io/awiciroh/devcon25:devcon25-usgs
+                  image_pull_policy: Always
+              devcon10:
+                display_name: Devcon26-INFLECT FIM
+                slug: devcon10
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-inflect
+                  image_pull_policy: Always
+              devcon11:
+                display_name: Devcon26-HydroServer
+                slug: devcon11
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-hydroserver
+                  image_pull_policy: Always
+              devcon12:
+                display_name: Devcon26-Hillslope Water Quality Prediction
+                slug: devcon12
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-hillslope
+                  image_pull_policy: Always
+              devcon13:
+                display_name: Devcon26-ML Emulator Models
+                slug: devcon13
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-emulator
+                  image_pull_policy: Always
+              devcon14:
+                display_name: Devcon26-Satellite Data Projection
+                slug: devcon14
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-satellite
+                  image_pull_policy: Always
+              devcon16:
+                display_name: Devcon26-Foundations of ML
+                slug: devcon16
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-foundations
                   image_pull_policy: Always
         kubespawner_override:
           mem_limit: 7G

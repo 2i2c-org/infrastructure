@@ -11,10 +11,6 @@ filestores               = {}
 single_process_oom_kill  = false
 
 persistent_disks = {
-  "ahs" = {
-    size        = 100
-    name_suffix = "ahs"
-  }
   "authoring" = {
     size        = 25
     name_suffix = "authoring"
@@ -23,9 +19,29 @@ persistent_disks = {
     size        = 60
     name_suffix = "bcc"
   }
+  "berea" = {
+    size        = 25
+    name_suffix = "berea"
+  }
   "bmcc" = {
     size        = 25
     name_suffix = "bmcc"
+  }
+  "boise" = {
+    size        = 25
+    name_suffix = "boise"
+  }
+  "calpolyslo" = {
+    size        = 25
+    name_suffix = "calpolyslo"
+  }
+  "carrollu" = {
+    size        = 25
+    name_suffix = "carrollu"
+  }
+  "cau" = {
+    size        = 25
+    name_suffix = "cau"
   }
   "ccsf" = {
     size        = 513
@@ -35,6 +51,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "chabot"
   }
+  "chaminade" = {
+    size        = 25
+    name_suffix = "chaminade"
+  }
   "chaffey" = {
     size        = 25
     name_suffix = "chaffey"
@@ -42,6 +62,14 @@ persistent_disks = {
   "chicagostate" = {
     size        = 25
     name_suffix = "chicagostate"
+  }
+  "clarku" = {
+    size        = 50
+    name_suffix = "clarku"
+  }
+  "cloud-county" = {
+    size        = 25
+    name_suffix = "cloud-county"
   }
   "cmu" = {
     size        = 25
@@ -55,9 +83,9 @@ persistent_disks = {
     size        = 150
     name_suffix = "csm"
   }
-  "csum" = {
+  "csusm" = {
     size        = 25
-    name_suffix = "csum"
+    name_suffix = "csusm"
   }
   "deanza" = {
     size        = 60
@@ -67,10 +95,6 @@ persistent_disks = {
     size        = 35
     name_suffix = "demo"
   }
-  "dvc" = {
-    size        = 98
-    name_suffix = "dvc"
-  }
   "elac" = {
     size        = 40
     name_suffix = "elac"
@@ -78,6 +102,14 @@ persistent_disks = {
   "elcamino" = {
     size        = 350
     name_suffix = "elcamino"
+  }
+  "emich" = {
+    size        = 25
+    name_suffix = "emich"
+  }
+  "epcc" = {
+    size        = 25
+    name_suffix = "epcc"
   }
   "evc" = {
     size        = 200
@@ -87,6 +119,10 @@ persistent_disks = {
     size        = 100
     name_suffix = "etsu"
   }
+  "fgcu" = {
+    size        = 25
+    name_suffix = "fgcu"
+  }
   "foothill" = {
     size        = 200
     name_suffix = "foothill"
@@ -94,6 +130,14 @@ persistent_disks = {
   "fresno" = {
     size        = 60
     name_suffix = "fresno"
+  }
+  "fullertoncc" = {
+    size        = 25
+    name_suffix = "fullertoncc"
+  }
+  "georgetown" = {
+    size        = 25
+    name_suffix = "georgetown"
   }
   "glendale" = {
     size        = 60
@@ -107,6 +151,10 @@ persistent_disks = {
     size        = 500
     name_suffix = "gpu-demo"
   }
+  "gssm" = {
+    size        = 25
+    name_suffix = "gssm"
+  }
   "gwu" = {
     size        = 300
     name_suffix = "gwu"
@@ -119,9 +167,25 @@ persistent_disks = {
     size        = 25
     name_suffix = "hmc"
   }
+  "howard" = {
+    size        = 25
+    name_suffix = "howard"
+  }
   "humboldt" = {
     size        = 200
     name_suffix = "humboldt"
+  }
+  "iub" = {
+    size        = 25
+    name_suffix = "iub"
+  }
+  "iit" = {
+    size        = 25
+    name_suffix = "iit"
+  }
+  "ivytech" = {
+    size        = 25
+    name_suffix = "ivytech"
   }
   "kean" = {
     size        = 25
@@ -139,6 +203,10 @@ persistent_disks = {
     size        = 200
     name_suffix = "laney"
   }
+  "laspositas" = {
+    size        = 25
+    name_suffix = "laspositas"
+  }
   "lavc" = {
     size        = 25
     name_suffix = "lavc"
@@ -146,6 +214,10 @@ persistent_disks = {
   "lbcc" = {
     size        = 25
     name_suffix = "lbcc"
+  }
+  "maine" = {
+    size        = 25
+    name_suffix = "maine"
   }
   "mendocino" = {
     size        = 40
@@ -171,17 +243,41 @@ persistent_disks = {
     size        = 25
     name_suffix = "mission"
   }
+  "monmouth" = {
+    size        = 100
+    name_suffix = "monmouth"
+  }
   "moreno" = {
     size        = 60
     name_suffix = "moreno"
   }
+  "nicc" = {
+    size        = 25
+    name_suffix = "nicc"
+  }
   "norco" = {
-    size        = 40
+    size        = 50
     name_suffix = "norco"
+  }
+  "nova" = {
+    size        = 25
+    name_suffix = "nova"
   }
   "ocu" = {
     size        = 25
     name_suffix = "ocu"
+  }
+  "oit" = {
+    size        = 25
+    name_suffix = "oit"
+  }
+  "orangecoast" = {
+    size        = 25
+    name_suffix = "orangecoast"
+  }
+  "ornl" = {
+    size        = 25
+    name_suffix = "ornl"
   }
   "palomar" = {
     size        = 40
@@ -191,6 +287,10 @@ persistent_disks = {
     size        = 140
     name_suffix = "pasadena"
   }
+  "psu" = {
+    size        = 25
+    name_suffix = "psu"
+  }
   "redwoods" = {
     size        = 40
     name_suffix = "redwoods"
@@ -198,6 +298,10 @@ persistent_disks = {
   "reedley" = {
     size        = 40
     name_suffix = "reedley"
+  }
+  "ric" = {
+    size        = 25
+    name_suffix = "ric"
   }
   "riohondo" = {
     size        = 20
@@ -215,25 +319,25 @@ persistent_disks = {
     size        = 100
     name_suffix = "sbcc"
   }
-  "sbcc-dev" = {
-    size        = 20
-    name_suffix = "sbcc-dev"
+  "shasta" = {
+    size        = 25
+    name_suffix = "shasta"
   }
   "sierra" = {
-    size        = 20
+    size        = 30
     name_suffix = "sierra"
   }
   "sjcc" = {
     size        = 30
     name_suffix = "sjcc"
   }
-  "sjsu" = {
-    size        = 20
-    name_suffix = "sjsu"
-  }
   "skyline" = {
-    size        = 115
+    size        = 150
     name_suffix = "skyline"
+  }
+  "smc" = {
+    size        = 25
+    name_suffix = "smc"
   }
   "sou" = {
     size        = 100
@@ -244,44 +348,88 @@ persistent_disks = {
     name_suffix = "spelman"
   }
   "srjc" = {
-    size        = 50
+    size        = 100
     name_suffix = "srjc"
   }
   "staging" = {
     size        = 2
     name_suffix = "staging"
   }
-  "stanford" = {
+  "tiffin" = {
     size        = 25
-    name_suffix = "stanford"
+    name_suffix = "tiffin"
+  }
+  "tntech" = {
+    size        = 100
+    name_suffix = "tntech"
+  }
+  "toledo" = {
+    size        = 25
+    name_suffix = "toledo"
   }
   "tuskegee" = {
     size        = 20
     name_suffix = "tuskegee"
   }
-  "ucsc" = {
-    size        = 20
-    name_suffix = "ucsc"
+  "uams" = {
+    size        = 25
+    name_suffix = "uams"
   }
   "umd" = {
     size        = 50
     name_suffix = "umd"
   }
+  "unc-chapel-hill" = {
+    size        = 25
+    name_suffix = "unc-chapel-hill"
+  }
+  "uncw" = {
+    size        = 25
+    name_suffix = "uncw"
+  }
   "und" = {
     size        = 25
     name_suffix = "und"
   }
-  "unr" = {
-    size        = 40
-    name_suffix = "unr"
+  "uta" = {
+    size        = 25
+    name_suffix = "uta"
+  }
+  "utpb" = {
+    size        = 25
+    name_suffix = "utpb"
+  }
+  "uwyo" = {
+    size        = 25
+    name_suffix = "uwyo"
   }
   "virginia" = {
     size        = 180
     name_suffix = "virginia"
   }
+  "wcu" = {
+    size        = 25
+    name_suffix = "wcu"
+  }
+  "weber" = {
+    size        = 25
+    name_suffix = "weber"
+  }
+  "whitman" = {
+    size        = 25
+    name_suffix = "whitman"
+  }
+  "willamette" = {
+    size        = 25
+    name_suffix = "willamette"
+  }
   "wlac" = {
     size        = 20
     name_suffix = "wlac"
+  }
+  "york" = {
+    size        = 25
+    name_suffix = "york"
   }
 }
 
@@ -326,6 +474,12 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
     disk_size_gb : 150,
+    zones : [
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
   "gpu-t4" : {
     min : 0,
@@ -377,3 +531,6 @@ dask_nodes = {
 }
 
 user_buckets = {}
+
+# Enable k8s-node-operator https://github.com/2i2c-org/k8s-node-operator
+enable_k8s_node_operator = true

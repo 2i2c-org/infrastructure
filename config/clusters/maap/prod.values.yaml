@@ -10,11 +10,18 @@ jupyterhub:
     homepage:
       gitRepoBranch: master
       gitRepoUrl: https://github.com/MAAP-Project/maap-hub-homepage
+      templateVars:
+        # Non-logged-in visitors go straight to EDL (oauth_login), matching the
+        # MAAP Console — no sign-up landing first. New/role-less users then hit the
+        # hub's 403 page, which bounces them to /signup?status=pending&from=hub
+        # (the post-auth "in review" state) on the paired UAT web env.
+        redirect_to: https://hub.maap-project.org/hub/oauth_login
+
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-prod/$(JUPYTERHUB_USER)
       MAAP_API_HOST: api.maap-project.org
-      DOCKERIMAGE_PATH_DEFAULT: mas.maap-project.org/root/maap-workspaces/custom_images/maap_base:v5.0.0
+      DOCKERIMAGE_PATH_DEFAULT: mas.maap-project.org/root/maap-workspaces/custom_images/maap_base:v6.0.0
       DOCKERIMAGE_PATH_BASE_IMAGE: $(JUPYTER_IMAGE)
       WORKSPACE_BUCKET: maap-ops-workspace
     profileList:
@@ -34,21 +41,36 @@ jupyterhub:
               image: '{value}'
           choices:
             01-pangeo:
-              display_name: Modified Pangeo Notebook v5.1.0
+              display_name: Modified Pangeo Notebook v5.2.0
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.1.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v5.2.0
             02-rocker:
-              display_name: Rocker Geospatial v5.1.0
+              display_name: Rocker Geospatial v5.2.0
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.1.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v5.2.0
             03-isce3:
-              display_name: isce3 v5.1.0
+              display_name: isce3 v5.2.0
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.1.0
-            04-qgis:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v5.2.0
+            04-pangeo-ogc:
+              display_name: OGC compliant Modified Pangeo Notebook v6.0.0
+              description: Pangeo based notebook with a Python environment
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pangeo:v6.0.0
+            05-rocker-ogc:
+              display_name: OGC compliant Rocker Geospatial v6.0.0
+              description: JupyterHub environment with many R geospatial libraries pre-installed
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v6.0.0
+            06-isce3-ogc:
+              display_name: OGC compliant isce3 v6.0.0
+              description: Pangeo based notebook with a Python environment and isce3
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/isce3:v6.0.0
+            07-qgis:
               display_name: QGIS on Linux Desktop
               description: Linux desktop in the browser, with qgis installed
               kubespawner_override:
@@ -163,30 +185,30 @@ jupyterhub:
             kubespawner_override:
               image: '{value}'
           choices:
-            pytorch:
-              display_name: Pangeo PyTorch ML Notebook
-              default: false
-              slug: pytorch
-              kubespawner_override:
-                image: quay.io/pangeo/pytorch-notebook:2025.12.30
             pytorch-maap:
               display_name: Pangeo PyTorch ML Notebook with MAAP extensions
               default: false
               slug: pytorch
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v5.1.0
-            tensorflow2:
-              display_name: Pangeo Tensorflow2 ML Notebook
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v5.2.0
+            pytorch-maap-ogc:
+              display_name: OGC compliant Pangeo PyTorch ML Notebook with MAAP extensions
               default: false
-              slug: tensorflow2
+              slug: pytorch
               kubespawner_override:
-                image: quay.io/pangeo/ml-notebook:2025.12.30
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/pytorch:v6.0.0
             tensorflow2-maap:
               display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
               default: true
               slug: tensorflow2
               kubespawner_override:
-                image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v5.1.0
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v5.2.0
+            tensorflow2-maap-ogc:
+              display_name: OGC compliant Pangeo Tensorflow2 ML Notebook with MAAP extensions
+              default: false
+              slug: tensorflow2
+              kubespawner_override:
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v6.0.0
       kubespawner_override:
         environment:
           NVIDIA_DRIVER_CAPABILITIES: compute,utility
@@ -201,6 +223,15 @@ jupyterhub:
       GenericOAuthenticator:
         token_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/token
         authorize_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/auth
+      Authenticator:
+        # End the Keycloak SSO session on hub logout. Without this, logout only
+        # clears the hub session; the login page's redirect_to (oauth_login)
+        # then silently re-authenticates via the live Keycloak cookie and the
+        # user lands back on the dashboard still logged in. Requires
+        # https://www.maap-project.org/* in the jupyterhub-maap client's
+        # "Valid post logout redirect URIs" in Keycloak.
+        logout_redirect_url: https://auth.openveda.cloud/realms/maap/protocol/openid-connect/logout?client_id=jupyterhub-maap&post_logout_redirect_uri=https%3A%2F%2Fwww.maap-project.org%2F
+
 dask-gateway:
   gateway:
     backend:
@@ -210,7 +241,6 @@ binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-prod-
-
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0cb9118aa95971a6a

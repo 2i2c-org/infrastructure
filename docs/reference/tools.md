@@ -94,7 +94,7 @@ new files.
 
 [Terraform](https://www.terraform.io/) is an "Infrastructure as Code" (IaC) tool that allows you to build, change, and version infrastructure in the cloud.
 We use terraform to provision cloud infrastructure and modify it directly.
-We then deploy applications on top of that infrastructure via [Helm](tools:helm).
+We then deploy applications on top of that infrastructure via [Helm](#tools:helm).
 
 The minimum required version is `1.3`.
 

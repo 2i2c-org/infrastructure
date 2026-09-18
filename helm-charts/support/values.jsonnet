@@ -109,7 +109,7 @@ local makePodRestartAlert = function(
             sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~"%s"})
           -
             sum by (pod, namespace) (kube_pod_container_status_restarts_total{pod=~"%s"} offset 10m)
-      ) >= 1    
+      ) >= 1
   ||| % [pod_name_regex, pod_name_regex],
   'for': '5m',
   labels: {
@@ -126,8 +126,9 @@ local makePodStuckInPendingForTooLongAlert = function(
   severity,
                                              ) {
   alert: 'Pod stuck in Pending for at least 30m',
+  // Ignore continuous image pre-pullers, as on large images it can take more than 30min to pull
   expr: |||
-    max by (namespace, pod) (kube_pod_status_phase{phase="Pending"}) > 0
+    max by (namespace, pod) (kube_pod_status_phase{phase="Pending", pod!~"^continuous-image-puller-.*"}) > 0
   |||,
   'for': '30m',
   labels: {
@@ -157,14 +158,235 @@ local makePodStuckInTerminatingForTooLongAlert = function(
   },
 };
 
+local makeUsageQuotasFailOpenAlert = function(
+  summary,
+  severity,
+                                     ) {
+  alert: 'Compute usage quotas - At least one fail open detected in the last 30 mins',
+  expr: |||
+    sum(
+      changes(jupyterhub_usage_quotas_fail_open_total[30m])
+    ) by (namespace) >= 1
+  |||,
+  'for': '0m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
+local makeUsageQuotasPrometheusErrorAlert = function(
+  summary,
+  severity,
+                                            ) {
+  alert: 'Compute usage quotas - At least one Prometheus error detected  in the last 30m',
+  expr: |||
+    sum(
+      changes(jupyterhub_usage_quotas_prometheus_error_total[30m])
+    ) >= 3
+  |||,
+  'for': '0m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
+local makeUsageQuotasServerDeniedAlert = function(
+  summary,
+  severity,
+                                         ) {
+  alert: 'Compute usage quotas - At least one server launch denied due to exhausted quota in cluster ' + cluster_name + ' in the last 30 mins',
+  expr: |||
+    changes(
+      (
+        max by (namespace) (
+          jupyterhub_request_duration_seconds_count{handler="jupyterhub.handlers.pages.SpawnPendingHandler", code="422"}
+            or 0*jupyterhub_request_duration_seconds_count # 0 values and absent values are distinct, so we need to 'fill-in' absent values across the time series so that the changes operator acts consistently
+          )
+        )[30m:1m]
+    ) >= 1
+  |||,
+  'for': '0m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
 local configCostMonitoring = {
   enabled: true,
-  extraEnv: [
-    {
-      name: 'CLUSTER_NAME',
-      value: cluster_name,
+  config: {
+    AWSCostExplorer: {
+      hub_name_tag: '2i2c:hub-name',
+      home_storage_costs_filter: {
+        Tags: {
+          Key: '2i2c:volume-purpose',
+          Values: ['home-nfs'],
+          MatchOptions: ['EQUALS'],
+        },
+      },
+      attributable_costs_filter: {
+        Or: [
+          {
+            Tags: {
+              Key: 'alpha.eksctl.io/cluster-name',
+              Values: [cluster_name],
+              MatchOptions: ['EQUALS'],
+            },
+          },
+          {
+            Tags: {
+              Key: 'kubernetes.io/cluster/%s' % [cluster_name],
+              Values: ['owned'],
+              MatchOptions: ['EQUALS'],
+            },
+          },
+          {
+            Tags: {
+              Key: '2i2c.org/cluster-name',
+              Values: [cluster_name],
+              MatchOptions: ['EQUALS'],
+            },
+          },
+          // FIXME to the FIXME: The FIXME comment underneath does not make any sense
+          // to me, so we should investigate what the intent was and remove it.
+          // FIXME: The inclusion of tags 2i2c:hub-name and 2i2c:node-purpose below
+          //        in this filter is a patch to capture openscapes data from 1st
+          //        July and up to 24th September 2024, and can be removed once
+          //        that date range is considered irrelevant.
+          {
+            Not: {
+              Tags: {
+                Key: '2i2c:hub-name',
+                MatchOptions: ['ABSENT'],
+              },
+            },
+          },
+          {
+            Not: {
+              Tags: {
+                Key: '2i2c:node-purpose',
+                MatchOptions: ['ABSENT'],
+              },
+            },
+          },
+        ],
+      },
+      core_costs_filter: {
+        Or: [
+          // Core node storage
+          {
+            And: [
+              {
+                Dimensions: {
+                  Key: 'SERVICE',
+                  Values: ['EC2 - Other'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+              {
+                Tags: {
+                  Key: '2i2c:node-purpose',
+                  Values: ['core'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+            ],
+          },
+          // Core node compute
+          {
+            And: [
+              {
+                Dimensions: {
+                  Key: 'SERVICE',
+                  Values: ['Amazon Elastic Compute Cloud - Compute'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+              {
+                Tags: {
+                  Key: '2i2c:node-purpose',
+                  Values: ['core'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+            ],
+          },
+          // Cluster NAT gateway - common for all hubs
+          {
+            And: [
+              {
+                Dimensions: {
+                  Key: 'SERVICE',
+                  Values: ['EC2 - Other'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+              {
+                Dimensions: {
+                  Key: 'USAGE_TYPE_GROUP',
+                  Values: [
+                    'EC2: NAT Gateway - Running Hours',
+                    'EC2: NAT Gateway - Data Processed',
+                  ],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+            ],
+          },
+          // Hub database storage
+          {
+            And: [
+              {
+                Dimensions: {
+                  Key: 'SERVICE',
+                  Values: ['EC2 - Other'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+              {
+                Tags: {
+                  Key: 'kubernetes.io/created-for/pvc/name',
+                  Values: ['hub-db-dir'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+            ],
+          },
+          // Support components storage (Prometheus, Grafana, Alertmanager)
+          {
+            And: [
+              {
+                Dimensions: {
+                  Key: 'SERVICE',
+                  Values: ['EC2 - Other'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+              {
+                Tags: {
+                  Key: 'kubernetes.io/created-for/pvc/namespace',
+                  Values: ['support'],
+                  MatchOptions: ['EQUALS'],
+                },
+              },
+            ],
+          },
+        ],
+      },
     },
-  ],
+
+  },
   serviceAccount: {
     annotations: {
       // See terraform/aws/cost-monitoring.tf
@@ -173,12 +395,22 @@ local configCostMonitoring = {
   },
 };
 
+local configFluentBit = {
+  serviceAccount: {
+    annotations: if provider_name == 'aws' then {
+      // See terraform/aws/k8s-event-exporter.tf
+      'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/k8s_event_exporter_cloudwatch' % account_id,
+    } else {},
+  },
+};
 
 {
   grafana: {
     serviceAccount: {
       annotations: if provider_name == 'aws' then {
         'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/jupyterhub_grafana_cloudwatch' % account_id,
+      } else if provider_name == 'gcp' then {
+        'iam.gke.io/gcp-service-account': 'grafana-2i2c-sa@%s.iam.gserviceaccount.com' % account_id,
       } else {},
     },
   },
@@ -200,6 +432,15 @@ local configCostMonitoring = {
           ],
           repeat_interval: '3h',
           routes: [
+            {
+              receiver: 'cloudbank-pager',
+              matchers: [
+                'cluster =~ .*cloudbank.*',
+                'alertname =~ .*',
+              ],
+              // if this one matches, don't check sub-sequent routes
+              continue: false,
+            },
             {
               receiver: 'known-storage-outage-pager',
               matchers: [
@@ -235,6 +476,13 @@ local configCostMonitoring = {
               matchers: [
                 'cluster =~ .*',
                 'alertname =~ ".*stuck in state.*"',
+              ],
+            },
+            {
+              receiver: 'jupyterhub-usage-quotas',
+              matchers: [
+                'cluster =~ .*',
+                'alertname =~ "Compute usage quotas.*"',
               ],
             },
           ],
@@ -328,6 +576,12 @@ local configCostMonitoring = {
                 '^proxy.*',
                 'immediate action needed'
               ),
+              makePodRestartAlert(
+                'support-prometheus-server',
+                'support-prometheus-server pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
+                '^proxy.*',
+                'same day action needed'
+              ),
             ],
           },
           {
@@ -352,9 +606,28 @@ local configCostMonitoring = {
               ),
             ],
           },
+          {
+            name: 'Possible application outage',
+            rules: [
+              makeUsageQuotasFailOpenAlert(
+                'Compute usage quotas - Fail open detected on %s:{{ $labels.namespace }} in the last 30 mins' % [cluster_name],
+                'same day action needed'
+              ),
+              makeUsageQuotasPrometheusErrorAlert(
+                'Compute usage quotas - At least one Prometheus error detected in %s in the last 30 mins' % [cluster_name],
+                'same day action needed'
+              ),
+              // Temporary alert during initial rollout period
+              makeUsageQuotasServerDeniedAlert(
+                'Compute usage quotas - Server launch denied on %s:{{ $labels.namespace }} due to exhausted quota in the last 30 mins' % [cluster_name],
+                'action needed this week'
+              ),
+            ],
+          },
         ],
       },
     },
   },
   'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
+  'fluent-bit': configFluentBit,
 }

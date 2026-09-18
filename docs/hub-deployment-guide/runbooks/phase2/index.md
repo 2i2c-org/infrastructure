@@ -59,16 +59,16 @@ All of the following steps must be followed in order to consider phase 2 complet
 
 1. **Create the new cluster**
 
-   Follow the provider-specific steps in [](new-cluster:new-cluster) to create the cluster.
+   Follow the provider-specific steps in [](#new-cluster:new-cluster) to create the cluster.
 
 2. **Configure and deploy the support chart**
 
-   Follow the steps in [](deploy-support-chart) to configure and deploy the support chart.
+   Follow the steps in [](#deploy-support-chart) to configure and deploy the support chart.
 
 3. **Setup Grafana dashboards**
 
-   Follow the steps in [](setup-grafana) to setup Grafana dashboards for the newly created cluster.
+   Follow the steps in [](#setup-grafana) to setup Grafana dashboards for the newly created cluster.
 
 4. **Register the new cluster with the central 2i2c Grafana**
 
-   Follow the steps in [](register-new-cluster-with-central-grafana) so that the cluster you just added will be findable from the 2i2c central Grafana.
+   Follow the steps in [](#register-new-cluster-with-central-grafana) so that the cluster you just added will be findable from the 2i2c central Grafana.

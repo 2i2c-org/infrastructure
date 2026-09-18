@@ -1,19 +1,17 @@
-# https://docs.readthedocs.io/en/stable/config-file/v2.html
+# Read the Docs configuration file for myst
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
 version: 2
 
+# Set the OS and Python version. mystmd installs its own Node.js.
 build:
-  os: ubuntu-24.04
+  os: ubuntu-22.04
   tools:
     python: '3.13'
-  jobs:
-    post_checkout:
-    - git fetch --unshallow || true
-
-python:
-  install:
-  - path: .
-  - requirements: docs/requirements.txt
-
-sphinx:
-  configuration: docs/conf.py
-  builder: dirhtml
+  commands:
+  - pip install nox
+  - nox -s docs
+    # Copy the output to Read the Docs expected location
+  - mkdir -p $READTHEDOCS_OUTPUT/html/
+  - cp -r docs/_build/html/. "$READTHEDOCS_OUTPUT/html"
+    # Clean up build artifacts
+  - rm -rf docs/_build

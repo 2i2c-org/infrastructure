@@ -1,19 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
-redirects:
-  rules:
-  - from: r-staging.utoronto.2i2c.cloud
-    to: r-staging.datatools.utoronto.ca
-  - from: r.utoronto.2i2c.cloud
-    to: r.datatools.utoronto.ca
-  - from: jupyter-staging.datatools.utoronto.ca
-    to: staging.utoronto.2i2c.cloud
-  - from: jupyter.datatools.utoronto.ca
-    to: jupyter.utoronto.ca
-  - from: highmem.utoronto.2i2c.cloud
-    to: highmem.datatools.utoronto.ca
-
 prometheus:
   server:
     persistentVolume:
@@ -33,8 +17,6 @@ prometheus:
       limits:
         memory: 12Gi
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:
@@ -50,16 +32,10 @@ grafana:
       hosts:
       - grafana.utoronto.2i2c.cloud
 
-ingress-nginx:
+nginx-ingress:
   controller:
     service:
       annotations:
         # This annotation is a requirement for use in Azure provided
-        # LoadBalancer.
-        #
-        # ref: https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
-        # ref: https://github.com/Azure/AKS/blob/master/CHANGELOG.md#release-2022-09-11
-        # ref: https://github.com/Azure/AKS/issues/2907#issuecomment-1109759262
-        # ref: https://github.com/kubernetes/ingress-nginx/issues/8501#issuecomment-1108428615
-        #
+        # LoadBalancer - see https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
         service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz

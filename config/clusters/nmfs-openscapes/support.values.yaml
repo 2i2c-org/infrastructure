@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
 prometheus:
   server:
     # Bumped as part of https://github.com/2i2c-org/infrastructure/issues/4632
@@ -20,8 +17,6 @@ prometheus:
       limits:
         memory: 8Gi
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:
@@ -50,21 +45,3 @@ calico:
 nvidiaDevicePlugin:
   aws:
     enabled: true
-
-nginx-ingress:
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-ingress-nginx:
-  controller:
-    # Turn off this controller
-    replicaCount: 0
-    # Let go of the `nginx` ingress class
-    ingressClassResource:
-      enabled: false
-
-clusterEntrypoint:
-  targetController: nginx-ingress

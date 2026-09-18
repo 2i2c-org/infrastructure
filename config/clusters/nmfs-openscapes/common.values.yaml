@@ -3,8 +3,14 @@ nfs:
   pv:
     enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
 
 jupyterhub:
   custom:
@@ -56,11 +62,11 @@ jupyterhub:
             enabled: true
           choices:
             pyrgeo2:
-              display_name: Py-R - Geospatial + QGIS, Panoply - py-rocket-geospatial-2 2025.12.23
+              display_name: Py-R - Geospatial + QGIS, Panoply - py-rocket-geospatial-2 2026.02.18
               slug: pyrgeo2
               default: true
               kubespawner_override:
-                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:2025.12.23
+                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:2026.02.18
             echosm:
               display_name: Py-R - echoSMs hackathon - latest
               slug: echosm
@@ -276,6 +282,18 @@ jupyterhub:
 
   hub:
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        - users:activity!user
+      user:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        - access:services!service=binder
+        - access:services!service=usage-quota
     config:
       Authenticator:
         admin_users:

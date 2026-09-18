@@ -1,7 +1,7 @@
 (upgrade-sub-charts)=
 # Upgrade the versions of sub-charts used in our Helm chart
 
-The [basehub helm chart](hub-helm-charts) that 2i2c deploys on their hubs, depends on several upstream helm charts.
+The [basehub helm chart](#hub-helm-charts) that 2i2c deploys on their hubs, depends on several upstream helm charts.
 This chart needs to be kept up-to-date with the upstream releases so that the communities we serve benefit from the latest features and bug fixes.
 
 Before rolling out a new version of a sub-chart to all of the hubs, we need to make sure that it works as expected. Although manual testing is important, things might still break in production, under high user activity, exposing edge cases that were not considered during testing.

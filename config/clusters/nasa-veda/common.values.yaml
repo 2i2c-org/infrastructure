@@ -7,6 +7,11 @@ basehub:
       serverIP: fs-08b7410bc122c9d70.efs.us-west-2.amazonaws.com
   dask-gateway:
     enabled: true
+    gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
   jupyterhub:
     custom:
       daskhubSetup:
@@ -43,6 +48,19 @@ basehub:
             url: https://www.earthdata.nasa.gov/esds
     hub:
       allowNamedServers: true
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+          - users:activity!user
+        user:
+          scopes:
+          - self
+          - access:services!service=usage-quota
+          - access:services!service=dask-gateway
+          # Access to binder service
+          - access:services!service=binder
       config:
         JupyterHub:
           authenticator_class: github
@@ -106,7 +124,7 @@ basehub:
                 display_name: Modified Pangeo Notebook
                 description: Pangeo based notebook with a Python environment
                 kubespawner_override:
-                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.12.30-v1
+                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2026.06.04-v1
                   init_containers:
                   # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                   # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
@@ -128,13 +146,8 @@ basehub:
                 display_name: Rocker Geospatial with RStudio
                 description: R environment with many geospatial libraries pre-installed
                 kubespawner_override:
-                  image: rocker/binder:4.4
+                  image: mas.maap-project.org/root/maap-workspaces/2i2c/r-base:v6.0.0
                   image_pull_policy: Always
-                    # Launch RStudio after the user logs in
-                  default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                  working_dir: /home/rstudio
               03-qgis:
                 display_name: QGIS on Linux Desktop
                 description: Linux desktop in the browser, with qgis installed
@@ -277,6 +290,8 @@ basehub:
       DockerRegistry:
         url: &url https://quay.io
         username: &username imagebuilding-non-gcp-hubs+image_builder
+      BinderHub:
+        auth_enabled: true
     buildPodsRegistryCredentials:
       server: *url
       username: *username

@@ -48,8 +48,8 @@ for binderhub.
 
 When an alert is triggered, it automatically opens an Incident in the
 [Managed JupyterHubs](https://2i2c-org.pagerduty.com/service-directory/PS10YJ3) service
-we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
-the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
+we maintain in PagerDuty. This also notifies the `#alerts-to-action-now` channel on
+the 2i2c slack or the `#alerts-cloudbank` if it's on the cloudbank cluster, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
 
 ### Prometheus health checks
 
@@ -58,8 +58,8 @@ Our prometheus instances are protected by auth, so we just check to see if we ge
 
 When an alert is triggered, it automatically opens an Incident in the
 [Cluster Prometheus](https://2i2c-org.pagerduty.com/service-directory/P4B7MEA) service
-we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
-the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
+we maintain in PagerDuty. This also notifies the the `#alerts-to-action-now` channel on
+the 2i2c slack or the `#alerts-cloudbank` if it's on the cloudbank cluster, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
 
 
 ## How are the checks set up?

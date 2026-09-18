@@ -52,7 +52,7 @@ next 5 minutes.
 
 ## Community communication
 
-Increasing the size of a storage disk has cost implications. Downsizing the volume is also a [complicated process](howto:decrease-size-gcp-filestore).
+Increasing the size of a storage disk has cost implications. Downsizing the volume is also a [complicated process](#howto:decrease-size-gcp-filestore).
 Please let the community know that we've performed an emergency resize using an email thread on FreshDesk after such resize has happened.
 
 <details open>

@@ -16,7 +16,7 @@ default_budget_alert = {
 
 ebs_volumes = {
   "staging" = {
-    size        = 2
+    size        = 30
     type        = "gp3"
     name_suffix = "staging"
     tags        = { "2i2c:hub-name" : "staging" }
@@ -24,7 +24,8 @@ ebs_volumes = {
   "prod" = {
     size        = 4096 # 4TiB
     type        = "gp3"
-    throughput  = 250 # Double the default 125
+    iops        = 5000
+    throughput  = 250
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
   },
@@ -33,6 +34,7 @@ ebs_volumes = {
 enable_jupyterhub_cost_monitoring = true
 
 enable_nfs_backup = true
+enable_ebs_alarms = true
 
 disable_cluster_wide_filestore = true
 

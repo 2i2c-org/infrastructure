@@ -1,0 +1,87 @@
+jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
+  prePuller:
+    extraTolerations:
+    - key: hub.jupyter.org/dedicated
+      operator: Exists
+      effect: NoSchedule
+    continuous:
+      enabled: true
+  singleuser:
+    defaultUrl: /lab
+    profileList:
+    - display_name: CPU only
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-base:
+              display_name: Default Image
+              description: RStudio, VS Code, JupyterLab, Python, R
+              default: true
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:fbab22cbce38
+      kubespawner_override:
+        mem_guarantee: 512M
+        mem_limit: 1G
+        cpu_guarantee: 0.1
+        cpu_limit: 2
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+        default: true
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/2/20/Berea_college_full_logo.png
+          name: Berea College
+          url: https://www.berea.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - berea.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - leez@berea.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-berea
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

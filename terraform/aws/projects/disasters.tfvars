@@ -62,26 +62,8 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::sentinel-s2-l1c",
               "arn:aws:s3:::sentinel-s2-l1c/*",
-              "arn:aws:s3:::csda-data-vendor-airbus-optical",
-              "arn:aws:s3:::csda-data-vendor-airbus-optical/*",
-              "arn:aws:s3:::csdap-ghgsat-delivery",
-              "arn:aws:s3:::csdap-ghgsat-delivery/*",
-              "arn:aws:s3:::csda-data-vendor-umbra",
-              "arn:aws:s3:::csda-data-vendor-umbra/*",
-              "arn:aws:s3:::csdap-capellaspace-delivery",
-              "arn:aws:s3:::csdap-capellaspace-delivery/*",
-              "arn:aws:s3:::csdap-airbus-delivery",
-              "arn:aws:s3:::csdap-airbus-delivery/*",
-              "arn:aws:s3:::csdap-blacksky-delivery",
-              "arn:aws:s3:::csdap-blacksky-delivery/*",
-              "arn:aws:s3:::csda-data-vendor-satellogic",
-              "arn:aws:s3:::csda-data-vendor-satellogic/*",
-              "arn:aws:s3:::csdap-iceye-delivery",
-              "arn:aws:s3:::csdap-iceye-delivery/*",
               "arn:aws:s3:::naip-analytic",
               "arn:aws:s3:::naip-analytic/*",
-              "arn:aws:s3:::csdap-planet-skysat-delivery",
-              "arn:aws:s3:::csdap-planet-skysat-delivery/*",
               "arn:aws:s3:::nasa-disasters-dev",
               "arn:aws:s3:::nasa-disasters-dev/*",
               "arn:aws:s3:::nasa-disasters-staging",
@@ -92,6 +74,42 @@ hub_cloud_permissions = {
             "Effect": "Allow",
             "Action": "s3:ListAllMyBuckets",
             "Resource": "*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:GetObjectTagging"
+            ],
+            "Resource": [
+              "arn:aws:s3:::csda-data-vendor-airbus-optical/disasters/*",
+              "arn:aws:s3:::csdap-ghgsat-delivery/disasters/*",
+              "arn:aws:s3:::csda-data-vendor-umbra/disasters/*",
+              "arn:aws:s3:::csdap-capellaspace-delivery/disasters/*",
+              "arn:aws:s3:::csdap-airbus-delivery/disasters/*",
+              "arn:aws:s3:::csdap-blacksky-delivery/disasters/*",
+              "arn:aws:s3:::csda-data-vendor-satellogic/disasters/*",
+              "arn:aws:s3:::csdap-iceye-delivery/disasters/*",
+              "arn:aws:s3:::csdap-planet-skysat-delivery/disasters/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": [
+              "arn:aws:s3:::csda-data-vendor-airbus-optical",
+              "arn:aws:s3:::csdap-ghgsat-delivery",
+              "arn:aws:s3:::csda-data-vendor-umbra",
+              "arn:aws:s3:::csdap-capellaspace-delivery",
+              "arn:aws:s3:::csdap-airbus-delivery",
+              "arn:aws:s3:::csdap-blacksky-delivery",
+              "arn:aws:s3:::csda-data-vendor-satellogic",
+              "arn:aws:s3:::csdap-iceye-delivery",
+              "arn:aws:s3:::csdap-planet-skysat-delivery"
+            ],
+            "Condition": {
+              "StringLike": {"s3:prefix": ["disasters/*", "disasters"]}
+            }
           }
         ]
       }
@@ -142,26 +160,8 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::sentinel-s2-l1c",
               "arn:aws:s3:::sentinel-s2-l1c/*",
-              "arn:aws:s3:::csda-data-vendor-airbus-optical",
-              "arn:aws:s3:::csda-data-vendor-airbus-optical/*",
-              "arn:aws:s3:::csdap-ghgsat-delivery",
-              "arn:aws:s3:::csdap-ghgsat-delivery/*",
-              "arn:aws:s3:::csda-data-vendor-umbra",
-              "arn:aws:s3:::csda-data-vendor-umbra/*",
-              "arn:aws:s3:::csdap-capellaspace-delivery",
-              "arn:aws:s3:::csdap-capellaspace-delivery/*",
-              "arn:aws:s3:::csdap-airbus-delivery",
-              "arn:aws:s3:::csdap-airbus-delivery/*",
-              "arn:aws:s3:::csdap-blacksky-delivery",
-              "arn:aws:s3:::csdap-blacksky-delivery/*",
-              "arn:aws:s3:::csda-data-vendor-satellogic",
-              "arn:aws:s3:::csda-data-vendor-satellogic/*",
-              "arn:aws:s3:::csdap-iceye-delivery",
-              "arn:aws:s3:::csdap-iceye-delivery/*",
               "arn:aws:s3:::naip-analytic",
               "arn:aws:s3:::naip-analytic/*",
-              "arn:aws:s3:::csdap-planet-skysat-delivery",
-              "arn:aws:s3:::csdap-planet-skysat-delivery/*",
               "arn:aws:s3:::nasa-disasters-dev",
               "arn:aws:s3:::nasa-disasters-dev/*",
               "arn:aws:s3:::nasa-disasters-staging",
@@ -172,6 +172,42 @@ hub_cloud_permissions = {
             "Effect": "Allow",
             "Action": "s3:ListAllMyBuckets",
             "Resource": "*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:GetObjectTagging"
+            ],
+            "Resource": [
+              "arn:aws:s3:::csda-data-vendor-airbus-optical/disasters/*",
+              "arn:aws:s3:::csdap-ghgsat-delivery/disasters/*",
+              "arn:aws:s3:::csda-data-vendor-umbra/disasters/*",
+              "arn:aws:s3:::csdap-capellaspace-delivery/disasters/*",
+              "arn:aws:s3:::csdap-airbus-delivery/disasters/*",
+              "arn:aws:s3:::csdap-blacksky-delivery/disasters/*",
+              "arn:aws:s3:::csda-data-vendor-satellogic/disasters/*",
+              "arn:aws:s3:::csdap-iceye-delivery/disasters/*",
+              "arn:aws:s3:::csdap-planet-skysat-delivery/disasters/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": [
+              "arn:aws:s3:::csda-data-vendor-airbus-optical",
+              "arn:aws:s3:::csdap-ghgsat-delivery",
+              "arn:aws:s3:::csda-data-vendor-umbra",
+              "arn:aws:s3:::csdap-capellaspace-delivery",
+              "arn:aws:s3:::csdap-airbus-delivery",
+              "arn:aws:s3:::csdap-blacksky-delivery",
+              "arn:aws:s3:::csda-data-vendor-satellogic",
+              "arn:aws:s3:::csdap-iceye-delivery",
+              "arn:aws:s3:::csdap-planet-skysat-delivery"
+            ],
+            "Condition": {
+              "StringLike": {"s3:prefix": ["disasters/*", "disasters"]}
+            }
           }
         ]
       }
@@ -190,6 +226,7 @@ ebs_volumes = {
     size        = 2500 # 2.5TB
     type        = "gp3"
     name_suffix = "prod"
+    throughput  = 250 # Double the throughput, as we kept getting alerts for throughput consistently
     tags        = { "2i2c:hub-name" : "prod" }
   }
 }

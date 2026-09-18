@@ -1,0 +1,49 @@
+jupyterhub:
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 1G
+      limit: 2G
+    cpu:
+      guarantee: 0.05
+      limit: 2
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 64bd188721c0
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.whitman.edu/images/global/logos/wc-primary-black-rgb.svg
+          name: Whitman College
+          url: https://www.whitman.edu
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - whitman.edu
+        strip_domain: false
+        allow_all: true
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - ptukhim@whitman.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-whitman

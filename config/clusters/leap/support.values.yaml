@@ -1,6 +1,3 @@
-prometheusIngressAuthSecret:
-  enabled: false
-
 prometheus:
   server:
     ingress:
@@ -12,15 +9,13 @@ prometheus:
         hosts:
         - prometheus.leap.2i2c.cloud
     persistentVolume:
-      size: 500Gi
+      size: 550Gi
     resources:
       requests:
         memory: 20Gi
       limits:
         memory: 20Gi
 
-    extraArgs:
-      web.config.file: /etc/config/web.yml
 grafana:
   grafana.ini:
     server:
@@ -35,22 +30,4 @@ grafana:
     - secretName: grafana-tls
       hosts:
       - grafana.leap.2i2c.cloud
-
-nginx-ingress:
-  enabled: true
-  controller:
-    ingressClass:
-      # Claim the `nginx` ingress class
-      create: true
-
-ingress-nginx:
-  controller:
-    # Turn off this controller
-    replicaCount: 0
-    # Let go of the `nginx` ingress class
-    ingressClassResource:
-      enabled: false
-
-clusterEntrypoint:
-  targetController: nginx-ingress
 

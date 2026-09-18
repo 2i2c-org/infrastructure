@@ -1,10 +1,10 @@
 (setup-grafana)=
 # Setup grafana dashboards
 
-Now, we will deploy some specific dashboards to the grafana instance we deployed as part of [](deploy-support-chart).
+Now, we will deploy some specific dashboards to the grafana instance we deployed as part of [](#deploy-support-chart).
 
 ````{seealso}
-It is also possible to [enable logging in with GitHub](grafana-dashboards:github-auth)
+It is also possible to [enable logging in with GitHub](#grafana-dashboards:github-auth)
 to allow Community Representatives and Hub Administrators to access these dashboards as well.
 ```{warning}
 We should enable GitHub login for _all_ Grafana dashboards running on **dedicated**
@@ -15,7 +15,7 @@ clusters, so the Community Representatives have access to them.
 (setup-grafana:log-in)=
 ## Login to the cluster-specific grafana
 
-Eventually, visiting `GRAFANA_URL` (which we set in [](deploy-support-chart)) will present you with a login page.
+Eventually, visiting `GRAFANA_URL` (which we set in [](#deploy-support-chart)) will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
@@ -74,5 +74,5 @@ Any re-triggering of the workflow after the initial deployment will overwrite an
 
 ## Granting grafana access to the community representative
 
-Once you have setup the grafana instance, you may wish to [](grafana-access:invite-link)
+Once you have setup the grafana instance, you may wish to [](#grafana-access:invite-link)
 **only if the cluster is _dedicated_ to one community**.

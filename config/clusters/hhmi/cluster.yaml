@@ -1,6 +1,9 @@
 name: hhmi
 provider: gcp
 provider_url: https://console.cloud.google.com/kubernetes/clusters/details/us-west2/hhmi-cluster/details?project=hhmi-398911
+metadata:
+  2i2c:
+    hubspot_deal_id: 231111145206
 gcp:
   key: enc-deployer-credentials.secret.json
   project: hhmi-398911

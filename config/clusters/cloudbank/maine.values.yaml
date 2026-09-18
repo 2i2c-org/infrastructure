@@ -1,0 +1,51 @@
+jupyterhub:
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 384M
+      limit: 1.5G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://umaine.edu/wp-content/themes/um/assets/img/umaine-logo-website.svg
+          name: University of Maine
+          url: https://umaine.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          https://idp.maine.edu/idp/shibboleth:
+            default: true
+            allow_all: true
+            username_derivation:
+              username_claim: email
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users:
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        - isaac.overcast@maine.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-maine
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

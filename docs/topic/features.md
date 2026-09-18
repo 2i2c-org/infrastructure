@@ -10,7 +10,7 @@ do so should be provided in a linked how-to document.
 GPUs are heavily used in machine learning workflows, and we support
 provisioning GPUs for users on all major platforms.
 
-See [the associated howto guide](howto:features:gpu) for more information
+See [the associated howto guide](#howto:features:gpu) for more information
 on enabling this.
 
 ## Cloud permissions
@@ -39,7 +39,7 @@ on Google Cloud storage, to sustainably share costs of maintaining the data.
 
 If buckets outside the project have the `Requester Payes` flag, then we need to:
 - set `hub_cloud_permissions.allow_access_to_external_requester_pays_buckets`
-  in the terraform config of the cluster (see the guide at [](howto:features:cloud-access:access-perms))
+  in the terraform config of the cluster (see the guide at [](#howto:features:cloud-access:access-perms))
 - this will allow them to be charged on their project for access of such
   outside buckets
 

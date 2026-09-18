@@ -8,7 +8,7 @@ team that the community is being billed for it.
 
 ## Set up the hub with CILogon
 
-First, we set up the hub and use [CILogon](auth:cilogon) for authentication, so the community
+First, we set up the hub and use [CILogon](#auth:cilogon) for authentication, so the community
 can get started and poke around. This decouples getting started from the auth0 process,
 to make everything smoother (for both 2i2c engineers and the community).
 

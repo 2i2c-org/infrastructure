@@ -7,9 +7,6 @@ jupyterhub:
     cpu:
       guarantee: 1
       limit: 2
-    image:
-      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/java-user-image
-      tag: ee5edaf8759d
     storage:
       extraVolumeMounts:
       extraVolumes:

@@ -5,6 +5,11 @@ nfs:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
 jupyterhub:
   custom:
     daskhubSetup:
@@ -28,6 +33,24 @@ jupyterhub:
           url: https://www.earthdata.nasa.gov/esds
   hub:
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        - users:activity!user
+      user:
+        scopes:
+        - self
+        - access:services!service=usage-quota
+        - access:services!service=dask-gateway
+        # Access to binder service
+        - access:services!service=binder
+    service:
+      extraPorts:
+      - port: 9000
+        targetPort: 9000
+        name: usage-quota
     config:
       JupyterHub:
         authenticator_class: generic-oauth
@@ -102,7 +125,7 @@ jupyterhub:
               display_name: Modified Pangeo Notebook
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
-                image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2025.12.30-v1
+                image: klesinger/disasters-jupyterhub-docker-image:latest
                 init_containers:
                 # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                 # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
@@ -122,15 +145,9 @@ jupyterhub:
                     runAsGroup: 1000
             02-rocker:
               display_name: Rocker Geospatial with RStudio
-              description: R environment with many geospatial libraries pre-installed
+              description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
-                image: rocker/binder:4.4
-                image_pull_policy: Always
-                  # Launch RStudio after the user logs in
-                default_url: /rstudio
-                  # Ensures container working dir is homedir
-                  # https://github.com/2i2c-org/infrastructure/issues/2559
-                working_dir: /home/rstudio
+                image: mas.maap-project.org/root/maap-workspaces/2i2c/r:v6.0.0
             03-qgis:
               display_name: QGIS on Linux Desktop
               description: Linux desktop in the browser, with qgis installed
@@ -138,7 +155,7 @@ jupyterhub:
                   # Launch people directly into the Linux desktop when they start
                 default_url: /desktop
                   # Built from https://github.com/2i2c-org/nasa-qgis-image
-                image: quay.io/2i2c/nasa-qgis-image:607df3f5c661
+                image: quay.io/2i2c/nasa-qgis-image:2725f26348ba
         resource_allocation:
           display_name: Resource Allocation
           choices:
@@ -281,6 +298,8 @@ binderhub-service:
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
+    BinderHub:
+      auth_enabled: true
   buildPodsRegistryCredentials:
     server: *url
     username: *username

@@ -2,8 +2,8 @@
 
 Cloud resources for NASA's [Science Managed Cloud Environment](https://smce.nasa.gov/) (SMCE) is managed via an AWS organization and access via a SSO service.
 
-Once the steps below are done, steps for the regular [AWS Cluster Setup](new-cluster:new-cluster) can proceed,
-until completion of [provisioning credentials for CI/CD](new-cluster:terraform:cluster-credentials).
+Once the steps below are done, steps for the regular [AWS Cluster Setup](#new-cluster:new-cluster) can proceed,
+until completion of [provisioning credentials for CI/CD](#new-cluster:terraform:cluster-credentials).
 
 ## Getting an account
 
@@ -30,7 +30,7 @@ Select the permission level you need to perform your work, and you will be direc
 You can also copy and paste the access keys you require into your terminal to use the AWS CLI.
 
 ### Via the terminal
-Follow the instructions at [](cloud-access:aws-sso:terminal) to get access into the cluster.
+Follow the instructions at [](#cloud-access:aws-sso:terminal) to get access into the cluster.
 
 The rest of the process should be the same.
 
@@ -70,4 +70,4 @@ we can import that into our terraform with `terraform import -var-file=projects/
 
 ## Cost allocation tags
 
-[Cost allocation tags](howto:cost-monitoring:activate-tags) have been enabled at the AWS organization level for SMCE. Therefore we do not need to enable them with our terraform configuration, i.e. the variable `enable_cost_allocation_tags` is set to `false` by default, so we do not need to include this in the `projects/<project>.tfvars` file.
+[Cost allocation tags](#howto:cost-monitoring:activate-tags) have been enabled at the AWS organization level for SMCE. Therefore we do not need to enable them with our terraform configuration, i.e. the variable `enable_cost_allocation_tags` is set to `false` by default, so we do not need to include this in the `projects/<project>.tfvars` file.

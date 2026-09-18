@@ -20,6 +20,5 @@ via FUSE.
 This is mounted from inside the user pod, so will use whatever
 cloud permissions the user has. So to provide write access or access
 to private object storage buckets, we will need to configure
-[appropriate cloud permissions](
-howto:features:cloud-access:access-perms). However, for just
+[appropriate cloud permissions](#howto:features:cloud-access:access-perms). However, for just
 public object storage buckets, no extra permissions are needed.

@@ -54,7 +54,7 @@ Run this section on the destination cluster.
 
    [^simple]: Although we only need an SSH server on _destination_ side in forward mode, this container also providers a generic shell environment that is nearly sufficient for performing an `rsync`.
 
-   We can start by adding this image as an entry of `jupyterhub-home-nfs.extraContainers`. The configuration for the destination deployment is shown in [the following code block](migrate-external:values-dst), with the features required to run an SSH server emphasised:
+   We can start by adding this image as an entry of `jupyterhub-home-nfs.extraContainers`. The configuration for the destination deployment is shown in [the following code block](#migrate-external:values-dst), with the features required to run an SSH server emphasised:
 
    ```{code-block} yaml
    :name: migrate-external:values-dst
@@ -81,7 +81,7 @@ Run this section on the destination cluster.
 
 3. **Install `rsync`**
 
-   The container image described in [the `extraContainers` configuration](migrate-external:values-dst) does not natively include the `rsync` utility. We can remedy this by opening a shell with the following command:
+   The container image described in [the `extraContainers` configuration](#migrate-external:values-dst) does not natively include the `rsync` utility. We can remedy this by opening a shell with the following command:
 
    ```shell
    kubectl -n <DEST-HUB> exec -it deploy/storage-quota-home-nfs -c openssh-server -- /bin/sh
@@ -109,8 +109,7 @@ Run this section on the destination cluster.
    kubectl -n <DEST-HUB> get service/openssh-service
    ```
 
-   (migrate-external:setup-src)=
-
+(migrate-external:setup-src)=
 ## Setting up the source server
 
 ```{important}
@@ -118,7 +117,7 @@ Run this section on the source cluster.
 ```
 
 1. **Deploy a file-transfer container**  
-   We can add the same image used in [](migrate-external:setup-dst) as an entry of `jupyterhub-home-nfs.extraContainers`. The configuration for the source deployment is shown in [the following code block](migrate-external:values-src), with the specialisations for the source container emphasised:
+   We can add the same image used in [](#migrate-external:setup-dst) as an entry of `jupyterhub-home-nfs.extraContainers`. The configuration for the source deployment is shown in [the following code block](#migrate-external:values-src), with the specialisations for the source container emphasised:
 
    ```{code-block} yaml
    :name: migrate-external:values-src
@@ -142,7 +141,7 @@ Run this section on the source cluster.
 
 2. **Install `rsync`**
 
-   As we saw earlier, the container image described in [the `extraContainers` configuration](migrate-external:values-src) does not natively include the `rsync` utility. We can remedy this by opening a shell with the following command:
+   As we saw earlier, the container image described in [the `extraContainers` configuration](#migrate-external:values-src) does not natively include the `rsync` utility. We can remedy this by opening a shell with the following command:
 
    ```shell
    kubectl -n <SRC-HUB> exec -it deploy/storage-quota-home-nfs -c openssh-server -- /bin/sh
@@ -156,7 +155,7 @@ Run this section on the source cluster.
 
 3. **Provision the SSH private key**
 
-   In order for the sender to be able to authorise with the receiver, we'll need to provision the environment with the private counterpart to the [public key that we created earlier](migrate-external:create-key). We can easily do this by writing it to a temporary file from the clipboard. In the existing shell in the source container, run the following command and paste the key with {kbd}`Ctrl+V`. Once the key has been pasted, enter an EOF with {kbd}`Ctrl+D`
+   In order for the sender to be able to authorise with the receiver, we'll need to provision the environment with the private counterpart to the [public key that we created earlier](#migrate-external:create-key). We can easily do this by writing it to a temporary file from the clipboard. In the existing shell in the source container, run the following command and paste the key with {kbd}`Ctrl+V`. Once the key has been pasted, enter an EOF with {kbd}`Ctrl+D`
 
    ```bash
    cat > /tmp/key
@@ -211,15 +210,15 @@ Once an initial sync of the data has been performed, we can ensure that we've ca
 Stopping user pods is highly disruptive. Unless you're operating inside scheduled down-time, prefer to wait for the cluster activity to fall to zero. You can introduce a maintenance window overnight by disabling the spawner, and allowing existing sessions to terminate.
 ```
 
-Now that we've cordoned off the storage, we can repeat the step performed in [](migrate-external:initial-sync) to copy only the modified files.
+Now that we've cordoned off the storage, we can repeat the step performed in [](#migrate-external:initial-sync) to copy only the modified files.
 
 ## Tearing down the transfer deployments
 
 After copying the files between disks, we now can tear down the migration deployments.
 
-1. First, delete the service created in [an earlier step](migrate-external:create-ingress) by running the following in the destination hub context:
+1. First, delete the service created in [an earlier step](#migrate-external:create-ingress) by running the following in the destination hub context:
    ```shell
    kubectl -n <DST-HUB> delete service/openssh-service
    ```
-2. Then, revert the changes to the JupyterHub `values.yaml` in [](migrate-external:setup-dst) and [](migrate-external:setup-src).
+2. Then, revert the changes to the JupyterHub `values.yaml` in [](#migrate-external:setup-dst) and [](#migrate-external:setup-src).
 3. Finally, re-deploy both hubs.

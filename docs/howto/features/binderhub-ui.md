@@ -17,7 +17,7 @@ We call this a `binderhub-ui` style hub and the primary features offered would b
 
 ## Generate a sample initial hub configuration
 
-Directly run the following `deployer` command or follow the steps in the [Initial Hub setup](hub-deployment-guide:runbooks:phase3.1) guide to get started on a very basic hub setup or copy-paste the configuration of a similar hub, then follow the steps below.
+Directly run the following `deployer` command or follow the steps in the [Initial Hub setup](#hub-deployment-guide:runbooks:phase3.1) guide to get started on a very basic hub setup or copy-paste the configuration of a similar hub, then follow the steps below.
 
 ```bash
 deployer generate hub-asset binderhub-ui-values-file
@@ -455,11 +455,11 @@ For clusters running on AWS, you can use the encrypted file located at `config/c
 ```
 ### 1. Setup the image registry
 
-Follow the guide at [](howto:features:imagebuilding-hub:image-registry) of the imagebuilding hub.
+Follow the guide at [](#howto:features:imagebuilding-hub:image-registry) of the imagebuilding hub.
 
 ### 2. Further configure the `binderhub-service` chart
 
-Some more configuration of the `binderhub-service` chart is required by following the guide at [](howto:features:imagebuilding-hub:configure-binderhub-service-chart).
+Some more configuration of the `binderhub-service` chart is required by following the guide at [](#howto:features:imagebuilding-hub:configure-binderhub-service-chart).
 Specifically, we need to:
 
 - **Configure `binderhub-service.config.BinderHub.image_prefix** so that BinderHub knows under which prefix to push the images to the registry

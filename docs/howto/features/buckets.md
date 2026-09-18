@@ -1,7 +1,7 @@
 (howto:features:storage-buckets)=
 # Setup object storage buckets
 
-See [the relevant topic page](topic:features:cloud:scratch-buckets) for more information
+See [the relevant topic page](#topic:features:cloud:scratch-buckets) for more information
 on why users want this!
 
 1. In the `.tfvars` file for the project in which this hub is based off
@@ -38,7 +38,7 @@ on why users want this!
    not be used for frequently accessed or publicly accessible data.
 
 2. Enable access to these buckets from the hub or make them publicly accessible from outside
-   by [editing `hub_cloud_permissions`](howto:features:cloud-access:access-perms)
+   by [editing `hub_cloud_permissions`](#howto:features:cloud-access:access-perms)
    in the same `.tfvars` file. Follow all the steps listed there - this
    should create the storage buckets and provide all users access to them!
 

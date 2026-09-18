@@ -7,7 +7,7 @@ jupyterhub:
       limit: 1.5G
     image:
       name: quay.io/ccsf/jupyterhub
-      tag: sp26.3
+      tag: fa26.2
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -15,9 +15,9 @@ jupyterhub:
     homepage:
       templateVars:
         org:
-          name: City College SF
+          name: City College of San Francisco
           logo_url: https://www.ccsf.edu/sites/default/files/inline-images/CCSF%20LOGO.png
-          url: https://www.ccsf.edu/
+          url: https://ccsf-math.github.io/jupyterhub/
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -28,35 +28,29 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: 0.0.1-0.dev.git.16666.h2707c010b
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: email
-            allowed_domains:
-            - mail.ccsf.edu
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - mail.ccsf.edu
+        strip_domain: false
+        allow_all: true
       Authenticator:
         allowed_users:
         - sonnyzadeh@gmail.com
-        - clare.alice.heimer@gmail.com
-          # Below are UC Berkeley tutors for spring semester 2024
-        - k_usovich@berkeley.edu
-        - bellajzhang@berkeley.edu
-        - freddygoh21@berkeley.edu
-        - knnebedum@berkeley.edu
-        - kingsun@berkeley.edu
         admin_users:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
-        - shawn.wiggins@mail.ccsf.edu
-        - craig.persiko@mail.ccsf.edu
-        - efuchs@mail.ccsf.edu
-        - amy.mclanahan@mail.ccsf.edu
         - vsoon129@berkeley.edu
+        - shawn.wiggins@mail.ccsf.edu
+        - sonnyzadeh@gmail.com
+        - ronald.pageii@mail.ccsf.edu
+        - craig.persiko@mail.ccsf.edu
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-ccsf
