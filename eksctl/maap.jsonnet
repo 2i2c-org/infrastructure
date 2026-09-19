@@ -25,15 +25,40 @@ local c = cluster.makeCluster(
       instanceType: 'g4dn.xlarge',
     },
   ],
-  nodeGroupGenerations=['d'],
+  nodeGroupGenerations=['d', 'e'],
 );
 
-cluster.withNodeGroupConfigOverride(
+// jsonnet doesn't like it when we reuse variable
+// names, so let's define new variables for each override
+
+// We want larger `/tmp` for larger instances,
+// simply as a way to have larger tmp under some
+// circumstances. This is hopefully a temporary workaround,
+// until we figure out a more permanent way to get larger
+// scratch spaces to some users.
+local c1 = cluster.withNodeGroupConfigOverride(
   c,
-  kind='notebook',
+  instanceType='r5.xlarge',
   overrides={
     // For https://github.com/MAAP-Project/Community/issues/1254,
     // so `/tmp` can be larger
     volumeSize: 200,
+  }
+);
+
+local c2 = cluster.withNodeGroupConfigOverride(
+  c1,
+  instanceType='r5.4xlarge',
+  overrides={
+    volumeSize: 400,
+  }
+);
+
+
+cluster.withNodeGroupConfigOverride(
+  c2,
+  instanceType='r5.16xlarge',
+  overrides={
+    volumeSize: 800,
   }
 )
