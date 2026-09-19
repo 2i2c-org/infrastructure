@@ -90,7 +90,7 @@ jupyterhub:
             01_standard:
               display_name: Standard
               description: Max of 200GB
-              default: True
+              default: true
               kubespawner_override: {}
             02_gb_500:
               display_name: Dedicated 500GB
@@ -109,8 +109,8 @@ jupyterhub:
                           labels:
                             type: temporary-user-scratch
                         spec:
-                          accessModes: [ "ReadWriteOnce" ]
-                          storageClassName: "ebs-csi-default-sc" # Needs to be set explicitly it looks like
+                          accessModes: [ReadWriteOnce]
+                          storageClassName: ebs-csi-default-sc   # Needs to be set explicitly it looks like
                           volumeAttributesClassName: scratch-disk
                           resources:
                             requests:
