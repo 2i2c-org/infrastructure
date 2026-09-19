@@ -110,7 +110,8 @@ jupyterhub:
                             type: temporary-user-scratch
                         spec:
                           accessModes: [ "ReadWriteOnce" ]
-                          storageClassName: "scratch-disk" # Needs to be set explicitly it looks like
+                          storageClassName: "ebs-csi-default-sc" # Needs to be set explicitly it looks like
+                          volumeAttributesClassName: scratch-disk
                           resources:
                             requests:
                               storage: 500Gi

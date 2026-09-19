@@ -404,6 +404,15 @@ local configFluentBit = {
   },
 };
 
+local scratchDisk =  {
+    enabled: provider_name == 'aws',
+    provider: provider_name,
+    parameters: if provider_name == 'aws' then {
+      type: 'gp3',
+      iops: "4000"
+    }
+};
+
 {
   grafana: {
     serviceAccount: {
@@ -630,8 +639,5 @@ local configFluentBit = {
   },
   'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
   'fluent-bit': configFluentBit,
-  'scratchDisk': {
-    'enabled': provider_name == 'aws',
-    'provider': provider_name
-  }
+  'scratchDisk': scratchDisk
 }
