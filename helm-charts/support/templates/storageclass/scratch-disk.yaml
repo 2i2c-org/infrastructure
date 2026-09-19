@@ -1,0 +1,17 @@
+{{- if .Values.scratchDisk.enabled }}
+{{- if eq .Values.scratchDisk.provider "aws" }}
+apiVersion: storage.k8s.io/v1
+kind: VolumeAttributesClass
+metadata:
+  name: scratch-disk
+driverName: ebs.csi.aws.com
+parameters:
+  # Tag this as part of the hub for cost accounting
+  # There's no easy way to tag each PVC with a username unfortunately
+  # https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/tagging.md
+  tagSpecification_1: '2i2c:hub-name={{ .PVCNamespace }}'
+  tagSpecification_1: '2i2c:volume-purpose=scratch'
+
+  {{ .Values.scratchDisk.parameters | toYaml | nindent 2}}
+{{- end }}
+{{- end}}
