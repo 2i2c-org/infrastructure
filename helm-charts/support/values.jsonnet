@@ -409,7 +409,6 @@ local scratchDisk = {
   provider: provider_name,
   parameters: if provider_name == 'aws' then {
     type: 'gp3',
-    iops: '4000',
   },
 };
 
