@@ -630,4 +630,8 @@ local configFluentBit = {
   },
   'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
   'fluent-bit': configFluentBit,
+  'scratchDisk': {
+    'enabled': provider_name == 'aws',
+    'provider': provider_name
+  }
 }
