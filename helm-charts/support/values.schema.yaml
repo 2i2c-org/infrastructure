@@ -63,6 +63,8 @@ properties:
         type: boolean
       parameters:
         type: object
+      driverName:
+        type: string
       provider:
         enum:
         # Change when we support GCP too

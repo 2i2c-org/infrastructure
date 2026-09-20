@@ -404,13 +404,32 @@ local configFluentBit = {
   },
 };
 
-local scratchDisk = {
-  enabled: provider_name == 'aws',
-  provider: provider_name,
-  parameters: if provider_name == 'aws' then {
-    type: 'gp3',
+local scratchDiskConfigMapping = {
+  'aws': {
+    enabled: true,
+    driverName: 'ebs.csi.aws.com',
+    parameters: {
+      type: 'gp3',
+
+      # Tag this as part of the hub for cost accounting
+      # There's no easy way to tag each PVC with a username unfortunately
+      # https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/tagging.md
+      tagSpecification_1: '2i2c:hub-name={{ .PVCNamespace }}',
+      tagSpecification_2: '2i2c:volume-purpose=scratch'
+    }
+  },
+  'gcp': {
+    enabled: true,
+    driverName: 'pd.csi.storage.gke.io',
+    parameters: {
+      type: 'pd-balanced'
+    }
   },
 };
+
+local scratchDiskConfig = std.get(scratchDiskConfigMapping, provider_name, {
+  enabled: false
+});
 
 {
   grafana: {
@@ -638,5 +657,5 @@ local scratchDisk = {
   },
   'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
   'fluent-bit': configFluentBit,
-  scratchDisk: scratchDisk,
+  scratchDisk: scratchDiskConfig,
 }
