@@ -17,7 +17,7 @@ required:
   - global
   - fluent-bit
   - k8s-node-operator
-  - scratchDisk
+  - scratchDiskVAC
 properties:
   # We don't control validation of dependent charts here
   cluster-autoscaler:
@@ -53,7 +53,7 @@ properties:
 
   # These provide values for objects we create, so we validate their schema
   # to the best of our ability.
-  scratchDisk:
+  scratchDiskVAC:
     type: object
     additionalProperties: false
     required:

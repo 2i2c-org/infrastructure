@@ -1,9 +1,11 @@
-{{- if .Values.scratchDisk.enabled }}
+{{- if .Values.scratchDiskVAC.enabled }}
 apiVersion: storage.k8s.io/v1
 kind: VolumeAttributesClass
 metadata:
   name: scratch-disk
-driverName: {{ .Values.scratchDisk.driverName }}
+driverName: {{ .Values.scratchDiskVAC.driverName }}
+{{ with .Values.scratchDiskVAC.parameters }}
 parameters:
-  {{ .Values.scratchDisk.parameters | toYaml | nindent 2}}
+  {{ . | toYaml | nindent 2}}
+{{- end}}
 {{- end}}

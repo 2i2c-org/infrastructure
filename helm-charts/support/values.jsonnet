@@ -404,13 +404,14 @@ local configFluentBit = {
   },
 };
 
-local scratchDiskConfigMapping = {
+local scratchDiskVACConfigMapping = {
+  # We need a VolumeAttributesClsas for AWS so we can set AWS tags for cost monitoring
+  # Add more cloud providers here as we need (to tweak iops, etc)
   'aws': {
     enabled: true,
     driverName: 'ebs.csi.aws.com',
     parameters: {
-      type: 'gp3',
-
+      # Don't set type here, as that's specified by storageClass instead
       # Tag this as part of the hub for cost accounting
       # There's no easy way to tag each PVC with a username unfortunately
       # https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/tagging.md
@@ -419,17 +420,10 @@ local scratchDiskConfigMapping = {
     }
   },
   'gcp': {
-    enabled: true,
-    driverName: 'pd.csi.storage.gke.io',
-    parameters: {
-      type: 'pd-balanced'
-    }
-  },
+    enabled: false,  # disabled by default, only enable if you want to set specific params
+    driverName: 'pd.csi.storage.gke.io'
+  }
 };
-
-local scratchDiskConfig = std.get(scratchDiskConfigMapping, provider_name, {
-  enabled: false
-});
 
 {
   grafana: {
@@ -657,5 +651,8 @@ local scratchDiskConfig = std.get(scratchDiskConfigMapping, provider_name, {
   },
   'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
   'fluent-bit': configFluentBit,
-  scratchDisk: scratchDiskConfig,
+  scratchDiskVAC: std.get(scratchDiskVACConfigMapping, provider_name, {
+    enabled: false # Default to turned off for unknown cloud providers
+  })
+
 }
