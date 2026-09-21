@@ -1,4 +1,6 @@
 jupyterhub:
+  singleuser:
+    defaultUrl: /lab
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -31,14 +33,13 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         allowed_idps:
-          https://auth.chaminade.edu/idp/shibboleth:
+          http://google.com/accounts/o8/id:
             default: true
             username_derivation:
               username_claim: email
-            allow_all: true
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: email
+            allowed_domains:
+            - chaminade.edu
+            - student.chaminade.edu
       Authenticator:
         admin_users:
         - sean.smorris@berkeley.edu
