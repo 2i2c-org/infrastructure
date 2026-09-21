@@ -44,7 +44,7 @@ On AWS, the default storage class is named `ebs-csi-default-sc`. This will typic
 Our hub values therefore must be modified as follows:
 ```{code-block} yaml
 :filename: hub.values.yaml
-:enable-linenos:
+:linenos:
 :emphasize-lines: 37,38
 
 singleuser:
