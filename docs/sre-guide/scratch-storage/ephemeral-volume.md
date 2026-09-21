@@ -87,7 +87,8 @@ singleuser:
                           volumeAttributesClassName: scratch-disk
                           resources:
                             requests:
-                              storage: 500Gi```
+                              storage: 500Gi
+```
 
 We may wish to increase the performance of the ephemeral disk. To do this, we'll modify the support chart values for the `scratch-disk` `VolumeAttributesClass`:
 ```{code-block} yaml
