@@ -96,6 +96,74 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
+  "n2-highmem-16-zonal-primary" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
+    labels : {
+      "cloud.google.com/compute-class" : "prefer-primary-zone"
+    },
+    taints : [{
+      key : "cloud.google.com/compute-class",
+      value : "prefer-primary-zone",
+      effect : "NO_SCHEDULE",
+    }],
+    zones : [
+      "us-central1-c",
+    ]
+  },
+  "n2-highmem-16-zonal-fallback" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
+    labels : {
+      "cloud.google.com/compute-class" : "prefer-primary-zone"
+    },
+    taints : [{
+      key : "cloud.google.com/compute-class",
+      value : "prefer-primary-zone",
+      effect : "NO_SCHEDULE",
+    }],
+    zones : [
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-f"
+    ]
+  },
+  "n2-highmem-64-zonal-primary" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
+    labels : {
+      "cloud.google.com/compute-class" : "prefer-primary-zone"
+    },
+    taints : [{
+      key : "cloud.google.com/compute-class",
+      value : "prefer-primary-zone",
+      effect : "NO_SCHEDULE",
+    }],
+    zones : [
+      "us-central1-c",
+    ]
+  },
+  "n2-highmem-64-zonal-fallback" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
+    labels : {
+      "cloud.google.com/compute-class" : "prefer-primary-zone"
+    },
+    taints : [{
+      key : "cloud.google.com/compute-class",
+      value : "prefer-primary-zone",
+      effect : "NO_SCHEDULE",
+    }],
+    zones : [
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-f"
+    ]
+  },
   "public-n2-highmem-4" : {
     min : 0,
     max : 100,
