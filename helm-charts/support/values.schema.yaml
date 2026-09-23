@@ -17,6 +17,7 @@ required:
   - global
   - fluent-bit
   - k8s-node-operator
+  - zonalComputeClass
 properties:
   # We don't control validation of dependent charts here
   cluster-autoscaler:
@@ -225,3 +226,22 @@ properties:
             type: string
             description: |
               Name of the StorageClass to create
+  zonalComputeClass:
+    type: object
+    required: [enabled]
+    if:
+      properties:
+        enabled:
+          const: true
+    then:
+      additionalProperties: false
+      required: [primaryNodePools]
+      properties:
+        enabled:
+          type: boolean
+        primaryNodePools:
+          type: array
+          items: 
+            type: string
+          description: |
+            Names of the primary zone node pools for the cluster

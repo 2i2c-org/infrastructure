@@ -30,4 +30,8 @@ grafana:
     - secretName: grafana-tls
       hosts:
       - grafana.leap.2i2c.cloud
-
+zonalComputeClass:
+  enabled: true
+  primaryNodePools:
+  - nb-n2-highmem-64-zonal-primary
+  - nb-n2-highmem-16-zonal-primary

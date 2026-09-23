@@ -15,6 +15,16 @@ local is_usage_quotas_hub = !std.any([
   for pattern in hub_types
 ]);
 
+// Common selectors to workloads running on the notebook pools
+local commonNotebookPoolSelectors = if provider == 'aws' then {
+  '2i2c/hub-name': hub_name,
+  'node.kubernetes.io/instance-type': 'r5.xlarge',
+} else if provider == 'gcp' then {
+  'node.kubernetes.io/instance-type': 'n2-highmem-4',
+  'cloud.google.com/compute-class': 'prefer-primary-zone',
+}
+else {};
+
 local emitDaskHubCompatibleConfig(basehubConfig) =
   // Handle legacy 'daskhub' type hubs
   // Note: This relies on `jsonnet` being called with absolute path to
@@ -237,22 +247,11 @@ local jupyterhubConfig =
              extraConfig: jupyterhubUsageQuotasHubConfig.extraConfig,
            }
          else {},
-  } +
-  if provider == 'aws' then {
+  } + std.prune({
     singleuser: {
-      nodeSelector: {
-        '2i2c/hub-name': hub_name,
-        'node.kubernetes.io/instance-type': 'r5.xlarge',
-      },
+      nodeSelector: commonNotebookPoolSelectors,
     },
-  }
-  else if provider == 'gcp' then {
-    singleuser: {
-      nodeSelector: {
-        'node.kubernetes.io/instance-type': 'n2-highmem-4',
-      },
-    },
-  } else {};
+  });
 
 local daskGatewayConfig =
   if provider == 'aws' then {
@@ -286,35 +285,15 @@ local binderhubServiceConfig = {
   // Schedule builder pods to run on the default smallest user nodes
   // https://github.com/2i2c-org/infrastructure/issues/4241
   dockerApi:
-    {} +
-    if provider == 'aws' then {
-      nodeSelector: {
-        '2i2c/hub-name': hub_name,
-        'node.kubernetes.io/instance-type': 'r5.xlarge',
-      },
-    }
-    else if provider == 'gcp' then {
-      nodeSelector: {
-        'node.kubernetes.io/instance-type': 'n2-highmem-4',
-      },
-    } else {},
+    {
+      nodeSelector: commonNotebookPoolSelectors,
+    },
   config:
-    {} +
-    if provider == 'aws' then {
+    std.prune({
       KubernetesBuildExecutor: {
-        node_selector: {
-          '2i2c/hub-name': hub_name,
-          'node.kubernetes.io/instance-type': 'r5.xlarge',
-        },
+        node_selector: commonNotebookPoolSelectors,
       },
-    }
-    else if provider == 'gcp' then {
-      KubernetesBuildExecutor: {
-        node_selector: {
-          'node.kubernetes.io/instance-type': 'n2-highmem-4',
-        },
-      },
-    } else {},
+    }),
   // For auth
   extraEnv: [
     {
