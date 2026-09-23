@@ -404,6 +404,10 @@ local configFluentBit = {
   },
 };
 
+//local configZonalComputeClass = {
+//  enabled: provider_name == "gcp",
+//};
+
 {
   grafana: {
     serviceAccount: {
@@ -630,4 +634,5 @@ local configFluentBit = {
   },
   'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
   'fluent-bit': configFluentBit,
+  //zonalComputeClass: configZonalComputeClass,
 }
