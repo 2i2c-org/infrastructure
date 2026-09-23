@@ -95,6 +95,7 @@ jupyterhub:
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/jupyter-health-demostration-hub
       JHE_URL: https://jhe.fly.dev
       JHE_CLIENT_ID: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
+      OPENCODE_CONFIG: /etc/opencode-default/opencode.json
     extraFiles:
       extra_server_config_py:
         mountPath: /opt/conda/etc/jupyter/jupyter_server_config.py
@@ -113,30 +114,50 @@ jupyterhub:
           c.SMARTExtensionApp.scopes = ["openid", "profile", "fhirUser", "launch/patient"]
           c.SMARTExtensionApp.smart_launch_hook = smart_launch_hook
 
-          # jupyter-ai config
-          import os
+      opencode:
+        mountPath: /etc/opencode-default/opencode.json
+        data:
+          $schema: https://opencode.ai/config.json
+          model: nrp/qwen3
+          disabled_providers:
+          - opencode
+          provider:
+            nrp:
+              npm: '@ai-sdk/openai-compatible'
+              name: NRP
+              options:
+                baseURL: https://ellm.nrp-nautilus.io/v1
+                apiKey: '{env:OPENAI_API_KEY}'
+              models:
+                kimi:
+                  name: kimi
+                  limit:
+                    context: 262144
+                    output: 32768
+                  options:
+                    chat_template_kwargs:
+                      thinking: true
+                      preserve_thinking: true
+                  variants:
+                    instruct:
+                      chat_template_kwargs:
+                        thinking: false
+                        preserve_thinking: false
+                qwen3:
+                  name: qwen3
+                qwen3-small:
+                  name: qwen3-small
+                gpt-oss:
+                  name: gpt-oss
+                gemma:
+                  name: gemma
+                gemma-small:
+                  name: gemma-small
+                glm-5:
+                  name: glm-5
+                minimax-m2:
+                  name: minimax-m2
 
-          api_key = os.environ["OPENAI_API_KEY"]
-          api_base = os.environ["OPENAI_BASE_URL"]
-          # ref: https://nrp.ai/documentation/userdocs/ai/llm-managed/#available-models
-          model_name = "qwen3"
-          model_id = f"openai-custom:{model_name}"
-          chat_model_id = f"openai-chat-custom:{model_name}"
-          per_model_parameters = {"openai_api_base": api_base}
-
-          c.AiExtension.allowed_providers = ["openai-chat-custom", "openai-custom"]
-          c.AiExtension.default_api_keys = {
-              'OPENAI_API_KEY': api_key,
-          }
-
-          c.AiExtension.default_language_model = chat_model_id
-          c.AiExtension.default_completions_model = chat_model_id
-          c.AiExtension.default_embeddings_model = model_id
-
-          c.AiExtension.model_parameters = {
-              model_id: per_model_parameters,
-              chat_model_id: per_model_parameters,
-          }
 
     image:
       name: quay.io/jupyterhealth/singleuser-premvp
