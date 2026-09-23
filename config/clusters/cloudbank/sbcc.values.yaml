@@ -30,7 +30,11 @@ jupyterhub:
         allowed_hosted_domains:
         - pipeline.sbcc.edu
         strip_domain: false
-        allow_all: true
+        # allowed_hosted_domains is additive and honours admin_users,
+        # so allow_all is not needed. allow_existing_users grandfathers
+        # the off-domain accounts already in this hub's database.
+        allow_all: false
+        allow_existing_users: true
       OAuthenticator:
         # WARNING: Don't use allow_existing_users with config to allow an
         #          externally managed group of users, such as
