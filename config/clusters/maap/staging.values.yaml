@@ -84,6 +84,41 @@ jupyterhub:
                 default_url: /desktop
                   # Built from https://github.com/2i2c-org/nasa-qgis-image
                 image: quay.io/2i2c/nasa-qgis-image:2725f26348ba
+        scratch_disk:
+          display_name: Scratch Disk on /tmp
+          allowed_groups:
+          - CPU:XL
+          - CPU:XXL
+          - CPU:XXXL
+          choices:
+            01_standard:
+              display_name: Standard
+              description: Max of 200GB
+              default: true
+              kubespawner_override: {}
+            02_gb_500:
+              display_name: Dedicated 500GB
+              description: 500GB dedicated to just you
+              kubespawner_override:
+                volume_mounts:
+                  tmp:
+                    name: big-tmp
+                    mountPath: /tmp
+                volumes:
+                  big-tmp:
+                    name: big-tmp
+                    ephemeral:
+                      volumeClaimTemplate:
+                        metadata:
+                          labels:
+                            type: temporary-user-scratch
+                        spec:
+                          accessModes: [ReadWriteOnce]
+                          storageClassName: ebs-csi-default-sc  # Set this & volumeAttributes explicitly
+                          volumeAttributesClassName: scratch-disk
+                          resources:
+                            requests:
+                              storage: 500Gi
         resource_allocation:
           display_name: Resource Allocation
           choices:

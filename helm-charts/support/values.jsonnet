@@ -404,6 +404,27 @@ local configFluentBit = {
   },
 };
 
+local scratchDiskVACConfigMapping = {
+  // We need a VolumeAttributesClsas for AWS so we can set AWS tags for cost monitoring
+  // Add more cloud providers here as we need (to tweak iops, etc)
+  aws: {
+    enabled: true,
+    driverName: 'ebs.csi.aws.com',
+    parameters: {
+      // Don't set type here, as that's specified by storageClass instead
+      // Tag this as part of the hub for cost accounting
+      // There's no easy way to tag each PVC with a username unfortunately
+      // https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/tagging.md
+      tagSpecification_1: '2i2c:hub-name={{ .PVCNamespace }}',
+      tagSpecification_2: '2i2c:volume-purpose=scratch',
+    },
+  },
+  gcp: {
+    enabled: false,  // disabled by default, only enable if you want to set specific params
+    driverName: 'pd.csi.storage.gke.io',
+  },
+};
+
 {
   grafana: {
     serviceAccount: {
@@ -630,4 +651,8 @@ local configFluentBit = {
   },
   'jupyterhub-cost-monitoring': if provider_name == 'aws' then configCostMonitoring else { enabled: false },
   'fluent-bit': configFluentBit,
+  scratchDiskVAC: std.get(scratchDiskVACConfigMapping, provider_name, {
+    enabled: false,  // Default to turned off for unknown cloud providers
+  }),
+
 }

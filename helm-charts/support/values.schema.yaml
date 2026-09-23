@@ -17,6 +17,7 @@ required:
   - global
   - fluent-bit
   - k8s-node-operator
+  - scratchDiskVAC
 properties:
   # We don't control validation of dependent charts here
   cluster-autoscaler:
@@ -52,6 +53,23 @@ properties:
 
   # These provide values for objects we create, so we validate their schema
   # to the best of our ability.
+  scratchDiskVAC:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+      parameters:
+        type: object
+      driverName:
+        type: string
+      provider:
+        enum:
+        # Change when we support GCP too
+        - aws
+        type: string
   copyfail:
     type: object
     additionalProperties: false

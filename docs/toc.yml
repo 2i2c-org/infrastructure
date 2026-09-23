@@ -33,7 +33,10 @@ project:
     - file: sre-guide/common-problems-solutions.md
     - file: sre-guide/prometheus-disk-resize.md
     - file: sre-guide/upgrade-support-chart-versions.md
-    - file: sre-guide/scratch-storage.md
+    - title: Scratch storage
+      children:
+      - file: sre-guide/scratch-storage/node-disk.md
+      - file: sre-guide/scratch-storage/ephemeral-volume.md
 
   - title: Hub deployment guide
     children:
