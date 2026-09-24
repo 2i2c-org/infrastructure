@@ -11,14 +11,14 @@ Each hub gets its own staging hub. They match all configuration, except:
 2. Different Login credentials
 3. (Possibly) different hub DB sizes, as we still store logs in the hub db dir
    (a bad practice we should stop soon).
-   
+
 ## Usernames
 
 The default hub (at jupyter.utoronto.ca) and its staging hub use an opaque
 id (oid) in the form of a [uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)
 as usernames. This caused a bunch of confusion with respect to support, and
 hence other hubs use user emails as usernames instead.
-   
+
 ## Config Structure
 
 For each hub, we want the following files:

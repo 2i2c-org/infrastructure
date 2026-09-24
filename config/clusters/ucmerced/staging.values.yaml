@@ -1,7 +1,7 @@
 jupyterhub:
   singleuser:
-    # [CUSTOM] jupyterhub.singleuser.nodeSelector 
-    # 
+    # [CUSTOM] jupyterhub.singleuser.nodeSelector
+    #
     # Used by userPlaceholder (and profiles)
     nodeSelector:
       node.kubernetes.io/instance-type: r5.2xlarge

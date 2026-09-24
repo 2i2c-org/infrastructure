@@ -121,7 +121,7 @@ jupyterhub:
           name: home
           mountPath: /home/jovyan/shared-public
           subPath: _shared-public
-          readOnly: false 
+          readOnly: false
         # If the hub has RStudio, mount the shared-public directory for RStudio as well
         2-shared-public-rstudio-volumemount:
           name: home

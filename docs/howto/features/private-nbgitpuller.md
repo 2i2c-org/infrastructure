@@ -74,7 +74,7 @@ the app we just created.
       but `${CONDA_PREFIX}/etc/gitconfig`. So, *if* the image installs `git` from
       conda-forge, you have to start the image, look for the value of the `${CONDA_PREFIX}` environment variable, and construct `mountPath` to be `<CONDA_PREFIX>/etc/gitconfig`
 
-      ```{important} 
+      ```{important}
       The environment variables for the singleuser pod are expanded before the singleuser environment is constructed. This means that the `CONDA_PREFIX` environment variable itself cannot be interpolated from the environment, and you must determine it by-hand from the image.
       ```
 

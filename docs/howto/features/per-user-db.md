@@ -139,7 +139,7 @@ jupyterhub:
 
 If the per-user db is no longer needed, we should cleanup the created disks
 so we are no longer charged for them. Just deleting the Kubernetes PVCs
-created here should delete the underlying disks as well. 
+created here should delete the underlying disks as well.
 
 ```{warning}
 This is irreversible! Make sure the community is fully aware before doing this
@@ -150,18 +150,17 @@ This is irreversible! Make sure the community is fully aware before doing this
    ```bash
    kubectl -n <namespace> get pvc -l component=extra-pvc
    ```
-   
+
    Inspect it to make sure you are deleting the PVCs **from the right hub**
    from the **right cluster**.
-   
+
 2. Delete the PVCs:
 
    ```bash
    kubectl -n <namespace> delete pvc -l component=extra-pvc
    ```
-   
+
    This might take a while. The backing disks will be deleted by Kubernetes as well,
    once any pods attached to them go down. This means it is safe to run this
    command while users are currently running - there will be no effects on
    any running user pods!
-   

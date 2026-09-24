@@ -7,11 +7,11 @@ title: "Rollout <change>"
 
 ## Context
 
-<!-- Provide any relevant context and the rationale behind the change --> 
+<!-- Provide any relevant context and the rationale behind the change -->
 
 ## Deadline
 
-<!-- Provide the deadline by which the migration should be wrapped up. Also mention if the deadline is hard or soft --> 
+<!-- Provide the deadline by which the migration should be wrapped up. Also mention if the deadline is hard or soft -->
 
 ## Rollout procedure
 
