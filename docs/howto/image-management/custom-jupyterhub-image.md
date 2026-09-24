@@ -91,7 +91,7 @@ To install an unreleased package, we will need to install directly from GitHub a
 ## How to build and push a new version of the available hub images
 
 Rebuild the Docker image and push it to the [Quay.io registry](https://quay.io/repository/2i2c/pilot-hub)
- 
+
 - Your `@2i2c` address should give you access to push to the Quay.io registry where the hub image lives, but make sure you are logged into quay.io container registry with the right credentials and these creds are configured to have access to <https://quay.io/repository/2i2c/pilot-hub>.
   Please contact someone at 2i2c for access if this is not the case.
 

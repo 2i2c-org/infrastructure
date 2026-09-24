@@ -22,13 +22,13 @@ singleuser:
               display_name: Standard
               description: Max of 200GB
               default: true
-              kubespawner_override: 
+              kubespawner_override:
                 # ...
             # This option will define a dedicated ephemeral volume
             02_gb_500:
               display_name: Dedicated 500GB
               description: 500GB dedicated to just you
-              kubespawner_override: 
+              kubespawner_override:
                 # ...
 ```
 When defining the dedicated ephemeral volume `kubespawner_override`, we need to specify special `storageClassName` and `volumeAttributesClassName` attributes that allow the CSI driver to provision the correct kind of temporary volume.
@@ -62,13 +62,13 @@ singleuser:
               display_name: Standard
               description: Max of 200GB
               default: true
-              kubespawner_override: 
+              kubespawner_override:
                 # ...
             # This option will define a dedicated ephemeral volume
             02_gb_500:
               display_name: Dedicated 500GB
               description: 500GB dedicated to just you
-              kubespawner_override: 
+              kubespawner_override:
                 volume_mounts:
                   tmp:
                     name: big-tmp
@@ -95,9 +95,9 @@ We may wish to increase the performance of the ephemeral disk. To do this, we'll
 :filename: support.values.yaml
 
 scratchDiskVAC:
-  parameters:  
+  parameters:
     provisioned-iops: "3000"
-    provisioned-throughput: "50" 
+    provisioned-throughput: "50"
 
 ```
 See [the Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/#the-volumeattributesclass-api) for more details on these parameters.

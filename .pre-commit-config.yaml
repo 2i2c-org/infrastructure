@@ -76,6 +76,13 @@ repos:
     entry: \b(from|import)\b.*\bdev\b
     files: ^src/deployer/commands/.*$
 
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+    # Get rid of trailing whitespace
+  - id: trailing-whitespace
+    exclude: dashboards/vendor/.*
+
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:
   autoupdate_schedule: monthly

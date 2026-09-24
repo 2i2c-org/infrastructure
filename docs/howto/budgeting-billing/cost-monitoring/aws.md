@@ -67,17 +67,17 @@ Below is a template message you can send to the technical contact. Note that `<$
 
 
 > In order for 2i2c to enable the cloud cost monitoring feature for your community, the following changes needs to be made in the AWS organization's management account:
-> 
+>
 > 1. Declare that linked member accounts are allowed to access Cost Explorer.
-> 
+>
 >    This can be done via "Billing and Cost Management" -> "Cost Management Preferences", where the checkbox "Linked account access" should be checked.
-> 
+>
 > 2. Enable a specific set of cost allocation tags.
-> 
+>
 >    This can be done via "Billing and Cost Management" -> "Cost Allocation Tags".
-> 
+>
 >    The tags that to be activated are:
-> 
+>
 >    - `2i2c:hub-name`
 >    - `2i2c.org/cluster-name`
 >    - `2i2c.org/node-purpose`

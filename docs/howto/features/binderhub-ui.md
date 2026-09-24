@@ -414,7 +414,7 @@ jupyterhub:
 
 #### 7. Restrict the repositories that can be built
 
-When deploying an unauthenticated binderhub, it's useful to restrict what repositories can be built to avoid abuse. This can be achieved by setting 
+When deploying an unauthenticated binderhub, it's useful to restrict what repositories can be built to avoid abuse. This can be achieved by setting
 
 ```yaml
 binderhub-service:

@@ -94,9 +94,9 @@ aws configure sso
 ```
 
 1. You will be presented with a prompt asking you for various SSO details. If you've run this step for another AWS account under this SSO provider, use **the same session name** and you'll be taken to step (2). Otherwise, fill in the following details.
-   - **SSO session name** — a unique name of the SSO session that provides access to this account. 
+   - **SSO session name** — a unique name of the SSO session that provides access to this account.
    - **SSO start URL** — the SSO app URL, e.g. https://2i2c.awsapps.com/start#/
-   - **SSO region** — the region of the SSO, typically `us-east-1` 
+   - **SSO region** — the region of the SSO, typically `us-east-1`
    - **SSO registration scopes** — leave default.
 2. Now grant access to the sign-in request launched by the application
 3. Select the appropriate AWS account from a list of available AWS accounts.

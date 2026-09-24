@@ -60,19 +60,19 @@ Please let the community know that we've performed an emergency resize using an 
 <br>
 
 > Dear all,
-> 
+>
 > The home directory disk capacity for the <$CLUSTER_NAME> <$HUB_NAME> hub was close to its maximum limit.
 > We have increased the disk so that now there is between 10% to 15% free space remaining.
 > Recommended actions:
-> 
+>
 > 1. Instruct users to delete any unused files from their home directories (saves cloud costs)
-> 
+>
 > OR
-> 
+>
 > 2. Instruct us to increase the home directory disk capacity in case you are expecting more of such increased usage (incurs cloud costs)
-> 
+>
 > You can make use of the Grafana Dashboard *JupyterHub Default Dashboards >
 > Home Directory Usage Dashboard* to get an overview of home directory usage per-user:
-> 
+>
 > <$GRAFANA_URL>
 </details>

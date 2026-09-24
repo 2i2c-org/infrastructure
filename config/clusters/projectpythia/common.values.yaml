@@ -133,7 +133,7 @@ jupyterhub:
               )
               with urllib.request.urlopen(req) as resp:
                   user = json.load(resp)
-              
+
               access_token = user["auth_state"]["access_token"]
 
               print(f"username=x-access-token")

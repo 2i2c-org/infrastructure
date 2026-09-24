@@ -919,7 +919,7 @@ jupyterhub:
             KubeSpawner.image:
               type: string
               title: User docker image
-              description: Determines languages, libraries and interfaces 
+              description: Determines languages, libraries and interfaces
                 available
               help: Leave this blank to use the default
             Spawner.default_url:
@@ -1072,7 +1072,7 @@ jupyterhub:
       - mountPath: /usr/local/share/jupyterhub/static/extra-assets
         name: custom-templates
         subPath: repo/extra-assets
-      - mountPath: 
+      - mountPath:
           /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
         name: usage-quotas
         subPath: jupyterhub_usage_quotas_config.py

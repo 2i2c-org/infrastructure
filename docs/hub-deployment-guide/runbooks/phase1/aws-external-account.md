@@ -16,7 +16,7 @@ There are some steps to do before the deploy:
 
 1. This engineer can use the IAM service in the AWS Console to create accounts for each of the other engineers
    and then sends the credentials to each, for example, through Slack.
-   
+
    ```{tip}
    Create a **User group** with admin permissions.
    ```

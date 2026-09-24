@@ -13,7 +13,7 @@
      - Name: [cluster]-[hub] (e.g. cloudbank-sou)
      - Authorized redirect URIs: https://[hub].[cluster].2i2c.cloud/hub/oauth_callback (e.g. https://sou.cloudbank.2i2c.cloud/hub/oauth_callback)
    - Copy or download the Client ID and Client secret from the pop-up
-   - Once you have created the OAuth app, then use the Client ID and secret in the step below 
+   - Once you have created the OAuth app, then use the Client ID and secret in the step below
 
 2. **Create or update the appropriate secret config file under `config/clusters/<cluster_name>/<hub_name>.secret.values.yaml`.**
    You should add the following config to this file, pasting in the client ID and secret you generated in step 1.
