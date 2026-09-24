@@ -35,7 +35,9 @@ jupyterhub:
         allowed_hosted_domains:
         - nicc.edu
         strip_domain: false
-        allow_all: true
+        # allowed_hosted_domains is additive and honours admin_users,
+        # so allow_all is not needed. No off-domain users on this hub.
+        allow_all: false
       Authenticator:
         admin_users:
         - sean.smorris@berkeley.edu
