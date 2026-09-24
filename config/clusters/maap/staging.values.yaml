@@ -86,10 +86,6 @@ jupyterhub:
                 image: quay.io/2i2c/nasa-qgis-image:2725f26348ba
         scratch_disk:
           display_name: Scratch Disk on /tmp
-          allowed_groups:
-          - CPU:XL
-          - CPU:XXL
-          - CPU:XXXL
           choices:
             01_standard:
               display_name: Standard
@@ -99,6 +95,10 @@ jupyterhub:
             02_gb_500:
               display_name: Dedicated 500GB
               description: 500GB dedicated to just you
+              allowed_groups:
+              - CPU:XL
+              - CPU:XXL
+              - CPU:XXXL
               kubespawner_override:
                 volume_mounts:
                   tmp:
