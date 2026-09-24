@@ -121,6 +121,13 @@ jupyterhub:
           model: nrp/qwen3
           disabled_providers:
           - opencode
+          mcp:
+            jhe:
+              enabled: true
+              type: remote
+              url: https://mcp.berkeley-jhe-demo.jupyterhealth.org/mcp
+              headers:
+                Authorization: Bearer {env:JHE_TOKEN}
           provider:
             nrp:
               npm: '@ai-sdk/openai-compatible'
