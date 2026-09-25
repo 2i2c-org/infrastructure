@@ -17,14 +17,14 @@ local c = cluster.makeCluster(
       'r5.4xlarge',
       'r7i.4xlarge',
       'r6i.4xlarge',
-    ]
+    ],
   ],
-  hubs=['staging','workshop',],
+  hubs=['staging', 'workshop'],
   notebookGPUNodeGroups=[],
   nodeGroupGenerations=['a'],
   extraTags={
-    "JHCM:Attributable": "true",
-    "JHCM:ClusterName": "schmidt-astro-events"
+    'JHCM:Attributable': 'true',
+    'JHCM:ClusterName': 'schmidt-astro-events',
   }
 );
 

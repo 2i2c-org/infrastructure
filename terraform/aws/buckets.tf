@@ -2,9 +2,9 @@
 resource "aws_s3_bucket" "user_buckets" {
   for_each = var.user_buckets
   bucket   = lower("${var.cluster_name}-${each.key}")
-  tags     = merge(each.value.tags, {
-    "JHCM:Attributable"   = "true"
-    "JHCM:ClusterName"    = var.cluster_name
+  tags = merge(each.value.tags, {
+    "JHCM:Attributable" = "true"
+    "JHCM:ClusterName"  = var.cluster_name
   })
 }
 

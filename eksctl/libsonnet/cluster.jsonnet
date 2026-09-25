@@ -87,9 +87,9 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': clusterName,
 
-      # Newer style tags for JHCM
-      "JHCM:Attributable": "true",
-      "JHCM:ClusterName": clusterName
+      // Newer style tags for JHCM
+      'JHCM:Attributable': 'true',
+      'JHCM:ClusterName': clusterName,
     } + extraTags,
   } + (
     // Allow custom kubelet config
@@ -129,7 +129,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     },
     extraTags={
       '2i2c:node-purpose': 'core',
-      "JHCM:Purpose": 'core'
+      'JHCM:Purpose': 'core',
     } + extraTags,
     minSize=minSize,
     maxSize=maxSize,
@@ -183,8 +183,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     extraTags={
       '2i2c:node-purpose': 'user',
       '2i2c:hub-name': hubName,
-      "JHCM:Purpose": "user",
-      "JHCM:HubName": hubName
+      'JHCM:Purpose': 'user',
+      'JHCM:HubName': hubName,
     } + extraTags,
     extraKubeletConfig={
       singleProcessOOMKill: true,
@@ -271,8 +271,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         ],
         extraTags={
           '2i2c:node-purpose': 'worker',
-          "JHCM:Purpose": "dask-worker",
-          "JHCM:HubName": hubName
+          'JHCM:Purpose': 'dask-worker',
+          'JHCM:HubName': hubName,
         } + extraTags,
         extraKubeletConfig={
           singleProcessOOMKill: true,
@@ -318,8 +318,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         ManagedBy: '2i2c',
         '2i2c.org/cluster-name': name,
 
-        "JHCM:Attributable": "true",
-        "JHCM:ClusterName": name
+        'JHCM:Attributable': 'true',
+        'JHCM:ClusterName': name,
       } + extraTags,
     },
     availabilityZones: ['%s%s' % [region, lowerCaseLetter(i)] for i in std.range(0, regionSize - 1)],
@@ -337,8 +337,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         ManagedBy: '2i2c',
         '2i2c.org/cluster-name': name,
 
-        "JHCM:Attributable": "true",
-        "JHCM:ClusterName": name
+        'JHCM:Attributable': 'true',
+        'JHCM:ClusterName': name,
       } + extraTags } + addon
       for addon in
         [

@@ -12,22 +12,22 @@ cluster_nodes_location = "us-east-1a"
 #
 
 ebs_volumes = {
-"staging" = {
+  "staging" = {
     name_suffix = "staging",
     type        = "gp3",
     size        = 10,
-    tags        = {
+    tags = {
       "2i2c:hub-name" : "staging",
-      "JHCM:HubName": "staging"
+      "JHCM:HubName" : "staging"
     },
   },
-"workshop" = {
+  "workshop" = {
     name_suffix = "workshop",
     type        = "gp3",
     size        = 100,
-    tags        = {
+    tags = {
       "2i2c:hub-name" : "workshop"
-      "JHCM:HubName": "staging"
+      "JHCM:HubName" : "staging"
     },
   },
 
@@ -39,7 +39,7 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : {
       "2i2c:hub-name" : "staging"
-      "JHCM:HubName": "staging"
+      "JHCM:HubName" : "staging"
     },
   },
 
@@ -47,19 +47,19 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : {
       "2i2c:hub-name" : "workshop",
-      "JHCM:HubName": "workshop"
+      "JHCM:HubName" : "workshop"
     },
   },
 }
 
 
 hub_cloud_permissions = {
- "staging" : {
-   bucket_admin_access : ["scratch-staging"],
- },
- "workshop" : {
-   bucket_admin_access : ["scratch-workshop"],
- },
+  "staging" : {
+    bucket_admin_access : ["scratch-staging"],
+  },
+  "workshop" : {
+    bucket_admin_access : ["scratch-workshop"],
+  },
 }
 
 enable_jupyterhub_cost_monitoring = true
