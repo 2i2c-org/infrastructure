@@ -4,9 +4,31 @@ jupyterhub:
     memory:
       guarantee: 512M
       limit: 1G
-    image:
-      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: e42c967c281c
+    profileList:
+    - display_name: Choose your environment
+      default: true
+      profile_options:
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            00-base:
+              display_name: Base Image
+              description: RStudio, VS Code, JupyterLab, Python, R
+              default: true
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:e42c967c281c
+            01-cs41:
+              display_name: CS 41
+              slug: cs41
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/cs41_base_image:TODO-set-tag
   scheduling:
     userScheduler:
       enabled: true
