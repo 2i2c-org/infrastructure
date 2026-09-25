@@ -11,6 +11,9 @@ resource "aws_ebs_volume" "nfs_home_dirs" {
   tags = merge(each.value.tags, {
     Name                  = each.value.name_suffix == null ? "hub-nfs-home-dirs" : "hub-nfs-home-dirs-${each.value.name_suffix}"
     "2i2c:volume-purpose" = "home-nfs"
+    "JHCM:Purpose"        = "home-nfs"
+    "JHCM:Attributable"   = "true"
+    "JHCM:ClusterName"    = var.cluster_name
     NFSBackup             = var.enable_nfs_backup ? "true" : "false" # Tag to identify volumes to backup by Data Lifecycle Manager (DLM)
   })
 
