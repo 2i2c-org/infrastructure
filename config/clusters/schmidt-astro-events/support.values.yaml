@@ -5,11 +5,11 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.schmidt-astro-events.2i2c.cloud
+      - prometheus.schmidt-astro-events.2i2c.cloud
       tls:
-        - secretName: prometheus-tls
-          hosts:
-            - prometheus.schmidt-astro-events.2i2c.cloud
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.schmidt-astro-events.2i2c.cloud
 
 grafana:
   grafana.ini:
@@ -23,11 +23,11 @@ grafana:
     size: 1Gi
   ingress:
     hosts:
-      - grafana.schmidt-astro-events.2i2c.cloud
+    - grafana.schmidt-astro-events.2i2c.cloud
     tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.schmidt-astro-events.2i2c.cloud
+    - secretName: grafana-tls
+      hosts:
+      - grafana.schmidt-astro-events.2i2c.cloud
 
 
 cluster-autoscaler:
