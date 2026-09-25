@@ -86,6 +86,10 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     tags: makeCaLabelTags(self.labels) + makeCaTaintTags(self.taints) + {
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': clusterName,
+
+      # Newer style tags for JHCM
+      "JHCM:Attributable": "true",
+      "JHCM:ClusterName": clusterName
     } + extraTags,
   } + (
     // Allow custom kubelet config
@@ -113,6 +117,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     generation,
     minSize,
     maxSize,
+    extraTags={}
   ):: $.makeNodeGroup(
     clusterName=clusterName,
     namePrefix='core',
@@ -124,7 +129,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     },
     extraTags={
       '2i2c:node-purpose': 'core',
-    },
+      "JHCM:Purpose": 'core'
+    } + extraTags,
     minSize=minSize,
     maxSize=maxSize,
     generation=generation
@@ -177,6 +183,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     extraTags={
       '2i2c:node-purpose': 'user',
       '2i2c:hub-name': hubName,
+      "JHCM:Purpose": "user",
+      "JHCM:HubName": hubName
     } + extraTags,
     extraKubeletConfig={
       singleProcessOOMKill: true,
@@ -235,6 +243,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     generation,
     minSize,
     maxSize,
+    extraTags={}
   ):: $.makeNodeGroup(
         clusterName,
         'dask-%s' % [hubName],
@@ -262,7 +271,9 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         ],
         extraTags={
           '2i2c:node-purpose': 'worker',
-        },
+          "JHCM:Purpose": "dask-worker",
+          "JHCM:HubName": hubName
+        } + extraTags,
         extraKubeletConfig={
           singleProcessOOMKill: true,
         },
@@ -294,7 +305,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     notebookGPUNodeGroups=[],
     daskInstanceTypes=[],
     nodeGroupGenerations=[],
-    regionSize=3
+    regionSize=3,
+    extraTags={}
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -305,7 +317,10 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       tags+: {
         ManagedBy: '2i2c',
         '2i2c.org/cluster-name': name,
-      },
+
+        "JHCM:Attributable": "true",
+        "JHCM:ClusterName": name
+      } + extraTags,
     },
     availabilityZones: ['%s%s' % [region, lowerCaseLetter(i)] for i in std.range(0, regionSize - 1)],
     iam: {
@@ -321,7 +336,10 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       { version: 'latest', tags: {
         ManagedBy: '2i2c',
         '2i2c.org/cluster-name': name,
-      } } + addon
+
+        "JHCM:Attributable": "true",
+        "JHCM:ClusterName": name
+      } + extraTags } + addon
       for addon in
         [
           { name: 'coredns' },
@@ -364,7 +382,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         minSize=1,
         // We only want 1 core node running.
         // For clusters where we want more, it should be a manual override
-        maxSize=1
+        maxSize=1,
+        extraTags=extraTags
       )
       for generation in nodeGroupGenerations
     ] + [
@@ -375,7 +394,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         instanceType=instanceType,
         generation=generation,
         minSize=0,
-        maxSize=100
+        maxSize=100,
+        extraTags=extraTags
       )
       for hubName in hubs
       for instanceType in notebookCPUInstanceTypes
@@ -393,7 +413,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4'),
         generation=generation,
         minSize=0,
-        maxSize=100
+        maxSize=100,
+        extraTags=extraTags
       )
       for hubName in hubs
       for gpuConfig in notebookGPUNodeGroups
@@ -407,7 +428,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         instanceType=instanceType,
         generation=generation,
         minSize=0,
-        maxSize=100
+        maxSize=100,
+        extraTags=extraTags
       )
       for hubName in hubs
       for instanceType in daskInstanceTypes
