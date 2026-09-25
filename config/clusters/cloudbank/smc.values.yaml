@@ -4,6 +4,9 @@ jupyterhub:
     memory:
       guarantee: 512M
       limit: 1G
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: e42c967c281c
   scheduling:
     userScheduler:
       enabled: true
