@@ -1,0 +1,13 @@
+{{- if .Values.zonalComputeClass.enabled -}}
+apiVersion: cloud.google.com/v1
+kind: ComputeClass
+metadata:
+  name: prefer-primary-zone
+spec:
+  priorities:
+  # Prefer primary AZ
+  - nodepools: 
+    {{ .Values.zonalComputeClass.primaryNodePools | toYaml | nindent 4 }}
+  # Fall back to any compute
+  whenUnsatisfiable: ScaleUpAnyway
+{{- end }}
