@@ -1,0 +1,42 @@
+name: schmidt-astro-events
+provider: aws
+provider_url: https://998493219388.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 350016532181
+aws:
+  account: 998493219388
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: schmidt-astro-events
+  region: us-east-1
+  billing:
+    paid_by_us: false
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs: []
+  # Uncomment the lines below once the support infrastructure was deployed and
+  # you are ready to add the first cluster
+
+
+  # - name: staging
+  #   # Tip: consider changing this to something more human friendly
+  #   display_name: "schmidt-astro-events - staging"
+  #   domain: staging.schmidt-astro-events.2i2c.cloud
+  #   helm_chart: basehub
+  #   helm_chart_values_files:
+  #     - common.values.yaml
+  #     - staging.values.yaml
+  #     - enc-staging.secret.values.yaml
+
+  # - name: workshop
+  #   # Tip: consider changing this to something more human friendly
+  #   display_name: "schmidt-astro-events - workshop"
+  #   domain: workshop.schmidt-astro-events.2i2c.cloud
+  #   helm_chart: basehub
+  #   helm_chart_values_files:
+  #     - common.values.yaml
+  #     - workshop.values.yaml
+  #     - enc-workshop.secret.values.yaml
