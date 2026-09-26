@@ -64,7 +64,7 @@ persistent_disks = {
     name_suffix = "chicagostate"
   }
   "clarku" = {
-    size        = 50
+    size        = 100
     name_suffix = "clarku"
   }
   "cloud-county" = {
@@ -260,7 +260,7 @@ persistent_disks = {
     name_suffix = "norco"
   }
   "nova" = {
-    size        = 25
+    size        = 50
     name_suffix = "nova"
   }
   "ocu" = {
