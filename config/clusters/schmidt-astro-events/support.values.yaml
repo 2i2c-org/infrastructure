@@ -1,0 +1,46 @@
+prometheus:
+  server:
+    persistentVolume:
+      size: 100Gi
+    ingress:
+      enabled: true
+      hosts:
+      - prometheus.schmidt-astro-events.2i2c.cloud
+      tls:
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.schmidt-astro-events.2i2c.cloud
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.schmidt-astro-events.2i2c.cloud/
+  auth.github:
+    enabled: true
+    allowed_organizations: 2i2c-org
+  persistence:
+    # We don't need 10Gi on the Grafana persistent directory
+    size: 1Gi
+  ingress:
+    hosts:
+    - grafana.schmidt-astro-events.2i2c.cloud
+    tls:
+    - secretName: grafana-tls
+      hosts:
+      - grafana.schmidt-astro-events.2i2c.cloud
+
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: schmidt-astro-events
+  awsRegion: us-east-1
+
+calico:
+  enabled: true
+
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
