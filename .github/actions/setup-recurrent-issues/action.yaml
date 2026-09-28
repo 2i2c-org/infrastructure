@@ -39,7 +39,7 @@ runs:
       --title "${{ inputs.title }}" \
       --body "${{ inputs.body }}" \
       --parent "${{ inputs.parent }}" \
-      --blocked_by "${{ inputs.blocked_by }}")
+      --blocked-by "${{ inputs.blocked_by }}")
       echo "issue=$issue" >> $GITHUB_ENV
       echo "issue_number=$(echo $issue)" >> $GITHUB_OUTPUT
     env:
