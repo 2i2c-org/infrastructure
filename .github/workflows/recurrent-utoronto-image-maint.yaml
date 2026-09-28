@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     # Run on the first of Sept at midnight, every year
-  - cron: 0 0 1 9 *
+  - cron: 0 0 1 7 *
 
 jobs:
   create_issue:
@@ -32,8 +32,8 @@ jobs:
           ### Definition of Done
           - [ ] Images are updated
 
-        fields: Status
-        values: Upcoming P&S Initiatives
+        fields: Status,End date
+        values: Upcoming P&S Initiatives,2027-09-01
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Update everything in utoronto Python image to latest version
@@ -54,8 +54,8 @@ jobs:
           Note: we can drop packages if necessary, as long as their overall infra config still works for their needs.
         parent: ${{ steps.tracking-initiative.outputs.issue_number }}
         label: support
-        fields: Status,Estimate
-        values: Up Next,3
+        fields: Status,Estimate,End date
+        values: Up Next,3,2027-09-01
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Update everything in utoronto R image to latest version
@@ -74,8 +74,8 @@ jobs:
           - [ ] Communicate this to UToronto and ask them to test, providing testing instructions on how to login to staging hub
         parent: ${{ steps.tracking-initiative.outputs.issue_number }}
         label: support
-        fields: Status,Estimate
-        values: Up Next,3
+        fields: Status,Estimate,End date
+        values: Up Next,3,2027-09-01
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Set a date to roll out utoronto python and R images to production
@@ -95,8 +95,8 @@ jobs:
           Note: give them a deadline to respond by, and then go ahead with the date if we don't hear back.
         parent: ${{ steps.tracking-initiative.outputs.issue_number }}
         label: support
-        fields: Status,Estimate
-        values: Up Next,2
+        fields: Status,Estimate,End date
+        values: Up Next,2,2027-09-01
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Roll out new images to UToronto
@@ -114,8 +114,8 @@ jobs:
         parent: ${{ steps.tracking-initiative.outputs.issue_number }}
         blocked_by: ${{ steps.rollout-date.outputs.issue_number }}
         label: support
-        fields: Status,Estimate
-        values: Up Next,1
+        fields: Status,Estimate,End date
+        values: Up Next,1,2027-09-01
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Watch for image related issues on UToronto for a set period of time
@@ -132,6 +132,6 @@ jobs:
         parent: ${{ steps.tracking-initiative.outputs.issue_number }}
         blocked_by: ${{ steps.rollout.outputs.issue_number }}
         label: support
-        fields: Status,Estimate
-        values: Up Next,2
+        fields: Status,Estimate,End date
+        values: Up Next,2,2027-09-01
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
