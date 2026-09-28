@@ -227,7 +227,7 @@ Make sure to run this command **inside** the `eksctl` directory, otherwise it ca
 ```
 
 ```bash
-eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml 
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
 ```
 
 This might take a few minutes.

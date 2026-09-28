@@ -90,7 +90,7 @@ Example CLI use that snoozes staging check for 7 days:
 ```
 HUB=staging
 POLICY=$(gcloud alpha monitoring policies list  --filter "displayName ~ staging" --format='value(name)')
-# echo $POLICY 
+# echo $POLICY
 # projects/two-eye-two-see/alertPolicies/12673409021288629743
 gcloud alpha monitoring snoozes create --display-name="Uptime Check Disabled $HUB_NAME" --criteria-policies="$POLICY" --start-time="$(date -Iseconds)" --end-time="+PT7D"
 # Created snooze [projects/two-eye-two-see/snoozes/3009021608334458880].

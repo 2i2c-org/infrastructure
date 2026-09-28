@@ -57,7 +57,7 @@ AWS management account. If a future cluster deviates from this, you can tell by
    AWS billing UI
    ```
 1. Run the following deployer command to convert the generated CSV file into the format required for the invoicing process.
-   
+
    ```bash
    deployer transform cost-table aws pathto/downloaded/csvfile
    ```
@@ -89,7 +89,7 @@ Currently this is the recommended way of retrieving the costs from GCP.
    ```
 
 1. Run the following deployer command to convert the generated CSV file into the format required for the invoicing process.
-   
+
    ```bash
    deployer transform cost-table gcp pathto/downloaded/csvfile
    ```

@@ -26,3 +26,8 @@ jupyterhub:
         data:
           SMARTExtensionApp:
             redirect_uri: https://staging.jupyter-health.2i2c.cloud/hub/user-redirect/smart-on-fhir/callback
+      opencode:
+        data:
+          mcp:
+            jhe:
+              url: https://mcp.berkeley-jhe-staging.jupyterhealth.org/mcp

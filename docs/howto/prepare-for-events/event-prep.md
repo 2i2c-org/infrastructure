@@ -70,7 +70,7 @@ Although both of these approaches are helpful, they also come with an increase i
 This should be considered if either of the following are true:
 
 - the image is huge
-- faster server startup times were requested at the cost of the cloud cost increase 
+- faster server startup times were requested at the cost of the cloud cost increase
 
 ```{admonition} Action to take
 :class: tip

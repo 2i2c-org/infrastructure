@@ -97,7 +97,7 @@ jupyterhub:
                 },
             }
             for i, (group, org, team, name) in enumerate(
-                # Allow renaming of the final path 
+                # Allow renaming of the final path
                 (group, org, team, group_to_path_overrides.get(group, team))
                 for group, org, team in group_org_team_entries
             )

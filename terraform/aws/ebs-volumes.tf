@@ -50,8 +50,8 @@ resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
     id          = "max_throughput_exceeded"
     return_data = "true"
     expression  = <<-EOT
-       SELECT MAX(VolumeThroughputExceededCheck) 
-       FROM "AWS/EBS" 
+       SELECT MAX(VolumeThroughputExceededCheck)
+       FROM "AWS/EBS"
        WHERE VolumeId = '${each.value.id}'
      EOT
     period      = 60
@@ -77,8 +77,8 @@ resource "aws_cloudwatch_metric_alarm" "volume_iops_alarm" {
     id          = "max_iops_exceeded"
     return_data = "true"
     expression  = <<-EOT
-       SELECT MAX(VolumeIOPSExceededCheck) 
-       FROM "AWS/EBS" 
+       SELECT MAX(VolumeIOPSExceededCheck)
+       FROM "AWS/EBS"
        WHERE VolumeId = '${each.value.id}'
      EOT
     # Smallest possible period

@@ -28,7 +28,7 @@ useful privacy guarantees to be worth it. Those are:
 
 1. We must not possess, *stored at rest*, a user identifier that is Personally
    Identifiable. This includes usernames, emails, as well as opaque integer
-   user ids from external services. For example, if we were to use the numerical 
+   user ids from external services. For example, if we were to use the numerical
    user id from GitHub (via the `oidc` attribute from CILogon), it can
    be trivially mapped back to the username [via
    BigQuery](https://www.gharchive.org/#bigquery) or any number of
@@ -36,38 +36,38 @@ useful privacy guarantees to be worth it. Those are:
    website using GitHub (or Google, etc) for login, so any data
    breaches in those websites can also be used to de-anonymize our
    users.
-   
+
 2. We live in a world where user data leaks are a fact of life, and you can buy
    tons of user identifiers for pretty cheap. This may also happen to *us*, and
-   we may unintentionally leak data too! So users should still be hard to 
+   we may unintentionally leak data too! So users should still be hard to
    de-anonymize when the attacker has in their possession the following:
 
    1. List of user identifiers (emails, usernames, numeric user ids,
       etc) from *other data breaches*.
    2. List of user identifiers *from us*.
    3. Any secret keys we use to hash these identifiers.
-   
+
    (1) is out of our control, and we must be prepared for (2) and (3), so
    we truly do not store any personal information, rather than just make it
    slightly more complicated for our users to be deanonymized.
-   
+
 To provide these guarantees, we create the anonymized username in the following
 way:
 
 1. Take a combination of user attributes returned to us by CILogon. Right now,
    we pick the following:
-   
+
    1. A CILogon specific opaque identifier (`sub`)
    2. The identifier for the 3rd party OAuth provider chosen by the user (Google,
       GitHub, Microsoft, etc) (`idp`)
    3. The internal opaque identifier used by *that* third party (`oidc`)
-   
+
 2. Combine it with a per-hub *secret salt* (or [pepper](https://en.wikipedia.org/wiki/Pepper_(cryptography)))
 
 3. Using the pepper as the key, hash the user attributes with the
    [blake2b](https://en.wikipedia.org/wiki/BLAKE_(hash_function)) keyed
    hashing algorithm, to produce a 32byte secret. This is used as the username.
-   
+
 To now deanonymize these usernames, an attacker must have:
 
 1. Breached user information from CILogon (for the CILogon identifier)
@@ -116,19 +116,19 @@ anonymization turned on.
 
 2. Generate a secret key to be used for deriving the username, by running
    `openssl rand -hex 32` on your commandline.
-   
-3. In the corresponding encrypted values file for the hub, add the following 
+
+3. In the corresponding encrypted values file for the hub, add the following
    config:
-   
+
    ```yaml
     jupyterhub:
       hub:
         extraEnv:
           USERNAME_DERIVATION_PEPPER: <value-generated-in-step-2>
    ```
-   
+
    Nest this inside a `basehub` key if this is for a daskhub.
-  
+
 This should be enough configuration changes for this to work.
 
 ## Longer term solution

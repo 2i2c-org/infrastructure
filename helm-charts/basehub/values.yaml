@@ -57,6 +57,12 @@ binderhub-service:
       base_url: /services/binder
       use_registry: true
       auth_enabled: true
+    BuildExecutor:
+      # Put the contents of the repo under `/srv/repo`
+      # By default they go under `/home/jovyan`, which gets overwritten
+      # by the home directory
+      repo2docker_extra_args:
+      - --target-repo-dir=/srv/repo
     KubernetesBuildExecutor:
       build_image: quay.io/jupyterhub/repo2docker:2025.12.1.dev94-gd3893dba2
       node_selector:
@@ -919,7 +925,7 @@ jupyterhub:
             KubeSpawner.image:
               type: string
               title: User docker image
-              description: Determines languages, libraries and interfaces 
+              description: Determines languages, libraries and interfaces
                 available
               help: Leave this blank to use the default
             Spawner.default_url:
@@ -1072,7 +1078,7 @@ jupyterhub:
       - mountPath: /usr/local/share/jupyterhub/static/extra-assets
         name: custom-templates
         subPath: repo/extra-assets
-      - mountPath: 
+      - mountPath:
           /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
         name: usage-quotas
         subPath: jupyterhub_usage_quotas_config.py

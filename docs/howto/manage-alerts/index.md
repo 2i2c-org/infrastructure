@@ -112,7 +112,7 @@ The causes for this can be varied, and it always requires investigation. Some co
 4. The requested resources are too big to fit on the node type that was requested. Our resource generation script is designed to guard against this. Check to see if we are actually using the resource generation script here.
 5. There is not enough quota in the cloud project for node spin up to happen. Check the cloud console to see if this is the case, and request additional quota.
 6. There is a cloud provider outage. Check out their status page.
-7. A mysterious 7th option. Form a mental model of our infrastructure, and poke around. If you find any useful info, 
+7. A mysterious 7th option. Form a mental model of our infrastructure, and poke around. If you find any useful info,
 
 ### What to do for alerts on home directory IOPs or Throughput
 

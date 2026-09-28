@@ -38,7 +38,7 @@ For simplicity, we'll rsync in the forwards direction and run `rsync` from the _
 Run this section on the destination cluster.
 ```
 
-1. **Create a public-private key pair**  
+1. **Create a public-private key pair**
    To securely communicate between the two file-servers, we must create a keypair:
 
    ```{code-block} bash
@@ -116,7 +116,7 @@ Run this section on the destination cluster.
 Run this section on the source cluster.
 ```
 
-1. **Deploy a file-transfer container**  
+1. **Deploy a file-transfer container**
    We can add the same image used in [](#migrate-external:setup-dst) as an entry of `jupyterhub-home-nfs.extraContainers`. The configuration for the source deployment is shown in [the following code block](#migrate-external:values-src), with the specialisations for the source container emphasised:
 
    ```{code-block} yaml

@@ -1,7 +1,7 @@
 (howto-troubleshoot:kubectl-logs)=
 # Kubectl logging
 
-This page describes how to look at various logs by using some deployer commands that wrap the most common kubectl commands or by using kubectl directly. 
+This page describes how to look at various logs by using some deployer commands that wrap the most common kubectl commands or by using kubectl directly.
 
 ## Look at logs via deployer sub-commands
 
