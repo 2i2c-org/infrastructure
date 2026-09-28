@@ -1,15 +1,6 @@
-/*
- Some of the assumptions this jinja2 template makes about the cluster:
-   - location of the nodes of the kubernetes cluster will be <region>a
-   - no default scratch buckets support
-*/
 region                 = "us-east-1"
 cluster_name           = "schmidt-astro-events"
 cluster_nodes_location = "us-east-1a"
-
-# Tip: uncomment and verify any missing info in the lines below if you want
-#       to setup scratch buckets for the hubs on this cluster.
-#
 
 ebs_volumes = {
   "staging" = {
@@ -56,9 +47,51 @@ user_buckets = {
 hub_cloud_permissions = {
   "staging" : {
     bucket_admin_access : ["scratch-staging"],
+    extra_iam_policy : <<-EOT
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:ListBucketVersions",
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": [
+              "arn:aws:s3:::schmidt-observatory-system",
+              "arn:aws:s3:::schmidt-observatory-system/*"
+            ]
+          }
+        ]
+      }
+    EOT
   },
   "workshop" : {
     bucket_admin_access : ["scratch-workshop"],
+    extra_iam_policy : <<-EOT
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:GetObjectTagging",
+              "s3:ListBucketVersions",
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": [
+              "arn:aws:s3:::schmidt-observatory-system",
+              "arn:aws:s3:::schmidt-observatory-system/*"
+            ]
+          }
+        ]
+      }
+    EOT
   },
 }
 
