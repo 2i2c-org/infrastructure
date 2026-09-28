@@ -1,0 +1,12 @@
+nfs:
+  pv:
+      serverIP: 10.100.140.233
+jupyterhub:
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://schmidt-astro-events-scratch-staging/$(JUPYTERHUB_USER)
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-02b012cf8d00a4f89
+
