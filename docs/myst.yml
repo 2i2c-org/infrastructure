@@ -10,6 +10,8 @@ project:
   # keywords: []
   # authors: []
   github: https://github.com/2i2c-org/infrastructure
+  references:
+    kube: https://jupyterhub-kubespawner.readthedocs.io/en/latest/
   static_files:
   - _static/
   plugins:
