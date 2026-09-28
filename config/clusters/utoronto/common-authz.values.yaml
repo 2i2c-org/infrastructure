@@ -40,7 +40,7 @@ jupyterhub:
         allow_all: false
         admin_users: []
         admin_groups:
-        - course::2i2c-jupyter-test::enrollment_type::teacher
+        - course::2i2c-jupyter-test::role::TeacherEnrollment
         - course::2i2c-jupyter-test::section::Another&20Section
         allowed_groups:
         - course::2i2c-jupyter-test
