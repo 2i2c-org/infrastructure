@@ -19,11 +19,10 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-canvas.values.yaml
   - python-common.values.yaml
   - staging.values.yaml
   - common-authz.values.yaml
-  - enc-common-canvas.secret.values.yaml
+  - enc-common.secret.values.yaml
   - enc-staging.secret.values.yaml
 - name: prod
   display_name: University of Toronto (prod)
@@ -31,10 +30,9 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-canvas.values.yaml
   - python-common.values.yaml
   - prod.values.yaml
-  - enc-common-canvas.secret.values.yaml
+  - enc-common.secret.values.yaml
   - enc-prod.secret.values.yaml
 - name: r-staging
   display_name: University of Toronto (r-staging)
@@ -44,11 +42,10 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-canvas.values.yaml
   - r-common.values.yaml
   - r-staging.values.yaml
   - common-authz.values.yaml
-  - enc-common-canvas.secret.values.yaml
+  - enc-common.secret.values.yaml
   - enc-r-staging.secret.values.yaml
 - name: r-prod
   display_name: University of Toronto (R)
@@ -56,10 +53,9 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-canvas.values.yaml
   - r-common.values.yaml
   - r-prod.values.yaml
-  - enc-common-canvas.secret.values.yaml
+  - enc-common.secret.values.yaml
   - enc-r-prod.secret.values.yaml
 - name: highmem
   display_name: University of Toronto (highmem)
@@ -69,8 +65,7 @@ hubs:
   helm_chart: basehub
   helm_chart_values_files:
   - common.values.yaml
-  - common-canvas.values.yaml
   - python-common.values.yaml
   - highmem.values.yaml
-  - enc-common-canvas.secret.values.yaml
+  - enc-common.secret.values.yaml
   - enc-highmem.secret.values.yaml
