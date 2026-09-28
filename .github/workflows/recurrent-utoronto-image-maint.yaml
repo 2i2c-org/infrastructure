@@ -40,7 +40,6 @@ jobs:
         fields: Status,End date
         values: Upcoming P&S Initiatives,${{ env.deadline_as_iso_date }}
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-
     - name: Update everything in utoronto Python image to latest version
       uses: ./.github/actions/setup-recurrent-issues
       with:
@@ -62,9 +61,8 @@ jobs:
         fields: Status,Estimate,End date
         values: Up Next,3,${{ env.deadline_as_iso_date }}
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-
     - name: Update everything in utoronto R image to latest version
-      uses: ./.github/actions/setup-recurrent-issue
+      uses: ./.github/actions/setup-recurrent-issues
       with:
         title: Update everything in utoronto R image to latest version
         body: |
@@ -84,7 +82,7 @@ jobs:
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Set a date to roll out utoronto python and R images to production
-      uses: ./.github/actions/setup-recurrent-issue
+      uses: ./.github/actions/setup-recurrent-issues
       id: rollout-date
       with:
         title: Set a date to roll out utoronto python and R images to production
@@ -105,7 +103,7 @@ jobs:
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Roll out new images to UToronto
-      uses: ./.github/actions/setup-recurrent-issue
+      uses: ./.github/actions/setup-recurrent-issues
       id: rollout
       with:
         title: Roll out new images to UToronto
@@ -124,7 +122,7 @@ jobs:
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Watch for image related issues on UToronto for a set period of time
-      uses: ./.github/actions/setup-recurrent-issue
+      uses: ./.github/actions/setup-recurrent-issues
       with:
         title: Watch for image related issues on UToronto for a set period of time
         body: |
