@@ -13,6 +13,11 @@ jobs:
       issues: write
     steps:
     - uses: actions/checkout@v7
+    - name: Get Deadline
+      id: get_deadline
+      run: |
+        year=$(date +%Y)
+        echo "deadline_as_iso_date=${year}-09-01" >> "$GITHUB_ENV"
     - name: Create tracking initiative
       id: tracking-initiative
       uses: ./.github/actions/setup-recurrent-issues
@@ -33,7 +38,7 @@ jobs:
           - [ ] Images are updated
 
         fields: Status,End date
-        values: Upcoming P&S Initiatives,2027-09-01
+        values: Upcoming P&S Initiatives,${{ env.deadline_as_iso_date }}
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Update everything in utoronto Python image to latest version
@@ -55,7 +60,7 @@ jobs:
         parent: ${{ steps.tracking-initiative.outputs.issue_number }}
         label: support
         fields: Status,Estimate,End date
-        values: Up Next,3,2027-09-01
+        values: Up Next,3,${{ env.deadline_as_iso_date }}
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Update everything in utoronto R image to latest version
@@ -75,7 +80,7 @@ jobs:
         parent: ${{ steps.tracking-initiative.outputs.issue_number }}
         label: support
         fields: Status,Estimate,End date
-        values: Up Next,3,2027-09-01
+        values: Up Next,3,${{ env.deadline_as_iso_date }}
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Set a date to roll out utoronto python and R images to production
@@ -96,7 +101,7 @@ jobs:
         parent: ${{ steps.tracking-initiative.outputs.issue_number }}
         label: support
         fields: Status,Estimate,End date
-        values: Up Next,2,2027-09-01
+        values: Up Next,2,${{ env.deadline_as_iso_date }}
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Roll out new images to UToronto
@@ -115,7 +120,7 @@ jobs:
         blocked_by: ${{ steps.rollout-date.outputs.issue_number }}
         label: support
         fields: Status,Estimate,End date
-        values: Up Next,1,2027-09-01
+        values: Up Next,1,${{ env.deadline_as_iso_date }}
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 
     - name: Watch for image related issues on UToronto for a set period of time
@@ -133,5 +138,5 @@ jobs:
         blocked_by: ${{ steps.rollout.outputs.issue_number }}
         label: support
         fields: Status,Estimate,End date
-        values: Up Next,2,2027-09-01
+        values: Up Next,2,${{ env.deadline_as_iso_date }}
         GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
