@@ -26,6 +26,8 @@ basehub:
           manage_groups: false
           allow_all: true
     singleuser:
+      nodeSelector:
+        node.kubernetes.io/instance-type: r5.4xlarge
       profileList:
       - display_name: Choose your environment and resources
         default: true
