@@ -26,7 +26,6 @@ hubs:
   domain: staging.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:
-  - common.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
 
