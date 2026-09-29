@@ -557,6 +557,17 @@ hubs:
   - maine.values.yaml
   - enc-maine.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: marian
+  display_name: Marian University
+  domain: marian.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
+  - marian.values.yaml
+  - enc-marian.secret.values.yaml
+  #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: mendocino
   display_name: Mendocino College
   domain: mendocino.cloudbank.2i2c.cloud
