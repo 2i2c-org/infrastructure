@@ -24,15 +24,25 @@ jupyterhub:
           name: Marian University
           url: https://www.marian.edu/
   hub:
+    db:
+      pvc:
+        storageClassName: standard-rwo
     config:
       JupyterHub:
-        authenticator_class: google
-      GoogleOAuthenticator:
-        username_claim: email
-        allowed_hosted_domains:
-        - marian.edu
-        strip_domain: false
-        allow_all: false
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - marian.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+            - marian.edu
       Authenticator:
         admin_users:
         - sean.smorris@berkeley.edu
