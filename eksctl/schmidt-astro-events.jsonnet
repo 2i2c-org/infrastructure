@@ -1,9 +1,9 @@
 local cluster = import './libsonnet/cluster.jsonnet';
 
 local c = cluster.makeCluster(
-  name='<< cluster_name >>',
-  region='<< cluster_region >>',
-  nodeAz='<< cluster_region >>a',
+  name='schmidt-astro-events',
+  region='us-east-1',
+  nodeAz='us-east-1a',
   version='1.36',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
@@ -17,15 +17,15 @@ local c = cluster.makeCluster(
       'r5.4xlarge',
       'r7i.4xlarge',
       'r6i.4xlarge',
-    ]
+    ],
   ],
-  hubs=[
-    <%- for hub in hubs -%>
-    '<< hub >>',
-    <%- endfor -%>
-  ],
+  hubs=['staging', 'workshop'],
   notebookGPUNodeGroups=[],
-  nodeGroupGenerations=['a']
+  nodeGroupGenerations=['a'],
+  extraTags={
+    'JHCM:Attributable': 'true',
+    'JHCM:ClusterName': 'schmidt-astro-events',
+  }
 );
 
 c

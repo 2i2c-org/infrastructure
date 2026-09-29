@@ -206,6 +206,7 @@ jobs:
       failure_temple: ${{ steps.declare-failure.outputs.failure_temple }}
       failure_uw-escience: ${{ steps.declare-failure.outputs.failure_uw-escience }}
       failure_ucec: ${{ steps.declare-failure.outputs.failure_ucec }}
+      failure_schmidt-astro-events: ${{ steps.declare-failure.outputs.failure_schmidt-astro-events }}
 
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -439,7 +440,7 @@ jobs:
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
       failure_uw-escience_staging: ${{ steps.declare-failure.outputs.failure_uw-escience_staging }}
       failure_ucec_staging: ${{ steps.declare-failure.outputs.failure_ucec_staging }}
-
+      failure_schmidt_astro_staging: ${{ steps.declare-failure.outputs.failure_schmidt-astro_staging }}
     permissions:
       id-token: write
 
