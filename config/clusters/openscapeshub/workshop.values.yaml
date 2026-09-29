@@ -8,6 +8,9 @@ basehub:
     pv:
       serverIP: 10.100.130.27
   jupyterhub:
+    prePuller:
+      continuous:
+        enabled: true
     custom:
       homepage:
         # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
