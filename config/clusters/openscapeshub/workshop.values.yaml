@@ -8,9 +8,6 @@ basehub:
     pv:
       serverIP: 10.100.130.27
   jupyterhub:
-    prePuller:
-      continuous:
-        enabled: true
     custom:
       homepage:
         # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
@@ -26,8 +23,6 @@ basehub:
           manage_groups: false
           allow_all: true
     singleuser:
-      nodeSelector:
-        node.kubernetes.io/instance-type: r5.4xlarge
       profileList:
       - display_name: Choose your environment and resources
         default: true
