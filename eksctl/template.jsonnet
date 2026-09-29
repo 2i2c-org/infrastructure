@@ -7,9 +7,9 @@ local c = cluster.makeCluster(
   version='1.36',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
-    'r5.xlarge',
-    'r5.4xlarge',
-    'r5.16xlarge',
+    'r8i.xlarge',
+    'r8i.4xlarge',
+    'r8i.16xlarge',
   ],
   daskInstanceTypes=[
     [
