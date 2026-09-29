@@ -2,55 +2,55 @@
     "r5.xlarge": {
         "capacity": {
             "cpu": 4.0,
-            "memory": 33163589976
+            "memory": 33264484352
         },
         "allocatable": {
             "cpu": 3.92,
-            "memory": 32122060406
+            "memory": 32223248384
         },
         "measured_overhead": {
-            "cpu": 0.195,
-            "memory": 262144000
+            "cpu": 0.225,
+            "memory": 327155712
         },
         "available": {
-            "cpu": 3.725,
-            "memory": 31859916406
+            "cpu": 3.695,
+            "memory": 31896092672
         }
     },
     "r5.4xlarge": {
         "capacity": {
             "cpu": 16.0,
-            "memory": 133523017039
+            "memory": 133622648832
         },
         "allocatable": {
             "cpu": 15.89,
-            "memory": 130451041681
+            "memory": 130551369728
         },
         "measured_overhead": {
-            "cpu": 0.195,
-            "memory": 262144000
+            "cpu": 0.225,
+            "memory": 327155712
         },
         "available": {
-            "cpu": 15.695,
-            "memory": 130188897681
+            "cpu": 15.665,
+            "memory": 130224214016
         }
     },
     "r5.16xlarge": {
         "capacity": {
             "cpu": 64.0,
-            "memory": 535122860310
+            "memory": 535321505792
         },
         "allocatable": {
             "cpu": 63.77,
-            "memory": 526249457876
+            "memory": 526448455680
         },
         "measured_overhead": {
-            "cpu": 0.195,
-            "memory": 262144000
+            "cpu": 0.225,
+            "memory": 327155712
         },
         "available": {
-            "cpu": 63.575,
-            "memory": 525987313876
+            "cpu": 63.545,
+            "memory": 526121299968
         }
     },
     "r7i.xlarge": {
@@ -195,6 +195,186 @@
         "available": {
             "cpu": 15.418,
             "memory": 60795363328
+        }
+    },
+    "m8i.xlarge": {
+        "capacity": {
+            "cpu": 4.0,
+            "memory": 16468447232
+        },
+        "allocatable": {
+            "cpu": 3.92,
+            "memory": 14735151104
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 3.695,
+            "memory": 14407995392
+        }
+    },
+    "m8i.2xlarge": {
+        "capacity": {
+            "cpu": 8.0,
+            "memory": 33089449984
+        },
+        "allocatable": {
+            "cpu": 7.91,
+            "memory": 31356153856
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 7.685,
+            "memory": 31028998144
+        }
+    },
+    "m8i.4xlarge": {
+        "capacity": {
+            "cpu": 16.0,
+            "memory": 66331443200
+        },
+        "allocatable": {
+            "cpu": 15.89,
+            "memory": 61414670336
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 15.665,
+            "memory": 61087514624
+        }
+    },
+    "r8i.xlarge": {
+        "capacity": {
+            "cpu": 4.0,
+            "memory": 33090461696
+        },
+        "allocatable": {
+            "cpu": 3.92,
+            "memory": 31357165568
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 3.695,
+            "memory": 31030009856
+        }
+    },
+    "r8i.2xlarge": {
+        "capacity": {
+            "cpu": 8.0,
+            "memory": 66333470720
+        },
+        "allocatable": {
+            "cpu": 7.91,
+            "memory": 64600174592
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 7.685,
+            "memory": 64273018880
+        }
+    },
+    "r8i.4xlarge": {
+        "capacity": {
+            "cpu": 16.0,
+            "memory": 132920147968
+        },
+        "allocatable": {
+            "cpu": 15.89,
+            "memory": 128003375104
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 15.665,
+            "memory": 127676219392
+        }
+    },
+    "r8i.16xlarge": {
+        "capacity": {
+            "cpu": 64.0,
+            "memory": 532339572736
+        },
+        "allocatable": {
+            "cpu": 63.77,
+            "memory": 520317648896
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 63.545,
+            "memory": 519990493184
+        }
+    },
+    "r8i.large": {
+        "capacity": {
+            "cpu": 2.0,
+            "memory": 16468955136
+        },
+        "allocatable": {
+            "cpu": 1.93,
+            "memory": 15416184832
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 1.705,
+            "memory": 15089029120
+        }
+    },
+    "m8i.large": {
+        "capacity": {
+            "cpu": 2.0,
+            "memory": 8157949952
+        },
+        "allocatable": {
+            "cpu": 1.93,
+            "memory": 7105179648
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 1.705,
+            "memory": 6778023936
+        }
+    },
+    "m8i.16xlarge": {
+        "capacity": {
+            "cpu": 64.0,
+            "memory": 265984704512
+        },
+        "allocatable": {
+            "cpu": 63.77,
+            "memory": 253962780672
+        },
+        "measured_overhead": {
+            "cpu": 0.225,
+            "memory": 327155712
+        },
+        "available": {
+            "cpu": 63.545,
+            "memory": 253635624960
         }
     }
 }
