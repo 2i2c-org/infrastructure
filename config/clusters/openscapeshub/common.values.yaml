@@ -71,12 +71,12 @@ basehub:
                 description: Python datascience environment
                 kubespawner_override:
                   image: openscapes/python:998fa91
-              02-R:
+              02-r:
                 display_name: R + Python Geospatial
                 description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
-              03-Matlab:
+              03-matlab:
                 display_name: Matlab
                 description: Matlab environment
                 kubespawner_override:
