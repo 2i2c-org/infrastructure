@@ -7,11 +7,11 @@ local c = cluster.makeCluster(
   version='1.36',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
-    # Offer 4:1 memory to cpu ratio, than 8:1 of r* instances
+    // Offer 4:1 memory to cpu ratio, than 8:1 of r* instances
     'm8i.xlarge',
     'm8i.2xlarge',
     'm8i.4xlarge',
-    'm8i.16xlarge'
+    'm8i.16xlarge',
   ],
   daskInstanceTypes=[
     [
