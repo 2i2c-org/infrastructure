@@ -1563,7 +1563,16 @@ jupyterhub:
 
                 # Handle `allowed_groups` specified in profile_options
                 if 'profile_options' in profile:
-                  for k, po in profile['profile_options'].items():
+                  # Iterate this way as we may drop some profile options during iteration
+                  for k in list(profile['profile_options']):
+                    po = profile['profile_options'][k]
+
+                    if 'allowed_groups' in po:
+                      allowed_groups = set([g.casefold() for g in po['allowed_groups']])
+                      if not (allowed_groups & groups):
+                        del profile['profile_options'][k]
+                        print(f'Hiding {profile["display_name"]}.{k} for user {spawner.user.name} based on group membership')
+                        continue
 
                     # If `unlisted_choice` has an `allowed_groups` and the current
                     # user is not present in any of those teams, we delete the
@@ -1573,6 +1582,7 @@ jupyterhub:
                       if 'allowed_groups' in po['unlisted_choice']:
                         if not (set(po['unlisted_choice']['allowed_groups']) & groups):
                           del po['unlisted_choice']
+
 
                     if 'choices' in po:
                       new_choices = {}
