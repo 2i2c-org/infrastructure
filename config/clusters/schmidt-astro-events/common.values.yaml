@@ -28,14 +28,6 @@ jupyterhub:
         funded_by:
           name: Schmidty Obervatory System
           url: https://www.schmidtsciences.org/schmidt-observatory-system/
-    singleuser:
-       extraFiles:
-         gitconfig-system:
-           mountPath: /etc/gitconfig
-           stringData: |
-             [credential "https://github.com"]
-             helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 5113167
-             useHttpPath = true
     singleuserAdmin:
       extraVolumeMounts:
         01-allusers-volumemount:
@@ -45,6 +37,13 @@ jupyterhub:
           name: home
           mountPath: /home/rstudio/allusers
   singleuser:
+    extraFiles:
+      gitconfig-system:
+        mountPath: /etc/gitconfig
+        stringData: |
+          [credential "https://github.com"]
+          helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 5113167
+          useHttpPath = true
     cloudMetadata:
       blockWithIptables: false
     defaultUrl: /lab
