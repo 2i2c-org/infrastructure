@@ -19,8 +19,7 @@ privacy issues as well.
 
 The limitations of this set up are:
 
-1. No users means no *admin users*, so the JupyterHub configurator is unavailable.
-   All config must be set in our config files, and deployed via GitHub.
+1. No users means no *admin users*
 2. No home page is visible, so our home page customizations do not work.
 3. We do *not* cull users, because that would [cause problems](https://blog.jupyter.org/accurately-counting-daily-weekly-monthly-active-users-on-jupyterhub-6fbec6c6ce2f)
    with counting active users. This is a trade-off, as if we end up with a *huge*
@@ -146,21 +145,6 @@ ephemeral hub's users.
    'source' hub and it'll immediately show up here! It's mounted to be read-only - since
    there are no real 'users' in an ephemeral hub, if we make it readwrite, it can be easily
    deleted (accidentally or intentionally) with no accountability.
-
-## Image configuration in chart
-
-The image needs to be specified in the chart directly and not via the JupyterHub
-configurator because with `tmpauthenticator` we can't distinguish admin users to
-have such rights without providing it to every user.
-
-```yaml
-jupyterhub:
-  singleuser:
-    # image could also be configured via singleuser.profileList configuration
-    image:
-      name: <image-name>
-      tag: <tag>
-```
 
 ## Enable hook pre-puller & disable JupyterHub
 

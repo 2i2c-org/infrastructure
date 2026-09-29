@@ -63,8 +63,6 @@ This can be any image name & tag available in a public container registry.
 Whenever you push a new image, you should make a PR that updates the tag here.
 Only on merge will the hub get the new image.
 
-Another way to update the image is to use the [configurator](https://docs.2i2c.org/en/latest/admin/howto/configurator.html).
-
 ### Split up an image for use with the repo2docker-action
 
 Sometimes we have user images defined in a repo, and we want to extract
