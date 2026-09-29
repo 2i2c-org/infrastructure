@@ -1,4 +1,9 @@
 basehub:
+  nodePlaceholder:
+    enabled: true
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.4xlarge
+    replicas: 0
   nfs:
     pv:
       serverIP: 10.100.130.27
