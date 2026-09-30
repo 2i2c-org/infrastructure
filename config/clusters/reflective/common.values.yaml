@@ -72,16 +72,16 @@ jupyterhub:
         - emilykuhn
         - aliakherati
         - johnorcutt
-        UsageQuotaManager:
-          failover_open: true
-          scope_fallback_strategy:
-            empty:
-              resource: memory
-              limit: 10000G
-              window: 30
-            intersection: max
-        UsageViewer:
-          enable_compute: true
+      UsageQuotaManager:
+        failover_open: true
+        scope_fallback_strategy:
+          empty:
+            resource: memory
+            limit: 10000G
+            window: 30
+          intersection: max
+      UsageViewer:
+        enable_compute: true
   scheduling:
     userScheduler:
       enabled: true
