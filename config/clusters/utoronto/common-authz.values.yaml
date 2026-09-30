@@ -5,7 +5,7 @@ jupyterhub:
       tag: 0.0.1-0.dev.git.17043.h6d9b98223
     extraConfig:
       001-canvas-auth: |
-        from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls
+        from jupyterhub_oauthenticator_authz_helpers.canvas import get_course_groups, build_auth_urls
         canvas_url = "https://utoronto.instructure.com"
 
         async def auth_state_hook(authenticator, auth_state):
@@ -15,8 +15,7 @@ jupyterhub:
           access_token = auth_state["access_token"]
 
           groups = {
-            *await get_course_groups(canvas_url, access_token, canvas_course_key="course_code"),
-            *await get_user_groups(canvas_url, access_token),
+            *await get_course_groups(canvas_url, access_token, canvas_course_key="course_code")
           }
 
           # Only register recognised groups
@@ -34,7 +33,7 @@ jupyterhub:
         cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(canvas_url)
 
         # Scopes that this token will need
-        cfg.scope = [*build_auth_urls.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
+        cfg.scope = [*build_auth_urls.scopes, *get_course_groups.scopes]
     config:
       GenericOAuthenticator:
         allow_all: false
