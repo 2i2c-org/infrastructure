@@ -6,6 +6,7 @@ import typer
 
 from deployer.app import CONTINUOUS_DEPLOYMENT, app
 from deployer.infra_components.cluster import Cluster
+from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 
@@ -18,21 +19,21 @@ def deploy_dashboards(
     ),
     dashboard_dir_default: str = typer.Option(
         "dashboards",
-        help="""(Optional) ./deploy.py script accepts manual override for where JupyterHub default dashboards are defined. Path is relative to jupyterhub-grafana-dashboards/deploy.py script.
+        help="""(Optional) ./deploy.py script accepts manual override for where JupyterHub default dashboards are defined.
 
         Warning: you should manually delete dashboards deployed this way, since they are not cleaned up in the CI/CD.
         """,
     ),
     dashboard_dir_cost: str = typer.Option(
         "../jupyterhub-cost-monitoring/dashboards",
-        help="""(Optional) ./deploy.py script accepts manual override where cloud cost dashboards are defined. Path is relative to jupyterhub-grafana-dashboards/deploy.py script.
+        help="""(Optional) ./deploy.py script accepts manual override where cloud cost dashboards are defined.
 
         Warning: you should manually delete dashboards deployed this way, since they are not cleaned up in the CI/CD.
         """,
     ),
     dashboard_dir_custom: str = typer.Option(
-        "../dashboards",
-        help="""(Optional) ./deploy.py script accepts manual override where custom dashboards are defined. Path is relative to jupyterhub-grafana-dashboards/deploy.py script.
+        f"{REPO_ROOT_PATH}/dashboards",
+        help="""(Optional) ./deploy.py script accepts manual override where custom dashboards are defined.
 
         Warning: you should manually delete dashboards deployed this way, since they are not cleaned up in the CI/CD.
         """,
@@ -136,5 +137,5 @@ def deploy_dashboards(
                     "--folder-uid=custom-dashboards",
                 ],
                 env=deploy_script_env,
-                cwd=f"{d}/jupyterhub-grafana-dashboards",
+                cwd=f"{REPO_ROOT_PATH}/dashboards",
             )
