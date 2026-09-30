@@ -32,8 +32,8 @@ def render_jsonnet(
     jsonnet_file: Path,
     cluster_name: str,
     provider: str,
-    region: str | None,
-    account_id: str | None,
+    region: str | None = None,
+    account_id: str | None = None,
     hub_domain: str | None = None,
     hub_name: str | None = None,
 ):
