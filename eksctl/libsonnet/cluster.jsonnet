@@ -202,7 +202,10 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     gpuType,
     generation,
     minSize,
-    maxSize
+    maxSize,
+    extraLabels={},
+    extraTaints=[],
+    extraTags={}
   ):: $.makeNotebookCPUNodeGroup(
     clusterName=clusterName,
     hubName=hubName,
@@ -214,10 +217,10 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     extraLabels={
       '2i2c/has-gpu': 'true',
       'k8s.amazonaws.com/accelerator': gpuType,
-    },
+    } + extraLabels,
     extraTags={
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': std.toString(gpuCount),
-    },
+    } + extraTags,
 
     extraTaints=[
       {
@@ -225,7 +228,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         value: 'present',
         effect: 'NoSchedule',
       },
-    ]
+    ] + extraTaints
   ) + (
     // Turn off fabric on GPU nodes, as they are not nvswitch devices
     if gpuType == 'nvidia-tesla-t4' then {
@@ -243,6 +246,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     generation,
     minSize,
     maxSize,
+    extraLabels={},
+    extraTaints=[],
     extraTags={}
   ):: $.makeNodeGroup(
         clusterName,
@@ -255,7 +260,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         extraLabels={
           'k8s.dask.org/node-purpose': 'worker',
           '2i2c/hub-name': hubName,
-        },
+        } + extraLabels,
 
         extraTaints=[
           {
@@ -268,7 +273,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
             value: 'worker',
             effect: 'NoSchedule',
           },
-        ],
+        ] + extraTaints,
         extraTags={
           '2i2c:node-purpose': 'worker',
           'JHCM:Purpose': 'dask-worker',
