@@ -1,6 +1,46 @@
 local cluster_name = std.extVar('VARS_2I2C_CLUSTER_NAME');
 local provider_name = std.extVar('VARS_2I2C_PROVIDER');
 local account_id = std.extVar('VARS_2I2C_ACCOUNT_ID');
+local region = std.extVar('VARS_2I2C_REGION');
+
+local grafanaDatasources = {
+  'datasources.yaml': {
+    apiVersion: 1,
+    datasources: [
+      {
+        name: 'prometheus',
+        orgId: 1,
+        type: 'prometheus',
+        url: 'http://support-prometheus-server',
+        access: 'proxy',
+        isDefault: false,
+        editable: false,
+        basicAuth: true,
+        basicAuthUser: '${username}',
+        secureJsonData: {
+          basicAuthPassword: '${password}',
+        },
+      },
+      {
+        name: 'yesoreyeram-infinity-datasource',
+        type: 'yesoreyeram-infinity-datasource',
+        isDefault: false,
+        editable: true,
+        url: 'http://jupyterhub-cost-monitoring',
+      },
+    ] + if provider_name == 'aws' then [
+      {
+        name: 'cloudwatch',
+        orgId: 1,
+        type: 'cloudwatch',
+        jsonData: {
+          defaultRegion: region,
+        },
+      },
+    ],
+  },
+};
+
 
 local makePVCApproachingFullAlert = function(
   summary,
@@ -434,6 +474,7 @@ local scratchDiskVACConfigMapping = {
         'iam.gke.io/gcp-service-account': 'grafana-2i2c-sa@%s.iam.gserviceaccount.com' % account_id,
       } else {},
     },
+    datasources: grafanaDatasources,
   },
   prometheus: {
     alertmanager: {

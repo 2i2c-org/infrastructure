@@ -485,8 +485,10 @@ class Cluster:
         render_args.update(kwargs)
         if self.spec["provider"] == "aws":
             render_args["account_id"] = self.spec["aws"]["account"]
+            render_args["region"] = self.spec["aws"]["region"]
         elif self.spec["provider"] == "gcp":
             render_args["account_id"] = self.spec["gcp"]["project"]
+            render_args["region"] = self.spec["gcp"]["zone"]
         else:
             render_args["account_id"] = None
         with render_jsonnet(**render_args) as rendered_file:
