@@ -94,7 +94,7 @@ jupyterhub:
                   # https://github.com/2i2c-org/infrastructure/issues/2559
                 working_dir: /home/rstudio
 
-        scratch_disk:
+        scratch_disk: &scratch_disk
           display_name: Scratch Disk on /tmp
           choices:
             01_standard:
@@ -177,6 +177,7 @@ jupyterhub:
       description: Start a GPU
       slug: gpu
       profile_options:
+        scratch_disk: *scratch_disk
         image:
           display_name: Image
           unlisted_choice:
