@@ -177,7 +177,7 @@ hub_cloud_permissions = {
             ],
             "Resource": [
               "arn:aws:s3:::airquality-data-store-develop",
-              "arn:aws:s3:::airquality-data-store-develop/tempo/*"
+              "arn:aws:s3:::airquality-data-store-develop/*"
             ]
           }
         ]
