@@ -170,14 +170,15 @@ hub_cloud_permissions = {
           },
           {
             "Effect": "Allow",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::airquality-data-store-develop/tempo/*"
-          },
-          {
-            "Effect": "Allow",
-            "Action": "s3:ListBucket",
-            "Resource": "arn:aws:s3:::airquality-data-store-develop",
-            "Condition": { "StringLike": { "s3:prefix": "tempo/*" } }
+            "Action": [
+              "s3:GetObject",
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": [
+              "arn:aws:s3:::airquality-data-store-develop",
+              "arn:aws:s3:::airquality-data-store-develop/tempo/*"
+            ]
           }
         ]
       }
