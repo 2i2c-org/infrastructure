@@ -648,6 +648,15 @@ hubs:
   - moreno.values.yaml
   - enc-moreno.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: mtu
+  display_name: Michigan Technological University
+  domain: mtu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - mtu.values.yaml
+  - enc-mtu.secret.values.yaml
 - name: nicc
   display_name: Northeast Iowa Community College
   domain: nicc.cloudbank.2i2c.cloud
