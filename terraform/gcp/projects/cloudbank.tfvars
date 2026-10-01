@@ -255,6 +255,10 @@ persistent_disks = {
     size        = 60
     name_suffix = "moreno"
   }
+  "mtu" = {
+    size        = 25
+    name_suffix = "mtu"
+  }
   "nicc" = {
     size        = 25
     name_suffix = "nicc"
