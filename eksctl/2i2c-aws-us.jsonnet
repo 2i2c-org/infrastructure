@@ -29,7 +29,7 @@ local c = cluster.makeCluster(
       instanceType: 'g4dn.xlarge',
     },
   ],
-  nodeGroupGenerations=['c']
+  nodeGroupGenerations=['d']
 );
 
 c
