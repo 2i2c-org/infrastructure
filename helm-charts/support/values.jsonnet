@@ -37,7 +37,7 @@ local grafanaDatasources = {
           defaultRegion: region,
         },
       },
-    ],
+    ] else [],
   },
 };
 
