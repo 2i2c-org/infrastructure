@@ -206,6 +206,9 @@ async def test_health_attempts(
         else:
             return
 
+        if i < attempts - 1:
+            await asyncio.sleep(attempt_wait_time_s)
+
     raise RuntimeError("All attempts failed")
 
 

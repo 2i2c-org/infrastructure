@@ -475,7 +475,7 @@ jobs:
 
     - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
       run: |
-        deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }} --attempts 3 --attempt-timeout-s=600
+        deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
     - name: Declare failure status
       id: declare-failure
