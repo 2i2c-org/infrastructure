@@ -46,19 +46,6 @@ jupyterhub:
         - scottyhq
   singleuser:
     defaultUrl: /lab
-    storage:
-      extraVolumes:
-        002-scratch-session:
-          name: scratch-session
-          emptyDir:
-            # Limit total size, to prevent pod being evicted
-            # with over use by any one user. This can be increased,
-            # but may need to increase the size of the node disk
-            sizeLimit: 100Gi
-      extraVolumeMounts:
-        002-scratch-session:
-          name: scratch-session
-          mountPath: /tmp
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23liUgKLAUO3UUsGqx
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/uw-escience-gh-scoped-creds
@@ -106,6 +93,42 @@ jupyterhub:
                   # Ensures container working dir is homedir
                   # https://github.com/2i2c-org/infrastructure/issues/2559
                 working_dir: /home/rstudio
+
+        scratch_disk: &scratch_disk
+          display_name: Scratch Disk on /tmp
+          choices:
+            01_standard:
+              display_name: Standard
+              default: true
+              kubespawner_override: {}
+            02_gb_500:
+              display_name: Dedicated 500GB
+              description: 500GB dedicated to just you
+              kubespawner_override:
+                volume_mounts:
+                  tmp:
+                    name: big-tmp
+                    mountPath: /tmp
+                volumes:
+                  big-tmp:
+                    name: big-tmp
+                    ephemeral:
+                      volumeClaimTemplate:
+                        metadata:
+                          labels:
+                            hub.jupyter.org/volume-purpose: user-scratch
+                            hub.jupyter.org/username: '{username}'
+                            hub.jupyter.org/servername: '{servername}'
+                          annotations:
+                            hub.jupyter.org/username: '{unescaped_username}'
+                            hub.jupyter.org/servername: '{unescaped_servername}'
+                        spec:
+                          accessModes: [ReadWriteOnce]
+                          storageClassName: ebs-csi-default-sc  # Set this & volumeAttributes explicitly
+                          volumeAttributesClassName: scratch-disk
+                          resources:
+                            requests:
+                              storage: 500Gi
         resource_allocation:
           display_name: Resource Allocation
           choices:
@@ -154,6 +177,7 @@ jupyterhub:
       description: Start a GPU
       slug: gpu
       profile_options:
+        scratch_disk: *scratch_disk
         image:
           display_name: Image
           unlisted_choice:

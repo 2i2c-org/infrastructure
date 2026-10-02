@@ -80,7 +80,12 @@ singleuser:
                       volumeClaimTemplate:
                         metadata:
                           labels:
-                            type: temporary-user-scratch
+                            hub.jupyter.org/volume-purpose: user-scratch
+                            hub.jupyter.org/username: '{username}'
+                            hub.jupyter.org/servername: '{servername}'
+                          annotations:
+                            hub.jupyter.org/username: '{unescaped_username}'
+                            hub.jupyter.org/servername: '{unescaped_servername}'
                         spec:
                           accessModes: [ReadWriteOnce]
                           storageClassName: ebs-csi-default-sc  # Set this & volumeAttributes explicitly
