@@ -45,6 +45,7 @@ jupyterhub:
         - daphneh@andrew.cmu.edu
         - jslackma@andrew.cmu.edu
         - ray@andrew.cmu.edu
+        - ray@cmu.edu
 
 jupyterhub-home-nfs:
   gke:
