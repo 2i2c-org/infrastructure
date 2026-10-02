@@ -167,6 +167,18 @@ hub_cloud_permissions = {
             "Effect": "Allow",
             "Action": "s3:ListAllMyBuckets",
             "Resource": "*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": [
+              "arn:aws:s3:::airquality-data-store-develop",
+              "arn:aws:s3:::airquality-data-store-develop/*"
+            ]
           }
         ]
       }
