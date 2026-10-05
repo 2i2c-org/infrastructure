@@ -245,6 +245,15 @@ variable "original_single_efs_tags" {
   EOT
 }
 
+variable "s3files" {
+  default = {}
+  type = map(object({
+    bucket : string,
+    tags : optional(map(string), {}),
+    hubs : list(string)
+  }))
+
+}
 variable "filestores" {
   type = map(object({
     name_suffix : optional(string, null),

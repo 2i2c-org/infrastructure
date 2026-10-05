@@ -1,0 +1,32 @@
+{{ if .Values.jupyterhub.custom.s3files.enabled }}
+{{ range $key, $value := .Values.jupyterhub.custom.s3files.mounts }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: s3files-{{ $.Release.Name}}-{{ $key }}
+spec:
+  capacity:
+    storage: 1Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: s3files:{{ $value.volumeHandle }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: s3files-{{ $key }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: s3files-{{ $.Release.Name}}-{{ $key }}
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Mi
+{{- end }}
+{{- end }}
