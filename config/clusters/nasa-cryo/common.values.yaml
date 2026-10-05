@@ -25,9 +25,9 @@ basehub:
       homepage:
         templateVars:
           org:
-            name: Cryo in the Cloud
+            name: StratusGeo # Formerly: Cryo in the Cloud
             logo_url: https://raw.githubusercontent.com/CryoInTheCloud/CryoCloudWebsite/main/cryocloud.png
-            url: https://github.com/CryoInTheCloud
+            url: https://github.com/StratusGeo # Formerly: https://github.com/CryoInTheCloud
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -57,12 +57,17 @@ basehub:
         GitHubOAuthenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to populate the teams in the auth state
-          allowed_organizations:
+          allowed_organizations: # during name transition, CryoInTheCloud and StratusGeo should both exist
           - CryoInTheCloud:cryoclouduser
           - CryoInTheCloud:cryocloudadvanced
           - CryoInTheCloud:csdms-2025-workshop
           - CryoInTheCloud:fish-pace
           - CryoInTheCloud:continuous-dems-workshops
+          - StratusGeo:cryoclouduser
+          - StratusGeo:cryocloudadvanced
+          - StratusGeo:csdms-2025-workshop
+          - StratusGeo:fish-pace
+          - StratusGeo:continuous-dems-workshops
           - oceanhackweek:ohw26-organizers-fellows-mentors
           - oceanhackweek:ohw26-participants
         Authenticator:
@@ -71,7 +76,7 @@ basehub:
           admin_users:
           - tsnow03
           - JessicaS11
-          - jdmillstein
+          - derekpickell 
           - fperez
           - scottyhq
           - jomey
@@ -126,8 +131,8 @@ basehub:
                 image: '{value}'
             choices:
               01-python:
-                display_name: CryoCloud Python Image
-                description: Cryo-geo-ocean environment maintained by the CryoCloud team
+                display_name: StratusGeo Python Image #Formerly: CryoCloud Python Image
+                description: Cryo-geo-ocean environment maintained by the StratusGeo team
                 default: true
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
@@ -173,6 +178,13 @@ basehub:
                 - CryoInTheCloud:csdms-2025-workshop
                 - CryoInTheCloud:fish-pace
                 - CryoInTheCloud:continuous-dems-workshops
+                - StratusGeo:CryoCloudAdvanced
+                - StratusGeo:CryoCloudUser
+                - StratusGeo:csdms-2025-workshop
+                - StratusGeo:fish-pace
+                - StratusGeo:continuous-dems-workshops
+                - StratusGeo:StratusGeoAdvanced
+                - StratusGeo:StratusGeoUser
                 - 2i2c-org:hub-access-for-2i2c-staff
                 - oceanhackweek:ohw26-organizers-fellows-mentors
                 - oceanhackweek:ohw26-participants
@@ -235,6 +247,9 @@ basehub:
                 - 2i2c-org:hub-access-for-2i2c-staff
                 - CryoInTheCloud:CryoCloudAdvanced
                 - CryoInTheCloud:ml-in-glaciology
+                - StratusGeo:CryoCloudAdvanced
+                - StratusGeo:ml-in-glaciology
+                - StratusGeo:StratusGeoAdvanced
                 kubespawner_override:
                   mem_guarantee: 64020707016
                   mem_limit: 64020707016
@@ -259,6 +274,7 @@ basehub:
         allowed_groups:
         - 2i2c-org:hub-access-for-2i2c-staff
         - CryoInTheCloud:ml-in-glaciology
+        - StratusGeo:ml-in-glaciology
         profile_options:
           image:
             display_name: Image
