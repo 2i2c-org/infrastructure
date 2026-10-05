@@ -55,4 +55,4 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         quota_overrides:
-          _shared: 250
+          _shared: 400
