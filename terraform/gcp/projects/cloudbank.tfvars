@@ -72,7 +72,7 @@ persistent_disks = {
     name_suffix = "cloud-county"
   }
   "cmu" = {
-    size        = 25
+    size        = 50
     name_suffix = "cmu"
   }
   "cra" = {
