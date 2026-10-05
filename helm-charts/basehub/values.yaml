@@ -383,6 +383,9 @@ jupyterhub:
   custom:
     auth:
       anonymizeUsername: false
+    s3files:
+      enabled: false
+      mounts: {}
     singleuser:
       extraPVCs: []
     singleuserAdmin:
