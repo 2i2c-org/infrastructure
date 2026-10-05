@@ -30,13 +30,13 @@ local c = cluster.makeCluster(
   },
   extraAddons=[
     {
-      name: "aws-efs-csi-driver",
+      name: 'aws-efs-csi-driver',
       attachPolicyARNs: [
-        "arn:aws:iam::aws:policy/service-role/AmazonS3FilesCSIDriverPolicy",
-        "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
-        "arn:aws:iam::aws:policy/AmazonElasticFileSystemsUtils"
-      ]
-    }
+        'arn:aws:iam::aws:policy/service-role/AmazonS3FilesCSIDriverPolicy',
+        'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess',
+        'arn:aws:iam::aws:policy/AmazonElasticFileSystemsUtils',
+      ],
+    },
   ]
 );
 

@@ -66,7 +66,7 @@ resource "aws_iam_policy" "s3files_access" {
           "s3:List*",
           "s3:PutObject*"
         ],
-        "Resource": "arn:aws:s3:::${each.value.config.bucket}/*",
+        "Resource" : "arn:aws:s3:::${each.value.config.bucket}/*",
         "Condition" : {
           "StringEquals" : {
             "aws:ResourceAccount" : data.aws_caller_identity.current.account_id
@@ -92,7 +92,7 @@ resource "aws_iam_policy" "s3files_access" {
             ]
           }
         },
-        "Resource" : "arn:aws:kms:${var.region}:${ data.aws_caller_identity.current.account_id}:*"
+        "Resource" : "arn:aws:kms:${var.region}:${data.aws_caller_identity.current.account_id}:*"
       },
       {
         "Sid" : "EventBridgeManage",
@@ -132,8 +132,8 @@ resource "aws_iam_policy" "s3files_access" {
 }
 
 resource "aws_iam_role_policy_attachment" "s3files_attachment" {
-  for_each = local.s3files_hubs
-  role = aws_iam_role.s3files[each.key].name
+  for_each   = local.s3files_hubs
+  role       = aws_iam_role.s3files[each.key].name
   policy_arn = aws_iam_policy.s3files_access[each.key].arn
 }
 
@@ -143,9 +143,9 @@ resource "aws_iam_role_policy_attachment" "s3files_attachment" {
 # if they use s3files to access it.
 resource "aws_s3files_file_system" "s3files" {
   for_each = local.s3files_hubs
-  tags     = merge(each.value.config.tags, {
-    "2i2c:hub-name": each.value.hub_name,
-    "JHCM:HubName": each.value.hub_name
+  tags = merge(each.value.config.tags, {
+    "2i2c:hub-name" : each.value.hub_name,
+    "JHCM:HubName" : each.value.hub_name
   })
 
   bucket                = "arn:aws:s3:::${each.value.config.bucket}"
@@ -183,9 +183,9 @@ locals {
   s3files_hubs = { for s3fh in distinct(flatten([
     for s3filesname, config in var.s3files : [
       for hub_name in config.hubs : {
-        hub_name      = hub_name
-        s3filesname   = s3filesname
-        config = config
+        hub_name    = hub_name
+        s3filesname = s3filesname
+        config      = config
       }
     ]
   ])) : "${s3fh.s3filesname}-${s3fh.hub_name}" => s3fh }
@@ -193,8 +193,8 @@ locals {
   s3files_hubs_mountpoints = { for s3hm in distinct(flatten([
     for key, value in local.s3files_hubs : [
       for subnet_id in toset(data.aws_subnets.cluster_node_subnets.ids) : {
-        subnet_id: subnet_id,
-        s3files_hubs_key: key
+        subnet_id : subnet_id,
+        s3files_hubs_key : key
       }
     ]
   ])) : "${s3hm.subnet_id}-${s3hm.s3files_hubs_key}" => s3hm }
@@ -233,5 +233,5 @@ resource "aws_s3files_mount_target" "s3files" {
 }
 
 output "s3fs_fs_mape" {
-  value = { for key, config in local.s3files_hubs : key => aws_s3files_file_system.s3files[key].id}
+  value = { for key, config in local.s3files_hubs : key => aws_s3files_file_system.s3files[key].id }
 }
