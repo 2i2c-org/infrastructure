@@ -1,3 +1,29 @@
+locals {
+  # Nested for loop, thanks to https://www.daveperrett.com/articles/2021/08/19/nested-for-each-with-terraform/
+  s3files_hubs = { for s3fh in distinct(flatten([
+    for s3filesname, config in var.s3files : [
+      for hub_name in config.hubs : {
+        hub_name    = hub_name
+        s3filesname = s3filesname
+        config      = config
+      }
+    ]
+  ])) : "${s3fh.s3filesname}-${s3fh.hub_name}" => s3fh }
+
+  s3files_hubs_mountpoints = { for s3hm in distinct(flatten([
+    for key, value in local.s3files_hubs : [
+      for subnet_id in toset(data.aws_subnets.cluster_node_subnets.ids) : {
+        subnet_id : subnet_id,
+        s3files_hubs_key : key
+      }
+    ]
+  ])) : "${s3hm.subnet_id}-${s3hm.s3files_hubs_key}" => s3hm }
+}
+
+# IAM roles, one per s3file, that lets S3Files access the data
+# as well as EventBridge & other permissions needed to set itself
+# up. This is the role that needs appropriate access to the
+# S3 buckets as well.
 resource "aws_iam_role" "s3files" {
   for_each = local.s3files_hubs
   name     = "${var.cluster_name}-s3files-${each.key}"
@@ -131,16 +157,15 @@ resource "aws_iam_policy" "s3files_access" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "s3files_attachment" {
+resource "aws_iam_role_policy_attachment" "s3files" {
   for_each   = local.s3files_hubs
   role       = aws_iam_role.s3files[each.key].name
   policy_arn = aws_iam_policy.s3files_access[each.key].arn
 }
 
 # We have to create one s3files per bucket per hub,
-# since we want to use the same IAM role for bucket access
-# when users use it via programmatic APIs talking to S3 *or*
-# if they use s3files to access it.
+# so we can attribute cost of the access accurately at least
+# to the hub, even if we can't to each user.
 resource "aws_s3files_file_system" "s3files" {
   for_each = local.s3files_hubs
   tags = merge(each.value.config.tags, {
@@ -153,9 +178,10 @@ resource "aws_s3files_file_system" "s3files" {
   accept_bucket_warning = true
 
   lifecycle {
-    # Additional safeguard against deleting the EFS
-    # as this causes irreversible data loss!
-    # prevent_destroy = true
+    # Additional safeguard against deleting the S3Files,
+    # as recreating this means we have to change the
+    # filesystem id in our helm config
+    prevent_destroy = true
   }
 }
 
@@ -174,54 +200,10 @@ resource "aws_s3files_synchronization_configuration" "s3files" {
   }
 
   expiration_data_rule {
+    # Only keep data for 3 days, to keep the amount of data
+    # in EFS small.
     days_after_last_access = 3
   }
-}
-
-locals {
-  # Nested for loop, thanks to https://www.daveperrett.com/articles/2021/08/19/nested-for-each-with-terraform/
-  s3files_hubs = { for s3fh in distinct(flatten([
-    for s3filesname, config in var.s3files : [
-      for hub_name in config.hubs : {
-        hub_name    = hub_name
-        s3filesname = s3filesname
-        config      = config
-      }
-    ]
-  ])) : "${s3fh.s3filesname}-${s3fh.hub_name}" => s3fh }
-
-  s3files_hubs_mountpoints = { for s3hm in distinct(flatten([
-    for key, value in local.s3files_hubs : [
-      for subnet_id in toset(data.aws_subnets.cluster_node_subnets.ids) : {
-        subnet_id : subnet_id,
-        s3files_hubs_key : key
-      }
-    ]
-  ])) : "${s3hm.subnet_id}-${s3hm.s3files_hubs_key}" => s3hm }
-  # setproduct works with sets and lists, but aws_efs_file_system.hub_homedirs
-  # is a map so convert it first
-  file_systems = [
-    for _, fs in aws_s3files_file_system.s3files : {
-      id = fs.id
-      # name = fs.tags["Name"]
-    }
-  ]
-
-  # subnet_ids = toset(data.aws_subnets.cluster_node_subnets.ids)
-
-  # # This variable is used to find the number of and construct all the
-  # # indexes of the items in aws_efs_mount_target.hub_homedirs[*]
-  # s3files_mount_targets = [
-  #   # setproduct function will computing the Cartesian product
-  #   # between the ids of each subnet and the given name of each EFS instance
-  #   for pair in setproduct(toset(data.aws_subnets.cluster_node_subnets.ids), local.file_systems) : {
-  #     subnet_id      = pair[0]
-  #     file_system_id = pair[1].id
-  #     # # Note that the id alone is not enough because terraform needs to know its
-  #     # # value at plan time and this is not possible
-  #     # name = pair[1].name
-  #   }
-  # ]
 }
 
 resource "aws_s3files_mount_target" "s3files" {
@@ -232,6 +214,62 @@ resource "aws_s3files_mount_target" "s3files" {
   security_groups = [data.aws_security_group.cluster_nodes_shared_security_group.id]
 }
 
-output "s3fs_fs_mape" {
+
+# Create a role for the EFS CSI driver, one per cluster
+# This should be able to access all the S3 buckets we care
+# about as well, since it may do direct reads too.
+resource "aws_iam_role" "s3files_efs_csi_driver" {
+  count = length(local.s3files_hubs) > 0 ? 1 : 0
+  name  = "${var.cluster_name}-s3files-efs-csi-driver"
+
+  assume_role_policy = data.aws_iam_policy_document.s3files_efs_csi_driver_assume.json
+}
+
+# Let this role be assumed by the efs node & controller
+data "aws_iam_policy_document" "s3files_efs_csi_driver_assume" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type = "Federated"
+
+      identifiers = [
+        "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer, "https://", "")}"
+      ]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer, "https://", "")}:sub"
+      values = [
+        # Same role for both node & controller
+        "system:serviceaccount:kube-system:efs-csi-node-sa",
+        "system:serviceaccount:kube-system:efs-csi-controller-sa"
+      ]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "s3files_efs_base" {
+  # From https://docs.aws.amazon.com/eks/latest/userguide/s3files-csi.html
+  # for the access that the EFS CSI driver needs
+  for_each = length(local.s3files_hubs) > 0 ? toset([
+    "arn:aws:iam::aws:policy/service-role/AmazonS3FilesCSIDriverPolicy",
+    "arn:aws:iam::aws:policy/AmazonS3FilesClientFullAccess",
+
+    # In the future, we can tune this to have ReadOnly access
+    # just to specific buckets
+    "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AmazonElasticFileSystemsUtils"
+  ]) : toset([])
+  role       = aws_iam_role.s3files_efs_csi_driver[0].name
+  policy_arn = each.value
+}
+
+output "s3files_fs_map" {
   value = { for key, config in local.s3files_hubs : key => aws_s3files_file_system.s3files[key].id }
+}
+
+output "s3files_efs_csi_driver_role" {
+  value = length(local.s3files_hubs) > 0 ? aws_iam_role.s3files_efs_csi_driver[*].arn : null
 }
