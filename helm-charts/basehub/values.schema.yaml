@@ -423,18 +423,34 @@ properties:
                       custom_html:
                         type: string
                   funded_by:
-                    type: object
-                    additionalProperties: false
-                    required:
-                      - name
-                      - url
-                    properties:
-                      name:
-                        type: string
-                      url:
-                        type: string
-                      custom_html:
-                        type: string
+                    oneOf:
+                      - type: object
+                        additionalProperties: false
+                        required:
+                          - name
+                          - url
+                        properties:
+                          name:
+                            type: string
+                          url:
+                            type: string
+                          custom_html:
+                            type: string
+                      - type: array
+                        items:
+                          type: object
+                          additionalProperties: false
+                          required:
+                            - name
+                            - url
+                          properties:
+                            name:
+                              type: string
+                            url:
+                              type: string
+                            custom_html:
+                              type: string
+
           singleuserAdmin:
             type: object
             additionalProperties: false
