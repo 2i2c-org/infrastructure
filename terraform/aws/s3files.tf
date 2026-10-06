@@ -219,6 +219,7 @@ resource "aws_s3files_mount_target" "s3files" {
 # This should be able to access all the S3 buckets we care
 # about as well, since it may do direct reads too.
 resource "aws_iam_role" "s3files_efs_csi_driver" {
+  count = length(local.s3files_hubs) > 0 ? 1 : 0
   name = "${var.cluster_name}-s3files-efs-csi-driver"
 
   assume_role_policy = data.aws_iam_policy_document.s3files_efs_csi_driver_assume.json
@@ -252,7 +253,7 @@ data "aws_iam_policy_document" "s3files_efs_csi_driver_assume" {
 resource "aws_iam_role_policy_attachment" "s3files_efs_base" {
   # From https://docs.aws.amazon.com/eks/latest/userguide/s3files-csi.html
   # for the access that the EFS CSI driver needs
-  for_each = toset([
+  for_each = length(local.s3files_hubs) > 0 ? toset([
     "arn:aws:iam::aws:policy/service-role/AmazonS3FilesCSIDriverPolicy",
     "arn:aws:iam::aws:policy/AmazonS3FilesClientFullAccess",
 
@@ -260,8 +261,8 @@ resource "aws_iam_role_policy_attachment" "s3files_efs_base" {
     # just to specific buckets
     "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
     "arn:aws:iam::aws:policy/AmazonElasticFileSystemsUtils"
-  ])
-  role = aws_iam_role.s3files_efs_csi_driver.name
+  ]) : toset([])
+  role = aws_iam_role.s3files_efs_csi_driver[0].name
   policy_arn = each.value
 }
 
@@ -270,5 +271,5 @@ output "s3files_fs_map" {
 }
 
 output "s3files_efs_csi_driver_role" {
-  value = aws_iam_role.s3files_efs_csi_driver.arn
+  value = length(local.s3files_hubs) > 0 ?  aws_iam_role.s3files_efs_csi_driver[*].arn : null
 }
