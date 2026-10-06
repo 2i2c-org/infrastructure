@@ -31,7 +31,7 @@ local c = cluster.makeCluster(
   extraAddons=[
     {
       name: 'aws-efs-csi-driver',
-      serviceAccountRoleARN: "arn:aws:iam::998493219388:role/schmidt-astro-events-s3files-efs-csi-driver",
+      serviceAccountRoleARN: 'arn:aws:iam::998493219388:role/schmidt-astro-events-s3files-efs-csi-driver',
     },
   ]
 );

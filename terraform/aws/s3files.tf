@@ -220,7 +220,7 @@ resource "aws_s3files_mount_target" "s3files" {
 # about as well, since it may do direct reads too.
 resource "aws_iam_role" "s3files_efs_csi_driver" {
   count = length(local.s3files_hubs) > 0 ? 1 : 0
-  name = "${var.cluster_name}-s3files-efs-csi-driver"
+  name  = "${var.cluster_name}-s3files-efs-csi-driver"
 
   assume_role_policy = data.aws_iam_policy_document.s3files_efs_csi_driver_assume.json
 }
@@ -262,7 +262,7 @@ resource "aws_iam_role_policy_attachment" "s3files_efs_base" {
     "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
     "arn:aws:iam::aws:policy/AmazonElasticFileSystemsUtils"
   ]) : toset([])
-  role = aws_iam_role.s3files_efs_csi_driver[0].name
+  role       = aws_iam_role.s3files_efs_csi_driver[0].name
   policy_arn = each.value
 }
 
@@ -271,5 +271,5 @@ output "s3files_fs_map" {
 }
 
 output "s3files_efs_csi_driver_role" {
-  value = length(local.s3files_hubs) > 0 ?  aws_iam_role.s3files_efs_csi_driver[*].arn : null
+  value = length(local.s3files_hubs) > 0 ? aws_iam_role.s3files_efs_csi_driver[*].arn : null
 }
