@@ -311,7 +311,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     daskInstanceTypes=[],
     nodeGroupGenerations=[],
     regionSize=3,
-    extraTags={}
+    extraTags={},
+    extraAddons=[]
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -376,7 +377,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
                   enableMetrics: true
             |||,
           },
-        ]
+        ] + extraAddons
     ],
     managedNodeGroups: [
       $.makeCoreNodeGroup(

@@ -383,6 +383,9 @@ jupyterhub:
   custom:
     auth:
       anonymizeUsername: false
+    s3files:
+      enabled: false
+      mounts: {}
     singleuser:
       extraPVCs: []
     singleuserAdmin:
@@ -1745,6 +1748,29 @@ jupyterhub:
             return None
 
         c.OAuthenticator.refresh_user_hook = refresh_user_hook
+      11-s3files-mounting: |
+        from z2jh import get_config
+
+        if get_config('custom.s3files.enabled'):
+          mounts = get_config('custom.s3files.mounts')
+          for key, config in mounts.items():
+            name = f's3files-{key}'
+            c.KubeSpawner.volumes[name] = {
+              'name': name,
+              'persistentVolumeClaim': {
+                'claimName': name
+              }
+            }
+            c.KubeSpawner.volume_mounts[f'jovyan-{name}'] = {
+              'name': name,
+              'mountPath': f'/home/jovyan/s3/{config["bucketName"]}',
+              'readOnly': True
+            }
+            c.KubeSpawner.volume_mounts[f'rstudio-{name}'] = {
+              'name': name,
+              'mountPath': f'/home/rstudio/s3/{config["bucketName"]}',
+              'readOnly': True
+            }
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
         # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
