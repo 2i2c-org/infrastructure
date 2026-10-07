@@ -267,9 +267,24 @@ resource "aws_iam_role_policy_attachment" "s3files_efs_base" {
 }
 
 output "s3files_fs_map" {
-  value = { for key, config in local.s3files_hubs : key => aws_s3files_file_system.s3files[key].id }
+  value = {
+    for hub_name, mounts in
+      {
+      for key, config in local.s3files_hubs
+      :
+      config.hub_name => {
+        (config.config.bucket) = {
+          "bucketName" : config.config.bucket, "volumeHandle" : aws_s3files_file_system.s3files[key].id
+        }
+      }...
+    }
+    :
+    hub_name => yamlencode(merge(mounts...))
+  }
 }
 
+#
+
 output "s3files_efs_csi_driver_role" {
-  value = length(local.s3files_hubs) > 0 ? aws_iam_role.s3files_efs_csi_driver[*].arn : null
+  value = one(aws_iam_role.s3files_efs_csi_driver[*].arn)
 }

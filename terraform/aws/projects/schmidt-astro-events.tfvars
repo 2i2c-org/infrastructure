@@ -103,11 +103,15 @@ enable_jupyterhub_cost_monitoring = true
 
 s3files = {
   "schmidt-observatory-system" : {
-    tags = {
-      "2i2c:hub-name" : "workshop",
-      "JHCM:HubName" : "workshop"
-    },
-    bucket = "schmidt-observatory-system"
-    hubs   = ["workshop", "staging"]
+    bucket : "schmidt-observatory-system"
+    hubs   : ["workshop", "staging"]
+  },
+  "staging-scratch" : {
+    bucket : "schmidt-astro-events-scratch-staging"
+    hubs   : ["staging"]
+  },
+  "workshop-scratch" : {
+    bucket : "schmidt-astro-events-scratch-workshop"
+    hubs   : ["workshop"]
   }
 }
