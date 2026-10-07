@@ -42,5 +42,5 @@ scratchDiskVAC:
   enabled: true
   parameters:
     # Increase for faster /tmp
-    iops: "4000"
-    throughput: "300"
+    iops: '4000'
+    throughput: '300'
