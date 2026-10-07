@@ -37,3 +37,10 @@ cluster-autoscaler:
 
 calico:
   enabled: true
+
+scratchDiskVAC:
+  enabled: true
+  parameters:
+    # Increase for faster /tmp
+    iops: '4000'
+    throughput: '300'
