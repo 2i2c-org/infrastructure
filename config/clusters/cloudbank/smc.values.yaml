@@ -28,7 +28,7 @@ jupyterhub:
               display_name: CS 41
               slug: cs41
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/cs41_base_image:TODO-set-tag
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/smc-user-image:8c49d58104f3
   scheduling:
     userScheduler:
       enabled: true
