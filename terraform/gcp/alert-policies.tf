@@ -28,7 +28,7 @@ resource "google_monitoring_alert_policy" "cluster_autoscaler_out_of_resources_a
   project      = var.project_id
   combiner     = "OR"
   enabled      = true
-
+  severity     = "CRITICAL"
   conditions {
     display_name = "Scale Up Error Out Of Resources"
     condition_matched_log {
