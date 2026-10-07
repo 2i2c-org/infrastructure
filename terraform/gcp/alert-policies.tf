@@ -24,7 +24,7 @@ resource "google_monitoring_notification_channel" "pagerduty_cloudbank" {
 }
 
 resource "google_monitoring_alert_policy" "cluster_autoscaler_out_of_resources_alert" {
-  display_name = "${var.prefix}: Autoscaler out of resources"
+  display_name = "Autoscaler out of resources"
   project      = var.project_id
   combiner     = "OR"
   enabled      = true
@@ -37,6 +37,15 @@ resource "google_monitoring_alert_policy" "cluster_autoscaler_out_of_resources_a
       (jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.out.of.resources")
       EOT
     }
+  }
+
+  alert_strategy {
+    notification_rate_limit {
+      period = "3600s"
+    }
+
+    # seven days
+    auto_close = "604800s"
   }
 
   # Send a notification to our PagerDuty channel when this is triggered
