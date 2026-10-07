@@ -195,10 +195,6 @@ persistent_disks = {
     size        = 140
     name_suffix = "lacc"
   }
-  "lahc" = {
-    size        = 25
-    name_suffix = "lahc"
-  }
   "laney" = {
     size        = 200
     name_suffix = "laney"
