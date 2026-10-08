@@ -9,4 +9,9 @@ jupyterhub:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0027f2b7dc07df273
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        quota_overrides:
+          _shared: 200
 

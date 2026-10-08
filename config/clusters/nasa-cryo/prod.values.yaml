@@ -63,6 +63,9 @@ basehub:
       config:
         QuotaManager:
           hard_quota: 35 # in GiB
+          quota_overrides:
+            _shared: 130
+            _shared-public: 165
   binderhub-service:
     config:
       BinderHub:
