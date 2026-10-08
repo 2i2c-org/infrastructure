@@ -12,7 +12,9 @@ jupyterhub:
       templateVars:
         org:
           name: Jupyter Health
-          logo_url: https://jupyterhealth.github.io/images/JH_logo_2.png
+          # NOTE: When jupyterhealth.org is served from GitHub pages, instead of replit, change this to:
+          #   https://jupyterhealth.org/images/JH_logo_2.png
+          logo_url: https://docs.jupyterhealth.org/jupyterhealth.org/images/JH_logo_2.png
           url: https://github.com/jupyterhealth/
         designed_by:
           name: Jupyter Health

@@ -101,11 +101,11 @@ We may wish to increase the performance of the ephemeral disk. To do this, we'll
 
 scratchDiskVAC:
   parameters:
-    provisioned-iops: "3000"
-    provisioned-throughput: "50"
+    iops: "4000"
+    throughput: "400"
 
 ```
-See [the Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/#the-volumeattributesclass-api) for more details on these parameters.
+See [the Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/#the-volumeattributesclass-api) for more details on these parameters. Available parameters differ by cloud provider - see docs for ([AWS](https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/parameters.md)), [GCP](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver/blob/master/README.md#createvolume-parameters) and [Azure](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/docs/driver-parameters.md).
 
 ::::
 
