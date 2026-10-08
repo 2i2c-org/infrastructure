@@ -8,6 +8,8 @@ jupyterhub-home-nfs:
 
 jupyterhub:
   custom:
+    usageQuotas:
+      enabled: false
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github

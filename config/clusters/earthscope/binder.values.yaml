@@ -22,6 +22,8 @@ jupyterhub:
     # Also cull all users more than 12h old
     users: true
   custom:
+    usageQuotas:
+      enabled: false
     2i2c:
       # This uses custom ids from auth0, so we can't use our default
       # emails as access

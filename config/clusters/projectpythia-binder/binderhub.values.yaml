@@ -19,6 +19,8 @@ jupyterhub:
       hosts:
       - hub.projectpythia.org
   custom:
+    usageQuotas:
+      enabled: false
     binderhubUI:
       enabled: true
     2i2c:
