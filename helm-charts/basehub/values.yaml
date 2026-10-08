@@ -784,7 +784,7 @@ jupyterhub:
         # as well as /home/rstudio. This allows rocker images (which use the
         # rstudio user and put home in /home/rstudio) to be first class citizens
         # along with jupyter based images, regardless of how they are specified (
-        # via the configurator, or with unlisted_choice, or as a profile). For non-rocker
+        # with unlisted_choice, or as a profile). For non-rocker
         # images, this is just invisible in the UI and there is no performance overhead
         # for these extra bind mounts. An additional positive here is that in case *students*
         # end up accidentally hardcoding paths in their notebooks, it will continue to work
@@ -918,40 +918,6 @@ jupyterhub:
       UsageViewer:
         prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local'
         enable_compute: false
-    extraFiles:
-      configurator-schema-default:
-        mountPath: /usr/local/etc/jupyterhub-configurator/00-default.schema.json
-        data:
-          type: object
-          name: config
-          properties:
-            KubeSpawner.image:
-              type: string
-              title: User docker image
-              description: Determines languages, libraries and interfaces
-                available
-              help: Leave this blank to use the default
-            Spawner.default_url:
-              type: string
-              title: Default User Interface
-              enum:
-                - "/tree"
-                - "/lab"
-                - "/rstudio"
-              default: "/tree"
-              enumMetadata:
-                interfaces:
-                  - value: "/tree"
-                    title: Classic Notebook
-                    description: >-
-                      The original single-document interface for creating
-                      Jupyter Notebooks.
-                  - value: "/lab"
-                    title: JupyterLab
-                    description: A Powerful next generation notebook interface
-                  - value: "/rstudio"
-                    title: RStudio
-                    description: An IDE For R, created by the RStudio company
     extraEnv:
       # Turn off IP checks for XSRF, as we aren't currently able to consistently
       # get the end user IP to the JupyterHub process at all times
