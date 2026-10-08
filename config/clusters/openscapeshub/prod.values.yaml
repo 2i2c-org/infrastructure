@@ -10,6 +10,8 @@ basehub:
       config:
         QuotaManager:
           hard_quota: 30 # in GiB
+          quota_overrides:
+            _shared: 100
     eks:
       volumeId: vol-0cddd71981a7ff6ba
   nfs:

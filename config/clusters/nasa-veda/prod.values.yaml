@@ -23,3 +23,6 @@ basehub:
         QuotaManager:
           # Community-requested value
           hard_quota: 200 # in GiB
+          quota_overrides:
+            _shared: 200
+            _shared-public: 200
