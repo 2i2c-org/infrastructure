@@ -201,20 +201,20 @@ local jupyterhubConfig =
   {
     ingress: hubIngressConfig,
     hub: {
-           services: {
-                       binder: {
-                         // dynamically configure redirect_uri for binderhub service, so we don't have to do that in each hub
-                         oauth_redirect_uri: 'https://%s/services/binder/oauth_callback' % [hub_domain],
-                       },
-                     },
-           config: {
-             OAuthenticator: {
-               // Always set oauth callback URL, to prevent it from being
-               // guessed 'wrong'.
-               oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
-             },
-           } + jupyterhubUsageQuotasHubConfig.config,
-         }
+      services: {
+        binder: {
+          // dynamically configure redirect_uri for binderhub service, so we don't have to do that in each hub
+          oauth_redirect_uri: 'https://%s/services/binder/oauth_callback' % [hub_domain],
+        },
+      },
+      config: {
+        OAuthenticator: {
+          // Always set oauth callback URL, to prevent it from being
+          // guessed 'wrong'.
+          oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
+        },
+      } + jupyterhubUsageQuotasHubConfig.config,
+    },
   } +
   if provider == 'aws' then {
     singleuser: {
