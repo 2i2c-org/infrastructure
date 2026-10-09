@@ -20,9 +20,6 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
     homepage:
-      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
-      # is merged
-      gitRepoBranch: unify-logins-2
       templateVars:
         org:
           name: Reflective Cloud

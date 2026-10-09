@@ -8,11 +8,6 @@ basehub:
     pv:
       serverIP: 10.100.130.27
   jupyterhub:
-    custom:
-      homepage:
-        # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
-        # is merged
-        gitRepoBranch: unify-logins-2
     hub:
       allowNamedServers: true
       config:

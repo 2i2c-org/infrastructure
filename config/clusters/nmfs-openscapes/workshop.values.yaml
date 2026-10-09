@@ -4,10 +4,6 @@ nfs:
 
 jupyterhub:
   custom:
-    homepage:
-      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
-      # is merged
-      gitRepoBranch: unify-logins-2
     singleuserAdmin:
       extraVolumeMounts:
         01-allusers-volumemount:

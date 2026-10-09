@@ -16,24 +16,6 @@ export CLUSTER_NAME=cluster_name
 export HUB_NAME=hub_name
 ```
 
-## Use a specific branch of the homepage repository
-
-Until [this PR](https://github.com/2i2c-org/default-hub-homepage/pull/51)
-is merged, we need to explicitly specify that as the
-branch to use so login pages show the username / password
-correctly.
-
-In the `${HUB_NAME}.values.yaml` file, include the following config.
-
-```yaml
-jupyterhub:
-  custom:
-    homepage:
-      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
-      # is merged
-      gitRepoBranch: unify-logins-2
-```
-
 ## Set a *regular* user password and an *admin* password
 
 When using the shared password method, you can have *two* passwords:
