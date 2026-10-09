@@ -37,3 +37,10 @@ calico:
 nvidiaDevicePlugin:
   aws:
     enabled: true
+
+redirects:
+  rules:
+  - from: hub.cryointhecloud.com
+    to: hub.stratusgeo.org
+#  - from: staging.hub.cryointhecloud.com
+#    to: staging.hub.stratusgeo.org

@@ -76,6 +76,7 @@ project:
       - file: hub-deployment-guide/hubs/move-hubs/index.md
         children:
         - file: hub-deployment-guide/hubs/move-hubs/across-clusters.md
+        - file: hub-deployment-guide/hubs/move-hubs/new-url.md
 
   - title: How-to guides
     children:
