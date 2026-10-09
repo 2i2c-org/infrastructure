@@ -34,3 +34,9 @@ charts:
           REQUIREMENTS_FILE: "latest-usage-quotas-requirements.txt"
         contextPath: "images/hub"
         dockerfilePath: images/hub/Dockerfile-jupyterhub6
+      cloudbank:
+        imageName: quay.io/2i2c/cloudbank-hub
+        buildArgs:
+          REQUIREMENTS_FILE: cloudbank-requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile
