@@ -1,45 +1,21 @@
-(sre-guide:scratch-storage-ephem)=
-# Setting up scratch storage with ephemeral volumes
+(howto:features:scratch-disk)=
+# Setting up larger, dedicated `/tmp` for users
+
+Because the hub home storage is based on NFS, it's only supposed to be used for
+storing small data and code. Storing large datasets is not recommended because
+it can get expensive and inefficient pretty quickly. Instead, we recommend using
+cloud object storage combined with scratch storage that is local to the node
+where the notebook server is running.
+
 
 This guide covers how to setup a scratch storage in `/tmp` using an `ephemeral` volume.
 
 ## Add a scratch profile option
 
-We can provide users with access to scratch storage by adding a `scratch_disk` profile option entry in the `singleuser.profileList` configuration. Here, we'll define possible `/tmp` choices, such as a larger `/tmp` disk and/or _faster_ disks for high-performance workloads. We can combine node-level scratch (see @sre-guide:scratch-storage-node) with dedicated scratch storage using profile options:
-```yaml
-singleuser:
-  profileList:
-    - display_name: Choose your environment and resources
-      default: true
-      profile_options:
-        image:
-          # ...
-        scratch_disk:
-          display_name: Scratch Disk on /tmp
-          choices:
-            # This option just uses the default node-level /tmp
-            01_standard:
-              display_name: Standard
-              description: Max of 200GB
-              default: true
-              kubespawner_override:
-                # ...
-            # This option will define a dedicated ephemeral volume
-            02_gb_500:
-              display_name: Dedicated 500GB
-              description: 500GB dedicated to just you
-              kubespawner_override:
-                # ...
-```
-When defining the dedicated ephemeral volume `kubespawner_override`, we need to specify special `storageClassName` and `volumeAttributesClassName` attributes that allow the CSI driver to provision the correct kind of temporary volume.
-
-## Define the volume attributes and storage class
-
-:::::{tab-set}
-::::{tab-item} AWS
-:sync: aws-key
-
-On AWS, the default storage class is named `ebs-csi-default-sc`. This will typically represent a `gp3` volume. Meanwhile, the `VolumeAttributesClass` is managed by the support Helm chart, and is named `scratch-disk`. In `kubespawner_override`, we'll define a temporary ephemeral volume that includes this configuration.
+We can provide users with access to scratch storage by adding a `scratch_disk`
+profile option entry in the `singleuser.profileList` configuration. Here, we'll
+define possible `/tmp` choices, such as a larger `/tmp` disk and/or _faster_
+disks for high-performance workloads.
 
 Our hub values therefore must be modified as follows:
 ```{code-block} yaml
@@ -60,7 +36,6 @@ singleuser:
             # This option just uses the default node-level /tmp
             01_standard:
               display_name: Standard
-              description: Max of 200GB
               default: true
               kubespawner_override:
                 # ...
@@ -88,12 +63,17 @@ singleuser:
                             hub.jupyter.org/servername: '{unescaped_servername}'
                         spec:
                           accessModes: [ReadWriteOnce]
-                          storageClassName: ebs-csi-default-sc  # Set this & volumeAttributes explicitly
+                          storageClassName: <set-according-to-cloud-provider> # Set this & volumeAttributes explicitly
                           volumeAttributesClassName: scratch-disk
                           resources:
                             requests:
                               storage: 500Gi
 ```
+
+You have to set the `storageClassName` explicitly. For AWS, it's `ebs-csi-default-sc` for `gp3` volumes, and
+`dynamic-rwo` for GKE.
+
+You can also restrict access to specific groups via [`allowed_groups`](howto:features:profile-restrict)
 
 We may wish to increase the performance of the ephemeral disk. To do this, we'll modify the support chart values for the `scratch-disk` `VolumeAttributesClass`:
 ```{code-block} yaml
