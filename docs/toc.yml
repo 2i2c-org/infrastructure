@@ -114,6 +114,7 @@ project:
       - file: howto/features/per-user-db.md
       - file: howto/features/private-nbgitpuller.md
       - file: howto/features/profile-list-restrict.md
+      - file: howto/features/s3-mount.md
       - file: howto/features/rocker.md
       - file: howto/features/shared-token.md
       - file: howto/features/shared-db.md
