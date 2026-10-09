@@ -269,7 +269,7 @@ resource "aws_iam_role_policy_attachment" "s3files_efs_base" {
 output "s3files_fs_map" {
   value = {
     for hub_name, mounts in
-      {
+    {
       for key, config in local.s3files_hubs
       :
       config.hub_name => {
