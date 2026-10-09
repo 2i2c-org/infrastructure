@@ -139,14 +139,14 @@ All of the following steps must be followed in order to consider phase 3.1 compl
                ```
             - **Setup the relevant Authentication Provider with relevant credentials**
 
-               See [](enable-auth-provider) for steps on how to achieve this.
+               See [](#enable-auth-provider) for steps on how to achieve this.
 
          - **If this will be a binderhub style hub, then run:**
             ```bash
             deployer generate hub-asset binderhub-ui-values-file
             ```
 
-            And continue following the guide at [](features:binderhub-ui-hub).
+            And continue following the guide at [](#features:binderhub-ui-hub).
 
    1. **If the cluster has currently no hubs**
 
@@ -223,7 +223,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
    Use the info provided in the new hub GitHub issue for the `Dask gateway` section.
    If Dask gateway will be needed, then choose a `basehub`, and follow the guide on
-   [how to enable dask-gateway on an existing hub](howto:features:daskhub).
+   [how to enable dask-gateway on an existing hub](#howto:features:daskhub).
 
 1. **Add the new cluster and staging hub to CI/CD**
 
@@ -247,12 +247,12 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
 1. **Monitor the action to make sure that it completes**
 
-   If something goes wrong and the workflow does not finish, try [deploying locally](hubs:manual-deploy) to access the logs to help understand what is going on.
+   If something goes wrong and the workflow does not finish, try [deploying locally](#hubs:manual-deploy) to access the logs to help understand what is going on.
    It may be necessary to make new changes to the hub's configuration via a Pull Request, or to *revert* the old Pull Request if you cannot determine how to resolve the problem.
 
    ```{attention}
    In order to protect sensitive tokens, our CI/CD pipeline will **not** print testing output to its logs.
-   You will need to run the [health check locally](hubs:manual-deploy:health-check) to inspect these logs.
+   You will need to run the [health check locally](#hubs:manual-deploy:health-check) to inspect these logs.
    ```
 
 1. **Log in to the hub**

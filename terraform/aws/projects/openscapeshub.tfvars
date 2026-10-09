@@ -75,12 +75,54 @@ hub_cloud_permissions = {
       "scratch-staging",
       "persistent-staging",
     ],
+    # Provides readonly requestor-pays access to firms-landsat-output bucket,
+    # veda bucket (https://2i2c.freshdesk.com/a/tickets/6142).
+    extra_iam_policy : <<-EOT
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:Get*",
+                    "s3:List*",
+                    "s3:Describe*"
+                ],
+                "Resource": [
+                  "arn:aws:s3:::firms-landsat-output",
+                  "arn:aws:s3:::firms-landsat-output/*"
+                ]
+            }
+        ]
+      }
+    EOT
   },
   "prod" : {
     bucket_admin_access : [
       "scratch",
       "persistent",
     ],
+    # Provides readonly requestor-pays access to firms-landsat-output bucket,
+    # veda bucket (https://2i2c.freshdesk.com/a/tickets/6142).
+    extra_iam_policy : <<-EOT
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:Get*",
+                    "s3:List*",
+                    "s3:Describe*"
+                ],
+                "Resource": [
+                  "arn:aws:s3:::firms-landsat-output",
+                  "arn:aws:s3:::firms-landsat-output/*"
+                ]
+            }
+        ]
+      }
+    EOT
   },
   "workshop" : {
     bucket_admin_access : [

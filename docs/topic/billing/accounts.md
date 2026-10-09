@@ -3,6 +3,15 @@
 Cloud providers have different ways of attaching a source of money
 (a credit card or cloud credits) to the resources we get charged for.
 
+(billing/does-2i2c-pay)=
+## Does 2i2c pay for a hub's cloud costs?
+
+% TODO: Remove our billing pay flags, ref: https://github.com/2i2c-org/infrastructure/issues/8548
+
+See the [invoicing cloud costs](https://compass.2i2c.org/finance/contracts/#how-to-invoice-communities-for-cloud-costs) section in our team compass.
+In this repository, we do not store information about whether 2i2c or a community pays for their cloud costs.
+
+
 ## GCP
 
 A [Billing Account](https://cloud.google.com/billing/docs/how-to/manage-billing-account)

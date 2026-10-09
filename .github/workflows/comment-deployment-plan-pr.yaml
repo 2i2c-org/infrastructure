@@ -33,10 +33,9 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-    - uses: actions/checkout@v6
-    - run: pip install requests
-    - run: python extra-scripts/comment-deployment-plan-pr.py
-      env:
-        GITHUB_REPOSITORY: ${{ github.repository }}
-        RUN_ID: ${{ github.event.workflow_run.id }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v7
+
+    - name: Provide comment to track deployment progress
+      uses: ./.github/actions/show-deployment-plan
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}

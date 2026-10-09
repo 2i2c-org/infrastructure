@@ -1,6 +1,9 @@
 name: openscapeshub
 provider: aws
 provider_url: https://783616723547.signin.aws.amazon.com/console
+metadata:
+  2i2c:
+    hubspot_deal_id: 86221243106
 aws:
   account: 783616723547
   key: enc-deployer-credentials.secret.json

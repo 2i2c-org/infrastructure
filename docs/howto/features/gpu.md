@@ -183,7 +183,7 @@ AWS, and we can configure a node group there to provide us GPUs.
 
    `g4dn.xlarge` gives us 1 Nvidia T4 GPU and ~4 CPUs. The `tags` definition
    is necessary to let the autoscaler know that this nodegroup has
-   1 GPU per node and also for the [cost monitoring system](topic:monitoring-alerting:cost-monitoring) to differentiate
+   1 GPU per node and also for the [cost monitoring system](#topic:monitoring-alerting:cost-monitoring) to differentiate
    between hubs. The `taints` definition is required to prevent scheduling of
    non-GPU pods onto the GPU nodes. If you're using a different machine type with
    more GPUs, adjust this definition accordingly. The `tags` and `labels` entries
@@ -280,7 +280,7 @@ jupyterhub:
    using `GitHubOAuthenticator`, and restricts access to the GPU only
    to members of that GitHub team. If `allowed_teams` is not used in
    other config in the `profileList`, you may need to also explicitly
-   [enable some other config (`enable_auth_state` and `populate_teams_in_auth_state`)](howto:features:profile-restrict)
+   [enable some other config (`enable_auth_state` and `populate_teams_in_auth_state`)](#howto:features:profile-restrict)
    for this feature to work.
 
 Do a deployment with this config, and then we can test to make sure

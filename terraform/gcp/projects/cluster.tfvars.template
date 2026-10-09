@@ -8,7 +8,7 @@
 prefix     = "{{ cluster_name }}"
 project_id = "{{ project_id }}"
 
-zone   = "{{ cluster_region }}"
+zone   = "{{ cluster_zone }}"
 region = "{{ cluster_region }}"
 
 # Config required to enable automatic budget alerts to be sent to support@2i2c.org

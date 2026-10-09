@@ -48,8 +48,8 @@ for binderhub.
 
 When an alert is triggered, it automatically opens an Incident in the
 [Managed JupyterHubs](https://2i2c-org.pagerduty.com/service-directory/PS10YJ3) service
-we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
-the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
+we maintain in PagerDuty. This also notifies the `#alerts-to-action-now` channel on
+the 2i2c slack or the `#alerts-cloudbank` if it's on the cloudbank cluster, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
 
 ### Prometheus health checks
 
@@ -58,8 +58,8 @@ Our prometheus instances are protected by auth, so we just check to see if we ge
 
 When an alert is triggered, it automatically opens an Incident in the
 [Cluster Prometheus](https://2i2c-org.pagerduty.com/service-directory/P4B7MEA) service
-we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
-the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
+we maintain in PagerDuty. This also notifies the the `#alerts-to-action-now` channel on
+the 2i2c slack or the `#alerts-cloudbank` if it's on the cloudbank cluster, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
 
 
 ## How are the checks set up?
@@ -90,7 +90,7 @@ Example CLI use that snoozes staging check for 7 days:
 ```
 HUB=staging
 POLICY=$(gcloud alpha monitoring policies list  --filter "displayName ~ staging" --format='value(name)')
-# echo $POLICY 
+# echo $POLICY
 # projects/two-eye-two-see/alertPolicies/12673409021288629743
 gcloud alpha monitoring snoozes create --display-name="Uptime Check Disabled $HUB_NAME" --criteria-policies="$POLICY" --start-time="$(date -Iseconds)" --end-time="+PT7D"
 # Created snooze [projects/two-eye-two-see/snoozes/3009021608334458880].

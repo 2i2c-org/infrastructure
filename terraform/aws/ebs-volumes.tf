@@ -11,6 +11,9 @@ resource "aws_ebs_volume" "nfs_home_dirs" {
   tags = merge(each.value.tags, {
     Name                  = each.value.name_suffix == null ? "hub-nfs-home-dirs" : "hub-nfs-home-dirs-${each.value.name_suffix}"
     "2i2c:volume-purpose" = "home-nfs"
+    "JHCM:Purpose"        = "home-nfs"
+    "JHCM:Attributable"   = "true"
+    "JHCM:ClusterName"    = var.cluster_name
     NFSBackup             = var.enable_nfs_backup ? "true" : "false" # Tag to identify volumes to backup by Data Lifecycle Manager (DLM)
   })
 
@@ -35,7 +38,7 @@ resource "aws_sns_topic_subscription" "volume_metric_exceeded_https_target" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
-  for_each                  = aws_ebs_volume.nfs_home_dirs
+  for_each                  = var.enable_ebs_alarms ? aws_ebs_volume.nfs_home_dirs : {}
   alarm_name                = "Throughput Limit Exceeded for ${each.value.tags["Name"]} (${var.cluster_name})"
   evaluation_periods        = 5
   datapoints_to_alarm       = 3
@@ -50,8 +53,8 @@ resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
     id          = "max_throughput_exceeded"
     return_data = "true"
     expression  = <<-EOT
-       SELECT MAX(VolumeThroughputExceededCheck) 
-       FROM "AWS/EBS" 
+       SELECT MAX(VolumeThroughputExceededCheck)
+       FROM "AWS/EBS"
        WHERE VolumeId = '${each.value.id}'
      EOT
     period      = 60
@@ -62,7 +65,7 @@ resource "aws_cloudwatch_metric_alarm" "volume_throughput_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_iops_alarm" {
-  for_each                  = aws_ebs_volume.nfs_home_dirs
+  for_each                  = var.enable_ebs_alarms ? aws_ebs_volume.nfs_home_dirs : {}
   alarm_name                = "IOPs Limit Exceeded for ${each.value.tags["Name"]} (${var.cluster_name})"
   evaluation_periods        = 5
   datapoints_to_alarm       = 3
@@ -77,8 +80,8 @@ resource "aws_cloudwatch_metric_alarm" "volume_iops_alarm" {
     id          = "max_iops_exceeded"
     return_data = "true"
     expression  = <<-EOT
-       SELECT MAX(VolumeIOPSExceededCheck) 
-       FROM "AWS/EBS" 
+       SELECT MAX(VolumeIOPSExceededCheck)
+       FROM "AWS/EBS"
        WHERE VolumeId = '${each.value.id}'
      EOT
     # Smallest possible period

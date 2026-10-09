@@ -37,7 +37,7 @@ jupyterhub:
       # Authenticator:
       #   admin_users:
       #   - sean-morris
-      #   - jpace-redwoods      
+      #   - jpace-redwoods
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:

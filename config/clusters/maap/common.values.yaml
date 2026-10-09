@@ -5,6 +5,12 @@ nfs:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
 dask-gateway:
   enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+      jupyterhub:
+        jupyterhubServiceName: dask-gateway
+
 jupyterhub:
 
   prePuller:
@@ -14,7 +20,7 @@ jupyterhub:
       enabled: true
 
     extraImages:
-      # Keep up to date with the init container used for pulling in docs, under initContainers
+      # Keep up to date with the container used for pulling in docs, under extraContainers
       nbgitpuller:
         name: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init
         tag: 97eb45f9d23b128aff810e45911857d5cffd05c2
@@ -29,23 +35,27 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
-    homepage:
-      templateVars:
-        org:
-          name: The Multi-Mission Algorithm and Analysis Platform (MAAP)Project
-          logo_url: https://maap-project.org/wp-content/uploads/2021/10/nasamaaplogo3.png
-          url: https://maap-project.org/
-        designed_by:
-          name: 2i2c
-          url: https://2i2c.org
-        operated_by:
-          name: 2i2c
-          url: https://2i2c.org
-        funded_by:
-          name: NASA
-          url: https://www.earthdata.nasa.gov/esds
+    # NOTE: homepage.templateVars is set per-hub (prod = full homepage `org` set;
+    # staging = `redirect_to`). The basehub schema makes the two mutually
+    # exclusive, so it cannot be shared here in common.
   hub:
+    image:
+      name: quay.io/2i2c/jupyterhub-6
+      tag: 0.0.1-0.dev.git.16914.h6b64c8e2c
     allowNamedServers: true
+    loadRoles:
+      server:
+        scopes:
+        - self
+        - access:services!service=dask-gateway
+        - users:activity!user
+      user:
+        scopes:
+        - self
+        - access:services!service=usage-quota
+        - access:services!service=dask-gateway
+        # Access to binder service
+        - access:services!service=binder
     config:
       JupyterHub:
         authenticator_class: generic-oauth
@@ -83,20 +93,49 @@ jupyterhub:
         - CPU:XXL
         - CPU:XXXL
         - GPU:T4
+      UsageQuotaManager:
+        scope_fallback_strategy:
+          intersection: max
+        failover_open: true
+        # https://github.com/NASA-IMPACT/veda-jupyterhub/issues/135#issuecomment-5572240704
+        policy:
+        - resource: memory
+          limit: 11520G
+          window: 30
+          scope:
+            group:
+            - CPU:XS
+            - CPU:M
+            - CPU:L
+        - resource: memory
+          limit: 92160G
+          window: 30
+          scope:
+            group:
+            - CPU:XS
+            - CPU:S
+            - CPU:M
+            - CPU:L
+            - CPU:XL
+            - CPU:XXL
+            - CPU:XXL
+            - CPU:XXXL
+      UsageViewer:
+        enable_compute: true
     extraConfig:
       001-username-claim: |
         def populate_token(spawner, auth_state):
           # For our deployment-service-check health check user, there is no auth_state.
           if auth_state:
             pgt = f"jwt:{auth_state.get('id_token', '')}"
-            
+
             spawner.environment.update({
               "MAAP_PGT": pgt,
               "KC_ACCESS_TOKEN": auth_state.get("access_token", ""),
               "KC_ID_TOKEN": auth_state.get("id_token", ""),
               "KC_REFRESH_TOKEN": auth_state.get("refresh_token", "")
             })
-            
+
             # Inject MAAP_PGT into the s3fs sidecar container
             for container in spawner.extra_containers:
               if container.get("name") == "s3fs":
@@ -107,14 +146,19 @@ jupyterhub:
                 })
 
         c.Spawner.auth_state_hook = populate_token
-      # Post auth API endpoint maintained by the MAAP Platform team
-      002-post-auth-webhook: |
-        import asyncio
+      # MAAP member-sync webhook maintained by the MAAP Platform team.
+      # Runs via modify_auth_state_hook, which fires during authenticate()
+      # BEFORE the allowed-groups check — so a member record is auto-created
+      # for every authenticated user, including brand-new pending/role-less
+      # users who are then rejected from the hub and redirected to the sign-up
+      # page. (A post_auth_hook only runs for already-allowed users, so it can
+      # never create the pending record an admin needs to review.)
+      002-member-sync-webhook: |
         from tornado.httpclient import AsyncHTTPClient
         from z2jh import get_config
 
         async def _notify_maap_api(authenticator, base_url, pgt):
-            """Fire-and-forget call to MAAP REST API."""
+            """Call the MAAP REST API so it registers/refreshes the member."""
             http_client = AsyncHTTPClient()
             try:
                 await http_client.fetch(
@@ -124,29 +168,28 @@ jupyterhub:
                     request_timeout=5.0,
                 )
             except Exception as e:
-                authenticator.log.exception("MAAP post-auth webhook failed: %s", e)
+                authenticator.log.exception("MAAP member-sync webhook failed: %s", e)
 
-        async def maap_post_auth_hook(authenticator, handler, authentication):
-            """Notify MAAP REST API after successful login (non-blocking)."""
+        async def maap_modify_auth_state_hook(authenticator, auth_state):
+            """Notify the MAAP REST API during authentication (before the
+            allowed-groups check) so pending users are auto-created."""
             base_url = get_config("custom.maap.apiBaseUrl", "")
-            if not base_url:
-                return authentication
+            authenticator.log.info("MAAP member-sync webhook: base_url=%s", base_url)
+            if not base_url or not auth_state:
+                return auth_state
 
-            auth_state = authentication.get("auth_state", {})
-            pgt = f"jwt:{auth_state.get('id_token', '')}"
+            # The access token carries the jupyterhub-maap audience the MAAP API
+            # requires, and lets the API retrieve the user's EDL token from the
+            # Keycloak broker endpoint.
+            pgt = f"jwt:{auth_state.get('access_token', '')}"
+            authenticator.log.info("MAAP member-sync webhook: calling %s/api/members/self", base_url)
 
-            asyncio.ensure_future(_notify_maap_api(authenticator, base_url, pgt))
+            await _notify_maap_api(authenticator, base_url, pgt)
 
-            return authentication
+            return auth_state
 
-        c.GenericOAuthenticator.post_auth_hook = maap_post_auth_hook
+        c.GenericOAuthenticator.modify_auth_state_hook = maap_modify_auth_state_hook
   singleuser:
-    extraFiles:
-      jupyter_server_config.json:
-        data:
-          FileContentsManager:
-            # Allow deleting full directories
-            always_delete_dir: true
     cloudMetadata:
       blockWithIptables: false
     defaultUrl: /lab
@@ -196,22 +239,6 @@ jupyterhub:
           subPath: my-team-buckets
           mountPropagation: HostToContainer
           readOnly: false
-    initContainers:
-    - name: jupyterhub-gitpuller-init
-      # Keep this up to date with `prePuller.extraImages`
-      image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-      env:
-      - name: TARGET_PATH
-        value: veda-docs
-      - name: SOURCE_REPO
-        value: https://github.com/NASA-IMPACT/veda-docs
-      volumeMounts:
-      - name: home
-        mountPath: /home/jovyan
-        subPath: '{escaped_username}'
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
     extraContainers:
     - name: s3fs
       image: mas.dit.maap-project.org/root/che-sidecar-s3fs:2i2c
@@ -248,6 +275,40 @@ jupyterhub:
         mountPath: /my-team-buckets
         subPath: my-team-buckets
         mountPropagation: Bidirectional
+    # Running gitpuller as a regular container rather than an init container
+    # so that neither its image pull nor the repo pull blocks the notebook
+    # container from starting.
+    - name: jupyterhub-gitpuller-init
+      # Keep this up to date with `prePuller.extraImages`
+      image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+      # The image's CMD clones and then exits 0, which is correct for an init
+      # container but not here. We're adding `sleep infinity` to run indefinitely
+      command:
+      - /bin/bash
+      - -c
+      - |
+        bash /opt/k8s-init-gitpuller.sh
+        exec sleep infinity
+      resources:
+        limits:
+          memory: 256Mi
+          cpu: 0.5
+        requests:
+          # set some tiny requests
+          memory: 32Mi
+          cpu: 0.01
+      env:
+      - name: TARGET_PATH
+        value: veda-docs
+      - name: SOURCE_REPO
+        value: https://github.com/NASA-IMPACT/veda-docs
+      volumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+        subPath: '{escaped_username}'
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
 
   scheduling:
     userScheduler:
@@ -263,6 +324,8 @@ binderhub-service:
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
+    BinderHub:
+      auth_enabled: true
   buildPodsRegistryCredentials:
     server: *url
     username: *username

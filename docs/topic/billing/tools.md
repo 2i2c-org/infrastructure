@@ -51,4 +51,4 @@ This can be *extremely helpful* in assuaging communities of cost overruns
 but requires we have a prediction for *what numbers* to set these budgets at,
 as well as what to do when the alerts fire.
 
-More details can be found in [](topic:billing:budget-alerts).
+More details can be found in [](#topic:billing:budget-alerts).

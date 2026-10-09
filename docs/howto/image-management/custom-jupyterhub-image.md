@@ -5,7 +5,7 @@ The 2i2c hubs use a custom `hub` image that is defined in the [helm-charts direc
 ## The `hub` image
 
 This custom hub image is built on top of the [jupyterhub/k8s-hub](https://hub.docker.com/r/jupyterhub/k8s-hub) Docker image and configured based on the needs of 2i2c hubs.
-This allows adding and configuring other packages like the [jupyterhub-configurator](https://github.com/yuvipanda/jupyterhub-configurator) or using specific versions of the spawner and authenticator.
+This allows adding and configuring other packages or using specific versions of the spawner and authenticator.
 More information about this custom image can be found in the [Dockerfile](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub/Dockerfile) itself.
 
 
@@ -91,7 +91,7 @@ To install an unreleased package, we will need to install directly from GitHub a
 ## How to build and push a new version of the available hub images
 
 Rebuild the Docker image and push it to the [Quay.io registry](https://quay.io/repository/2i2c/pilot-hub)
- 
+
 - Your `@2i2c` address should give you access to push to the Quay.io registry where the hub image lives, but make sure you are logged into quay.io container registry with the right credentials and these creds are configured to have access to <https://quay.io/repository/2i2c/pilot-hub>.
   Please contact someone at 2i2c for access if this is not the case.
 

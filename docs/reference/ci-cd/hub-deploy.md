@@ -55,7 +55,7 @@ This last job deploys all production hubs that require it in parallel to the clu
 (cicd/hub/pr-comment)=
 ## Posting the deployment plan as a comment on a Pull Request
 
-The [`generate-jobs`](cicd/hub/generate-jobs) job outputs tables of all the hubs across all the clusters that will be upgraded as a result of changes in the repository.
+The [`generate-jobs`](#cicd/hub/generate-jobs) job outputs tables of all the hubs across all the clusters that will be upgraded as a result of changes in the repository.
 However, this table can be difficult to track down in amongst the GitHub Actions logs.
 Therefore, we have another workflow that will post this information as a comment on the Pull Request that triggered the run for discoverability.
 

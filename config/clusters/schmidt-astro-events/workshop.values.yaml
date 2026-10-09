@@ -1,0 +1,16 @@
+nfs:
+  pv:
+    serverIP: 10.100.209.159
+jupyterhub:
+  custom:
+    s3files:
+      mounts:
+        schmidt-observatory-system:
+          volumeHandle: fs-0122cfff59073f460
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://schmidt-astro-events-scratch-workshop/$(JUPYTERHUB_USER)
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0931af54d0972d0fe

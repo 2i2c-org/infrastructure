@@ -100,7 +100,7 @@ At this point, it is useful to have a few terminal windows open:
 
 - One terminal with `deployer use-cluster-credentials $CLUSTER_NAME` to run `kubectl` commands in
 - Another terminal to run `deployer deploy $CLUSTER_NAME $HUB_NAME` in
-- A terminal that is attached to the data transfer pod to re-run the file transfer (see [](migrate-data:reattach-pod))
+- A terminal that is attached to the data transfer pod to re-run the file transfer (see [](#migrate-data:reattach-pod))
 
 1. **Check there are no active users on the hub.**
    You can check this by running:

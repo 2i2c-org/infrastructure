@@ -126,14 +126,14 @@ resource.labels.namespace_name="<namespace>"
 labels.k8s-pod/hub_jupyter_org/username="<escaped-username>"
 ```
 
-You can also look by container name such as the below query for dask-worker and distributed.nanny. 
+You can also look by container name such as the below query for dask-worker and distributed.nanny.
 
 ```
 resource.type="k8s_container"
 resource.labels.container_name="dask-worker" OR resource.labels.container_name="distributed.nanny"
 ```
 
-You must pass the [escaped username](howto:troubleshoot:logs:username) to the
+You must pass the [escaped username](#howto:troubleshoot:logs:username) to the
 query.
 
 #### Full-text search across logs

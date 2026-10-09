@@ -4,12 +4,12 @@ local c = cluster.makeCluster(
   name='<< cluster_name >>',
   region='<< cluster_region >>',
   nodeAz='<< cluster_region >>a',
-  version='1.34',
+  version='1.36',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
-    'r5.xlarge',
-    'r5.4xlarge',
-    'r5.16xlarge',
+    'r8i.xlarge',
+    'r8i.4xlarge',
+    'r8i.16xlarge',
   ],
   daskInstanceTypes=[
     [

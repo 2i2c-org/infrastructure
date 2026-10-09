@@ -11,9 +11,9 @@ on OAuthenticator.
 Communities often want to *selectively* grant access to resources based on
 what *groups* a user belongs to. The most common example being restricted
 access to GPUs, really large resource allocations or the ability to specify
-[arbitrary images to launch](howto:features:unlisted-choice).
+[arbitrary images to launch](#howto:features:unlisted-choice).
 
-We override the [`profile_list`](https://jupyterhub-kubespawner.readthedocs.io/en/latest/spawner.html#kubespawner.KubeSpawner.profile_list)
+We override the [`profile_list`](xref:kube#kubespawner.KubeSpawner.profile_list)
 feature of KubeSpawner to be able to restrict specific profiles or profile options
 to only be available to users who belong to specific JupyterHub groups (or in the
 case of using GitHub authentication, GitHub teams).
@@ -174,6 +174,40 @@ Since this adds on from the previous example, it'll have the following behavior:
    behavior is repeated for both of them.
 4. So only people who are members of *both* `matlab-access` and `large-compute` can
    see the larger dropdown options for the Matlab profile.
+
+### Example 3: Restrict a particular `profile_option` itself
+
+Now let's say the community wants to restrict only users who are members of a
+`use-tmp` group to configure temporary storage (scratch)
+
+```yaml
+- display_name: Python
+  description: Python datascience environment
+  default: true
+  kubespawner_override:
+    image: python-image:tag
+  profile_options: &profile_options
+    requests: ...
+
+    scratch_disk:
+      display_name: Scratch Disk on /tmp
+      allowed_groups:
+      - use-tmp
+      choices:
+        01_standard:
+          display_name: Standard
+          description: Max of 200GB
+          default: true
+          kubespawner_override: ...
+        02_gb_500:
+          display_name: Dedicated 500GB
+          description: 500GB dedicated to just you
+          kubespawner_override: ...
+```
+
+In this example, we build on the previous case. In addition to the previous behaviour, we
+grant users belonging to the `use-tmp` group with the ability to choose whether they are granted additional scratch storage. These users can also configure what kind of scratch storage their servers are given.
+
 
 ## Enabling externally managed groups for `GitHubOAuthenticator`
 

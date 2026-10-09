@@ -1,6 +1,9 @@
 name: temple
 provider: aws
 provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 86221243084
 aws:
   account: 324830304144
   key: enc-deployer-credentials.secret.json

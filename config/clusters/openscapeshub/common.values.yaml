@@ -6,6 +6,11 @@ basehub:
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
   dask-gateway:
     enabled: true
+    gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
   jupyterhub:
     custom:
       daskhubSetup:
@@ -65,13 +70,13 @@ basehub:
                 display_name: Python
                 description: Python datascience environment
                 kubespawner_override:
-                  image: openscapes/python:65d6916
-              02-R:
+                  image: openscapes/python:998fa91
+              02-r:
                 display_name: R + Python Geospatial
                 description: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
-              03-Matlab:
+              03-matlab:
                 display_name: Matlab
                 description: Matlab environment
                 kubespawner_override:
@@ -154,6 +159,18 @@ basehub:
         enabled: true
     hub:
       allowNamedServers: true
+      loadRoles:
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+          - users:activity!user
+        user:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+          - access:services!service=binder
+          - access:services!service=usage-quota
       config:
         JupyterHub:
           authenticator_class: github
@@ -176,6 +193,24 @@ basehub:
           - erinmr
           - betolink
           - ateucher
+          - ronnyhdez
+        UsageQuotaManager:
+          failover_open: true
+          scope_fallback_strategy:
+            empty:
+              resource: memory
+              limit: 5000G
+              window: 30
+            intersection: max
+          policy:
+          - resource: memory
+            limit: 25000G
+            window: 30
+            scope:
+              group:
+              - NASA-Openscapes:defined-term-access-2i2c
+        UsageViewer:
+          enable_compute: true
   binderhub-service:
     enabled: true
     config:

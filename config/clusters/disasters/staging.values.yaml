@@ -18,7 +18,6 @@ binderhub-service:
   config:
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/disasters-staging-
-
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-08f3d124fcfd518b0

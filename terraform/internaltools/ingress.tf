@@ -1,17 +1,14 @@
-
-
-# This is deprecated, but I also currently hate everything else I have checked on.
-resource "helm_release" "ingress-nginx" {
-  name             = "ingress-nginx"
-  namespace        = "ingress-nginx"
+resource "helm_release" "nginx-ingress" {
+  name             = "nginx-ingress"
+  namespace        = "ingress"
   create_namespace = true
-  repository       = "https://kubernetes.github.io/ingress-nginx"
-  chart            = "ingress-nginx"
-  version          = "4.13.0"
-  set = [{
-    name  = "controller.admissionWebhooks.enabled"
-    value = false
-  }]
+  repository       = "oci://ghcr.io/nginx/charts"
+  chart            = "nginx-ingress"
+  version          = "2.4.4"
+
+  values = [
+    file("${path.module}/ingress.yaml")
+  ]
 }
 
 resource "helm_release" "cert-manager" {
@@ -55,6 +52,33 @@ resource "kubernetes_manifest" "clusterissuer_letsencrypt_prod" {
           }
         ]
       }
+    }
+  }
+}
+
+
+resource "kubernetes_service" "cluster-entrypoint" {
+  metadata {
+    name      = "cluster-entrypoint"
+    namespace = "ingress"
+  }
+  spec {
+    external_traffic_policy = "Local"
+    type                    = "LoadBalancer"
+    port {
+      name        = "http"
+      port        = 80
+      target_port = 80
+    }
+
+    port {
+      name        = "https"
+      port        = 443
+      target_port = 443
+    }
+    selector = {
+      "app.kubernetes.io/instance" = "nginx-ingress"
+      "app.kubernetes.io/name"     = "nginx-ingress"
     }
   }
 }

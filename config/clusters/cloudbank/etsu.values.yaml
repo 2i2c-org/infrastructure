@@ -6,7 +6,7 @@ jupyterhub:
       limit: 32G
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/cloudbank-etsu-image
-      tag: 48152a00cc04
+      tag: 05bf48c49e2d
     storage:
       extraVolumeMounts:
         1-submit-volumemount:

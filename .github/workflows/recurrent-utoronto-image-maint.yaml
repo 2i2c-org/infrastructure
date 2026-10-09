@@ -1,0 +1,140 @@
+name: 'Recurrent: UToronto image maintenance'
+on:
+  workflow_dispatch:
+  schedule:
+    # Run on the first of Sept at midnight, every year
+  - cron: 0 0 1 7 *
+
+jobs:
+  create_issue:
+    name: Create issues
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - uses: actions/checkout@v7
+    - name: Get Deadline
+      id: get_deadline
+      run: |
+        year=$(date +%Y)
+        echo "deadline_as_iso_date=${year}-09-01" >> "$GITHUB_ENV"
+    - name: Create tracking initiative
+      id: tracking-initiative
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: '[P&S Initiative] UToronto image maintenance'
+        body: |
+          ## Context
+          2i2c has responsibility for maintaining the following images
+
+          - https://github.com/2i2c-org/utoronto-image
+          - https://github.com/2i2c-org/utoronto-r-image
+
+
+          ### What we need to do
+          See sub-issues
+
+          ### Definition of Done
+          - [ ] Images are updated
+
+        fields: Status,End date
+        values: Upcoming P&S Initiatives,${{ env.deadline_as_iso_date }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+    - name: Update everything in utoronto Python image to latest version
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: Update everything in utoronto Python image to latest version
+        body: |
+          ## Context
+          https://github.com/2i2c-org/utoronto-image is the main utoronto Python image. We want to update the versions of *all* packages to their latest versions.
+
+          ## Definition of Done
+
+          - [ ] Update base scipy image we inherit from
+          - [ ] Update versions of everything in ~requirements.txt~ environment.yml to latest
+          - [ ] Push this image to staging hub
+          - [ ] Communicate this to UToronto and ask them to test, providing testing instructions on how to login to staging hub
+
+          Note: we can drop packages if necessary, as long as their overall infra config still works for their needs.
+        parent: ${{ steps.tracking-initiative.outputs.issue_number }}
+        label: support
+        fields: Status,Estimate,End date
+        values: Up Next,3,${{ env.deadline_as_iso_date }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+    - name: Update everything in utoronto R image to latest version
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: Update everything in utoronto R image to latest version
+        body: |
+          ## Context
+          https://github.com/2i2c-org/utoronto-r-image is the main utoronto R image. We want to update the versions of *all* packages to their latest versions.
+
+          ## Definition of done
+
+          - [ ] Update base rocker image we inherit from
+          - [ ] Update versions of everything in environment.yml to latest
+          - [ ] Push this image to staging hub
+          - [ ] Communicate this to UToronto and ask them to test, providing testing instructions on how to login to staging hub
+        parent: ${{ steps.tracking-initiative.outputs.issue_number }}
+        label: support
+        fields: Status,Estimate,End date
+        values: Up Next,3,${{ env.deadline_as_iso_date }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+
+    - name: Set a date to roll out utoronto python and R images to production
+      uses: ./.github/actions/setup-recurrent-issues
+      id: rollout-date
+      with:
+        title: Set a date to roll out utoronto python and R images to production
+        body: |
+          We should pick a few dates that may work for us from https://www.artsci.utoronto.ca/current/dates-deadlines/academic-dates#academic-dates-deadlines-accordion-3, ideally between the last summer exams and their academic fall start,
+          and offer that to UToronto.
+
+          ## Definition of done
+
+          - [ ] We have picked a few dates based on the UToronto academic calendar that works for us
+          - [ ] We have communicated this to them and heard back
+
+          Note: give them a deadline to respond by, and then go ahead with the date if we don't hear back.
+        parent: ${{ steps.tracking-initiative.outputs.issue_number }}
+        label: support
+        fields: Status,Estimate,End date
+        values: Up Next,2,${{ env.deadline_as_iso_date }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+
+    - name: Roll out new images to UToronto
+      uses: ./.github/actions/setup-recurrent-issues
+      id: rollout
+      with:
+        title: Roll out new images to UToronto
+        body: |
+          After the rollout data has been agreed with UToronto.
+
+          ## Definition of done
+
+          - [ ] Images rolled out to production
+          - [ ] Communicated to UToronto
+        parent: ${{ steps.tracking-initiative.outputs.issue_number }}
+        blocked_by: ${{ steps.rollout-date.outputs.issue_number }}
+        label: support
+        fields: Status,Estimate,End date
+        values: Up Next,1,${{ env.deadline_as_iso_date }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+
+    - name: Watch for image related issues on UToronto for a set period of time
+      uses: ./.github/actions/setup-recurrent-issues
+      with:
+        title: Watch for image related issues on UToronto for a set period of time
+        body: |
+          After we roll out Utoronto image upgrades, we should watch for image related issues for a set period of time. In particular, this is likely to be the first week of classes as that's often when issues may be discovered despite earlier testing.
+
+          ## Definition of Done
+
+          - [ ] We have dates we should watch for image related issues
+          - [ ] We fix any that arise
+        parent: ${{ steps.tracking-initiative.outputs.issue_number }}
+        blocked_by: ${{ steps.rollout.outputs.issue_number }}
+        label: support
+        fields: Status,Estimate,End date
+        values: Up Next,2,${{ env.deadline_as_iso_date }}
+        GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}

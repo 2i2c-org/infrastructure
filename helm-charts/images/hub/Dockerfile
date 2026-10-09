@@ -22,6 +22,6 @@ COPY ${REQUIREMENTS_FILE} /tmp/
 
 USER root
 
-RUN pip install -r /tmp/${REQUIREMENTS_FILE}
+RUN pip install --force-reinstall -r /tmp/${REQUIREMENTS_FILE}
 
 USER $NB_USER

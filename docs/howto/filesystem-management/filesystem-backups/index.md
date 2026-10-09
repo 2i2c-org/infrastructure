@@ -6,8 +6,6 @@ Hence if the filesystem is lost, for some reason, this is a disastrous event.
 These documents describe how to enable automated backups of the filesystems for
 various cloud providers, and recover filesystems from those backups.
 
-```{toctree}
-:maxdepth: 2
-enable-backups
-restore-filesystem
-```
+:::{toc}
+:context: children
+:::

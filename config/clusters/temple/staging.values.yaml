@@ -9,6 +9,12 @@ jupyterhub:
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23libKsm2tlJzjYplj
       GH_SCOPED_CREDS_APP_URL: https://github.com/apps/temple-advanced-staging-push
+  hub:
+    loadRoles:
+      user:
+        scopes:
+        - self
+        - access:services!service=binder
 binderhub-service:
   config:
     BinderHub:

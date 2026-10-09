@@ -3,7 +3,6 @@
 
 This documentation covers tasks related to image management.
 
-```{toctree}
-custom-jupyterhub-image
-update-env
-```
+:::{toc}
+:context: children
+:::

@@ -29,6 +29,8 @@ spec:
       labels:
         name: nvidia-device-plugin-ds
     spec:
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
       tolerations:
       - key: nvidia.com/gpu
         operator: Exists
@@ -50,7 +52,7 @@ spec:
       containers:
         # NOTE: 0.18.0 crashes for AL2023 out of the box
         # Copy version from https://github.com/eksctl-io/eksctl/blob/main/pkg/addons/assets/nvidia-device-plugin.yaml
-      - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.4
+      - image: nvcr.io/nvidia/k8s-device-plugin:v0.19.3
         name: nvidia-device-plugin-ctr
         env:
           - name: FAIL_ON_INIT_ERROR

@@ -13,8 +13,6 @@ for each hub.
 | Upstream defaults from z2jh | z2jh maintainers | [`helm-charts/basehub/Chart.yaml`](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/Chart.yaml) lists the z2jh version. Most of our configuration is directly from upstream |
 | [`helm-charts/basehub/values.yaml`](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml) | 2i2c engineers | Common to all hubs run from this repo |
 | [`config/clusters` (previously `hubs.yaml`)](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters) | 2i2c engineers | There is one folder per cluster, and each cluster can have multiple hubs deployed defined by a `<hub_name>.values.yaml` file in the same folder. There is also cluster-wide config stored in a `cluster.yaml` in each cluster directory. [`config/clusters/schema.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cluster.schema.yaml) contains documentation and validation information for fields in this set of configuration. |
-| [Configurator schema defaults](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L143) | 2i2c engineers | **If** there is a default set in the schema for available options in the configurator, it will always override the config elsewhere in our YAML files |
-| Configurator | Hub admins | If hub admins 'unset' a value, it should go to what's configured via our yaml files|
 
 ## Location of common configuration
 
@@ -55,7 +53,7 @@ These credential files have the naming convention `enc-deployer-credentials.secr
 
 (Optional) Grafana API Token
 : This token allows us to programmatically create a range of useful dashboards in a cluster's grafana deployment, allowing us to inspect and track the usage of all the JupyterHubs deployed to that cluster.
-See the [](grafana-dashboards) documentation for more information on how this token is used.
+See the [](#grafana-dashboards) documentation for more information on how this token is used.
 These token files have the naming convention `enc-grafana-token.secret.yaml` when encrypted.
 
 Additionally, the cluster folder can contain any number of helm chart values files to describe any individual JupyterHub running on the cluster.
@@ -90,4 +88,4 @@ When designing our configuration structure, we apply the following conventions.
 3. In the spirit of convention 2, we should not house our secrets under a specific folder and mimic the structure of `config/clusters` under it.
    Instead, we define all config for a cluster, encrypted or not, into the same place.
    We then use filenames to track if a file should be encrypted and whether it is currently encrypted or not.
-   See [](secrets:top) for more information on this.
+   See <#secrets:top> for more information on this.

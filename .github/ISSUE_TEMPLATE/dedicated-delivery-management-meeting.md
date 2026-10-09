@@ -7,8 +7,8 @@ assignees: ''
 
 ---
 
-### Meeting goal and agenda 
-- [ ] Use the Team Compass meeting agendas to pre-populate the meeting plan: https://compass.2i2c.org/services/dedicated-delivery-management/ 
+### Meeting goal and agenda
+- [ ] Use the Team Compass meeting agendas to pre-populate the meeting plan: https://compass.2i2c.org/services/dedicated-delivery-management/
 
 ### Participants requested
 
@@ -22,7 +22,7 @@ assignees: ''
 
 ### Summary of decisions and actions
 
-<!-- Capture appropriately detailed meeting notes and share them with the community; this section gives us a place to quickly notice what was decided and next steps in a way all team members can easily find. 
+<!-- Capture appropriately detailed meeting notes and share them with the community; this section gives us a place to quickly notice what was decided and next steps in a way all team members can easily find.
 
 Recommended meeting note procedure:
 - Create a Google doc and attach to the calendar invite

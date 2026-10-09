@@ -1,0 +1,19 @@
+name: Add an iteration number to a closed issue that didn't have any
+on:
+  issues:
+    types: [closed]
+jobs:
+  compute-iteration:
+    uses: ./.github/workflows/compute-iteration-number.yaml
+  create-tracking-issues:
+    runs-on: ubuntu-latest
+    needs: compute-iteration
+    steps:
+    - name: Set the "Status" and mark the issue as "Emergency" in the project board
+      uses: EndBug/project-fields@v2
+      with:
+        operation: set
+        fields: Iteration
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+        values: Iteration ${{ needs.compute-iteration.outputs.iteration }}

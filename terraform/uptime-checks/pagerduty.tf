@@ -29,3 +29,12 @@ resource "google_monitoring_notification_channel" "pagerduty_prometheus" {
     service_key = data.sops_file.pagerduty_integration_key.data["pagerduty.prometheus"]
   }
 }
+
+resource "google_monitoring_notification_channel" "pagerduty_cloudbank" {
+  project      = var.project_id
+  display_name = "PagerDuty Uptime Cloudbank cluster"
+  type         = "pagerduty"
+  sensitive_labels {
+    service_key = data.sops_file.pagerduty_integration_key.data["pagerduty.cloudbank"]
+  }
+}

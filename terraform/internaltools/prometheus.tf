@@ -161,8 +161,8 @@ locals {
 
           scheme = "https"
           basic_auth = {
-            username : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.users.0.username"]),
-            password : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusIngressAuthSecret.users.0.password"])
+            username : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusAuthSecret.username"]),
+            password : sensitive(data.sops_file.encrypted_prometheus_configs[p.cluster].data["prometheusAuthSecret.password"])
           }
         }
       ]
@@ -175,7 +175,8 @@ locals {
         enabled : true,
         ingressClassName : "nginx",
         annotations : {
-          "cert-manager.io/cluster-issuer" : "letsencrypt-prod"
+          "cert-manager.io/cluster-issuer" : "letsencrypt-prod",
+          "acme.cert-manager.io/http01-edit-in-place" : "true"
         },
         hosts : ["federated-prometheus.internaltools.2i2c.org"],
         tls : [{

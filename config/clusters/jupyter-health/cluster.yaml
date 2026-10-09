@@ -1,6 +1,10 @@
 name: jupyter-health
 provider: aws
 provider_url: https://2i2c.awsapps.com/start/#/
+metadata:
+  2i2c:
+    # Counted as part of the BIDS contract
+    hubspot_deal_id: 86221242070
 aws:
   account: 211125465508
   key: enc-deployer-credentials.secret.json
@@ -23,6 +27,7 @@ hubs:
   - enc-common.secret.values.yaml
   - staging.values.yaml
   - enc-staging.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: prod
   display_name: Jupyter Health (prod)
   domain: jupyter-health.2i2c.cloud
@@ -32,3 +37,4 @@ hubs:
   - enc-common.secret.values.yaml
   - prod.values.yaml
   - enc-prod.secret.values.yaml
+  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml

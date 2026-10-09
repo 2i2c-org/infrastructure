@@ -1,0 +1,22 @@
+controller:
+  # replicaCount: 0
+  reportIngressStatus:
+    # Disable leader election — we only have one replica.
+    # This was motivated by an apparent race condition on 2i2c-aws-us
+    enableLeaderElection: false
+  # Don't enable any custom resource definitions, as that just makes our lives hard for no reason
+  enableCustomResources: false
+  appprotect:
+    enable: false
+  appprotectdos:
+    enable: false
+
+  # Enable custom config snippets, which we use for rewriting
+  enableSnippets: true
+
+  ingressClass:
+    # Claim the `nginx` ingress class
+    create: true
+
+  service:
+    type: ClusterIP

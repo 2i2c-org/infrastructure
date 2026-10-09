@@ -8,6 +8,10 @@ basehub:
   dask-gateway:
     enabled: true
     gateway:
+      auth:
+        type: jupyterhub
+        jupyterhub:
+          jupyterhubServiceName: dask-gateway
       backend:
         imagePullSecrets: [name: image-pull-secret]
 
@@ -19,6 +23,8 @@ basehub:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: github
       homepage:
+        gitRepoUrl: https://github.com/2i2c-org/default-hub-homepage
+        gitRepoBranch: feat-multiple-funders
         templateVars:
           org:
             name: Cryo in the Cloud
@@ -30,12 +36,15 @@ basehub:
           operated_by:
             name: 2i2c
             url: https://2i2c.org
-          # Ideally, this community would like to list more than one funder
-          # Issue tracking implementation of this feature:
-          # https://github.com/2i2c-org/default-hub-homepage/issues/16
           funded_by:
-            name: NASA ICESat-2 Science Team
+          - name: NASA ICESat-2 Science Team
             url: https://icesat-2.gsfc.nasa.gov/science_definition_team
+          - name: NSF CloudBank
+            url: https://www.cloudbank.org/
+          - name: NASA ESDS
+            url: https://www.earthdata.nasa.gov/
+
+
     hub:
       allowNamedServers: true
       config:
@@ -57,6 +66,10 @@ basehub:
           - CryoInTheCloud:cryoclouduser
           - CryoInTheCloud:cryocloudadvanced
           - CryoInTheCloud:csdms-2025-workshop
+          - CryoInTheCloud:fish-pace
+          - CryoInTheCloud:continuous-dems-workshops
+          - oceanhackweek:ohw26-organizers-fellows-mentors
+          - oceanhackweek:ohw26-participants
         Authenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to persist auth state
@@ -64,12 +77,12 @@ basehub:
           - tsnow03
           - JessicaS11
           - jdmillstein
-          - dfelikson
           - fperez
           - scottyhq
           - jomey
           - rwegener2
           - itcarroll
+          - eeholmes
       loadRoles:
         user:
           scopes:
@@ -78,6 +91,15 @@ basehub:
           - shares!user
           - read:users:name
           - list:users
+          # Access to binder service
+          - access:services!service=binder
+          - access:services!service=dask-gateway
+          - access:services!service=usage-quota
+        server:
+          scopes:
+          - self
+          - access:services!service=dask-gateway
+          - users:activity!user
     singleuser:
       cloudMetadata:
         blockWithIptables: false
@@ -114,7 +136,7 @@ basehub:
                 default: true
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
-                  image: quay.io/cryointhecloud/cryo-hub-image:b39d8d901d7b
+                  image: quay.io/cryointhecloud/cryo-hub-image:43421f450d6a
               02-pythonpace:
                 display_name: Ocean Biology Python Image
                 description: Ocean Biology environment used by the PACE mission
@@ -139,6 +161,11 @@ basehub:
                 kubespawner_override:
                   # From https://2i2c.freshdesk.com/a/tickets/1537
                   image: openscapes/matlab:latest
+              06-oceanhackweek:
+                display_name: OceanHackWeek Python Image
+                description: OceanHackWeek environment with many geospatial libraries for tutorials and projects
+                kubespawner_override:
+                  image: ghcr.io/oceanhackweek/python:latest
           resource_allocation:
             display_name: Resource Allocation
             choices:
@@ -149,7 +176,11 @@ basehub:
                 - CryoInTheCloud:CryoCloudAdvanced
                 - CryoInTheCloud:CryoCloudUser
                 - CryoInTheCloud:csdms-2025-workshop
+                - CryoInTheCloud:fish-pace
+                - CryoInTheCloud:continuous-dems-workshops
                 - 2i2c-org:hub-access-for-2i2c-staff
+                - oceanhackweek:ohw26-organizers-fellows-mentors
+                - oceanhackweek:ohw26-participants
                 kubespawner_override:
                   mem_guarantee: 1951419879
                   mem_limit: 1951419879

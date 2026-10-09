@@ -63,7 +63,7 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 ```
 
 ```{important}
-At this point, it is also a good idea to enable [automatic backups of the the NFS server](howto:filesystem-backups:enable:aws) as well.
+At this point, it is also a good idea to enable [automatic backups of the the NFS server](#howto:filesystem-backups:enable:aws) as well.
 ```
 
 ## Enabling `jupyterhub-home-nfs`
@@ -130,7 +130,7 @@ To check whether the NFS server is running properly, see the [Troubleshooting](#
 
 ## Migrating existing home directories and switching to the new NFS server
 
-See [](migrate-data) for instructions on performing these steps.
+See [](#migrate-data) for instructions on performing these steps.
 
 ## Enforcing storage quotas
 
@@ -207,7 +207,7 @@ The keys under `c.QuotaManager.quota_overrides` must be the names of directories
 
 ## Increasing the size of the disk used by the NFS server
 
-If the disk used by the NFS server is close to being full, we may need to increase its size. This can be done by following the instructions in [](howto:increase-disk-size).
+If the disk used by the NFS server is close to being full, we may need to increase its size. This can be done by following the instructions in [](#howto:increase-disk-size).
 
 ## Troubleshooting
 
@@ -244,4 +244,4 @@ xfs_quota -x -c 'report -N -p'
 
 This should show us the list of directories being monitored for quota enforcement, and the current usage and quotas for each of the home directories.
 
-If a user exceeds their quota, the user's pod will not be able to start successfully. A hub admin will need to free up space in the user's home directory to allow the pod to start, using [the `allusers` feature](topic:storage:allusers).
+If a user exceeds their quota, the user's pod will not be able to start successfully. A hub admin will need to free up space in the user's home directory to allow the pod to start, using [the `allusers` feature](#topic:storage:allusers).

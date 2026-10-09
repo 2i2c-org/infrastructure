@@ -10,6 +10,10 @@ inputs:
     required: true
   assignee:
     default: ''
+  parent:
+    default: ''
+  blocked_by:
+    default: ''
   fields:
     required: true
   values:
@@ -19,19 +23,25 @@ inputs:
   project_board_url:
     required: true
     default: https://github.com/orgs/2i2c-org/projects/57
-
+outputs:
+  issue_number:
+    value: ${{ steps.create-issue.outputs.issue_number }}
 runs:
   using: composite
   steps:
   - name: Create issue
+    id: create-issue
     run: |
       issue=$(gh issue create \
       --label "recurrent" \
       --label "${{ inputs.label }}" \
       --assignee "${{ inputs.assignee }}" \
       --title "${{ inputs.title }}" \
-      --body "${{ inputs.body }}")
+      --body "${{ inputs.body }}" \
+      --parent "${{ inputs.parent }}" \
+      --blocked-by "${{ inputs.blocked_by }}")
       echo "issue=$issue" >> $GITHUB_ENV
+      echo "issue_number=$(echo $issue)" >> $GITHUB_OUTPUT
     env:
       GH_TOKEN: ${{ inputs.GH_TOKEN }}
       GH_REPO: ${{ github.repository }}

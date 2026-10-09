@@ -26,7 +26,8 @@ local c = cluster.withNodeGroupConfigOverride(
       'workshop',
     ],
     notebookGPUNodeGroups=[],
-    nodeGroupGenerations=['d']
+    // TODO: delete r5.xlarge-d and r5.4xlarge-d
+    nodeGroupGenerations=['d', 'e']
   ), kind='core', overrides={ maxSize: 2 }
 );
 c

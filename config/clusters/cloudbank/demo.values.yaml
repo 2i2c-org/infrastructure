@@ -13,6 +13,10 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
     homepage:
+      # Required by shared-password auth so the login page shows the
+      # username/password form. Remove once
+      # https://github.com/2i2c-org/default-hub-homepage/pull/51 is merged.
+      gitRepoBranch: unify-logins-2
       templateVars:
         org:
           name: 2i2c / CloudBank Hubs Demo
@@ -29,17 +33,41 @@ jupyterhub:
           url: http://cloudbank.org/
   hub:
     config:
+      # ---------------------------------------------------------------
+      # PREVIOUS AUTH SCHEME - GitHub OAuth against the ucb-ds org.
+      # To restore: uncomment this block, delete the shared-password
+      # block below, and remove the `gitRepoBranch` line added above.
+      # Nothing else is needed - `enc-demo-git.secret.values.yaml` is
+      # still listed in cluster.yaml and still holds the
+      # GitHubOAuthenticator client_id/client_secret; it is simply
+      # inert while authenticator_class is shared-password.
+      #
+      # JupyterHub:
+      #   authenticator_class: github
+      # GitHubOAuthenticator:
+      #   allowed_organizations:
+      #   - ucb-ds
+      #   scope:
+      #   - read:org
+      # Authenticator:
+      #   admin_users:
+      #   - sean-morris
+      #   - ericvd-ucb
+      # ---------------------------------------------------------------
       JupyterHub:
-        authenticator_class: github
-      GitHubOAuthenticator:
-        allowed_organizations:
-        - ucb-ds
-        scope:
-        - read:org
+        admin_access: true
+        authenticator_class: shared-password
       Authenticator:
+        # We don't use the per-group password feature of shared-passwords yet
+        manage_groups: false
+        # Allow everyone with the password to log in
+        allow_all: true
         admin_users:
-        - sean-morris
-        - ericvd-ucb
+        - sean.smorris@berkeley.edu
+        - ericvd@berkeley.edu
+        # lowercase: JupyterHub normalizes typed usernames to lowercase,
+        # and with shared-password the user types their own username
+        - caroline.hutchings@norcocollege.edu
   cull:
     # Cull after 30min of inactivity
     every: 300

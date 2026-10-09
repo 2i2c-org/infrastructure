@@ -1,5 +1,8 @@
 local escapeName(name) = std.strReplace(name, '.', '-');
 local lowerCaseLetter(i) = std.char(97 + i);
+// Build 63-char (max) name with untouched generation.
+local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(generation)] + '-' + generation;
+
 {
   /**
    Create a managed nodegroup config that can autoscale from 0.
@@ -58,11 +61,12 @@ local lowerCaseLetter(i) = std.char(97 + i);
     // Include name prefix, escaped instance type (because names can't have .)
     // and name generation
     local instanceTypes = if std.isString(instanceType) then [instanceType] else instanceType,
-    name: std.join('-', [
-      namePrefix,
-    ] + std.map(escapeName, instanceTypes) + [
+    name: buildName(
+      [
+        namePrefix,
+      ] + std.map(escapeName, instanceTypes),
       generation,
-    ]),
+    ),
     availabilityZones: availabilityZones,
     minSize: minSize,
     maxSize: maxSize,
@@ -82,6 +86,10 @@ local lowerCaseLetter(i) = std.char(97 + i);
     tags: makeCaLabelTags(self.labels) + makeCaTaintTags(self.taints) + {
       ManagedBy: '2i2c',
       '2i2c.org/cluster-name': clusterName,
+
+      // Newer style tags for JHCM
+      'JHCM:Attributable': 'true',
+      'JHCM:ClusterName': clusterName,
     } + extraTags,
   } + (
     // Allow custom kubelet config
@@ -109,6 +117,7 @@ local lowerCaseLetter(i) = std.char(97 + i);
     generation,
     minSize,
     maxSize,
+    extraTags={}
   ):: $.makeNodeGroup(
     clusterName=clusterName,
     namePrefix='core',
@@ -120,7 +129,8 @@ local lowerCaseLetter(i) = std.char(97 + i);
     },
     extraTags={
       '2i2c:node-purpose': 'core',
-    },
+      'JHCM:Purpose': 'core',
+    } + extraTags,
     minSize=minSize,
     maxSize=maxSize,
     generation=generation
@@ -173,6 +183,8 @@ local lowerCaseLetter(i) = std.char(97 + i);
     extraTags={
       '2i2c:node-purpose': 'user',
       '2i2c:hub-name': hubName,
+      'JHCM:Purpose': 'user',
+      'JHCM:HubName': hubName,
     } + extraTags,
     extraKubeletConfig={
       singleProcessOOMKill: true,
@@ -190,7 +202,10 @@ local lowerCaseLetter(i) = std.char(97 + i);
     gpuType,
     generation,
     minSize,
-    maxSize
+    maxSize,
+    extraLabels={},
+    extraTaints=[],
+    extraTags={}
   ):: $.makeNotebookCPUNodeGroup(
     clusterName=clusterName,
     hubName=hubName,
@@ -202,10 +217,10 @@ local lowerCaseLetter(i) = std.char(97 + i);
     extraLabels={
       '2i2c/has-gpu': 'true',
       'k8s.amazonaws.com/accelerator': gpuType,
-    },
+    } + extraLabels,
     extraTags={
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': std.toString(gpuCount),
-    },
+    } + extraTags,
 
     extraTaints=[
       {
@@ -213,7 +228,7 @@ local lowerCaseLetter(i) = std.char(97 + i);
         value: 'present',
         effect: 'NoSchedule',
       },
-    ]
+    ] + extraTaints
   ) + (
     // Turn off fabric on GPU nodes, as they are not nvswitch devices
     if gpuType == 'nvidia-tesla-t4' then {
@@ -231,6 +246,9 @@ local lowerCaseLetter(i) = std.char(97 + i);
     generation,
     minSize,
     maxSize,
+    extraLabels={},
+    extraTaints=[],
+    extraTags={}
   ):: $.makeNodeGroup(
         clusterName,
         'dask-%s' % [hubName],
@@ -242,7 +260,7 @@ local lowerCaseLetter(i) = std.char(97 + i);
         extraLabels={
           'k8s.dask.org/node-purpose': 'worker',
           '2i2c/hub-name': hubName,
-        },
+        } + extraLabels,
 
         extraTaints=[
           {
@@ -255,10 +273,12 @@ local lowerCaseLetter(i) = std.char(97 + i);
             value: 'worker',
             effect: 'NoSchedule',
           },
-        ],
+        ] + extraTaints,
         extraTags={
           '2i2c:node-purpose': 'worker',
-        },
+          'JHCM:Purpose': 'dask-worker',
+          'JHCM:HubName': hubName,
+        } + extraTags,
         extraKubeletConfig={
           singleProcessOOMKill: true,
         },
@@ -290,7 +310,9 @@ local lowerCaseLetter(i) = std.char(97 + i);
     notebookGPUNodeGroups=[],
     daskInstanceTypes=[],
     nodeGroupGenerations=[],
-    regionSize=3
+    regionSize=3,
+    extraTags={},
+    extraAddons=[]
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -301,7 +323,10 @@ local lowerCaseLetter(i) = std.char(97 + i);
       tags+: {
         ManagedBy: '2i2c',
         '2i2c.org/cluster-name': name,
-      },
+
+        'JHCM:Attributable': 'true',
+        'JHCM:ClusterName': name,
+      } + extraTags,
     },
     availabilityZones: ['%s%s' % [region, lowerCaseLetter(i)] for i in std.range(0, regionSize - 1)],
     iam: {
@@ -317,7 +342,10 @@ local lowerCaseLetter(i) = std.char(97 + i);
       { version: 'latest', tags: {
         ManagedBy: '2i2c',
         '2i2c.org/cluster-name': name,
-      } } + addon
+
+        'JHCM:Attributable': 'true',
+        'JHCM:ClusterName': name,
+      } + extraTags } + addon
       for addon in
         [
           { name: 'coredns' },
@@ -349,7 +377,7 @@ local lowerCaseLetter(i) = std.char(97 + i);
                   enableMetrics: true
             |||,
           },
-        ]
+        ] + extraAddons
     ],
     managedNodeGroups: [
       $.makeCoreNodeGroup(
@@ -360,7 +388,8 @@ local lowerCaseLetter(i) = std.char(97 + i);
         minSize=1,
         // We only want 1 core node running.
         // For clusters where we want more, it should be a manual override
-        maxSize=1
+        maxSize=1,
+        extraTags=extraTags
       )
       for generation in nodeGroupGenerations
     ] + [
@@ -371,7 +400,8 @@ local lowerCaseLetter(i) = std.char(97 + i);
         instanceType=instanceType,
         generation=generation,
         minSize=0,
-        maxSize=100
+        maxSize=100,
+        extraTags=extraTags
       )
       for hubName in hubs
       for instanceType in notebookCPUInstanceTypes
@@ -389,7 +419,8 @@ local lowerCaseLetter(i) = std.char(97 + i);
         gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4'),
         generation=generation,
         minSize=0,
-        maxSize=100
+        maxSize=100,
+        extraTags=extraTags
       )
       for hubName in hubs
       for gpuConfig in notebookGPUNodeGroups
@@ -403,7 +434,8 @@ local lowerCaseLetter(i) = std.char(97 + i);
         instanceType=instanceType,
         generation=generation,
         minSize=0,
-        maxSize=100
+        maxSize=100,
+        extraTags=extraTags
       )
       for hubName in hubs
       for instanceType in daskInstanceTypes

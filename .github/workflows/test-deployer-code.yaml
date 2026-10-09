@@ -4,37 +4,29 @@ on:
   push:
     branches:
     - main
-    paths:
-    - deployer/**
+    paths: &paths
+    - src/**
     - tests/**
-    - requirements.txt
-    - dev-requirements.txt
     - pyproject.toml
     tags:
     - '**'
   pull_request:
     branches:
     - main
-    paths:
-    - deployer/**
-    - tests/**
-    - requirements.txt
-    - dev-requirements.txt
-    - pyproject.toml
+    paths: *paths
   workflow_dispatch:
 
 jobs:
   test-deployer:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - uses: actions/setup-python@v6
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
       with:
         python-version: '3.13'
     - name: Install dependencies
       run: |
         pip install -U pip
-        pip install --editable .
+        pip install --editable . --group test
     - name: Run tests
-      run: |
-        python -m pytest -vvv --color=yes
+      run: python -m pytest -vvv --color=yes

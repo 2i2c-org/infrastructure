@@ -28,7 +28,7 @@ This documentation covers the steps to take to update the version of these depen
     ```
 
 1. *For any dependencies that will be bumped, check the release notes for mention of any breaking changes we should be aware of.*
-   
+
    If you find a breaking change or are unsure of a specific upgrade, you can revert the change in the PR, commit and push it.
 
 1. *Deploy the PR to a test cluster and monitor it.*

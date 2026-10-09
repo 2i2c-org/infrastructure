@@ -1,6 +1,9 @@
 name: dubois
 provider: gcp
 provider_url: https://console.cloud.google.com/kubernetes/clusters/details/us-central1/dubois-cluster/observability?project=dubois-436615
+metadata:
+  2i2c:
+    hubspot_deal_id: 86221243093
 gcp:
   key: enc-deployer-credentials.secret.json
   project: dubois-436615

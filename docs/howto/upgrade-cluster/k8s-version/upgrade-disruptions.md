@@ -30,20 +30,20 @@ if it does and in what manner.
 Disruptions to the core node pool is a disruption to workloads running on it,
 and there are a few workloads that when disrupted would disrupt users.
 
-### ingress-nginx-controller pod(s) disruptions
+### nginx-ingress-controller pod(s) disruptions
 
-The `support` chart we install in each cluster comes with the `ingress-nginx`
-chart. The `ingress-nginx` chart creates one or more `ingress-nginx-controller`
+The `support` chart we install in each cluster comes with the `nginx-ingress`
+chart. The `nginx-ingress` chart creates one or more `nginx-ingress-controller`
 pods that are proxying network traffic associated with incoming connections.
 
 To shut down such pod means to break connections from users working against the
 user servers. A broken connection can be re-established if there is another
 replica of this pod ready to accept a new connection.
 
-We are currently running only one replica of the `ingress-nginx-controller` pod,
+We are currently running only one replica of the `nginx-ingress-controller` pod,
 and we won't have issues with this during rolling updates, such as when the
 Deployment's pod template specification is changed or when manually running
-`kubectl rollout restart -n support deploy/support-ingress-nginx-controller`. We
+`kubectl rollout restart -n support deploy/support-nginx-ingress-controller`. We
 will however have broken connections and user pods unable to establish new connections
 directly if `kubectl delete` is used on this single pod, or `kubectl drain` is
 used on the node.

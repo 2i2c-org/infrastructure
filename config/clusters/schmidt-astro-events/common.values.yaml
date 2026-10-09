@@ -1,0 +1,146 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+dask-gateway:
+  enabled: false
+jupyterhub:
+  custom:
+    daskhubSetup:
+      enabled: false
+    s3files:
+      enabled: true
+      mounts:
+        schmidt-observatory-system:
+          bucketName: schmidt-observatory-system
+    2i2c:
+      add_staff_user_ids_to_admin_users: false
+    homepage:
+      # Remove once https://github.com/2i2c-org/default-hub-homepage/pull/51
+      # is merged
+      gitRepoBranch: unify-logins-2
+      templateVars:
+        org:
+          name: Schmidt Observatory System Science Symposium
+          logo_url: https://symposium.schmidtobservatorysystem.org/static/assets/logo-nav.png
+          url: https://symposium.schmidtobservatorysystem.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: Schmidty Obervatory System
+          url: https://www.schmidtsciences.org/schmidt-observatory-system/
+    singleuserAdmin:
+      extraVolumeMounts:
+        01-allusers-volumemount:
+          name: home
+          mountPath: /home/jovyan/allusers
+        02-allusers-rstudio-volumemount:
+          name: home
+          mountPath: /home/rstudio/allusers
+  singleuser:
+    extraFiles:
+      gitconfig-system:
+        mountPath: /etc/gitconfig
+        stringData: |
+          [credential "https://github.com"]
+          helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 5113167
+          useHttpPath = true
+    cloudMetadata:
+      blockWithIptables: false
+    defaultUrl: /lab
+    profileList:
+    - display_name: Choose your environment and resources
+      default: true
+      profile_options:
+        image:
+          display_name: Environment
+          dynamic_image_building:
+            enabled: true
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            description: Specify your own docker image (must have python and jupyterhub installed in it)
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            01-florence:
+              display_name: Florence Symposium 2026
+              description: |
+                Pangeo + Schmidt Base + Packages for Florence Symposium (To Be Renamed)
+              kubespawner_override:
+                image: quay.io/2i2c/schmidt-astro-florence-symposium:2026-09-28
+            02-base:
+              display_name: Base Schmidt Observatory Image
+              description: Pangeo + Astro Packages
+              kubespawner_override:
+                image: quay.io/2i2c/schmidt-astro-base:2026-09-28
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~1.9 CPUs
+              description: Up to ~8 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7602104545
+                mem_limit: 7602104545
+                cpu_guarantee: 1.882825
+                cpu_limit: 7.5313
+                node_selector:
+                  node.kubernetes.io/instance-type: m8i.2xlarge
+            mem_14_gb:
+              display_name: ~14 GB RAM, ~4 CPUs
+              description: Up to ~8 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 15204209090
+                mem_limit: 15204209090
+                cpu_guarantee: 3.76565
+                cpu_limit: 7.5313
+                node_selector:
+                  node.kubernetes.io/instance-type: m8i.2xlarge
+            mem_28_gb:
+              display_name: ~28 GB RAM, ~8 CPUs
+              description: ~8 CPUs always available
+              default: true
+              kubespawner_override:
+                mem_guarantee: 30408418181
+                mem_limit: 30408418181
+                cpu_guarantee: 7.5313
+                cpu_limit: 7.5313
+                node_selector:
+                  node.kubernetes.io/instance-type: m8i.2xlarge
+            mem_56_gb:
+              display_name: ~56 GB RAM, ~15 CPUs
+              description: ~15 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 59865764331
+                mem_limit: 59865764331
+                cpu_guarantee: 15.3517
+                cpu_limit: 15.3517
+                node_selector:
+                  node.kubernetes.io/instance-type: m8i.4xlarge
+  scheduling:
+    userScheduler:
+      enabled: true
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: shared-password
+      Authenticator:
+        enable_auth_state: false
+        manage_groups: false
+        allow_all: true
+binderhub-service:
+  enabled: true
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/schmidt-astro-events-
+  buildPodsRegistryCredentials:
+    server: https://quay.io
+    username: imagebuilding-non-gcp-hubs+image_builder

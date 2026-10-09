@@ -1,0 +1,12 @@
+nfs:
+  pv:
+    serverIP: 10.100.215.21
+jupyterhub:
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://uw-escience-scratch-staging/$(JUPYTERHUB_USER)
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-061c43dc309660f3d
+

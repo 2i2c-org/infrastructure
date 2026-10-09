@@ -1,0 +1,57 @@
+name: ucec
+provider: gcp
+provider_url: https://console.cloud.google.com/kubernetes/clusters/details/us-central1/ucec-cluster/observability?project=ucec-503914
+metadata:
+  2i2c:
+    hubspot_deal_id: 264449029831
+gcp:
+  key: enc-deployer-credentials.secret.json
+  project: ucec-503914
+  cluster: ucec-cluster
+  # We default to a regional cluster
+  zone: us-central1
+  billing:
+    # Set to true if billing for this cluster is paid for by the 2i2c card
+    paid_by_us: true
+    bigquery:
+      # contains information about bigquery billing export (https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
+      # for calculating how much this cluster costs us. Required if `paid_by_us` is
+      # set to true.
+      # the id of gcp project where bigquery dataset lives, which is usually the cluster's name
+      project: ucec
+      # the default name of the dataset from the docs
+      dataset: cloud_costs
+      # the 2i2c billing account id
+      billing_id: 0157F7-E3EA8C-25AC3C
+support:
+  helm_chart_values_files:
+  - support.values.yaml
+  - enc-support.secret.values.yaml
+hubs:
+- name: staging
+    # Tip: consider changing this to something more human friendly
+  display_name: UCEC Staging
+  domain: staging.ucec.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - staging.values.yaml
+  - enc-staging.secret.values.yaml
+- name: ebfm
+    # Tip: consider changing this to something more human friendly
+  display_name: EBFM
+  domain: ebfm.ucec.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - ebfm.values.yaml
+  - enc-ebfm.secret.values.yaml
+- name: seamap
+    # Tip: consider changing this to something more human friendly
+  display_name: SeaMap
+  domain: seamap.ucec.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - seamap.values.yaml
+  - enc-seamap.secret.values.yaml

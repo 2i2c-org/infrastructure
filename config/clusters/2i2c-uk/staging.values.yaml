@@ -10,7 +10,7 @@ jupyterhub:
   singleuser:
     image:
       name: pangeo/pangeo-notebook
-      tag: 2023.02.27
+      tag: 2025.01.24
     defaultUrl: /lab
   custom:
     2i2c:
