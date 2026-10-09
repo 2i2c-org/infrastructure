@@ -1,0 +1,56 @@
+{{- /*
+  The template renders a set of Ingress resources to redirect incoming requests
+  made to one domain (from) to another (to).
+
+  ref: https://kubernetes.github.io/ingress-nginx/examples/rewrite/
+*/}}
+{{- range .Values.redirects.rules }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-redirect-{{ .from }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    # for nginx-ingress controller
+    nginx.org/server-snippets: |
+      rewrite "^\/(?!\.well-known\/acme-challenge)(.*)$" "$scheme://{{ .to }}/$1" {{ .type | default "redirect" }};
+    # Allow cert-manager to edit this ingress
+    # as nginx-ingress considers duplicate hosts "host collisions"
+    # causing problems when cert-manager creates the temporary ACME ingress
+    acme.cert-manager.io/http01-edit-in-place: "true"
+
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ .from }}
+      secretName: redirect-{{ .from }}-tls
+  rules:
+    - host: {{ .from }}
+      http:
+        paths:
+        - backend:
+            service:
+              name: redirects-service
+              port:
+                name: http
+          path: /
+          pathType: Prefix
+{{- /*
+  A YAML document separator is used below as the template could render multiple
+  separate k8s resources.
+*/}}
+---
+{{- end }}
+---
+# Define an empty service that can be targeted by redirects
+apiVersion: v1
+kind: Service
+metadata:
+  name: redirects-service
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+
