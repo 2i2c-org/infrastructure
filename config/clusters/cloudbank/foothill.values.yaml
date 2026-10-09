@@ -44,6 +44,10 @@ jupyterhub:
             username_derivation:
               username_claim: email
       Authenticator:
+        allowed_users:
+        - anniebento316@gmail.com
+        - thumusreecharan@gmail.com
+        - sean.smorris@gmail.com
         admin_users:
         - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu

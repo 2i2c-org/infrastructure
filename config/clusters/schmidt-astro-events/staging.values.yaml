@@ -2,6 +2,11 @@ nfs:
   pv:
     serverIP: 10.100.140.233
 jupyterhub:
+  custom:
+    s3files:
+      mounts:
+        schmidt-observatory-system:
+          volumeHandle: fs-00abd9668906bc93d
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://schmidt-astro-events-scratch-staging/$(JUPYTERHUB_USER)

@@ -5,7 +5,7 @@ The 2i2c hubs use a custom `hub` image that is defined in the [helm-charts direc
 ## The `hub` image
 
 This custom hub image is built on top of the [jupyterhub/k8s-hub](https://hub.docker.com/r/jupyterhub/k8s-hub) Docker image and configured based on the needs of 2i2c hubs.
-This allows adding and configuring other packages like the [jupyterhub-configurator](https://github.com/yuvipanda/jupyterhub-configurator) or using specific versions of the spawner and authenticator.
+This allows adding and configuring other packages or using specific versions of the spawner and authenticator.
 More information about this custom image can be found in the [Dockerfile](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub/Dockerfile) itself.
 
 

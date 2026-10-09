@@ -14,3 +14,5 @@ jupyterhub-home-nfs:
     config:
       QuotaManager:
         hard_quota: 50 # in GiB
+        quota_overrides:
+          _shared: 615

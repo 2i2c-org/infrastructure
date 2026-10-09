@@ -194,6 +194,23 @@ basehub:
           - betolink
           - ateucher
           - ronnyhdez
+        UsageQuotaManager:
+          failover_open: true
+          scope_fallback_strategy:
+            empty:
+              resource: memory
+              limit: 5000G
+              window: 30
+            intersection: max
+          policy:
+          - resource: memory
+            limit: 25000G
+            window: 30
+            scope:
+              group:
+              - NASA-Openscapes:defined-term-access-2i2c
+        UsageViewer:
+          enable_compute: true
   binderhub-service:
     enabled: true
     config:

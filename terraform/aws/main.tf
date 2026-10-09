@@ -5,7 +5,7 @@ terraform {
     aws = {
       # https://registry.terraform.io/providers/hashicorp/aws/latest
       source  = "hashicorp/aws"
-      version = "~> 5.89"
+      version = "~> 6.67"
     }
 
     mysql = {

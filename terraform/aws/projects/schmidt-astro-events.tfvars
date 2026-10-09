@@ -62,7 +62,9 @@ hub_cloud_permissions = {
             ],
             "Resource": [
               "arn:aws:s3:::schmidt-observatory-system",
-              "arn:aws:s3:::schmidt-observatory-system/*"
+              "arn:aws:s3:::schmidt-observatory-system/*",
+              "arn:aws:s3:::schmidt-yuvi-test-bucket",
+              "arn:aws:s3:::schmidt-yuvi-test-bucket/*"
             ]
           }
         ]
@@ -86,7 +88,9 @@ hub_cloud_permissions = {
             ],
             "Resource": [
               "arn:aws:s3:::schmidt-observatory-system",
-              "arn:aws:s3:::schmidt-observatory-system/*"
+              "arn:aws:s3:::schmidt-observatory-system/*",
+              "arn:aws:s3:::schmidt-yuvi-test-bucket",
+              "arn:aws:s3:::schmidt-yuvi-test-bucket/*"
             ]
           }
         ]
@@ -96,3 +100,14 @@ hub_cloud_permissions = {
 }
 
 enable_jupyterhub_cost_monitoring = true
+
+s3files = {
+  "schmidt-observatory-system" : {
+    tags = {
+      "2i2c:hub-name" : "workshop",
+      "JHCM:HubName" : "workshop"
+    },
+    bucket = "schmidt-observatory-system"
+    hubs   = ["workshop", "staging"]
+  }
+}

@@ -88,6 +88,10 @@ local jupyterhubHomeNFSConfig = {
         projects_file: '/export/%s/.projects' % hub_name,
         projid_file: '/export/%s/.projid' % hub_name,
         log_level: 'INFO',
+        quota_overrides: {
+          _shared: 100,
+          '_shared-public': 100,
+        },
       },
     },
   },

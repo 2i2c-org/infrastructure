@@ -261,7 +261,23 @@ properties:
           - singleuser
           - 2i2c
           - auth
+          - s3files
         properties:
+          s3files:
+            type: object
+            properties:
+              enabled:
+                type: boolean
+              mounts:
+                type: object
+                patternProperties:
+                  "^\\w+$":
+                    type: object
+                    properties:
+                      bucketName:
+                        type: string
+                      volumeHandle:
+                        type: string
           auth:
             type: object
             additionalProperties: false
@@ -423,18 +439,34 @@ properties:
                       custom_html:
                         type: string
                   funded_by:
-                    type: object
-                    additionalProperties: false
-                    required:
-                      - name
-                      - url
-                    properties:
-                      name:
-                        type: string
-                      url:
-                        type: string
-                      custom_html:
-                        type: string
+                    oneOf:
+                      - type: object
+                        additionalProperties: false
+                        required:
+                          - name
+                          - url
+                        properties:
+                          name:
+                            type: string
+                          url:
+                            type: string
+                          custom_html:
+                            type: string
+                      - type: array
+                        items:
+                          type: object
+                          additionalProperties: false
+                          required:
+                            - name
+                            - url
+                          properties:
+                            name:
+                              type: string
+                            url:
+                              type: string
+                            custom_html:
+                              type: string
+
           singleuserAdmin:
             type: object
             additionalProperties: false

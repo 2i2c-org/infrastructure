@@ -72,7 +72,7 @@ persistent_disks = {
     name_suffix = "cloud-county"
   }
   "cmu" = {
-    size        = 300
+    size        = 500
     name_suffix = "cmu"
   }
   "cra" = {
@@ -194,10 +194,6 @@ persistent_disks = {
   "lacc" = {
     size        = 140
     name_suffix = "lacc"
-  }
-  "lahc" = {
-    size        = 25
-    name_suffix = "lahc"
   }
   "laney" = {
     size        = 200

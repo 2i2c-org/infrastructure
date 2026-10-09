@@ -27,7 +27,13 @@ local c = cluster.makeCluster(
   extraTags={
     'JHCM:Attributable': 'true',
     'JHCM:ClusterName': 'schmidt-astro-events',
-  }
+  },
+  extraAddons=[
+    {
+      name: 'aws-efs-csi-driver',
+      serviceAccountRoleARN: 'arn:aws:iam::998493219388:role/schmidt-astro-events-s3files-efs-csi-driver',
+    },
+  ]
 );
 
 c
