@@ -53,6 +53,9 @@ jupyterhub:
           name: Clark Atlanta University
           url: https://www.cau.edu/
   hub:
+    image:
+      name: quay.io/2i2c/pilot-hub
+      tag: 0.0.1-0.dev.git.16609.hb23fbd448
     config:
       JupyterHub:
         authenticator_class: cilogon
