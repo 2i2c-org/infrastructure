@@ -19,16 +19,9 @@ local c = cluster.withNodeGroupConfigOverride(
         instanceType: 'g4dn.xlarge',
       },
     ],
-    nodeGroupGenerations=['a', 'b']
+    nodeGroupGenerations=['c']
   ),
-  kind='notebook',
-  overrides={
-    // 80 GiB reserved + 4*100GiB (four users)
-    volumeSize: 480,
-    // Ensure that /tmp is faster
-    volumeIOPS: 4000,
-    volumeThroughput: 300,
-  }
+  kind='notebook'
 );
 
 c
