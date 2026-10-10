@@ -42,6 +42,8 @@ jupyterhub-home-nfs:
 
 jupyterhub:
   custom:
+    usageQuotas:
+      enabled: false
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
       extraVolumeMounts:

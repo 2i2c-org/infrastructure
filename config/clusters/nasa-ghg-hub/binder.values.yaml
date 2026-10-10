@@ -13,6 +13,8 @@ jupyterhub:
     # Also cull all users more than 12h old
     users: true
   custom:
+    usageQuotas:
+      enabled: false
     binderhubUI:
       enabled: true
     2i2c:
