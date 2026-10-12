@@ -24,21 +24,24 @@ resource "google_monitoring_notification_channel" "pagerduty_cloudbank" {
 }
 
 resource "google_monitoring_alert_policy" "cluster_autoscaler_out_of_resources_alert" {
-  display_name = "Autoscaler out of resources"
+  display_name = "Autoscaler cannot scale up"
   project      = var.project_id
   combiner     = "OR"
   enabled      = true
   severity     = "CRITICAL"
   conditions {
-    display_name = "Scale Up Error Out Of Resources"
+    display_name = "Out of resources in zone"
     condition_matched_log {
       filter = <<-EOT
       logName="projects/${var.project_id}/logs/container.googleapis.com%2Fcluster-autoscaler-visibility"
       (jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.out.of.resources")
       EOT
+      label_extractors = {
+        zone           = "REGEXP_EXTRACT(jsonPayload.resultInfo.results.errorMsg.parameters[0], \"zones/([^/]+)\")"
+        instance_group = "REGEXP_EXTRACT(jsonPayload.resultInfo.results.errorMsg.parameters[0], \"instanceGroups/([^/]+)\")"
+      }
     }
   }
-
   alert_strategy {
     notification_rate_limit {
       period = "3600s"
