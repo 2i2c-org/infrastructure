@@ -37,14 +37,27 @@ resource "google_monitoring_alert_policy" "cluster_autoscaler_out_of_resources_a
       (jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.out.of.resources")
       EOT
       label_extractors = {
-        zone           = "REGEXP_EXTRACT(jsonPayload.resultInfo.results.errorMsg.parameters[0], \"zones/([^/]+)\")"
-        instance_group = "REGEXP_EXTRACT(jsonPayload.resultInfo.results.errorMsg.parameters[0], \"instanceGroups/([^/]+)\")"
+        zone           = "REGEXP_EXTRACT(jsonPayload, \"zones/([^/]+)\")"
+        instance_group = "REGEXP_EXTRACT(jsonPayload, \"instanceGroups/([^/]+)\")"
       }
     }
   }
+
+  documentation {
+    mime_type = "text/markdown"
+    subject   = "subject"
+    content   = <<-EOT
+      **GKE Cluster Autoscaler could not scale up due to resource limits.**
+
+      - **Zone:** $${log.extracted_label.zone}
+      - **Instance group:** $${log.extracted_label.instance_group}
+
+      EOT
+  }
+
   alert_strategy {
     notification_rate_limit {
-      period = "3600s"
+      period = "1800s"
     }
 
     # seven days
