@@ -185,8 +185,7 @@ local makePVReleasedAlert = function(
   summary,
   severity,
                             ) {
-  alert: 'PV Released The bound PVC was deleted, but the underlying storage was not reclaimed',
-  // Ignore continuous image pre-pullers, as on large images it can take more than 30min to pull
+  alert: 'The bound PVC was deleted, but the underlying storage was not reclaimed',
   expr: |||
     max by (namespace, persistentvolume) (kube_persistentvolume_status_phase{phase="Released"}) > 0
   |||,
@@ -683,7 +682,7 @@ local scratchDiskVACConfigMapping = {
             name: 'PV stuck in state Released, storage not claimed',
             rules: [
               makePVReleasedAlert(
-                'PV Released The bound PVC was deleted, but the underlying storage was not reclaimed.',
+                'The bound PVC was deleted, but the underlying storage was not reclaimed.',
                 'action needed this week'
               ),
             ],
