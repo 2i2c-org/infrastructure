@@ -180,6 +180,26 @@ local makePodStuckInPendingForTooLongAlert = function(
   },
 };
 
+
+local makePVReleasedAlert = function(
+  summary,
+  severity,
+                            ) {
+  alert: 'PV Released The bound PVC was deleted, but the underlying storage was not reclaimed',
+  // Ignore continuous image pre-pullers, as on large images it can take more than 30min to pull
+  expr: |||
+    max by (namespace, persistentvolume) (kube_persistentvolume_status_phase{phase="Released"}) > 0
+  |||,
+  'for': '30m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
 local makePodStuckInTerminatingForTooLongAlert = function(
   summary,
   severity,
@@ -655,6 +675,15 @@ local scratchDiskVACConfigMapping = {
               ),
               makePodStuckInTerminatingForTooLongAlert(
                 'Pod is stuck in Terminating state for a suspicious long time',
+                'action needed this week'
+              ),
+            ],
+          },
+          {
+            name: 'PV stuck in state Released, storage not claimed',
+            rules: [
+              makePVReleasedAlert(
+                'PV Released The bound PVC was deleted, but the underlying storage was not reclaimed.',
                 'action needed this week'
               ),
             ],
