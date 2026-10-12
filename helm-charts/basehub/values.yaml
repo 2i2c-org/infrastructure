@@ -1761,21 +1761,24 @@ jupyterhub:
           from jupyterhub_usage_quotas import setup_usage_quotas
           setup_usage_quotas(c)
 
-          c.JupyterHub.services['usage-quota'] = {
-            'url': 'http://hub:9000',
-            'display': True,
-            'oauth_no_confirm': True,
-            'command': [
-              'python',
-              '-m',
-              'jupyterhub_usage_quotas.services.usage_viewer',
-              '--config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py',
-            ],
-            'environment': {
-                "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME"),
-                "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD")
+          c.JupyterHub.services.append(
+            {
+              'name': 'usage-quota',
+              'url': 'http://hub:9000',
+              'display': True,
+              'oauth_no_confirm': True,
+              'command': [
+                'python',
+                '-m',
+                'jupyterhub_usage_quotas.services.usage_viewer',
+                '--config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py',
+              ],
+              'environment': {
+                  "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME"),
+                  "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD")
+              }
             }
-          }
+          )
 
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
