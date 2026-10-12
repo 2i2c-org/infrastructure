@@ -387,9 +387,7 @@ jupyterhub:
       enabled: false
       mounts: {}
     usageQuotas:
-      # FIXME: Turn this to false, enable only in places we
-      # actually have it configured
-      enabled: true
+      enabled: false
     singleuser:
       extraPVCs: []
     singleuserAdmin:

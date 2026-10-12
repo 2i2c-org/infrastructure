@@ -6,6 +6,8 @@ jupyterhub:
       Authenticator:
         allow_all: true
   custom:
+    usageQuotas:
+      enabled: false
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
       extraVolumeMounts:
