@@ -10,10 +10,6 @@ local is_staging = std.member(hub_name, 'staging');
 
 // Return False if hub_name contains ['binder', 'spyglass', 'public', 'ephemeral'] for rolling out compute usage quotas
 local hub_types = ['binder', 'spyglass', 'public', 'ephemeral'];
-local is_usage_quotas_hub = !std.any([
-  std.length(std.findSubstr(pattern, hub_name)) > 0
-  for pattern in hub_types
-]);
 
 local emitDaskHubCompatibleConfig(basehubConfig) =
   // Handle legacy 'daskhub' type hubs
@@ -109,28 +105,6 @@ local jupyterhubUsageQuotasHubConfig = {
   },
 };
 
-local jupyterhubUsageQuotasServicesConfig = {
-  'usage-quota': {
-    url: 'http://hub:9000',
-    display: true,
-    oauth_no_confirm: true,
-    command: [
-    ],
-  },
-};
-
-local jupyterhubUsageQuotasRolesConfig = {
-  'usage-quota-service': {
-    scopes: [
-      'read:users',
-      'list:services',
-      'read:services',
-    ],
-    services: [
-      'usage-quota',
-    ],
-  },
-};
 
 local jupyterhubGroupsExporterConfig = {
   // Config values
