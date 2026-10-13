@@ -134,8 +134,9 @@ jupyterhub:
   hub:
     allowNamedServers: true
     image:
+      # Brings in https://github.com/jupyterhub/jupyterhub/pull/5557
       name: quay.io/2i2c/jupyterhub-6-auth-state-reconcile
-      tag: 0.0.1-0.dev.git.17044.haa5e92e5d
+      tag: 0.0.1-0.dev.git.17191.hac8737b9e
     extraConfig:
       001-litellm-key: |
         from z2jh import get_config
