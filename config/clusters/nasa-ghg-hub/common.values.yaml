@@ -14,9 +14,9 @@ basehub:
       backend:
         imagePullSecrets: [name: image-pull-secret]
   jupyterhub:
-    usageQuotas:
-      enabled: true
     custom:
+      usageQuotas:
+        enabled: true
       daskhubSetup:
         enabled: true
       2i2c:
