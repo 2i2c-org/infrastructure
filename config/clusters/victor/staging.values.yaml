@@ -11,6 +11,59 @@ basehub:
         QuotaManager:
           hard_quota: 5 # in GiB
   jupyterhub:
+    custom:
+      singleuserAdmin:
+        extraVolumeMounts:
+          # Admins can see every project folder, read-only, at ~/all-projects.
+          # Merged with the default shared-readwrite mounts from basehub.
+          010-projects-readonly-volumemount:
+            name: home
+            mountPath: /home/jovyan/all-projects
+            subPath: _projects
+            readOnly: true
+    hub:
+      extraConfig:
+        001-group-shared-directories: |
+          # Give members of a JupyterHub group a shared, read-write folder.
+          #
+          # A user in the JupyterHub group "project:<name>" gets the directory
+          # _projects/<name> (on the hub's home volume) mounted read-write at
+          # ~/projects/<name>. Group membership is read from the hub every time
+          # a server starts, so changes apply on the next server start.
+          #
+          # Only groups starting with GROUP_PREFIX are considered, and each
+          # <name> must be a plain directory name. The directory should
+          # already exist at _projects/<name>, owned by uid 1000 / gid 100 so
+          # members can write (if missing, Kubernetes creates it owned by root).
+          import re
+
+          GROUP_PREFIX = "project:"
+          SAFE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+
+          def group_shared_directories(spawner):
+              overrides = {}
+              for g in spawner.user.groups:
+                  if not g.name.startswith(GROUP_PREFIX):
+                      continue
+                  name = g.name[len(GROUP_PREFIX):]
+                  if not SAFE_NAME.fullmatch(name):
+                      continue
+                  overrides[f"group-{g.name}"] = {
+                      "groups": [g.name],
+                      "spawner_override": {
+                          "volume_mounts": {
+                              f"group-{g.name}": {
+                                  "name": "home",
+                                  "mountPath": f"/home/jovyan/projects/{name}",
+                                  "subPath": f"_projects/{name}",
+                                  "readOnly": False,
+                              }
+                          }
+                      },
+                  }
+              return overrides
+
+          c.KubeSpawner.group_overrides = group_shared_directories
     singleuser:
       profileList:
         # IMPORTANT: Staging and prod's profileList's are meant to be kept
