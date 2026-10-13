@@ -8,6 +8,11 @@ jupyterhub:
   custom:
     usageQuotas:
       enabled: true
+    litellmKeyProvisioner:
+      enabled: true
+      url: https://llmaven-iss-prod-litellm-prod.gentlebay-de6eef95.westus2.azurecontainerapps.io
+      team_ids:
+      - schmidt-astro-participants-staging
     daskhubSetup:
       enabled: false
     s3files:
@@ -128,11 +133,148 @@ jupyterhub:
       enabled: true
   hub:
     allowNamedServers: true
+    image:
+      name: quay.io/2i2c/jupyterhub-6-auth-state-reconcile
+      tag: 0.0.1-0.dev.git.17044.haa5e92e5d
+    extraConfig:
+      001-litellm-key: |
+        from z2jh import get_config
+        from yarl import URL
+        from aiohttp import ClientSession
+
+        async def ensure_key(
+            litellm_url: URL,
+            litellm_key: str,
+            username: str,
+            teams: set[str],
+            existing_litellm_key_authstate: dict
+        ) -> dict[str, str]:
+            """
+            Ensure a LiteLLM user with a working key exists
+
+            Returns a dict with following information:
+            - key_name: The redacted, public key name for a working key
+            - key: The full actual API key
+            """
+            async with ClientSession(headers={
+                "Authorization": f"Bearer {litellm_key}"
+            }) as client:
+
+                # Check if the user already exists. Username is considered
+                # unique and deterministic, derived from the hub user name
+                resp = await client.get(litellm_url / "user/info", params={
+                    "user_id": username
+                })
+
+                if resp.status == 404:
+                    # User doesn't exist, so we gotta create the user
+                    # We add the appropriate teams, and get a key back we can return
+                    # No additonal api requests needed here
+                    user_model = {
+                        "user_id": username,
+                        "user_alias": username,
+                        "teams": list(teams),
+                    }
+                    resp = await client.post(litellm_url / "user/new", json=user_model)
+                    if resp.status == 200:
+                        full_user_model = await resp.json()
+                        return {
+                            "key": full_user_model["key"],
+                            "key_name": full_user_model["key_name"]
+                        }
+                    else:
+                        # FIXME: We should probably *not* fail here, but just log
+                        # a message and let people through. They can log out and back
+                        # in to regenerate the key.
+                        resp.raise_for_status()
+                else:
+                    # User does exist! We ensure that the team membership is right
+                    # for this user (to handle changes in our config about which teams
+                    # are set for which user), and then make sure we have a key for them
+                    user_model = await resp.json()
+
+                    # Ensure that all the teams we want users to be in are present
+                    team_memberships = set(t["team_id"] for t in user_model["teams"])
+                    if team_memberships.issuperset(teams):
+                        print("All teams satisfied")
+                    else:
+                        teams_to_add = teams - team_memberships
+                        for team in teams_to_add:
+                            # FIXME: Handle exceptions here. Likely just catch
+                            # and ignore, since we can ask users to re-log in again
+                            team_add_resp = await client.post(url=litellm_url / "team/member_add", json={
+                                "member": [{"user_id": username, "role": "user"}],
+                                "team_id": team
+                            })
+
+                    # Ensure that we have a key. We explicitly don't actually check here
+                    # if the key we have is blocked or not, as we want to allow administrators
+                    # on the LiteLLM side to block keys as a guardrail mechanism. So we
+                    # only check for the existence of a key, rather than if it is *usable*.
+                    active_keys = [k["key_name"] for k in user_model["keys"]]
+                    if (
+                        # We have a current key, but it isn't a valid active key
+                        ("key_name" in existing_litellm_key_authstate and existing_litellm_key_authstate["key_name"] not in active_keys)
+                        or
+                        # We don't have a current token at all
+                        "key_name" not in existing_litellm_key_authstate
+                    ):
+                        key_add_resp = await client.post(litellm_url / "key/generate", json={
+                            "user_id": username
+                        })
+
+                        key_data = await key_add_resp.json()
+                        return {
+                            "key_name": key_data["key_name"],
+                            "key": key_data["key"]
+                        }
+                    else:
+                        # The most common pathway - we have a key! Let's just do
+                        # nothing and keep on going on.
+                        return existing_litellm_key_authstate
+
+        async def augment_auth_state_hook(auth_model, auth_state):
+            litellm_url = URL(get_config("custom.litellmKeyProvisioner.url"))
+            api_key = get_config("custom.litellmKeyProvisioner.key")
+            team_ids = set(get_config("custom.litellmKeyProvisioner.team_ids"))
+            print("auth model is", auth_model)
+            username = auth_model['name']
+            print("outer auth state is", auth_state)
+            if auth_state is None:
+                auth_state = {}
+            litellm_auth_state = await ensure_key(
+                litellm_url,
+                api_key,
+                username,
+                team_ids,
+                auth_state.get('litellm', {})
+            )
+            auth_state['litellm'] = litellm_auth_state
+            return auth_state
+
+        def auth_state_hook(spawner, auth_state):
+          base_url = get_config("custom.litellmKeyProvisioner.url")
+          key = auth_state["litellm"]["key"]
+          env = {
+              "OPENAI_API_KEY": key,
+              "OPENAI_BASE_URL": f"{base_url}/v1",
+              "ANTHROPIC_AUTH_TOKEN": key,
+              "ANTHROPIC_BASE_URL": base_url,
+              "LITELLM_API_KEY": key,
+              "LITELLM_BASE_URL": base_url
+          }
+          spawner.environment.update(env)
+
+        enabled = get_config("custom.litellmKeyProvisioner.enabled", False)
+
+        if enabled:
+          c.Spawner.auth_state_hook = auth_state_hook
+          c.Authenticator.reconcile_auth_state_hook = augment_auth_state_hook
     config:
       JupyterHub:
         authenticator_class: shared-password
       Authenticator:
-        enable_auth_state: false
+        enable_auth_state: true
         manage_groups: false
         allow_all: true
 binderhub-service:

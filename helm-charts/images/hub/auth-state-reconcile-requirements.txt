@@ -1,0 +1,3 @@
+jupyterhub-fancy-profiles==0.6.0
+jupyterhub-usage-quotas==0.2.0
+git+https://github.com/yuvipanda/jupyterhub@955623266161b9a2265e7e1db3939198ab48309b

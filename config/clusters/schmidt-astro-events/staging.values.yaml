@@ -3,6 +3,9 @@ nfs:
     serverIP: 10.100.140.233
 jupyterhub:
   custom:
+    litellmKeyProvisioner:
+      team_ids:
+      - schmidt-astro-participants-staging
     s3files:
       mounts:
         schmidt-observatory-system:
