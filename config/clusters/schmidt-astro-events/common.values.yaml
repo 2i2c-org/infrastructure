@@ -234,7 +234,7 @@ jupyterhub:
                         # nothing and keep on going on.
                         return existing_litellm_key_authstate
 
-        async def augment_auth_state_hook(auth_model, auth_state):
+        async def augment_auth_state_hook(authenticator, auth_model, auth_state):
             litellm_url = URL(get_config("custom.litellmKeyProvisioner.url"))
             api_key = get_config("custom.litellmKeyProvisioner.key")
             team_ids = set(get_config("custom.litellmKeyProvisioner.team_ids"))
