@@ -262,7 +262,13 @@ properties:
           - 2i2c
           - auth
           - s3files
+          - usageQuotas
         properties:
+          usageQuotas:
+            type: object
+            properties:
+              enabled:
+                type: boolean
           s3files:
             type: object
             properties:

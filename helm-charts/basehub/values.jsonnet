@@ -10,10 +10,6 @@ local is_staging = std.member(hub_name, 'staging');
 
 // Return False if hub_name contains ['binder', 'spyglass', 'public', 'ephemeral'] for rolling out compute usage quotas
 local hub_types = ['binder', 'spyglass', 'public', 'ephemeral'];
-local is_usage_quotas_hub = !std.any([
-  std.length(std.findSubstr(pattern, hub_name)) > 0
-  for pattern in hub_types
-]);
 
 local emitDaskHubCompatibleConfig(basehubConfig) =
   // Handle legacy 'daskhub' type hubs
@@ -107,47 +103,8 @@ local jupyterhubUsageQuotasHubConfig = {
       public_hub_url: 'https://%s/' % hub_domain,
     },
   },
-  extraConfig: {
-    '11-setup-usage-quotas': |||
-      import os
-      from jupyterhub_usage_quotas import setup_usage_quotas
-      setup_usage_quotas(c)
-      for service in c.JupyterHub.services:
-        if service["name"] == "usage-quota":
-          service["environment"] = {
-            "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME"),
-            "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD")
-          }
-    |||,
-  },
 };
 
-local jupyterhubUsageQuotasServicesConfig = {
-  'usage-quota': {
-    url: 'http://hub:9000',
-    display: true,
-    oauth_no_confirm: true,
-    command: [
-      'python',
-      '-m',
-      'jupyterhub_usage_quotas.services.usage_viewer',
-      '--config-files=/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py',
-    ],
-  },
-};
-
-local jupyterhubUsageQuotasRolesConfig = {
-  'usage-quota-service': {
-    scopes: [
-      'read:users',
-      'list:services',
-      'read:services',
-    ],
-    services: [
-      'usage-quota',
-    ],
-  },
-};
 
 local jupyterhubGroupsExporterConfig = {
   // Config values
@@ -218,29 +175,20 @@ local jupyterhubConfig =
   {
     ingress: hubIngressConfig,
     hub: {
-           services: {
-                       binder: {
-                         // dynamically configure redirect_uri for binderhub service, so we don't have to do that in each hub
-                         oauth_redirect_uri: 'https://%s/services/binder/oauth_callback' % [hub_domain],
-                       },
-                     } +
-                     if is_usage_quotas_hub then
-                       jupyterhubUsageQuotasServicesConfig
-                     else {},
-           config: {
-             OAuthenticator: {
-               // Always set oauth callback URL, to prevent it from being
-               // guessed 'wrong'.
-               oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
-             },
-           } + jupyterhubUsageQuotasHubConfig.config,
-         } +
-         if is_usage_quotas_hub then
-           {
-             loadRoles: jupyterhubUsageQuotasRolesConfig,
-             extraConfig: jupyterhubUsageQuotasHubConfig.extraConfig,
-           }
-         else {},
+      services: {
+        binder: {
+          // dynamically configure redirect_uri for binderhub service, so we don't have to do that in each hub
+          oauth_redirect_uri: 'https://%s/services/binder/oauth_callback' % [hub_domain],
+        },
+      },
+      config: {
+        OAuthenticator: {
+          // Always set oauth callback URL, to prevent it from being
+          // guessed 'wrong'.
+          oauth_callback_url: 'https://%s/hub/oauth_callback' % [hub_domain],
+        },
+      } + jupyterhubUsageQuotasHubConfig.config,
+    },
   } +
   if provider == 'aws' then {
     singleuser: {

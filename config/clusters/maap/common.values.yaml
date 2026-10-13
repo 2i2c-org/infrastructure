@@ -30,6 +30,8 @@ jupyterhub:
         tag: 2i2c # This is a mutable tag, so may trigger re-pulls
 
   custom:
+    usageQuotas:
+      enabled: true
     daskhubSetup:
       enabled: true
     2i2c:

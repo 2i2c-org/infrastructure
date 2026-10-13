@@ -12,6 +12,8 @@ dask-gateway:
         jupyterhubServiceName: dask-gateway
 jupyterhub:
   custom:
+    usageQuotas:
+      enabled: true
     daskhubSetup:
       enabled: true
     2i2c:
