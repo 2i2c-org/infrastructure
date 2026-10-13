@@ -8,9 +8,21 @@ This guide explains how to enable and configure compute quotas using the [`jupyt
 For details on general configuration, see [JupyterHub Usage Quotas -- Multi-cluster setups](https://jupyterhub-usage-quotas.readthedocs.io/en/latest/howto/deploy/#multi-cluster-setups).
 ```
 
-## Conditionally enabled in Jsonnet
+## How to enable
 
-The compute quota system is enabled for all hubs except for hubs such as BinderHubs, etc. See the conditional `is_usage_quotas_hub` defined in the Jsonnet [`basehub/values.jsonnet`](https://github.com/2i2c-org/infrastructure/blob/5761a5b7038557dce8f7b6c6574ba0b6c6d8b1bb/helm-charts/basehub/values.jsonnet#L12) for hub name patterns that are excluded from usage quota deployments.
+The entry `12-conditional-usage-quotas` under the `jupyterhub.hub.extraConfig` key in the `basehub/values.yaml` file conditionally enables the JupyterHub service running the usage dashboard. This service is opt-in by adding
+
+```yaml
+basehub:
+  jupyterhub:
+    custom:
+      usageQuotas:
+        enabled: true
+```
+
+to a hub's `values.yaml` file. The service is currently opt out for all Cloudbank hub's due to issues with CI/CD deployment for this cluster, however this deployment strategy will be updated when [this issue](https://github.com/2i2c-org/jupyterhub-usage-quotas/issues/90) is fixed.
+
+The quota manager itself is a library is unconditionally installed in all hub images through the `helm-charts/images/hub/requirements.txt` file.
 
 ## Add a compute quota policy
 
