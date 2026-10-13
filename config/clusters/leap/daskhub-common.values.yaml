@@ -20,6 +20,8 @@ basehub:
             limit: 4G
   jupyterhub:
     custom:
+      usageQuotas:
+        enabled: true
       daskhubSetup:
         enabled: true
       # Extra mount point for admins to access to all users' home dirs
