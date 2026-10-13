@@ -6,6 +6,8 @@ dask-gateway:
   enabled: false
 jupyterhub:
   custom:
+    usageQuotas:
+      enabled: true
     daskhubSetup:
       enabled: false
     s3files:
