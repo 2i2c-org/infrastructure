@@ -191,7 +191,7 @@ jupyterhub:
                 if resp.status == 404:
                     # User doesn't exist, so we gotta create the user
                     # We add the appropriate teams, and get a key back we can return
-                    # No additonal api requests needed here
+                    # No additional api requests needed here
                     user_model = {
                         "user_id": litellm_username,
                         "user_alias": username,
