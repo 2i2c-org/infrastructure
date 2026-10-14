@@ -11,8 +11,6 @@ jupyterhub:
     litellmKeyProvisioner:
       enabled: true
       url: https://llmaven-iss-prod-litellm-prod.gentlebay-de6eef95.westus2.azurecontainerapps.io
-      team_ids:
-      - schmidt-astro-participants-staging
     daskhubSetup:
       enabled: false
     s3files:
@@ -139,6 +137,7 @@ jupyterhub:
       tag: 0.0.1-0.dev.git.17191.hac8737b9e
     extraConfig:
       001-litellm-key: |
+        import traceback
         from z2jh import get_config
         from yarl import URL
         from aiohttp import ClientSession, ClientTimeout
@@ -184,11 +183,12 @@ jupyterhub:
                     }
                     resp = await client.post(litellm_url / "user/new", json=user_model)
                     full_user_model = await resp.json()
+                    print(f"Created LiteLLM user for {username}")
                     return {
                         "key": full_user_model["key"],
                         "key_name": full_user_model["key_name"]
                     }
-                else:
+                elif resp.status == 200:
                     # User does exist! We ensure that the team membership is right
                     # for this user (to handle changes in our config about which teams
                     # are set for which user), and then make sure we have a key for them
@@ -196,9 +196,7 @@ jupyterhub:
 
                     # Ensure that all the teams we want users to be in are present
                     team_memberships = set(t["team_id"] for t in user_model["teams"])
-                    if team_memberships.issuperset(teams):
-                        print(f"User {username} is present in all LiteLLM teams")
-                    else:
+                    if not team_memberships.issuperset(teams):
                         teams_to_add = teams - team_memberships
                         for team in teams_to_add:
                             # FIXME: Handle exceptions here. Likely just catch
@@ -237,7 +235,11 @@ jupyterhub:
                     else:
                         # The most common pathway - we have a key! Let's just do
                         # nothing and keep on going on.
+                        print(f"User {username} has LiteLLM key, not doing anything")
                         return existing_litellm_key_authstate
+                else:
+                  # A non 200, non 404 response. Something up with the LiteLLM service.
+                  resp.raise_for_status()
 
         async def augment_auth_state_hook(authenticator, auth_model, auth_state):
             litellm_url = URL(get_config("custom.litellmKeyProvisioner.url"))
@@ -246,13 +248,21 @@ jupyterhub:
             username = auth_model['name']
             if auth_state is None:
                 auth_state = {}
-            litellm_auth_state = await ensure_key(
-                litellm_url,
-                api_key,
-                username,
-                team_ids,
-                auth_state.get('litellm', {})
-            )
+            try:
+              litellm_auth_state = await ensure_key(
+                  litellm_url,
+                  api_key,
+                  username,
+                  team_ids,
+                  auth_state.get('litellm', {})
+              )
+            except Exception as e:
+              # Print but then ignore every exception
+              print(f"Error ensuring LiteLLM key for user {username}")
+              traceback.print_exception(e)
+              # Return existing auth_state so we don't lose it
+              return auth_state
+
             auth_state['litellm'] = litellm_auth_state
             return auth_state
 
