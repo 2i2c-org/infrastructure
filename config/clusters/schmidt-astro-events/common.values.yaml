@@ -299,7 +299,11 @@ jupyterhub:
 
         def auth_state_hook(spawner, auth_state):
           base_url = get_config("custom.litellmKeyProvisioner.url")
-          key = auth_state["litellm"]["key"]
+          litellm = (auth_state or {}).get("litellm") or {}
+          if "key" not in litellm:
+              spawner_user_name = spawner.user.name
+              spawner.log.warning(f"No LiteLLM key for {spawner_user_name}, not setting LLM env vars")
+          key = litellm["key"]
           env = {
               "OPENAI_API_KEY": key,
               "OPENAI_BASE_URL": f"{base_url}/v1",
