@@ -137,8 +137,8 @@ jupyterhub:
       tag: 0.0.1-0.dev.git.17191.hac8737b9e
     extraConfig:
       001-litellm-key: |
-        import traceback
         from z2jh import get_config
+        from logging import Logger
         from yarl import URL
         from aiohttp import ClientSession, ClientTimeout
 
@@ -156,7 +156,8 @@ jupyterhub:
             hub_name: str,
             username: str,
             teams: set[str],
-            existing_litellm_key_authstate: dict
+            existing_litellm_key_authstate: dict,
+            log: Logger
         ) -> dict[str, str]:
             """
             Ensure a LiteLLM user with a working key exists
@@ -205,7 +206,7 @@ jupyterhub:
                     }
                     resp = await client.post(litellm_url / "user/new", json=user_model)
                     full_user_model = await resp.json()
-                    print(f"Created LiteLLM user {litellm_username} for {username}")
+                    log.info(f"Created LiteLLM user {litellm_username} for {username}")
                     return {
                         "key": full_user_model["key"],
                         "key_name": full_user_model["key_name"]
@@ -233,7 +234,7 @@ jupyterhub:
                                 "team_id": team
                             })
 
-                            print(f"Added user {username} with LiteLLM username {litellm_username} to LiteLLM team {team}")
+                            log.info(f"Added user {username} with LiteLLM username {litellm_username} to LiteLLM team {team}")
 
                     # Ensure that we have a key. We explicitly don't actually check here
                     # if the key we have is blocked or not, as we want to allow administrators
@@ -251,7 +252,7 @@ jupyterhub:
                             "user_id": litellm_username
                         })
 
-                        print(f"Created LiteLLM key for user {username} with LiteLLM username {litellm_username}")
+                        log.info(f"Created LiteLLM key for user {username} with LiteLLM username {litellm_username}")
 
                         key_data = await key_add_resp.json()
 
@@ -262,7 +263,7 @@ jupyterhub:
                     else:
                         # The most common pathway - we have a key! Let's just do
                         # nothing and keep on going on.
-                        print(f"User {username} with LiteLLM username {litellm_username} has LiteLLM key, not doing anything")
+                        log.info(f"User {username} with LiteLLM username {litellm_username} has LiteLLM key, not doing anything")
                         return existing_litellm_key_authstate
                 else:
                   # A non 200, non 404 response. Something up with the LiteLLM service.
@@ -274,6 +275,7 @@ jupyterhub:
             api_key = get_config("custom.litellmKeyProvisioner.key")
             team_ids = set(get_config("custom.litellmKeyProvisioner.teamIds"))
             username = auth_model['name']
+            log = authenticator.log
             if auth_state is None:
                 auth_state = {}
             try:
@@ -283,14 +285,17 @@ jupyterhub:
                   hub_name,
                   username,
                   team_ids,
-                  auth_state.get('litellm', {})
+                  auth_state.get('litellm', {}),
+                  log
               )
             except MismatchedLiteLLMUserException as e:
+              log.info(f"Failing login for user {username} due to potential LiteLLM escalation attempt")
+              log.exception()
               raise
             except Exception as e:
               # Print but then ignore every exception
-              print(f"Error ensuring LiteLLM key for user {username}")
-              traceback.print_exception(e)
+              log.info(f"Error ensuring LiteLLM key for user {username}")
+              log.exception()
               # Return existing auth_state so we don't lose it
               return auth_state
 
