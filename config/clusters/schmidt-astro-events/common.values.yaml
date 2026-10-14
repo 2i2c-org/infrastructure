@@ -141,7 +141,7 @@ jupyterhub:
       001-litellm-key: |
         from z2jh import get_config
         from yarl import URL
-        from aiohttp import ClientSession
+        from aiohttp import ClientSession, ClientTimeout
 
         async def ensure_key(
             litellm_url: URL,
@@ -157,15 +157,21 @@ jupyterhub:
             - key_name: The redacted, public key name for a working key
             - key: The full actual API key
             """
-            async with ClientSession(headers={
+            async with ClientSession(
+              headers={
                 "Authorization": f"Bearer {litellm_key}"
-            }) as client:
+              },
+              # We generally want to raise exceptions for non 200 responses,
+              # to abort the flow and catch that in our calling function.
+              raise_for_status=True,
+              timeout=ClientTimeout(total=10)
+            ) as client:
 
                 # Check if the user already exists. Username is considered
                 # unique and deterministic, derived from the hub user name
                 resp = await client.get(litellm_url / "user/info", params={
                     "user_id": username
-                })
+                }, raise_for_status=False)
 
                 if resp.status == 404:
                     # User doesn't exist, so we gotta create the user
@@ -177,17 +183,11 @@ jupyterhub:
                         "teams": list(teams),
                     }
                     resp = await client.post(litellm_url / "user/new", json=user_model)
-                    if resp.status == 200:
-                        full_user_model = await resp.json()
-                        return {
-                            "key": full_user_model["key"],
-                            "key_name": full_user_model["key_name"]
-                        }
-                    else:
-                        # FIXME: We should probably *not* fail here, but just log
-                        # a message and let people through. They can log out and back
-                        # in to regenerate the key.
-                        resp.raise_for_status()
+                    full_user_model = await resp.json()
+                    return {
+                        "key": full_user_model["key"],
+                        "key_name": full_user_model["key_name"]
+                    }
                 else:
                     # User does exist! We ensure that the team membership is right
                     # for this user (to handle changes in our config about which teams
@@ -197,7 +197,7 @@ jupyterhub:
                     # Ensure that all the teams we want users to be in are present
                     team_memberships = set(t["team_id"] for t in user_model["teams"])
                     if team_memberships.issuperset(teams):
-                        print("All teams satisfied")
+                        print(f"User {username} is present in all LiteLLM teams")
                     else:
                         teams_to_add = teams - team_memberships
                         for team in teams_to_add:
@@ -207,6 +207,8 @@ jupyterhub:
                                 "member": [{"user_id": username, "role": "user"}],
                                 "team_id": team
                             })
+
+                            print(f"Added user {username} to LiteLLM team {team}")
 
                     # Ensure that we have a key. We explicitly don't actually check here
                     # if the key we have is blocked or not, as we want to allow administrators
@@ -224,7 +226,10 @@ jupyterhub:
                             "user_id": username
                         })
 
+                        print(f"Created LiteLLM key for user {username}")
+
                         key_data = await key_add_resp.json()
+
                         return {
                             "key_name": key_data["key_name"],
                             "key": key_data["key"]
