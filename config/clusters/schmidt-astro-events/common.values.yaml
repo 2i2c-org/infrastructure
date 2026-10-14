@@ -243,9 +243,7 @@ jupyterhub:
             litellm_url = URL(get_config("custom.litellmKeyProvisioner.url"))
             api_key = get_config("custom.litellmKeyProvisioner.key")
             team_ids = set(get_config("custom.litellmKeyProvisioner.team_ids"))
-            print("auth model is", auth_model)
             username = auth_model['name']
-            print("outer auth state is", auth_state)
             if auth_state is None:
                 auth_state = {}
             litellm_auth_state = await ensure_key(
