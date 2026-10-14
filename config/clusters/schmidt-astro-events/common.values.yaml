@@ -7,7 +7,7 @@ dask-gateway:
 jupyterhub:
   custom:
     usageQuotas:
-      enabled: true
+      enabled: false
     litellmKeyProvisioner:
       enabled: true
       url: https://llmaven-iss-prod-litellm-prod.gentlebay-de6eef95.westus2.azurecontainerapps.io
