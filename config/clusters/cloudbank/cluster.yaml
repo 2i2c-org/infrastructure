@@ -449,7 +449,7 @@ hubs:
   - enc-humboldt.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: iecc
-  display_name: Wabash Valley College
+  display_name: Illinois Eastern Community Colleges
   domain: iecc.cloudbank.2i2c.cloud
   helm_chart: basehub
   helm_chart_values_files:

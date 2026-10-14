@@ -23,9 +23,9 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.wvc.edu/_resources/images/brand/media/images/logos/WVC-academic-logo-color.png
-          name: Wabash Valley College
-          url: https://www.wvc.edu/
+          logo_url: https://iecc.edu/sites/default/files/2026-07/iecc_logo_4.svg
+          name: Illinois Eastern Community Colleges
+          url: https://iecc.edu/
   hub:
     db:
       pvc:
