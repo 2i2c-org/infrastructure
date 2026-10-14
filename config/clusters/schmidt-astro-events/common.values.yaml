@@ -142,9 +142,18 @@ jupyterhub:
         from yarl import URL
         from aiohttp import ClientSession, ClientTimeout
 
+        class MismatchedLiteLLMUserException(Exception):
+            """
+            Exception thrown when a hub user's LiteLLM user isn't created by us.
+
+            Potentially a privilege escalation issue.
+            """
+            pass
+
         async def ensure_key(
             litellm_url: URL,
             litellm_key: str,
+            hub_name: str,
             username: str,
             teams: set[str],
             existing_litellm_key_authstate: dict
@@ -155,7 +164,14 @@ jupyterhub:
             Returns a dict with following information:
             - key_name: The redacted, public key name for a working key
             - key: The full actual API key
+
+            Raises a MismatchedLiteLLMUserException if a LiteLLM user matches the hub user,
+            but was not created by us. This helps guard against privilege escalation attacks,
+            since the user provided input of username is part of creating the LiteLLM username.
+
+            Raises appropriate aiohttp exceptions for failures when talking to LiteLLM.
             """
+            litellm_username = f"hub-user::{hub_name}::{username}"
             async with ClientSession(
               headers={
                 "Authorization": f"Bearer {litellm_key}"
@@ -167,9 +183,9 @@ jupyterhub:
             ) as client:
 
                 # Check if the user already exists. Username is considered
-                # unique and deterministic, derived from the hub user name
+                # unique and deterministic, derived from the hub user name + prefix
                 resp = await client.get(litellm_url / "user/info", params={
-                    "user_id": username
+                    "user_id": litellm_username
                 }, raise_for_status=False)
 
                 if resp.status == 404:
@@ -177,13 +193,19 @@ jupyterhub:
                     # We add the appropriate teams, and get a key back we can return
                     # No additonal api requests needed here
                     user_model = {
-                        "user_id": username,
+                        "user_id": litellm_username,
                         "user_alias": username,
                         "teams": list(teams),
+                        "metadata": {
+                          # Add these so we can track where users are from,
+                          # and reduce attack surface of impersonating more powerful users
+                          "hub_name": hub_name,
+                          "hub_username": username
+                        }
                     }
                     resp = await client.post(litellm_url / "user/new", json=user_model)
                     full_user_model = await resp.json()
-                    print(f"Created LiteLLM user for {username}")
+                    print(f"Created LiteLLM user {litellm_username} for {username}")
                     return {
                         "key": full_user_model["key"],
                         "key_name": full_user_model["key_name"]
@@ -194,6 +216,11 @@ jupyterhub:
                     # are set for which user), and then make sure we have a key for them
                     user_model = await resp.json()
 
+                    # Make sure we are actually handling a user who we created ourselves,
+                    # rather than an existing user (with more or less permissions than us).
+                    user_metadata = user_model.get("user_info", {}).get("metadata", {})
+                    if user_metadata.get("hub_name") != hub_name or user_metadata.get("hub_username") != username:
+                        raise MismatchedLiteLLMUserException(f"LiteLLM user {litellm_username} matched for hub user {username}, but does not have correct metadata: {user_metadata}")
                     # Ensure that all the teams we want users to be in are present
                     team_memberships = set(t["team_id"] for t in user_model["teams"])
                     if not team_memberships.issuperset(teams):
@@ -202,11 +229,11 @@ jupyterhub:
                             # FIXME: Handle exceptions here. Likely just catch
                             # and ignore, since we can ask users to re-log in again
                             team_add_resp = await client.post(url=litellm_url / "team/member_add", json={
-                                "member": [{"user_id": username, "role": "user"}],
+                                "member": [{"user_id": litellm_username, "role": "user"}],
                                 "team_id": team
                             })
 
-                            print(f"Added user {username} to LiteLLM team {team}")
+                            print(f"Added user {username} with LiteLLM username {litellm_username} to LiteLLM team {team}")
 
                     # Ensure that we have a key. We explicitly don't actually check here
                     # if the key we have is blocked or not, as we want to allow administrators
@@ -221,10 +248,10 @@ jupyterhub:
                         "key_name" not in existing_litellm_key_authstate
                     ):
                         key_add_resp = await client.post(litellm_url / "key/generate", json={
-                            "user_id": username
+                            "user_id": litellm_username
                         })
 
-                        print(f"Created LiteLLM key for user {username}")
+                        print(f"Created LiteLLM key for user {username} with LiteLLM username {litellm_username}")
 
                         key_data = await key_add_resp.json()
 
@@ -235,7 +262,7 @@ jupyterhub:
                     else:
                         # The most common pathway - we have a key! Let's just do
                         # nothing and keep on going on.
-                        print(f"User {username} has LiteLLM key, not doing anything")
+                        print(f"User {username} with LiteLLM username {litellm_username} has LiteLLM key, not doing anything")
                         return existing_litellm_key_authstate
                 else:
                   # A non 200, non 404 response. Something up with the LiteLLM service.
@@ -243,8 +270,9 @@ jupyterhub:
 
         async def augment_auth_state_hook(authenticator, auth_model, auth_state):
             litellm_url = URL(get_config("custom.litellmKeyProvisioner.url"))
+            hub_name = get_config("custom.litellmKeyProvisioner.hubName")
             api_key = get_config("custom.litellmKeyProvisioner.key")
-            team_ids = set(get_config("custom.litellmKeyProvisioner.team_ids"))
+            team_ids = set(get_config("custom.litellmKeyProvisioner.teamIds"))
             username = auth_model['name']
             if auth_state is None:
                 auth_state = {}
@@ -252,10 +280,13 @@ jupyterhub:
               litellm_auth_state = await ensure_key(
                   litellm_url,
                   api_key,
+                  hub_name,
                   username,
                   team_ids,
                   auth_state.get('litellm', {})
               )
+            except MismatchedLiteLLMUserException as e:
+              raise
             except Exception as e:
               # Print but then ignore every exception
               print(f"Error ensuring LiteLLM key for user {username}")

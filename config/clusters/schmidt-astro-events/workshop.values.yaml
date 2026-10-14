@@ -4,7 +4,8 @@ nfs:
 jupyterhub:
   custom:
     litellmKeyProvisioner:
-      team_ids:
+      hubName: schmidt-astro-events.2i2c.cloud
+      teamIds:
       - schmidt-astro-participants
     s3files:
       mounts:
