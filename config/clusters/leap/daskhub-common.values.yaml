@@ -82,6 +82,16 @@ basehub:
           - SammyAgrawal
           - sarika-debruyn
           - ilu24
+        UsageQuotaManager:
+          scope_fallback_strategy:
+            empty:
+              resource: memory
+              limit: 40000G
+              window: 30
+            intersection: max
+          failover_open: true
+        UsageViewer:
+          enable_compute: true
       extraConfig:
         001-group-shared-directories: |
           c.KubeSpawner.group_overrides = {
