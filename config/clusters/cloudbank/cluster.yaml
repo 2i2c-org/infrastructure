@@ -448,6 +448,16 @@ hubs:
   - humboldt.values.yaml
   - enc-humboldt.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: iecc
+  display_name: Illinois Eastern Community Colleges
+  domain: iecc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - iecc.values.yaml
+  - enc-iecc.secret.values.yaml
+  #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: iit
   display_name: Illinois Tech
   domain: iit.cloudbank.2i2c.cloud

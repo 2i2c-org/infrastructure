@@ -1,0 +1,48 @@
+jupyterhub:
+  singleuser:
+    defaultUrl: /lab
+    memory:
+      guarantee: 1G
+      limit: 2G
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/java-user-image
+      tag: 109b5f8ca22b
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://iecc.edu/sites/default/files/2026-07/iecc_logo_4.svg
+          name: Illinois Eastern Community Colleges
+          url: https://iecc.edu/
+  hub:
+    db:
+      pvc:
+        storageClassName: standard-rwo
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+        - IECC-CloudBank-Access
+        scope:
+        - read:org
+      Authenticator:
+        admin_users:
+        - sean-morris
+        - ericvd-ucb
+        - zachwilson-ivytech
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-iecc
