@@ -178,8 +178,8 @@ jupyterhub:
       name: quay.io/jupyterhealth/singleuser-premvp
       tag: latest
     memory:
-      limit: 1991244775
-      guarantee: 1991244775
+      limit: 4G
+      guarantee: 4G
     cpu:
       limit: 3.725
       guarantee: 0.2328125
