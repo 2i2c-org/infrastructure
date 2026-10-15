@@ -9,7 +9,11 @@ jupyterhub:
     tls:
     - hosts: [r-staging.datatools.utoronto.ca]
       secretName: https-auto-tls
+
   hub:
+    config:
+      GenericOAuthenticator:
+        allow_all: true
     db:
       pvc:
         # prod stores logs, so let's make it big
