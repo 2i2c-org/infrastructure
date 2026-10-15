@@ -23,43 +23,61 @@ resource "google_monitoring_notification_channel" "pagerduty_cloudbank" {
   }
 }
 
-resource "google_monitoring_alert_policy" "cluster_autoscaler_out_of_resources_alert" {
-  display_name = "Autoscaler cannot scale up"
+resource "google_logging_metric" "scale_up_failed_oo_resources" {
+  project = var.project_id
+  name    = "scale-up-oo-resources"
+  filter  = <<-EOT
+  logName="projects/${var.project_id}/logs/container.googleapis.com%2Fcluster-autoscaler-visibility"
+  (jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.out.of.resources")
+  EOT
+  metric_descriptor {
+    display_name = "Could not scale up nodegroup"
+    metric_kind  = "DELTA"
+    value_type   = "INT64"
+    unit         = "1"
+    labels {
+      key         = "zone"
+      value_type  = "STRING"
+      description = "Node zone"
+    }
+    labels {
+      key         = "instance_group"
+      value_type  = "STRING"
+      description = "Instance group requested"
+    }
+  }
+  label_extractors = {
+    zone           = "REGEXP_EXTRACT(jsonPayload.resultInfo.results.errorMsg.parameters, \"zones/([^/]+)\")"
+    instance_group = "REGEXP_EXTRACT(jsonPayload.resultInfo.results.errorMsg.parameters, \"instanceGroups/([^/]+)\")"
+  }
+}
+
+resource "google_monitoring_alert_policy" "out_of_resources_alert" {
+  display_name = "Resource exhaustion policy"
   project      = var.project_id
   combiner     = "OR"
   enabled      = true
   severity     = "CRITICAL"
+
   conditions {
-    display_name = "Out of resources in zone"
-    condition_matched_log {
-      filter = <<-EOT
-      logName="projects/${var.project_id}/logs/container.googleapis.com%2Fcluster-autoscaler-visibility"
-      (jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.out.of.resources")
-      EOT
-      label_extractors = {
-        zone           = "REGEXP_EXTRACT(jsonPayload, \"zones/([^/]+)\")"
-        instance_group = "REGEXP_EXTRACT(jsonPayload, \"instanceGroups/([^/]+)\")"
+    display_name = "Out Of Resources condition"
+
+    condition_threshold {
+      filter          = "metric.type=\"logging.googleapis.com/user/${google_logging_metric.scale_up_failed_oo_resources.name}\" AND resource.type=\"k8s_cluster\""
+      comparison      = "COMPARISON_GT"
+      threshold_value = "0"
+      # Alert immediately we get the oor (out of resources) log message
+      duration = "0s"
+
+      aggregations {
+        # Only alert once in 10min
+        alignment_period   = "600s"
+        per_series_aligner = "ALIGN_DELTA"
       }
     }
   }
 
-  documentation {
-    mime_type = "text/markdown"
-    subject   = "subject"
-    content   = <<-EOT
-      **GKE Cluster Autoscaler could not scale up due to resource limits.**
-
-      - **Zone:** $${log.extracted_label.zone}
-      - **Instance group:** $${log.extracted_label.instance_group}
-
-      EOT
-  }
-
   alert_strategy {
-    notification_rate_limit {
-      period = "1800s"
-    }
-
     # seven days
     auto_close = "604800s"
   }
