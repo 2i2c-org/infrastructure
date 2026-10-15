@@ -107,6 +107,19 @@ jupyterhub:
               display_name: Dedicated 500GB
               description: 500GB dedicated to just you
               kubespawner_override:
+                init_containers:
+                - name: volume-mount-ownership-fix
+                  image: busybox:1.36.1
+                  command:
+                  - sh
+                  - -c
+                      # sticky (1), and r(4)+w(2)+x(1) for owner,group,public
+                  - chmod 1777 /tmp
+                  securityContext:
+                    runAsUser: 0
+                  volumeMounts:
+                  - name: big-tmp
+                    mountPath: /tmp
                 volume_mounts:
                   tmp:
                     name: big-tmp
