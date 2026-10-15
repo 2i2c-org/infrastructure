@@ -1,7 +1,9 @@
+import contextlib
 import os
 import traceback
 from pathlib import Path
 
+import aiohttp
 from jhub_client.execute import JupyterHubAPI, execute_notebook
 
 from deployer.utils.rendering import print_colour
@@ -11,7 +13,7 @@ def notebook_dir(hub_type):
     return (Path(__file__).parent).joinpath("test-notebooks", hub_type)
 
 
-async def check_hub_health(hub_url, test_notebook_path, service_api_token):
+async def check_workflow_health(hub_url, test_notebook_path, service_api_token):
     """
     After each hub gets deployed, validate that it 'works'.
 
@@ -61,19 +63,46 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             del os.environ["JUPYTERHUB_API_TOKEN"]
 
 
-async def test_hub_healthy(hub_url, api_token, hub_type, verbose):
-    nb_dir = notebook_dir(hub_type)
-    try:
-        print_colour(f"Starting hub {hub_url} health validation...", "yellow")
-        for root, _, files in os.walk(nb_dir, topdown=False):
-            for _, name in enumerate(files):
-                # We only want to run the "scale_dask_workers.ipynb" file if the
-                # check_dask_scaling variable is true. We continue in the loop if
-                # check_dask_scaling == False when we iterate over this file.
-                print_colour(f"Running {name} test notebook...", "yellow")
+async def fetch_hub_version(hub_url: str):
+    api_url = f"{hub_url.removesuffix('/')}/hub/api"
+    async with aiohttp.ClientSession() as session, session.get(api_url) as response:
+        data = await response.json()
 
-                test_notebook_path = os.path.join(root, name)
-                await check_hub_health(hub_url, test_notebook_path, api_token)
+    return data["version"]
+
+
+@contextlib.contextmanager
+def log_group(title: str):
+    if "GITHUB_ACTIONS" not in os.environ:
+        return
+
+    print(f"::group::{{{title}}}")
+    yield
+    print("::endgroup::")
+
+
+async def test_hub_healthy(hub_url: str, api_token: str, hub_type: str, verbose: bool):
+    # First, check we can hit the hub
+    try:
+        print_colour(f"Running health checks for {hub_url} ...", "yellow")
+
+        with log_group("Hub API health"):
+            print_colour("Checking hub API is reachable ...", "yellow")
+            hub_version = await fetch_hub_version(hub_url)
+            print_colour(f"Found hub running version {hub_version}", "green")
+
+        with log_group("Notebook workflow health"):
+            nb_dir = notebook_dir(hub_type)
+            print_colour("Checking singleuser workflows succeed ...", "yellow")
+            for root, _, files in os.walk(nb_dir, topdown=False):
+                for _, name in enumerate(files):
+                    # We only want to run the "scale_dask_workers.ipynb" file if the
+                    # check_dask_scaling variable is true. We continue in the loop if
+                    # check_dask_scaling == False when we iterate over this file.
+                    print_colour(f"Running {name} test notebook ...", "yellow")
+
+                    test_notebook_path = os.path.join(root, name)
+                    await check_workflow_health(hub_url, test_notebook_path, api_token)
 
         print_colour(f"Hub {hub_url} is healthy!")
     except Exception as e:
@@ -83,4 +112,4 @@ async def test_hub_healthy(hub_url, api_token, hub_type, verbose):
         )
         if verbose:
             print_colour(traceback.format_exc(), None)
-        raise (e)
+        raise
