@@ -4,8 +4,11 @@ Actions available when deploying many JupyterHubs to many Kubernetes clusters
 
 import asyncio
 import base64
+import itertools
+import random
 import subprocess
 import sys
+from collections.abc import Generator
 
 import typer
 from ruamel.yaml import YAML
@@ -184,20 +187,29 @@ def deploy(
                 cleanup_values_schema_json(chart_dir)
 
 
+def exponential_backoffs(slot_time: float, max_time) -> Generator[float]:
+    for i in itertools.count():
+        yield random.uniform(0, min(slot_time * 2**i, max_time))
+
+
 async def test_health_attempts(
     hub_url: str,
     service_api_token: str,
     hub_type: str,
     attempts: int,
-    attempt_timeout_s: int,
-    attempt_wait_time_s: int,
+    attempt_timeout_s: float,
+    attempt_wait_time_s: float,
+    attempt_max_wait_time_s: float,
     verbose: bool,
 ):
-    for i in range(attempts):
+    for i, sleep_time_s in zip(
+        range(attempts),
+        exponential_backoffs(attempt_wait_time_s, attempt_max_wait_time_s),
+    ):
         try:
             async with asyncio.timeout(attempt_timeout_s):
                 await test_hub_healthy(hub_url, service_api_token, hub_type, verbose)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             print_colour(f"Attempt {i + 1} timed out, retrying", colour="red")
         except Exception:
             print_colour(
@@ -207,7 +219,10 @@ async def test_health_attempts(
             return
 
         if i < attempts - 1:
-            await asyncio.sleep(attempt_wait_time_s)
+            print_colour(
+                f"Waiting {sleep_time_s:.1f}s before retrying", colour="yellow"
+            )
+            await asyncio.sleep(sleep_time_s)
 
     raise RuntimeError("All attempts failed")
 
@@ -224,6 +239,9 @@ def run_hub_health_check(
     ),
     attempt_wait_time_s: int = typer.Option(
         10, help="Number of seconds to wait between trying the next attempt"
+    ),
+    attempt_max_wait_time_s: int = typer.Option(
+        120, help="Number of seconds to wait between trying the next attempt"
     ),
     verbose: bool = typer.Option(False, help="Print traceback on error"),
 ):
@@ -257,14 +275,16 @@ def run_hub_health_check(
     print_colour(f"Running hub health check for {hub.spec['name']}...")
 
     # Check if this hub has a domain override file. If yes, apply override.
-    if "domain_override_file" in hub.spec.keys():
+    if "domain_override_file" in hub.spec:
         domain_override_file = hub.spec["domain_override_file"]
 
-        with get_decrypted_file(
-            hub.cluster.config_dir / domain_override_file
-        ) as decrypted_path:
-            with open(decrypted_path) as f:
-                domain_override_config = yaml.load(f)
+        with (
+            get_decrypted_file(
+                hub.cluster.config_dir / domain_override_file
+            ) as decrypted_path,
+            open(decrypted_path) as f,
+        ):
+            domain_override_config = yaml.load(f)
 
         hub.spec["domain"] = domain_override_config["domain"]
 
@@ -299,6 +319,7 @@ def run_hub_health_check(
             attempts,
             attempt_timeout_s,
             attempt_wait_time_s,
+            attempt_max_wait_time_s,
             verbose,
         )
     )
