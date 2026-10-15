@@ -100,7 +100,7 @@ jupyterhub:
     profileList: {}
     extraEnv:
       GH_SCOPED_CREDS_CLIENT_ID: Iv23lilZjNoav2oWKdPJ
-      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/jupyter-health-demostration-hub
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/jupyter-health-demonstration-hub
       JHE_URL: https://jhe.fly.dev
       JHE_CLIENT_ID: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
       OPENCODE_CONFIG: /etc/opencode-default/opencode.json
