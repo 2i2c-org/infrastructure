@@ -33,7 +33,7 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: Schmidty Obervatory System
+          name: Schmidt Observatory System
           url: https://www.schmidtsciences.org/schmidt-observatory-system/
     singleuserAdmin:
       extraVolumeMounts:
