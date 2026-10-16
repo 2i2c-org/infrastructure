@@ -40,3 +40,9 @@ charts:
           REQUIREMENTS_FILE: cloudbank-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
+      jupyterhub6-auth-state-reconcile:
+        imageName: quay.io/2i2c/jupyterhub-6-auth-state-reconcile
+        buildArgs:
+          REQUIREMENTS_FILE: "auth-state-reconcile-requirements.txt"
+        contextPath: "images/hub"
+        dockerfilePath: images/hub/Dockerfile.auth-state-reconcile

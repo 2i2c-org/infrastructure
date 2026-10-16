@@ -3,6 +3,10 @@ nfs:
     serverIP: 10.100.209.159
 jupyterhub:
   custom:
+    litellmKeyProvisioner:
+      hubName: schmidt-astro-events.2i2c.cloud
+      teamIds:
+      - schmidt-astro-participants
     s3files:
       mounts:
         schmidt-observatory-system:
