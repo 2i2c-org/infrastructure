@@ -128,11 +128,30 @@ jupyterhub:
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
                 image: klesinger/disasters-jupyterhub-docker-image:latest
-                init_containers:
-                # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+                extra_containers:
+                # this container uses nbgitpuller to mount https://github.com/Disasters-Learning-Portal/disasters-docs for user pods
                 # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+                # Running gitpuller as a regular container rather than an init container
+                # so that neither its image pull nor the repo pull blocks the notebook
+                # container from starting.
                 - name: jupyterhub-gitpuller-init
                   image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                  # The image's CMD clones and then exits 0, which is correct for an init
+                  # container but not here. We're adding `sleep infinity` to run indefinitely
+                  command:
+                  - /bin/bash
+                  - -c
+                  - |
+                    bash /opt/k8s-init-gitpuller.sh
+                    exec sleep infinity
+                  resources:
+                    limits:
+                      memory: 256Mi
+                      cpu: 0.5
+                    requests:
+                      # set some tiny requests
+                      memory: 32Mi
+                      cpu: 0.01
                   env:
                   - name: TARGET_PATH
                     value: disasters-docs
