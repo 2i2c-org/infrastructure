@@ -38,6 +38,10 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
     values = [var.cluster_name]
   }
 }
+
+
+# FIXME: add OIDC for irsa etc.
+
 resource "aws_eks_cluster" "cluster" {
   count = var.use_eksctl ? 0 : 1
 
@@ -51,6 +55,8 @@ resource "aws_eks_cluster" "cluster" {
   version  = var.k8s_versions.min_master_version
 
   vpc_config {
+    # endpoint_private/public
+    # Security group IDs
     subnet_ids = concat(aws_subnet.private[*].id, aws_subnet.public[*].id)
   }
 
@@ -102,6 +108,7 @@ data "aws_availability_zones" "available" {
 resource "aws_vpc" "main" {
   count = var.use_eksctl ? 0 : 1
 
+  # TODO: set CIDR block from variable
   cidr_block           = "192.168.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
@@ -112,8 +119,9 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "private" {
-  count             = var.use_eksctl ? 0 : length(data.aws_availability_zones.available.names)
-  vpc_id            = aws_vpc.main[0].id
+  count  = var.use_eksctl ? 0 : length(data.aws_availability_zones.available.names)
+  vpc_id = aws_vpc.main[0].id
+  # FIXME: use cidrsubnet() to split the vpc CIDR block (variable) into a block according to a number of subnet bits (var, e.g. 3), and the count index
   cidr_block        = "192.168.${count.index + 1}.0/24"
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
@@ -124,8 +132,9 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_subnet" "public" {
-  count                   = var.use_eksctl ? 0 : length(data.aws_availability_zones.available.names)
-  vpc_id                  = aws_vpc.main[0].id
+  count  = var.use_eksctl ? 0 : length(data.aws_availability_zones.available.names)
+  vpc_id = aws_vpc.main[0].id
+  # FIXME: also use cidrsubnet as above, shift count by length of private subnet
   cidr_block              = "192.168.${count.index + 10}.0/24"
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
@@ -135,6 +144,11 @@ resource "aws_subnet" "public" {
     "kubernetes.io/role/elb" = "1"
   }
 }
+
+# FIXME: add aws_internet_gateway to allow VPC access to internet
+#        https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html
+
+# FIXME: add aws_route, aws_route_table, aws_route_table_association, aws_nat_gateway, and aws_eips for the nag gateway
 
 resource "aws_iam_role" "node" {
   count = var.use_eksctl ? 0 : 1
@@ -177,6 +191,8 @@ resource "aws_launch_template" "core" {
 
   instance_type = var.core_nodes.machine_type
 
+  # FIXME: update_default_version?
+
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -188,6 +204,9 @@ resource "aws_launch_template" "core" {
       throughput  = var.core_nodes.disk_throughput
     }
   }
+
+  # FIXME: node placement, primary zone
+  # FIXME: user_data to set maxPods?
 }
 
 resource "aws_eks_node_group" "core" {
@@ -195,12 +214,12 @@ resource "aws_eks_node_group" "core" {
   cluster_name    = aws_eks_cluster.cluster[0].name
   node_group_name = "${var.cluster_name}-core-pool"
   node_role_arn   = aws_iam_role.cluster[0].arn
-  subnet_ids      = aws_subnet.public[*].id
-  ami_type        = "AL2023_x86_64_STANDARD"
+  # FIXME: only primary AZ (filter)
+  subnet_ids = aws_subnet.public[*].id
+  ami_type   = "AL2023_x86_64_STANDARD"
 
   launch_template {
-    id = aws_launch_template.core[0].id
-    # TODO: check this is correct
+    id      = aws_launch_template.core[0].id
     version = aws_launch_template.core[0].default_version
   }
 
@@ -217,6 +236,7 @@ resource "aws_eks_node_group" "core" {
   update_config {
     max_unavailable = 1
   }
+  # FIXME: lifeccyle ignore changes to desired_size
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
@@ -239,6 +259,7 @@ resource "aws_eks_node_group" "core" {
   Generate EC2 resource tags representing node taints that cluster autoscaler's autodiscovery understands
   https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#auto-discovery-setup
   */
+  # FIXME: store all labels under new var, pre merged
   labels = merge({
     "node.kubernetes.io/instance-type" = "${var.core_nodes.machine_type}",
     "hub.jupyter.org/node-purpose"     = "core",
@@ -261,6 +282,8 @@ resource "aws_eks_node_group" "core" {
       for k, v in var.core_nodes.taints :
       "k8s.io/cluster-autoscaler/node-template/taint/${k}" => "${v.value}:${v.effect}"
     }
+    # FIXME: add cluster-autoscaler/enabled and ${var.cluster_name} = owned
+    #        if the cluster autoscaler config requires it
   )
 }
 
@@ -269,6 +292,7 @@ resource "aws_launch_template" "notebook" {
   name     = "${var.cluster_name}-notebook-${each.key}"
 
   instance_type = each.value.machine_type
+  # FIXME: update_default_version
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -280,6 +304,9 @@ resource "aws_launch_template" "notebook" {
       throughput  = each.value.disk_throughput
     }
   }
+
+  # FIXME: set placement into primary availability_zone
+  # FIXME: set nodeconfig maxPods
 
   user_data = base64encode(<<-EOT
 ---
@@ -299,8 +326,9 @@ resource "aws_eks_node_group" "notebook" {
   cluster_name    = aws_eks_cluster.cluster[0].name
   node_group_name = "${var.cluster_name}-notebook-pool"
   node_role_arn   = aws_iam_role.cluster[0].arn
-  subnet_ids      = aws_subnet.public[*].id
-  ami_type        = "AL2023_x86_64_STANDARD"
+  # FIXME: primary AZ
+  subnet_ids = aws_subnet.public[*].id
+  ami_type   = "AL2023_x86_64_STANDARD"
 
   launch_template {
     # TODO fixme this seems long winded
@@ -312,6 +340,8 @@ resource "aws_eks_node_group" "notebook" {
   node_repair_config {
     enabled = true
   }
+
+  # FIXME: lifecycle ignore changes to desired size
 
   scaling_config {
     min_size     = each.value.min
@@ -361,5 +391,7 @@ resource "aws_eks_node_group" "notebook" {
       for k, v in each.value.taints :
       "k8s.io/cluster-autoscaler/node-template/taint/${k}" => "${v.value}:${v.effect}"
     }
+
+    # FIXME: see above for the autoscaler
   )
 }
