@@ -76,7 +76,7 @@ jupyterhub:
               description: |
                 Pangeo + Schmidt Base + Packages for Florence Symposium (To Be Renamed)
               kubespawner_override:
-                image: quay.io/2i2c/schmidt-astro-florence-symposium:2026-09-28
+                image: quay.io/2i2c/schmidt-astro-florence-symposium:257c9c1
             02-base:
               display_name: Base Schmidt Observatory Image
               description: Pangeo + Astro Packages
@@ -98,17 +98,17 @@ jupyterhub:
             mem_14_gb:
               display_name: ~14 GB RAM, ~4 CPUs
               description: Up to ~8 CPUs when available
+              default: true
               kubespawner_override:
                 mem_guarantee: 15204209090
                 mem_limit: 15204209090
                 cpu_guarantee: 3.76565
                 cpu_limit: 7.5313
                 node_selector:
-                  node.kubernetes.io/instance-type: m8i.2xlarge
+                  node.kubernetes.io/instance-type: m8i.16xlarge
             mem_28_gb:
               display_name: ~28 GB RAM, ~8 CPUs
               description: ~8 CPUs always available
-              default: true
               kubespawner_override:
                 mem_guarantee: 30408418181
                 mem_limit: 30408418181
