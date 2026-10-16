@@ -137,6 +137,21 @@ jupyterhub:
       tag: 0.0.1-0.dev.git.17191.hac8737b9e
     extraConfig:
       001-litellm-key: |
+        # -----------------------------------------------------------------------------
+        # Acknowledgments
+        #
+        # This extra configuration code was developed in collaboration with 
+        # the Scientific Software Engineering Center (SSEC)
+        # at the University of Washington eScience Institute.
+        # We gratefully acknowledge the SSEC team for their software engineering
+        # expertise, including their contributions to the design and testing
+        # that helped make this AI integration open, reusable, and sustainable.
+        #
+        # SSEC is supported by Schmidt Sciences through the Virtual Institute for
+        # Scientific Software (VISS).
+        #
+        # Learn more: https://escience.washington.edu/software-engineering/ssec/
+        # -----------------------------------------------------------------------------
         from z2jh import get_config
         from logging import Logger
         from yarl import URL
