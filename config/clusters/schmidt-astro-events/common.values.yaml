@@ -140,7 +140,7 @@ jupyterhub:
         # -----------------------------------------------------------------------------
         # Acknowledgments
         #
-        # This extra configuration code was developed in collaboration with 
+        # This extra configuration code was developed in collaboration with
         # the Scientific Software Engineering Center (SSEC)
         # at the University of Washington eScience Institute.
         # We gratefully acknowledge the SSEC team for their software engineering
