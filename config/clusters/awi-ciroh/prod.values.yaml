@@ -58,7 +58,7 @@ basehub:
                 display_name: CIROH Community NextGen Hub
                 slug: devcon7
                 kubespawner_override:
-                  image: quay.io/awiciroh/ngiab-2i2c:v1.2.3
+                  image: quay.io/awiciroh/ngiab-2i2c:v1.3.1
                   image_pull_policy: Always
               devcon8: # No longer a devcon image
                 display_name: Community Assets Computation Hub
