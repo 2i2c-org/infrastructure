@@ -1,4 +1,16 @@
 jupyterhub:
+  singleuser:
+    extraFiles:
+      kernel-cull:
+        mountPath: /etc/jupyter/jupyter_server_config.d/kernel-cull.json
+        data:
+          MappingKernelManager:
+            cull_idle_timeout: 3600
+            cull_interval: 300
+            cull_connected: true
+            cull_busy: false
+          ServerApp:
+            shutdown_no_activity_timeout: 3600
   scheduling:
     userScheduler:
       # I was noticing sometimes upto a minute between when
