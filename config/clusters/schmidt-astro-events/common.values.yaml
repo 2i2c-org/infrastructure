@@ -165,12 +165,37 @@ jupyterhub:
             """
             pass
 
+        async def create_key(
+            client: ClientSession,
+            litellm_url: URL,
+            litellm_username: str,
+            username: str,
+            team_id: str,
+            log: Logger
+        ):
+            resp = await client.post(litellm_url / "key/generate", json={
+                "user_id": litellm_username,
+                "key_alias": litellm_username,
+                "team_id": team_id,
+                "models": ["all-team-models"]
+            })
+
+            log.info(f"Created LiteLLM key for user {username} with LiteLLM username {litellm_username}")
+
+            key_data = await resp.json()
+
+            return {
+                "key_name": key_data["key_name"],
+                "key": key_data["key"]
+            }
+
         async def ensure_key(
             litellm_url: URL,
             litellm_key: str,
             hub_name: str,
             username: str,
             teams: set[str],
+            key_team_id: str,
             existing_litellm_key_authstate: dict,
             log: Logger
         ) -> dict[str, str]:
@@ -212,6 +237,7 @@ jupyterhub:
                         "user_id": litellm_username,
                         "user_alias": username,
                         "teams": list(teams),
+                        "auto_create_key": "false",
                         "metadata": {
                           # Add these so we can track where users are from,
                           # and reduce attack surface of impersonating more powerful users
@@ -222,10 +248,16 @@ jupyterhub:
                     resp = await client.post(litellm_url / "user/new", json=user_model)
                     full_user_model = await resp.json()
                     log.info(f"Created LiteLLM user {litellm_username} for {username}")
-                    return {
-                        "key": full_user_model["key"],
-                        "key_name": full_user_model["key_name"]
-                    }
+
+
+                    return await create_key(
+                        client,
+                        litellm_url,
+                        litellm_username,
+                        username,
+                        key_team_id,
+                        log
+                    )
                 elif resp.status == 200:
                     # User does exist! We ensure that the team membership is right
                     # for this user (to handle changes in our config about which teams
@@ -263,18 +295,14 @@ jupyterhub:
                         # We don't have a current token at all
                         "key_name" not in existing_litellm_key_authstate
                     ):
-                        key_add_resp = await client.post(litellm_url / "key/generate", json={
-                            "user_id": litellm_username
-                        })
-
-                        log.info(f"Created LiteLLM key for user {username} with LiteLLM username {litellm_username}")
-
-                        key_data = await key_add_resp.json()
-
-                        return {
-                            "key_name": key_data["key_name"],
-                            "key": key_data["key"]
-                        }
+                        return await create_key(
+                            client,
+                            litellm_url,
+                            litellm_username,
+                            username,
+                            key_team_id,
+                            log
+                        )
                     else:
                         # The most common pathway - we have a key! Let's just do
                         # nothing and keep on going on.
@@ -289,6 +317,7 @@ jupyterhub:
             hub_name = get_config("custom.litellmKeyProvisioner.hubName")
             api_key = get_config("custom.litellmKeyProvisioner.key")
             team_ids = set(get_config("custom.litellmKeyProvisioner.teamIds"))
+            key_team_id = get_config("custom.litellmKeyProvisioner.keyTeamId")
             username = auth_model['name']
             log = authenticator.log
             if auth_state is None:
@@ -300,17 +329,16 @@ jupyterhub:
                   hub_name,
                   username,
                   team_ids,
+                  key_team_id,
                   auth_state.get('litellm', {}),
                   log
               )
             except MismatchedLiteLLMUserException as e:
-              log.info(f"Failing login for user {username} due to potential LiteLLM escalation attempt")
-              log.exception()
+              log.exception(f"Failing login for user {username} due to potential LiteLLM escalation attempt")
               raise
             except Exception as e:
               # Print but then ignore every exception
-              log.info(f"Error ensuring LiteLLM key for user {username}")
-              log.exception()
+              log.exception(f"Error ensuring LiteLLM key for user {username}")
               # Return existing auth_state so we don't lose it
               return auth_state
 
@@ -323,6 +351,7 @@ jupyterhub:
           if "key" not in litellm:
               spawner_user_name = spawner.user.name
               spawner.log.warning(f"No LiteLLM key for {spawner_user_name}, not setting LLM env vars")
+              return
           key = litellm["key"]
           env = {
               "OPENAI_API_KEY": key,

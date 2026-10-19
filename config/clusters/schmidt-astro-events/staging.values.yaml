@@ -7,6 +7,7 @@ jupyterhub:
       hubName: staging.schmidt-astro-events.2i2c.cloud
       teamIds:
       - schmidt-astro-participants-staging
+      keyTeamId: schmidt-astro-participants-staging
     s3files:
       mounts:
         schmidt-observatory-system:
