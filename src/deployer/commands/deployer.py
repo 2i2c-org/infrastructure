@@ -7,6 +7,7 @@ import base64
 import itertools
 import random
 import subprocess
+import traceback
 import sys
 from collections.abc import Generator
 
@@ -211,10 +212,11 @@ async def test_health_attempts(
                 await test_hub_healthy(hub_url, service_api_token, hub_type, verbose)
         except TimeoutError:
             print_colour(f"Attempt {i + 1} timed out, retrying", colour="red")
-        except Exception:
+        except Exception as e:
             print_colour(
                 f"An error occurred during attempt {i + 1}, retrying", colour="red"
             )
+            traceback.print_exception(e)
         else:
             return
 
