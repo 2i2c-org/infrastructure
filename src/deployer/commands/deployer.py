@@ -7,8 +7,8 @@ import base64
 import itertools
 import random
 import subprocess
-import traceback
 import sys
+import traceback
 from collections.abc import Generator
 
 import typer
