@@ -25,8 +25,7 @@ local c = cluster.makeCluster(
       instanceType: 'g4dn.xlarge',
     },
   ],
-  // FIXME: There is one nodegroup from generation g
-  // Remove it once there are no users with:
+  // FIXME: once there are no users on the older generation nodes, delete them with:
   // eksctl delete nodegroup --config-file=$cluster.eksctl.yaml --only-missing --approve
   nodeGroupGenerations=['a']
 );

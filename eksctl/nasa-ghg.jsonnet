@@ -4,7 +4,7 @@ local c = cluster.makeCluster(
   name='nasa-ghg-hub',
   region='us-west-2',
   nodeAz='us-west-2a',
-  version='1.34',
+  version='1.36',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     'r5.xlarge',
@@ -20,6 +20,6 @@ local c = cluster.makeCluster(
     ],
   ],
   hubs=['staging', 'prod', 'binder'],
-  nodeGroupGenerations=['b']
+  nodeGroupGenerations=['c']
 );
 c

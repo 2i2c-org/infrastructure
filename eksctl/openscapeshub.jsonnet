@@ -5,7 +5,7 @@ local c = cluster.withNodeGroupConfigOverride(
     name='openscapeshub',
     region='us-west-2',
     nodeAz='us-west-2b',
-    version='1.34',
+    version='1.36',
     coreNodeInstanceType='r8i-flex.large',
     notebookCPUInstanceTypes=[
       'r5.xlarge',
@@ -26,8 +26,9 @@ local c = cluster.withNodeGroupConfigOverride(
       'workshop',
     ],
     notebookGPUNodeGroups=[],
-    // TODO: delete r5.xlarge-d and r5.4xlarge-d
-    nodeGroupGenerations=['d', 'e']
+    // FIXME: once there are no users on the older generation nodes, delete them with:
+    // eksctl delete nodegroup --config-file=$cluster.eksctl.yaml --only-missing --approve
+    nodeGroupGenerations=['f']
   ), kind='core', overrides={ maxSize: 2 }
 );
 c
