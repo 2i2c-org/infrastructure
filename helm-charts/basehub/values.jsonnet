@@ -174,8 +174,8 @@ local hubIngressConfig = {
 local jupyterhubConfig =
   {
     debug: {
-      # Turn on debug logging by default in staging
-      enabled: is_staging
+      // Turn on debug logging by default in staging
+      enabled: is_staging,
     },
     ingress: hubIngressConfig,
     hub: {
