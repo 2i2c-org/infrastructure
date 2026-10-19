@@ -24,7 +24,7 @@ local c = cluster.makeCluster(
   notebookGPUNodeGroups=[],
   // FIXME: once there are no users on the older generation nodes, delete them with:
   // eksctl delete nodegroup --config-file=$cluster.eksctl.yaml --only-missing --approve
-  nodeGroupGenerations=['a']
+  nodeGroupGenerations=['c']
 );
 
 c
