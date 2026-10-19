@@ -6,7 +6,7 @@ local c = cluster.withNodeGroupConfigOverride(
       name='nmfs-openscapes',
       region='us-west-2',
       nodeAz='us-west-2b',
-      version='1.34',
+      version='1.36',
       coreNodeInstanceType='r8i-flex.large',
       notebookCPUInstanceTypes=[
         'r5.xlarge',
@@ -27,8 +27,7 @@ local c = cluster.withNodeGroupConfigOverride(
           instanceType: 'g4dn.xlarge',
         },
       ],
-      // From generation 'g' there are only workshop nodes
-      nodeGroupGenerations=['c', 'h'],
+      nodeGroupGenerations=['a'],
     ),
     kind='core',
     overrides={ maxSize: 2 }
