@@ -24,8 +24,12 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         allowed_idps:
-          urn:mace:incommon:iu.edu:
+          https://idp.login.iu.edu/idp/shibboleth:
             default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true
+          urn:mace:incommon:iu.edu:
             username_derivation:
               username_claim: email
             allow_all: true
