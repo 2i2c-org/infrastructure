@@ -74,11 +74,12 @@ async def fetch_hub_version(hub_url: str):
 @contextlib.contextmanager
 def log_group(title: str):
     if "GITHUB_ACTIONS" not in os.environ:
-        return
-
-    print(f"::group::{{{title}}}")
-    yield
-    print("::endgroup::")
+        print_colour(f"\033[4m❯ {title}\033[0m", "red")
+        yield
+    else:
+        print(f"::group::{{{title}}}")
+        yield
+        print("::endgroup::")
 
 
 async def test_hub_healthy(hub_url: str, api_token: str, hub_type: str, verbose: bool):
