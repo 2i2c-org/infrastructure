@@ -4,7 +4,7 @@ local c = cluster.makeCluster(
   name='ucmerced',
   region='us-west-2',
   nodeAz='us-west-2a',
-  version='1.34',
+  version='1.36',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     // Add r5.2xlarge to mirror prior n2-highmem-8 on GCP
@@ -22,6 +22,8 @@ local c = cluster.makeCluster(
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[],
+  // FIXME: once there are no users on the older generation nodes, delete them with:
+  // eksctl delete nodegroup --config-file=$cluster.eksctl.yaml --only-missing --approve
   nodeGroupGenerations=['a']
 );
 

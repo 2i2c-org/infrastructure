@@ -7,7 +7,7 @@ local c = cluster.withNodeGroupConfigOverride(
         name='earthscope',
         region='us-east-2',
         nodeAz='us-east-2a',
-        version='1.34',
+        version='1.36',
         coreNodeInstanceType='r8i-flex.large',
         notebookCPUInstanceTypes=[
           'r5.xlarge',
@@ -30,8 +30,9 @@ local c = cluster.withNodeGroupConfigOverride(
             instanceType: 'g4dn.xlarge',
           },
         ],
-        // FIXME: Clean up nb-prod-r5-xlarge-e
-        nodeGroupGenerations=['e', 'f']
+        // FIXME: once there are no users on the older generation nodes, delete them with:
+        // eksctl delete nodegroup --config-file=$cluster.eksctl.yaml --only-missing --approve
+        nodeGroupGenerations=['a']
       ),
       // Add provenence of resources
       overrides={
