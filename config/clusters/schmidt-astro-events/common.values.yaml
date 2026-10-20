@@ -74,14 +74,14 @@ jupyterhub:
             01-florence:
               display_name: Florence Symposium 2026
               description: |
-                Pangeo + Schmidt Base + Packages for Florence Symposium (To Be Renamed)
+                Florence Symposium (+ Schmidt Base + Pangeo)
               kubespawner_override:
-                image: quay.io/2i2c/schmidt-astro-florence-symposium:257c9c1
+                image: quay.io/2i2c/schmidt-astro-florence-symposium:2026-10-17
             02-base:
               display_name: Base Schmidt Observatory Image
               description: Pangeo + Astro Packages
               kubespawner_override:
-                image: quay.io/2i2c/schmidt-astro-base:2026-09-28
+                image: quay.io/2i2c/schmidt-astro-base:2026-10-17
         resource_allocation:
           display_name: Resource Allocation
           choices:
