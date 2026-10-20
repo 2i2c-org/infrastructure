@@ -44,3 +44,8 @@ scratchDiskVAC:
     # Increase for faster /tmp
     iops: '4000'
     throughput: '300'
+
+# FIXME: remove this once eksctl is fixed
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
