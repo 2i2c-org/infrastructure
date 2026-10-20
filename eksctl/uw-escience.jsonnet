@@ -5,7 +5,7 @@ local c = cluster.withNodeGroupConfigOverride(
     name='uw-escience',
     region='us-west-2',
     nodeAz='us-west-2a',
-    version='1.34',
+    version='1.36',
     coreNodeInstanceType='r8i-flex.large',
     notebookCPUInstanceTypes=[
       'r5.xlarge',
@@ -19,7 +19,7 @@ local c = cluster.withNodeGroupConfigOverride(
         instanceType: 'g4dn.xlarge',
       },
     ],
-    nodeGroupGenerations=['c']
+    nodeGroupGenerations=['a']
   ),
   kind='notebook'
 );

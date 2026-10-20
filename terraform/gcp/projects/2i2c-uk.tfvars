@@ -8,16 +8,17 @@ billing_account_id = "0157F7-E3EA8C-25AC3C"
 filestores = {}
 
 k8s_versions = {
-  min_master_version : "1.35.3-gke.1943000",
-  core_nodes_version : "1.35.3-gke.1943000",
-  notebook_nodes_version : "1.35.3-gke.1943000",
+  min_master_version : "1.36.4-gke.1495002",
+  core_nodes_version : "1.36.4-gke.1495002",
+  notebook_nodes_version : "1.36.4-gke.1495002",
 }
 
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
 notebook_nodes = {
-  # To be deleted when empty
+  # FIXME: To be deleted
+  # Currently returning Internal Error on delete attempts
   "n2-highmem-4" : {
     min : 0,
     max : 100,
