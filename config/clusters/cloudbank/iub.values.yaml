@@ -1,4 +1,8 @@
 jupyterhub:
+  singleuser:
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/java-user-image
+      tag: 156d03cded75
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -24,12 +28,10 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         allowed_idps:
-          https://idp.login.iu.edu/idp/shibboleth:
-            default: true
-            username_derivation:
-              username_claim: email
-            allow_all: true
           http://google.com/accounts/o8/id:
+            default: true
+            allowed_domains:
+            - iu.edu
             username_derivation:
               username_claim: email
       Authenticator:
