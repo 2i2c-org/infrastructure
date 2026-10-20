@@ -1,9 +1,9 @@
 nfs:
   pv:
-    serverIP: 10.100.55.222
+    serverIP: 10.100.39.172
 jupyterhub-home-nfs:
   eks:
-    volumeId: vol-0b5fc915293bd5bec
+    volumeId: vol-022719c599349286c
 jupyterhub:
   custom:
     2i2c:
