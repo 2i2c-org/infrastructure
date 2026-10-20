@@ -81,7 +81,7 @@ def setup_aws_sts_env(profile: str, mfa_arn: str, mfa_code: str) -> dict[str, st
 
     # Not an SSO log-in problem, throw an error
     if not re.search(
-        r"Error loading SSO Token|SSO session associated with this profile has expired or is otherwise invalid",
+        r"Error loading SSO Token|SSO session associated with this profile has expired or is otherwise invalid|Token has expired and refresh failed",
         result.stderr,
     ):
         raise STSEnvSetupError(result.stderr)
