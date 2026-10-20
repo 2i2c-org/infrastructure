@@ -1,4 +1,4 @@
-jupyterhub-fancy-profiles==0.6.0
+jupyterhub-fancy-profiles==0.7.0
 jupyterhub-usage-quotas==0.2.0
 # Brings in https://github.com/jupyterhub/jupyterhub/pull/5557
-git+https://github.com/jupyterhub/jupyterhub@541b1d8a10d782c439b2eb4b5b86ce9b9f88d83b
+jupyterhub==6.1.0
