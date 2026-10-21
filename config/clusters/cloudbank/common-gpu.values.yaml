@@ -1,7 +1,7 @@
 jupyterhub:
   prePuller:
     continuous:
-      enabled: true
+      enabled: false
     # pullProfileListImages: true pulls every profile in list
     # -- so set it to false and set the extraImages to what you want pre-pulled
     pullProfileListImages: false
