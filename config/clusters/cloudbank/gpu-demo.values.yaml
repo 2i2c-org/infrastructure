@@ -1,23 +1,4 @@
 jupyterhub:
-  cull:
-    every: 60
-    timeout: 300
-  singleuser:
-    extraFiles:
-      jupyter_server_config.json:
-        data:
-          MappingKernelManager:
-            cull_idle_timeout: 300
-            cull_interval: 60
-            cull_busy: false
-          ServerApp:
-            shutdown_no_activity_timeout: 300
-      jupyter_notebook_config.json:
-        data:
-          MappingKernelManager:
-            cull_idle_timeout: 300
-            cull_interval: 60
-            cull_busy: false
   scheduling:
     userScheduler:
       # I was noticing sometimes upto a minute between when
