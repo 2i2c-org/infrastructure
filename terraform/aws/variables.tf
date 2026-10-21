@@ -314,6 +314,28 @@ variable "enable_jupyterhub_cost_tags" {
   EOT
 }
 
+variable "enable_legacy_2i2c_tags" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Set legacy 2i2c tags on resources.
+  EOT
+}
+
+variable "external_cost_tags" {
+  type = object({
+    cluster_name = string
+    hub_name = string
+    purpose = string
+  })
+  default     = null
+  description = <<-EOT
+  Define additional cost tags.
+
+  Set `cluster_name`, `hub_name`, or `purpose` sets to define externally tracked cost tags
+  EOT
+}
+
 variable "enable_k8s_event_exporter" {
   type        = bool
   default     = false
