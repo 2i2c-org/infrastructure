@@ -29,6 +29,11 @@ jupyterhub:
     # specific and wins.
     startTimeout: 1200
     defaultUrl: /lab
+    extraFiles:
+      jupyter_server_config.json:
+        data:
+          ServerApp:
+            shutdown_no_activity_timeout: 3600
     profileList:
     - display_name: CPU only
       default: true
