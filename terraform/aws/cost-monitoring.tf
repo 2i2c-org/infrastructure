@@ -56,8 +56,9 @@ output "jupyterhub_cost_monitoring_k8s_sa_annotation" {
 }
 
 # If enable_jupyterhub_cost_tags = true, then activate cost allocation tags for the AWS Cost Explorer. Can take up to 24 hours to activate after being applied to a resource.
-locals {
-  cost_allocation_tags = var.enable_jupyterhub_cost_tags ? [
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ce_cost_allocation_tag
+resource "aws_ce_cost_allocation_tag" "cost_allocation_tags" {
+  for_each = toset(var.enable_jupyterhub_cost_tags ? [
     "2i2c:hub-name",
     "2i2c:node-purpose",
     "2i2c:volume-purpose",
@@ -66,12 +67,7 @@ locals {
     "kubernetes.io/cluster/{var_cluster_name}",
     "kubernetes.io/created-for/pvc/name",
     "kubernetes.io/created-for/pvc/namespace",
-  ] : []
-}
-
-# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ce_cost_allocation_tag
-resource "aws_ce_cost_allocation_tag" "cost_allocation_tags" {
-  for_each = toset(local.cost_allocation_tags)
+  ] : [])
 
   tag_key = replace(each.key, "{var_cluster_name}", var.cluster_name)
   status  = "Active"
