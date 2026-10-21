@@ -168,7 +168,7 @@ resource "aws_iam_role_policy_attachment" "s3files" {
 # to the hub, even if we can't to each user.
 resource "aws_s3files_file_system" "s3files" {
   for_each = local.s3files_hubs
-  tags = merge(each.value.config.tags, {for tag in local.hub_name_tags: tag => each.value.hub_name})
+  tags     = merge(each.value.config.tags, { for tag in local.hub_name_tags : tag => each.value.hub_name })
 
   bucket                = "arn:aws:s3:::${each.value.config.bucket}"
   role_arn              = aws_iam_role.s3files[each.key].arn

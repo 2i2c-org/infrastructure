@@ -27,7 +27,7 @@ variable "user_buckets" {
       extra_read_only_principals : optional(list(string), []),
       extra_full_principals : optional(list(string), []),
       tags : optional(map(string), {}),
-      hub_name: optional(string, null)
+      hub_name : optional(string, null)
     })
   )
   default     = {}
@@ -327,8 +327,8 @@ variable "enable_legacy_2i2c_tags" {
 variable "external_cost_tags" {
   type = object({
     cluster_name = string
-    hub_name = string
-    purpose = string
+    hub_name     = string
+    purpose      = string
   })
   default     = null
   description = <<-EOT

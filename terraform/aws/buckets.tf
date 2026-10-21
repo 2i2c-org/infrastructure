@@ -2,9 +2,9 @@
 resource "aws_s3_bucket" "user_buckets" {
   for_each = var.user_buckets
   bucket   = lower("${var.cluster_name}-${each.key}")
-  tags = merge(each.value.tags, 
-    {for tag in local.cluster_name_tags: tag => var.cluster_name},
-    each.value.hub_name == null ? {} : {for tag in local.hub_name_tags: tag => each.value.hub_name}
+  tags = merge(each.value.tags,
+    { for tag in local.cluster_name_tags : tag => var.cluster_name },
+    each.value.hub_name == null ? {} : { for tag in local.hub_name_tags : tag => each.value.hub_name }
   )
 }
 
