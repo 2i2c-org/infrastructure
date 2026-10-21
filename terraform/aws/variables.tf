@@ -27,6 +27,7 @@ variable "user_buckets" {
       extra_read_only_principals : optional(list(string), []),
       extra_full_principals : optional(list(string), []),
       tags : optional(map(string), {}),
+      hub_name: optional(string, null)
     })
   )
   default     = {}
@@ -48,6 +49,7 @@ variable "user_buckets" {
   4. `extra_full_principals` - optional AWS IAM principals that are
      granted full RW access to the bucket.
   5. `tags` - bucket specific tags to be merged into the general tags variable.
+  6. `hub_name` - hub to associate bucket with for costs
   EOT
 }
 
