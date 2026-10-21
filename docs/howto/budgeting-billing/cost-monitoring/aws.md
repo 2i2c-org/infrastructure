@@ -80,7 +80,7 @@ Below is a template message you can send to the technical contact. Note that `<$
 >
 >    - `2i2c:hub-name`
 >    - `2i2c.org/cluster-name`
->    - `2i2c.org/node-purpose`
+>    - `2i2c:node-purpose`
 >    - `2i2c.org/volume-purpose`
 >    - `alpha.eksctl.io/cluster-name`
 >    - `kubernetes.io/cluster/<$CLUSTER_NAME>`
