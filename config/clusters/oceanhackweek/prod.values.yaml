@@ -1,7 +1,6 @@
 nfs:
-  enabled: false
   pv:
-    serverIP: 10.100.253.138
+    serverIP: 10.100.106.79
 
 jupyterhub-home-nfs:
   eks:
