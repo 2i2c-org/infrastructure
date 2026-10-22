@@ -12,6 +12,7 @@ dask-gateway:
       jupyterhub:
         jupyterhubServiceName: dask-gateway
 
+
 jupyterhub:
   custom:
     usageQuotas:
