@@ -4,7 +4,7 @@ local c = cluster.makeCluster(
   name='oceanhackweek',
   region='us-west-2',
   nodeAz='us-west-2a',
-  version='1.33',
+  version='1.36',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
     'r5.xlarge',
@@ -13,7 +13,7 @@ local c = cluster.makeCluster(
   ],
   hubs=['staging', 'prod'],
   notebookGPUNodeGroups=[],
-  nodeGroupGenerations=['b']
+  nodeGroupGenerations=['a']
 );
 
 c
