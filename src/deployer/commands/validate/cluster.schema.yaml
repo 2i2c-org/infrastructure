@@ -11,6 +11,14 @@ properties:
     description: |
       Name of the cluster, used primarily to identify it in
       the deploy script. This value should match the parent folder name.
+  health_checks:
+    type: string
+    description: |
+      Kind of health checks to run. `api` tests only the cluster and hub APIs, 
+      whilst notebooks tests pre-defined worklows.
+    enum: 
+      - api
+      - notebooks
   metadata:
     type: object
     description: |

@@ -85,20 +85,17 @@ async def using_jupyterhub_token(token: str):
 
 async def ensure_no_pending_user(hub: JupyterHubAPI, username: str):
     if user := (await hub.get_user(username)):
-        print("found user")
         if user["server"] and not user["pending"]:
             await hub.ensure_server_deleted(username, 60)
-            print("deleted server")
 
         # If we don't delete the user too, than we won't be able to start a kernel for it.
         # This is because we would have lost its api token from the previous run.
         await hub.delete_user(username)
-        print("deleted user")
-    else:
-        print("no found user", username)
 
 
-async def test_hub_healthy(hub_url: str, api_token: str, hub_type: str, verbose: bool):
+async def test_hub_healthy(
+    *, hub_url: str, api_token: str, hub_type: str, test_notebooks: bool, verbose: bool
+):
     # First, check we can hit the hub
     try:
         print_colour(f"Running health checks for {hub_url} ...", "yellow")
@@ -130,27 +127,32 @@ async def test_hub_healthy(hub_url: str, api_token: str, hub_type: str, verbose:
                     )
 
                     # Run some workflows
-                    with log_group("Notebook workflow health"):
-                        nb_dir = notebook_dir(hub_type)
-                        print_colour(
-                            "Checking singleuser workflows succeed ...", "yellow"
-                        )
-                        test_notebook_paths = (
-                            os.path.join(root, name)
-                            for root, _, files in os.walk(nb_dir, topdown=False)
-                            for _, name in enumerate(files)
-                        )
-                        for test_notebook_path in test_notebook_paths:
-                            name = os.path.basename(test_notebook_path)
-                            # We only want to run the "scale_dask_workers.ipynb" file if the
-                            # check_dask_scaling variable is true. We continue in the loop if
-                            # check_dask_scaling == False when we iterate over this file.
-                            print_colour(f"Running {name} test notebook ...", "yellow")
-
-                            cells = parse_notebook_cells(test_notebook_path)
-                            await run_notebook_in_default_kernel(
-                                username, server, cells, validate=False
+                    if test_notebooks:
+                        with log_group("Notebook workflow health"):
+                            nb_dir = notebook_dir(hub_type)
+                            print_colour(
+                                "Checking singleuser workflows succeed ...", "yellow"
                             )
+                            test_notebook_paths = (
+                                os.path.join(root, name)
+                                for root, _, files in os.walk(nb_dir, topdown=False)
+                                for _, name in enumerate(files)
+                            )
+                            for test_notebook_path in test_notebook_paths:
+                                name = os.path.basename(test_notebook_path)
+                                # We only want to run the "scale_dask_workers.ipynb" file if the
+                                # check_dask_scaling variable is true. We continue in the loop if
+                                # check_dask_scaling == False when we iterate over this file.
+                                print_colour(
+                                    f"Running {name} test notebook ...", "yellow"
+                                )
+
+                                cells = parse_notebook_cells(test_notebook_path)
+                                await run_notebook_in_default_kernel(
+                                    username, server, cells, validate=False
+                                )
+                    else:
+                        print_colour("Skipping notebook tests ...", "yellow")
 
             print_colour(f"Hub {hub_url} is healthy!")
     except Exception as e:
