@@ -97,69 +97,57 @@ async def test_hub_healthy(
     *, hub_url: str, api_token: str, hub_type: str, test_notebooks: bool, verbose: bool
 ):
     # First, check we can hit the hub
-    try:
-        print_colour(f"Running health checks for {hub_url} ...", "yellow")
 
-        with log_group("Hub health"):
-            print_colour("Checking hub API is reachable ...", "yellow")
-            hub_version = await fetch_hub_version(hub_url)
-            print_colour(f"Found hub running version {hub_version}", "green")
+    print_colour(f"Running health checks for {hub_url} ...", "yellow")
 
-        username = "deployment-service-check"
-        async with using_jupyterhub_token(api_token), JupyterHubAPI(hub_url) as hub:
-            await ensure_no_pending_user(hub, username)
+    with log_group("Hub health"):
+        print_colour("Checking hub API is reachable ...", "yellow")
+        hub_version = await fetch_hub_version(hub_url)
+        print_colour(f"Found hub running version {hub_version}", "green")
 
-            # Start a server
-            print_colour(f"Starting health-check server for {username}...", "yellow")
-            server = await hub.ensure_server(
-                username,
-                create_user=True,
-                timeout=60,
-            )
-            async with server:
-                with log_group("Server health"):
-                    # Check the API
-                    print_colour("Checking server API is reachable ...", "yellow")
-                    specs = await server.list_kernel_specs()
-                    default = specs["default"]
-                    print_colour(
-                        f"Found default kernelspec {default} for server", "green"
-                    )
+    username = "deployment-service-check"
+    async with using_jupyterhub_token(api_token), JupyterHubAPI(hub_url) as hub:
+        await ensure_no_pending_user(hub, username)
 
-                    # Run some workflows
-                    if test_notebooks:
-                        with log_group("Notebook workflow health"):
-                            nb_dir = notebook_dir(hub_type)
-                            print_colour(
-                                "Checking singleuser workflows succeed ...", "yellow"
-                            )
-                            test_notebook_paths = (
-                                os.path.join(root, name)
-                                for root, _, files in os.walk(nb_dir, topdown=False)
-                                for _, name in enumerate(files)
-                            )
-                            for test_notebook_path in test_notebook_paths:
-                                name = os.path.basename(test_notebook_path)
-                                # We only want to run the "scale_dask_workers.ipynb" file if the
-                                # check_dask_scaling variable is true. We continue in the loop if
-                                # check_dask_scaling == False when we iterate over this file.
-                                print_colour(
-                                    f"Running {name} test notebook ...", "yellow"
-                                )
-
-                                cells = parse_notebook_cells(test_notebook_path)
-                                await run_notebook_in_default_kernel(
-                                    username, server, cells, validate=False
-                                )
-                    else:
-                        print_colour("Skipping notebook tests ...", "yellow")
-
-            print_colour(f"Hub {hub_url} is healthy!")
-    except Exception as e:
-        print_colour(
-            f"{type(e)}: {e}",
-            "red",
+        # Start a server
+        print_colour(f"Starting health-check server for {username}...", "yellow")
+        server = await hub.ensure_server(
+            username,
+            create_user=True,
+            timeout=60,
         )
-        if verbose:
-            print_colour(traceback.format_exc(), None)
-        raise
+        async with server:
+            with log_group("Server health"):
+                # Check the API
+                print_colour("Checking server API is reachable ...", "yellow")
+                specs = await server.list_kernel_specs()
+                default = specs["default"]
+                print_colour(f"Found default kernelspec {default} for server", "green")
+
+                # Run some workflows
+                if test_notebooks:
+                    with log_group("Notebook workflow health"):
+                        nb_dir = notebook_dir(hub_type)
+                        print_colour(
+                            "Checking singleuser workflows succeed ...", "yellow"
+                        )
+                        test_notebook_paths = (
+                            os.path.join(root, name)
+                            for root, _, files in os.walk(nb_dir, topdown=False)
+                            for _, name in enumerate(files)
+                        )
+                        for test_notebook_path in test_notebook_paths:
+                            name = os.path.basename(test_notebook_path)
+                            # We only want to run the "scale_dask_workers.ipynb" file if the
+                            # check_dask_scaling variable is true. We continue in the loop if
+                            # check_dask_scaling == False when we iterate over this file.
+                            print_colour(f"Running {name} test notebook ...", "yellow")
+
+                            cells = parse_notebook_cells(test_notebook_path)
+                            await run_notebook_in_default_kernel(
+                                username, server, cells, validate=False
+                            )
+                else:
+                    print_colour("Skipping notebook tests ...", "yellow")
+
+        print_colour(f"Hub {hub_url} is healthy!")
