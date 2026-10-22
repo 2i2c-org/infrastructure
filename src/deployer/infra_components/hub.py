@@ -115,20 +115,7 @@ class Hub:
 
             self.spec["domain"] = domain_override_config["domain"]
 
-        for values_file in self.spec["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(
-                values_file
-            ) and not values_file.endswith(".jsonnet"):
-                values_file = self.cluster.config_dir / values_file
-                config = yaml.load(values_file)
-                # Check if there's config that enables dask-gateway
-                dask_gateway_enabled = config.get("dask-gateway", {}).get(
-                    "enabled", False
-                )
-                if dask_gateway_enabled:
-                    break
-
-        if dask_gateway_enabled:
+        if self.type == "daskhub":
             # Install CRDs for daskhub before deployment
             manifest_urls = [
                 f"https://raw.githubusercontent.com/dask/dask-gateway/{dask_gateway_version}/resources/helm/dask-gateway/crds/daskclusters.yaml",
