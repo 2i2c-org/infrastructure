@@ -201,7 +201,7 @@ async def test_health_attempts(
     # How long attempt and cleanup can take
     attempt_timeout_s: float,
     cleanup_timeout_s: float,
-    # Time betweena ttempts
+    # Time between attempts
     attempt_wait_time_s: float,
     attempt_max_wait_time_s: float,
     verbose: bool,
