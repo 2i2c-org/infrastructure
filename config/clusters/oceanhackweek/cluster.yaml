@@ -1,5 +1,9 @@
 name: oceanhackweek
 provider: aws # https://2i2c.awsapps.com/start#/
+provider_url: https://2i2c.awsapps.com/start#/
+metadata:
+  2i2c:
+    hubspot_deal_id: 324817164986
 aws:
   account: 221106934874
   key: enc-deployer-credentials.secret.json
