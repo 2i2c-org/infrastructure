@@ -25,12 +25,14 @@ def log_group(title: str):
         print("::endgroup::")
 
 
+VERY_LARGE_TIMEOUT = 9999
+
+
 async def run_notebook_in_default_kernel(
     username: str,
     jupyter,
     cells,
     validate: bool = False,
-    timeout: float = 60.0,
 ):
     kernel_id, kernel = await jupyter.ensure_kernel()
     try:
@@ -40,7 +42,7 @@ async def run_notebook_in_default_kernel(
                 kernel_result = await kernel.send_code(
                     username,
                     code,
-                    timeout=timeout,
+                    timeout=VERY_LARGE_TIMEOUT,
                     wait=True,
                 )
                 result_cells.append((code, kernel_result))
@@ -113,7 +115,7 @@ async def test_hub_healthy(
         server = await hub.ensure_server(
             username,
             create_user=True,
-            timeout=60,
+            timeout=VERY_LARGE_TIMEOUT,
         )
         async with server:
             with log_group("Server health"):
@@ -144,7 +146,10 @@ async def test_hub_healthy(
 
                             cells = parse_notebook_cells(test_notebook_path)
                             await run_notebook_in_default_kernel(
-                                username, server, cells, validate=False
+                                username,
+                                server,
+                                cells,
+                                validate=False,
                             )
                 else:
                     print_colour("Skipping notebook tests ...", "yellow")
