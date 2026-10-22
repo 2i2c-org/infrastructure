@@ -8,20 +8,20 @@ enable_jupyterhub_cost_monitoring = true
 # enable_jupyterhub_cost_tags = false
 
 external_cost_tags = {
-  cluster_name: "Project",
-  hub_name: "SubProject",
-  purpose: "Group",
+  cluster_name : "Project",
+  hub_name : "SubProject",
+  purpose : "Group",
 }
 
 ebs_volumes = {
   "staging" = {
-    size        = 1
-    type        = "gp3"
+    size = 1
+    type = "gp3"
   },
   "prod" = {
-    size        = 5600
-    type        = "gp3"
-    throughput  = 375 # Triple the throughput, handling alerts for exceeding throughput consistently
+    size       = 5600
+    type       = "gp3"
+    throughput = 375 # Triple the throughput, handling alerts for exceeding throughput consistently
   }
 }
 enable_nfs_backup = true
