@@ -198,10 +198,14 @@ async def test_health_attempts(
     service_api_token: str,
     hub_type: str,
     attempts: int,
+    # How long attempt and cleanup can take
     attempt_timeout_s: float,
+    cleanup_timeout_s: float,
+    # Time between attempts
     attempt_wait_time_s: float,
     attempt_max_wait_time_s: float,
     verbose: bool,
+    test_notebooks: bool,
 ):
     for i, sleep_time_s in zip(
         range(attempts),
@@ -209,14 +213,22 @@ async def test_health_attempts(
     ):
         try:
             async with asyncio.timeout(attempt_timeout_s):
-                await test_hub_healthy(hub_url, service_api_token, hub_type, verbose)
+                await test_hub_healthy(
+                    hub_url=hub_url,
+                    api_token=service_api_token,
+                    hub_type=hub_type,
+                    test_notebooks=test_notebooks,
+                    cleanup_timeout_s=cleanup_timeout_s,
+                )
         except TimeoutError:
             print_colour(f"Attempt {i + 1} timed out, retrying", colour="red")
         except Exception as e:
             print_colour(
-                f"An error occurred during attempt {i + 1}, retrying", colour="red"
+                f"{type(e).__name__} occurred during attempt {i + 1}: {e}\nRetrying ...",
+                colour="red",
             )
-            traceback.print_exception(e)
+            if verbose:
+                traceback.print_exception(e)
         else:
             return
 
@@ -238,6 +250,9 @@ def run_hub_health_check(
     ),
     attempt_timeout_s: int = typer.Option(
         600, help="Number of seconds before giving up on an attempt"
+    ),
+    cleanup_timeout_s: int = typer.Option(
+        600, help="Number of seconds before giving up on a cleanup attempt"
     ),
     attempt_wait_time_s: int = typer.Option(
         10, help="Number of seconds to wait between trying the next attempt"
@@ -313,15 +328,18 @@ def run_hub_health_check(
             )
         service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
 
+    test_notebooks = cluster.spec.get("health_checks", "notebooks") == "notebooks"
     asyncio.run(
         test_health_attempts(
-            hub_url,
-            service_api_token,
-            hub.type,
-            attempts,
-            attempt_timeout_s,
-            attempt_wait_time_s,
-            attempt_max_wait_time_s,
-            verbose,
+            hub_url=hub_url,
+            service_api_token=service_api_token,
+            hub_type=hub.type,
+            attempts=attempts,
+            attempt_timeout_s=attempt_timeout_s,
+            cleanup_timeout_s=cleanup_timeout_s,
+            attempt_wait_time_s=attempt_wait_time_s,
+            attempt_max_wait_time_s=attempt_max_wait_time_s,
+            verbose=verbose,
+            test_notebooks=test_notebooks,
         )
     )

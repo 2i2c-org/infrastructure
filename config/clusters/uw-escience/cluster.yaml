@@ -4,6 +4,7 @@ provider_url: https://federation-proxy.cloudbank.org/aws?account=334807430785
 metadata:
   2i2c:
     hubspot_deal_id: 179106877126
+health_checks: api
 aws:
   account: 334807430785
   key: enc-deployer-credentials.secret.json
