@@ -1,10 +1,10 @@
+import asyncio
 import contextlib
+import difflib
 import os
 from pathlib import Path
 
-import asyncio
 import aiohttp
-import difflib
 from jhub_client.execute import JupyterHubAPI
 from jhub_client.utils import parse_notebook_cells
 

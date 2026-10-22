@@ -14,11 +14,11 @@ properties:
   health_checks:
     type: string
     description: |
-      Kind of health checks to run. `api` tests only the cluster and hub APIs, 
+      Kind of health checks to run. `api` tests only the cluster and hub APIs,
       whilst notebooks tests pre-defined worklows.
-    enum: 
-      - api
-      - notebooks
+    enum:
+    - api
+    - notebooks
   metadata:
     type: object
     description: |
