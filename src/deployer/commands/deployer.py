@@ -215,7 +215,6 @@ async def test_health_attempts(
                     api_token=service_api_token,
                     hub_type=hub_type,
                     test_notebooks=test_notebooks,
-                    verbose=verbose,
                 )
         except TimeoutError:
             print_colour(f"Attempt {i + 1} timed out, retrying", colour="red")
@@ -224,7 +223,8 @@ async def test_health_attempts(
                 f"{type(e).__name__} occurred during attempt {i + 1}: {e}\nRetrying ...",
                 colour="red",
             )
-            traceback.print_exception(e)
+            if verbose:
+                traceback.print_exception(e)
         else:
             return
 

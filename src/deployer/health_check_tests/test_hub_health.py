@@ -1,6 +1,5 @@
 import contextlib
 import os
-import traceback
 from pathlib import Path
 
 import aiohttp
@@ -94,7 +93,7 @@ async def ensure_no_pending_user(hub: JupyterHubAPI, username: str):
 
 
 async def test_hub_healthy(
-    *, hub_url: str, api_token: str, hub_type: str, test_notebooks: bool, verbose: bool
+    *, hub_url: str, api_token: str, hub_type: str, test_notebooks: bool
 ):
     # First, check we can hit the hub
 
