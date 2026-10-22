@@ -2,6 +2,7 @@ import contextlib
 import os
 from pathlib import Path
 
+import asyncio
 import aiohttp
 import difflib
 from jhub_client.execute import JupyterHubAPI
@@ -32,6 +33,7 @@ async def run_notebook_in_default_kernel(
     username: str,
     jupyter,
     cells,
+    cleanup_timeout_s: float,
     validate: bool = False,
 ):
     kernel_id, kernel = await jupyter.ensure_kernel()
@@ -58,7 +60,9 @@ async def run_notebook_in_default_kernel(
                         f"execution of cell={i} did not match expected result diff={diff}"
                     )
     finally:
-        await jupyter.delete_kernel(kernel_id)
+        await asyncio.wait_for(
+            jupyter.delete_kernel(kernel_id), timeout=cleanup_timeout_s
+        )
 
 
 async def fetch_hub_version(hub_url: str):
@@ -95,7 +99,12 @@ async def ensure_no_pending_user(hub: JupyterHubAPI, username: str):
 
 
 async def test_hub_healthy(
-    *, hub_url: str, api_token: str, hub_type: str, test_notebooks: bool
+    *,
+    hub_url: str,
+    api_token: str,
+    hub_type: str,
+    test_notebooks: bool,
+    cleanup_timeout_s: float,
 ):
     # First, check we can hit the hub
 
@@ -117,41 +126,51 @@ async def test_hub_healthy(
             create_user=True,
             timeout=VERY_LARGE_TIMEOUT,
         )
-        async with server:
-            with log_group("Server health"):
-                # Check the API
-                print_colour("Checking server API is reachable ...", "yellow")
-                specs = await server.list_kernel_specs()
-                default = specs["default"]
-                print_colour(f"Found default kernelspec {default} for server", "green")
+        try:
+            async with server:
+                with log_group("Server health"):
+                    # Check the API
+                    print_colour("Checking server API is reachable ...", "yellow")
+                    specs = await server.list_kernel_specs()
+                    default = specs["default"]
+                    print_colour(
+                        f"Found default kernelspec {default} for server", "green"
+                    )
 
-                # Run some workflows
-                if test_notebooks:
-                    with log_group("Notebook workflow health"):
-                        nb_dir = notebook_dir(hub_type)
-                        print_colour(
-                            "Checking singleuser workflows succeed ...", "yellow"
-                        )
-                        test_notebook_paths = (
-                            os.path.join(root, name)
-                            for root, _, files in os.walk(nb_dir, topdown=False)
-                            for _, name in enumerate(files)
-                        )
-                        for test_notebook_path in test_notebook_paths:
-                            name = os.path.basename(test_notebook_path)
-                            # We only want to run the "scale_dask_workers.ipynb" file if the
-                            # check_dask_scaling variable is true. We continue in the loop if
-                            # check_dask_scaling == False when we iterate over this file.
-                            print_colour(f"Running {name} test notebook ...", "yellow")
-
-                            cells = parse_notebook_cells(test_notebook_path)
-                            await run_notebook_in_default_kernel(
-                                username,
-                                server,
-                                cells,
-                                validate=False,
+                    # Run some workflows
+                    if test_notebooks:
+                        with log_group("Notebook workflow health"):
+                            nb_dir = notebook_dir(hub_type)
+                            print_colour(
+                                "Checking singleuser workflows succeed ...", "yellow"
                             )
-                else:
-                    print_colour("Skipping notebook tests ...", "yellow")
+                            test_notebook_paths = (
+                                os.path.join(root, name)
+                                for root, _, files in os.walk(nb_dir, topdown=False)
+                                for _, name in enumerate(files)
+                            )
+                            for test_notebook_path in test_notebook_paths:
+                                name = os.path.basename(test_notebook_path)
+                                # We only want to run the "scale_dask_workers.ipynb" file if the
+                                # check_dask_scaling variable is true. We continue in the loop if
+                                # check_dask_scaling == False when we iterate over this file.
+                                print_colour(
+                                    f"Running {name} test notebook ...", "yellow"
+                                )
 
-        print_colour(f"Hub {hub_url} is healthy!")
+                                cells = parse_notebook_cells(test_notebook_path)
+                                await run_notebook_in_default_kernel(
+                                    username,
+                                    server,
+                                    cells,
+                                    validate=False,
+                                )
+                    else:
+                        print_colour("Skipping notebook tests ...", "yellow")
+
+            print_colour(f"Hub {hub_url} is healthy!")
+        finally:
+            await asyncio.wait_for(
+                hub.ensure_server_deleted(username, timeout=VERY_LARGE_TIMEOUT),
+                timeout=cleanup_timeout_s,
+            )
