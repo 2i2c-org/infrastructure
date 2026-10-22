@@ -3,16 +3,6 @@ nfs:
   pv:
     serverIP: 192.168.68.1
 
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::221106934874:role/oceanhackweek-staging
-
-jupyterhub:
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.oceanhackweek.2i2c.cloud/hub/oauth_callback
-
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-066b81aba074d726d
