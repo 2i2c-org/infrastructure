@@ -21,7 +21,7 @@ def log_group(title: str):
         print_colour(f"\033[4m❯ {title}\033[0m", "red")
         yield
     else:
-        print(f"::group::{{{title}}}")
+        print(f"::group::{title}")
         yield
         print("::endgroup::")
 
@@ -30,6 +30,7 @@ VERY_LARGE_TIMEOUT = 9999
 
 
 async def run_notebook_in_default_kernel(
+    *,
     username: str,
     jupyter,
     cells,
@@ -160,9 +161,10 @@ async def test_hub_healthy(
 
                                 cells = parse_notebook_cells(test_notebook_path)
                                 await run_notebook_in_default_kernel(
-                                    username,
-                                    server,
-                                    cells,
+                                    username=username,
+                                    jupyter=server,
+                                    cells=cells,
+                                    cleanup_timeout_s=cleanup_timeout_s,
                                     validate=False,
                                 )
                     else:
