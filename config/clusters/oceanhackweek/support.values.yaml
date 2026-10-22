@@ -1,0 +1,40 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+prometheus:
+  server:
+    persistentVolume:
+      size: 100Gi
+    ingress:
+      enabled: true
+      hosts:
+      - prometheus.oceanhackweek.2i2c.cloud
+      tls:
+      - secretName: prometheus-tls
+        hosts:
+        - prometheus.oceanhackweek.2i2c.cloud
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.oceanhackweek.2i2c.cloud/
+  persistence:
+    # We don't need 10Gi on the Grafana persistent directory
+    size: 1Gi
+  ingress:
+    hosts:
+    - grafana.oceanhackweek.2i2c.cloud
+    tls:
+    - secretName: grafana-tls
+      hosts:
+      - grafana.oceanhackweek.2i2c.cloud
+
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: oceanhackweek
+  awsRegion: us-west-2
+
+calico:
+  enabled: true
