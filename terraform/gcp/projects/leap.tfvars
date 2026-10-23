@@ -124,7 +124,10 @@ notebook_nodes = {
       "us-central1-a",
       "us-central1-b",
       "us-central1-f"
-    ]
+    ],
+    labels : {
+      "2i2c-node-like" : "n2-highmem-16"
+    },
   },
 
   "n4-highmem-16" : {
@@ -138,7 +141,10 @@ notebook_nodes = {
       "us-central1-a",
       "us-central1-b",
       "us-central1-f"
-    ]
+    ],
+    labels : {
+      "2i2c-node-like" : "n2-highmem-16"
+    },
   },
   "n2-highmem-64" : {
     min : 0,
