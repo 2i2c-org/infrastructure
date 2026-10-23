@@ -6,7 +6,7 @@ jupyterhub:
       limit: 2G
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/java-user-image
-      tag: 109b5f8ca22b
+      tag: 7ec302df643e
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
