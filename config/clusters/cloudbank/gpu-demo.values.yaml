@@ -1,4 +1,11 @@
 jupyterhub:
+  prePuller:
+    continuous:
+      enabled: true
+  singleuser:
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
+      tag: f40f3c6e6069
   scheduling:
     userScheduler:
       # I was noticing sometimes upto a minute between when
