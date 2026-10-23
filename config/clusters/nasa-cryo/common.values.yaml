@@ -89,6 +89,7 @@ basehub:
           - rwegener2
           - itcarroll
           - eeholmes
+          - babettetchonang
       loadRoles:
         user:
           scopes:
