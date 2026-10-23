@@ -295,6 +295,7 @@ basehub:
           node_selector:
             # Allow n2-highmem-16 or n4-highmem-16
             2i2c-node-like: n2-highmem-16
+            node.kubernetes.io/instance-type: null
             # node.kubernetes.io/instance-type: n2-highmem-16
 
         # NOTE: This is the second medium profile list entry, with less node
