@@ -6,7 +6,7 @@ jupyterhub:
       limit: 6G
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/cloudbank-etsu-image
-      tag: 48152a00cc04
+      tag: a455347d1ce0
   custom:
     2i2c:
       add_staff_user_ids_of_type: google

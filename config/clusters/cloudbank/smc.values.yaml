@@ -23,12 +23,12 @@ jupyterhub:
               description: RStudio, VS Code, JupyterLab, Python, R
               default: true
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:e42c967c281c
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:45f6f60e10f5
             01-cs41:
               display_name: CS 41
               slug: cs41
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/smc-user-image:8c49d58104f3
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/smc-user-image:72d8d0527f46
   scheduling:
     userScheduler:
       enabled: true

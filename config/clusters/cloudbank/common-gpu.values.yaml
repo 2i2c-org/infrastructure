@@ -8,7 +8,7 @@ jupyterhub:
     extraImages:
       00-sml-pytorch:
         name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-        tag: 51375ae7f0b0
+        tag: f40f3c6e6069
     extraTolerations:
     - key: hub.jupyter.org/dedicated
       operator: Exists
@@ -53,12 +53,12 @@ jupyterhub:
               description: RStudio, VS Code, JupyterLab, Python, R
               default: true
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:e42c967c281c
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:45f6f60e10f5
             01-slm:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:f6f187f86979
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:0e15c5f67363
             02-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
@@ -74,7 +74,7 @@ jupyterhub:
               display_name: C# Image
               description: RStudio, VS Code, JupyterLab, Python, R, C#
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image:gui-demo
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image:dce2d64366ff
       kubespawner_override:
         # mem_limit bumped from the original 1G to help deal with possible
         # kernel restarts, per https://2i2c.freshdesk.com/a/tickets/567
@@ -102,7 +102,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:51375ae7f0b0
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:f40f3c6e6069
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
