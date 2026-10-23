@@ -112,13 +112,26 @@ notebook_nodes = {
       "community" : "public",
     },
   }
-
   "n2-highmem-16-a" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
     min : 1,
     max : 100,
     machine_type : "n2-highmem-16",
+    zones : [
+      # For now, risk higher costs in order to find more nodes
+      "us-central1-c",
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-f"
+    ]
+  },
+
+  "n4-highmem-16" : {
+    min : 0,
+    max : 100,
+    machine_type : "n4-highmem-16",
+    disk_type : "hyperdisk-balanced",
     zones : [
       # For now, risk higher costs in order to find more nodes
       "us-central1-c",
