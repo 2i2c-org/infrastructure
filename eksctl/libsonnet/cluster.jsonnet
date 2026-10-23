@@ -312,21 +312,22 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     nodeGroupGenerations=[],
     regionSize=3,
     extraTags={},
-    extraAddons=[]
+    extraAddons=[],
+    enableLegacyCostTags=true,
   ):: {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
+    local costTags = (if enableLegacyCostTags then {
+      ManagedBy: '2i2c',
+      '2i2c.org/cluster-name': name,
+    } else {}) + {
+      'JHCM:ClusterName': name,
+    },
     metadata+: {
       name: name,
       region: region,
       version: version,
-      tags+: {
-        ManagedBy: '2i2c',
-        '2i2c.org/cluster-name': name,
-
-        'JHCM:Attributable': 'true',
-        'JHCM:ClusterName': name,
-      } + extraTags,
+      tags+: costTags + extraTags,
     },
     availabilityZones: ['%s%s' % [region, lowerCaseLetter(i)] for i in std.range(0, regionSize - 1)],
     iam: {
@@ -339,13 +340,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       },
     },
     addons: [
-      { version: 'latest', tags: {
-        ManagedBy: '2i2c',
-        '2i2c.org/cluster-name': name,
-
-        'JHCM:Attributable': 'true',
-        'JHCM:ClusterName': name,
-      } + extraTags } + addon
+      { version: 'latest', tags: costTags + extraTags } + addon
       for addon in
         [
           { name: 'coredns' },
