@@ -9,7 +9,7 @@ resource "aws_ebs_volume" "nfs_home_dirs" {
   encrypted         = true
 
   tags = merge(each.value.tags, {
-    Name      = each.value.name_suffix == null ? "hub-nfs-home-dirs" : "hub-nfs-home-dirs-${each.value.name_suffix}"
+    Name      = "hub-nfs-home-dirs-${each.key}"
     NFSBackup = var.enable_nfs_backup ? "true" : "false" # Tag to identify volumes to backup by Data Lifecycle Manager (DLM)
     },
     { for tag in local.volume_purpose_tags : tag => "home-nfs" },
