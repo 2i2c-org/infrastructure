@@ -293,7 +293,9 @@ basehub:
           cpu_limit:
           mem_limit:
           node_selector:
-            node.kubernetes.io/instance-type: n2-highmem-16
+            # Allow n2-highmem-16 or n4-highmem-16
+            2i2c-node-like: n2-highmem-16
+            # node.kubernetes.io/instance-type: n2-highmem-16
 
         # NOTE: This is the second medium profile list entry, with less node
         #       share options for a different subset of users via the basehub
