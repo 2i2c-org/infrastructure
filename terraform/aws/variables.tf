@@ -27,6 +27,7 @@ variable "user_buckets" {
       extra_read_only_principals : optional(list(string), []),
       extra_full_principals : optional(list(string), []),
       tags : optional(map(string), {}),
+      hub_name : optional(string, null)
     })
   )
   default     = {}
@@ -48,6 +49,7 @@ variable "user_buckets" {
   4. `extra_full_principals` - optional AWS IAM principals that are
      granted full RW access to the bucket.
   5. `tags` - bucket specific tags to be merged into the general tags variable.
+  6. `hub_name` - hub to associate bucket with for costs
   EOT
 }
 
@@ -311,6 +313,28 @@ variable "enable_jupyterhub_cost_tags" {
   default     = false
   description = <<-EOT
   Activate cost allocation tags with the AWS Cost Explorer API.
+  EOT
+}
+
+variable "enable_legacy_2i2c_tags" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Set legacy 2i2c tags on resources.
+  EOT
+}
+
+variable "external_cost_tags" {
+  type = object({
+    cluster_name = string
+    hub_name     = string
+    purpose      = string
+  })
+  default     = null
+  description = <<-EOT
+  Define additional cost tags.
+
+  Set `cluster_name`, `hub_name`, or `purpose` sets to define externally tracked cost tags
   EOT
 }
 

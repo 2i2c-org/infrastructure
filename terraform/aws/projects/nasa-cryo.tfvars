@@ -4,19 +4,24 @@ cluster_nodes_location = "us-west-2a"
 
 enable_jupyterhub_cost_monitoring = true
 
+# Once on CloudBank
+# enable_jupyterhub_cost_tags = false
+
+external_cost_tags = {
+  cluster_name : "Project",
+  hub_name : "SubProject",
+  purpose : "Group",
+}
+
 ebs_volumes = {
   "staging" = {
-    size        = 1
-    type        = "gp3"
-    name_suffix = "staging"
-    tags        = { "2i2c:hub-name" : "staging" }
+    size = 1
+    type = "gp3"
   },
   "prod" = {
-    size        = 5600
-    type        = "gp3"
-    throughput  = 375 # Triple the throughput, handling alerts for exceeding throughput consistently
-    name_suffix = "prod"
-    tags        = { "2i2c:hub-name" : "prod" }
+    size       = 5600
+    type       = "gp3"
+    throughput = 375 # Triple the throughput, handling alerts for exceeding throughput consistently
   }
 }
 enable_nfs_backup = true
@@ -24,20 +29,20 @@ enable_nfs_backup = true
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
-    "tags" : { "2i2c:hub-name" : "staging" }
+    "hub_name" : "staging"
   },
   "scratch" : {
     "delete_after" : 7,
-    "tags" : { "2i2c:hub-name" : "prod" }
+    "hub_name" : "prod"
   },
   # For https://2i2c.freshdesk.com/a/tickets/847
   "persistent-staging" : {
     "delete_after" : null,
-    "tags" : { "2i2c:hub-name" : "staging" }
+    "hub_name" : "staging"
   },
   "persistent" : {
     "delete_after" : null,
-    "tags" : { "2i2c:hub-name" : "prod" }
+    "hub_name" : "prod"
   },
 }
 
