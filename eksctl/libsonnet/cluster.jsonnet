@@ -318,9 +318,9 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
     local costTags = (if enableLegacyCostTags then {
-      ManagedBy: '2i2c',
-      '2i2c.org/cluster-name': name,
-    } else {}) + {
+                        ManagedBy: '2i2c',
+                        '2i2c.org/cluster-name': name,
+                      } else {}) + {
       'JHCM:ClusterName': name,
     },
     metadata+: {
