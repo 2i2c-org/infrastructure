@@ -657,6 +657,15 @@ hubs:
   - enc-common.secret.values.yaml
   - mtu.values.yaml
   - enc-mtu.secret.values.yaml
+- name: ncsu
+  display_name: North Carolina State University
+  domain: ncsu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - ncsu.values.yaml
+  - enc-ncsu.secret.values.yaml
 - name: nicc
   display_name: Northeast Iowa Community College
   domain: nicc.cloudbank.2i2c.cloud
