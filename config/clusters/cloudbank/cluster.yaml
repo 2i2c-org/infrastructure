@@ -676,6 +676,15 @@ hubs:
   - nicc.values.yaml
   - enc-nicc.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: nmsu
+  display_name: New Mexico State University
+  domain: nmsu.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - nmsu.values.yaml
+  - enc-nmsu.secret.values.yaml
 - name: norco
   display_name: Norco College
   domain: norco.cloudbank.2i2c.cloud
