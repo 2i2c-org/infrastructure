@@ -267,6 +267,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "nicc"
   }
+  "nmsu" = {
+    size        = 25
+    name_suffix = "nmsu"
+  }
   "norco" = {
     size        = 50
     name_suffix = "norco"
