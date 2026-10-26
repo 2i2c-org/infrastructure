@@ -42,7 +42,7 @@ jupyterhub:
         admin_users:
         - sean-morris
         - ericvd-ucb
-        - zachwilson-ivytech
+        - zachwilson-iecc
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-iecc
