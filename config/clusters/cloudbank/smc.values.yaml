@@ -23,7 +23,7 @@ jupyterhub:
               description: RStudio, VS Code, JupyterLab, Python, R
               default: true
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:45f6f60e10f5
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:42a579e662f4
             01-cs41:
               display_name: CS 41
               slug: cs41
