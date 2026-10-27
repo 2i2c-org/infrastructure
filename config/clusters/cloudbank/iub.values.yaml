@@ -25,15 +25,13 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            allowed_domains:
-            - iu.edu
-            username_derivation:
-              username_claim: email
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - iu.edu
+        strip_domain: false
+        allow_all: false
       Authenticator:
         admin_users:
         - sean.smorris@berkeley.edu
