@@ -19,7 +19,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://iu.edu/images/brand/iu-trident-promo.jpg
+          logo_url: https://assets.iu.edu/brand/3.x/trident-large.png
           name: Indiana University Bloomington
           url: https://www.indiana.edu/
   hub:
