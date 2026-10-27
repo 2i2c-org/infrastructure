@@ -19,21 +19,19 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://iu.edu/images/brand/iu-trident-promo.jpg
+          logo_url: https://assets.iu.edu/brand/3.x/trident-large.png
           name: Indiana University Bloomington
           url: https://www.indiana.edu/
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            allowed_domains:
-            - iu.edu
-            username_derivation:
-              username_claim: email
+        authenticator_class: google
+      GoogleOAuthenticator:
+        username_claim: email
+        allowed_hosted_domains:
+        - iu.edu
+        strip_domain: false
+        allow_all: false
       Authenticator:
         admin_users:
         - sean.smorris@berkeley.edu
