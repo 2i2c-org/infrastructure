@@ -27,6 +27,9 @@ jupyterhub:
           name: Whitman College
           url: https://www.whitman.edu
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: 0.0.1-0.dev.git.17203.h34102b8b4
     config:
       JupyterHub:
         authenticator_class: google

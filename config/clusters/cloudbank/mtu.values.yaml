@@ -21,6 +21,9 @@ jupyterhub:
           name: Michigan Technological University
           url: https://www.mtu.edu/
   hub:
+    image:
+      name: quay.io/2i2c/oauthenticator-latest
+      tag: 0.0.1-0.dev.git.17203.h34102b8b4
     db:
       pvc:
         storageClassName: standard-rwo
