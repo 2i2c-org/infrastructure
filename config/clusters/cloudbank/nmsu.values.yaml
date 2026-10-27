@@ -1,4 +1,8 @@
 jupyterhub:
+  singleuser:
+    image:
+      name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
+      tag: 42a579e662f4
   scheduling:
     userScheduler:
       enabled: true
