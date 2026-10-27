@@ -9,6 +9,9 @@ jupyterhub:
       pvc:
         # prod stores logs, so let's make it big
         storage: 60Gi
+    config:
+      GenericOAuthenticator:
+        allow_all: true
   singleuser:
     memory:
       limit: 6G
