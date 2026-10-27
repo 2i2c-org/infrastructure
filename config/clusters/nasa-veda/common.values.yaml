@@ -126,7 +126,7 @@ basehub:
                 display_name: Modified Pangeo Notebook
                 description: Pangeo based notebook with a Python environment
                 kubespawner_override:
-                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2026.06.04-v1
+                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2026.10.21-v1
                   extra_containers:
                   # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                   # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
@@ -282,13 +282,13 @@ basehub:
                 default: false
                 slug: pytorch
                 kubespawner_override:
-                  image: quay.io/pangeo/pytorch-notebook:2025.12.30
+                  image: quay.io/pangeo/pytorch-notebook:2026.10.21
               tensorflow2:
                 display_name: Pangeo Tensorflow2 ML Notebook
                 default: true
                 slug: tensorflow2
                 kubespawner_override:
-                  image: quay.io/pangeo/ml-notebook:2025.12.30
+                  image: quay.io/pangeo/ml-notebook:2026.10.21
         kubespawner_override:
           environment:
             NVIDIA_DRIVER_CAPABILITIES: compute,utility
