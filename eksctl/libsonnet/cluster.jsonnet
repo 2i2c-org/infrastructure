@@ -33,6 +33,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     extraTaints=[],
     extraTags={},
     extraKubeletConfig=null,
+    spot=false
   ):: {
     /**
      Generate EC2 resource tags representing node labels that cluster autoscaler's autodiscovery understands
@@ -91,6 +92,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       'JHCM:Attributable': 'true',
       'JHCM:ClusterName': clusterName,
     } + extraTags,
+    spot: spot,
   } + (
     // Allow custom kubelet config
     if std.type(extraKubeletConfig) == 'null' then {} else
@@ -282,11 +284,11 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         extraKubeletConfig={
           singleProcessOOMKill: true,
         },
+        spot=true
       ) +
       {
         _kind:: 'dask-worker',
         _hubName:: hubName,
-        spot: true,
       },
   /**
    Create a valid eksctl Cluster configuration
