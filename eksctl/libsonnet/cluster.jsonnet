@@ -92,7 +92,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       'JHCM:Attributable': 'true',
       'JHCM:ClusterName': clusterName,
     } + extraTags,
-    spot: spot,
+    [if spot then 'spot']: true,
   } + (
     // Allow custom kubelet config
     if std.type(extraKubeletConfig) == 'null' then {} else
@@ -419,6 +419,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         instanceType=gpuConfig.instanceType,
         gpuCount=std.get(gpuConfig, 'gpuCount', 1),
         gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4'),
+        spot=std.get(gpuConfig, 'spot', false),
         generation=generation,
         minSize=0,
         maxSize=100,
