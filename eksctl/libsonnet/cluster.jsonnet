@@ -427,7 +427,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         spot=std.get(gpuConfig, 'spot', false),
         generation=generation,
         minSize=0,
-        maxSize=100,
+        maxSize=10,
         extraTags=extraTags
       )
       for hubName in hubs
