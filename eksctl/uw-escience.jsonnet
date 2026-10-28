@@ -17,6 +17,23 @@ local c = cluster.withNodeGroupConfigOverride(
     notebookGPUNodeGroups=[
       {
         instanceType: 'g4dn.xlarge',
+        gpuType: 'nvidia-tesla-t4',
+      },
+      {
+        instanceType: 'g6.xlarge',
+        gpuType: 'nvidia-l4',
+      },
+      {
+        instanceType: 'g5.xlarge',
+        gpuType: 'nvidia-a10g',
+      },
+      {
+        instanceType: 'g6e.xlarge',
+        gpuType: 'nvidia-l40s',
+      },
+      {
+        instanceType: 'p5.4xlarge',
+        gpuType: 'nvidia-h100',
       },
     ],
     nodeGroupGenerations=['a']
