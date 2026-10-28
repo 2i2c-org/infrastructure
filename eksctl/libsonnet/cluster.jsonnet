@@ -156,7 +156,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     maxSize,
     extraLabels={},
     extraTaints=[],
-    extraTags={}
+    extraTags={},
+    spot=false
   ):: $.makeNodeGroup(
     clusterName,
     'nb-%s' % [hubName],
@@ -165,6 +166,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     generation=generation,
     minSize=minSize,
     maxSize=maxSize,
+    spot=spot,
     extraLabels={
       'hub.jupyter.org/node-purpose': 'user',
       'k8s.dask.org/node-purpose': 'scheduler',
@@ -207,7 +209,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     maxSize,
     extraLabels={},
     extraTaints=[],
-    extraTags={}
+    extraTags={},
+    spot=false,
   ):: $.makeNotebookCPUNodeGroup(
     clusterName=clusterName,
     hubName=hubName,
@@ -216,6 +219,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     generation=generation,
     minSize=minSize,
     maxSize=maxSize,
+    spot=spot,
     extraLabels={
       '2i2c/has-gpu': 'true',
       'k8s.amazonaws.com/accelerator': gpuType,
@@ -250,7 +254,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     maxSize,
     extraLabels={},
     extraTaints=[],
-    extraTags={}
+    extraTags={},
+    spot=true,
   ):: $.makeNodeGroup(
         clusterName,
         'dask-%s' % [hubName],
@@ -259,6 +264,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         generation=generation,
         minSize=minSize,
         maxSize=maxSize,
+        spot=spot,
         extraLabels={
           'k8s.dask.org/node-purpose': 'worker',
           '2i2c/hub-name': hubName,
@@ -284,7 +290,6 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         extraKubeletConfig={
           singleProcessOOMKill: true,
         },
-        spot=true
       ) +
       {
         _kind:: 'dask-worker',
