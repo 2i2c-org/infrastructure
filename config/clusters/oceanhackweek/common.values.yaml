@@ -31,15 +31,14 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
-        - Intercoonecta:ohwes25-organizers
-        - Intercoonecta:ohwes25-participants-tallerintermed
-        - Intercoonecta:ohwes25-participants-hackaton
+        - Intercoonecta:ohwes26-organizers
+        - Intercoonecta:ohwes26-participants
       Authenticator:
         admin_users:
         - ocefpaf
         - abkfenris
-        - cpsarason
         - emiliom
+        - juliajaca
 
   scheduling:
     userScheduler:
