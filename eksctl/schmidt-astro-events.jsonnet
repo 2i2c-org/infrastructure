@@ -7,7 +7,7 @@ local c = cluster.makeCluster(
   version='1.36',
   coreNodeInstanceType='r8i-flex.large',
   notebookCPUInstanceTypes=[
-    # Keep both m and r instances here, so we can switch just in common.yaml
+    // Keep both m and r instances here, so we can switch just in common.yaml
     'm8i.xlarge',
     'm8i.2xlarge',
     'm8i.4xlarge',
