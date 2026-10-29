@@ -36,13 +36,37 @@ local c = cluster.withNodeGroupConfigOverride(
         gpuType: 'nvidia-h100',
       },
       {
+        instanceType: 'g4dn.xlarge',
+        gpuType: 'nvidia-tesla-t4',
+        spot: true,
+      },
+      {
+        instanceType: 'g6.xlarge',
+        gpuType: 'nvidia-l4',
+        spot: true,
+      },
+      {
+        instanceType: 'g5.xlarge',
+        gpuType: 'nvidia-a10g',
+        spot: true,
+      },
+      {
+        instanceType: 'g6e.xlarge',
+        gpuType: 'nvidia-l40s',
+        spot: true,
+      },
+      {
+        instanceType: 'p5.4xlarge',
+        gpuType: 'nvidia-h100',
+        spot: true,
+      },
+      {
         instanceType:
           [
             'g4dn.xlarge',
             'g6.xlarge',
             'g5.xlarge',
             'g6e.xlarge',
-            'p5.4xlarge',
           ],
         spot: true,
       },
