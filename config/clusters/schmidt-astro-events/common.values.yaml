@@ -21,6 +21,8 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: false
     homepage:
+      gitRepoBranch: schmidt-astro-events
+      gitRepoUrl: https://github.com/uw-ssec/jhub-homepages
       templateVars:
         org:
           name: Schmidt Observatory System Science Symposium
