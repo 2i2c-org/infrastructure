@@ -33,6 +33,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     extraTaints=[],
     extraTags={},
     extraKubeletConfig=null,
+    spot=false
   ):: {
     /**
      Generate EC2 resource tags representing node labels that cluster autoscaler's autodiscovery understands
@@ -79,7 +80,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       enabled: true,
     },
     labels: {
-      'node.kubernetes.io/instance-type': instanceTypes[0],
+      [if std.isString(instanceType) then 'node.kubernetes.io/instance-type']: instanceType,
       '2i2c/node-group-generation': generation,
     } + extraLabels,
     taints: extraTaints,
@@ -91,6 +92,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       'JHCM:Attributable': 'true',
       'JHCM:ClusterName': clusterName,
     } + extraTags,
+    [if spot then 'spot']: true,
   } + (
     // Allow custom kubelet config
     if std.type(extraKubeletConfig) == 'null' then {} else
@@ -154,7 +156,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     maxSize,
     extraLabels={},
     extraTaints=[],
-    extraTags={}
+    extraTags={},
+    spot=false
   ):: $.makeNodeGroup(
     clusterName,
     'nb-%s' % [hubName],
@@ -163,9 +166,9 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     generation=generation,
     minSize=minSize,
     maxSize=maxSize,
+    spot=spot,
     extraLabels={
       'hub.jupyter.org/node-purpose': 'user',
-      'k8s.dask.org/node-purpose': 'scheduler',
       '2i2c/hub-name': hubName,
     } + extraLabels,
     extraTaints=[
@@ -205,7 +208,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     maxSize,
     extraLabels={},
     extraTaints=[],
-    extraTags={}
+    extraTags={},
+    spot=false,
   ):: $.makeNotebookCPUNodeGroup(
     clusterName=clusterName,
     hubName=hubName,
@@ -214,9 +218,10 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     generation=generation,
     minSize=minSize,
     maxSize=maxSize,
+    spot=spot,
     extraLabels={
       '2i2c/has-gpu': 'true',
-      'k8s.amazonaws.com/accelerator': gpuType,
+      [if std.isString(instanceType) then 'k8s.amazonaws.com/accelerator']: gpuType,
     } + extraLabels,
     extraTags={
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': std.toString(gpuCount),
@@ -248,7 +253,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     maxSize,
     extraLabels={},
     extraTaints=[],
-    extraTags={}
+    extraTags={},
+    spot=true,
   ):: $.makeNodeGroup(
         clusterName,
         'dask-%s' % [hubName],
@@ -257,6 +263,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         generation=generation,
         minSize=minSize,
         maxSize=maxSize,
+        spot=spot,
         extraLabels={
           'k8s.dask.org/node-purpose': 'worker',
           '2i2c/hub-name': hubName,
@@ -286,7 +293,6 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       {
         _kind:: 'dask-worker',
         _hubName:: hubName,
-        spot: true,
       },
   /**
    Create a valid eksctl Cluster configuration
@@ -342,7 +348,6 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       { version: 'latest', tags: {
         ManagedBy: '2i2c',
         '2i2c.org/cluster-name': name,
-
         'JHCM:Attributable': 'true',
         'JHCM:ClusterName': name,
       } + extraTags } + addon
@@ -401,7 +406,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         generation=generation,
         minSize=0,
         maxSize=100,
-        extraTags=extraTags
+        extraTags=extraTags,
+        extraLabels={ 'k8s.dask.org/node-purpose': 'scheduler' },
       )
       for hubName in hubs
       for instanceType in notebookCPUInstanceTypes
@@ -417,9 +423,10 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         instanceType=gpuConfig.instanceType,
         gpuCount=std.get(gpuConfig, 'gpuCount', 1),
         gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4'),
+        spot=std.get(gpuConfig, 'spot', false),
         generation=generation,
         minSize=0,
-        maxSize=100,
+        maxSize=10,
         extraTags=extraTags
       )
       for hubName in hubs
