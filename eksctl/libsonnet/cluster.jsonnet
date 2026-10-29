@@ -169,7 +169,6 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     spot=spot,
     extraLabels={
       'hub.jupyter.org/node-purpose': 'user',
-      'k8s.dask.org/node-purpose': 'scheduler',
       '2i2c/hub-name': hubName,
     } + extraLabels,
     extraTaints=[
@@ -349,7 +348,6 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       { version: 'latest', tags: {
         ManagedBy: '2i2c',
         '2i2c.org/cluster-name': name,
-
         'JHCM:Attributable': 'true',
         'JHCM:ClusterName': name,
       } + extraTags } + addon
@@ -408,7 +406,8 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         generation=generation,
         minSize=0,
         maxSize=100,
-        extraTags=extraTags
+        extraTags=extraTags,
+        extraLabels={ 'k8s.dask.org/node-purpose': 'scheduler' },
       )
       for hubName in hubs
       for instanceType in notebookCPUInstanceTypes
