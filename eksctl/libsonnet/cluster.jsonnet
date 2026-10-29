@@ -80,7 +80,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
       enabled: true,
     },
     labels: {
-      'node.kubernetes.io/instance-type': instanceTypes[0],
+      [if std.isString(instanceType) then 'node.kubernetes.io/instance-type']: instanceType,
       '2i2c/node-group-generation': generation,
     } + extraLabels,
     taints: extraTaints,
@@ -222,7 +222,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     spot=spot,
     extraLabels={
       '2i2c/has-gpu': 'true',
-      'k8s.amazonaws.com/accelerator': gpuType,
+      [if std.isString(instanceType) then 'k8s.amazonaws.com/accelerator']: gpuType,
     } + extraLabels,
     extraTags={
       'k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu': std.toString(gpuCount),
