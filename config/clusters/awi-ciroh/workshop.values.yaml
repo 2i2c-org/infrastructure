@@ -1,0 +1,113 @@
+basehub:
+  nodePlaceholder:
+    enabled: false
+  jupyterhub-home-nfs:
+    gke:
+      volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-workshop
+  jupyterhub:
+    cull:
+      # No pods over 12h long
+      maxAge: 43200
+    scheduling:
+      userScheduler:
+        enabled: true
+    custom:
+      singleuserAdmin:
+        extraVolumeMounts:
+      # gitRepoBranch:
+        # gitRepoBranch: unify-logins-2
+    singleuser:
+      profileList:
+      - display_name: Default
+        description: Choose image and resource allocation
+        default: true
+        profile_options:
+          image:
+            display_name: Image
+            dynamic_image_building:
+              enabled: false
+            choices:
+              ccnh: # No longer a devcon image
+                display_name: CIROH Community NextGen Hub
+                slug: ccnh
+                kubespawner_override:
+                  image: quay.io/awiciroh/ngiab-2i2c:v1.3.1
+                  image_pull_policy: Always
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+                image_pull_policy: Always
+          requests:
+            display_name: Resource Allocation
+            choices:
+              mem_7_gb:
+                display_name: ~7 GB RAM, ~0.9 CPUs
+                description: Up to ~15 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 7643721728
+                  mem_limit: 7643721728
+                  cpu_guarantee: 0.9443524999999999
+                  cpu_limit: 15.109639999999999
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-16
+              mem_14_gb:
+                display_name: ~14 GB RAM, ~1.9 CPUs
+                description: Up to ~15 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 15287443456
+                  mem_limit: 15287443456
+                  cpu_guarantee: 1.8887049999999999
+                  cpu_limit: 15.109639999999999
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-16
+              mem_28_gb:
+                display_name: ~28 GB RAM, ~4 CPUs
+                description: Up to ~15 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 30574886912
+                  mem_limit: 30574886912
+                  cpu_guarantee: 3.7774099999999997
+                  cpu_limit: 15.109639999999999
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-16
+              mem_57_gb:
+                display_name: ~57 GB RAM, ~8 CPUs
+                description: Up to ~15 CPUs when available
+                kubespawner_override:
+                  mem_guarantee: 61149773824
+                  mem_limit: 61149773824
+                  cpu_guarantee: 7.554819999999999
+                  cpu_limit: 15.109639999999999
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-16
+              mem_114_gb:
+                display_name: ~114 GB RAM, ~15 CPUs
+                description: ~15 CPUs always available
+                kubespawner_override:
+                  mem_guarantee: 122299547648
+                  mem_limit: 122299547648
+                  cpu_guarantee: 15.109639999999999
+                  cpu_limit: 15.109639999999999
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-16
+
+      extraEnv:
+        SCRATCH_BUCKET: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
+    hub:
+      allowNamedServers: true
+      config:
+        JupyterHub:
+          authenticator_class: shared-password
+        Authenticator:
+          manage_groups: false
+          allow_all: true
+          admin_users:
+          - arpita0911patel
+          - benlee0423
+          - sheargrub
+          - snaserneisary

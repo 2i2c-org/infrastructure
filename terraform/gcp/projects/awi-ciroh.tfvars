@@ -20,6 +20,10 @@ persistent_disks = {
     size        = 2965 # in GiB
     name_suffix = "prod"
   }
+  "workshop" = {
+    size        = 300 # in GiB
+    name_suffix = "workshop"
+  }
 }
 
 # Cloud costs for this project are not passed through by 2i2c
@@ -39,6 +43,10 @@ user_buckets = {
     "uniform_bucket_level_access_only" : true
   },
   "scratch" : {
+    "delete_after" : 7,
+    "uniform_bucket_level_access_only" : true
+  },
+  "scratch-workshop" : {
     "delete_after" : 7,
     "uniform_bucket_level_access_only" : true
   },
@@ -138,6 +146,10 @@ hub_cloud_permissions = {
   "prod" : {
     bucket_admin_access : ["scratch", "persistent"],
     hub_namespace : "prod"
+  }
+  "workshop" : {
+    bucket_admin_access : ["scratch-workshop"],
+    hub_namespace : "workshop"
   }
 }
 
