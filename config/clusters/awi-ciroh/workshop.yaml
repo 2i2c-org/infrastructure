@@ -1,0 +1,181 @@
+basehub:
+  nodePlaceholder:
+    enabled: false
+  jupyterhub-home-nfs:
+    gke:
+      volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-workshop
+  jupyterhub:
+    cull:
+      # No pods over 12h long
+      maxAge: 43200
+    scheduling:
+      userScheduler:
+        enabled: true
+    custom:
+      singleuserAdmin:
+        extraVolumeMounts:
+      # gitRepoBranch:
+        # gitRepoBranch: unify-logins-2
+    singleuser:
+      profileList:
+      - display_name: Small
+        description: 5GB RAM, 2 CPUs
+        default: true
+        profile_options: &profile_options
+          image:
+            display_name: Image
+              # Requested in https://2i2c.freshdesk.com/a/tickets/1387
+            choices:
+              old:
+                display_name: Original Pangeo Notebook base image 2023.09.11
+                slug: old
+                kubespawner_override:
+                  image: quay.io/2i2c/awi-ciroh-image:d9f753c83a6b
+              new:
+                display_name: New Pangeo Notebook base image 2024.04.08
+                default: true
+                slug: new
+                kubespawner_override:
+                  image: quay.io/2i2c/awi-ciroh-image:d86a62ae0b85
+              devcon15: # Repurposed for Summer Institute '26
+                display_name: Summer Institute Bootcamp
+                slug: devcon15
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-cuahsi
+                  image_pull_policy: Always
+              devcon7: # No longer a devcon image
+                display_name: CIROH Community NextGen Hub
+                slug: devcon7
+                kubespawner_override:
+                  image: quay.io/awiciroh/ngiab-2i2c:v1.3.1
+                  image_pull_policy: Always
+              devcon8: # No longer a devcon image
+                display_name: Community Assets Computation Hub
+                slug: devcon8
+                kubespawner_override:
+                  image: quay.io/2i2c/awi-ciroh-image:symfluence-v0.9.2
+                  image_pull_policy: Always
+              devcon1:
+                display_name: Devcon25-USGS Surface Water Tools
+                slug: devcon1
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon25:devcon25-usgs
+                  image_pull_policy: Always
+              devcon10:
+                display_name: Devcon26-INFLECT FIM
+                slug: devcon10
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-inflect
+                  image_pull_policy: Always
+              devcon11:
+                display_name: Devcon26-HydroServer
+                slug: devcon11
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-hydroserver
+                  image_pull_policy: Always
+              devcon12:
+                display_name: Devcon26-Hillslope Water Quality Prediction
+                slug: devcon12
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-hillslope
+                  image_pull_policy: Always
+              devcon13:
+                display_name: Devcon26-ML Emulator Models
+                slug: devcon13
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-emulator
+                  image_pull_policy: Always
+              devcon14:
+                display_name: Devcon26-Satellite Data Projection
+                slug: devcon14
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-satellite
+                  image_pull_policy: Always
+              devcon16:
+                display_name: Devcon26-Foundations of ML
+                slug: devcon16
+                kubespawner_override:
+                  image: quay.io/awiciroh/devcon26:devcon26-foundations
+                  image_pull_policy: Always
+        kubespawner_override:
+          mem_limit: 7G
+          mem_guarantee: 5G
+          cpu_limit: 2
+          cpu_guarantee: 0.938
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+      - display_name: Medium
+        description: 11GB RAM, 4 CPUs
+        profile_options: *profile_options
+        kubespawner_override:
+          mem_limit: 15G
+          mem_guarantee: 11G
+          cpu_limit: 4
+          cpu_guarantee: 1.875
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+      - display_name: Large
+        description: 24GB RAM, 8 CPUs
+        profile_options: *profile_options
+        kubespawner_override:
+          mem_limit: 30G
+          mem_guarantee: 24G
+          cpu_limit: 8
+          cpu_guarantee: 3.75
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+      - display_name: Huge
+        description: 52GB RAM, 16 CPUs
+        profile_options: *profile_options
+        kubespawner_override:
+          mem_limit: 60G
+          mem_guarantee: 52G
+          cpu_limit: 16
+          cpu_guarantee: 7.5
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: Start a container on a dedicated node with a GPU
+        allowed_groups:
+        - 2i2c-org:hub-access-for-2i2c-staff
+        - AlabamaWaterInstitute:2i2c_portal_users_gpu
+        profile_options:
+          image:
+            display_name: Image
+            choices:
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook
+                slug: tensorflow
+                kubespawner_override:
+                  image: pangeo/ml-notebook:2024.05.07
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                default: true
+                slug: pytorch
+                kubespawner_override:
+                  image: pangeo/pytorch-notebook:2024.05.07
+        kubespawner_override:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          mem_limit:
+          mem_guarantee: 14G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-highmem-8
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
+      extraEnv:
+        SCRATCH_BUCKET: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: gs://awi-ciroh-scratch-workshop/$(JUPYTERHUB_USER)
+    hub:
+      allowNamedServers: true
+      config:
+        JupyterHub:
+          authenticator_class: shared-password
+        Authenticator:
+          manage_groups: false
+          allow_all: true
+          admin_users:
+          - arpita0911patel
+          - benlee0423
+          - sheargrub
+          - snaserneisary
