@@ -37,14 +37,6 @@ jupyterhub:
         funded_by:
           name: Schmidt Observatory System
           url: https://www.schmidtsciences.org/schmidt-observatory-system/
-    singleuserAdmin:
-      extraVolumeMounts:
-        01-allusers-volumemount:
-          name: home
-          mountPath: /home/jovyan/allusers
-        02-allusers-rstudio-volumemount:
-          name: home
-          mountPath: /home/rstudio/allusers
   singleuser:
     extraFiles:
       gitconfig-system:
@@ -377,6 +369,8 @@ jupyterhub:
         enable_auth_state: true
         manage_groups: false
         allow_all: true
+        admin_users:
+        - anshul37@uw.edu # Anshul
 binderhub-service:
   enabled: true
   config:
