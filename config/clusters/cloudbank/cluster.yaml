@@ -377,6 +377,17 @@ hubs:
   - golden.values.yaml
   - enc-golden.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: greenriver
+  display_name: Green River College
+  domain: greenriver.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
+  - greenriver.values.yaml
+  - enc-greenriver.secret.values.yaml
+  #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: gssm
   display_name: Governors School of Science and Math
   domain: gssm.cloudbank.2i2c.cloud

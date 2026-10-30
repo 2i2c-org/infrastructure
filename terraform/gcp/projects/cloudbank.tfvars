@@ -151,6 +151,10 @@ persistent_disks = {
     size        = 500
     name_suffix = "gpu-demo"
   }
+  "greenriver" = {
+    size        = 25
+    name_suffix = "greenriver"
+  }
   "gssm" = {
     size        = 25
     name_suffix = "gssm"
