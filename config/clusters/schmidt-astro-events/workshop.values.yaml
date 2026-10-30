@@ -12,7 +12,20 @@ jupyterhub:
       mounts:
         schmidt-observatory-system:
           volumeHandle: fs-0122cfff59073f460
+  prePuller:
+    continuous:
+      enabled: true
   singleuser:
+    # Override the singleuser image tag and node selector,
+    # so the continuous pre-puller picks this up. This is not
+    # used anywhere else. If we don't set the image, the
+    # continuous pre-puller pulls in the 'default' old
+    # scipy image as well, taking up disk space
+    image:
+      name: quay.io/2i2c/schmidt-astro-florence-symposium
+      tag: 2026-10-29
+    nodeSelector:
+      node.kubernetes.io/instance-type: r8i.16xlarge
     extraEnv:
       SCRATCH_BUCKET: s3://schmidt-astro-events-scratch-workshop/$(JUPYTERHUB_USER)
 
