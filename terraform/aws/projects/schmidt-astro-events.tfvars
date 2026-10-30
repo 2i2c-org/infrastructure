@@ -15,7 +15,7 @@ ebs_volumes = {
   "workshop" = {
     name_suffix = "workshop",
     type        = "gp3",
-    size        = 300,
+    size        = 1000,
     # Let's bump these far up, since we don't know what the
     # performance characteristics are
     iops       = 15000,
