@@ -78,12 +78,12 @@ jupyterhub:
               description: |
                 Florence Symposium (+ Schmidt Base + Pangeo)
               kubespawner_override:
-                image: quay.io/2i2c/schmidt-astro-florence-symposium:2026-10-17
+                image: quay.io/2i2c/schmidt-astro-florence-symposium:2026-10-29
             02-base:
               display_name: Base Schmidt Observatory Image
               description: Pangeo + Astro Packages
               kubespawner_override:
-                image: quay.io/2i2c/schmidt-astro-base:2026-10-17
+                image: quay.io/2i2c/schmidt-astro-base:2026-10-29
         resource_allocation:
           display_name: Resource Allocation
           choices:
