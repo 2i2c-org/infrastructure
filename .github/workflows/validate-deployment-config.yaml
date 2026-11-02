@@ -25,8 +25,8 @@ jobs:
         submodules: true
     - name: Compare support and staging
       run: |
-        yq ".jobs.upgrade-support.outputs | keys[]" .github/workflows/deploy-hubs.yaml -r | rg "failure_(.*)" -r '$1' | sort > /tmp/matrix-support.txt
-        yq ".jobs.upgrade-staging.outputs | keys[]" .github/workflows/deploy-hubs.yaml -r | rg "failure_([^_]*)_staging" -r '$1' | sort > /tmp/matrix-staging.txt
+        yq ".jobs.upgrade-support.outputs | keys[]" .github/workflows/deploy-hubs.yaml -r | sed -E -n "s/failure_(.*)/\1/p" | sort > /tmp/matrix-support.txt
+        yq ".jobs.upgrade-staging.outputs | keys[]" .github/workflows/deploy-hubs.yaml -r | sed -E -n "s/failure_(.*)_staging/\1/p" | sort > /tmp/matrix-staging.txt
         # Ensure that the two sets of hubs match
         diff -q /tmp/matrix*
     - name: Compare support and clusters
