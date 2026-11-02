@@ -179,7 +179,6 @@ jobs:
     # If you are adding a new cluster, please remember to list it here!
     outputs:
       failure_2i2c-aws-us: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us }}
-      failure_2i2c-jetstream2: ${{ steps.declare-failure.outputs.failure_2i2c-jetstream2 }}
       failure_2i2c-uk: ${{ steps.declare-failure.outputs.failure_2i2c-uk }}
       failure_2i2c: ${{ steps.declare-failure.outputs.failure_2i2c }}
       failure_awi-ciroh: ${{ steps.declare-failure.outputs.failure_awi-ciroh }}
@@ -193,13 +192,14 @@ jobs:
       failure_leap: ${{ steps.declare-failure.outputs.failure_leap }}
       failure_maap: ${{ steps.declare-failure.outputs.failure_maap }}
       failure_nasa-cryo: ${{ steps.declare-failure.outputs.failure_nasa-cryo }}
-      failure_nasa-ghg: ${{ steps.declare-failure.outputs.failure_nasa-ghg }}
+      failure_nasa-ghg-hub: ${{ steps.declare-failure.outputs.failure_nasa-ghg-hub }}
       failure_nasa-veda: ${{ steps.declare-failure.outputs.failure_nasa-veda }}
       failure_neurohackademy: ${{ steps.declare-failure.outputs.failure_neurohackademy }}
       failure_nmfs-openscapes: ${{ steps.declare-failure.outputs.failure_nmfs-openscapes }}
       failure_oceanhackweek: ${{ steps.declare-failure.outputs.failure_oceanhackweek }}
       failure_openscapeshub: ${{ steps.declare-failure.outputs.failure_openscapeshub }}
       failure_opensci: ${{ steps.declare-failure.outputs.failure_opensci }}
+      failure_projectpythia-binder: ${{ steps.declare-failure.outputs.failure_projectpythia-binder }}
       failure_projectpythia: ${{ steps.declare-failure.outputs.failure_projectpythia }}
       failure_reflective: ${{ steps.declare-failure.outputs.failure_reflective }}
       failure_utoronto: ${{ steps.declare-failure.outputs.failure_utoronto }}
@@ -207,6 +207,7 @@ jobs:
       failure_temple: ${{ steps.declare-failure.outputs.failure_temple }}
       failure_uw-escience: ${{ steps.declare-failure.outputs.failure_uw-escience }}
       failure_ucec: ${{ steps.declare-failure.outputs.failure_ucec }}
+      failure_ucmerced: ${{ steps.declare-failure.outputs.failure_ucmerced }}
       failure_schmidt-astro-events: ${{ steps.declare-failure.outputs.failure_schmidt-astro-events }}
 
     if: |
@@ -413,7 +414,6 @@ jobs:
     outputs:
       failure_2i2c_staging: ${{ steps.declare-failure.outputs.failure_2i2c_staging }}
       failure_2i2c_dask-staging: ${{ steps.declare-failure.outputs.failure_2i2c_dask-staging }}
-      failure_2i2c_ucmercedstaging: ${{ steps.declare-failure.outputs.failure_2i2c_ucmercedstaging }}
       failure_2i2c-aws-us_staging: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us_staging }}
       failure_2i2c-uk_staging: ${{ steps.declare-failure.outputs.failure_2i2c-uk_staging }}
       failure_awi-ciroh_staging: ${{ steps.declare-failure.outputs.failure_awi-ciroh_staging }}
@@ -434,15 +434,17 @@ jobs:
       failure_oceanhackweek_staging: ${{ steps.declare-failure.outputs.failure_oceanhackweek_staging }}
       failure_openscapeshub_staging: ${{ steps.declare-failure.outputs.failure_openscapeshub_staging }}
       failure_opensci_staging: ${{ steps.declare-failure.outputs.failure_opensci_staging }}
+      failure_projectpythia-binder_staging: ${{ steps.declare-failure.outputs.failure_projectpythia-binder_staging }}
       failure_projectpythia_staging: ${{ steps.declare-failure.outputs.failure_projectpythia_staging }}
       failure_reflective_staging: ${{ steps.declare-failure.outputs.failure_reflective_staging }}
       failure_utoronto_staging: ${{ steps.declare-failure.outputs.failure_utoronto_staging }}
       failure_utoronto_r-staging: ${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}
       failure_victor_staging: ${{ steps.declare-failure.outputs.failure_victor_staging }}
+      failure_schmidt-astro-events_staging: ${{ steps.declare-failure.outputs.failure_schmidt-astro-events_staging }}
       failure_temple_staging: ${{ steps.declare-failure.outputs.failure_temple_staging }}
-      failure_uw-escience_staging: ${{ steps.declare-failure.outputs.failure_uw-escience_staging }}
       failure_ucec_staging: ${{ steps.declare-failure.outputs.failure_ucec_staging }}
-      failure_schmidt_astro_staging: ${{ steps.declare-failure.outputs.failure_schmidt-astro_staging }}
+      failure_ucmerced_staging: ${{ steps.declare-failure.outputs.failure_ucmerced_staging }}
+      failure_uw-escience_staging: ${{ steps.declare-failure.outputs.failure_uw-escience_staging }}
     permissions:
       id-token: write
 
