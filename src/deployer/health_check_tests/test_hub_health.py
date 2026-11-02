@@ -89,11 +89,8 @@ async def using_jupyterhub_token(token: str):
             del os.environ["JUPYTERHUB_API_TOKEN"]
 
 
-async def ensure_no_pending_user(hub: JupyterHubAPI, username: str):
-    if user := (await hub.get_user(username)):
-        if user["server"] and not user["pending"]:
-            await hub.ensure_server_deleted(username, VERY_LARGE_TIMEOUT)
-
+async def ensure_user_does_not_exist(hub: JupyterHubAPI, username: str):
+    if await hub.get_user(username):
         # If we don't delete the user too, than we won't be able to start a kernel for it.
         # This is because we would have lost its api token from the previous run.
         await hub.delete_user(username)
@@ -118,7 +115,8 @@ async def test_hub_healthy(
 
     username = "deployment-service-check"
     async with using_jupyterhub_token(api_token), JupyterHubAPI(hub_url) as hub:
-        await ensure_no_pending_user(hub, username)
+        # Ensure we create a fresh user each time
+        await ensure_user_does_not_exist(hub, username)
 
         # Start a server
         print_colour(f"Starting health-check server for {username}...", "yellow")
