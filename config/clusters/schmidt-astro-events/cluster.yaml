@@ -4,6 +4,7 @@ provider_url: https://998493219388.signin.aws.amazon.com/console
 metadata:
   2i2c:
     hubspot_deal_id: 350016532181
+health_checks: api
 aws:
   account: 998493219388
   key: enc-deployer-credentials.secret.json
