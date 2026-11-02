@@ -4,6 +4,7 @@ provider_url: https://d-9067c5bbc5.awsapps.com/start/
 metadata:
   2i2c:
     hubspot_deal_id: 86933236464
+health_checks: api
 aws:
   account: 597746869805
   key: enc-deployer-credentials.secret.json
