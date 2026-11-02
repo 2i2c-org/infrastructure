@@ -4,32 +4,32 @@ name: Validate deployment config
 on:
   pull_request:
     branches:
-      - main
+    - main
     paths:
-      - .github/workflows/deploy-hubs.yaml
-      - config/clusters/*/cluster.yaml
+    - .github/workflows/deploy-hubs.yaml
+    - config/clusters/*/cluster.yaml
   push:
     branches:
-      - main
+    - main
     paths:
-      - .github/workflows/deploy-hubs.yaml
-      - config/clusters/*/cluster.yaml
+    - .github/workflows/deploy-hubs.yaml
+    - config/clusters/*/cluster.yaml
   workflow_dispatch:
 
 jobs:
   check-deployment-config-consistency:
     runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v7
-        with:
-          submodules: true
-      - name: Compare support and staging
-        run: |
-          yq ".jobs.upgrade-support.outputs | keys[]" .github/workflows/deploy-hubs.yaml -r | rg "failure_(.*)" -r '$1' | sort > /tmp/matrix-support.txt
-          yq ".jobs.upgrade-staging.outputs | keys[]" .github/workflows/deploy-hubs.yaml -r | rg "failure_([^_]*)_staging" -r '$1' | sort > /tmp/matrix-staging.txt
-          # Ensure that the two sets of hubs match
-          diff -q /tmp/matrix*
-      - name: Compare support and clusters
-        run: |
-          # Do we have the same hubs as we have config to deploy them?
-          diff -q /tmp/matrix-support.txt <(ls -1 config/clusters | grep -v "^templates$" | sort)
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+    - name: Compare support and staging
+      run: |
+        yq ".jobs.upgrade-support.outputs | keys[]" .github/workflows/deploy-hubs.yaml -r | rg "failure_(.*)" -r '$1' | sort > /tmp/matrix-support.txt
+        yq ".jobs.upgrade-staging.outputs | keys[]" .github/workflows/deploy-hubs.yaml -r | rg "failure_([^_]*)_staging" -r '$1' | sort > /tmp/matrix-staging.txt
+        # Ensure that the two sets of hubs match
+        diff -q /tmp/matrix*
+    - name: Compare support and clusters
+      run: |
+        # Do we have the same hubs as we have config to deploy them?
+        diff -q /tmp/matrix-support.txt <(ls -1 config/clusters | grep -v "^templates$" | sort)
