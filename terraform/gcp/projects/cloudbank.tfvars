@@ -44,7 +44,7 @@ persistent_disks = {
     name_suffix = "cau"
   }
   "ccsf" = {
-    size        = 513
+    size        = 550
     name_suffix = "ccsf"
   }
   "chabot" = {
@@ -104,7 +104,7 @@ persistent_disks = {
     name_suffix = "elcamino"
   }
   "emich" = {
-    size        = 25
+    size        = 50
     name_suffix = "emich"
   }
   "epcc" = {

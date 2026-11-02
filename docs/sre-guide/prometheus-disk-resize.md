@@ -56,48 +56,45 @@ deployer use-cluster-credentials $CLUSTER_NAME
    kubectl patch storageclass <storage-class-name> --patch '{\"allowVolumeExpansion\": true}'
    ```
 
-```{note}
-At the point, you could try to redeploy the support chart and see if it succeeds.
-If it doesn't, continue with the steps.
-```
+1. Deploy the support chart. Support for expanding PersistentVolumeClaims (PVCs) should be enabled by default for csi volumes.
+   If it fails, try the steps below.
+   1. Delete the persistent volume claim for the prometheus server.
+      Persistent volume claims cannot be patched so we will need to recreate it.
 
-1. Delete the persistent volume claim for the prometheus server.
-   Persistent volume claims cannot be patched so we will need to recreate it.
+      ```bash
+      # List all PVCs in the support namespace
+      kubectl -n support get pvc
 
-   ```bash
-   # List all PVCs in the support namespace
-   kubectl -n support get pvc
+      # Delete the prometheus server PVC
+      kubectl -n support delete pvc support-prometheus-server
+      ```
 
-   # Delete the prometheus server PVC
-   kubectl -n support delete pvc support-prometheus-server
-   ```
+   1. In another terminal with the `CLUSTER_NAME` variable set, redeploy the support chart.
+      It should fail with the PVC in a `Pending` state.
 
-1. In another terminal with the `CLUSTER_NAME` variable set, redeploy the support chart.
-   It should fail with the PVC in a `Pending` state.
+      ```bash
+      deployer deploy-support $CLUSTER_NAME
+      ```
 
-   ```bash
-   deployer deploy-support $CLUSTER_NAME
-   ```
+   1. Edit the persistent volume to have the same UID and resource version as the newly created PVC under`spec.claimRef`.
 
-1. Edit the persistent volume to have the same UID and resource version as the newly created PVC under`spec.claimRef`.
+      ```bash
+      # Get the UID and resource version of the PVC
+      kubectl -n support get pvc support-prometheus-server -o yaml
 
-   ```bash
-   # Get the UID and resource version of the PVC
-   kubectl -n support get pvc support-prometheus-server -o yaml
+      # Edit the PV to reference these values under `spec.claimRef`
+      kubectl edit pv <pv-name>
+      ```
 
-   # Edit the PV to reference these values under `spec.claimRef`
-   kubectl edit pv <pv-name>
-   ```
+   1. Delete the prometheus server pod and check that it comes back up.
 
-1. Delete the prometheus server pod and check that it comes back up.
+      ```bash
+      kubectl -n support delete pod support-prometheus-server-<hash>
+      kubectl -n support get pods --watch
+      ```
 
-   ```bash
-   kubectl -n support delete pod support-prometheus-server-<hash>
-   kubectl -n support get pods --watch
-   ```
+   1. Redeploy the support chart again and this time it should succeed.
 
-1. Redeploy the support chart again and this time it should succeed.
-
-   ```bash
-   deployer deploy-support $CLUSTER_NAME
-   ```
+      ```bash
+      deployer deploy-support $CLUSTER_NAME
+      ```
