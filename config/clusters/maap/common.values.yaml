@@ -301,9 +301,13 @@ jupyterhub:
           cpu: 0.01
       env:
       - name: TARGET_PATH
-        value: veda-docs
+        value: maap-documentation
       - name: SOURCE_REPO
-        value: https://github.com/NASA-IMPACT/veda-docs
+        value: https://github.com/MAAP-Project/maap-documentation
+      # The repo has no `main` branch. `master` holds the "latest" released
+      # docs, published at https://docs.maap-project.org/en/latest/
+      - name: SOURCE_BRANCH
+        value: master
       volumeMounts:
       - name: home
         mountPath: /home/jovyan
