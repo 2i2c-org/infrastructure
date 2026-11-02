@@ -77,6 +77,11 @@ basehub:
       config:
         JupyterHub:
           authenticator_class: github
+          template_vars:
+            announcement: |
+              On <strong>December 2nd, 2026</strong>, the U.S. Greenhouse Gas Center will be transitioning our Jupyterhub services. Users will no longer be able to login or access their home directories on or after this date.
+
+              To download your home directories, see <a href="https://docs.google.com/document/d/1tsFzdbQg-cNsK-keX0I1DUOMmE0sTJttoNnsx77Zhr8/edit?tab=t.0">the guidance document</a>.
         GitHubOAuthenticator:
           allowed_organizations:
           - US-GHG-Center:ghgc-hub-access
