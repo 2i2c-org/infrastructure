@@ -143,7 +143,7 @@ basehub:
                 default: true
                 kubespawner_override:
                   # Image repo: https://github.com/CryoInTheCloud/hub-image
-                  image: quay.io/cryointhecloud/cryo-hub-image:43421f450d6a
+                  image: quay.io/cryointhecloud/cryo-hub-image:8a95212bbf13
               02-pythonpace:
                 display_name: Ocean Biology Python Image
                 description: Ocean Biology environment used by the PACE mission
@@ -154,8 +154,8 @@ basehub:
                 display_name: Machine Learning Python Image
                 description: ML environment with TensorFlow, Keras, Scikit from Pangeo
                 kubespawner_override:
-                  # Image repo: https://github.com/CryoInTheCloud/hub-image
-                  image: pangeo/ml-notebook:2025.12.30
+                  # Image repo: https://github.com/pangeo-data/pangeo-docker-images
+                  image: pangeo/ml-notebook:2026.10.21
               04-r:
                 display_name: Py-Rocket R Image
                 description: RStudio and Python environment with many geospatial libraries
@@ -299,13 +299,13 @@ basehub:
                 default: true
                 slug: pytorch
                 kubespawner_override:
-                  image: quay.io/pangeo/pytorch-notebook:2025.12.30
+                  image: quay.io/pangeo/pytorch-notebook:2026.10.21
               tensorflow:
                 display_name: Machine Learning Image
                 description: ML environment with TensorFlow, Keras, Scikit from Pangeo
                 slug: tensorflow
                 kubespawner_override:
-                  image: quay.io/pangeo/ml-notebook:2025.12.30
+                  image: quay.io/pangeo/ml-notebook:2026.10.21
         kubespawner_override:
           environment:
             NVIDIA_DRIVER_CAPABILITIES: compute,utility
