@@ -7,7 +7,7 @@ prometheus:
         # See https://github.com/2i2c-org/infrastructure/pull/1906
         memory: 6Gi
     persistentVolume:
-      size: 1000Gi
+      size: 1100Gi
     ingress:
       enabled: true
       hosts:

@@ -44,7 +44,7 @@ persistent_disks = {
     name_suffix = "cau"
   }
   "ccsf" = {
-    size        = 513
+    size        = 550
     name_suffix = "ccsf"
   }
   "chabot" = {
