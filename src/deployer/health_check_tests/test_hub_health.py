@@ -11,7 +11,7 @@ from jhub_client.utils import parse_notebook_cells
 from deployer.utils.rendering import print_colour
 
 
-def notebook_dir(hub_type):
+def notebook_dir(hub_type: str) -> Path:
     return (Path(__file__).parent).joinpath("test-notebooks", hub_type)
 
 
@@ -92,7 +92,7 @@ async def using_jupyterhub_token(token: str):
 async def ensure_no_pending_user(hub: JupyterHubAPI, username: str):
     if user := (await hub.get_user(username)):
         if user["server"] and not user["pending"]:
-            await hub.ensure_server_deleted(username, 60)
+            await hub.ensure_server_deleted(username, VERY_LARGE_TIMEOUT)
 
         # If we don't delete the user too, than we won't be able to start a kernel for it.
         # This is because we would have lost its api token from the previous run.
