@@ -104,7 +104,7 @@ persistent_disks = {
     name_suffix = "elcamino"
   }
   "emich" = {
-    size        = 25
+    size        = 50
     name_suffix = "emich"
   }
   "epcc" = {
