@@ -7,7 +7,7 @@ jupyterhub:
       templateVars:
         org:
           name: Norco College
-          logo_url: https://www.norcocollege.edu/Carousel2/86.jpg?RenditionID=23
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/4/4e/Norco_College_Logo.png
           url: https://www.norcocollege.edu/
         designed_by:
           name: 2i2c

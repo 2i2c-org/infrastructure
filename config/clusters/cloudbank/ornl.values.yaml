@@ -20,7 +20,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.ornl.gov/themes/custom/ornl/images/ornl-logo.svg
+          logo_url: https://upload.wikimedia.org/wikipedia/en/d/d2/ORNLTNlogo.svg
           name: Oak Ridge National Laboratory
           url: https://www.ornl.gov/
   hub:

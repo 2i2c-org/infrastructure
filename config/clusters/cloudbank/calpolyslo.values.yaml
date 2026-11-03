@@ -18,7 +18,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.calpoly.edu/themes/custom/calpoly/logo.svg
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/2/26/Cal_Poly_San_Luis_Obispo_wordmark.svg
           name: California Polytechnic State University, San Luis Obispo
           url: https://www.calpoly.edu/
   hub:

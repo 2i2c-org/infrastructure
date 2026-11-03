@@ -12,7 +12,7 @@ jupyterhub:
       templateVars:
         org:
           name: Oakland City University
-          logo_url: https://oakedu.wpengine.com/wp-content/uploads/2020/12/oakland-city-university-logo.svg
+          logo_url: https://upload.wikimedia.org/wikipedia/en/0/05/Oakland_City_University_logo.jpg
           url: https://www.oak.edu/
         designed_by:
           name: 2i2c

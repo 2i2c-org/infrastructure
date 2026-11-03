@@ -7,7 +7,7 @@ jupyterhub:
       templateVars:
         org:
           name: Glendale Community College
-          logo_url: https://www.glendale.edu/home/showpublishedimage/33622/637538639301600000
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/e/e3/Glendale_Community_College_CA_logo.png
           url: https://www.glendale.edu/
         designed_by:
           name: 2i2c

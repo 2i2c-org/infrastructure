@@ -20,7 +20,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.carrollu.edu/Carroll/common/img/logo.svg
+          logo_url: https://www.carrollu.edu/_resources/images/logos/logo.svg
           name: Carroll University
           url: https://www.carrollu.edu
   hub:

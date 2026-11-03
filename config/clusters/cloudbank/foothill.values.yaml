@@ -7,7 +7,7 @@ jupyterhub:
       templateVars:
         org:
           name: Foothill College
-          logo_url: https://foothill.edu/_resources/images/logo.png
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/9/91/Foothill_College_logo.svg
           url: https://foothill.edu/
         designed_by:
           name: 2i2c
