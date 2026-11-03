@@ -21,8 +21,8 @@ jupyterhub:
 
   singleuser:
     memory:
-      limit: 3G
-      guarantee: 3G
+      limit: 4G
+      guarantee: 1G
   hub:
     image:
       name: quay.io/2i2c/oauthenticator-latest

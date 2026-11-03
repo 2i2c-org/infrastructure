@@ -10,6 +10,9 @@ jupyterhub:
     continuous:
       enabled: true
   singleuser:
+    memory:
+      guarantee: 512M
+      limit: 1G
     defaultUrl: /lab
     profileList:
     - display_name: CPU only
@@ -30,8 +33,6 @@ jupyterhub:
               description: RStudio, VS Code, JupyterLab, Python, R
               default: true
       kubespawner_override:
-        mem_guarantee: 512M
-        mem_limit: 1G
         cpu_guarantee: 0.1
         cpu_limit: 2
         node_selector:
