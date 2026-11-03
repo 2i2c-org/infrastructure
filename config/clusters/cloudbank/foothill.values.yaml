@@ -42,7 +42,6 @@ jupyterhub:
       Authenticator:
         allowed_users:
         - anniebento316@gmail.com
-        - thumusreecharan@gmail.com
         - sean.smorris@gmail.com
         - serenasodhani@gmail.com
         admin_users:
