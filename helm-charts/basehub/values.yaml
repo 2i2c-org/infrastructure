@@ -1771,7 +1771,7 @@ jupyterhub:
                 'python',
                 '-m',
                 'jupyterhub_usage_quotas.services.usage_viewer',
-                '--config-files=["/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py", "/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config_secret.py"]',
+                '--config-files=["/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py"]',
               ],
               'environment': {
                   "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME"),
