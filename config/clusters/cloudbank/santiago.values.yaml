@@ -22,7 +22,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.sccollege.edu/sites/AppCatalog/ClientSideAssets/4a5d1929-e968-4323-ae87-79fe98b60585/scc-logo-horizontal_b4a8edf11cfb85c43888f6d2827e8f4c.jpg
+          logo_url: https://www.sccollege.edu/_resources/images/logo-updated.png
           name: Santiago Canyon College
           url: https://www.sccollege.edu/
   hub:

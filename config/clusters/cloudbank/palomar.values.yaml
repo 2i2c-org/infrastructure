@@ -7,7 +7,7 @@ jupyterhub:
       templateVars:
         org:
           name: Palomar Community College
-          logo_url: https://www2.palomar.edu/pages/guidelines/files/2016/03/webGuide_screened_2-color_light.jpg
+          logo_url: https://upload.wikimedia.org/wikipedia/en/e/e2/Palomar-college-logo.png
           url: https://www2.palomar.edu/
         designed_by:
           name: 2i2c

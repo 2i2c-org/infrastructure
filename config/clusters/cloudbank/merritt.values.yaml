@@ -21,7 +21,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.merritt.edu/wp-content/themes/merritt_college/assets/img/logo-blue.svg
+          logo_url: https://6398505.fs1.hubspotusercontent-na2.net/hubfs/6398505/Merritt-Logo-Revised-June-2017.png
           name: Merritt College
           url: https://www.merritt.edu/
   hub:

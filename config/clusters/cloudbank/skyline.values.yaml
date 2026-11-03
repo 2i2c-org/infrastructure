@@ -22,7 +22,7 @@ jupyterhub:
           url: http://cloudbank.org/
         org:
           name: Skyline College
-          logo_url: http://skylinecollege.edu/mcpr/images/logos/png/skyline_logo_horiz_cmyk.png
+          logo_url: https://skylinecollege.edu/mcpr/images/logos/_new/Primary_Logo_RGB_Full_Color.png
           url: https://www.skylinecollege.edu/
   hub:
     image:

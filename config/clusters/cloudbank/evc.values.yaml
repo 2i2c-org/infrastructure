@@ -21,7 +21,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Evergreen_Valley_College_logo.png/799px-Evergreen_Valley_College_logo.png?20210323212539
+          logo_url: https://www.evc.edu/_resources/images/logos/1-straight-logo_2color1.png
           name: Evergreen Valley College
           url: https://www.evc.edu/
   hub:

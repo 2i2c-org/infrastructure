@@ -21,7 +21,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.riohondo.edu/wp-content/themes/reverie-child/img/rhc-logo-2x.png
+          logo_url: https://www.riohondo.edu/wp-content/themes/rio-custom-theme/assets/images/Rio-Hondo-College-logo.png
           name: Rio Hondo Community College
           url: https://www.riohondo.edu/
   hub:

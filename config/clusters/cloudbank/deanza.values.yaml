@@ -7,7 +7,7 @@ jupyterhub:
       templateVars:
         org:
           name: DeAnza College
-          logo_url: https://www.deanza.edu/_resources/images/deanza_logo.svg
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/b/be/De_Anza_College_logo.svg
           url: https://www.deanza.edu/
         designed_by:
           name: 2i2c
