@@ -347,10 +347,6 @@ persistent_disks = {
     size        = 30
     name_suffix = "sierra"
   }
-  "sjcc" = {
-    size        = 30
-    name_suffix = "sjcc"
-  }
   "skyline" = {
     size        = 150
     name_suffix = "skyline"
@@ -386,10 +382,6 @@ persistent_disks = {
   "toledo" = {
     size        = 25
     name_suffix = "toledo"
-  }
-  "tuskegee" = {
-    size        = 20
-    name_suffix = "tuskegee"
   }
   "uams" = {
     size        = 25
