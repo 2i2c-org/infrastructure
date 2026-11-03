@@ -40,6 +40,18 @@ jupyterhub:
           url: https://www.schmidtsciences.org/schmidt-observatory-system/
   singleuser:
     extraFiles:
+      jupyter_server_config.json:
+        data:
+          # set ping interval to 10s & timeout to 30s,
+          # so we recover from congested websocket connections early
+          # These are ignored until https://github.com/jupyter-server/jupyter_server/pull/1700
+          # is merged and deployed, so we also set ws_ping_interval & ws_ping_timeout
+          websocket_ping_interval: 10
+          websocket_ping_timeout: 30
+          tornado_settings:
+            # These are set in ms
+            ws_ping_interval: 10000
+            ws_ping_timeout: 30000
       gitconfig-system:
         mountPath: /etc/gitconfig
         stringData: |
