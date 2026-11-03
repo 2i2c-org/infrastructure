@@ -5,7 +5,6 @@ metadata:
   2i2c:
     # Counted as part of the BIDS contract
     hubspot_deal_id: 86221242070
-health_checks: api
 aws:
   account: 211125465508
   key: enc-deployer-credentials.secret.json
