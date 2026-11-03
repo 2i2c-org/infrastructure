@@ -2,7 +2,7 @@ nodePlaceholder:
   enabled: true
   nodeSelector:
     node.kubernetes.io/instance-type: r8i.16xlarge
-  replicas: 2
+  replicas: 0
 nfs:
   pv:
     serverIP: 10.100.209.159
