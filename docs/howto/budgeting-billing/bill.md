@@ -27,13 +27,7 @@ before following the steps below. Your 2i2c.org email should give you access.
 
 ## Communities in shared cloud accounts
 
-We used to run hubs on a shared cluster, but we don't anymore. There's only
-one hub remaining on shared clusters - Michigan Tech University. We will
-[migrate it](https://github.com/2i2c-org/infrastructure/issues/5875) to its
-own cluster at some point soon. Until then, since it's the only hub running
-on the `two-eye-two-see` `pilot-hubs` cluster, we can use
-[this report](https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2026-03-01;to=2026-03-31;dateType=INVOICE_DATE;projects=350668521154;labels=goog-k8s-cluster-name:pilot-hubs-cluster;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see)
-to roughly approximate the cloud cost of the MTU hub.
+We used to run hubs on a shared cluster, but we don't anymore. Dedicated cloud accounts give communities more visibility into their costs, and more control of their usage. 
 
 ## Communities with dedicated cloud accounts
 
