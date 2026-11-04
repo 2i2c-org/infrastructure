@@ -197,6 +197,20 @@ properties:
         description: |
           jupyterhub-groups-exporter is an externally-managed JupyterHub service that exports user group memberships to Prometheus.
 
+  jupyterhub-usage-quotas:
+    type: object
+    additionalProperties: true
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Install the usage quota dashboard (the usage viewer) as an
+          externally-managed JupyterHub service. Only hubs with a
+          chart_override that has the jupyterhub-usage-quotas dependency can
+          enable it.
+
   # binderhub-service is a dependency chart with its own schema, but we impose
   # some additional restrictions below via this chart's schema.
   binderhub-service:
