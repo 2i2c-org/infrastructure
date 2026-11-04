@@ -27,7 +27,7 @@ before following the steps below. Your 2i2c.org email should give you access.
 
 ## Communities in shared cloud accounts
 
-We used to run hubs on a shared cluster, but we don't anymore. Dedicated cloud accounts give communities more visibility into their costs, and more control of their usage. 
+We used to run hubs on a shared cluster, but we don't anymore. Dedicated cloud accounts give communities more visibility into their costs, and more control of their usage.
 
 ## Communities with dedicated cloud accounts
 
