@@ -5,7 +5,218 @@ jupyterhub:
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://uw-escience-scratch-staging/$(JUPYTERHUB_USER)
-
+    profileList:
+    - display_name: CPU Only
+      default: true
+      profile_options:
+        image:
+          display_name: Environment
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            display_name_in_choices: Bring your own image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            01-go-bgc:
+              display_name: GO-BGC 2026 Workshop
+              description: GO-BGC Float Data Workshop
+              slug: go-bgc-2026
+              default: true
+              kubespawner_override:
+                image: quay.io/winghouw/gobgc2026:v1.0.0
+            02-scipy:
+              display_name: Jupyter SciPy Notebook
+              description: Scientific Python image
+              slug: scipy
+              kubespawner_override:
+                image: quay.io/jupyter/scipy-notebook:2026-06-29
+            03-pangeo:
+              display_name: Pangeo Notebook Image
+              description: Python image with scientific, dask and geospatial tools
+              kubespawner_override:
+                image: pangeo/pangeo-notebook:2026-06-29
+            04-rocker:
+              display_name: Rocker Geospatial with RStudio
+              description: R environment with many geospatial libraries pre-installed
+              kubespawner_override:
+                image: rocker/binder:4.4
+                image_pull_policy: Always
+                  # Launch RStudio after the user logs in
+                default_url: /rstudio
+                  # Ensures container working dir is homedir
+                  # https://github.com/2i2c-org/infrastructure/issues/2559
+                working_dir: /home/rstudio
+        scratch_disk: &scratch_disk
+          display_name: Scratch Disk on /tmp
+          choices:
+            01_standard:
+              display_name: Standard
+              default: true
+              kubespawner_override: {}
+            02_gb_500:
+              display_name: Dedicated 500GB
+              description: 500GB dedicated to just you
+              kubespawner_override:
+                init_containers:
+                - name: volume-mount-ownership-fix
+                  image: busybox:1.36.1
+                  command:
+                  - sh
+                  - -c
+                      # sticky (1), and r(4)+w(2)+x(1) for owner,group,public
+                  - chmod 1777 /tmp
+                  securityContext:
+                    runAsUser: 0
+                  volumeMounts:
+                  - name: big-tmp
+                    mountPath: /tmp
+                volume_mounts:
+                  tmp:
+                    name: big-tmp
+                    mountPath: /tmp
+                volumes:
+                  big-tmp:
+                    name: big-tmp
+                    ephemeral:
+                      volumeClaimTemplate:
+                        metadata:
+                          labels:
+                            hub.jupyter.org/volume-purpose: user-scratch
+                            hub.jupyter.org/username: '{username}'
+                            hub.jupyter.org/servername: '{servername}'
+                          annotations:
+                            hub.jupyter.org/username: '{unescaped_username}'
+                            hub.jupyter.org/servername: '{unescaped_servername}'
+                        spec:
+                          accessModes: [ReadWriteOnce]
+                          storageClassName: ebs-csi-default-sc  # Set this & volumeAttributes explicitly
+                          volumeAttributesClassName: scratch-disk
+                          resources:
+                            requests:
+                              storage: 500Gi
+        resource_allocation:
+          display_name: Resource Allocation
+          choices:
+            mem_7_gb:
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 7805679519
+                mem_limit: 7805679519
+                cpu_guarantee: 0.912625
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+            mem_15_gb:
+              display_name: ~15 GB RAM, ~1.8 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 15611359038
+                mem_limit: 15611359038
+                cpu_guarantee: 1.82525
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_29_gb:
+              display_name: ~29 GB RAM, ~4 CPUs
+              description: ~4 CPUs always available
+              kubespawner_override:
+                mem_guarantee: 31222718077
+                mem_limit: 31222718077
+                cpu_guarantee: 3.6505
+                cpu_limit: 3.6505
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.xlarge
+            mem_60_gb:
+              display_name: ~60 GB RAM, ~8 CPUs
+              description: Up to ~15 CPUs when available
+              kubespawner_override:
+                mem_guarantee: 64020707016
+                mem_limit: 64020707016
+                cpu_guarantee: 7.69055
+                cpu_limit: 15.3811
+                node_selector:
+                  node.kubernetes.io/instance-type: r5.4xlarge
+    - display_name: GPU
+      description: Start a GPU
+      slug: gpu
+      profile_options:
+        scratch_disk: *scratch_disk
+        image:
+          display_name: Image
+          unlisted_choice:
+            enabled: true
+            display_name: Custom image
+            validation_regex: ^.+:.+$
+            validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+            kubespawner_override:
+              image: '{value}'
+          choices:
+            pytorch:
+              display_name: PyTorch ML Image
+              description: ML environment with PyTorch from Pangeo
+              default: true
+              slug: pytorch
+              kubespawner_override:
+                image: quay.io/pangeo/pytorch-notebook:2026.05.29
+            tensorflow:
+              display_name: Machine Learning Image
+              description: ML environment with TensorFlow, Keras, Scikit from Pangeo
+              slug: tensorflow
+              kubespawner_override:
+                image: quay.io/pangeo/ml-notebook:2026.05.29
+        resource_allocation:
+          display_name: GPU machine
+          choices:
+            g4dn_xlarge:
+              display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                mem_limit:
+                mem_guarantee: 14G
+                node_selector:
+                  node.kubernetes.io/instance-type: g4dn.xlarge
+                extra_resource_limits:
+                  nvidia.com/gpu: '1'
+                default: true
+            g6_xlarge:
+              display_name: NVIDIA L4 Tensor Core, ~16 GB, ~4 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_limit:
+                mem_guarantee: 14G
+                node_selector:
+                  node.kubernetes.io/instance-type: g6.xlarge
+            g5_xlarge:
+              display_name: NVIDIA G5, ~16 GB, ~4 CPUs
+              description: ~4 CPUs always available
+              kubespawner_override:
+                mem_limit:
+                mem_guarantee: 14G
+                node_selector:
+                  node.kubernetes.io/instance-type: g5.xlarge
+            g6e_xlarge:
+              display_name: NVIDIA NVIDIA L40S Tensor Core, ~32 GB, ~4 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                mem_limit:
+                mem_guarantee: 29G
+                node_selector:
+                  node.kubernetes.io/instance-type: g6e.xlarge
+            p5_4xlarge:
+              display_name: NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
+              description: Up to ~16 CPUs when available
+              kubespawner_override:
+                mem_limit:
+                mem_guarantee: 248G
+                node_selector:
+                  node.kubernetes.io/instance-type: p5.4xlarge
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-061c43dc309660f3d
