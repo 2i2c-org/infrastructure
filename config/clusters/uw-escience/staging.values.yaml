@@ -105,6 +105,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 mem_guarantee: 7805679519
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 mem_limit: 7805679519
                 cpu_guarantee: 0.912625
                 cpu_limit: 3.6505
@@ -189,34 +191,50 @@ jupyterhub:
               display_name: NVIDIA L4 Tensor Core, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 mem_limit:
                 mem_guarantee: 14G
                 node_selector:
                   node.kubernetes.io/instance-type: g6.xlarge
+                extra_resource_limits:
+                  nvidia.com/gpu: '1'
             g5_xlarge:
               display_name: NVIDIA G5, ~16 GB, ~4 CPUs
               description: ~4 CPUs always available
               kubespawner_override:
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 mem_limit:
                 mem_guarantee: 14G
                 node_selector:
                   node.kubernetes.io/instance-type: g5.xlarge
+                extra_resource_limits:
+                  nvidia.com/gpu: '1'
             g6e_xlarge:
               display_name: NVIDIA NVIDIA L40S Tensor Core, ~32 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 mem_limit:
                 mem_guarantee: 29G
                 node_selector:
                   node.kubernetes.io/instance-type: g6e.xlarge
+                extra_resource_limits:
+                  nvidia.com/gpu: '1'
             p5_4xlarge:
               display_name: NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
               description: Up to ~16 CPUs when available
               kubespawner_override:
+                environment:
+                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 mem_limit:
                 mem_guarantee: 248G
                 node_selector:
                   node.kubernetes.io/instance-type: p5.4xlarge
+                extra_resource_limits:
+                  nvidia.com/gpu: '1'
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-061c43dc309660f3d
