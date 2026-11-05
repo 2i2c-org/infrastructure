@@ -87,9 +87,7 @@ jupyterhub:
         scratch_disk:
           display_name: Scratch Disk on /tmp
           allowed_groups:
-          - CPU:XL
-          - CPU:XXL
-          - CPU:XXXL
+          - power-user
           choices:
             01_standard:
               display_name: Standard
@@ -130,7 +128,7 @@ jupyterhub:
             mem_2_gb:
               display_name: ~2 GB RAM, ~0.2 CPUs
               allowed_groups:
-              - CPU:XS
+              - basic-user
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 mem_guarantee: 1951419879
@@ -142,7 +140,7 @@ jupyterhub:
             mem_4_gb:
               display_name: ~4 GB RAM, ~0.5 CPUs
               allowed_groups:
-              - CPU:S
+              - basic-user
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 mem_guarantee: 3902839759
@@ -154,7 +152,7 @@ jupyterhub:
             mem_7_gb:
               display_name: ~7 GB RAM, ~0.9 CPUs
               allowed_groups:
-              - CPU:M
+              - basic-user
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 mem_guarantee: 7805679519
@@ -168,7 +166,7 @@ jupyterhub:
               description: Up to ~15 CPUs when available
               default: true
               allowed_groups:
-              - CPU:L
+              - basic-user
               kubespawner_override:
                 mem_guarantee: 16005176754
                 mem_limit: 16005176754
@@ -180,7 +178,7 @@ jupyterhub:
               display_name: ~30 GB RAM, ~4 CPUs
               description: Up to ~15 CPUs when available
               allowed_groups:
-              - CPU:XL
+              - power-user
               kubespawner_override:
                 mem_guarantee: 32010353508
                 mem_limit: 32010353508
@@ -193,7 +191,7 @@ jupyterhub:
               description: Up to ~15 CPUs when available
 
               allowed_groups:
-              - CPU:XXL
+              - power-user
               kubespawner_override:
                 mem_guarantee: 64020707016
                 mem_limit: 64020707016
@@ -205,7 +203,7 @@ jupyterhub:
               display_name: ~119 GB RAM, ~15 CPUs
               description: ~15 CPUs always available
               allowed_groups:
-              - CPU:XXXL
+              - power-user
               kubespawner_override:
                 mem_guarantee: 128041414033
                 mem_limit: 128041414033
@@ -217,7 +215,7 @@ jupyterhub:
       description: Start a container on a dedicated node with a GPU
       slug: gpu
       allowed_groups:
-      - GPU:T4
+      - gpu-user
       profile_options:
         image:
           display_name: Environment
@@ -270,6 +268,15 @@ jupyterhub:
       00-volumes-and-volume-mounts-as-dict: ''
     config:
       GenericOAuthenticator:
+        # Tiered capability roles from NASA-IMPACT/veda-keycloak#307
+        # (see NASA-IMPACT/veda-jupyterhub#111). Staging uses only these
+        # roles. The per-size CPU:* / GPU:T4 roles are still used on prod.
+        # Move these settings to common.values.yaml when prod moves to the
+        # new structure. This list replaces the list in common.values.yaml.
+        # power-user, gpu-user and Admin all include basic-user (Keycloak
+        # composites), so login only needs basic-user.
+        allowed_groups:
+        - basic-user
         token_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/auth
       Authenticator:
@@ -280,6 +287,23 @@ jupyterhub:
         # https://uat.maap-project.org/* in the jupyterhub-maap client's
         # "Valid post logout redirect URIs" in Keycloak.
         logout_redirect_url: https://keycloak.delta-backend.xyz/realms/maap/protocol/openid-connect/logout?client_id=jupyterhub-maap&post_logout_redirect_uri=https%3A%2F%2Fuat.maap-project.org%2F
+      UsageQuotaManager:
+        # Same limits as common.values.yaml, with the capability roles from
+        # NASA-IMPACT/veda-keycloak#307. This list replaces the list in
+        # common.values.yaml.
+        policy:
+        - resource: memory
+          limit: 11520G
+          window: 30
+          scope:
+            group:
+            - basic-user
+        - resource: memory
+          limit: 92160G
+          window: 30
+          scope:
+            group:
+            - power-user
 
 dask-gateway:
   gateway:
