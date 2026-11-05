@@ -155,10 +155,6 @@ persistent_disks = {
     size        = 25
     name_suffix = "greenriver"
   }
-  "gssm" = {
-    size        = 25
-    name_suffix = "gssm"
-  }
   "gwu" = {
     size        = 300
     name_suffix = "gwu"
