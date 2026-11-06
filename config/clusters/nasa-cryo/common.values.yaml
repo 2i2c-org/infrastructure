@@ -29,7 +29,7 @@ basehub:
         templateVars:
           org:
             name: StratusGeo # Formerly: Cryo in the Cloud
-            logo_url: https://raw.githubusercontent.com/CryoInTheCloud/CryoCloudWebsite/main/cryocloud.png
+            logo_url: https://github.com/user-attachments/assets/568b5fa1-96dc-4055-838d-a48084c6fb34
             url: https://github.com/StratusGeo # Formerly: https://github.com/CryoInTheCloud
           designed_by:
             name: 2i2c
