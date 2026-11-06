@@ -81,7 +81,9 @@ jupyterhub:
         scratch_disk:
           display_name: Scratch Disk on /tmp
           allowed_groups:
-          - power-user
+          - CPU:XL
+          - CPU:XXL
+          - CPU:XXXL
           choices:
             01_standard:
               display_name: Standard
