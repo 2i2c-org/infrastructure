@@ -52,6 +52,12 @@ nginx-ingress:
 
     service:
       type: ClusterIP
+    configMap:
+      entries:
+        http-snippets: |
+          gzip on;
+          gzip_types  text/plain application/xml application/atom+xml application/javascript application/x-javascript application/json application/rss+xml application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/svg+xml image/x-icon text/css text/javascript text/plain text/x-component;
+          gzip_min_length 256;
 
 # prometheus is responsible for collecting metrics and informing grafana about
 # the metrics on request. It comes with several dependency charts, where we
