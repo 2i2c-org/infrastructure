@@ -65,7 +65,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
     name: buildName(
       [
         namePrefix,
-      ] + std.map(escapeName, instanceTypes),
+      ] + std.map(escapeName, instanceTypes) + [if spot then 'spot'],
       generation,
     ),
     availabilityZones: availabilityZones,
