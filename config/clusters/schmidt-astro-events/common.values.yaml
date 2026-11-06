@@ -84,32 +84,32 @@ jupyterhub:
               display_name: ~7 GB RAM, ~0.9 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
-                mem_guarantee: 7602310266
-                mem_limit: 7602310266
-                cpu_guarantee: 0.9052749999999999
-                cpu_limit: 3.6210999999999998
+                mem_guarantee: 7873444812
+                mem_limit: 7873444812
+                cpu_guarantee: 0.9414125
+                cpu_limit: 7.5313
                 node_selector:
-                  node.kubernetes.io/instance-type: r8i.xlarge
+                  node.kubernetes.io/instance-type: r8i.2xlarge
             mem_15_gb:
               display_name: ~14 GB RAM, ~1.8 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
-                mem_guarantee: 15204620533
-                mem_limit: 15204620533
-                cpu_guarantee: 1.8105499999999999
-                cpu_limit: 3.6210999999999998
+                mem_guarantee: 15746889625
+                mem_limit: 15746889625
+                cpu_guarantee: 1.882825
+                cpu_limit: 7.5313
                 node_selector:
-                  node.kubernetes.io/instance-type: r8i.xlarge
+                  node.kubernetes.io/instance-type: r8i.2xlarge
             mem_30_gb:
               display_name: ~28 GB RAM, ~4 CPUs
               description: ~4 CPUs always available
               kubespawner_override:
-                mem_guarantee: 30409241067
-                mem_limit: 30409241067
-                cpu_guarantee: 3.6210999999999998
-                cpu_limit: 3.6210999999999998
+                mem_guarantee: 31493779251
+                mem_limit: 31493779251
+                cpu_guarantee: 3.76565
+                cpu_limit: 7.5313
                 node_selector:
-                  node.kubernetes.io/instance-type: r8i.xlarge
+                  node.kubernetes.io/instance-type: r8i.2xlarge
             mem_60_gb:
               display_name: ~59 GB RAM, ~8 CPUs
               description: ~8 CPUs always available
