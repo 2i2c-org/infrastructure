@@ -81,46 +81,45 @@ jupyterhub:
           display_name: Resource Allocation
           choices:
             mem_8_gb:
-              display_name: ~8 GB RAM, ~1.0 CPUs
-              description: Up to ~63 CPUs when available
+              display_name: ~7 GB RAM, ~0.9 CPUs
+              description: Up to ~4 CPUs when available
               kubespawner_override:
-                mem_guarantee: 8091297024
-                mem_limit: 8091297024
-                cpu_guarantee: 0.977265625
-                cpu_limit: 62.545
+                mem_guarantee: 7602310266
+                mem_limit: 7602310266
+                cpu_guarantee: 0.9052749999999999
+                cpu_limit: 3.6210999999999998
                 node_selector:
-                  node.kubernetes.io/instance-type: r8i.16xlarge
+                  node.kubernetes.io/instance-type: r8i.xlarge
             mem_15_gb:
-              display_name: ~15 GB RAM, ~2.0 CPUs
-              description: Up to ~63 CPUs when available
-              default: true
+              display_name: ~14 GB RAM, ~1.8 CPUs
+              description: Up to ~4 CPUs when available
               kubespawner_override:
-                mem_guarantee: 16182594048
-                mem_limit: 16182594048
-                cpu_guarantee: 1.95453125
-                cpu_limit: 62.545
+                mem_guarantee: 15204620533
+                mem_limit: 15204620533
+                cpu_guarantee: 1.8105499999999999
+                cpu_limit: 3.6210999999999998
                 node_selector:
-                  node.kubernetes.io/instance-type: r8i.16xlarge
+                  node.kubernetes.io/instance-type: r8i.xlarge
             mem_30_gb:
-              display_name: ~30 GB RAM, ~4 CPUs
-              description: Up to ~63 CPUs when available
+              display_name: ~28 GB RAM, ~4 CPUs
+              description: ~4 CPUs always available
               kubespawner_override:
-                mem_guarantee: 32365188096
-                mem_limit: 32365188096
-                cpu_guarantee: 3.9090625
-                cpu_limit: 62.545
+                mem_guarantee: 30409241067
+                mem_limit: 30409241067
+                cpu_guarantee: 3.6210999999999998
+                cpu_limit: 3.6210999999999998
                 node_selector:
-                  node.kubernetes.io/instance-type: r8i.16xlarge
+                  node.kubernetes.io/instance-type: r8i.xlarge
             mem_60_gb:
-              display_name: ~60 GB RAM, ~8 CPUs
-              description: Up to ~63 CPUs when available
+              display_name: ~59 GB RAM, ~8 CPUs
+              description: ~8 CPUs always available
               kubespawner_override:
-                mem_guarantee: 64730376192
-                mem_limit: 64730376192
-                cpu_guarantee: 7.818125
-                cpu_limit: 62.545
+                mem_guarantee: 62987558502
+                mem_limit: 62987558502
+                cpu_guarantee: 7.5313
+                cpu_limit: 7.5313
                 node_selector:
-                  node.kubernetes.io/instance-type: r8i.16xlarge
+                  node.kubernetes.io/instance-type: r8i.2xlarge
   scheduling:
     userScheduler:
       enabled: true
