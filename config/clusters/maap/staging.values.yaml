@@ -266,6 +266,31 @@ jupyterhub:
     extraConfig:
       # Undo unnecessary common config
       00-volumes-and-volume-mounts-as-dict: ''
+      # The usage viewer runs as an external service from the
+      # jupyterhub-usage-quotas chart. 12-conditional-usage-quotas adds a
+      # hub-managed usage-quota service after the hub.services entry, and the
+      # later entry replaces the earlier one. Remove the hub-managed entry.
+      # Also remove the command of the hub.services entry, which is None (see
+      # hub.services.usage-quota below).
+      12-conditional-usage-quotas-external: |
+        services = []
+        for service in c.JupyterHub.services:
+          if service.get("name") == "usage-quota":
+            if service.get("command"):
+              continue
+            service.pop("command", None)
+          services.append(service)
+        c.JupyterHub.services = services
+    services:
+      # The external usage viewer service. z2jh makes the API token,
+      # and the jupyterhub-usage-quotas chart reads it from the hub Secret.
+      usage-quota:
+        url: http://usage-viewer:9000
+        display: true
+        oauth_no_confirm: true
+        # Replace the placeholder command from basehub. Helm keeps the null,
+        # so 12-conditional-usage-quotas-external removes it.
+        command:
     config:
       GenericOAuthenticator:
         # Tiered capability roles from NASA-IMPACT/veda-keycloak#307
@@ -317,3 +342,26 @@ binderhub-service:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-043cd887a98827319
+
+# The usage viewer as an external JupyterHub service. See
+# staging-chart.yaml.
+jupyterhub-usage-quotas:
+  enabled: true
+  jupyterhub:
+    publicUrl: https://staging.hub.maap-project.org/
+  config:
+    UsageViewer:
+      prometheus_url: http://support-prometheus-server.support.svc.cluster.local
+      enable_compute: true
+  extraEnv:
+    # basehub mirrors the prometheus-auth Secret from the support namespace
+  - name: JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: prometheus-auth
+        key: username
+  - name: JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: prometheus-auth
+        key: password
