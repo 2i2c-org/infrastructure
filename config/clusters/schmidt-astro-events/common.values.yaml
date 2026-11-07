@@ -10,7 +10,7 @@ jupyterhub:
       enabled: false
     litellmKeyProvisioner:
       enabled: true
-      url: https://llmaven-iss-prod-litellm-prod.gentlebay-de6eef95.westus2.azurecontainerapps.io
+      url: https://ai-workshops-gateway.uwssec.org
     daskhubSetup:
       enabled: false
     s3files:
