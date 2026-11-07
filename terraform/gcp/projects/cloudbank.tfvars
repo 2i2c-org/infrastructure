@@ -87,10 +87,6 @@ persistent_disks = {
     size        = 450
     name_suffix = "csusm"
   }
-  "deanza" = {
-    size        = 60
-    name_suffix = "deanza"
-  }
   "demo" = {
     size        = 35
     name_suffix = "demo"
@@ -230,10 +226,6 @@ persistent_disks = {
   "merced" = {
     size        = 60
     name_suffix = "merced"
-  }
-  "merritt" = {
-    size        = 25
-    name_suffix = "merritt"
   }
   "mmc" = {
     size        = 25
@@ -426,10 +418,6 @@ persistent_disks = {
   "whitman" = {
     size        = 25
     name_suffix = "whitman"
-  }
-  "willamette" = {
-    size        = 25
-    name_suffix = "willamette"
   }
   "wlac" = {
     size        = 20
