@@ -178,6 +178,7 @@ jupyterhub:
               display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: &nvidia_env
                   NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 mem_limit:
@@ -191,6 +192,7 @@ jupyterhub:
               display_name: SPOT NVIDIA Tesla T4, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -202,6 +204,7 @@ jupyterhub:
               display_name: NVIDIA L4 Tensor Core, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -212,6 +215,7 @@ jupyterhub:
               display_name: SPOT NVIDIA L4 Tensor Core, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -223,6 +227,7 @@ jupyterhub:
               display_name: NVIDIA G5, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -233,6 +238,7 @@ jupyterhub:
               display_name: SPOT NVIDIA G5, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -244,6 +250,7 @@ jupyterhub:
               display_name: NVIDIA NVIDIA L40S Tensor Core, ~32 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 29G
@@ -254,6 +261,7 @@ jupyterhub:
               display_name: SPOT NVIDIA NVIDIA L40S Tensor Core, ~32 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 29G
@@ -265,6 +273,7 @@ jupyterhub:
               display_name: NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
               description: Up to ~16 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 248G
@@ -275,6 +284,7 @@ jupyterhub:
               display_name: SPOT NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
               description: Up to ~16 CPUs when available
               kubespawner_override:
+                start_timeout: 900
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 248G
@@ -282,17 +292,18 @@ jupyterhub:
                   node.kubernetes.io/instance-type: p5.4xlarge
                   eks.amazonaws.com/capacityType: SPOT
                 extra_resource_limits: gpu_resource_limits\
-          60_any_spot_gpu:
-            display_name: Any SPOT GPU from the supported G-Family options
-            description: NVIDIA H100 not included
-            kubespawner_override:
-              environment: *nvidia_env
-              mem_limit:
-              mem_guarantee: 14G
-              node_selector:
-                2i2c/instance-type: g4dn-g6-g5-g6e.xlarge
-                eks.amazonaws.com/capacityType: SPOT
-              extra_resource_limits: gpu_resource_limits
+            60_any_spot_gpu:
+              display_name: Any SPOT GPU from the supported G-Family options
+              description: NVIDIA H100 not included
+              kubespawner_override:
+                start_timeout: 900
+                environment: *nvidia_env
+                mem_limit:
+                mem_guarantee: 14G
+                node_selector:
+                  2i2c/instance-type: g4dn-g6-g5-g6e.xlarge
+                  eks.amazonaws.com/capacityType: SPOT
+                extra_resource_limits: gpu_resource_limits
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-061c43dc309660f3d
