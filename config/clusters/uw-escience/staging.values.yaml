@@ -230,7 +230,7 @@ jupyterhub:
                   node.kubernetes.io/instance-type: g5.xlarge
                 extra_resource_limits: gpu_resource_limits
             31_g5_xlarge:
-              display_name: NVIDIA G5, ~16 GB, ~4 CPUs
+              display_name: SPOT NVIDIA G5, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 environment: *nvidia_env
@@ -261,18 +261,7 @@ jupyterhub:
                   node.kubernetes.io/instance-type: g6e.xlarge
                   eks.amazonaws.com/capacityType: SPOT
                 extra_resource_limits: gpu_resource_limits
-            50_any_spot_gpu:
-              display_name: Any available SPOT GPU machine above
-              description: NVIDIA H100 not included
-              kubespawner_override:
-                environment: *nvidia_env
-                mem_limit:
-                mem_guarantee: 14G
-                node_selector:
-                  2i2c/instance-type: g4dn-g6-g5-g6e.xlarge
-                  eks.amazonaws.com/capacityType: SPOT
-                extra_resource_limits: gpu_resource_limits
-            60_p5_4xlarge:
+            50_p5_4xlarge:
               display_name: NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
               description: Up to ~16 CPUs when available
               kubespawner_override:
@@ -282,8 +271,8 @@ jupyterhub:
                 node_selector:
                   node.kubernetes.io/instance-type: p5.4xlarge
                 extra_resource_limits: gpu_resource_limits
-            61_p5_4xlarge:
-              display_name: NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
+            51_p5_4xlarge:
+              display_name: SPOT NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
               description: Up to ~16 CPUs when available
               kubespawner_override:
                 environment: *nvidia_env
@@ -292,7 +281,18 @@ jupyterhub:
                 node_selector:
                   node.kubernetes.io/instance-type: p5.4xlarge
                   eks.amazonaws.com/capacityType: SPOT
-                extra_resource_limits: gpu_resource_limits
+                extra_resource_limits: gpu_resource_limits\
+          60_any_spot_gpu:
+            display_name: Any SPOT GPU from the supported G-Family options
+            description: NVIDIA H100 not included
+            kubespawner_override:
+              environment: *nvidia_env
+              mem_limit:
+              mem_guarantee: 14G
+              node_selector:
+                2i2c/instance-type: g4dn-g6-g5-g6e.xlarge
+                eks.amazonaws.com/capacityType: SPOT
+              extra_resource_limits: gpu_resource_limits
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-061c43dc309660f3d
