@@ -17,14 +17,12 @@ from ruamel.yaml import YAML
 from deployer.app import CONTINUOUS_DEPLOYMENT, app
 from deployer.commands.validate.config import (
     cleanup_values_schema_json,
-)
-from deployer.commands.validate.config import cluster_config as validate_cluster_config
-from deployer.commands.validate.config import get_chart_dir
-from deployer.commands.validate.config import support_config as validate_support_config
-from deployer.commands.validate.config import (
+    get_chart_dir,
     validate_authenticator_config,
     validate_hub_config,
 )
+from deployer.commands.validate.config import cluster_config as validate_cluster_config
+from deployer.commands.validate.config import support_config as validate_support_config
 from deployer.health_check_tests.test_hub_health import test_hub_healthy
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
