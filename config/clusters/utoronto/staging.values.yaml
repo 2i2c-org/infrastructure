@@ -1,4 +1,8 @@
 jupyterhub:
+  singleuser:
+    image:
+      name: quay.io/2i2c/utoronto-image
+      tag: cf9e2b0-security-patch-2025-07-28
   hub:
     db:
       pvc:
