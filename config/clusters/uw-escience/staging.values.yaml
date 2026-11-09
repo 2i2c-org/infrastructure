@@ -174,67 +174,125 @@ jupyterhub:
         resource_allocation:
           display_name: GPU machine
           choices:
-            g4dn_xlarge:
+            10_g4dn_xlarge:
               display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
-                environment:
+                environment: &nvidia_env
                   NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 mem_limit:
                 mem_guarantee: 14G
                 node_selector:
                   node.kubernetes.io/instance-type: g4dn.xlarge
-                extra_resource_limits:
+                extra_resource_limits: &gpu_resource_limits
                   nvidia.com/gpu: '1'
                 default: true
-            g6_xlarge:
+            11_g4dn_xlarge:
+              display_name: SPOT NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                environment: *nvidia_env
+                mem_limit:
+                mem_guarantee: 14G
+                extra_resource_limits: *gpu_resource_limits
+                node_selector:
+                  node.kubernetes.io/instance-type: g4dn.xlarge
+                  eks.amazonaws.com/capacityType: SPOT
+            20_g6_xlarge:
               display_name: NVIDIA L4 Tensor Core, ~16 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
-                environment:
-                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
                 node_selector:
                   node.kubernetes.io/instance-type: g6.xlarge
-                extra_resource_limits:
-                  nvidia.com/gpu: '1'
-            g5_xlarge:
-              display_name: NVIDIA G5, ~16 GB, ~4 CPUs
-              description: ~4 CPUs always available
+                extra_resource_limits: *gpu_resource_limits
+            21_g6_xlarge:
+              display_name: SPOT NVIDIA L4 Tensor Core, ~16 GB, ~4 CPUs
+              description: Up to ~4 CPUs when available
               kubespawner_override:
-                environment:
-                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                environment: *nvidia_env
+                mem_limit:
+                mem_guarantee: 14G
+                node_selector:
+                  node.kubernetes.io/instance-type: g6.xlarge
+                  eks.amazonaws.com/capacityType: SPOT
+                extra_resource_limits: *gpu_resource_limits
+            30_g5_xlarge:
+              display_name: NVIDIA G5, ~16 GB, ~4 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
                 node_selector:
                   node.kubernetes.io/instance-type: g5.xlarge
-                extra_resource_limits:
-                  nvidia.com/gpu: '1'
-            g6e_xlarge:
+                extra_resource_limits: gpu_resource_limits
+            31_g5_xlarge:
+              display_name: NVIDIA G5, ~16 GB, ~4 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                environment: *nvidia_env
+                mem_limit:
+                mem_guarantee: 14G
+                node_selector:
+                  node.kubernetes.io/instance-type: g5.xlarge
+                  eks.amazonaws.com/capacityType: SPOT
+                extra_resource_limits: gpu_resource_limits
+            40_g6e_xlarge:
               display_name: NVIDIA NVIDIA L40S Tensor Core, ~32 GB, ~4 CPUs
               description: Up to ~4 CPUs when available
               kubespawner_override:
-                environment:
-                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 29G
                 node_selector:
                   node.kubernetes.io/instance-type: g6e.xlarge
-                extra_resource_limits:
-                  nvidia.com/gpu: '1'
-            p5_4xlarge:
+                extra_resource_limits: gpu_resource_limits
+            41_g6e_xlarge:
+              display_name: SPOT NVIDIA NVIDIA L40S Tensor Core, ~32 GB, ~4 CPUs
+              description: Up to ~4 CPUs when available
+              kubespawner_override:
+                environment: *nvidia_env
+                mem_limit:
+                mem_guarantee: 29G
+                node_selector:
+                  node.kubernetes.io/instance-type: g6e.xlarge
+                  eks.amazonaws.com/capacityType: SPOT
+                extra_resource_limits: gpu_resource_limits
+            50_any_spot_gpu:
+              display_name: Any available SPOT GPU machine above
+              description: NVIDIA H100 not included
+              kubespawner_override:
+                environment: *nvidia_env
+                mem_limit:
+                mem_guarantee: 14G
+                node_selector:
+                  2i2c/instance-type: g4dn-g6-g5-g6e.xlarge
+                  eks.amazonaws.com/capacityType: SPOT
+                extra_resource_limits: gpu_resource_limits
+            60_p5_4xlarge:
               display_name: NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
               description: Up to ~16 CPUs when available
               kubespawner_override:
-                environment:
-                  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 248G
                 node_selector:
                   node.kubernetes.io/instance-type: p5.4xlarge
-                extra_resource_limits:
-                  nvidia.com/gpu: '1'
+                extra_resource_limits: gpu_resource_limits
+            61_p5_4xlarge:
+              display_name: NVIDIA H100 Tensor Core, ~256 GB, ~16 CPUs
+              description: Up to ~16 CPUs when available
+              kubespawner_override:
+                environment: *nvidia_env
+                mem_limit:
+                mem_guarantee: 248G
+                node_selector:
+                  node.kubernetes.io/instance-type: p5.4xlarge
+                  eks.amazonaws.com/capacityType: SPOT
+                extra_resource_limits: gpu_resource_limits
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-061c43dc309660f3d
