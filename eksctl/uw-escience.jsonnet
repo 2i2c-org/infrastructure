@@ -68,6 +68,9 @@ local c = cluster.withNodeGroupConfigOverride(
             'g5.xlarge',
             'g6e.xlarge',
           ],
+        extraLabels: {
+          '2i2c/instance-type': 'g4dn-g6-g5-g6e.xlarge',
+        },
         spot: true,
       },
     ],

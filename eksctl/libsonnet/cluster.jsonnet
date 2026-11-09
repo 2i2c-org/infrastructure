@@ -424,6 +424,7 @@ local buildName(parts, generation) = std.join('-', parts)[:63 - 1 - std.length(g
         gpuCount=std.get(gpuConfig, 'gpuCount', 1),
         gpuType=std.get(gpuConfig, 'gpuType', 'nvidia-tesla-t4'),
         spot=std.get(gpuConfig, 'spot', false),
+        extraLabels=std.get(gpuConfig, 'extraLabels', {}),
         generation=generation,
         minSize=0,
         maxSize=10,
