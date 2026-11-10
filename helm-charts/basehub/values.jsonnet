@@ -8,9 +8,6 @@ local account_id = std.extVar('VARS_2I2C_ACCOUNT_ID');
 // name of the hub.
 local is_staging = std.member(hub_name, 'staging');
 
-// Return False if hub_name contains ['binder', 'spyglass', 'public', 'ephemeral'] for rolling out compute usage quotas
-local hub_types = ['binder', 'spyglass', 'public', 'ephemeral'];
-
 local emitDaskHubCompatibleConfig(basehubConfig) =
   // Handle legacy 'daskhub' type hubs
   // Note: This relies on `jsonnet` being called with absolute path to
@@ -98,10 +95,12 @@ local jupyterhubUsageQuotasHubConfig = {
     UsageQuotaManager: {
       hub_namespace: '%s' % hub_name,
     },
-    UsageViewer: {
-      hub_namespace: '%s' % hub_name,
-      public_hub_url: 'https://%s/' % hub_domain,
-    },
+  },
+};
+
+local jupyterhubUsageQuotasViewerConfig = {
+  jupyterhub: {
+    publicUrl: 'https://%s' % hub_domain,
   },
 };
 
@@ -305,6 +304,7 @@ emitDaskHubCompatibleConfig(
     nfs: nfsConfig,
     'jupyterhub-home-nfs': jupyterhubHomeNFSConfig,
     'jupyterhub-groups-exporter': jupyterhubGroupsExporterConfig,
+    'jupyterhub-usage-quotas': jupyterhubUsageQuotasViewerConfig,
     jupyterhub: jupyterhubConfig,
     userServiceAccount: userServiceAccountConfig,
     'dask-gateway': daskGatewayConfig,
