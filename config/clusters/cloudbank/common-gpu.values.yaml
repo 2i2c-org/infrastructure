@@ -78,6 +78,11 @@ jupyterhub:
               description: RStudio, VS Code, JupyterLab, Python, R, C#
               kubespawner_override:
                 image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image:5de08f79fb18
+            05-vision-user-image:
+              display_name: 3D Computer Vision Image
+              description: JupyterLab, Python, Open3D, trimesh, pycolmap, OpenCV
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/vision-user-image:87654f24e8e1
       kubespawner_override:
         cpu_guarantee: 0.1
         cpu_limit: 2
