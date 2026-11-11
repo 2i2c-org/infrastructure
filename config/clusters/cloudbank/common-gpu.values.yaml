@@ -8,7 +8,7 @@ jupyterhub:
     extraImages:
       00-sml-pytorch:
         name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-        tag: f40f3c6e6069
+        tag: 037c12ffadfa
     extraTolerations:
     - key: hub.jupyter.org/dedicated
       operator: Exists
@@ -56,12 +56,12 @@ jupyterhub:
               description: RStudio, VS Code, JupyterLab, Python, R
               default: true
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:42a579e662f4
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:e46bfc537447
             01-slm:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:0e15c5f67363
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-cpu-image:b269733322fe
             02-scipy:
               display_name: Jupyter SciPy Notebook
               description: Scientific Python image
@@ -77,7 +77,12 @@ jupyterhub:
               display_name: C# Image
               description: RStudio, VS Code, JupyterLab, Python, R, C#
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image:dce2d64366ff
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/c-sharp-user-image:5de08f79fb18
+            05-vision-user-image:
+              display_name: 3D Computer Vision Image
+              description: JupyterLab, Python, Open3D, trimesh, pycolmap, OpenCV
+              kubespawner_override:
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/vision-user-image:62501103fddb
       kubespawner_override:
         cpu_guarantee: 0.1
         cpu_limit: 2
@@ -101,7 +106,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:f40f3c6e6069
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:037c12ffadfa
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
