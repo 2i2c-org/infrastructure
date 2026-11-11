@@ -74,10 +74,11 @@ basehub:
         JupyterHub:
           authenticator_class: generic-oauth
         GenericOAuthenticator:
-          allowed_scopes:
-            # This allows EarthScope to control who can login to the hub
-          - geolab
+#          allowed_scopes:
+#            # This allows EarthScope to control who can login to the hub
+#          - geolab
           auth_state_groups_key: scope
+          allow_existing_users: true
           scope:
           - openid
             # This gives us refresh token
