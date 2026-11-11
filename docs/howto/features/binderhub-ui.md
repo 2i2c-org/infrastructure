@@ -123,6 +123,7 @@ We need to configure BinderHub so that:
 
 - it's not running in an API only mode
 - it knows about where the hub is running
+- it knows to put repo contents on $HOME
 
 ```yaml
 binderhub-service:
@@ -132,6 +133,12 @@ binderhub-service:
       hub_url: https://<jupyterhub-public-url>.2i2c.cloud
       badge_base_url: https://<binderhub-public-url>.2i2c.cloud
       enable_api_only_mode: false
+    BuildExecutor:
+      # Put the contents of the repo under `/home/jovyan`, rather than
+      # our default of `/srv/repo`. BinderHubs have no persistent storage,
+      # and $HOME is where the repo is expected to be.
+      repo2docker_extra_args:
+      - --target-repo-dir=/home/jovyan
 ```
 
 #### 6. Check that the builder docker api and user pods are scheduled on the smallest available instance or on the hub dedicated instance type

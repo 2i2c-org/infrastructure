@@ -92,6 +92,12 @@ binderhub-service:
       allowed_specs:
       - ^ProjectPythia/.*$
       - binder-examples/requirements
+    BuildExecutor:
+      # Put the contents of the repo under `/home/jovyan`, rather than
+      # our default of `/srv/repo`. BinderHubs have no persistent storage,
+      # and $HOME is where the repo is expected to be.
+      repo2docker_extra_args:
+      - --target-repo-dir=/home/jovyan
   extraEnv:
   - name: JUPYTERHUB_API_TOKEN
     valueFrom:

@@ -107,6 +107,12 @@ binderhub-service:
   custom:
     sendLogsOfLaunchEventsTo2i2c: true
   config:
+    BuildExecutor:
+      # Put the contents of the repo under `/home/jovyan`, rather than
+      # our default of `/srv/repo`. BinderHubs have no persistent storage,
+      # and $HOME is where the repo is expected to be.
+      repo2docker_extra_args:
+      - --target-repo-dir=/home/jovyan
     BinderHub:
       base_url: /
       hub_url: https://hub.big.binder.opensci.2i2c.cloud
