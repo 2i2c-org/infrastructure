@@ -82,7 +82,7 @@ jupyterhub:
               display_name: 3D Computer Vision Image
               description: JupyterLab, Python, Open3D, trimesh, pycolmap, OpenCV
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/vision-user-image:87654f24e8e1
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/vision-user-image:62501103fddb
       kubespawner_override:
         cpu_guarantee: 0.1
         cpu_limit: 2
