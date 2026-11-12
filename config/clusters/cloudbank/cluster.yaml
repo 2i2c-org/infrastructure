@@ -1041,6 +1041,7 @@ hubs:
   helm_chart_values_files:
   - common.values.yaml
   - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
   - weber.values.yaml
   - enc-weber.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
