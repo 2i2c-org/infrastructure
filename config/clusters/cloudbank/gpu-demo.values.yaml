@@ -5,7 +5,7 @@ jupyterhub:
   singleuser:
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-      tag: 037c12ffadfa
+      tag: 2b2808d96ff9
   scheduling:
     userScheduler:
       # I was noticing sometimes upto a minute between when
