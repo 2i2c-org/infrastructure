@@ -104,7 +104,7 @@
           # Install package
           ''
             ${unwantedEnvPreamble}
-            pip install -e "deployer[dev]"
+            pip install -e ".[dev]"
           '';
       };
     });
