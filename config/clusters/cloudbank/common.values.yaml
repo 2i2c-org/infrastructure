@@ -14,7 +14,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/cloudbank-hub
-      tag: 0.0.1-0.dev.git.17190.h2b4e487a1
+      tag: 0.0.1-0.dev.git.17462.h993cabd51
     services:
       cloudbank-pilot-hub-users: {}
     loadRoles:

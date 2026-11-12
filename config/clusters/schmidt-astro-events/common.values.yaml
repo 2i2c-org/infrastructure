@@ -128,7 +128,7 @@ jupyterhub:
     image:
       # Brings in https://github.com/jupyterhub/jupyterhub/pull/5557
       name: quay.io/2i2c/jupyterhub-6-auth-state-reconcile
-      tag: 0.0.1-0.dev.git.17389.h6e818fd55
+      tag: 0.0.1-0.dev.git.17462.h993cabd51
     extraConfig:
       001-litellm-key: |
         # -----------------------------------------------------------------------------
