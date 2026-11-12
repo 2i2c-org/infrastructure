@@ -50,7 +50,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/jupyterhub-6
-      tag: 0.0.1-0.dev.git.17389.h6e818fd55
+      tag: 0.0.1-0.dev.git.17462.h993cabd51
     allowNamedServers: true
     extraConfig:
       01-orcid: |

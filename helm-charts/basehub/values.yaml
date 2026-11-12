@@ -1117,7 +1117,7 @@ jupyterhub:
           - users:activity!user
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.16609.hb23fbd448"
+      tag: 0.0.1-0.dev.git.17462.h993cabd51
     service:
       # Usage quota dashboard
       extraPorts:

@@ -26,7 +26,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/oauthenticator-latest
-      tag: 0.0.1-0.dev.git.17203.h34102b8b4
+      tag: 0.0.1-0.dev.git.17462.h993cabd51
     config:
       JupyterHub:
         authenticator_class: google
