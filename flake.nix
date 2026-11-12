@@ -6,14 +6,10 @@
 {
   inputs = {
     nixpkgs-helm.url = "github:NixOS/nixpkgs/9b100cfb67ccb2ff6e723b78d4ae2f9c88654a1c";
-    # Perf: use a fixed hash to maximise overlap with other nixpkgs.
-    #       nixpkgs _can_ be updated, but no need.
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-gcloud.url = "github:NixOS/nixpkgs/8c50a710ddca43d7a530fb805ad55bde8d0141c5";
-    nixpkgs.url = "github:NixOS/nixpkgs/8c50a710ddca43d7a530fb805ad55bde8d0141c5";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     dev-python = {
-      url = "github:agoose77/dev-flakes/v10?dir=python";
+      url = "github:agoose77/dev-flakes/v16?dir=python";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -21,7 +17,6 @@
     self,
     nixpkgs,
     nixpkgs-helm,
-    nixpkgs-gcloud,
     dev-python,
   }: let
     forAllSystems =
@@ -31,9 +26,6 @@
       pkgs-helm = import nixpkgs-helm {
         inherit system;
       };
-      pkgs-gcloud = import nixpkgs-gcloud {
-        inherit system;
-      };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -41,7 +33,7 @@
 
       # Define our interpreter
       python = pkgs.python313;
-      gdk = pkgs-gcloud.google-cloud-sdk.withExtraComponents (with pkgs-gcloud.google-cloud-sdk.components; [
+      gdk = pkgs.google-cloud-sdk.withExtraComponents (with pkgs.google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
       ]);
       # Configure packages that need additional deps
