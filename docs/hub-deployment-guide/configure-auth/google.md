@@ -68,7 +68,7 @@
             authenticator_class: google
           GoogleOAuthenticator:
             username_claim: email
-            hosted_domain:
+            allow_hosted_domain:
             - [domain] (e.g. go.pasadena.edu)
             strip_domain: false
             allow_all: true

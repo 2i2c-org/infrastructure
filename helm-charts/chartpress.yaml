@@ -22,16 +22,10 @@ charts:
           REQUIREMENTS_FILE: authz-helpers-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
-      oauthenticator-latest:
-        imageName: quay.io/2i2c/oauthenticator-latest
-        buildArgs:
-          REQUIREMENTS_FILE: oauthenticator-latest-requirements.txt
-        contextPath: images/hub
-        dockerfilePath: images/hub/Dockerfile
       jupyterhub6:
         imageName: quay.io/2i2c/jupyterhub-6
         buildArgs:
-          REQUIREMENTS_FILE: "latest-usage-quotas-requirements.txt"
+          REQUIREMENTS_FILE: "jupyterhub6-requirements.txt"
         contextPath: "images/hub"
         dockerfilePath: images/hub/Dockerfile.jupyterhub6
       cloudbank:
@@ -43,6 +37,6 @@ charts:
       jupyterhub6-auth-state-reconcile:
         imageName: quay.io/2i2c/jupyterhub-6-auth-state-reconcile
         buildArgs:
-          REQUIREMENTS_FILE: "auth-state-reconcile-requirements.txt"
+          REQUIREMENTS_FILE: "jupyterhub6-requirements.txt"
         contextPath: "images/hub"
         dockerfilePath: images/hub/Dockerfile.auth-state-reconcile
