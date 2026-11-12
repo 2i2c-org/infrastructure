@@ -1725,8 +1725,9 @@ jupyterhub:
 
         usage_quotas_enabled = get_config('custom.usageQuotas.enabled')
         if usage_quotas_enabled:
-          from jupyterhub_usage_quotas import setup_usage_quotas
+          from jupyterhub_usage_quotas import setup_usage_quotas, get_template_path
           setup_usage_quotas(c)
+          c.JupyterHub.template_paths.insert(0, get_template_path())
           # Replace existing no-op usage quota viewer with JH service config
           services = []
           for service in c.JupyterHub.services:
