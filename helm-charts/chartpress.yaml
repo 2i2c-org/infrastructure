@@ -17,7 +17,6 @@ charts:
         buildArgs:
           REQUIREMENTS_FILE: requirements.txt
       hub-authz-helpers:
-        valuesPath: jupyterhub.hub.image
         buildArgs:
           REQUIREMENTS_FILE: authz-helpers-requirements.txt
         contextPath: images/hub
