@@ -7,7 +7,7 @@ nfs:
 jupyterhub:
   custom:
     usageQuotas:
-      enabled: false
+      enabled: true
   cull:
     timeout: 3600 # 1 hour of no activity, in seconds
     maxAge: 43200 # 12 hour hard cap regardless of activity, in seconds
@@ -66,3 +66,5 @@ jupyterhub-home-nfs:
       requests:
         cpu: 0.001
         memory: 8Mi
+jupyterhub-usage-quotas:
+  enabled: true
