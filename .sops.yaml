@@ -1,4 +1,7 @@
 creation_rules:
+# Use a different key for openscapes hub, so they can change their own passwords
+- path_regex: config/clusters/cloudbank/.*secret.*
+  gcp_kms: projects/two-eye-two-see/locations/us-central1/keyRings/community-keys/cryptoKeys/cloudbank
 - path_regex: .*secret.*
   gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
 - path_regex: .*/eksctl/ssh-keys/.*
