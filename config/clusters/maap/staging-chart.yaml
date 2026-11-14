@@ -34,6 +34,6 @@ dependencies:
   # draft PR https://github.com/2i2c-org/jupyterhub-usage-quotas/pull/102.
   # The chart is published from a fork until the PR is merged.
 - name: jupyterhub-usage-quotas
-  version: 0.1.6-0.dev.git.355.h2c9ba37
+  version: 0.1.6-0.dev.git.363.h887d9d2
   repository: oci://ghcr.io/sunu/jupyterhub-usage-quotas
   condition: jupyterhub-usage-quotas.enabled

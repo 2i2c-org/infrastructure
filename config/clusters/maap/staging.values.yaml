@@ -323,10 +323,9 @@ jupyterhub-home-nfs:
 # staging-chart.yaml.
 jupyterhub-usage-quotas:
   enabled: true
-  jupyterhub:
-    publicUrl: https://staging.hub.maap-project.org/
   config:
     UsageViewer:
+      public_hub_url: https://staging.hub.maap-project.org/
       prometheus_url: http://support-prometheus-server.support.svc.cluster.local
       enable_compute: true
   extraEnv:
