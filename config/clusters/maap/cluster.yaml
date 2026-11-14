@@ -26,7 +26,8 @@ hubs:
   - staging.values.yaml
   - enc-common.secret.values.yaml
   - enc-staging.secret.values.yaml
-  chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+  # Chart-jupyterhub-6-dev.yaml with the jupyterhub-usage-quotas chart
+  chart_override: staging-chart.yaml
 - name: prod
   display_name: MAAP - prod
   domain: hub.maap-project.org

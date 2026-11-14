@@ -1855,3 +1855,6 @@ jupyterhub-home-nfs:
 
 jupyterhub-groups-exporter:
   enabled: true
+
+jupyterhub-usage-quotas:
+  enabled: false
