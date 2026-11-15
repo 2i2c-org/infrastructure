@@ -1817,7 +1817,7 @@ jupyterhub-usage-quotas:
   enabled: false
   resources:
     requests:
-      cpu: 1
+      cpu: 0.5
       memory: 200Mi
     limits:
       memory: 500Mi
