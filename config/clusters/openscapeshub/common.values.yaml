@@ -221,3 +221,8 @@ basehub:
     buildPodsRegistryCredentials:
       server: https://quay.io
       username: imagebuilding-non-gcp-hubs+image_builder
+  jupyterhub-usage-quotas:
+    enabled: true
+    config:
+      UsageViewer:
+        enable_compute: true
