@@ -1815,6 +1815,12 @@ jupyterhub-groups-exporter:
 
 jupyterhub-usage-quotas:
   enabled: false
+  resources:
+    requests:
+      cpu: 1
+      memory: 200Mi
+    limits:
+      memory: 500Mi
   config:
     UsageViewer:
       prometheus_url: http://support-prometheus-server.support.svc.cluster.local
