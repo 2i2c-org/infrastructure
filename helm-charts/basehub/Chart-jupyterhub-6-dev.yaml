@@ -31,7 +31,6 @@ dependencies:
     repository: https://2i2c.org/jupyterhub-groups-exporter
     condition: jupyterhub-groups-exporter.enabled
   - name: jupyterhub-usage-quotas
-    version: 0.1.6-0.dev.git.355.h2c9ba37
-    repository: oci://ghcr.io/sunu/jupyterhub-usage-quotas
+    version: 0.1.6-0.dev.git.336.h5fec111
+    repository: oci://ghcr.io/2i2c-org/jupyterhub-usage-quotas
     condition: jupyterhub-usage-quotas.enabled
-
