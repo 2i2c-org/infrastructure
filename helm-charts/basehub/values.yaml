@@ -917,9 +917,6 @@ jupyterhub:
         scope_fallback_strategy:
           intersection: 'min'
         failover_open: true
-      UsageViewer:
-        prometheus_url: 'http://support-prometheus-server.support.svc.cluster.local'
-        enable_compute: false
     extraEnv:
       # Turn off IP checks for XSRF, as we aren't currently able to consistently
       # get the end user IP to the JupyterHub process at all times
@@ -1039,9 +1036,6 @@ jupyterhub:
     extraVolumes:
       - name: custom-templates
         emptyDir: {}
-      - name: usage-quotas
-        configMap:
-          name: usage-quotas-config
     extraVolumeMounts:
       - mountPath: /usr/local/share/jupyterhub/custom_templates
         name: custom-templates
@@ -1049,10 +1043,6 @@ jupyterhub:
       - mountPath: /usr/local/share/jupyterhub/static/extra-assets
         name: custom-templates
         subPath: repo/extra-assets
-      - mountPath:
-          /usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py
-        name: usage-quotas
-        subPath: jupyterhub_usage_quotas_config.py
     services:
       # hub-health service helps us run health checks from the deployer script.
       # The JupyterHub Helm chart will automatically generate an API token for
@@ -1066,8 +1056,8 @@ jupyterhub:
         #
         admin: true
       usage-quota:
-        # We provider an entry here unconditionally,
-        display: False
+        # We unconditionally provide a no-op entry so that roles and scopes are also provided unconditionally
+        display: false
         command:
         - sleep
         - infinity
@@ -1085,8 +1075,11 @@ jupyterhub:
         display: false
         url: http://binderhub:8090
         oauth_no_confirm: true
-      jupyterhub-groups-exporter: {}
+      jupyterhub-groups-exporter:
+        # We unconditionally provide a no-op entry so that roles and scopes are also provided unconditionally
+        display: false
       metrics-exporter:
+        # We unconditionally provide a no-op entry so that roles and scopes are also provided unconditionally
         display: false
     loadRoles:
       usage-quota-service:
@@ -1118,12 +1111,6 @@ jupyterhub:
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.16609.hb23fbd448"
-    service:
-      # Usage quota dashboard
-      extraPorts:
-        - port: 9000
-          targetPort: 9000
-          name: usage-quota
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -1142,26 +1129,6 @@ jupyterhub:
           ports:
             - port: 8081
               protocol: TCP
-        - ports:
-            - port: 9000
-          from:
-              # Allow traffic from the hub pod itself for Jupyterhub's internal healthchecks for hub managed services.
-            - podSelector:
-                matchLabels:
-                  app.kubernetes.io/component: hub
-                  app.kubernetes.io/name: jupyterhub
-              # Allow traffic from the proxy api pod
-            - podSelector:
-                matchLabels:
-                  hub.jupyter.org/network-access-hub: 'true'
-        - ports:
-            - port: 8081
-          from:
-              # Allow traffic from the hub pod itself for oauth calls from the usage-quota service to the hub api.
-            - podSelector:
-                matchLabels:
-                  app.kubernetes.io/component: hub
-                  app.kubernetes.io/name: jupyterhub
     # FIXME: We should think about these resource requests/limits, see
     #        https://github.com/2i2c-org/infrastructure/issues/2127.
     #
@@ -1758,28 +1725,18 @@ jupyterhub:
 
         usage_quotas_enabled = get_config('custom.usageQuotas.enabled')
         if usage_quotas_enabled:
-          from jupyterhub_usage_quotas import setup_usage_quotas
+          from jupyterhub_usage_quotas import setup_usage_quotas, get_template_path
           setup_usage_quotas(c)
-
-          c.JupyterHub.services.append(
-            {
-              'name': 'usage-quota',
-              'url': 'http://hub:9000',
-              'display': True,
-              'oauth_no_confirm': True,
-              'command': [
-                'python',
-                '-m',
-                'jupyterhub_usage_quotas.services.usage_viewer',
-                '--config-files=["/usr/local/etc/jupyterhub/jupyterhub_config.d/jupyterhub_usage_quotas_config.py"]',
-              ],
-              'environment': {
-                  "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME"),
-                  "JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD": os.environ.get("JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD")
-              }
-            }
-          )
-
+          c.JupyterHub.template_paths.insert(0, get_template_path())
+          # Replace existing no-op usage quota viewer with JH service config
+          services = []
+          for service in c.JupyterHub.services:
+            if service.get("name") == "usage-quota":
+              service["command"] = []
+              service["url"] = "http://usage-viewer:9000" # see helm chart value
+              service["display"] = True
+              service["oauth_no_confirm"] = True
+          services.append(service)
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |
         # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
@@ -1855,3 +1812,22 @@ jupyterhub-home-nfs:
 
 jupyterhub-groups-exporter:
   enabled: true
+
+jupyterhub-usage-quotas:
+  enabled: false
+  config:
+    UsageViewer:
+      prometheus_url: http://support-prometheus-server.support.svc.cluster.local
+      enable_compute: false
+  extraEnv:
+    # this mirrors the prometheus-auth secret from the support namespace
+  - name: JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: prometheus-auth
+        key: username
+  - name: JUPYTERHUB_USAGE_QUOTAS_PROMETHEUS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: prometheus-auth
+        key: password
