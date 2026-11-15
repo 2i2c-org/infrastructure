@@ -99,8 +99,10 @@ local jupyterhubUsageQuotasHubConfig = {
 };
 
 local jupyterhubUsageQuotasViewerConfig = {
-  jupyterhub: {
-    publicUrl: 'https://%s' % hub_domain,
+  config: {
+    UsageViewer: {
+      public_hub_url: 'https://%s' % hub_domain,
+    },
   },
 };
 
