@@ -1111,12 +1111,6 @@ jupyterhub:
     image:
       name: quay.io/2i2c/pilot-hub
       tag: 0.0.1-0.dev.git.17462.h993cabd51
-    service:
-      # Usage quota dashboard
-      extraPorts:
-        - port: 9000
-          targetPort: 9000
-          name: usage-quota
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
