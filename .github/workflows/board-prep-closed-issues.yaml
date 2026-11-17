@@ -43,8 +43,8 @@ jobs:
           gh api \
             --method POST \
             "repos/$GH_REPO/issues/$ISSUE_NUMBER/assignees" \
-            -f "assignees[]=$CLOSER"
-          echo "Assigned @$CLOSER to issue #$ISSUE_NUMBER"
+            -f "assignees[]=$ISSUE_CLOSER"
+          echo "Assigned @$ISSUE_CLOSER to issue #$ISSUE_NUMBER"
         else
           echo "Issue #$ISSUE_NUMBER already has an assignee; skipping."
         fi
@@ -59,8 +59,7 @@ jobs:
         github_token: $PROJECT_BOARD_TOKEN
         project_url: https://github.com/orgs/2i2c-org/projects/57
     - name: Leave a comment and label if no estimate
-      uses: EndBug/project-fields@v2
-      if: ${{ steps.get-estimate.outputs.values != '' }}
+      if: ${{ steps.get-estimate.outputs.values == '' }}
       run: |
-        BODY: "⚠️ @$CLOSER, this issue has no estimate. Please take action!"
+        BODY="⚠️ @$ISSUE_CLOSER, this issue has no estimate. Please take action!"
         gh issue comment "$ISSUE_NUMBER" --body "$BODY" --repo $GH_REPO
