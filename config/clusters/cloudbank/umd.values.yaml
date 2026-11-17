@@ -6,7 +6,7 @@ jupyterhub:
       limit: 4G
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/cloudbank-umd-image
-      tag: 7a98a6e9903b
+      tag: a6d4845fa6a4
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
