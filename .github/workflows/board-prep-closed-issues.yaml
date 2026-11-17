@@ -1,4 +1,4 @@
-name: Add an iteration number to a closed issue that didn't have any
+name: Take actions that are relevant to the project board, for closed issues
 on:
   issues:
     types: [closed]
@@ -11,7 +11,7 @@ env:
 jobs:
   compute-iteration:
     uses: ./.github/workflows/compute-iteration-number.yaml
-  create-tracking-issues:
+  update-board-issues:
     runs-on: ubuntu-latest
     needs: compute-iteration
     steps:
