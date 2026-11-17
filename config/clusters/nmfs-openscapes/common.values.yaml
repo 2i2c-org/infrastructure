@@ -64,11 +64,11 @@ jupyterhub:
             enabled: true
           choices:
             pyrgeo2:
-              display_name: Py-R - Geospatial + QGIS, Panoply - py-rocket-geospatial-2 2026.02.18
+              display_name: Py-R - Geospatial + QGIS - py-rocket-geospatial-2 2026.11.17
               slug: pyrgeo2
               default: true
               kubespawner_override:
-                image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:2026.02.18
+                image: ghcr.io/nmfs-opensci/py-rocket-geospatial-2:2026.11.17
             echosm:
               display_name: Py-R - echoSMs hackathon - latest
               slug: echosm
