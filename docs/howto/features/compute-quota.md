@@ -34,7 +34,7 @@ In the [usage quota dashboard](https://jupyterhub-usage-quotas.readthedocs.io/en
 
 ```{code} yaml
 :filename: config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml
-hub:
+jupyterhub-usage-quotas:
   config:
     UsageViewer:
       enable_compute: true
