@@ -8,7 +8,7 @@ jupyterhub:
     extraImages:
       00-sml-pytorch:
         name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-        tag: 5a8b8d1fae57
+        tag: 7a338b784819
     extraTolerations:
     - key: hub.jupyter.org/dedicated
       operator: Exists
@@ -56,7 +56,7 @@ jupyterhub:
               description: RStudio, VS Code, JupyterLab, Python, R
               default: true
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:dbe20956cd00
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image:4686c01553e9
             01-slm:
               display_name: Small Language Models - Workshop hub
               description: Python typical DS plus SLM packages
@@ -106,7 +106,7 @@ jupyterhub:
               display_name: Small Models and Pangeo PyTorch ML Notebook (2026.01.30)
               slug: small_models
               kubespawner_override:
-                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:5a8b8d1fae57
+                image: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image:7a338b784819
             01-tensorflow:
               display_name: Pangeo Tensorflow ML Notebook (2026.01.30)
               slug: tensorflow
