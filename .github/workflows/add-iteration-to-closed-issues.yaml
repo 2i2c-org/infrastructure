@@ -2,6 +2,12 @@ name: Add an iteration number to a closed issue that didn't have any
 on:
   issues:
     types: [closed]
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_REPO: ${{ github.repository }}
+  ISSUE_NUMBER: ${{ github.event.issue.number }}
+  ISSUE_CLOSER: ${{ github.event.sender.login }}
+  PROJECT_BOARD_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 jobs:
   compute-iteration:
     uses: ./.github/workflows/compute-iteration-number.yaml
@@ -9,13 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: compute-iteration
     steps:
+    # Issue with no Iteration
     - name: Get the "Iteration" field
       uses: EndBug/project-fields@v2
       id: get-iteration
       with:
         operation: get
         fields: Iteration
-        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        github_token: $PROJECT_BOARD_TOKEN
         project_url: https://github.com/orgs/2i2c-org/projects/57
     - name: Add current iteration to closed issue if doesn't have one already
       uses: EndBug/project-fields@v2
@@ -23,6 +30,37 @@ jobs:
       with:
         operation: set
         fields: Iteration
-        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+        github_token: $PROJECT_BOARD_TOKEN
         project_url: https://github.com/orgs/2i2c-org/projects/57
         values: Iteration ${{ needs.compute-iteration.outputs.iteration }}
+
+    # Issue with no Assignee
+    - name: Assign the person who closed the issue
+      run: |
+        ASSIGNEES=$(gh api "repos/$GH_REPO/issues/$ISSUE_NUMBER" --jq '.assignees | length')
+
+        if [ "$ASSIGNEES" -eq 0 ]; then
+          gh api \
+            --method POST \
+            "repos/$GH_REPO/issues/$ISSUE_NUMBER/assignees" \
+            -f "assignees[]=$CLOSER"
+          echo "Assigned @$CLOSER to issue #$ISSUE_NUMBER"
+        else
+          echo "Issue #$ISSUE_NUMBER already has an assignee; skipping."
+        fi
+
+    # Issue with no Estimate
+    - name: Get the "Estimate" field
+      uses: EndBug/project-fields@v2
+      id: get-estimate
+      with:
+        operation: get
+        fields: Estimate
+        github_token: $PROJECT_BOARD_TOKEN
+        project_url: https://github.com/orgs/2i2c-org/projects/57
+    - name: Leave a comment and label if no estimate
+      uses: EndBug/project-fields@v2
+      if: ${{ steps.get-estimate.outputs.values != '' }}
+      run: |
+        BODY: "⚠️ @$CLOSER, this issue has no estimate. Please take action!"
+        gh issue comment "$ISSUE_NUMBER" --body "$BODY" --repo $GH_REPO
