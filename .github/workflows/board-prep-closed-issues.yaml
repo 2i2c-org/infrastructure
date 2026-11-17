@@ -7,7 +7,6 @@ env:
   GH_REPO: ${{ github.repository }}
   ISSUE_NUMBER: ${{ github.event.issue.number }}
   ISSUE_CLOSER: ${{ github.event.sender.login }}
-  PROJECT_BOARD_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
 jobs:
   compute-iteration:
     uses: ./.github/workflows/compute-iteration-number.yaml
@@ -22,7 +21,7 @@ jobs:
       with:
         operation: get
         fields: Iteration
-        github_token: $PROJECT_BOARD_TOKEN
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
     - name: Add current iteration to closed issue if doesn't have one already
       uses: EndBug/project-fields@v2
@@ -30,7 +29,7 @@ jobs:
       with:
         operation: set
         fields: Iteration
-        github_token: $PROJECT_BOARD_TOKEN
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
         values: Iteration ${{ needs.compute-iteration.outputs.iteration }}
 
@@ -56,7 +55,7 @@ jobs:
       with:
         operation: get
         fields: Estimate
-        github_token: $PROJECT_BOARD_TOKEN
+        github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
     - name: Leave a comment and label if no estimate
       if: ${{ steps.get-estimate.outputs.values == '' }}
