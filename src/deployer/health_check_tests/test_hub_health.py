@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 
 import aiohttp
+from hucl.drivers import async_driver
 from hucl.flows import (
     create_user,
     delete_user,
@@ -48,11 +49,17 @@ async def create_health_check_user(
     hub_api_url = ensure_api_url(f"{hub_url}/hub/api")
 
     # Ensure we have a fresh user
-    await delete_user.asyn(
-        api_url=hub_api_url, api_token=service_api_token, user_name=user_name
+    await async_driver(
+        delete_user(
+            api_url=hub_api_url, api_token=service_api_token, user_name=user_name
+        ),
+        session=session,
     )
-    await create_user.asyn(
-        api_url=hub_api_url, api_token=service_api_token, user_name=user_name
+    await async_driver(
+        create_user(
+            api_url=hub_api_url, api_token=service_api_token, user_name=user_name
+        ),
+        session=session,
     )
     return await create_user_api_token(session, hub_url, service_api_token, user_name)
 
@@ -74,7 +81,11 @@ async def create_user_api_token(
 
 @contextlib.asynccontextmanager
 async def ensure_health_check_server(
-    hub_url: str, user_api_token: str, user_name: str, cleanup_timeout_s: float
+    session: aiohttp.ClientSession,
+    hub_url: str,
+    user_api_token: str,
+    user_name: str,
+    cleanup_timeout_s: float,
 ):
     """
     Spin up a temporary JupyterHub server under the `deployment-service-check` name.
@@ -86,18 +97,24 @@ async def ensure_health_check_server(
     try:
         # Now spin up a server
         partial_server_url = (
-            await start_server.asyn(
-                api_url=hub_api_url, api_token=user_api_token, user_name=user_name
+            await async_driver(
+                start_server(
+                    api_url=hub_api_url, api_token=user_api_token, user_name=user_name
+                ),
+                session=session,
             )
         ).rstrip("/")
         yield f"{hub_url}{partial_server_url}"
 
     finally:
         await asyncio.wait_for(
-            stop_server.asyn(
-                api_url=hub_api_url,
-                api_token=user_api_token,
-                user_name=user_name,
+            async_driver(
+                stop_server(
+                    api_url=hub_api_url,
+                    api_token=user_api_token,
+                    user_name=user_name,
+                ),
+                session=session,
             ),
             timeout=cleanup_timeout_s,
         )
@@ -155,7 +172,7 @@ async def test_hub_healthy(
 
             print_colour("Starting server ...", "yellow")
             async with ensure_health_check_server(
-                hub_url_base, user_api_token, user_name, cleanup_timeout_s
+                session, hub_url_base, user_api_token, user_name, cleanup_timeout_s
             ) as server_url_base:
                 # Check the API
                 print_colour("Checking server API is reachable ...", "yellow")
