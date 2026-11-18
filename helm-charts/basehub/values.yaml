@@ -886,6 +886,11 @@ jupyterhub:
         # Allow unauthenticated prometheus requests
         # Otherwise our prometheus server can't get hub metrics
         authenticate_prometheus: false
+        # Limit max number of named servers per user to guard against potential
+        # misuse from a single user spawning many concurrent users
+        # An additional guardrail on top of usage quotas
+        # Ref: https://github.com/2i2c-org/infrastructure/issues/9455
+        named_server_limit_per_user: 32
       KubeSpawner:
         # Make sure working directory is where we mount the home folder
         working_dir: /home/jovyan
