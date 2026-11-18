@@ -26,7 +26,7 @@ dependencies:
   # kubernetes community. We switch to this to have least potential disruption
   # possible, until we eventually perhaps move to the Gateway API someday
   - name: nginx-ingress
-    version: 2.4.4
+    version: 2.9.0
     repository: oci://ghcr.io/nginx/charts
     condition: nginx-ingress.enabled
 
