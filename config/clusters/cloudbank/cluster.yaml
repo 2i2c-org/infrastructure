@@ -569,6 +569,17 @@ hubs:
   - mendocino.values.yaml
   - enc-mendocino.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: miamioh
+  display_name: Miami University
+  domain: miamioh.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - common-gpu.values.yaml
+  - miamioh.values.yaml
+  - enc-miamioh.secret.values.yaml
+  #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
 - name: mmc
   display_name: Meharry Medical College
   domain: mmc.cloudbank.2i2c.cloud
