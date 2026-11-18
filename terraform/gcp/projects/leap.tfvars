@@ -96,22 +96,6 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  "public-n2-highmem-4" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-4",
-    labels : {
-      "2i2c.org/community" : "public"
-    },
-    taints : [{
-      key : "2i2c.org/community",
-      value : "public",
-      effect : "NO_SCHEDULE",
-    }],
-    resource_labels : {
-      "community" : "public",
-    },
-  }
   "n2-highmem-16-a" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
