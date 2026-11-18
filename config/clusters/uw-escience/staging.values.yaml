@@ -179,6 +179,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: &nvidia_env
                   NVIDIA_DRIVER_CAPABILITIES: compute,utility
                 mem_limit:
@@ -194,6 +196,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -206,6 +210,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -218,6 +224,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -230,6 +238,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -242,6 +252,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
@@ -254,6 +266,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 29G
@@ -266,6 +280,8 @@ jupyterhub:
               description: Up to ~4 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 29G
@@ -278,6 +294,8 @@ jupyterhub:
               description: Up to ~16 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 248G
@@ -290,6 +308,8 @@ jupyterhub:
               description: Up to ~16 CPUs when available
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 248G
@@ -302,6 +322,8 @@ jupyterhub:
               description: NVIDIA H100 not included
               kubespawner_override:
                 start_timeout: 900
+                slow_spawn_message_threshold: 300
+                slow_spawn_message_frequency: 30
                 environment: *nvidia_env
                 mem_limit:
                 mem_guarantee: 14G
