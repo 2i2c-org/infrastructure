@@ -26,6 +26,228 @@ basehub:
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)
+      profileList:
+      - display_name: Choose your environment and resources
+        default: true
+        profile_options:
+          image:
+            display_name: Environment
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image, of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            dynamic_image_building:
+              enabled: true
+            choices:
+              geolab-general:
+                display_name: GeoLab
+                slug: geolab-base
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope/geolab/geolab-base:latest
+              geolab-gmt:
+                display_name: GMT Course
+                slug: gmt-course
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope-dev/geolab/gmt:latest
+              geolab-sfg:
+                display_name: SeaFloor Geodesy
+                slug: geolab-sfg
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope/sfg-geolab:latest
+          resource_allocation:
+            display_name: Resource Allocation
+            choices:
+              mem_4_gb:
+                display_name: 4 GB RAM, ~0.5 CPUs
+                description: Upto ~4 CPUs when available
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
+                kubespawner_override:
+                  mem_guarantee: 3902839759
+                  mem_limit: 3902839759
+                  cpu_guarantee: 0.4563125
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_gb:
+                display_name: 7 GB RAM, ~0.9 CPUs
+                description: Upto ~4 CPUs when available
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
+                kubespawner_override:
+                  mem_guarantee: 7805679519
+                  mem_limit: 7805679519
+                  cpu_guarantee: 0.912625
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_15_gb:
+                display_name: 15 GB RAM, ~1.8 CPUs
+                description: Upto ~4 CPUs when available
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
+                kubespawner_override:
+                  mem_guarantee: 15611359038
+                  mem_limit: 15611359038
+                  cpu_guarantee: 1.82525
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_gb:
+                display_name: 29 GB RAM, ~4 CPUs
+                description: ~4 CPUs always available
+                allowed_groups:
+                - geolab
+                - geolab:dev
+                - geolab:power
+                - vm-sm
+                - vm-md
+                - vm-lg
+                - vm-xl
+                kubespawner_override:
+                  mem_guarantee: 31222718077
+                  mem_limit: 31222718077
+                  cpu_guarantee: 3.6505
+                  cpu_limit: 3.6505
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_gb:
+                display_name: 60 GB RAM, ~8 CPUs
+                description: Upto ~15 CPUs when available
+                allowed_groups:
+                - geolab:dev
+                - geolab:power
+                - vm-md
+                - vm-lg
+                - vm-xl
+                kubespawner_override:
+                  mem_guarantee: 64020707016
+                  mem_limit: 64020707016
+                  cpu_guarantee: 7.69055
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_119_gb:
+                display_name: 119 GB RAM, ~15 CPUs
+                description: ~15 CPUs always available
+                allowed_groups:
+                - geolab:dev
+                - geolab:power
+                - vm-lg
+                - vm-xl
+                kubespawner_override:
+                  mem_guarantee: 128041414033
+                  mem_limit: 128041414033
+                  cpu_guarantee: 15.3811
+                  cpu_limit: 15.3811
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_488_gb:
+                display_name: 488 GB RAM, ~63 CPUs
+                description: ~63 CPUs always available
+                allowed_groups:
+                - geolab:power
+                - vm-xl
+                kubespawner_override:
+                  mem_guarantee: 523839830228
+                  mem_limit: 523839830228
+                  cpu_guarantee: 62.575
+                  cpu_limit: 62.575
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.16xlarge
+          scratch_disk: &scratch_disk
+            display_name: Scratch disk on /tmp
+            choices:
+              01_standard:
+                display_name: Standard
+                description: Standard scratch disk shared with other users on your node
+                default: true
+              02_gb_100:
+                display_name: Dedicated 250 GB
+                description: 250 GB scratch disk dedicated for your use
+                kubespawner_override:
+                  volume_mounts:
+                    tmp:
+                      name: big-tmp
+                      mountPath: /tmp
+                  volumes:
+                    big-tmp:
+                      name: big-tmp
+                      ephemeral:
+                        volumeClaimTemplate:
+                          metadata:
+                            labels:
+                              hub.jupyter.org/volume-purpose: user-scratch
+                              hub.jupyter.org/username: '{username}'
+                              hub.jupyter.org/servername: '{servername}'
+                            annotations:
+                              hub.jupyter.org/username: '{unescaped_username}'
+                              hub.jupyter.org/servername: '{unescaped_servername}'
+                          spec:
+                            accessModes: [ReadWriteOnce]
+                            storageClassName: ebs-csi-default-sc
+                            volumeAttributesClassName: scratch-disk
+                            resources:
+                              requests:
+                                storage: 250Gi
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: Start a container on a dedicated node with a GPU
+        slug: gpu
+        allowed_groups:
+        - geolab:dev
+        - geolab:power
+        - gpu
+        profile_options:
+          scratch_disk: *scratch_disk
+          image:
+            display_name: Image
+            dynamic_image_building:
+              enabled: true
+            unlisted_choice:
+              enabled: true
+              display_name: Custom image
+              validation_regex: ^.+:.+$
+              validation_message: Must be a publicly available docker image of form <image-name>:<tag>
+              kubespawner_override:
+                image: '{value}'
+            choices:
+              geolab-gpu:
+                display_name: GeoLab-GPU
+                slug: geolab-gpu
+                kubespawner_override:
+                  image: public.ecr.aws/earthscope/geolab/geolab-gpu:latest
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook
+                slug: tensorflow
+                kubespawner_override:
+                  image: quay.io/pangeo/ml-notebook:2025.07.09
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                default: true
+                slug: pytorch
+                kubespawner_override:
+                  image: quay.io/pangeo/pytorch-notebook:2025.05.22
 
   jupyterhub-home-nfs:
     eks:
