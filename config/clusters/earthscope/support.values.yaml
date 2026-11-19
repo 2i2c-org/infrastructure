@@ -35,6 +35,13 @@ calico:
 jupyterhub-cost-monitoring:
   enabled: true
 
+scratchDiskVAC:
+  enabled: true
+  parameters:
+    # Increase for faster /tmp
+    iops: '4000'
+    throughput: '300'
+
 # FIXME: remove this once eksctl is fixed
 nvidiaDevicePlugin:
   aws:
