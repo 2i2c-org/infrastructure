@@ -116,6 +116,15 @@ hubs:
   - cau.values.yaml
   - enc-cau.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: ccc
+  display_name: Contra Costa College
+  domain: ccc.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - ccc.values.yaml
+  - enc-ccc.secret.values.yaml
 - name: ccsf
   display_name: City College SF
   domain: ccsf.cloudbank.2i2c.cloud

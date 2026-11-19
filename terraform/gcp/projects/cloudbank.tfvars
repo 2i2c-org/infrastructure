@@ -43,6 +43,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "cau"
   }
+  "ccc" = {
+    size        = 25
+    name_suffix = "ccc"
+  }
   "ccsf" = {
     size        = 550
     name_suffix = "ccsf"
