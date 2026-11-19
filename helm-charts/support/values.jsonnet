@@ -660,7 +660,7 @@ local scratchDiskVACConfigMapping = {
               makePodRestartAlert(
                 'support-prometheus-server',
                 'support-prometheus-server pod has restarted on %s:{{ $labels.namespace }}' % [cluster_name],
-                '^proxy.*',
+                '^support-prometheus-server.*',
                 'same day action needed'
               ),
             ],
