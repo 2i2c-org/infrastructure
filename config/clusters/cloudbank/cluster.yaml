@@ -196,6 +196,15 @@ hubs:
   - cmu.values.yaml
   - enc-cmu.secret.values.yaml
   #chart_override: helm-charts/basehub/Chart-jupyterhub-6-dev.yaml
+- name: colostate
+  display_name: Colorado State University
+  domain: colostate.cloudbank.2i2c.cloud
+  helm_chart: basehub
+  helm_chart_values_files:
+  - common.values.yaml
+  - enc-common.secret.values.yaml
+  - colostate.values.yaml
+  - enc-colostate.secret.values.yaml
 - name: cra
   display_name: Computing Research Association
   domain: cra.cloudbank.2i2c.cloud
