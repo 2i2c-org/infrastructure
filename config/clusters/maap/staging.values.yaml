@@ -40,41 +40,41 @@ jupyterhub:
               image: '{value}'
               image_pull_policy: Always
           choices:
-            01-pangeo:
-              display_name: Modified Pangeo Notebook
-              description: Pangeo based notebook with a Python environment
-              kubespawner_override:
-                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/pangeo:develop
-                image_pull_policy: Always
-            02-rocker:
-              display_name: Rocker Geospatial
-              description: JupyterHub environment with many R geospatial libraries pre-installed
-              kubespawner_override:
-                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/r:develop
-                image_pull_policy: Always
-            03-isce3:
-              display_name: isce3
-              description: Pangeo based notebook with a Python environment and isce3
-              kubespawner_override:
-                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/isce3:develop
-                image_pull_policy: Always
-            04-pangeo-ogc:
+            01-pangeo-ogc:
               display_name: OGC compliant Modified Pangeo Notebook
               description: Pangeo based notebook with a Python environment
               kubespawner_override:
                 image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/pangeo:v6.1.0
                 image_pull_policy: Always
-            05-rocker-ogc:
+            02-rocker-ogc:
               display_name: OGC compliant Rocker Geospatial
               description: JupyterHub environment with many R geospatial libraries pre-installed
               kubespawner_override:
                 image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/r:v6.1.0
                 image_pull_policy: Always
-            06-isce3:
+            03-isce3-ogc:
               display_name: OGC compliant isce3
               description: Pangeo based notebook with a Python environment and isce3
               kubespawner_override:
                 image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/isce3:v6.1.0
+                image_pull_policy: Always
+            04-pangeo:
+              display_name: Modified Pangeo Notebook
+              description: Pangeo based notebook with a Python environment
+              kubespawner_override:
+                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/pangeo:develop
+                image_pull_policy: Always
+            05-rocker:
+              display_name: Rocker Geospatial
+              description: JupyterHub environment with many R geospatial libraries pre-installed
+              kubespawner_override:
+                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/r:develop
+                image_pull_policy: Always
+            06-isce3:
+              display_name: isce3
+              description: Pangeo based notebook with a Python environment and isce3
+              kubespawner_override:
+                image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/isce3:develop
                 image_pull_policy: Always
             07-qgis:
               display_name: QGIS on Linux Desktop
@@ -243,13 +243,13 @@ jupyterhub:
                 image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/pytorch:v6.1.0
             tensorflow2-maap:
               display_name: Pangeo Tensorflow2 ML Notebook with MAAP extensions
-              default: true
+              default: false
               slug: tensorflow2
               kubespawner_override:
                 image: mas.dit.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:develop
             tensorflow2-maap-ogc:
               display_name: OGC compliant Pangeo Tensorflow2 ML Notebook with MAAP extensions
-              default: false
+              default: true
               slug: tensorflow2
               kubespawner_override:
                 image: mas.uat.maap-project.org/root/maap-workspaces/2i2c/tensorflow2:v6.1.0
