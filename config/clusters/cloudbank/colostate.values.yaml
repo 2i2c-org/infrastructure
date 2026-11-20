@@ -1,4 +1,6 @@
 jupyterhub:
+  singleuser:
+    defaultUrl: /lab
   scheduling:
     userScheduler:
       enabled: true
