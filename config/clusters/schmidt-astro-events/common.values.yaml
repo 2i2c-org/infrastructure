@@ -9,7 +9,7 @@ jupyterhub:
     usageQuotas:
       enabled: false
     litellmKeyProvisioner:
-      enabled: true
+      enabled: false
       url: https://ai-workshops-gateway.uwssec.org
     daskhubSetup:
       enabled: false
