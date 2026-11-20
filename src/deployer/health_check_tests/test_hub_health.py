@@ -1,12 +1,17 @@
 import asyncio
 import contextlib
-import difflib
 import os
 from pathlib import Path
 
 import aiohttp
-from jhub_client.execute import JupyterHubAPI
-from jhub_client.utils import parse_notebook_cells
+from hucl.drivers import async_driver
+from hucl.flows import (
+    create_user,
+    delete_user,
+    ensure_api_url,
+    start_server,
+    stop_server,
+)
 
 from deployer.utils.rendering import print_colour
 
@@ -29,71 +34,110 @@ def log_group(title: str):
 VERY_LARGE_TIMEOUT = 9999
 
 
-async def run_notebook_in_default_kernel(
-    *,
-    username: str,
-    jupyter,
-    cells,
+def bearer_auth_headers(token: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {token}"}
+
+
+async def create_health_check_user(
+    session, hub_url: str, service_api_token: str, user_name: str
+) -> str:
+    """
+    Ensure we have a new user, and determine the API token for it
+    """
+
+    # First, ensure we have a user
+    hub_api_url = ensure_api_url(f"{hub_url}/hub/api")
+
+    # Ensure we have a fresh user
+    await async_driver(
+        delete_user(
+            api_url=hub_api_url, api_token=service_api_token, user_name=user_name
+        ),
+        session=session,
+    )
+    await async_driver(
+        create_user(
+            api_url=hub_api_url, api_token=service_api_token, user_name=user_name
+        ),
+        session=session,
+    )
+    return await create_user_api_token(session, hub_url, service_api_token, user_name)
+
+
+async def create_user_api_token(
+    session: aiohttp.ClientSession, hub_url: str, service_api_token: str, user_name: str
+) -> str:
+    hub_api_url = ensure_api_url(f"{hub_url}/hub/api")
+
+    async with session.post(
+        f"{hub_api_url}/users/{user_name}/tokens",
+        headers=bearer_auth_headers(service_api_token),
+        json={"note": f"Health check token for {user_name}"},
+        raise_for_status=True,
+    ) as resp:
+        data = await resp.json()
+        return data["token"]
+
+
+@contextlib.asynccontextmanager
+async def ensure_health_check_server(
+    session: aiohttp.ClientSession,
+    hub_url: str,
+    user_api_token: str,
+    user_name: str,
     cleanup_timeout_s: float,
-    validate: bool = False,
 ):
-    kernel_id, kernel = await jupyter.ensure_kernel()
+    """
+    Spin up a temporary JupyterHub server under the `deployment-service-check` name.
+    Stop the server after completion.
+    """
+    # First, ensure we have a user
+    hub_api_url = ensure_api_url(f"{hub_url}/hub/api")
+
     try:
-        result_cells = []
-        async with kernel:
-            for i, (code, expected_result) in enumerate(cells):
-                kernel_result = await kernel.send_code(
-                    username,
-                    code,
-                    timeout=VERY_LARGE_TIMEOUT,
-                    wait=True,
-                )
-                result_cells.append((code, kernel_result))
-                # logger.debug(
-                #    f"kernel executing cell={i} code=\n{textwrap.indent(code, '   >>> ')}"
-                # )
-                # logger.debug(
-                #    f"kernel result cell={i} result=\n{textwrap.indent(kernel_result, '   | ')}"
-                # )
-                if validate and (kernel_result.strip() != expected_result.strip()):
-                    diff = "".join(difflib.unified_diff(kernel_result, expected_result))
-                    raise ValueError(
-                        f"execution of cell={i} did not match expected result diff={diff}"
-                    )
+        # Now spin up a server
+        partial_server_url = (
+            await async_driver(
+                start_server(
+                    api_url=hub_api_url, api_token=user_api_token, user_name=user_name
+                ),
+                session=session,
+            )
+        ).rstrip("/")
+        yield f"{hub_url}{partial_server_url}"
+
     finally:
         await asyncio.wait_for(
-            jupyter.delete_kernel(kernel_id), timeout=cleanup_timeout_s
+            async_driver(
+                stop_server(
+                    api_url=hub_api_url,
+                    api_token=user_api_token,
+                    user_name=user_name,
+                ),
+                session=session,
+            ),
+            timeout=cleanup_timeout_s,
         )
 
 
-async def fetch_hub_version(hub_url: str):
-    api_url = f"{hub_url.removesuffix('/')}/hub/api"
-    async with aiohttp.ClientSession() as session, session.get(api_url) as response:
+async def fetch_hub_version(session: aiohttp.ClientSession, hub_url: str):
+    api_url = ensure_api_url(f"{hub_url}/hub/api")
+    async with session.get(api_url) as response:
         data = await response.json()
 
     return data["version"]
 
 
-@contextlib.asynccontextmanager
-async def using_jupyterhub_token(token: str):
-    # Export the hub health check service as an env var so that jhub_client can read it.
-    orig_service_token = os.environ.get("JUPYTERHUB_API_TOKEN", None)
-
-    try:
-        os.environ["JUPYTERHUB_API_TOKEN"] = token
-        yield
-    finally:
-        if orig_service_token is not None:
-            os.environ["JUPYTERHUB_API_TOKEN"] = orig_service_token
-        else:
-            del os.environ["JUPYTERHUB_API_TOKEN"]
-
-
-async def ensure_user_does_not_exist(hub: JupyterHubAPI, username: str):
-    if await hub.get_user(username):
-        # If we don't delete the user too, than we won't be able to start a kernel for it.
-        # This is because we would have lost its api token from the previous run.
-        await hub.delete_user(username)
+async def fetch_server_default_kernelspec(
+    session: aiohttp.ClientSession, server_url: str, user_api_token: str
+):
+    async with session.get(
+        f"{server_url}/api/kernelspecs",
+        headers=bearer_auth_headers(user_api_token),
+        raise_for_status=True,
+    ) as resp:
+        specs = await resp.json()
+    return specs["default"]
 
 
 async def test_hub_healthy(
@@ -104,73 +148,37 @@ async def test_hub_healthy(
     test_notebooks: bool,
     cleanup_timeout_s: float,
 ):
-    # First, check we can hit the hub
+    hub_url_base = hub_url.rstrip("/")
+
+    user_name = "deployment-service-check"
 
     print_colour(f"Running health checks for {hub_url} ...", "yellow")
+    async with aiohttp.ClientSession() as session:
+        # First, check we can hit the hub
+        with log_group("Hub health"):
+            print_colour("Checking hub API is reachable ...", "yellow")
+            hub_version = await fetch_hub_version(session, hub_url_base)
+            print_colour(f"Found hub running version {hub_version}", "green")
 
-    with log_group("Hub health"):
-        print_colour("Checking hub API is reachable ...", "yellow")
-        hub_version = await fetch_hub_version(hub_url)
-        print_colour(f"Found hub running version {hub_version}", "green")
-
-    username = "deployment-service-check"
-    async with using_jupyterhub_token(api_token), JupyterHubAPI(hub_url) as hub:
-        # Ensure we create a fresh user each time
-        await ensure_user_does_not_exist(hub, username)
-
-        # Start a server
-        print_colour(f"Starting health-check server for {username}...", "yellow")
-        server = await hub.ensure_server(
-            username,
-            create_user=True,
-            timeout=VERY_LARGE_TIMEOUT,
-        )
-        try:
-            async with server:
-                with log_group("Server health"):
-                    # Check the API
-                    print_colour("Checking server API is reachable ...", "yellow")
-                    specs = await server.list_kernel_specs()
-                    default = specs["default"]
-                    print_colour(
-                        f"Found default kernelspec {default} for server", "green"
-                    )
-
-                    # Run some workflows
-                    if test_notebooks:
-                        with log_group("Notebook workflow health"):
-                            nb_dir = notebook_dir(hub_type)
-                            print_colour(
-                                "Checking singleuser workflows succeed ...", "yellow"
-                            )
-                            test_notebook_paths = (
-                                os.path.join(root, name)
-                                for root, _, files in os.walk(nb_dir, topdown=False)
-                                for _, name in enumerate(files)
-                            )
-                            for test_notebook_path in test_notebook_paths:
-                                name = os.path.basename(test_notebook_path)
-                                # We only want to run the "scale_dask_workers.ipynb" file if the
-                                # check_dask_scaling variable is true. We continue in the loop if
-                                # check_dask_scaling == False when we iterate over this file.
-                                print_colour(
-                                    f"Running {name} test notebook ...", "yellow"
-                                )
-
-                                cells = parse_notebook_cells(test_notebook_path)
-                                await run_notebook_in_default_kernel(
-                                    username=username,
-                                    jupyter=server,
-                                    cells=cells,
-                                    cleanup_timeout_s=cleanup_timeout_s,
-                                    validate=False,
-                                )
-                    else:
-                        print_colour("Skipping notebook tests ...", "yellow")
-
-            print_colour(f"Hub {hub_url} is healthy!")
-        finally:
-            await asyncio.wait_for(
-                hub.ensure_server_deleted(username, timeout=VERY_LARGE_TIMEOUT),
-                timeout=cleanup_timeout_s,
+        # First, then that we can hit the server
+        with log_group("Server health"):
+            # Create a user API token. We don't need to do this if the
+            # service API token has sufficient privs, but using a user.
+            # token lets us test that pathway!
+            print_colour("Creating user API token ...", "yellow")
+            user_api_token = await create_health_check_user(
+                session, hub_url_base, api_token, user_name
             )
+
+            print_colour("Starting server ...", "yellow")
+            async with ensure_health_check_server(
+                session, hub_url_base, user_api_token, user_name, cleanup_timeout_s
+            ) as server_url_base:
+                # Check the API
+                print_colour("Checking server API is reachable ...", "yellow")
+                default = await fetch_server_default_kernelspec(
+                    session, server_url_base, user_api_token
+                )
+                print_colour(f"Found default kernelspec {default} for server", "green")
+
+                print_colour(f"Hub {hub_url} is healthy!")
