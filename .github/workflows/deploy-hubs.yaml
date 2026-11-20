@@ -182,7 +182,6 @@ jobs:
       failure_2i2c-uk: ${{ steps.declare-failure.outputs.failure_2i2c-uk }}
       failure_2i2c: ${{ steps.declare-failure.outputs.failure_2i2c }}
       failure_awi-ciroh: ${{ steps.declare-failure.outputs.failure_awi-ciroh }}
-      failure_bnext-bio: ${{ steps.declare-failure.outputs.failure_bnext-bio }}
       failure_cloudbank: ${{ steps.declare-failure.outputs.failure_cloudbank }}
       failure_disasters: ${{ steps.declare-failure.outputs.failure_disasters }}
       failure_dubois: ${{ steps.declare-failure.outputs.failure_dubois }}
@@ -417,7 +416,6 @@ jobs:
       failure_2i2c-aws-us_staging: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us_staging }}
       failure_2i2c-uk_staging: ${{ steps.declare-failure.outputs.failure_2i2c-uk_staging }}
       failure_awi-ciroh_staging: ${{ steps.declare-failure.outputs.failure_awi-ciroh_staging }}
-      failure_bnext-bio_staging: ${{ steps.declare-failure.outputs.failure_bnext-bio_staging }}
       failure_cloudbank_staging: ${{ steps.declare-failure.outputs.failure_cloudbank_staging }}
       failure_dubois_staging: ${{ steps.declare-failure.outputs.failure_dubois_staging }}
       failure_disasters_staging: ${{ steps.declare-failure.outputs.failure_disasters_staging }}
