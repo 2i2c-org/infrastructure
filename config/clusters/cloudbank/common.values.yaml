@@ -14,7 +14,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/cloudbank-hub
-      tag: 0.0.1-0.dev.git.17190.h2b4e487a1
+      tag: 0.0.1-0.dev.git.17488.hd10bc93a4
     services:
       cloudbank-pilot-hub-users: {}
     loadRoles:
@@ -34,7 +34,7 @@ jupyterhub:
       limit: 2
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/base-user-image
-      tag: 42a579e662f4
+      tag: 4686c01553e9
 jupyterhub-home-nfs:
   quotaEnforcer:
     resources:

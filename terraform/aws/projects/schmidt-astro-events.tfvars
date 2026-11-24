@@ -16,10 +16,6 @@ ebs_volumes = {
     name_suffix = "workshop",
     type        = "gp3",
     size        = 1000,
-    # Let's bump these far up, since we don't know what the
-    # performance characteristics are
-    iops       = 15000,
-    throughput = 1000,
     tags = {
       "2i2c:hub-name" : "workshop"
       "JHCM:HubName" : "staging"

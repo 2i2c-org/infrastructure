@@ -6,7 +6,7 @@ jupyterhub:
       limit: 32G
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/geospatial-user-image
-      tag: a455347d1ce0
+      tag: f63b43c59981
     storage:
       extraVolumeMounts:
         1-submit-volumemount:

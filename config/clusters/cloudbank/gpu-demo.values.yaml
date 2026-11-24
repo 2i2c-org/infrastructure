@@ -5,7 +5,7 @@ jupyterhub:
   singleuser:
     image:
       name: us-central1-docker.pkg.dev/cal-icor-hubs/user-images/workshop-gpu-image
-      tag: f40f3c6e6069
+      tag: 7a338b784819
   scheduling:
     userScheduler:
       # I was noticing sometimes upto a minute between when
@@ -35,7 +35,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/jupyterhub-6
-      tag: 0.0.1-0.dev.git.17389.h6e818fd55
+      tag: 0.0.1-0.dev.git.17488.hd10bc93a4
     allowNamedServers: true
     config:
       JupyterHub:

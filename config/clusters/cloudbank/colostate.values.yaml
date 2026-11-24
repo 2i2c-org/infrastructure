@@ -1,9 +1,9 @@
 jupyterhub:
   singleuser:
     defaultUrl: /lab
-    memory:
-      guarantee: 512M
-      limit: 1G
+  scheduling:
+    userScheduler:
+      enabled: true
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -20,20 +20,24 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://upload.wikimedia.org/wikipedia/en/6/60/WillametteUniversitySeal.png
-          name: Willamette University
-          url: https://willamette.edu/
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/9/95/Colorado_State_University_logo.svg
+          name: Colorado State University
+          url: https://www.colostate.edu/
   hub:
+    db:
+      pvc:
+        storageClassName: standard-rwo
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         allowed_idps:
-          https://idp.willamette.edu/idp:
+          https://shibidp.colostate.edu/idp/shibboleth:
             default: true
             username_derivation:
               username_claim: email
-            allow_all: true
+            allowed_domains:
+            - colostate.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
@@ -41,10 +45,10 @@ jupyterhub:
         admin_users:
         - sean.smorris@berkeley.edu
         - ericvd@berkeley.edu
-        - hcheng@willamette.edu
+        - trpearce@colostate.edu
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-willamette
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-colostate
   quotaEnforcer:
     config:
       QuotaManager:

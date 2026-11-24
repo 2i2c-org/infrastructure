@@ -9,7 +9,7 @@ jobs:
       contains(github.event.issue.labels.*.name, 'outage')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
     - name: Extract incident ID from issue body
       id: extract
       shell: python
@@ -28,7 +28,7 @@ jobs:
           f.write(f"incident_id={incident_id}")
 
     - name: Leave a note to the incident
-      uses: ./.github/actions/pagerduty-note
+      uses: $/.github/actions/pagerduty-note
       with:
         incident_id: ${{ steps.extract.outputs.incident_id }}
         token: ${{ secrets.PD_TOKEN }}

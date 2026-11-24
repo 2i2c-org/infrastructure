@@ -47,11 +47,11 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         submodules: true
     - name: Report Status
-      uses: ravsamhq/notify-slack-action@v2
+      uses: ravsamhq/notify-slack-action@2.5.0
       with:
         notify_when: success,failure
         status: ${{ needs.health_check.result }}
@@ -73,7 +73,7 @@ jobs:
         fi
 
     - name: Leave a note to the incident
-      uses: ./.github/actions/pagerduty-note
+      uses: $/.github/actions/pagerduty-note
       with:
         incident_id: ${{ github.event.client_payload.id }}
         token: ${{ secrets.PD_TOKEN }}

@@ -12,7 +12,7 @@ dependencies:
     # images/hub/Dockerfile, and will also involve manually building and pushing
     # the Dockerfile to https://quay.io/2i2c/pilot-hub. Details about this can
     # be found in the Dockerfile's comments.
-    version: 4.3.3
+    version: 4.4.5
     repository: https://jupyterhub.github.io/helm-chart/
   - name: binderhub-service
     version: 0.1.0-0.dev.git.336.hca79dc0
@@ -30,3 +30,7 @@ dependencies:
     version: 1.1.1-0.dev.git.133.hd9f9ccc
     repository: https://2i2c.org/jupyterhub-groups-exporter
     condition: jupyterhub-groups-exporter.enabled
+  - name: jupyterhub-usage-quotas
+    version: 0.1.7
+    repository: oci://ghcr.io/2i2c-org/jupyterhub-usage-quotas
+    condition: jupyterhub-usage-quotas.enabled

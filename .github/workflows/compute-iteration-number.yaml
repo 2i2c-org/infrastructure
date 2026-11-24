@@ -21,7 +21,8 @@ jobs:
       id: compute
       run: |
         # Start date of Iteration 1
-        START_DATE="2024-10-16"
+        # We used to start sprints on Wednesdays, now we start Thursdays
+        START_DATE="2024-10-17"
         ITER_DAYS=14
 
         NOW=$(date +%s)

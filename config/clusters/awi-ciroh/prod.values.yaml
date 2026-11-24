@@ -47,7 +47,7 @@ basehub:
                 default: true
                 slug: new
                 kubespawner_override:
-                  image: quay.io/2i2c/awi-ciroh-image:d86a62ae0b85
+                  image: quay.io/2i2c/awi-ciroh-image:58bade4c8eba
               devcon15: # Repurposed for Summer Institute '26
                 display_name: Summer Institute Bootcamp
                 slug: devcon15

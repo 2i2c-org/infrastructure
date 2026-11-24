@@ -1,11 +1,7 @@
 jupyterhub:
-  singleuser:
-    memory:
-      # Increased to help deal with possible kernel restarts
-      # https://2i2c.freshdesk.com/a/tickets/567
-      guarantee: 384M
-      limit: 1.5G
-    defaultUrl: /lab
+  scheduling:
+    userScheduler:
+      enabled: true
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
@@ -22,29 +18,37 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.scgssm.org/themes/custom/scgssm/img/logo-white-text.svg
-          name: Governors School of Science and Math
-          url: https://www.scgssm.org/
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/5/5d/Miami_University_logo_2021.svg
+          name: Miami University
+          url: https://miamioh.edu/
   hub:
+    db:
+      pvc:
+        storageClassName: standard-rwo
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+          urn:mace:incommon:muohio.edu:
             default: true
             username_derivation:
               username_claim: email
             allowed_domains:
-            - governors.school
+            - miamioh.edu
+            - muohio.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
       Authenticator:
         admin_users:
-        - ericvd@berkeley.edu
         - sean.smorris@berkeley.edu
-        - tbelcher@governors.school
+        - ericvd@berkeley.edu
+        - zhengw22@miamioh.edu
 jupyterhub-home-nfs:
   gke:
-    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-gssm
+    volumeId: projects/cb-1003-1696/zones/us-central1-b/disks/hub-nfs-homedirs-miamioh
+  quotaEnforcer:
+    config:
+      QuotaManager:
+        hard_quota: 10 # in GiB

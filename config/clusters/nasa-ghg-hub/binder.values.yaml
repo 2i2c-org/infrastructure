@@ -103,6 +103,12 @@ binderhub-service:
       auth_enabled: false
       enable_api_only_mode: false
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/ghg-binder-
+    BuildExecutor:
+      # Put the contents of the repo under `/home/jovyan`, rather than
+      # our default of `/srv/repo`. BinderHubs have no persistent storage,
+      # and $HOME is where the repo is expected to be.
+      repo2docker_extra_args:
+      - --target-repo-dir=/home/jovyan
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder

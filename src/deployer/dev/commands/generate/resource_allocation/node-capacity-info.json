@@ -254,11 +254,11 @@
     "r8i.xlarge": {
         "capacity": {
             "cpu": 4.0,
-            "memory": 33090461696
+            "memory": 33090289664
         },
         "allocatable": {
             "cpu": 3.92,
-            "memory": 31357165568
+            "memory": 31356993536
         },
         "measured_overhead": {
             "cpu": 0.225,
@@ -266,7 +266,7 @@
         },
         "available": {
             "cpu": 3.695,
-            "memory": 31030009856
+            "memory": 31029837824
         }
     },
     "r8i.2xlarge": {

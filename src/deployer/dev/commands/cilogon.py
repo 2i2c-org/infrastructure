@@ -302,7 +302,7 @@ def get_all_clients(admin_id, admin_secret):
         return
 
     clients = response.json()
-    return [c for c in clients["clients"]]
+    return [*clients["clients"]]
 
 
 def find_duplicated_clients(clients):

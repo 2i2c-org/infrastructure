@@ -43,6 +43,10 @@ persistent_disks = {
     size        = 25
     name_suffix = "cau"
   }
+  "ccc" = {
+    size        = 25
+    name_suffix = "ccc"
+  }
   "ccsf" = {
     size        = 550
     name_suffix = "ccsf"
@@ -75,6 +79,10 @@ persistent_disks = {
     size        = 500
     name_suffix = "cmu"
   }
+  "colostate" = {
+    size        = 25
+    name_suffix = "colostate"
+  }
   "cra" = {
     size        = 25
     name_suffix = "cra"
@@ -86,10 +94,6 @@ persistent_disks = {
   "csusm" = {
     size        = 450
     name_suffix = "csusm"
-  }
-  "deanza" = {
-    size        = 60
-    name_suffix = "deanza"
   }
   "demo" = {
     size        = 35
@@ -104,7 +108,7 @@ persistent_disks = {
     name_suffix = "elcamino"
   }
   "emich" = {
-    size        = 50
+    size        = 100
     name_suffix = "emich"
   }
   "epcc" = {
@@ -154,10 +158,6 @@ persistent_disks = {
   "greenriver" = {
     size        = 25
     name_suffix = "greenriver"
-  }
-  "gssm" = {
-    size        = 25
-    name_suffix = "gssm"
   }
   "gwu" = {
     size        = 300
@@ -231,13 +231,9 @@ persistent_disks = {
     size        = 40
     name_suffix = "mendocino"
   }
-  "merced" = {
-    size        = 60
-    name_suffix = "merced"
-  }
-  "merritt" = {
+  "miamioh" = {
     size        = 25
-    name_suffix = "merritt"
+    name_suffix = "miamioh"
   }
   "mmc" = {
     size        = 25
@@ -430,10 +426,6 @@ persistent_disks = {
   "whitman" = {
     size        = 25
     name_suffix = "whitman"
-  }
-  "willamette" = {
-    size        = 25
-    name_suffix = "willamette"
   }
   "wlac" = {
     size        = 20

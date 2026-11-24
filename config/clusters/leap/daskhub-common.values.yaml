@@ -400,3 +400,8 @@ basehub:
     buildPodsRegistryCredentials:
       server: https://us-central1-docker.pkg.dev
       username: _json_key
+  jupyterhub-usage-quotas:
+    enabled: true
+    config:
+      UsageViewer:
+        enable_compute: true

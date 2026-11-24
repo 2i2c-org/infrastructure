@@ -42,18 +42,18 @@ inputs:
 runs:
   using: composite
   steps:
-  - uses: mamba-org/setup-micromamba@v3
+  - uses: mamba-org/setup-micromamba@v3.2.1
     with:
-      environment-file: build-tools/environment.yaml
-        # only cache environment
-      cache-environment-key: environment-${{ hashFiles('build-tools/environment.yaml') }}
-      cache-downloads-key: downloads-${{ hashFiles('build-tools/environment.yaml') }}
+      environment-file: build-tools/conda-lock.yml
+      environment-name: build-tools
+      cache-environment-key: environment-${{ hashFiles('build-tools/conda-lock.yml') }}
+      cache-downloads-key: downloads-${{ hashFiles('build-tools/conda-lock.yml') }}
 
       # There will always be a cache hit on the cache key when this composite
       # action is run, as its only done after the "generate-jobs" job has been run
       # which will save a cache.
   - name: Restore pip's install cache
-    uses: actions/cache@v6
+    uses: actions/cache@v6.1.0
     with:
       path: ~/.cache/pip
         # Local wheels are not cached https://pip.pypa.io/en/stable/topics/caching/#locally-built-wheels

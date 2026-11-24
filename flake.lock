@@ -8,50 +8,34 @@
       },
       "locked": {
         "dir": "python",
-        "lastModified": 1772621537,
-        "narHash": "sha256-/jBAYzRIRkXwykuNrIUqvh6HzWEiMwc+WBswuO5MB94=",
+        "lastModified": 1793270277,
+        "narHash": "sha256-YYTz50Nb1YzYdme2AP1d8VoXRK9dehjwiX1CHwHZX9Q=",
         "owner": "agoose77",
         "repo": "dev-flakes",
-        "rev": "45e941722640b75cb55af326151c8a9af52f598b",
+        "rev": "b304f52a0d3763ebaf59f38522e8bfb3cb81c238",
         "type": "github"
       },
       "original": {
         "dir": "python",
         "owner": "agoose77",
-        "ref": "v10",
+        "ref": "v16",
         "repo": "dev-flakes",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1780145889,
-        "narHash": "sha256-md0zn0RnwNvPyASas1yG5YUuwQ4ALA6ucL50l0DvqCo=",
+        "lastModified": 1794192123,
+        "narHash": "sha256-SvB8u5qaJAOwZZyZciqTVOg/rBoUs2w0sFTU6ED51AQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "8c50a710ddca43d7a530fb805ad55bde8d0141c5",
+        "rev": "177d0540942fb205af6993b1d5fa0b57799e09f8",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
-        "rev": "8c50a710ddca43d7a530fb805ad55bde8d0141c5",
-        "type": "github"
-      }
-    },
-    "nixpkgs-gcloud": {
-      "locked": {
-        "lastModified": 1780145889,
-        "narHash": "sha256-md0zn0RnwNvPyASas1yG5YUuwQ4ALA6ucL50l0DvqCo=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "8c50a710ddca43d7a530fb805ad55bde8d0141c5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "8c50a710ddca43d7a530fb805ad55bde8d0141c5",
         "type": "github"
       }
     },
@@ -75,7 +59,6 @@
       "inputs": {
         "dev-python": "dev-python",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-gcloud": "nixpkgs-gcloud",
         "nixpkgs-helm": "nixpkgs-helm"
       }
     }

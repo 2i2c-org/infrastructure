@@ -20,10 +20,10 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       ( !github.event.workflow_run.head_repository.fork )
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
     - name: Generate a token
       id: generate-token
-      uses: actions/create-github-app-token@v3
+      uses: actions/create-github-app-token@v3.4.0
       with:
         app-id: ${{ vars.PLACEHOLDERS_APP_ID }}
         private-key: ${{ secrets.PLACEHOLDERS_APP_PRIVATE_KEY }}

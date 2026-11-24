@@ -20,7 +20,7 @@ jobs:
   check-deployment-config-consistency:
     runs-on: ubuntu-slim
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         submodules: true
     - name: Compare support and staging
