@@ -192,8 +192,8 @@ basehub:
             display_name: Resource Allocation
             choices:
               mem_4_gb:
-                display_name: 4 GB RAM, ~0.5 CPUs
-                description: Upto ~4 CPUs when available
+                display_name: ~4 GB RAM, ~0.5 CPUs
+                description: Up to ~4 CPUs when available
                 allowed_groups:
                 - geolab
                 - geolab:dev
@@ -203,15 +203,15 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 3902839759
-                  mem_limit: 3902839759
-                  cpu_guarantee: 0.4563125
-                  cpu_limit: 3.6505
+                  mem_guarantee: 3907271352
+                  mem_limit: 3907271352
+                  cpu_guarantee: 0.4526
+                  cpu_limit: 3.6211
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_7_gb:
-                display_name: 7 GB RAM, ~0.9 CPUs
-                description: Upto ~4 CPUs when available
+                display_name: ~7 GB RAM, ~0.9 CPUs
+                description: Up to ~4 CPUs when available
                 allowed_groups:
                 - geolab
                 - geolab:dev
@@ -221,15 +221,15 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 7805679519
-                  mem_limit: 7805679519
-                  cpu_guarantee: 0.912625
-                  cpu_limit: 3.6505
+                  mem_guarantee: 7814542704
+                  mem_limit: 7814542704
+                  cpu_guarantee: 0.9053
+                  cpu_limit: 3.6211
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_15_gb:
-                display_name: 15 GB RAM, ~1.8 CPUs
-                description: Upto ~4 CPUs when available
+                display_name: ~15 GB RAM, ~1.8 CPUs
+                description: Up to ~4 CPUs when available
                 allowed_groups:
                 - geolab
                 - geolab:dev
@@ -239,14 +239,14 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 15611359038
-                  mem_limit: 15611359038
-                  cpu_guarantee: 1.82525
-                  cpu_limit: 3.6505
+                  mem_guarantee: 15629085409
+                  mem_limit: 15629085409
+                  cpu_guarantee: 1.8105
+                  cpu_limit: 3.6211
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_29_gb:
-                display_name: 29 GB RAM, ~4 CPUs
+                display_name: ~29 GB RAM, ~4 CPUs
                 description: ~4 CPUs always available
                 allowed_groups:
                 - geolab
@@ -257,15 +257,15 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 31222718077
-                  mem_limit: 31222718077
-                  cpu_guarantee: 3.6505
-                  cpu_limit: 3.6505
+                  mem_guarantee: 31258170818
+                  mem_limit: 31258170818
+                  cpu_guarantee: 3.6211
+                  cpu_limit: 3.6211
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_60_gb:
-                display_name: 60 GB RAM, ~8 CPUs
-                description: Upto ~15 CPUs when available
+                display_name: ~60 GB RAM, ~8 CPUs
+                description: Up to ~15 CPUs when available
                 allowed_groups:
                 - geolab:dev
                 - geolab:power
@@ -273,14 +273,14 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 64020707016
-                  mem_limit: 64020707016
-                  cpu_guarantee: 7.69055
-                  cpu_limit: 15.3811
+                  mem_guarantee: 64038365184
+                  mem_limit: 64038365184
+                  cpu_guarantee: 7.6758
+                  cpu_limit: 15.3517
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
               mem_119_gb:
-                display_name: 119 GB RAM, ~15 CPUs
+                display_name: ~119 GB RAM, ~15 CPUs
                 description: ~15 CPUs always available
                 allowed_groups:
                 - geolab:dev
@@ -288,10 +288,10 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 128041414033
-                  mem_limit: 128041414033
-                  cpu_guarantee: 15.3811
-                  cpu_limit: 15.3811
+                  mem_guarantee: 128076730368
+                  mem_limit: 128076730368
+                  cpu_guarantee: 15.3517
+                  cpu_limit: 15.3517
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
               mem_488_gb:
@@ -301,10 +301,10 @@ basehub:
                 - geolab:power
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 523839830228
-                  mem_limit: 523839830228
-                  cpu_guarantee: 62.575
-                  cpu_limit: 62.575
+                  mem_guarantee: 523973816320
+                  mem_limit: 523973816320
+                  cpu_guarantee: 62.545
+                  cpu_limit: 62.545
                   node_selector:
                     node.kubernetes.io/instance-type: r5.16xlarge
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs

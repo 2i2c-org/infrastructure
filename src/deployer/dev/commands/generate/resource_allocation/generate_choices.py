@@ -94,11 +94,11 @@ def proportional_memory_strategy(
                 # Guarantee and Limit are the same - this strategy has no oversubscription
                 "mem_guarantee": int(mem_limit),
                 "mem_limit": int(mem_limit),
-                "cpu_guarantee": cpu_guarantee,
+                "cpu_guarantee": round(cpu_guarantee, 4),
                 # CPU limit is set to entire available CPU of the node, making sure no single
                 # user can starve the node of critical kubelet / systemd resources.
                 # Leaving it unset sets it to same as guarantee, which we do not want.
-                "cpu_limit": available_node_cpu,
+                "cpu_limit": round(available_node_cpu, 4),
                 # Explicitly set node_selector here, so the output can be easily combined
                 # multiple times, with multiple instance types
                 "node_selector": {"node.kubernetes.io/instance-type": instance_type},
