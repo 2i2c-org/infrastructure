@@ -16,7 +16,7 @@ jobs:
     steps:
     # Issue with no Iteration
     - name: Get the "Iteration" field
-      uses: EndBug/project-fields@v2
+      uses: EndBug/project-fields@v2.1.0
       id: get-iteration
       with:
         operation: get
@@ -24,7 +24,7 @@ jobs:
         github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
         project_url: https://github.com/orgs/2i2c-org/projects/57
     - name: Add current iteration to closed issue if doesn't have one already
-      uses: EndBug/project-fields@v2
+      uses: EndBug/project-fields@v2.1.0
       if: ${{ steps.get-iteration.outputs.values == '' }}
       with:
         operation: set
@@ -50,7 +50,7 @@ jobs:
 
     # Issue with no Estimate
     - name: Get the "Estimate" field
-      uses: EndBug/project-fields@v2
+      uses: EndBug/project-fields@v2.1.0
       id: get-estimate
       with:
         operation: get

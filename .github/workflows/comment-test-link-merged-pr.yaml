@@ -30,9 +30,9 @@ jobs:
       actions: read
       pull-requests: write
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
 
     - name: Provide comment to track deployment progress
-      uses: ./.github/actions/monitor-deployment-notice
+      uses: $/.github/actions/monitor-deployment-notice
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}

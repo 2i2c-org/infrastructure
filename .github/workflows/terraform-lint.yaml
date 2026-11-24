@@ -9,9 +9,9 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v7
-    - uses: hashicorp/setup-terraform@v4
-    - uses: terraform-linters/setup-tflint@v6
+    - uses: actions/checkout@v7.0.1
+    - uses: hashicorp/setup-terraform@v4.0.1
+    - uses: terraform-linters/setup-tflint@v6.3.2
     - name: Run terraform linter
       run: |
         cd terraform

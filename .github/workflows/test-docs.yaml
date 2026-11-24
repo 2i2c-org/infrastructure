@@ -21,10 +21,10 @@ jobs:
   test-docs:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         fetch-depth: 0
-    - uses: actions/setup-python@v7
+    - uses: actions/setup-python@v7.1.0
       with:
         python-version: '3.13'
     - name: Build docs

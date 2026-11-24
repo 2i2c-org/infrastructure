@@ -52,7 +52,7 @@ runs:
     shell: bash
 
   - name: Set the "Status" and "Estimate" project board fields
-    uses: EndBug/project-fields@v2
+    uses: EndBug/project-fields@v2.1.0
     id: set-fields
     with:
       operation: set

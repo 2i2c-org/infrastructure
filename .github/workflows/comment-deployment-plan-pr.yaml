@@ -33,9 +33,9 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
 
     - name: Provide comment to track deployment progress
-      uses: ./.github/actions/show-deployment-plan
+      uses: $/.github/actions/show-deployment-plan
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
