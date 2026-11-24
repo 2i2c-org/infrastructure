@@ -45,6 +45,7 @@ runs:
   - uses: mamba-org/setup-micromamba@v3
     with:
       environment-file: build-tools/conda-lock.yml
+      environment-name: build-tools
       cache-environment-key: environment-${{ hashFiles('build-tools/conda-lock.yml') }}
       cache-downloads-key: downloads-${{ hashFiles('build-tools/conda-lock.yml') }}
 
