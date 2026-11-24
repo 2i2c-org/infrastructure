@@ -316,13 +316,13 @@ def run_hub_health_check(
                     "secrets",
                     "hub",
                     f"--namespace={hub.spec['name']}",
-                    r"--output=jsonpath={.data['hub\.services\.hub-health\.apiToken']}",
+                    r"--output=jsonpath={.data['hub\.services\.health-check\.apiToken']}",
                 ],
                 text=True,
             )
         except subprocess.CalledProcessError as e:
             raise ValueError(
-                f"Failed to acquire a JupyterHub API token for the hub-health service: {e.stdout}"
+                f"Failed to acquire a JupyterHub API token for the health-check service: {e.stdout}"
             )
         service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
 
