@@ -1049,13 +1049,13 @@ jupyterhub:
         name: custom-templates
         subPath: repo/extra-assets
     services:
-      # hub-health service helps us run health checks from the deployer script.
+      # health-check service helps us run health checks from the deployer script.
       # The JupyterHub Helm chart will automatically generate an API token for
       # services and expose it in a k8s Secret named `hub`. When we run health
       # tests against a hub, we read this token from the k8s Secret to acquire
       # the credentials needed to interacting with the JupyterHub API.
       #
-      hub-health:
+      health-check:
         display: false
       usage-quota:
         # We unconditionally provide a no-op entry so that roles and scopes are also provided unconditionally
@@ -1084,13 +1084,13 @@ jupyterhub:
         # We unconditionally provide a no-op entry so that roles and scopes are also provided unconditionally
         display: false
     loadRoles:
-      hub-health-service:
+      health-check-service:
         scopes:
         - admin:users!user=deployment-service-check
         - admin:servers!user=deployment-service-check
         - tokens!user=deployment-service-check
         services:
-        - hub-health
+        - health-check
       usage-quota-service:
         scopes:
         - read:users
