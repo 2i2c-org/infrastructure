@@ -3,14 +3,14 @@ resource "aws_guardduty_detector" "guardduty" {
 }
 
 resource "aws_guardduty_detector_feature" "disabled_features" {
-  for_each = toset(["S3_DATA_EVENTS", "RDS_LOGIN_EVENTS", "LAMBDA_NETWORK_LOGS", "EKS_RUNTIME_MONITORING"])
+  for_each    = toset(["S3_DATA_EVENTS", "RDS_LOGIN_EVENTS", "LAMBDA_NETWORK_LOGS", "EKS_RUNTIME_MONITORING"])
   detector_id = aws_guardduty_detector.guardduty.id
   name        = each.value
   status      = "DISABLED"
 }
 
 resource "aws_guardduty_detector_feature" "enabled_features" {
-  for_each = toset(["EKS_AUDIT_LOGS"])
+  for_each    = toset(["EKS_AUDIT_LOGS"])
   detector_id = aws_guardduty_detector.guardduty.id
   name        = each.value
   status      = "ENABLED"
@@ -22,18 +22,18 @@ resource "aws_guardduty_detector_feature" "enable_agents" {
   status      = "ENABLED"
 
   additional_configuration {
-    name = "EKS_ADDON_MANAGEMENT"
+    name   = "EKS_ADDON_MANAGEMENT"
     status = "ENABLED"
   }
 
   additional_configuration {
-    name = "EC2_AGENT_MANAGEMENT"
+    name   = "EC2_AGENT_MANAGEMENT"
     status = "ENABLED"
   }
 
   additional_configuration {
     # Explicitly set this here to prevent terraform from flip-flopping
-    name = "ECS_FARGATE_AGENT_MANAGEMENT"
+    name   = "ECS_FARGATE_AGENT_MANAGEMENT"
     status = "DISABLED"
   }
 }
@@ -55,7 +55,7 @@ resource "aws_sns_topic_subscription" "guardduty_https_target" {
 }
 
 resource "aws_cloudwatch_event_rule" "guardduty_finding" {
-  name        = "guardduty-to-sns"
+  name = "guardduty-to-sns"
 
   event_pattern = jsonencode({
     source = ["aws.guardduty"]
