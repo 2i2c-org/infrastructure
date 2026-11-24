@@ -94,10 +94,10 @@ jobs:
       (github.event_name == 'pull_request' && contains(github.head_ref, fromJson('["dependabot", "pre-commit"]')) == false)
 
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         submodules: true
-    - uses: actions/setup-python@v7
+    - uses: actions/setup-python@v7.1.0
       with:
         python-version: '3.13'
 
@@ -105,7 +105,7 @@ jobs:
         # Don't run this step when we manually trigger the workflow
       if: github.event_name != 'workflow_dispatch'
         # Action repo: https://github.com/dorny/paths-filter
-      uses: dorny/paths-filter@v4
+      uses: dorny/paths-filter@v4.0.3
       id: file_changes
       with:
         token: ''
@@ -227,12 +227,12 @@ jobs:
         jobs: ${{ fromJson(needs.generate-clusters-to-validate.outputs.cluster_matrix) }}
 
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         submodules: true
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
-      uses: ./.github/actions/setup-deploy
+      uses: $/.github/actions/setup-deploy
 
     - name: 'Validate cluster: ${{ matrix.jobs.cluster_name }}'
       env:

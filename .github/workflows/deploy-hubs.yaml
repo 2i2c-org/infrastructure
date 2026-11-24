@@ -69,15 +69,15 @@ jobs:
       prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         submodules: true
 
     - name: Setup deployer
-      uses: ./.github/actions/setup-deploy
+      uses: $/.github/actions/setup-deploy
 
     - name: Get merged/open PR labels
-      uses: actions/github-script@v9
+      uses: actions/github-script@v9.0.0
       id: pr-labels
       with:
           # Both pull_request and push can have triggered this job to run. A
@@ -113,7 +113,7 @@ jobs:
 
     - name: Identify files that have been added or modified
           # Action repo: https://github.com/dorny/paths-filter
-      uses: dorny/paths-filter@v4
+      uses: dorny/paths-filter@v4.0.3
       id: changed-files
       with:
         token: ''
@@ -150,7 +150,7 @@ jobs:
         (steps.generate-jobs.outputs.support-jobs != '[]' ||
         steps.generate-jobs.outputs.staging-jobs != '[]' ||
         steps.generate-jobs.outputs.prod-jobs != '[]')
-      uses: actions/upload-artifact@v7
+      uses: actions/upload-artifact@v7.0.2
       with:
         name: pr
         path: |
@@ -222,7 +222,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         submodules: true
 
@@ -236,12 +236,12 @@ jobs:
         echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
-      uses: ./.github/actions/setup-deploy
+      uses: $/.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
 
     - name: Setup sops credentials to decrypt repo secrets
-      uses: google-github-actions/auth@v3
+      uses: google-github-actions/auth@v3.0.0
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
@@ -271,7 +271,7 @@ jobs:
 
     - name: Report Status
       if: always()
-      uses: ravsamhq/notify-slack-action@v2
+      uses: ravsamhq/notify-slack-action@2.5.0
       with:
         notify_when: failure
         status: ${{ job.status }}
@@ -447,7 +447,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         submodules: true
 
@@ -461,12 +461,12 @@ jobs:
         echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
-      uses: ./.github/actions/setup-deploy
+      uses: $/.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
 
     - name: Setup sops credentials to decrypt repo secrets
-      uses: google-github-actions/auth@v3
+      uses: google-github-actions/auth@v3.0.0
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
@@ -501,7 +501,7 @@ jobs:
 
     - name: Report Status
       if: always()
-      uses: ravsamhq/notify-slack-action@v2
+      uses: ravsamhq/notify-slack-action@2.5.0
       with:
         notify_when: failure
         status: ${{ job.status }}
@@ -587,7 +587,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
       with:
         submodules: true
 
@@ -601,13 +601,13 @@ jobs:
         echo "slack_id=${SLACK_ID}" >> "$GITHUB_OUTPUT"
 
     - name: Setup sops credentials to decrypt repo secrets
-      uses: google-github-actions/auth@v3
+      uses: google-github-actions/auth@v3.0.0
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
     - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
-      uses: ./.github/actions/setup-deploy
+      uses: $/.github/actions/setup-deploy
       with:
         provider: ${{ matrix.jobs.provider }}
 
@@ -646,7 +646,7 @@ jobs:
 
     - name: Report Status
       if: always()
-      uses: ravsamhq/notify-slack-action@v2
+      uses: ravsamhq/notify-slack-action@2.5.0
       with:
         notify_when: failure
         status: ${{ job.status }}

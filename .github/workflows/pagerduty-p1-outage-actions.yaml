@@ -40,7 +40,7 @@ jobs:
       run: sleep 3
 
     - name: Set the "Status" and mark the issue as "Emergency" in the project board
-      uses: EndBug/project-fields@v2
+      uses: EndBug/project-fields@v2.1.0
       with:
         operation: set
             # If the fields name or type will change
@@ -88,7 +88,7 @@ jobs:
       run: sleep 3
 
     - name: Set the "Status" and mark the issue as "Emergency" in the project board
-      uses: EndBug/project-fields@v2
+      uses: EndBug/project-fields@v2.1.0
       with:
         operation: set
             # If the fields name or type will change
@@ -134,7 +134,7 @@ jobs:
       run: sleep 3
 
     - name: Set the "Status" , "Estimate" and mark the issue as "Emergency" in the project board
-      uses: EndBug/project-fields@v2
+      uses: EndBug/project-fields@v2.1.0
       with:
         operation: set
             # If the fields name or type will change

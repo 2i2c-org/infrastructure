@@ -23,17 +23,17 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v7.0.1
     - name: Setup Git
       run: |
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
-    - uses: actions/setup-node@v7
+    - uses: actions/setup-node@v7.1.0
       with:
         node-version: '22'
 
     - name: Setup deploy for ${{ github.event.inputs.cluster }} cluster
-      uses: ./.github/actions/setup-deploy
+      uses: $/.github/actions/setup-deploy
 
     - name: Apply scale-change
       run: |
