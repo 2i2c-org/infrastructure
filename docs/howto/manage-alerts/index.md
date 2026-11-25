@@ -95,6 +95,18 @@ There is additional automation that runs each time an alert like this is trigger
 - In addition, if the health check succeeds, the incident is resolved and a message with this status is posted in the relevant `#alerts-*` Slack channel
 - If the health check fails, then a message, mentioning the channel members, is posted in the relevant `#alerts-*` Slack channel
 
+### What to do for alerts on significant node scaleups
+
+When the node count is more than twice the rolling daily average, together with CPU usage > 80%, then this could indicate normal use, such as a workshop event, or abuse such as cryptojacking, which requires immediate attention.
+
+Check the team events calendar to verify a community event is taking place. If so, you can resolve the alert straight away.
+
+If there is no community event expected, then check for legitimate use and rule out any suspicious activity:
+
+- check the `support-cryptnono.*` pod logs for malicious activity
+- check which users are running the compute, and if their workflows are legitimate
+- ask the community representative if they are expecting large scale usage from users.
+
 ### What to do for alerts for application outages
 
 When an application is not working as expected, it is classed as a possible application outage. Similar to the server start alert above, it's best to investigate these ASAP to validate whether this is an outage or not. If it is an outage, follow the incident process as normal.

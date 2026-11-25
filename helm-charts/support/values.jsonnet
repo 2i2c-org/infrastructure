@@ -746,7 +746,7 @@ local scratchDiskVACConfigMapping = {
             rules: [
               makeNodeScaleUpUsageAlert(
                 'Significant node scaleup and compute usage',
-                'same day action needed'
+                'immediate action needed'
               ),
             ],
           },
