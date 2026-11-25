@@ -221,7 +221,7 @@ local makeNodeScaleUpAlert = function(
   summary,
   severity,
                              ) {
-  alert: 'Significant node scale up - Node count in cluster:' + cluster_name + ' > 2 standard deviations from the mean over the last 30 mins ',
+  alert: 'Significant node scale up - Node count in ' + cluster_name + ' cluster is more than 2 standard deviations from the hourly mean over the last 30 mins ',
   expr: |||
     # Z-score https://en.wikipedia.org/wiki/Standard_score
     (
@@ -592,6 +592,13 @@ local scratchDiskVACConfigMapping = {
               matchers: [
                 'cluster =~ .*',
                 'alertname =~ ".*stuck in state.*"',
+              ],
+            },
+            {
+              receiver: 'significant-node-scaleup-pager',
+              matchers: [
+                'cluster =~ .*',
+                'alertname =~ ".*node scaleup.*"',
               ],
             },
             {
