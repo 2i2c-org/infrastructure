@@ -84,7 +84,7 @@ At the time of writing, we have the following [alerting rules groups](https://pr
 5. **Pods stuck in an undesirable state for too long**
    For when there's a pod that's stuck in `Pending` for more than 15m or a pod stuck in `Terminating` for more than 10m.
 6. **Significant node scaleup**
-   For when node counts exceed 2 standard deviations from the mean over the last hour, sustained over 30 minutes. This could indicate normal use, such as a workshop event, or abuse such as cryptojacking.
+   For when node scaleups exceed twice the rolling daily average, and CPU utilisation is above 80%. This could indicate normal use, such as a workshop event, or abuse such as cryptojacking, which requires immediate attention.
 7. **Possible application outage**
    For when an application is not working as expected.
 
