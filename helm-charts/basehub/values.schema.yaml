@@ -46,7 +46,6 @@ properties:
     additionalProperties: false
     required:
       - enabled
-      - shareCreator
       - dirsizeReporter
       - pv
     properties:
@@ -71,20 +70,6 @@ properties:
         properties:
           enabled:
             type: boolean
-      shareCreator:
-        type: object
-        additionalProperties: false
-        required:
-          - enabled
-          - tolerations
-        properties:
-          enabled:
-            type: boolean
-          tolerations:
-            type: array
-            items:
-              type: object
-              additionalProperties: true
       pv:
         type: object
         additionalProperties: false
