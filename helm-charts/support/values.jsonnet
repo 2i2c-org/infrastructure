@@ -217,6 +217,41 @@ local makePodStuckInTerminatingForTooLongAlert = function(
   },
 };
 
+local makeNodeScaleUpAlert = function(
+  summary,
+  severity,
+                             ) {
+  alert: 'Significant node scale up - Node count in cluster:' + cluster_name + ' > 2 standard deviations from the mean over the last 30 mins ',
+  expr: |||
+    # Z-score https://en.wikipedia.org/wiki/Standard_score
+    (
+      count by (label_cloud_google_com_gke_nodepool) (
+        kube_node_labels
+      )
+      -
+      avg_over_time(
+        (count by (label_cloud_google_com_gke_nodepool) (
+          kube_node_labels
+        ))[1h:5m]
+      )
+    )
+    /
+    stddev_over_time(
+      (count by (label_cloud_google_com_gke_nodepool) (
+        kube_node_labels
+      ))[1h:5m]
+    ) >=2
+  |||,
+  'for': '30m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
 local makeUsageQuotasFailOpenAlert = function(
   summary,
   severity,
@@ -693,6 +728,15 @@ local scratchDiskVACConfigMapping = {
               diskIOApproachingSaturation(
                 'Disk IO approaching saturation',
                 'action needed this week'
+              ),
+            ],
+          },
+          {
+            name: 'Significant node scaleup',
+            rules: [
+              makeNodeScaleUpAlert(
+                'Significant node scaleup',
+                'same day action needed'
               ),
             ],
           },
