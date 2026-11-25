@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: 10.100.209.159
+    serverIP: 10.100.211.228
 jupyterhub:
   custom:
     litellmKeyProvisioner:
@@ -18,4 +18,4 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   eks:
-    volumeId: vol-0931af54d0972d0fe
+    volumeId: vol-0c4f13ca9658b163b

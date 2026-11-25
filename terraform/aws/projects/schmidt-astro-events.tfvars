@@ -15,10 +15,10 @@ ebs_volumes = {
   "workshop" = {
     name_suffix = "workshop",
     type        = "gp3",
-    size        = 1000,
+    size        = 100,
     tags = {
       "2i2c:hub-name" : "workshop"
-      "JHCM:HubName" : "staging"
+      "JHCM:HubName" : "workshop"
     },
   },
 
