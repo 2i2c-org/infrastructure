@@ -336,9 +336,6 @@ nfs:
   volumeReporter:
     # Is enabled just for Azure with jsonnet config
     enabled: false
-  shareCreator:
-    enabled: false
-    tolerations: []
   pv:
     enabled: false
     mountOptions:

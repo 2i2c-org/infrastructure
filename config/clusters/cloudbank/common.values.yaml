@@ -1,7 +1,5 @@
 nfs:
   enabled: true
-  shareCreator:
-    enabled: false
   pv:
     enabled: true
 jupyterhub:
