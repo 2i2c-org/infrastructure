@@ -217,6 +217,44 @@ local makePodStuckInTerminatingForTooLongAlert = function(
   },
 };
 
+local makeNodeScaleUpUsageAlert = function(
+  summary,
+  severity,
+                                  ) {
+  alert: 'Significant node scaleup and CPU usage - Node count in ' + cluster_name + ' cluster is more than twice the daily average with CPU usage > 80%',
+  expr: |||
+    count by (label_alpha_eksctl_io_nodegroup_name, label_cloud_google_com_gke_nodepool, label_kubernetes_azure_com_agentpool) (
+        kube_node_labels
+    )
+    -
+    avg_over_time(
+        (count by (label_alpha_eksctl_io_nodegroup_name, label_cloud_google_com_gke_nodepool, label_kubernetes_azure_com_agentpool) (
+        kube_node_labels
+        ))[1d:1h]
+    ) * 2 > 0
+    *
+    count(
+    (
+      sum(rate(node_cpu_seconds_total{mode!="idle"}[5m])) by (node)
+      /
+      sum(kube_node_status_capacity{resource="cpu"}) by (node)
+    )
+    * on (node) group_left(label_alpha_eksctl_io_nodegroup_name, label_cloud_google_com_gke_nodepool, label_kubernetes_azure_com_agentpool)
+    group(
+      kube_node_labels
+    ) by (node, label_alpha_eksctl_io_nodegroup_name, label_cloud_google_com_gke_nodepool, label_kubernetes_azure_com_agentpool) > 0.8
+    ) by (label_alpha_eksctl_io_nodegroup_name, label_cloud_google_com_gke_nodepool, label_kubernetes_azure_com_agentpool)
+  |||,
+  'for': '5m',
+  labels: {
+    cluster: cluster_name,
+    severity: severity,
+  },
+  annotations: {
+    summary: summary,
+  },
+};
+
 local makeUsageQuotasFailOpenAlert = function(
   summary,
   severity,
@@ -560,6 +598,13 @@ local scratchDiskVACConfigMapping = {
               ],
             },
             {
+              receiver: 'significant-node-scaleup-pager',
+              matchers: [
+                'cluster =~ .*',
+                'alertname =~ ".*node scaleup.*"',
+              ],
+            },
+            {
               receiver: 'jupyterhub-usage-quotas',
               matchers: [
                 'cluster =~ .*',
@@ -693,6 +738,15 @@ local scratchDiskVACConfigMapping = {
               diskIOApproachingSaturation(
                 'Disk IO approaching saturation',
                 'action needed this week'
+              ),
+            ],
+          },
+          {
+            name: 'Significant node scaleup',
+            rules: [
+              makeNodeScaleUpUsageAlert(
+                'Significant node scaleup and compute usage',
+                'same day action needed'
               ),
             ],
           },
