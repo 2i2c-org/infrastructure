@@ -2,19 +2,19 @@
     "r5.xlarge": {
         "capacity": {
             "cpu": 4.0,
-            "memory": 33264484352
+            "memory": 33264324608
         },
         "allocatable": {
             "cpu": 3.92,
-            "memory": 32223248384
+            "memory": 32223088640
         },
         "measured_overhead": {
-            "cpu": 0.225,
-            "memory": 327155712
+            "cpu": 0.425,
+            "memory": 595591168
         },
         "available": {
-            "cpu": 3.695,
-            "memory": 31896092672
+            "cpu": 3.495,
+            "memory": 31627497472
         }
     },
     "r5.4xlarge": {

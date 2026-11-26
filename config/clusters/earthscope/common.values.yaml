@@ -203,10 +203,10 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 3907271352
-                  mem_limit: 3907271352
-                  cpu_guarantee: 0.4526
-                  cpu_limit: 3.6211
+                  mem_guarantee: 3874368440
+                  mem_limit: 3874368440
+                  cpu_guarantee: 0.4281
+                  cpu_limit: 3.4251
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_7_gb:
@@ -221,10 +221,10 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 7814542704
-                  mem_limit: 7814542704
-                  cpu_guarantee: 0.9053
-                  cpu_limit: 3.6211
+                  mem_guarantee: 7748736880
+                  mem_limit: 7748736880
+                  cpu_guarantee: 0.8563
+                  cpu_limit: 3.4251
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_15_gb:
@@ -239,10 +239,10 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 15629085409
-                  mem_limit: 15629085409
-                  cpu_guarantee: 1.8105
-                  cpu_limit: 3.6211
+                  mem_guarantee: 15497473761
+                  mem_limit: 15497473761
+                  cpu_guarantee: 1.7126
+                  cpu_limit: 3.4251
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_29_gb:
@@ -257,10 +257,10 @@ basehub:
                 - vm-lg
                 - vm-xl
                 kubespawner_override:
-                  mem_guarantee: 31258170818
-                  mem_limit: 31258170818
-                  cpu_guarantee: 3.6211
-                  cpu_limit: 3.6211
+                  mem_guarantee: 30994947522
+                  mem_limit: 30994947522
+                  cpu_guarantee: 3.4251
+                  cpu_limit: 3.4251
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_60_gb:
