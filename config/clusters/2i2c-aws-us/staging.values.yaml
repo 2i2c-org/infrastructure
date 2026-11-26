@@ -49,6 +49,27 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   singleuser:
-    profileList: {}
+    profileList:
+      default:
+        display_name: Choose your environment and resources
+        default: true
+        profile_options:
+          scratch_disk:
+            display_name: Allusers
+            choices:
+              no:
+                display_name: No
+                description: Don't enable
+                default: true
+                kubespawner_override: {}
+              yes:
+                display_name: Yes
+                description: Enable
+                kubespawner_override:
+                  volume_mounts:
+                    01-allusers-volumemount:
+                      name: home
+                      mountPath: /home/jovyan/allusers
+                      readOnly: false
     extraEnv:
       SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-staging/$(JUPYTERHUB_USER)
