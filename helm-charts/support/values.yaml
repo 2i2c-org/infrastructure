@@ -502,7 +502,7 @@ fluent-bit:
     - name: state
       mountPath: /var/lib/fluent-bit
 
-k8s-node-operator:
+k8s-autoscaler-plugins:
   enabled: false
 
 # Configuration of templates provided directly by this chart

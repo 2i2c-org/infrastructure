@@ -501,8 +501,8 @@ variable "enable_logging" {
   EOT
 }
 
-// https://github.com/2i2c-org/k8s-node-operator
-variable "enable_k8s_node_operator" {
+// https://github.com/2i2c-org/k8s-autoscaler-plugins
+variable "enable_k8s_autoscaler_plugins" {
   type        = bool
   default     = false
   description = <<-EOT

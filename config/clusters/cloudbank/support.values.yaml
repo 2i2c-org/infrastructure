@@ -32,7 +32,7 @@ grafana:
       hosts:
       - grafana.cloudbank.2i2c.cloud
 
-k8s-node-operator:
+k8s-autoscaler-plugins:
   enabled: true
   extraEnv:
   - name: GCP_CLUSTER
