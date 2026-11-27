@@ -506,6 +506,6 @@ variable "enable_k8s_autoscaler_plugins" {
   type        = bool
   default     = false
   description = <<-EOT
-  Conditionally enable k8s node operator to scale nodes ahead of time.
+  Conditionally enable k8s autoscaler plugins to scale nodes ahead of time.
   EOT
 }
