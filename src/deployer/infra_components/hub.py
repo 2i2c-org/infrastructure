@@ -130,7 +130,7 @@ class Hub:
                 self.cluster.config_dir / p
                 for p in self.spec["helm_chart_values_files"]
             ) as values_files,
-            ExitStack() as jsonnet_stack,
+            ExitStack() as exit_stack,
         ):
 
             cmd = [
@@ -144,13 +144,21 @@ class Hub:
             ]
 
             # Add on rendered jsonnet values.yaml file for the chart
-            rendered_values_path = jsonnet_stack.enter_context(
+            rendered_values_path = exit_stack.enter_context(
                 self.render_jsonnet(
                     chart_dir / "values.jsonnet",
                 )
             )
 
             cmd += ["--values", rendered_values_path]
+
+            # Add on secret values.yaml file for the chart
+            secret_values_path = chart_dir / "enc-values.secret.yaml"
+            if secret_values_path.exists():
+                decrypted_values_path = exit_stack.enter_context(
+                    get_decrypted_file(secret_values_path)
+                )
+                cmd += ["--values", decrypted_values_path]
 
             if dry_run:
                 cmd.append("--dry-run")
@@ -162,7 +170,7 @@ class Hub:
             for values_file in values_files:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
-                    rendered_path = jsonnet_stack.enter_context(
+                    rendered_path = exit_stack.enter_context(
                         self.render_jsonnet(Path(values_file))
                     )
                     cmd.append(f"--values={rendered_path}")
