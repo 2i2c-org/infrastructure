@@ -17,7 +17,7 @@ required:
   - disableCoredumps
   - global
   - fluent-bit
-  - k8s-node-operator
+  - k8s-autoscaler-plugins
   - scratchDiskVAC
 properties:
   # We don't control validation of dependent charts here
@@ -48,7 +48,7 @@ properties:
   fluent-bit:
     type: object
     additionalProperties: true
-  k8s-node-operator:
+  k8s-autoscaler-plugins:
     type: object
     additionalProperties: true
 
