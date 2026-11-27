@@ -547,6 +547,7 @@ jupyterhub:
       # https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v
       # for more details.
       - /mnt/ghsa-w3vc-fx9p-wp4v/check-patch-run
+      - /mnt/patch-vulnerability-2026-11-27
       - jupyterhub-singleuser
     extraEnv:
       # notebook writes secure files that don't need to survive a
