@@ -153,7 +153,7 @@ class Hub:
             cmd += ["--values", rendered_values_path]
 
             # Add on secret values.yaml file for the chart
-            secret_values_path = chart_dir / "values.secret.yaml"
+            secret_values_path = chart_dir / "enc-values.secret.yaml"
             if secret_values_path.exists():
                 decrypted_values_path = exit_stack.enter_context(secret_values_path)
                 cmd += ["--values", decrypted_values_path]
