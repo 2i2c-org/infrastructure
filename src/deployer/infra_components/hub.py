@@ -155,7 +155,9 @@ class Hub:
             # Add on secret values.yaml file for the chart
             secret_values_path = chart_dir / "enc-values.secret.yaml"
             if secret_values_path.exists():
-                decrypted_values_path = exit_stack.enter_context(secret_values_path)
+                decrypted_values_path = exit_stack.enter_context(
+                    get_decrypted_file(secret_values_path)
+                )
                 cmd += ["--values", decrypted_values_path]
 
             if dry_run:
