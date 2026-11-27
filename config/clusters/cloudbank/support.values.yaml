@@ -47,4 +47,4 @@ k8s-autoscaler-plugins:
     value: test-pool
   serviceAccount:
     annotations:
-      iam.gke.io/gcp-service-account: cb-node-operator@cb-1003-1696.iam.gserviceaccount.com
+      iam.gke.io/gcp-service-account: cb-autoscaler-plugins@cb-1003-1696.iam.gserviceaccount.com
