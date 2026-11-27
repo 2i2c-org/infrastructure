@@ -70,6 +70,6 @@ dependencies:
   # k8s-autoscaler-plugins, scale k8s cluster ahead of time with plugins.
   # https://github.com/2i2c-org/k8s-autoscaler-plugins.
   - name: k8s-autoscaler-plugins
-    version: "0.0.1-0.dev.git.233.he4586ae"
+    version: "0.0.1-0.dev.git.235.h522423e"
     repository: https://2i2c.org/k8s-autoscaler-plugins/
     condition: k8s-autoscaler-plugins.enabled

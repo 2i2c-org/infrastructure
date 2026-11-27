@@ -35,16 +35,14 @@ grafana:
 k8s-autoscaler-plugins:
   enabled: true
   extraEnv:
+  - name: K8S_AUTOSCALER_PLUGINS_CLOUD_PROVIDER
+    value: GCP
   - name: GCP_CLUSTER
     value: cb-cluster
-  - name: GCP_MACHINE_TYPE
-    value: e2-medium
   - name: GCP_PROJECT_ID
     value: cb-1003-1696
-  - name: GCP_ZONE
+  - name: GCP_LOCATION
     value: us-central1-b
-  - name: GCP_NODEPOOL
-    value: test-pool
   serviceAccount:
     annotations:
       iam.gke.io/gcp-service-account: cb-autoscaler-plugins@cb-1003-1696.iam.gserviceaccount.com
